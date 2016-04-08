@@ -1,0 +1,1148 @@
+/*
+$Id: af177fde17d9d5f06baec7db058068aeedc108a4 $
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2016 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Text;
+using com.itextpdf.io;
+
+namespace com.itextpdf.io.source
+{
+	public class PdfTokenizer
+	{
+		private const long serialVersionUID = -2949864233416670521L;
+
+		public enum TokenType
+		{
+			Number,
+			String,
+			Name,
+			Comment,
+			StartArray,
+			EndArray,
+			StartDic,
+			EndDic,
+			Ref,
+			Obj,
+			EndObj,
+			Other,
+			EndOfFile
+		}
+
+		public static readonly bool[] delims = new bool[] { true, true, false, false, false
+			, false, false, false, false, false, true, true, false, true, true, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, true, false, false, false, false, true, false, false
+			, true, true, false, false, false, false, false, true, false, false, false, false
+			, false, false, false, false, false, false, false, false, true, false, true, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, true, false, true, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			, false, false, false, false, false, false, false, false, false, false, false, false
+			 };
+
+		public static readonly byte[] Obj = ByteUtils.GetIsoBytes("obj");
+
+		public static readonly byte[] R = ByteUtils.GetIsoBytes("R");
+
+		public static readonly byte[] Xref = ByteUtils.GetIsoBytes("xref");
+
+		public static readonly byte[] Startxref = ByteUtils.GetIsoBytes("startxref");
+
+		public static readonly byte[] Stream = ByteUtils.GetIsoBytes("stream");
+
+		public static readonly byte[] Trailer = ByteUtils.GetIsoBytes("trailer");
+
+		public static readonly byte[] N = ByteUtils.GetIsoBytes("n");
+
+		public static readonly byte[] F = ByteUtils.GetIsoBytes("f");
+
+		public static readonly byte[] Null = ByteUtils.GetIsoBytes("null");
+
+		public static readonly byte[] True = ByteUtils.GetIsoBytes("true");
+
+		public static readonly byte[] False = ByteUtils.GetIsoBytes("false");
+
+		protected internal PdfTokenizer.TokenType type;
+
+		protected internal int reference;
+
+		protected internal int generation;
+
+		protected internal bool hexString;
+
+		protected internal ByteBuffer outBuf;
+
+		private readonly RandomAccessFileOrArray file;
+
+		/// <summary>Streams are closed automatically.</summary>
+		private bool closeStream = true;
+
+		/// <summary>
+		/// Creates a PdfTokenizer for the specified
+		/// <see cref="RandomAccessFileOrArray"/>
+		/// .
+		/// The beginning of the file is read to determine the location of the header, and the data source is adjusted
+		/// as necessary to account for any junk that occurs in the byte source before the header
+		/// </summary>
+		/// <param name="file">the source</param>
+		public PdfTokenizer(RandomAccessFileOrArray file)
+		{
+			this.file = file;
+			this.outBuf = new ByteBuffer();
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void Seek(long pos)
+		{
+			file.Seek(pos);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void ReadFully(byte[] bytes)
+		{
+			file.ReadFully(bytes);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual long GetPosition()
+		{
+			return file.GetPosition();
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void Close()
+		{
+			if (closeStream)
+			{
+				file.Close();
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual long Length()
+		{
+			return file.Length();
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual int Read()
+		{
+			return file.Read();
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual String ReadString(int size)
+		{
+			StringBuilder buf = new StringBuilder();
+			int ch;
+			while ((size--) > 0)
+			{
+				ch = Read();
+				if (ch == -1)
+				{
+					break;
+				}
+				buf.Append((char)ch);
+			}
+			return buf.ToString();
+		}
+
+		public virtual PdfTokenizer.TokenType GetTokenType()
+		{
+			return type;
+		}
+
+		public virtual byte[] GetByteContent()
+		{
+			return outBuf.ToByteArray();
+		}
+
+		public virtual String GetStringValue()
+		{
+			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer()
+				, 0, outBuf.Size());
+		}
+
+		public virtual byte[] GetDecodedStringContent()
+		{
+			return DecodeStringContent(outBuf.GetInternalBuffer(), 0, outBuf.Size() - 1, IsHexString
+				());
+		}
+
+		public virtual bool TokenValueEqualsTo(byte[] cmp)
+		{
+			if (cmp == null)
+			{
+				return false;
+			}
+			int size = cmp.Length;
+			if (outBuf.Size() != size)
+			{
+				return false;
+			}
+			for (int i = 0; i < size; i++)
+			{
+				if (cmp[i] != outBuf.GetInternalBuffer()[i])
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public virtual int GetObjNr()
+		{
+			return reference;
+		}
+
+		public virtual int GetGenNr()
+		{
+			return generation;
+		}
+
+		public virtual void BackOnePosition(int ch)
+		{
+			if (ch != -1)
+			{
+				file.PushBack(unchecked((byte)ch));
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual int GetHeaderOffset()
+		{
+			String str = ReadString(1024);
+			int idx = str.IndexOf("%PDF-");
+			if (idx < 0)
+			{
+				idx = str.IndexOf("%FDF-");
+				if (idx < 0)
+				{
+					throw new IOException(IOException.PdfHeaderNotFound, this);
+				}
+			}
+			return idx;
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual String CheckPdfHeader()
+		{
+			file.Seek(0);
+			String str = ReadString(1024);
+			int idx = str.IndexOf("%PDF-");
+			if (idx != 0)
+			{
+				throw new IOException(IOException.PdfHeaderNotFound, this);
+			}
+			return str.JSubstring(idx + 1, idx + 8);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void CheckFdfHeader()
+		{
+			file.Seek(0);
+			String str = ReadString(1024);
+			int idx = str.IndexOf("%FDF-");
+			if (idx != 0)
+			{
+				throw new IOException(IOException.FdfStartxrefNotFound, this);
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual long GetStartxref()
+		{
+			int arrLength = 1024;
+			long fileLength = file.Length();
+			long pos = fileLength - arrLength;
+			if (pos < 1)
+			{
+				pos = 1;
+			}
+			while (pos > 0)
+			{
+				file.Seek(pos);
+				String str = ReadString(arrLength);
+				int idx = str.LastIndexOf("startxref");
+				if (idx >= 0)
+				{
+					return pos + idx;
+				}
+				pos = pos - arrLength + 9;
+			}
+			// 9 = "startxref".length()
+			throw new IOException(IOException.PdfStartxrefNotFound, this);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void NextValidToken()
+		{
+			int level = 0;
+			byte[] n1 = null;
+			byte[] n2 = null;
+			long ptr = 0;
+			while (NextToken())
+			{
+				if (type == PdfTokenizer.TokenType.Comment)
+				{
+					continue;
+				}
+				switch (level)
+				{
+					case 0:
+					{
+						if (type != PdfTokenizer.TokenType.Number)
+						{
+							return;
+						}
+						ptr = file.GetPosition();
+						n1 = GetByteContent();
+						++level;
+						break;
+					}
+
+					case 1:
+					{
+						if (type != PdfTokenizer.TokenType.Number)
+						{
+							file.Seek(ptr);
+							type = PdfTokenizer.TokenType.Number;
+							outBuf.Reset().Append(n1);
+							return;
+						}
+						n2 = GetByteContent();
+						++level;
+						break;
+					}
+
+					case 2:
+					{
+						if (type == PdfTokenizer.TokenType.Other)
+						{
+							if (TokenValueEqualsTo(R))
+							{
+								System.Diagnostics.Debug.Assert(n2 != null);
+								type = PdfTokenizer.TokenType.Ref;
+								reference = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+									(n1));
+								generation = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+									(n2));
+								return;
+							}
+							else
+							{
+								if (TokenValueEqualsTo(Obj))
+								{
+									System.Diagnostics.Debug.Assert(n2 != null);
+									type = PdfTokenizer.TokenType.Obj;
+									reference = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+										(n1));
+									generation = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+										(n2));
+									return;
+								}
+							}
+						}
+						file.Seek(ptr);
+						type = PdfTokenizer.TokenType.Number;
+						outBuf.Reset().Append(n1);
+						return;
+					}
+				}
+			}
+			if (level == 1)
+			{
+				// if the level 1 check returns EOF, then we are still looking at a number - set the type back to Number
+				type = PdfTokenizer.TokenType.Number;
+			}
+		}
+
+		// if we hit here, the file is either corrupt (stream ended unexpectedly),
+		// or the last token ended exactly at the end of a stream.  This last
+		// case can occur inside an Object Stream.
+		/// <exception cref="System.IO.IOException"/>
+		public virtual bool NextToken()
+		{
+			int ch;
+			outBuf.Reset();
+			do
+			{
+				ch = file.Read();
+			}
+			while (ch != -1 && IsWhitespace(ch));
+			if (ch == -1)
+			{
+				type = PdfTokenizer.TokenType.EndOfFile;
+				return false;
+			}
+			switch (ch)
+			{
+				case '[':
+				{
+					type = PdfTokenizer.TokenType.StartArray;
+					break;
+				}
+
+				case ']':
+				{
+					type = PdfTokenizer.TokenType.EndArray;
+					break;
+				}
+
+				case '/':
+				{
+					type = PdfTokenizer.TokenType.Name;
+					while (true)
+					{
+						ch = file.Read();
+						if (delims[ch + 1])
+						{
+							break;
+						}
+						outBuf.Append(ch);
+					}
+					BackOnePosition(ch);
+					break;
+				}
+
+				case '>':
+				{
+					ch = file.Read();
+					if (ch != '>')
+					{
+						ThrowError(IOException.GtNotExpected);
+					}
+					type = PdfTokenizer.TokenType.EndDic;
+					break;
+				}
+
+				case '<':
+				{
+					int v1 = file.Read();
+					if (v1 == '<')
+					{
+						type = PdfTokenizer.TokenType.StartDic;
+						break;
+					}
+					type = PdfTokenizer.TokenType.String;
+					hexString = true;
+					int v2 = 0;
+					while (true)
+					{
+						while (IsWhitespace(v1))
+						{
+							v1 = file.Read();
+						}
+						if (v1 == '>')
+						{
+							break;
+						}
+						outBuf.Append(v1);
+						v1 = ByteBuffer.GetHex(v1);
+						if (v1 < 0)
+						{
+							break;
+						}
+						v2 = file.Read();
+						while (IsWhitespace(v2))
+						{
+							v2 = file.Read();
+						}
+						if (v2 == '>')
+						{
+							break;
+						}
+						outBuf.Append(v2);
+						v2 = ByteBuffer.GetHex(v2);
+						if (v2 < 0)
+						{
+							break;
+						}
+						v1 = file.Read();
+					}
+					if (v1 < 0 || v2 < 0)
+					{
+						ThrowError(IOException.ErrorReadingString);
+					}
+					break;
+				}
+
+				case '%':
+				{
+					type = PdfTokenizer.TokenType.Comment;
+					do
+					{
+						ch = file.Read();
+					}
+					while (ch != -1 && ch != '\r' && ch != '\n');
+					break;
+				}
+
+				case '(':
+				{
+					type = PdfTokenizer.TokenType.String;
+					hexString = false;
+					int nesting = 0;
+					while (true)
+					{
+						ch = file.Read();
+						if (ch == -1)
+						{
+							break;
+						}
+						if (ch == '(')
+						{
+							++nesting;
+						}
+						else
+						{
+							if (ch == ')')
+							{
+								--nesting;
+								if (nesting == -1)
+								{
+									break;
+								}
+							}
+							else
+							{
+								if (ch == '\\')
+								{
+									outBuf.Append('\\');
+									ch = file.Read();
+									if (ch < 0)
+									{
+										break;
+									}
+								}
+							}
+						}
+						outBuf.Append(ch);
+					}
+					if (ch == -1)
+					{
+						ThrowError(IOException.ErrorReadingString);
+					}
+					break;
+				}
+
+				default:
+				{
+					if (ch == '-' || ch == '+' || ch == '.' || (ch >= '0' && ch <= '9'))
+					{
+						type = PdfTokenizer.TokenType.Number;
+						bool isReal = false;
+						int numberOfMinuses = 0;
+						if (ch == '-')
+						{
+							do
+							{
+								// Take care of number like "--234". If Acrobat can read them so must we.
+								++numberOfMinuses;
+								ch = file.Read();
+							}
+							while (ch == '-');
+							outBuf.Append('-');
+						}
+						else
+						{
+							outBuf.Append(ch);
+							// We don't need to check if the number is real over here
+							// as we need to know that fact only in case if there are any minuses.
+							ch = file.Read();
+						}
+						while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.'))
+						{
+							if (ch == '.')
+							{
+								isReal = true;
+							}
+							outBuf.Append(ch);
+							ch = file.Read();
+						}
+						if (numberOfMinuses > 1 && !isReal)
+						{
+							// Numbers of integer type and with more than one minus before them
+							// are interpreted by Acrobat as zero.
+							outBuf.Reset();
+							outBuf.Append('0');
+						}
+					}
+					else
+					{
+						type = PdfTokenizer.TokenType.Other;
+						do
+						{
+							outBuf.Append(ch);
+							ch = file.Read();
+						}
+						while (!delims[ch + 1]);
+					}
+					if (ch != -1)
+					{
+						BackOnePosition(ch);
+					}
+					break;
+				}
+			}
+			return true;
+		}
+
+		public virtual long GetLongValue()
+		{
+			return long.Parse(GetStringValue());
+		}
+
+		public virtual int GetIntValue()
+		{
+			return System.Convert.ToInt32(GetStringValue());
+		}
+
+		public virtual bool IsHexString()
+		{
+			return this.hexString;
+		}
+
+		public virtual bool IsCloseStream()
+		{
+			return closeStream;
+		}
+
+		public virtual void SetCloseStream(bool closeStream)
+		{
+			this.closeStream = closeStream;
+		}
+
+		public virtual RandomAccessFileOrArray GetSafeFile()
+		{
+			return file.CreateView();
+		}
+
+		/// <summary>Resolve escape symbols or hexadecimal symbols.</summary>
+		/// <remarks>
+		/// Resolve escape symbols or hexadecimal symbols.
+		/// <p/>
+		/// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
+		/// so we can convert it directly to byte array.
+		/// </remarks>
+		/// <returns>
+		/// byte[] for decrypting or for creating
+		/// <see cref="System.String"/>
+		/// .
+		/// </returns>
+		protected internal static byte[] DecodeStringContent(byte[] content, int from, int
+			 to, bool hexWriting)
+		{
+			ByteBuffer buffer = new ByteBuffer(to - from + 1);
+			if (hexWriting)
+			{
+				// <6954657874ae...>
+				for (int i = from; i <= to; )
+				{
+					int v1 = ByteBuffer.GetHex(content[i++]);
+					if (i > to)
+					{
+						buffer.Append(v1 << 4);
+						break;
+					}
+					int v2 = content[i++];
+					v2 = ByteBuffer.GetHex(v2);
+					buffer.Append((v1 << 4) + v2);
+				}
+			}
+			else
+			{
+				// ((iText\( some version)...)
+				for (int i = from; i <= to; )
+				{
+					int ch = content[i++];
+					if (ch == '\\')
+					{
+						bool lineBreak = false;
+						ch = content[i++];
+						switch (ch)
+						{
+							case 'n':
+							{
+								ch = '\n';
+								break;
+							}
+
+							case 'r':
+							{
+								ch = '\r';
+								break;
+							}
+
+							case 't':
+							{
+								ch = '\t';
+								break;
+							}
+
+							case 'b':
+							{
+								ch = '\b';
+								break;
+							}
+
+							case 'f':
+							{
+								ch = '\f';
+								break;
+							}
+
+							case '(':
+							case ')':
+							case '\\':
+							{
+								break;
+							}
+
+							case '\r':
+							{
+								lineBreak = true;
+								if (i <= to && content[i++] != '\n')
+								{
+									i--;
+								}
+								break;
+							}
+
+							case '\n':
+							{
+								lineBreak = true;
+								break;
+							}
+
+							default:
+							{
+								if (ch < '0' || ch > '7')
+								{
+									break;
+								}
+								int octal = ch - '0';
+								ch = content[i++];
+								if (ch < '0' || ch > '7')
+								{
+									i--;
+									ch = octal;
+									break;
+								}
+								octal = (octal << 3) + ch - '0';
+								ch = content[i++];
+								if (ch < '0' || ch > '7')
+								{
+									i--;
+									ch = octal;
+									break;
+								}
+								octal = (octal << 3) + ch - '0';
+								ch = octal & 0xff;
+								break;
+							}
+						}
+						if (lineBreak)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						if (ch == '\r')
+						{
+							// in this case current char is '\n' and we have to skip next '\n' if it presents.
+							ch = '\n';
+							if (i <= to && content[i++] != '\n')
+							{
+								i--;
+							}
+						}
+					}
+					buffer.Append(ch);
+				}
+			}
+			return buffer.ToByteArray();
+		}
+
+		/// <summary>Resolve escape symbols or hexadecimal symbols.</summary>
+		/// <remarks>
+		/// Resolve escape symbols or hexadecimal symbols.
+		/// <p/>
+		/// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
+		/// so we can convert it directly to byte array.
+		/// </remarks>
+		/// <returns>
+		/// byte[] for decrypting or for creating
+		/// <see cref="System.String"/>
+		/// .
+		/// </returns>
+		public static byte[] DecodeStringContent(byte[] content, bool hexWriting)
+		{
+			return DecodeStringContent(content, 0, content.Length - 1, hexWriting);
+		}
+
+		/// <summary>Is a certain character a whitespace? Currently checks on the following: '0', '9', '10', '12', '13', '32'.
+		/// 	</summary>
+		/// <remarks>
+		/// Is a certain character a whitespace? Currently checks on the following: '0', '9', '10', '12', '13', '32'.
+		/// <br />The same as calling
+		/// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>
+		/// .
+		/// </remarks>
+		/// <param name="ch">int</param>
+		/// <returns>boolean</returns>
+		public static bool IsWhitespace(int ch)
+		{
+			return IsWhitespace(ch, true);
+		}
+
+		/// <summary>Checks whether a character is a whitespace.</summary>
+		/// <remarks>Checks whether a character is a whitespace. Currently checks on the following: '0', '9', '10', '12', '13', '32'.
+		/// 	</remarks>
+		/// <param name="ch">int</param>
+		/// <param name="isWhitespace">boolean</param>
+		/// <returns>boolean</returns>
+		protected internal static bool IsWhitespace(int ch, bool isWhitespace)
+		{
+			return ((isWhitespace && ch == 0) || ch == 9 || ch == 10 || ch == 12 || ch == 13 
+				|| ch == 32);
+		}
+
+		protected internal static bool IsDelimiter(int ch)
+		{
+			return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']'
+				 || ch == '/' || ch == '%');
+		}
+
+		protected internal static bool IsDelimiterWhitespace(int ch)
+		{
+			return delims[ch + 1];
+		}
+
+		/// <summary>Helper method to handle content errors.</summary>
+		/// <remarks>
+		/// Helper method to handle content errors. Add file position to
+		/// <c>PdfRuntimeException</c>
+		/// .
+		/// </remarks>
+		/// <param name="error">message.</param>
+		/// <param name="messageParams">error params.</param>
+		/// <wrap>
+		/// error message into
+		/// <c>PdfRuntimeException</c>
+		/// and add position in file.
+		/// </wrap>
+		public virtual void ThrowError(String error, params Object[] messageParams)
+		{
+			try
+			{
+				throw new IOException(IOException.ErrorAtFilePointer1, new IOException(error).SetMessageParams
+					(messageParams)).SetMessageParams(file.GetPosition());
+			}
+			catch (System.IO.IOException)
+			{
+				throw new IOException(IOException.ErrorAtFilePointer1, new IOException(error).SetMessageParams
+					(messageParams)).SetMessageParams(error, "no position");
+			}
+		}
+
+		/// <summary>
+		/// Checks whether
+		/// <paramref name="line"/>
+		/// equals to 'trailer'.
+		/// </summary>
+		/// <param name="line">for check.</param>
+		/// <returns>true, if line is equals tio 'trailer', otherwise false.</returns>
+		public static bool CheckTrailer(ByteBuffer line)
+		{
+			if (Trailer.Length > line.Size())
+			{
+				return false;
+			}
+			for (int i = 0; i < Trailer.Length; i++)
+			{
+				if (Trailer[i] != line.Get(i))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>Reads data into the provided byte[].</summary>
+		/// <remarks>
+		/// Reads data into the provided byte[]. Checks on leading whitespace.
+		/// See
+		/// <see cref="IsWhitespace(int)">isWhiteSpace(int)</see>
+		/// or
+		/// <see cref="IsWhitespace(int, bool)">isWhiteSpace(int, boolean)</see>
+		/// for a list of whitespace characters.
+		/// <br />The same as calling
+		/// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>
+		/// .
+		/// </remarks>
+		/// <param name="buffer">@see ByteBuffer</param>
+		/// <returns>boolean</returns>
+		/// <exception cref="System.IO.IOException"/>
+		public virtual bool ReadLineSegment(ByteBuffer buffer)
+		{
+			return ReadLineSegment(buffer, true);
+		}
+
+		/// <summary>Reads data into the provided byte[].</summary>
+		/// <remarks>
+		/// Reads data into the provided byte[]. Checks on leading whitespace.
+		/// See
+		/// <see cref="IsWhitespace(int)">isWhiteSpace(int)</see>
+		/// or
+		/// <see cref="IsWhitespace(int, bool)">isWhiteSpace(int, boolean)</see>
+		/// for a list of whitespace characters.
+		/// </remarks>
+		/// <param name="buffer">@see ByteBuffer</param>
+		/// <param name="isNullWhitespace">
+		/// boolean to indicate whether '0' is whitespace or not.
+		/// If in doubt, use true or overloaded method
+		/// <see cref="ReadLineSegment(ByteBuffer)">readLineSegment(input)</see>
+		/// </param>
+		/// <returns>boolean</returns>
+		/// <exception cref="System.IO.IOException"/>
+		public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace)
+		{
+			int c;
+			bool eol = false;
+			// ssteward, pdftk-1.10, 040922:
+			// skip initial whitespace; added this because PdfReader.rebuildXref()
+			// assumes that line provided by readLineSegment does not have init. whitespace;
+			while (IsWhitespace((c = Read()), isNullWhitespace))
+			{
+			}
+			bool prevWasWhitespace = false;
+			while (!eol)
+			{
+				switch (c)
+				{
+					case -1:
+					case '\n':
+					{
+						eol = true;
+						break;
+					}
+
+					case '\r':
+					{
+						eol = true;
+						long cur = GetPosition();
+						if ((Read()) != '\n')
+						{
+							Seek(cur);
+						}
+						break;
+					}
+
+					case 9:
+					case 12:
+					case 32:
+					{
+						//whitespaces
+						if (prevWasWhitespace)
+						{
+							break;
+						}
+						prevWasWhitespace = true;
+						buffer.Append(unchecked((byte)c));
+						break;
+					}
+
+					default:
+					{
+						prevWasWhitespace = false;
+						buffer.Append(unchecked((byte)c));
+						break;
+					}
+				}
+				// break loop? do it before we read() again
+				if (eol || buffer.Size() == buffer.Capacity())
+				{
+					eol = true;
+				}
+				else
+				{
+					c = Read();
+				}
+			}
+			if (buffer.Size() == buffer.Capacity())
+			{
+				eol = false;
+				while (!eol)
+				{
+					switch (c = Read())
+					{
+						case -1:
+						case '\n':
+						{
+							eol = true;
+							break;
+						}
+
+						case '\r':
+						{
+							eol = true;
+							long cur = GetPosition();
+							if ((Read()) != '\n')
+							{
+								Seek(cur);
+							}
+							break;
+						}
+					}
+				}
+			}
+			return !(c == -1 && buffer.IsEmpty());
+		}
+
+		/// <summary>Check whether line starts with object declaration.</summary>
+		/// <param name="lineTokenizer">tokenizer, built by single line.</param>
+		/// <returns>object number and generation if check is successful, otherwise - null.</returns>
+		public static int[] CheckObjectStart(com.itextpdf.io.source.PdfTokenizer lineTokenizer
+			)
+		{
+			try
+			{
+				lineTokenizer.Seek(0);
+				if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType
+					.Number)
+				{
+					return null;
+				}
+				int num = lineTokenizer.GetIntValue();
+				if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType
+					.Number)
+				{
+					return null;
+				}
+				int gen = lineTokenizer.GetIntValue();
+				if (!lineTokenizer.NextToken())
+				{
+					return null;
+				}
+				if (!com.itextpdf.io.util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent
+					()))
+				{
+					return null;
+				}
+				return new int[] { num, gen };
+			}
+			catch (Exception)
+			{
+			}
+			// empty on purpose
+			return null;
+		}
+
+		protected internal class ReusableRandomAccessSource : RandomAccessSource
+		{
+			private ByteBuffer buffer;
+
+			public ReusableRandomAccessSource(ByteBuffer buffer)
+			{
+				if (buffer == null)
+				{
+					throw new ArgumentNullException();
+				}
+				this.buffer = buffer;
+			}
+
+			public virtual int Get(long offset)
+			{
+				if (offset >= buffer.Size())
+				{
+					return -1;
+				}
+				return 0xff & buffer.GetInternalBuffer()[(int)offset];
+			}
+
+			public virtual int Get(long offset, byte[] bytes, int off, int len)
+			{
+				if (buffer == null)
+				{
+					throw new InvalidOperationException("Already closed");
+				}
+				if (offset >= buffer.Size())
+				{
+					return -1;
+				}
+				if (offset + len > buffer.Size())
+				{
+					len = (int)(buffer.Size() - offset);
+				}
+				System.Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
+				return len;
+			}
+
+			public virtual long Length()
+			{
+				return buffer.Size();
+			}
+
+			/// <exception cref="System.IO.IOException"/>
+			public virtual void Close()
+			{
+				buffer = null;
+			}
+		}
+	}
+}
