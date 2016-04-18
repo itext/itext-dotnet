@@ -1,5 +1,5 @@
 /*
-$Id: ae6e8af98c541438763e098996ce18becd9172d5 $
+$Id: d4dc87789517d879f414d059507b5b2965e1e107 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -78,6 +78,9 @@ namespace com.itextpdf.io
 
 		/// <summary>Log message.</summary>
 		public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference";
+
+		/// <summary>Log message.</summary>
+		public const String INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE = "Invalid key value: key {0} has null value.";
 
 		/// <summary>Log message.</summary>
 		public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";

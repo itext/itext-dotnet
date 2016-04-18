@@ -1,5 +1,5 @@
 /*
-$Id: 577e0e2f64b49b9b268913c03628102731265dd3 $
+$Id: c4d3fa63397452fa0ee09a13f5cbebaa5b252eca $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -177,7 +177,7 @@ namespace com.itextpdf.io.font.cmap
 			{
 				if (mark.Length == 1)
 				{
-					char[] dest = CreateCharsFromSingleBytes((byte[])code.GetValue());
+					char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
 					byteMappings[(int)mark[0]] = dest;
 				}
 				else

@@ -1,5 +1,5 @@
 /*
-$Id: 4956ae61a867a627742b5367462ee083a88b3f80 $
+$Id: 14a635e46e73e28794238829a5cabf16a8c1525f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -139,7 +139,7 @@ namespace com.itextpdf.io.font.cmap
 				}
 				dic[name] = obj;
 			}
-			return new CMapObject(CMapObject.Dictionary, dic);
+			return new CMapObject(CMapObject.DICTIONARY, dic);
 		}
 
 		/// <summary>Reads an array.</summary>
@@ -165,7 +165,7 @@ namespace com.itextpdf.io.font.cmap
 				}
 				array.Add(obj);
 			}
-			return new CMapObject(CMapObject.Array, array);
+			return new CMapObject(CMapObject.ARRAY, array);
 		}
 
 		/// <summary>Reads a pdf object.</summary>
@@ -195,12 +195,12 @@ namespace com.itextpdf.io.font.cmap
 					CMapObject obj;
 					if (tokeniser.IsHexString())
 					{
-						obj = new CMapObject(CMapObject.HexString, PdfTokenizer.DecodeStringContent(tokeniser
+						obj = new CMapObject(CMapObject.HEX_STRING, PdfTokenizer.DecodeStringContent(tokeniser
 							.GetByteContent(), true));
 					}
 					else
 					{
-						obj = new CMapObject(CMapObject.String, PdfTokenizer.DecodeStringContent(tokeniser
+						obj = new CMapObject(CMapObject.STRING, PdfTokenizer.DecodeStringContent(tokeniser
 							.GetByteContent(), false));
 					}
 					return obj;
@@ -208,12 +208,12 @@ namespace com.itextpdf.io.font.cmap
 
 				case PdfTokenizer.TokenType.Name:
 				{
-					return new CMapObject(CMapObject.Name, DecodeName(tokeniser.GetByteContent()));
+					return new CMapObject(CMapObject.NAME, DecodeName(tokeniser.GetByteContent()));
 				}
 
 				case PdfTokenizer.TokenType.Number:
 				{
-					CMapObject numObject = new CMapObject(CMapObject.Number, null);
+					CMapObject numObject = new CMapObject(CMapObject.NUMBER, null);
 					try
 					{
 						numObject.SetValue((int)System.Double.Parse(tokeniser.GetStringValue()));
@@ -227,17 +227,17 @@ namespace com.itextpdf.io.font.cmap
 
 				case PdfTokenizer.TokenType.Other:
 				{
-					return new CMapObject(CMapObject.Literal, tokeniser.GetStringValue());
+					return new CMapObject(CMapObject.LITERAL, tokeniser.GetStringValue());
 				}
 
 				case PdfTokenizer.TokenType.EndArray:
 				{
-					return new CMapObject(CMapObject.Token, "]");
+					return new CMapObject(CMapObject.TOKEN, "]");
 				}
 
 				case PdfTokenizer.TokenType.EndDic:
 				{
-					return new CMapObject(CMapObject.Token, ">>");
+					return new CMapObject(CMapObject.TOKEN, ">>");
 				}
 
 				default:
@@ -321,7 +321,7 @@ namespace com.itextpdf.io.font.cmap
 			if (cMapObject.IsHexString())
 			{
 				return PdfEncodings.ConvertToString(((String)cMapObject.GetValue()).GetBytes(), PdfEncodings
-					.UnicodeBigUnmarked);
+					.UNICODE_BIG_UNMARKED);
 			}
 			else
 			{

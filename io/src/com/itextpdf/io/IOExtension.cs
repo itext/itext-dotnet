@@ -5,7 +5,7 @@ using System.Text;
 
 namespace com.itextpdf.io
 {
-    internal static class Extensions
+    internal static class IOExtensions
     {
         public static String JSubstring(this String str, int beginIndex, int endIndex)
         {

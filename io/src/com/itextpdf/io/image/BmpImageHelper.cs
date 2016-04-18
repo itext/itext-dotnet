@@ -1,5 +1,5 @@
 /*
-$Id: 3fd0e4e920a95aa460c02742520822c012475818 $
+$Id: a13bc2dc84ff65c1dead37f65a3b7e571e8df5b3 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -138,7 +138,7 @@ namespace com.itextpdf.io.image
 
 		private const int LCS_CALIBRATED_RGB = 0;
 
-		private const int LCS_sRGB = 1;
+		private const int LCS_SRGB = 1;
 
 		private const int LCS_CMYK = 2;
 
@@ -628,7 +628,7 @@ namespace com.itextpdf.io.image
 								throw new Exception("Not implemented yet.");
 							}
 
-							case LCS_sRGB:
+							case LCS_SRGB:
 							{
 								// Default Windows color space
 								bmp.properties["color_space"] = "LCS_sRGB";

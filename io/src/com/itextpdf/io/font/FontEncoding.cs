@@ -1,5 +1,5 @@
 /*
-$Id: 6df4fd131377935bce163b0d809c8c2699703b67 $
+$Id: 2978a8ece907a23abb2c323d33f1cdcf1b912c04 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,7 +53,7 @@ namespace com.itextpdf.io.font
 
 		private static readonly byte[] emptyBytes = new byte[0];
 
-		public static String FontSpecific = "FontSpecific";
+		public const String FontSpecific = "FontSpecific";
 
 		/// <summary>Base font encoding.</summary>
 		protected internal String baseEncoding;

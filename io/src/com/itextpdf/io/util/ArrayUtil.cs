@@ -1,5 +1,5 @@
 /*
-$Id: 3e8408f78228f486005674e1ee0baf3fbe0d6e94 $
+$Id: 0fd983e81dfa4dbac50c0781f4bd61307147462d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -102,6 +102,11 @@ namespace com.itextpdf.io.util
 			{
 				a[i] = value;
 			}
+		}
+
+		public static int[] CloneArray(int[] src)
+		{
+			return (int[])src.MemberwiseClone();
 		}
 	}
 }

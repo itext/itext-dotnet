@@ -1,5 +1,5 @@
 /*
-$Id: 1a882b0d8287c130f43799581ed3af3f32e0fe9c $
+$Id: b588fe226686d8f535164e0a06a292409a5d68d8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,7 +51,7 @@ namespace com.itextpdf.io.util
 {
 	public sealed class StreamUtil
 	{
-		private const int transferSize = 64 * 1024;
+		private const int TRANSFER_SIZE = 64 * 1024;
 
 		private static readonly byte[] escR = ByteUtils.GetIsoBytes("\\r");
 
@@ -243,10 +243,10 @@ namespace com.itextpdf.io.util
 		/// <exception cref="System.IO.IOException"/>
 		public static void TransferBytes(Stream input, Stream output)
 		{
-			byte[] buffer = new byte[transferSize];
+			byte[] buffer = new byte[TRANSFER_SIZE];
 			for (; ; )
 			{
-				int len = input.Read(buffer, 0, transferSize);
+				int len = input.Read(buffer, 0, TRANSFER_SIZE);
 				if (len > 0)
 				{
 					output.Write(buffer, 0, len);
@@ -261,10 +261,10 @@ namespace com.itextpdf.io.util
 		/// <exception cref="System.IO.IOException"/>
 		public static void TransferBytes(RandomAccessFileOrArray input, Stream output)
 		{
-			byte[] buffer = new byte[transferSize];
+			byte[] buffer = new byte[TRANSFER_SIZE];
 			for (; ; )
 			{
-				int len = input.Read(buffer, 0, transferSize);
+				int len = input.Read(buffer, 0, TRANSFER_SIZE);
 				if (len > 0)
 				{
 					output.Write(buffer, 0, len);

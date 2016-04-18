@@ -76,14 +76,14 @@ namespace com.itextpdf.io.util
             return true;
         }
 
-        public static int ArraysHashCode(char[] a)
+        public static int ArraysHashCode<T>(T[] a)
         {
             if (a == null)
                 return 0;
             int result = 1;
-            foreach (char element in a)
+            foreach (T element in a)
             {
-                result = 31*result + element;
+                result = 31*result + element.GetHashCode();
             }
             return result;
         }
@@ -127,7 +127,7 @@ namespace com.itextpdf.io.util
                                            - MIN_LOW_SURROGATE);
         }
         
-        public static IList<T> ArraysAsList<T>(T[] a)
+        public static IList<T> ArraysAsList<T>(params T[] a)
         {
             return new List<T>(a);
         }
@@ -144,7 +144,15 @@ namespace com.itextpdf.io.util
 
         public static void CollectionsAddAll<T>(IList<T> c, params T[] elements)
         {
-            
+            foreach (T element in elements)
+            {
+                c.Add(element);
+            }
+        }
+
+        public static double Random()
+        {
+            return new Random().NextDouble();
         }
     }
 }

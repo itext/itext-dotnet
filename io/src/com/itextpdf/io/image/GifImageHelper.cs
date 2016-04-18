@@ -1,5 +1,5 @@
 /*
-$Id: b3fa09bdea2b1965d87021d275f15f6f85632c2d $
+$Id: 0f38d17bc0170d50bb9d2543663dc63796560a9f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,7 +54,7 @@ namespace com.itextpdf.io.image
 {
 	public sealed class GifImageHelper
 	{
-		internal const int MaxStackSize = 4096;
+		internal const int MAX_STACK_SIZE = 4096;
 
 		private class GifParameters
 		{
@@ -449,15 +449,15 @@ namespace com.itextpdf.io.image
 			bool skipZero = false;
 			if (gif.prefix == null)
 			{
-				gif.prefix = new short[MaxStackSize];
+				gif.prefix = new short[MAX_STACK_SIZE];
 			}
 			if (gif.suffix == null)
 			{
-				gif.suffix = new byte[MaxStackSize];
+				gif.suffix = new byte[MAX_STACK_SIZE];
 			}
 			if (gif.pixelStack == null)
 			{
-				gif.pixelStack = new byte[MaxStackSize + 1];
+				gif.pixelStack = new byte[MAX_STACK_SIZE + 1];
 			}
 			gif.m_line_stride = (gif.iw * gif.m_bpc + 7) / 8;
 			gif.m_out = new byte[gif.m_line_stride * gif.ih];
@@ -542,7 +542,7 @@ namespace com.itextpdf.io.image
 					}
 					first = gif.suffix[code] & 0xff;
 					//  Add a new string to the string table,
-					if (available >= MaxStackSize)
+					if (available >= MAX_STACK_SIZE)
 					{
 						break;
 					}
@@ -550,7 +550,7 @@ namespace com.itextpdf.io.image
 					gif.prefix[available] = (short)old_code;
 					gif.suffix[available] = unchecked((byte)first);
 					available++;
-					if ((available & code_mask) == 0 && available < MaxStackSize)
+					if ((available & code_mask) == 0 && available < MAX_STACK_SIZE)
 					{
 						code_size++;
 						code_mask += available;

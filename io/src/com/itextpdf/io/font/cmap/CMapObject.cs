@@ -1,5 +1,5 @@
 /*
-$Id: dcdd09aadb2139c3701a607ae1de54c5d5dbe63b $
+$Id: 4bca65a09940b42385ca3bba154fb4af8be26e12 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,21 +49,21 @@ namespace com.itextpdf.io.font.cmap
 {
 	public class CMapObject
 	{
-		protected internal const int String = 1;
+		protected internal const int STRING = 1;
 
-		protected internal const int HexString = 2;
+		protected internal const int HEX_STRING = 2;
 
-		protected internal const int Name = 3;
+		protected internal const int NAME = 3;
 
-		protected internal const int Number = 4;
+		protected internal const int NUMBER = 4;
 
-		protected internal const int Literal = 5;
+		protected internal const int LITERAL = 5;
 
-		protected internal const int Array = 6;
+		protected internal const int ARRAY = 6;
 
-		protected internal const int Dictionary = 7;
+		protected internal const int DICTIONARY = 7;
 
-		protected internal const int Token = 8;
+		protected internal const int TOKEN = 8;
 
 		private int type;
 
@@ -92,42 +92,42 @@ namespace com.itextpdf.io.font.cmap
 
 		public virtual bool IsString()
 		{
-			return type == String || type == HexString;
+			return type == STRING || type == HEX_STRING;
 		}
 
 		public virtual bool IsHexString()
 		{
-			return type == HexString;
+			return type == HEX_STRING;
 		}
 
 		public virtual bool IsName()
 		{
-			return type == Name;
+			return type == NAME;
 		}
 
 		public virtual bool IsNumber()
 		{
-			return type == Number;
+			return type == NUMBER;
 		}
 
 		public virtual bool IsLiteral()
 		{
-			return type == Literal;
+			return type == LITERAL;
 		}
 
 		public virtual bool IsArray()
 		{
-			return type == Array;
+			return type == ARRAY;
 		}
 
 		public virtual bool IsDictionary()
 		{
-			return type == Dictionary;
+			return type == DICTIONARY;
 		}
 
 		public virtual bool IsToken()
 		{
-			return type == Token;
+			return type == TOKEN;
 		}
 
 		/// <summary>
@@ -137,7 +137,7 @@ namespace com.itextpdf.io.font.cmap
 		/// </summary>
 		public override String ToString()
 		{
-			if (type == String || type == HexString)
+			if (type == STRING || type == HEX_STRING)
 			{
 				byte[] content = (byte[])value;
 				StringBuilder str = new StringBuilder(content.Length);

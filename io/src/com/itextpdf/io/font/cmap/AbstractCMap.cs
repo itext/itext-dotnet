@@ -1,5 +1,5 @@
 /*
-$Id: 84d88d49298d43d565e60158f6ea4b8a123bb10c $
+$Id: 5c4a5b401724fadffa72f777e939a6ef529a4a9b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -130,13 +130,13 @@ namespace com.itextpdf.io.font.cmap
 					if (code.IsNumber())
 					{
 						int nn = (int)code.GetValue() + k - start;
-						AddChar(mark, new CMapObject(CMapObject.Number, nn));
+						AddChar(mark, new CMapObject(CMapObject.NUMBER, nn));
 					}
 					else
 					{
 						if (code.IsString())
 						{
-							CMapObject s1 = new CMapObject(CMapObject.HexString, sout);
+							CMapObject s1 = new CMapObject(CMapObject.HEX_STRING, sout);
 							AddChar(mark, s1);
 							System.Diagnostics.Debug.Assert(sout != null);
 							++sout[sout.Length - 1];
@@ -148,7 +148,7 @@ namespace com.itextpdf.io.font.cmap
 
 		//    protected static byte[] toByteArray(String value) {
 		//        if (PdfEncodings.isPdfDocEncoding(value)) {
-		//            return PdfEncodings.convertToBytes(value, PdfEncodings.PdfDocEncoding);
+		//            return PdfEncodings.convertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
 		//        } else {
 		//            return PdfEncodings.convertToBytes(value, null);
 		//        }
@@ -176,11 +176,11 @@ namespace com.itextpdf.io.font.cmap
 				if (bytes.Length >= 2 && bytes[0] == unchecked((byte)254) && bytes[1] == unchecked(
 					(byte)255))
 				{
-					return PdfEncodings.ConvertToString(bytes, PdfEncodings.UnicodeBig);
+					return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG);
 				}
 				else
 				{
-					return PdfEncodings.ConvertToString(bytes, PdfEncodings.PdfDocEncoding);
+					return PdfEncodings.ConvertToString(bytes, PdfEncodings.PDF_DOC_ENCODING);
 				}
 			}
 		}

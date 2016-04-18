@@ -1,5 +1,5 @@
 /*
-$Id: 474093c3ca85051670193fa05a1669dfeb534ad7 $
+$Id: 40eb58717377c7b246413e1477505855979bc809 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -55,7 +55,7 @@ namespace com.itextpdf.io.font
 	{
 		private const long serialVersionUID = -8484541242371901414L;
 
-		private const String AfmHeader = "StartFontMetrics";
+		private const String AFM_HEADER = "StartFontMetrics";
 
 		private String afmPath;
 
@@ -222,8 +222,8 @@ namespace com.itextpdf.io.font
 		/// <exception cref="System.IO.IOException"/>
 		private bool IsAfmFile(RandomAccessFileOrArray raf)
 		{
-			StringBuilder builder = new StringBuilder(AfmHeader.Length);
-			for (int i = 0; i < AfmHeader.Length; i++)
+			StringBuilder builder = new StringBuilder(AFM_HEADER.Length);
+			for (int i = 0; i < AFM_HEADER.Length; i++)
 			{
 				try
 				{
@@ -236,7 +236,7 @@ namespace com.itextpdf.io.font
 				}
 			}
 			raf.Seek(0);
-			return AfmHeader.Equals(builder.ToString());
+			return AFM_HEADER.Equals(builder.ToString());
 		}
 	}
 }

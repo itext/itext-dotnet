@@ -1,5 +1,5 @@
 /*
-$Id: 5440cdb4436ae6194c4e01fac5e2c4974859f35e $
+$Id: c274302bad531cad2aa09cc1bc2c3cef32e67605 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,6 +48,8 @@ namespace com.itextpdf.io.source
 {
 	public class GetBufferedRandomAccessSource : RandomAccessSource
 	{
+		private const long serialVersionUID = -8922625738755763494L;
+
 		private readonly RandomAccessSource source;
 
 		private readonly byte[] getBuffer;

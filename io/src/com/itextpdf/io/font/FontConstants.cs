@@ -1,5 +1,5 @@
 /*
-$Id: 1f08db850650246ac3a8a6db696a66794bd3bb95 $
+$Id: 629f9b3d77244a3a916c11604cc790339bd5fc6a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,8 +49,8 @@ namespace com.itextpdf.io.font
 {
 	public class FontConstants
 	{
-		public static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String>
-			();
+		internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String
+			>();
 
 		static FontConstants()
 		{
@@ -94,22 +94,22 @@ namespace com.itextpdf.io.font
 		public const int BOLDITALIC = BOLD | ITALIC;
 
 		/// <summary>Type 1 PostScript font.</summary>
-		public const int Type1Font = 1;
+		public const int TYPE_1_FONT = 1;
 
 		/// <summary>Compact Font Format PostScript font.</summary>
-		public const int Type1CompactFont = 2;
+		public const int TYPE_1_COMPACT_FONT = 2;
 
 		/// <summary>TrueType or OpenType with TrueType outlines font.</summary>
-		public const int TrueTypeFont = 3;
+		public const int TRUE_TYPE_FONT = 3;
 
 		/// <summary>CIDFont Type0 (Type1 outlines).</summary>
-		public const int CIDFontType0Font = 4;
+		public const int CID_FONT_TYPE_0_FONT = 4;
 
 		/// <summary>CIDFont Type2 (TrueType outlines).</summary>
-		public const int CIDFontType2Font = 5;
+		public const int CID_FONT_TYPE_2_FONT = 5;
 
 		/// <summary>OpenType with Type1 outlines.</summary>
-		public const int OpenTypeFont = 6;
+		public const int OPEN_TYPE_FONT = 6;
 
 		/// <summary>This is a possible value of a base 14 type 1 font</summary>
 		public const String COURIER = "Courier";

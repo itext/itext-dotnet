@@ -1,5 +1,5 @@
 /*
-$Id: 719ae51287c7776310a80f99bbd5617314d1de21 $
+$Id: efde81f10e00b788f1b760678f06a9470ecb7295 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -82,10 +82,10 @@ namespace com.itextpdf.io.font
 		public const String ZAPFDINGBATS = "ZapfDingbats";
 
 		/// <summary>This is the encoding to be used to output text in Unicode.</summary>
-		public const String UnicodeBig = "UnicodeBig";
+		public const String UNICODE_BIG = "UnicodeBig";
 
 		/// <summary>This is the encoding to be used to output text for Identity-H/V CMaps.</summary>
-		public const String UnicodeBigUnmarked = "UnicodeBigUnmarked";
+		public const String UNICODE_BIG_UNMARKED = "UnicodeBigUnmarked";
 
 		/// <summary>
 		/// This is the default encoding to be used for converting Strings into
@@ -93,13 +93,13 @@ namespace com.itextpdf.io.font
 		/// </summary>
 		/// <remarks>
 		/// This is the default encoding to be used for converting Strings into
-		/// bytes and vice versa. The default encoding is PdfDocEncoding.
+		/// bytes and vice versa. The default encoding is PDF_DOC_ENCODING.
 		/// </remarks>
-		public const String PdfDocEncoding = "PDF";
+		public const String PDF_DOC_ENCODING = "PDF";
 
-		public const String EmptyString = "";
+		private const String EMPTY_STRING = "";
 
-		public static readonly char[] winansiByteToChar = new char[] { (char)0, (char)1, 
+		private static readonly char[] winansiByteToChar = new char[] { (char)0, (char)1, 
 			(char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10
 			, (char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17, (char)18
 			, (char)19, (char)20, (char)21, (char)22, (char)23, (char)24, (char)25, (char)26
@@ -135,7 +135,7 @@ namespace com.itextpdf.io.font
 			, (char)244, (char)245, (char)246, (char)247, (char)248, (char)249, (char)250, (
 			char)251, (char)252, (char)253, (char)254, (char)255 };
 
-		public static readonly char[] pdfEncodingByteToChar = new char[] { (char)0, (char
+		private static readonly char[] pdfEncodingByteToChar = new char[] { (char)0, (char
 			)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char
 			)10, (char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17, (char
 			)18, (char)19, (char)20, (char)21, (char)22, (char)23, (char)24, (char)25, (char
@@ -172,24 +172,24 @@ namespace com.itextpdf.io.font
 			char)245, (char)246, (char)247, (char)248, (char)249, (char)250, (char)251, (char
 			)252, (char)253, (char)254, (char)255 };
 
-		public static readonly int[] standardEncoding = new int[] { 0, 0, 0, 0, 0, 0, 0, 
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 33
-			, 34, 35, 36, 37, 38, 8217, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 
-			53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 
-			73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 
-			93, 94, 95, 8216, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 
-			110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 
-			126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 161, 162, 163, 8260, 165, 402, 167, 164, 39, 8220, 171
-			, 8249, 8250, 64257, 64258, 0, 8211, 8224, 8225, 183, 0, 182, 8226, 8218, 8222, 
-			8221, 187, 8230, 8240, 0, 191, 0, 96, 180, 710, 732, 175, 728, 729, 168, 0, 730, 
-			184, 0, 733, 731, 711, 8212, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 198
+		internal static readonly int[] standardEncoding = new int[] { 0, 0, 0, 0, 0, 0, 0
+			, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 
+			33, 34, 35, 36, 37, 38, 8217, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52
+			, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72
+			, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92
+			, 93, 94, 95, 8216, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109
+			, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125
+			, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+			, 0, 0, 0, 0, 0, 0, 0, 0, 0, 161, 162, 163, 8260, 165, 402, 167, 164, 39, 8220, 
+			171, 8249, 8250, 64257, 64258, 0, 8211, 8224, 8225, 183, 0, 182, 8226, 8218, 8222
+			, 8221, 187, 8230, 8240, 0, 191, 0, 96, 180, 710, 732, 175, 728, 729, 168, 0, 730
+			, 184, 0, 733, 731, 711, 8212, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 198
 			, 0, 170, 0, 0, 0, 0, 321, 216, 338, 186, 0, 0, 0, 0, 0, 230, 0, 0, 0, 305, 0, 0
 			, 322, 248, 339, 223, 0, 0, 0, 0 };
 
-		public static readonly IntHashtable winansi = new IntHashtable();
+		private static readonly IntHashtable winansi = new IntHashtable();
 
-		public static readonly IntHashtable pdfEncoding = new IntHashtable();
+		private static readonly IntHashtable pdfEncoding = new IntHashtable();
 
 		private static readonly IDictionary<String, ExtraEncoding> extraEncodings = new Dictionary
 			<String, ExtraEncoding>();
@@ -271,7 +271,7 @@ namespace com.itextpdf.io.font
 			}
 			else
 			{
-				if (encoding.Equals(PdfDocEncoding))
+				if (encoding.Equals(PDF_DOC_ENCODING))
 				{
 					hash = pdfEncoding;
 				}
@@ -349,7 +349,7 @@ namespace com.itextpdf.io.font
 			}
 			else
 			{
-				if (encoding.Equals(PdfDocEncoding))
+				if (encoding.Equals(PDF_DOC_ENCODING))
 				{
 					hash = pdfEncoding;
 				}
@@ -402,7 +402,7 @@ namespace com.itextpdf.io.font
 		{
 			if (bytes == null)
 			{
-				return EmptyString;
+				return EMPTY_STRING;
 			}
 			if (encoding == null || encoding.Length == 0)
 			{
@@ -429,7 +429,7 @@ namespace com.itextpdf.io.font
 			}
 			else
 			{
-				if (encoding.Equals(PdfDocEncoding))
+				if (encoding.Equals(PDF_DOC_ENCODING))
 				{
 					ch = pdfEncodingByteToChar;
 				}
@@ -457,7 +457,7 @@ namespace com.itextpdf.io.font
 		/// <summary>
 		/// Checks is
 		/// <paramref name="text"/>
-		/// only has PdfDocEncoding characters.
+		/// only has PDF_DOC_ENCODING characters.
 		/// </summary>
 		/// <param name="text">
 		/// the
@@ -467,7 +467,7 @@ namespace com.itextpdf.io.font
 		/// <returns>
 		/// 
 		/// <see langword="true"/>
-		/// if only PdfDocEncoding characters are present
+		/// if only PDF_DOC_ENCODING characters are present
 		/// </returns>
 		public static bool IsPdfDocEncoding(String text)
 		{

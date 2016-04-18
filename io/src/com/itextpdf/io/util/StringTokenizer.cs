@@ -49,6 +49,7 @@ namespace com.itextpdf.io.util
 
     // a replacement for the StringTokenizer java class
     public class StringTokenizer {
+
         private int pos;
         private String str;
         private int len;

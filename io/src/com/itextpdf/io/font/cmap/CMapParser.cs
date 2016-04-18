@@ -1,5 +1,5 @@
 /*
-$Id: c26e034c53d8e9d4281fed64d98298e97234e93a $
+$Id: ab7d17211439a292d9b965a6fc9b8f3195a39c03 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,27 +52,17 @@ namespace com.itextpdf.io.font.cmap
 {
 	public class CMapParser
 	{
-		public const int Cid2UniType = 1;
+		private const String def = "def";
 
-		public const int Uni2CidType = 2;
+		private const String endcidrange = "endcidrange";
 
-		public const int Byte2CidType = 3;
+		private const String endcidchar = "endcidchar";
 
-		public const int Cid2ByteType = 4;
+		private const String endbfrange = "endbfrange";
 
-		public const int ToUnicodeType = 5;
+		private const String endbfchar = "endbfchar";
 
-		private const String Def = "def";
-
-		private const String EndCidRange = "endcidrange";
-
-		private const String EndCidChar = "endcidchar";
-
-		private const String EndBfRange = "endbfrange";
-
-		private const String EndBfChar = "endbfchar";
-
-		private const String UseCmap = "usecmap";
+		private const String usecmap = "usecmap";
 
 		private const String Registry = "Registry";
 
@@ -82,7 +72,7 @@ namespace com.itextpdf.io.font.cmap
 
 		private const String CMapName = "CMapName";
 
-		private const int MaxLevel = 10;
+		private const int MAX_LEVEL = 10;
 
 		/// <exception cref="System.IO.IOException"/>
 		public static void ParseCid(String cmapName, AbstractCMap cmap, CMapLocation location
@@ -95,7 +85,7 @@ namespace com.itextpdf.io.font.cmap
 		private static void ParseCid(String cmapName, AbstractCMap cmap, CMapLocation location
 			, int level)
 		{
-			if (level >= MaxLevel)
+			if (level >= MAX_LEVEL)
 			{
 				return;
 			}
@@ -124,7 +114,7 @@ namespace com.itextpdf.io.font.cmap
 						break;
 					}
 					String last = list[list.Count - 1].ToString();
-					if (level == 0 && list.Count == 3 && last.Equals(Def))
+					if (level == 0 && list.Count == 3 && last.Equals(def))
 					{
 						CMapObject cmapObject = list[0];
 						if (Registry.Equals(cmapObject.ToString()))
@@ -161,7 +151,7 @@ namespace com.itextpdf.io.font.cmap
 					}
 					else
 					{
-						if ((last.Equals(EndCidChar) || last.Equals(EndBfChar)) && list.Count >= 3)
+						if ((last.Equals(endcidchar) || last.Equals(endbfchar)) && list.Count >= 3)
 						{
 							int lMax = list.Count - 2;
 							for (int k = 0; k < lMax; k += 2)
@@ -174,7 +164,7 @@ namespace com.itextpdf.io.font.cmap
 						}
 						else
 						{
-							if ((last.Equals(EndCidRange) || last.Equals(EndBfRange)) && list.Count >= 4)
+							if ((last.Equals(endcidrange) || last.Equals(endbfrange)) && list.Count >= 4)
 							{
 								int lMax = list.Count - 3;
 								for (int k = 0; k < lMax; k += 3)
@@ -187,7 +177,7 @@ namespace com.itextpdf.io.font.cmap
 							}
 							else
 							{
-								if (last.Equals(UseCmap) && list.Count == 2 && list[0].IsName())
+								if (last.Equals(usecmap) && list.Count == 2 && list[0].IsName())
 								{
 									ParseCid(list[0].ToString(), cmap, location, level + 1);
 								}
