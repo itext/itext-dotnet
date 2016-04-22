@@ -1,5 +1,5 @@
 /*
-$Id: 3dd4e1e2640f78940336524ec92009a77999cb6b $
+$Id: cad8d50b67125a7bf03b42c1d49ea37ee08e3289 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -274,12 +274,7 @@ namespace com.itextpdf.io
 				}
 				else
 				{
-					Object[] parameters = new Object[messageParams.Count];
-					for (int i = 0; i < messageParams.Count; i++)
-					{
-						parameters[i] = messageParams[i];
-					}
-					return String.Format(base.Message, parameters);
+					return String.Format(base.Message, GetMessageParams());
 				}
 			}
 		}
@@ -291,6 +286,16 @@ namespace com.itextpdf.io
 			com.itextpdf.io.util.JavaUtil.CollectionsAddAll(this.messageParams, messageParams
 				);
 			return this;
+		}
+
+		protected internal virtual Object[] GetMessageParams()
+		{
+			Object[] parameters = new Object[messageParams.Count];
+			for (int i = 0; i < messageParams.Count; i++)
+			{
+				parameters[i] = messageParams[i];
+			}
+			return parameters;
 		}
 	}
 }

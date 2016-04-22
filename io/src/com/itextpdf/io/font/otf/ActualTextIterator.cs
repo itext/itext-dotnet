@@ -13,7 +13,7 @@ namespace com.itextpdf.io.font.otf
 		public ActualTextIterator(GlyphLine glyphLine)
 		{
 			this.glyphLine = glyphLine;
-			this.pos = glyphLine.start;
+			this.pos = glyphLine.start - 1;
 		}
 
 		public ActualTextIterator(GlyphLine glyphLine, int start, int end)
@@ -21,7 +21,7 @@ namespace com.itextpdf.io.font.otf
 		{
 		}
 
-		private int pos = -1;
+		private int pos;
 
 		public bool MoveNext()
 		{
@@ -103,7 +103,7 @@ namespace com.itextpdf.io.font.otf
 			for (int i = glyphLinePart.start; i < glyphLinePart.end; i++)
 			{
 				Glyph currentGlyph = glyphLine.glyphs[i];
-				if (currentGlyph.GetUnicode() == null)
+                if (!currentGlyph.HasValidUnicode())
 				{
 					needsActualText = true;
 					break;

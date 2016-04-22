@@ -1,5 +1,5 @@
 /*
-$Id: 629f9b3d77244a3a916c11604cc790339bd5fc6a $
+$Id: 5dd3e3c45dd110a154c9ddf7a6e10ce5e587c123 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -265,7 +265,7 @@ namespace com.itextpdf.io.font
 		protected internal const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
 		/// <summary>The code pages possible for a True Type font.</summary>
-		protected internal static readonly String[] TrueTypeCodePages = new String[] { "1252 Latin 1"
+		protected internal static readonly String[] CODE_PAGES = new String[] { "1252 Latin 1"
 			, "1250 Latin 2: Eastern Europe", "1251 Cyrillic", "1253 Greek", "1254 Turkish", 
 			"1255 Hebrew", "1256 Arabic", "1257 Windows Baltic", "1258 Vietnamese", null, null
 			, null, null, null, null, null, "874 Thai", "932 JIS/Japan", "936 Chinese: Simplified chars--PRC and Singapore"

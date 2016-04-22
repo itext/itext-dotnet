@@ -106,7 +106,7 @@ namespace com.itextpdf.io.util
 
 		public static int[] CloneArray(int[] src)
 		{
-			return (int[])src.MemberwiseClone();
+			return (int[])src.Clone();
 		}
 	}
 }

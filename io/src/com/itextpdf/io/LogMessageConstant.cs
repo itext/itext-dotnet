@@ -53,6 +53,9 @@ namespace com.itextpdf.io
 		public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
 
 		/// <summary>Log message.</summary>
+		public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
+
+		/// <summary>Log message.</summary>
 		public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
 		/// <summary>Log message.</summary>

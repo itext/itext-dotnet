@@ -176,6 +176,7 @@
     <Compile Include="src\com\itextpdf\io\util\GenericArray.cs" />
     <Compile Include="src\com\itextpdf\io\util\HashCode.cs" />
     <Compile Include="src\com\itextpdf\io\util\IanaEncodings.cs" />
+    <Compile Include="src\com\itextpdf\io\util\IdelOutputStream.cs" />
     <Compile Include="src\com\itextpdf\io\util\IntHashtable.cs" />
     <Compile Include="src\com\itextpdf\io\util\JavaUtil.cs" />
     <Compile Include="src\com\itextpdf\io\util\LinkedDictionary.cs" />

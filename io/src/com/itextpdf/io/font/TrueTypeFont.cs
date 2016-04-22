@@ -1,5 +1,5 @@
 /*
-$Id: ea941d20672b625436bad12975fd7e47c544a35c $
+$Id: fa712ea6a343743d7856c80fa0b901317fc4bee5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -408,6 +408,36 @@ namespace com.itextpdf.io.font
 			ReadGsubTable();
 			ReadGposTable();
 			isVertical = false;
+		}
+
+		/// <summary>Gets the code pages supported by the font.</summary>
+		/// <returns>the code pages supported by the font</returns>
+		public virtual String[] GetCodePagesSupported()
+		{
+			long cp = ((long)fontParser.GetOs_2Table().ulCodePageRange2 << 32) + (fontParser.
+				GetOs_2Table().ulCodePageRange1 & 0xffffffffL);
+			int count = 0;
+			long bit = 1;
+			for (int k = 0; k < 64; ++k)
+			{
+				if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null)
+				{
+					++count;
+				}
+				bit <<= 1;
+			}
+			String[] ret = new String[count];
+			count = 0;
+			bit = 1;
+			for (int k_1 = 0; k_1 < 64; ++k_1)
+			{
+				if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k_1] != null)
+				{
+					ret[count++] = FontConstants.CODE_PAGES[k_1];
+				}
+				bit <<= 1;
+			}
+			return ret;
 		}
 	}
 }

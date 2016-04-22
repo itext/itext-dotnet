@@ -475,7 +475,7 @@ namespace com.itextpdf.io.util
 		/// <exception cref="java.lang.CloneNotSupportedException"/>
 		public virtual Object Clone()
 		{
-			IntHashtable t = (IntHashtable)base.MemberwiseClone();
+			IntHashtable t = (IntHashtable)base.Clone();
 			t.table = new IntHashtable.Entry[table.Length];
 			for (int i = table.Length; i-- > 0; )
 			{
