@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{42173642-DB52-44D3-9883-3E34C65C53BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>layout</RootNamespace>
+    <AssemblyName>layout</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\Border.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\Border3D.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\DashedBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\DottedBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\DoubleBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\GrooveBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\InsetBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\OutsetBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\RidgeBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\RoundDotsBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\border\SolidBorder.cs" />
+    <Compile Include="src\com\itextpdf\layout\Canvas.cs" />
+    <Compile Include="src\com\itextpdf\layout\ColumnDocumentRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\Document.cs" />
+    <Compile Include="src\com\itextpdf\layout\ElementPropertyContainer.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\AbstractElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\AreaBreak.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\BlockElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Cell.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Div.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\IElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\ILargeElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\ILeafElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Image.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\LineSeparator.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Link.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\List.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\ListItem.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Paragraph.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Tab.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Table.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\TabStop.cs" />
+    <Compile Include="src\com\itextpdf\layout\element\Text.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\ByteVector.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\CharVector.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\Hyphen.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\Hyphenation.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\HyphenationConfig.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\HyphenationException.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\HyphenationTree.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\HyphenationTreeCache.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\Hyphenator.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\IPatternConsumer.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\PatternParser.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\TernaryTree.cs" />
+    <Compile Include="src\com\itextpdf\layout\hyphenation\TernaryTreeIterator.cs" />
+    <Compile Include="src\com\itextpdf\layout\IPropertyContainer.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LayoutArea.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LayoutContext.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LayoutPosition.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LayoutRect.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LayoutResult.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\LineLayoutResult.cs" />
+    <Compile Include="src\com\itextpdf\layout\layout\TextLayoutResult.cs" />
+    <Compile Include="src\com\itextpdf\layout\Property.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\AbstractRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\AccessibleAttributesApplier.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\AreaBreakRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\BlockRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\CanvasRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\CellRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\DocumentRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\DrawContext.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\ImageRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\IRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\LineRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\LineSeparatorRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\LinkRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\ListItemRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\ListRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\ParagraphRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\RootRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\TableRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\TabRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\TextRenderer.cs" />
+    <Compile Include="src\com\itextpdf\layout\renderer\TypographyUtils.cs" />
+    <Compile Include="src\com\itextpdf\layout\RootElement.cs" />
+    <Compile Include="src\com\itextpdf\layout\splitting\DefaultSplitCharacters.cs" />
+    <Compile Include="src\com\itextpdf\layout\splitting\ISplitCharacters.cs" />
+    <Compile Include="src\com\itextpdf\layout\Style.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\io\io.csproj">
+      <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
+      <Name>io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\kernel\kernel.csproj">
+      <Project>{89CA1A81-2179-424D-88B3-C2EDC9453364}</Project>
+      <Name>kernel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

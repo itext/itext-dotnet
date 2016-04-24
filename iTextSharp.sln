@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "io", "io\io.csproj", "{CEE5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kernel", "kernel\kernel.csproj", "{89CA1A81-2179-424D-88B3-C2EDC9453364}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "layout", "layout\layout.csproj", "{42173642-DB52-44D3-9883-3E34C65C53BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42173642-DB52-44D3-9883-3E34C65C53BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42173642-DB52-44D3-9883-3E34C65C53BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42173642-DB52-44D3-9883-3E34C65C53BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42173642-DB52-44D3-9883-3E34C65C53BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

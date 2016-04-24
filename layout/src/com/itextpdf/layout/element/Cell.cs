@@ -1,0 +1,294 @@
+/*
+$Id: b04479fd8b7c1d22cb08a10352fd5d1ac03212a3 $
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2016 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Collections.Generic;
+using com.itextpdf.io.log;
+using com.itextpdf.kernel.pdf;
+using com.itextpdf.kernel.pdf.tagutils;
+using com.itextpdf.layout;
+using com.itextpdf.layout.border;
+using com.itextpdf.layout.renderer;
+
+namespace com.itextpdf.layout.element
+{
+	/// <summary>
+	/// A
+	/// <see cref="Cell"/>
+	/// is one piece of data in an enclosing grid, the
+	/// <see cref="Table"/>
+	/// .
+	/// This object is a
+	/// <see cref="BlockElement{T}"/>
+	/// , giving it a number of visual layout
+	/// properties.
+	/// A cell can act as a container for a number of layout elements; it can only
+	/// contain other
+	/// <see cref="BlockElement{T}"/>
+	/// objects or images. Other types of layout
+	/// elements must be wrapped in a
+	/// <see cref="BlockElement{T}"/>
+	/// .
+	/// </summary>
+	public class Cell : BlockElement<com.itextpdf.layout.element.Cell>
+	{
+		private static readonly Border DEFAULT_BORDER = new SolidBorder(0.5f);
+
+		private int row;
+
+		private int col;
+
+		private int rowspan;
+
+		private int colspan;
+
+		protected internal PdfName role = PdfName.TD;
+
+		protected internal AccessibilityProperties tagProperties;
+
+		/// <summary>Creates a cell which takes a custom amount of cell spaces in the table.</summary>
+		/// <param name="rowspan">the number of rows this cell must occupy. Negative numbers will make the argument default to 1.
+		/// 	</param>
+		/// <param name="colspan">the number of columns this cell must occupy. Negative numbers will make the argument default to 1.
+		/// 	</param>
+		public Cell(int rowspan, int colspan)
+		{
+			this.rowspan = Math.Max(rowspan, 1);
+			this.colspan = Math.Max(colspan, 1);
+		}
+
+		/// <summary>Creates a cell.</summary>
+		public Cell()
+			: this(1, 1)
+		{
+		}
+
+		/// <summary>Gets a cell renderer for this element.</summary>
+		/// <remarks>
+		/// Gets a cell renderer for this element. Note that this method can be called more than once.
+		/// By default each element should define its own renderer, but the renderer can be overridden by
+		/// <see cref="AbstractElement{T}.SetNextRenderer(com.itextpdf.layout.renderer.IRenderer)
+		/// 	"/>
+		/// method call.
+		/// </remarks>
+		/// <returns>a cell renderer for this element</returns>
+		public override IRenderer GetRenderer()
+		{
+			CellRenderer cellRenderer = null;
+			if (nextRenderer != null)
+			{
+				if (nextRenderer is CellRenderer)
+				{
+					IRenderer renderer = nextRenderer;
+					nextRenderer = nextRenderer.GetNextRenderer();
+					cellRenderer = (CellRenderer)renderer;
+				}
+				else
+				{
+					Logger logger = LoggerFactory.GetLogger(typeof(Table));
+					logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
+				}
+			}
+			//cellRenderer could be null in case invalid type (see logger message above)
+			return cellRenderer == null ? ((CellRenderer)MakeNewRenderer()) : cellRenderer;
+		}
+
+		public virtual int GetRow()
+		{
+			return row;
+		}
+
+		public virtual int GetCol()
+		{
+			return col;
+		}
+
+		public virtual int GetRowspan()
+		{
+			return rowspan;
+		}
+
+		public virtual int GetColspan()
+		{
+			return colspan;
+		}
+
+		/// <summary>Adds any block element to the cell's contents.</summary>
+		/// <param name="element">
+		/// a
+		/// <see cref="BlockElement{T}"/>
+		/// </param>
+		/// <returns>this Element</returns>
+		public virtual com.itextpdf.layout.element.Cell Add<T>(BlockElement<T> element)
+		{
+			childElements.Add(element);
+			return this;
+		}
+
+		/// <summary>Adds an image to the cell's contents.</summary>
+		/// <param name="element">
+		/// an
+		/// <see cref="Image"/>
+		/// </param>
+		/// <returns>this Element</returns>
+		public virtual com.itextpdf.layout.element.Cell Add(Image element)
+		{
+			childElements.Add(element);
+			return this;
+		}
+
+		/// <summary>Adds an embedded table to the cell's contents.</summary>
+		/// <param name="element">
+		/// a nested
+		/// <see cref="Table"/>
+		/// </param>
+		/// <returns>this Element</returns>
+		public virtual com.itextpdf.layout.element.Cell Add(Table element)
+		{
+			childElements.Add(element);
+			return this;
+		}
+
+		/// <summary>Directly adds a String of text to this cell.</summary>
+		/// <remarks>
+		/// Directly adds a String of text to this cell. The content is wrapped in a
+		/// layout element.
+		/// </remarks>
+		/// <param name="content">
+		/// a
+		/// <see cref="System.String"/>
+		/// </param>
+		/// <returns>this Element</returns>
+		public virtual com.itextpdf.layout.element.Cell Add(String content)
+		{
+			return Add(new Paragraph(content));
+		}
+
+		/// <summary>Clones a cell with its position, properties, and optionally its contents.
+		/// 	</summary>
+		/// <param name="includeContent">whether or not to also include the contents of the cell.
+		/// 	</param>
+		/// <returns>a clone of this Element</returns>
+		public virtual com.itextpdf.layout.element.Cell Clone(bool includeContent)
+		{
+			com.itextpdf.layout.element.Cell newCell = new com.itextpdf.layout.element.Cell(rowspan
+				, colspan);
+			newCell.row = row;
+			newCell.col = col;
+			newCell.properties = new Dictionary<Property, Object>(properties);
+			if (includeContent)
+			{
+				newCell.childElements = new List<IElement>(childElements);
+			}
+			return newCell;
+		}
+
+		public override T1 GetDefaultProperty<T>(Property property)
+		{
+			switch (property)
+			{
+				case Property.BORDER:
+				{
+					return (T)DEFAULT_BORDER;
+				}
+
+				case Property.PADDING_BOTTOM:
+				case Property.PADDING_LEFT:
+				case Property.PADDING_RIGHT:
+				case Property.PADDING_TOP:
+				{
+					return (T)float.ValueOf(2);
+				}
+
+				default:
+				{
+					return base.GetDefaultProperty(property);
+				}
+			}
+		}
+
+		public override String ToString()
+		{
+			return String.Format("Cell{row={0}, col={1}, rowspan={2}, colspan={3}}", row, col
+				, rowspan, colspan);
+		}
+
+		public override PdfName GetRole()
+		{
+			return role;
+		}
+
+		public override void SetRole(PdfName role)
+		{
+			this.role = role;
+			if (PdfName.Artifact.Equals(role))
+			{
+				PropagateArtifactRoleToChildElements();
+			}
+		}
+
+		public override AccessibilityProperties GetAccessibilityProperties()
+		{
+			if (tagProperties == null)
+			{
+				tagProperties = new AccessibilityProperties();
+			}
+			return tagProperties;
+		}
+
+		protected internal override IRenderer MakeNewRenderer()
+		{
+			return new CellRenderer(this);
+		}
+
+		protected internal virtual com.itextpdf.layout.element.Cell UpdateCellIndexes(int
+			 row, int col, int numberOfColumns)
+		{
+			this.row = row;
+			this.col = col;
+			colspan = Math.Min(colspan, numberOfColumns - this.col);
+			return this;
+		}
+	}
+}
