@@ -154,5 +154,16 @@ namespace com.itextpdf.io.util
         {
             return new Random().NextDouble();
         }
+
+        public static void Fill(short[] a, short val) {
+            for (int i = 0, len = a.Length; i < len; i++)
+                a[i] = val;
+        }
+
+        public static void Fill(byte[] a, byte val)
+        {
+            for (int i = 0, len = a.Length; i < len; i++)
+                a[i] = val;
+        }
     }
 }

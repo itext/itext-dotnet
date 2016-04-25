@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kernel", "kernel\kernel.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "layout", "layout\layout.csproj", "{42173642-DB52-44D3-9883-3E34C65C53BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "barcodes", "barcodes\barcodes.csproj", "{DCAE8241-E391-418D-BA36-C7C064D7C413}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +23,6 @@ Global
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89CA1A81-2179-424D-88B3-C2EDC9453364}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42173642-DB52-44D3-9883-3E34C65C53BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42173642-DB52-44D3-9883-3E34C65C53BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42173642-DB52-44D3-9883-3E34C65C53BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42173642-DB52-44D3-9883-3E34C65C53BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
