@@ -1,5 +1,5 @@
 /*
-$Id: cb8ee16fdee3c4bd7f1d5cb1a97eb3e3c1c4e37e $
+$Id: 2f8f05e07519d0a1f9d3f4ff23be77af452e9b87 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -177,7 +177,7 @@ namespace com.itextpdf.barcodes
 			}
 			catch (Exception e)
 			{
-				throw new Exception(e.Message);
+				throw new Exception(e);
 			}
 		}
 
@@ -813,8 +813,7 @@ namespace com.itextpdf.barcodes
 					{
 						throw new ArgumentException("AI not found");
 					}
-					sai = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { unchecked((byte
-						)ai) });
+					sai = System.Convert.ToInt32(ai).ToString();
 					if (sai.Length == 1)
 					{
 						sai = "0" + sai;

@@ -1,5 +1,5 @@
 /*
-$Id: e089ffd22d7dea6ae708e2d7d6bb4b7ecac5082d $
+$Id: 9aabcb0607eddd58d98af996076dde22ad0162da $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -215,7 +215,7 @@ namespace com.itextpdf.barcodes
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new PdfException(e.Message);
+				throw new PdfException(e);
 			}
 		}
 
