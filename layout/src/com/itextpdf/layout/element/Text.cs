@@ -1,5 +1,5 @@
 /*
-$Id: 2cf8b3092673932867513932672441e4835d57c6 $
+$Id: 2bdfc1c4a561cdd2e280bd88e11965298cdb9024 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -81,14 +81,14 @@ namespace com.itextpdf.layout.element
 			this.text = text;
 		}
 
-		public override T1 GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.HORIZONTAL_SCALING:
 				case Property.VERTICAL_SCALING:
 				{
-					return (T)System.Convert.ToSingle(1);
+					return (T1)System.Convert.ToSingle(1);
 				}
 
 				default:
@@ -112,8 +112,7 @@ namespace com.itextpdf.layout.element
 		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
 		public virtual float GetTextRise()
 		{
-			//TODO! float or Float?
-			return ((float)this.GetProperty<float>(Property.TEXT_RISE));
+			return ((float)GetProperty(Property.TEXT_RISE));
 		}
 
 		/// <summary>Sets the text rise.</summary>
@@ -121,8 +120,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this Text</returns>
 		public virtual com.itextpdf.layout.element.Text SetTextRise(float textRise)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Text>(Property.TEXT_RISE, textRise
-				);
+			SetProperty(Property.TEXT_RISE, textRise);
+			return this;
 		}
 
 		/// <summary>
@@ -132,7 +131,7 @@ namespace com.itextpdf.layout.element
 		/// <returns>the horizontal spacing, as a <code>float</code></returns>
 		public virtual float GetHorizontalScaling()
 		{
-			return ((float)this.GetProperty<float>(Property.HORIZONTAL_SCALING));
+			return ((float)GetProperty(Property.HORIZONTAL_SCALING));
 		}
 
 		/// <summary>Skews the text to simulate italic and other effects.</summary>
@@ -147,8 +146,8 @@ namespace com.itextpdf.layout.element
 		{
 			alpha = (float)Math.Tan(alpha * Math.PI / 180);
 			beta = (float)Math.Tan(beta * Math.PI / 180);
-			return this.SetProperty<com.itextpdf.layout.element.Text>(Property.SKEW, new float
-				[] { alpha, beta });
+			SetProperty(Property.SKEW, new float[] { alpha, beta });
+			return this;
 		}
 
 		/// <summary>
@@ -164,8 +163,8 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Text SetHorizontalScaling(float horizontalScaling
 			)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Text>(Property.HORIZONTAL_SCALING
-				, horizontalScaling);
+			SetProperty(Property.HORIZONTAL_SCALING, horizontalScaling);
+			return this;
 		}
 
 		public virtual PdfName GetRole()

@@ -1,5 +1,5 @@
 /*
-$Id: 9cc9063570314ee07479a925d1febcfad78f3e09 $
+$Id: 2f351686e34a71cb8195fb6ad451868ba18c804a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,9 +45,9 @@ address: sales@itextpdf.com
 using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.canvas.draw;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -70,7 +70,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override void Draw(DrawContext drawContext)
 		{
-			LineDrawer leader = GetProperty(Property.TAB_LEADER);
+			ILineDrawer leader = GetProperty(Property.TAB_LEADER);
 			if (leader == null)
 			{
 				return;

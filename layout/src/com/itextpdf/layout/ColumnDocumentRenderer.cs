@@ -1,5 +1,5 @@
 /*
-$Id: 484652f2b5fef9cf64832f320df29dd5a2c650fb $
+$Id: 506ca9a093b706ea3e123025205ecd3d632d0f4d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using com.itextpdf.kernel.geom;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout
@@ -72,7 +73,7 @@ namespace com.itextpdf.layout
 			)
 		{
 			if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult
-				.GetAreaBreak().GetType() != Property.AreaBreakType.NEW_AREA)
+				.GetAreaBreak().GetType() != AreaBreakType.NEW_AREA)
 			{
 				nextAreaNumber = 0;
 			}

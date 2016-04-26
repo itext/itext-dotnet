@@ -1,5 +1,5 @@
 /*
-$Id: 9959f3257380dcf883792064df2b861d89405d76 $
+$Id: f8ef322c15b1160b5b5efd5f5ca10bf5cf50030f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -57,7 +57,7 @@ namespace com.itextpdf.layout.element
 	/// can be flushed regularly
 	/// by client code, e.g. at page boundaries or after a certain amount of additions.
 	/// </summary>
-	public interface ILargeElement
+	public interface ILargeElement : IElement
 	{
 		/// <summary>Checks whether an element has already been marked as complete.</summary>
 		/// <returns>the completion marker boolean</returns>

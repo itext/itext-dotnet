@@ -1,5 +1,5 @@
 /*
-$Id: a2897d64adac515b5af45b39846eff04c40f66eb $
+$Id: def62bffe90cf8c382d70a1b2475aeedbd012274 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ namespace com.itextpdf.io.source
 	/// as it's source
 	/// Note: Unlike most of the RandomAccessSource implementations, this class is not thread safe
 	/// </summary>
-	internal class RAFRandomAccessSource : RandomAccessSource
+	internal class RAFRandomAccessSource : IRandomAccessSource
 	{
 		/// <summary>The source</summary>
 		private readonly FileStream raf;

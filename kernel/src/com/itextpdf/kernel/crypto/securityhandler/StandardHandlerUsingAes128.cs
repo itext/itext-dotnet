@@ -1,5 +1,5 @@
 /*
-$Id: 8d077e83686c1ac0fb44d50040b16155ab327db8 $
+$Id: b4bb701c28e3e84bf9fbd3ef730396b72175a138 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -72,7 +72,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			return new OutputStreamAesEncryption(os, nextObjectKey, 0, nextObjectKeySize);
 		}
 
-		public override Decryptor GetDecryptor()
+		public override IDecryptor GetDecryptor()
 		{
 			return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
 		}

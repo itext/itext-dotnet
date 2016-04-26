@@ -1,5 +1,5 @@
 /*
-$Id: 5777becff0cda163106792573c26b6c4c762fb88 $
+$Id: 74daf77c7b5015c01e0b8169baf8739bc9c92e64 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -57,7 +57,9 @@ using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.layout;
 using com.itextpdf.layout.border;
+using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 using java.lang;
 
 namespace com.itextpdf.layout.renderer
@@ -92,14 +94,14 @@ namespace com.itextpdf.layout.renderer
 		protected internal bool isLastRendererForModelElement = true;
 
 		/// <summary>Creates a renderer.</summary>
-		public AbstractRenderer()
+		protected internal AbstractRenderer()
 		{
 		}
 
 		/// <summary>Creates a renderer for the specified layout element.</summary>
 		/// <param name="modelElement">the layout element that will be drawn by this renderer
 		/// 	</param>
-		public AbstractRenderer(IPropertyContainer modelElement)
+		protected internal AbstractRenderer(IElement modelElement)
 		{
 			// TODO linkedList?
 			this.modelElement = modelElement;
@@ -198,57 +200,55 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		public virtual T GetProperty<T>(Property key)
+		public virtual T1 GetProperty<T1>(Property key)
 		{
 			Object property;
 			if ((property = properties[key]) != null || properties.ContainsKey(key))
 			{
-				return (T)property;
+				return (T1)property;
 			}
 			if (modelElement != null && ((property = modelElement.GetProperty(key)) != null ||
 				 modelElement.HasProperty(key)))
 			{
-				return (T)property;
+				return (T1)property;
 			}
 			// TODO in some situations we will want to check inheritance with additional info, such as parent and descendant.
 			if (parent != null && key.IsInherited() && (property = parent.GetProperty(key)) !=
 				 null)
 			{
-				return (T)property;
+				return (T1)property;
 			}
 			property = GetDefaultProperty(key);
 			if (property != null)
 			{
-				return (T)property;
+				return (T1)property;
 			}
-			return modelElement != null ? (T)modelElement.GetDefaultProperty(key) : null;
+			return modelElement != null ? (T1)modelElement.GetDefaultProperty(key) : null;
 		}
 
-		public virtual T GetOwnProperty<T>(Property property)
+		public virtual T1 GetOwnProperty<T1>(Property property)
 		{
-			return (T)properties[property];
+			return (T1)properties[property];
 		}
 
-		public virtual T GetProperty<T>(Property property, T defaultValue)
+		public virtual T1 GetProperty<T1>(Property property, T1 defaultValue)
 		{
-			T result = GetProperty(property);
+			T1 result = GetProperty(property);
 			return result != null ? result : defaultValue;
 		}
 
-		public virtual T SetProperty<T>(Property property, Object value)
-			where T : IRenderer
+		public virtual void SetProperty(Property property, Object value)
 		{
 			properties[property] = value;
-			return (T)this;
 		}
 
-		public virtual T GetDefaultProperty<T>(Property property)
+		public virtual T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.POSITION:
 				{
-					return (T)System.Convert.ToInt32(LayoutPosition.STATIC);
+					return (T1)System.Convert.ToInt32(LayoutPosition.STATIC);
 				}
 
 				default:
@@ -261,7 +261,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Returns a property with a certain key, as a font object.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property">enum value</see>
+		/// <see cref="com.itextpdf.layout.property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -275,7 +275,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Returns a property with a certain key, as a color.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property">enum value</see>
+		/// <see cref="com.itextpdf.layout.property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -289,7 +289,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Returns a property with a certain key, as a floating point value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property">enum value</see>
+		/// <see cref="com.itextpdf.layout.property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -304,7 +304,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property">enum value</see>
+		/// <see cref="com.itextpdf.layout.property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -318,7 +318,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Returns a property with a certain key, as an integer value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property">enum value</see>
+		/// <see cref="com.itextpdf.layout.property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -366,7 +366,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Draws a background layer if it is defined by a key
-		/// <see cref="com.itextpdf.layout.Property.BACKGROUND"/>
+		/// <see cref="com.itextpdf.layout.property.Property.BACKGROUND"/>
 		/// in either the layout element or this
 		/// <see cref="IRenderer"/>
 		/// itself.
@@ -375,7 +375,7 @@ namespace com.itextpdf.layout.renderer
 		/// 	</param>
 		public virtual void DrawBackground(DrawContext drawContext)
 		{
-			Property.Background background = GetProperty(Property.BACKGROUND);
+			Background background = GetProperty(Property.BACKGROUND);
 			if (background != null)
 			{
 				Rectangle bBox = GetOccupiedAreaBBox();
@@ -423,7 +423,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>
 		/// Performs the drawing operation for the border of this renderer, if
 		/// defined by any of the
-		/// <see cref="com.itextpdf.layout.Property.BORDER"/>
+		/// <see cref="com.itextpdf.layout.property.Property.BORDER"/>
 		/// values in either the layout
 		/// element or this
 		/// <see cref="IRenderer"/>
@@ -523,7 +523,7 @@ namespace com.itextpdf.layout.renderer
 		/// </summary>
 		/// <param name="area">
 		/// a physical area on the
-		/// <see cref="DrawingContext"/>
+		/// <see cref="DrawContext"/>
 		/// </param>
 		/// <returns>
 		/// a list of
@@ -536,7 +536,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Gets the bounding box that contains all content written to the
-		/// <see cref="DrawingContext"/>
+		/// <see cref="DrawContext"/>
 		/// by this
 		/// <see cref="IRenderer"/>
 		/// .
@@ -587,16 +587,16 @@ namespace com.itextpdf.layout.renderer
 		protected internal virtual float RetrieveUnitValue(float basePercentValue, Property
 			 property)
 		{
-			Property.UnitValue value = GetProperty(property);
+			UnitValue value = GetProperty(property);
 			if (value != null)
 			{
-				if (value.GetUnitType() == Property.UnitValue.POINT)
+				if (value.GetUnitType() == UnitValue.POINT)
 				{
 					return value.GetValue();
 				}
 				else
 				{
-					if (value.GetUnitType() == Property.UnitValue.PERCENT)
+					if (value.GetUnitType() == UnitValue.PERCENT)
 					{
 						return value.GetValue() * basePercentValue / 100;
 					}
@@ -744,22 +744,21 @@ namespace com.itextpdf.layout.renderer
 		protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float
 			 availableWidth)
 		{
-			Property.HorizontalAlignment horizontalAlignment = childRenderer.GetProperty(Property
-				.HORIZONTAL_ALIGNMENT);
-			if (horizontalAlignment != null && horizontalAlignment != Property.HorizontalAlignment
-				.LEFT)
+			HorizontalAlignment horizontalAlignment = childRenderer.GetProperty(Property.HORIZONTAL_ALIGNMENT
+				);
+			if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT)
 			{
 				float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth
 					();
 				switch (horizontalAlignment)
 				{
-					case Property.HorizontalAlignment.RIGHT:
+					case HorizontalAlignment.RIGHT:
 					{
 						childRenderer.Move(freeSpace, 0);
 						break;
 					}
 
-					case Property.HorizontalAlignment.CENTER:
+					case HorizontalAlignment.CENTER:
 					{
 						childRenderer.Move(freeSpace / 2, 0);
 						break;

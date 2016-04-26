@@ -1,5 +1,5 @@
 /*
-$Id: aa99c18519b113d8ecb0b910ec98c6633820996e $
+$Id: 8cb9cbce2164e0ccd79fd3e7ce2d1fa068e9fbe1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,14 +44,15 @@ address: sales@itextpdf.com
 */
 using System;
 using com.itextpdf.io;
+using com.itextpdf.io.image;
 using com.itextpdf.io.log;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas.wmf;
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.kernel.pdf.xobject;
-using com.itextpdf.layout;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -132,11 +133,10 @@ namespace com.itextpdf.layout.element
 		public Image(PdfImageXObject xObject, float x, float y, float width)
 		{
 			this.xObject = xObject;
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.X, x);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.Y, y);
-			this.SetWidth(width);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.POSITION, LayoutPosition
-				.FIXED);
+			SetProperty(Property.X, x);
+			SetProperty(Property.Y, y);
+			SetWidth(width);
+			SetProperty(Property.POSITION, LayoutPosition.FIXED);
 		}
 
 		/// <summary>
@@ -156,10 +156,9 @@ namespace com.itextpdf.layout.element
 		public Image(PdfImageXObject xObject, float x, float y)
 		{
 			this.xObject = xObject;
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.X, x);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.Y, y);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.POSITION, LayoutPosition
-				.FIXED);
+			SetProperty(Property.X, x);
+			SetProperty(Property.Y, y);
+			SetProperty(Property.POSITION, LayoutPosition.FIXED);
 		}
 
 		/// <summary>
@@ -179,10 +178,9 @@ namespace com.itextpdf.layout.element
 		public Image(PdfFormXObject xObject, float x, float y)
 		{
 			this.xObject = xObject;
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.X, x);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.Y, y);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.POSITION, LayoutPosition
-				.FIXED);
+			SetProperty(Property.X, x);
+			SetProperty(Property.Y, y);
+			SetProperty(Property.POSITION, LayoutPosition.FIXED);
 		}
 
 		/// <summary>
@@ -193,12 +191,12 @@ namespace com.itextpdf.layout.element
 		/// </summary>
 		/// <param name="img">
 		/// an internal representation of the
-		/// <see cref="com.itextpdf.io.image.Image">image resource</see>
+		/// <see cref="com.itextpdf.io.image.ImageData">image resource</see>
 		/// </param>
-		public Image(com.itextpdf.io.image.Image img)
+		public Image(ImageData img)
 			: this(new PdfImageXObject(CheckImageType(img)))
 		{
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.FLUSH_ON_DRAW, true);
+			SetProperty(Property.FLUSH_ON_DRAW, true);
 		}
 
 		/// <summary>
@@ -209,16 +207,16 @@ namespace com.itextpdf.layout.element
 		/// </summary>
 		/// <param name="img">
 		/// an internal representation of the
-		/// <see cref="com.itextpdf.io.image.Image">image resource</see>
+		/// <see cref="com.itextpdf.io.image.ImageData">image resource</see>
 		/// </param>
 		/// <param name="x">a float value representing the horizontal offset of the lower left corner of the image
 		/// 	</param>
 		/// <param name="y">a float value representing the vertical offset of the lower left corner of the image
 		/// 	</param>
-		public Image(com.itextpdf.io.image.Image img, float x, float y)
+		public Image(ImageData img, float x, float y)
 			: this(new PdfImageXObject(CheckImageType(img)), x, y)
 		{
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.FLUSH_ON_DRAW, true);
+			SetProperty(Property.FLUSH_ON_DRAW, true);
 		}
 
 		/// <summary>
@@ -229,17 +227,17 @@ namespace com.itextpdf.layout.element
 		/// </summary>
 		/// <param name="img">
 		/// an internal representation of the
-		/// <see cref="com.itextpdf.io.image.Image">image resource</see>
+		/// <see cref="com.itextpdf.io.image.ImageData">image resource</see>
 		/// </param>
 		/// <param name="x">a float value representing the horizontal offset of the lower left corner of the image
 		/// 	</param>
 		/// <param name="y">a float value representing the vertical offset of the lower left corner of the image
 		/// 	</param>
 		/// <param name="width">a float value</param>
-		public Image(com.itextpdf.io.image.Image img, float x, float y, float width)
+		public Image(ImageData img, float x, float y, float width)
 			: this(new PdfImageXObject(CheckImageType(img)), x, y, width)
 		{
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.FLUSH_ON_DRAW, true);
+			SetProperty(Property.FLUSH_ON_DRAW, true);
 		}
 
 		/// <summary>Gets the XObject contained in this image object</summary>
@@ -258,15 +256,15 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetRotationAngle(double radAngle
 			)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.ROTATION_ANGLE
-				, radAngle);
+			SetProperty(Property.ROTATION_ANGLE, radAngle);
+			return this;
 		}
 
 		/// <summary>Gets the current left margin width of the element.</summary>
 		/// <returns>the left margin width, as a <code>float</code></returns>
 		public virtual float GetMarginLeft()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_LEFT));
+			return ((float)GetProperty(Property.MARGIN_LEFT));
 		}
 
 		/// <summary>Sets the left margin width of the element.</summary>
@@ -274,15 +272,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual com.itextpdf.layout.element.Image SetMarginLeft(float value)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.MARGIN_LEFT, 
-				value);
+			SetProperty(Property.MARGIN_LEFT, value);
+			return this;
 		}
 
 		/// <summary>Gets the current right margin width of the element.</summary>
 		/// <returns>the right margin width, as a <code>float</code></returns>
 		public virtual float GetMarginRight()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_RIGHT));
+			return ((float)GetProperty(Property.MARGIN_RIGHT));
 		}
 
 		/// <summary>Sets the right margin width of the element.</summary>
@@ -290,15 +288,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual com.itextpdf.layout.element.Image SetMarginRight(float value)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.MARGIN_RIGHT, 
-				value);
+			SetProperty(Property.MARGIN_RIGHT, value);
+			return this;
 		}
 
 		/// <summary>Gets the current top margin width of the element.</summary>
 		/// <returns>the top margin width, as a <code>float</code></returns>
 		public virtual float GetMarginTop()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_TOP));
+			return ((float)GetProperty(Property.MARGIN_TOP));
 		}
 
 		/// <summary>Sets the top margin width of the element.</summary>
@@ -306,15 +304,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual com.itextpdf.layout.element.Image SetMarginTop(float value)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.MARGIN_TOP, value
-				);
+			SetProperty(Property.MARGIN_TOP, value);
+			return this;
 		}
 
 		/// <summary>Gets the current bottom margin width of the element.</summary>
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
 		public virtual float GetMarginBottom()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_BOTTOM));
+			return ((float)GetProperty(Property.MARGIN_BOTTOM));
 		}
 
 		/// <summary>Sets the bottom margin width of the element.</summary>
@@ -322,8 +320,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual com.itextpdf.layout.element.Image SetMarginBottom(float value)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.MARGIN_BOTTOM
-				, value);
+			SetProperty(Property.MARGIN_BOTTOM, value);
+			return this;
 		}
 
 		/// <summary>Sets the margins around the element to a series of new widths.</summary>
@@ -348,10 +346,8 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image Scale(float horizontalScaling, float
 			 verticalScaling)
 		{
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.HORIZONTAL_SCALING, 
-				horizontalScaling);
-			this.SetProperty<com.itextpdf.layout.element.Image>(Property.VERTICAL_SCALING, verticalScaling
-				);
+			SetProperty(Property.HORIZONTAL_SCALING, horizontalScaling);
+			SetProperty(Property.VERTICAL_SCALING, verticalScaling);
 			return this;
 		}
 
@@ -394,15 +390,15 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetAutoScale(bool autoScale)
 		{
 			if (HasProperty(Property.AUTO_SCALE_WIDTH) && HasProperty(Property.AUTO_SCALE_HEIGHT
-				) && autoScale && (((bool)this.GetProperty<bool>(Property.AUTO_SCALE_WIDTH)) || 
-				((bool)this.GetProperty<bool>(Property.AUTO_SCALE_HEIGHT))))
+				) && autoScale && ((bool)((Object)GetProperty(Property.AUTO_SCALE_WIDTH)) || (bool
+				)((Object)GetProperty(Property.AUTO_SCALE_HEIGHT))))
 			{
 				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.layout.element.Image)
 					);
 				logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
 			}
-			return this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE, autoScale
-				);
+			SetProperty(Property.AUTO_SCALE, autoScale);
+			return this;
 		}
 
 		/// <summary>Sets the autoscale property for the height of the image.</summary>
@@ -412,19 +408,16 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetAutoScaleHeight(bool autoScale
 			)
 		{
-			if (HasProperty(Property.AUTO_SCALE_WIDTH) && autoScale && ((bool)this.GetProperty
-				<bool>(Property.AUTO_SCALE_WIDTH)))
+			if (HasProperty(Property.AUTO_SCALE_WIDTH) && autoScale && (bool)((Object)GetProperty
+				(Property.AUTO_SCALE_WIDTH)))
 			{
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_WIDTH, false
-					);
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_HEIGHT, false
-					);
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE, true);
+				SetProperty(Property.AUTO_SCALE_WIDTH, false);
+				SetProperty(Property.AUTO_SCALE_HEIGHT, false);
+				SetProperty(Property.AUTO_SCALE, true);
 			}
 			else
 			{
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_WIDTH, autoScale
-					);
+				SetProperty(Property.AUTO_SCALE_WIDTH, autoScale);
 			}
 			return this;
 		}
@@ -436,19 +429,16 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetAutoScaleWidth(bool autoScale
 			)
 		{
-			if (HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool)this.GetProperty
-				<bool>(Property.AUTO_SCALE_HEIGHT)))
+			if (HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && (bool)((Object)GetProperty
+				(Property.AUTO_SCALE_HEIGHT)))
 			{
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_WIDTH, false
-					);
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_HEIGHT, false
-					);
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE, true);
+				SetProperty(Property.AUTO_SCALE_WIDTH, false);
+				SetProperty(Property.AUTO_SCALE_HEIGHT, false);
+				SetProperty(Property.AUTO_SCALE, true);
 			}
 			else
 			{
-				this.SetProperty<com.itextpdf.layout.element.Image>(Property.AUTO_SCALE_WIDTH, autoScale
-					);
+				SetProperty(Property.AUTO_SCALE_WIDTH, autoScale);
 			}
 			return this;
 		}
@@ -457,7 +447,7 @@ namespace com.itextpdf.layout.element
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element. Also has as a
 		/// side effect that the Element's
-		/// <see cref="com.itextpdf.layout.Property.POSITION"/>
+		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
 		/// is changed to
 		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
 		/// .
@@ -468,7 +458,8 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetFixedPosition(float x, float 
 			y)
 		{
-			return SetFixedPosition(x, y, GetWidth());
+			SetFixedPosition(x, y, GetWidth());
+			return this;
 		}
 
 		/// <summary>
@@ -478,7 +469,7 @@ namespace com.itextpdf.layout.element
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element, on a specific
 		/// page. Also has as a side effect that the Element's
-		/// <see cref="com.itextpdf.layout.Property.POSITION"/>
+		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
 		/// is changed to
 		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
 		/// .
@@ -490,22 +481,23 @@ namespace com.itextpdf.layout.element
 		public virtual com.itextpdf.layout.element.Image SetFixedPosition(int pageNumber, 
 			float x, float y)
 		{
-			return SetFixedPosition(pageNumber, x, y, GetWidth());
+			SetFixedPosition(pageNumber, x, y, GetWidth());
+			return this;
 		}
 
-		public override T1 GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.AUTO_SCALE:
 				{
-					return (T)bool.ValueOf(false);
+					return (T1)bool.ValueOf(false);
 				}
 
 				case Property.HORIZONTAL_SCALING:
 				case Property.VERTICAL_SCALING:
 				{
-					return (T)float.ValueOf(1);
+					return (T1)float.ValueOf(1);
 				}
 
 				default:
@@ -541,30 +533,18 @@ namespace com.itextpdf.layout.element
 		/// <returns>the current scaled width</returns>
 		public virtual float GetImageScaledWidth()
 		{
-			float hscale = ((float)this.GetProperty<float>(Property.HORIZONTAL_SCALING));
-			if (hscale == null)
-			{
-				return xObject.GetWidth();
-			}
-			else
-			{
-				return xObject.GetWidth() * hscale;
-			}
+			return null == ((Object)GetProperty(Property.HORIZONTAL_SCALING)) ? xObject.GetWidth
+				() : xObject.GetWidth() * (float)((Object)GetProperty(Property.HORIZONTAL_SCALING
+				));
 		}
 
 		/// <summary>Gets scaled height of the image.</summary>
 		/// <returns>the current scaled height</returns>
 		public virtual float GetImageScaledHeight()
 		{
-			float vscale = ((float)this.GetProperty<float>(Property.VERTICAL_SCALING));
-			if (vscale == null)
-			{
-				return xObject.GetHeight();
-			}
-			else
-			{
-				return xObject.GetHeight() * vscale;
-			}
+			return null == ((Object)GetProperty(Property.VERTICAL_SCALING)) ? xObject.GetHeight
+				() : xObject.GetHeight() * (float)((Object)GetProperty(Property.VERTICAL_SCALING
+				));
 		}
 
 		public virtual PdfName GetRole()
@@ -591,10 +571,9 @@ namespace com.itextpdf.layout.element
 			return new ImageRenderer(this);
 		}
 
-		private static com.itextpdf.io.image.Image CheckImageType(com.itextpdf.io.image.Image
-			 image)
+		private static ImageData CheckImageType(ImageData image)
 		{
-			if (image is WmfImage)
+			if (image is WmfImageData)
 			{
 				throw new PdfException(PdfException.CannotCreateLayoutImageByWmfImage);
 			}

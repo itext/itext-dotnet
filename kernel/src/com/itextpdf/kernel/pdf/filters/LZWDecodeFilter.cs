@@ -1,5 +1,5 @@
 /*
-$Id: 9e39bb374f6916971f2b89074498cfef99f25d8f $
+$Id: b2ffe905a319ac2e1ceaea355b6d50721c5a869a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ using com.itextpdf.kernel.pdf;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>Handles LZWDECODE filter</summary>
-	public class LZWDecodeFilter : FilterHandler
+	public class LZWDecodeFilter : IFilterHandler
 	{
 		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
 			, PdfDictionary streamDictionary)

@@ -1,5 +1,5 @@
 /*
-$Id: a99061dec964ba34eb949c86e518ce17b8d08b35 $
+$Id: fc0ee1c51c0efb0d85153bc47c98e23fc94d1bd5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using com.itextpdf.layout;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -63,7 +64,7 @@ namespace com.itextpdf.layout.renderer
 	/// Renderers are designed to be extensible, and custom implementations can be
 	/// seeded to layout objects (or their custom subclasses) at runtime.
 	/// </remarks>
-	public interface IRenderer : IPropertyContainer<IRenderer>
+	public interface IRenderer : IPropertyContainer
 	{
 		/// <summary>Adds a child to the current renderer</summary>
 		/// <param name="renderer">a child to be added</param>
@@ -132,7 +133,7 @@ namespace com.itextpdf.layout.renderer
 		/// <param name="property">the property to be retrieved</param>
 		/// <param name="defaultValue">a fallback value</param>
 		/// <returns>the value of the given property</returns>
-		T GetProperty<T>(Property property, T defaultValue);
+		T1 GetProperty<T1>(Property property, T1 defaultValue);
 
 		/// <summary>
 		/// Explicitly sets this object as the child of another
@@ -148,7 +149,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Gets the model element associated with this renderer.</summary>
 		/// <returns>
 		/// the model element, as a
-		/// <see cref="com.itextpdf.layout.IPropertyContainer{T}">container of properties</see>
+		/// <see cref="com.itextpdf.layout.IPropertyContainer">container of properties</see>
 		/// </returns>
 		IPropertyContainer GetModelElement();
 

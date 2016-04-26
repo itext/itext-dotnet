@@ -1,5 +1,5 @@
 /*
-$Id: 27063ac08b347dbd7b91840acef5d97457197c89 $
+$Id: 70c441e1055999cc74a33c02e6011cb985b4a83b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,7 +46,7 @@ using System;
 
 namespace com.itextpdf.kernel.crypto
 {
-	public class AesDecryptor : Decryptor
+	public class AesDecryptor : IDecryptor
 	{
 		private AESCipher cipher;
 

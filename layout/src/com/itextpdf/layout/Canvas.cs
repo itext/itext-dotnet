@@ -1,5 +1,5 @@
 /*
-$Id: 7d1de269e22902571342f54a7f13d5e82500ef29 $
+$Id: 56a76a5931210e141a2f4fd31484bb07b5e3208f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -149,7 +149,7 @@ namespace com.itextpdf.layout
 
 		/// <summary>
 		/// Sets the
-		/// <see cref="IRenderer"/>
+		/// <see cref="com.itextpdf.layout.renderer.IRenderer"/>
 		/// for this Canvas.
 		/// </summary>
 		/// <param name="canvasRenderer">a renderer specific for canvas operations</param>

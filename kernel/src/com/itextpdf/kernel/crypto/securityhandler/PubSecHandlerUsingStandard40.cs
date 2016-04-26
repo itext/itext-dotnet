@@ -1,5 +1,5 @@
 /*
-$Id: 5e550540524600752db15f96f83982d74c06dcea $
+$Id: e7da841bb88ea10de1fbfd752520f40bbcdc728c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		}
 
 		public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, Key certificateKey
-			, Certificate certificate, String certificateKeyProvider, ExternalDecryptionProcess
+			, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 		{
 			InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, certificateKeyProvider
@@ -75,7 +75,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				);
 		}
 
-		public override Decryptor GetDecryptor()
+		public override IDecryptor GetDecryptor()
 		{
 			return new StandardDecryptor(nextObjectKey, 0, nextObjectKeySize);
 		}

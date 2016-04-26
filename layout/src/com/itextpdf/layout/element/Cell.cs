@@ -1,5 +1,5 @@
 /*
-$Id: b04479fd8b7c1d22cb08a10352fd5d1ac03212a3 $
+$Id: 78a8e605519d67ef7d6708ce434c0f6801f78433 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,8 +47,8 @@ using System.Collections.Generic;
 using com.itextpdf.io.log;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.border;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -131,7 +131,7 @@ namespace com.itextpdf.layout.element
 				}
 			}
 			//cellRenderer could be null in case invalid type (see logger message above)
-			return cellRenderer == null ? ((CellRenderer)MakeNewRenderer()) : cellRenderer;
+			return cellRenderer == null ? MakeNewRenderer() : cellRenderer;
 		}
 
 		public virtual int GetRow()
@@ -161,6 +161,7 @@ namespace com.itextpdf.layout.element
 		/// </param>
 		/// <returns>this Element</returns>
 		public virtual com.itextpdf.layout.element.Cell Add<T>(BlockElement<T> element)
+			where T : IElement
 		{
 			childElements.Add(element);
 			return this;
@@ -224,13 +225,13 @@ namespace com.itextpdf.layout.element
 			return newCell;
 		}
 
-		public override T1 GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.BORDER:
 				{
-					return (T)DEFAULT_BORDER;
+					return (T1)DEFAULT_BORDER;
 				}
 
 				case Property.PADDING_BOTTOM:
@@ -238,7 +239,7 @@ namespace com.itextpdf.layout.element
 				case Property.PADDING_RIGHT:
 				case Property.PADDING_TOP:
 				{
-					return (T)float.ValueOf(2);
+					return (T1)float.ValueOf(2);
 				}
 
 				default:

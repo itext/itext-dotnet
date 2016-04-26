@@ -1,5 +1,5 @@
 /*
-$Id: 3db76c6e2e468d70e5ddf6ba6646aa2823f566dc $
+$Id: 03dda38d05b04f1be7d3eb80a01600f7c1a8e5f9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,7 @@ using com.itextpdf.kernel.pdf;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>A filter that doesn't modify the stream at all</summary>
-	public class DoNothingFilter : FilterHandler
+	public class DoNothingFilter : IFilterHandler
 	{
 		private PdfName lastFilterName;
 

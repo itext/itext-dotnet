@@ -1,5 +1,5 @@
 /*
-$Id: 054fdb2a9cd83f40ddbb704a442f5f2953903a76 $
+$Id: 8e943ab7c3ec238f5b7e8f0a29030a5d235d8fe0 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,14 +50,14 @@ namespace com.itextpdf.io.source
 	/// A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().  This is useful when
 	/// passing a RandomAccessSource to a method that would normally close the source.
 	/// </remarks>
-	public class IndependentRandomAccessSource : RandomAccessSource
+	public class IndependentRandomAccessSource : IRandomAccessSource
 	{
 		/// <summary>The source</summary>
-		private readonly RandomAccessSource source;
+		private readonly IRandomAccessSource source;
 
 		/// <summary>Constructs a new OffsetRandomAccessSource</summary>
 		/// <param name="source">the source</param>
-		public IndependentRandomAccessSource(RandomAccessSource source)
+		public IndependentRandomAccessSource(IRandomAccessSource source)
 		{
 			this.source = source;
 		}

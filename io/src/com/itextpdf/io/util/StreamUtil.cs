@@ -1,5 +1,5 @@
 /*
-$Id: b588fe226686d8f535164e0a06a292409a5d68d8 $
+$Id: 8b8239bb6f6f5adb697f76ccf9ad9391a27906b8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -318,7 +318,7 @@ namespace com.itextpdf.io.util
 		/// copy to.
 		/// </param>
 		/// <exception cref="System.IO.IOException">on error.</exception>
-		public static void CopyBytes(RandomAccessSource source, long start, long length, 
+		public static void CopyBytes(IRandomAccessSource source, long start, long length, 
 			Stream output)
 		{
 			if (length <= 0)

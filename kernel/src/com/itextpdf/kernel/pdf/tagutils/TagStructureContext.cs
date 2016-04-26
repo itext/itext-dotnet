@@ -1,5 +1,5 @@
 /*
-$Id: 8c63024fd4f5096cbfdec4a44bce29868c95c3b7 $
+$Id: 657871fc7e392dd4cc2d8ba10e3dcb42c47f5818 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -66,9 +66,9 @@ namespace com.itextpdf.kernel.pdf.tagutils
 	{
 		private const long serialVersionUID = -7870069015800895036L;
 
-		private sealed class _HashSet_81 : HashSet<PdfName>
+		private sealed class _HashSet_82 : HashSet<PdfName>
 		{
-			public _HashSet_81()
+			public _HashSet_82()
 			{
 				{
 					this.Add(PdfName.Book);
@@ -81,7 +81,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 			}
 		}
 
-		private static readonly ICollection<PdfName> allowedRootTagRoles = new _HashSet_81
+		private static readonly ICollection<PdfName> allowedRootTagRoles = new _HashSet_82
 			();
 
 		private PdfDocument document;
@@ -89,6 +89,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		private PdfStructElem rootTagElement;
 
 		protected internal TagTreePointer autoTaggingPointer;
+
+		private PdfVersion tagStructureTargetVersion;
 
 		private bool forbidUnknownRoles;
 
@@ -127,6 +129,12 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <param name="document">the document which tag structure will be manipulated with this class.
 		/// 	</param>
 		public TagStructureContext(PdfDocument document)
+			: this(document, document.GetPdfVersion())
+		{
+		}
+
+		public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion
+			)
 		{
 			this.document = document;
 			if (!document.IsTagged())
@@ -135,6 +143,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 			}
 			connectedModelToStruct = new Dictionary<IAccessibleElement, PdfStructElem>();
 			connectedStructToModel = new Dictionary<PdfDictionary, IAccessibleElement>();
+			this.tagStructureTargetVersion = tagStructureTargetVersion;
 			forbidUnknownRoles = true;
 			NormalizeDocumentRootTag();
 		}
@@ -159,6 +168,11 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		{
 			this.forbidUnknownRoles = forbidUnknownRoles;
 			return this;
+		}
+
+		public virtual PdfVersion GetTagStructureTargetVersion()
+		{
+			return tagStructureTargetVersion;
 		}
 
 		/// <summary>

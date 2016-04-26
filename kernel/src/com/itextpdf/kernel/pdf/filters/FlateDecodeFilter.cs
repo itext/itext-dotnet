@@ -1,5 +1,5 @@
 /*
-$Id: 62a1858dfd9eadc03e8dabd29d49319395150e24 $
+$Id: 053412c4cb953c16ffc8f4ecbad6e2694000f667 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ using java.util.zip;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>Handles FlateDecode filter.</summary>
-	public class FlateDecodeFilter : FilterHandler
+	public class FlateDecodeFilter : IFilterHandler
 	{
 		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
 			, PdfDictionary streamDictionary)

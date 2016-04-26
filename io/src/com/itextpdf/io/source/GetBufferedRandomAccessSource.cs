@@ -1,5 +1,5 @@
 /*
-$Id: c274302bad531cad2aa09cc1bc2c3cef32e67605 $
+$Id: f0093ef9910478d78f3367c86db4ba960998a1a9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,11 +46,11 @@ using System;
 
 namespace com.itextpdf.io.source
 {
-	public class GetBufferedRandomAccessSource : RandomAccessSource
+	public class GetBufferedRandomAccessSource : IRandomAccessSource
 	{
 		private const long serialVersionUID = -8922625738755763494L;
 
-		private readonly RandomAccessSource source;
+		private readonly IRandomAccessSource source;
 
 		private readonly byte[] getBuffer;
 
@@ -60,7 +60,7 @@ namespace com.itextpdf.io.source
 
 		/// <summary>Constructs a new OffsetRandomAccessSource</summary>
 		/// <param name="source">the source</param>
-		public GetBufferedRandomAccessSource(RandomAccessSource source)
+		public GetBufferedRandomAccessSource(IRandomAccessSource source)
 		{
 			this.source = source;
 			this.getBuffer = new byte[(int)Math.Min(Math.Max(source.Length() / 4, 1), 4096)];

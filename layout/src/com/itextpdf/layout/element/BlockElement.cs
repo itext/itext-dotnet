@@ -1,5 +1,5 @@
 /*
-$Id: 41b28d7634c66c5feef90f2a13a668fe2fc24c73 $
+$Id: 0612c2bcf9c48212eacf5aa45d6f5672518638b2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,11 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
-using com.itextpdf.layout.renderer;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.element
 {
@@ -60,9 +58,10 @@ namespace com.itextpdf.layout.element
 	/// </summary>
 	/// <?/>
 	public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement
+		where T : IElement
 	{
 		/// <summary>Creates a BlockElement.</summary>
-		public BlockElement()
+		protected internal BlockElement()
 		{
 		}
 
@@ -70,7 +69,7 @@ namespace com.itextpdf.layout.element
 		/// <returns>the left margin width, as a <code>float</code></returns>
 		public virtual float GetMarginLeft()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_LEFT));
+			return ((float)GetProperty(Property.MARGIN_LEFT));
 		}
 
 		/// <summary>Sets the left margin width of the element.</summary>
@@ -78,14 +77,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetMarginLeft(float value)
 		{
-			return this.SetProperty<T>(Property.MARGIN_LEFT, value);
+			SetProperty(Property.MARGIN_LEFT, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current right margin width of the element.</summary>
 		/// <returns>the right margin width, as a <code>float</code></returns>
 		public virtual float GetMarginRight()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_RIGHT));
+			return ((float)GetProperty(Property.MARGIN_RIGHT));
 		}
 
 		/// <summary>Sets the right margin width of the element.</summary>
@@ -93,14 +93,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetMarginRight(float value)
 		{
-			return this.SetProperty<T>(Property.MARGIN_RIGHT, value);
+			SetProperty(Property.MARGIN_RIGHT, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current top margin width of the element.</summary>
 		/// <returns>the top margin width, as a <code>float</code></returns>
 		public virtual float GetMarginTop()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_TOP));
+			return ((float)GetProperty(Property.MARGIN_TOP));
 		}
 
 		/// <summary>Sets the top margin width of the element.</summary>
@@ -108,14 +109,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetMarginTop(float value)
 		{
-			return this.SetProperty<T>(Property.MARGIN_TOP, value);
+			SetProperty(Property.MARGIN_TOP, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current bottom margin width of the element.</summary>
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
 		public virtual float GetMarginBottom()
 		{
-			return ((float)this.GetProperty<float>(Property.MARGIN_BOTTOM));
+			return ((float)GetProperty(Property.MARGIN_BOTTOM));
 		}
 
 		/// <summary>Sets the bottom margin width of the element.</summary>
@@ -123,7 +125,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetMarginBottom(float value)
 		{
-			return this.SetProperty<T>(Property.MARGIN_BOTTOM, value);
+			SetProperty(Property.MARGIN_BOTTOM, value);
+			return (T)this;
 		}
 
 		/// <summary>Sets all margins around the element to the same width.</summary>
@@ -143,18 +146,18 @@ namespace com.itextpdf.layout.element
 		public virtual T SetMargins(float marginTop, float marginRight, float marginBottom
 			, float marginLeft)
 		{
-			this.SetMarginTop(marginTop);
-			this.SetMarginRight(marginRight);
-			this.SetMarginBottom(marginBottom);
-			this.SetMarginLeft(marginLeft);
-			return (T)(Object)this;
+			SetMarginTop(marginTop);
+			SetMarginRight(marginRight);
+			SetMarginBottom(marginBottom);
+			SetMarginLeft(marginLeft);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current left padding width of the element.</summary>
 		/// <returns>the left padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingLeft()
 		{
-			return ((float)this.GetProperty<float>(Property.PADDING_LEFT));
+			return ((float)GetProperty(Property.PADDING_LEFT));
 		}
 
 		/// <summary>Sets the left padding width of the element.</summary>
@@ -162,14 +165,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetPaddingLeft(float value)
 		{
-			return this.SetProperty<T>(Property.PADDING_LEFT, value);
+			SetProperty(Property.PADDING_LEFT, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current right padding width of the element.</summary>
 		/// <returns>the right padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingRight()
 		{
-			return ((float)this.GetProperty<float>(Property.PADDING_RIGHT));
+			return ((float)GetProperty(Property.PADDING_RIGHT));
 		}
 
 		/// <summary>Sets the right padding width of the element.</summary>
@@ -177,14 +181,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetPaddingRight(float value)
 		{
-			return this.SetProperty<T>(Property.PADDING_RIGHT, value);
+			SetProperty(Property.PADDING_RIGHT, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current top padding width of the element.</summary>
 		/// <returns>the top padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingTop()
 		{
-			return ((float)this.GetProperty<float>(Property.PADDING_TOP));
+			return ((float)GetProperty(Property.PADDING_TOP));
 		}
 
 		/// <summary>Sets the top padding width of the element.</summary>
@@ -192,14 +197,15 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetPaddingTop(float value)
 		{
-			return this.SetProperty<T>(Property.PADDING_TOP, value);
+			SetProperty(Property.PADDING_TOP, value);
+			return (T)this;
 		}
 
 		/// <summary>Gets the current bottom padding width of the element.</summary>
 		/// <returns>the bottom padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingBottom()
 		{
-			return ((float)this.GetProperty<float>(Property.PADDING_BOTTOM));
+			return ((float)GetProperty(Property.PADDING_BOTTOM));
 		}
 
 		/// <summary>Sets the bottom padding width of the element.</summary>
@@ -207,7 +213,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetPaddingBottom(float value)
 		{
-			return this.SetProperty<T>(Property.PADDING_BOTTOM, value);
+			SetProperty(Property.PADDING_BOTTOM, value);
+			return (T)this;
 		}
 
 		/// <summary>Sets all paddings around the element to the same width.</summary>
@@ -227,20 +234,20 @@ namespace com.itextpdf.layout.element
 		public virtual T SetPaddings(float paddingTop, float paddingRight, float paddingBottom
 			, float paddingLeft)
 		{
-			this.SetPaddingTop(paddingTop);
-			this.SetPaddingRight(paddingRight);
-			this.SetPaddingBottom(paddingBottom);
-			this.SetPaddingLeft(paddingLeft);
-			return (T)(Object)this;
+			SetPaddingTop(paddingTop);
+			SetPaddingRight(paddingRight);
+			SetPaddingBottom(paddingBottom);
+			SetPaddingLeft(paddingLeft);
+			return (T)this;
 		}
 
 		/// <summary>Sets the vertical alignment of the element.</summary>
 		/// <param name="verticalAlignment">the vertical alignment setting</param>
 		/// <returns>this element</returns>
-		public virtual T SetVerticalAlignment(Property.VerticalAlignment verticalAlignment
-			)
+		public virtual T SetVerticalAlignment(VerticalAlignment verticalAlignment)
 		{
-			return this.SetProperty<T>(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+			SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+			return (T)this;
 		}
 
 		/// <summary>
@@ -257,16 +264,17 @@ namespace com.itextpdf.layout.element
 		/// </param>
 		public virtual T SetSpacingRatio(float ratio)
 		{
-			return this.SetProperty<T>(Property.SPACING_RATIO, ratio);
+			SetProperty(Property.SPACING_RATIO, ratio);
+			return (T)this;
 		}
 
-		public override T1 GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.KEEP_TOGETHER:
 				{
-					return (T)bool.ValueOf(false);
+					return (T1)bool.ValueOf(false);
 				}
 
 				default:
@@ -284,12 +292,12 @@ namespace com.itextpdf.layout.element
 		/// </summary>
 		/// <returns>
 		/// the current value of the
-		/// <see cref="com.itextpdf.layout.Property.KEEP_TOGETHER"/>
+		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
 		/// property
 		/// </returns>
 		public virtual bool IsKeepTogether()
 		{
-			return ((bool)this.GetProperty<bool>(Property.KEEP_TOGETHER));
+			return ((bool)GetProperty(Property.KEEP_TOGETHER));
 		}
 
 		/// <summary>
@@ -300,13 +308,14 @@ namespace com.itextpdf.layout.element
 		/// </summary>
 		/// <param name="keepTogether">
 		/// the new value of the
-		/// <see cref="com.itextpdf.layout.Property.KEEP_TOGETHER"/>
+		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
 		/// property
 		/// </param>
 		/// <returns>this element</returns>
 		public virtual T SetKeepTogether(bool keepTogether)
 		{
-			return this.SetProperty<T>(Property.KEEP_TOGETHER, keepTogether);
+			SetProperty(Property.KEEP_TOGETHER, keepTogether);
+			return (T)this;
 		}
 
 		/// <summary>Sets the rotation radAngle.</summary>
@@ -314,7 +323,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetRotationAngle(float radAngle)
 		{
-			return this.SetProperty<T>(Property.ROTATION_ANGLE, radAngle);
+			SetProperty(Property.ROTATION_ANGLE, radAngle);
+			return (T)this;
 		}
 
 		/// <summary>Sets the rotation angle.</summary>
@@ -322,12 +332,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this element</returns>
 		public virtual T SetRotationAngle(double angle)
 		{
-			return this.SetProperty<T>(Property.ROTATION_ANGLE, (float)angle);
-		}
-
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new BlockRenderer(this);
+			SetProperty(Property.ROTATION_ANGLE, (float)angle);
+			return (T)this;
 		}
 
 		public abstract AccessibilityProperties GetAccessibilityProperties();

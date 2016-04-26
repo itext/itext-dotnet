@@ -1,5 +1,5 @@
 /*
-$Id: 45cd38153a833adfa6fcaf4bde847d710adb90d9 $
+$Id: c87a570ede7f7660e5100f614a72dce61fe5ddd4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,6 +49,7 @@ using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.layout;
 using com.itextpdf.layout.border;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -165,7 +166,7 @@ namespace com.itextpdf.layout.element
 			{
 				this.columnWidths[k] = 1;
 			}
-			base.SetWidth(Property.UnitValue.CreatePercentValue(100));
+			base.SetWidth(UnitValue.CreatePercentValue(100));
 			InitializeRows();
 		}
 
@@ -185,14 +186,13 @@ namespace com.itextpdf.layout.element
 		/// <summary>Sets the full width of the table.</summary>
 		/// <param name="width">the full width of the table.</param>
 		/// <returns>this element</returns>
-		public override com.itextpdf.layout.element.Table SetWidth(Property.UnitValue width
-			)
+		public override com.itextpdf.layout.element.Table SetWidth(UnitValue width)
 		{
 			if (width.IsPointValue() && width.GetValue() == 0)
 			{
-				width = Property.UnitValue.CreatePercentValue(100);
+				width = UnitValue.CreatePercentValue(100);
 			}
-			Property.UnitValue currWidth = GetWidth();
+			UnitValue currWidth = GetWidth();
 			if (!width.Equals(currWidth))
 			{
 				base.SetWidth(width);
@@ -232,10 +232,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="headerCell">a header cell to be added</param>
-		public virtual void AddHeaderCell(Cell headerCell)
+		public virtual com.itextpdf.layout.element.Table AddHeaderCell(Cell headerCell)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(headerCell);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received blockElement as a content to the header of the table.
@@ -248,10 +249,13 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="blockElement">an element to be added to a header cell</param>
-		public virtual void AddHeaderCell(BlockElement blockElement)
+		public virtual com.itextpdf.layout.element.Table AddHeaderCell<T>(BlockElement<T>
+			 blockElement)
+			where T : IElement
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(blockElement);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received image to the header of the table.</summary>
@@ -263,10 +267,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="image">an element to be added to a header cell</param>
-		public virtual void AddHeaderCell(Image image)
+		public virtual com.itextpdf.layout.element.Table AddHeaderCell(Image image)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(image);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received string as a content to the header of the table.
@@ -279,10 +284,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="content">a string to be added to a header cell</param>
-		public virtual void AddHeaderCell(String content)
+		public virtual com.itextpdf.layout.element.Table AddHeaderCell(String content)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(content);
+			return this;
 		}
 
 		/// <summary>Gets the header of the table.</summary>
@@ -309,10 +315,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="footerCell">a footer cell</param>
-		public virtual void AddFooterCell(Cell footerCell)
+		public virtual com.itextpdf.layout.element.Table AddFooterCell(Cell footerCell)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(footerCell);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received blockElement as a content to the footer of the table.
@@ -325,10 +332,13 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="blockElement">an element to be added to a footer cell</param>
-		public virtual void AddFooterCell(BlockElement blockElement)
+		public virtual com.itextpdf.layout.element.Table AddFooterCell<T>(BlockElement<T>
+			 blockElement)
+			where T : IElement
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(blockElement);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received image as a content to the footer of the table.
@@ -341,10 +351,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="image">an image to be added to a footer cell</param>
-		public virtual void AddFooterCell(Image image)
+		public virtual com.itextpdf.layout.element.Table AddFooterCell(Image image)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(image);
+			return this;
 		}
 
 		/// <summary>Adds a new cell with received string as a content to the footer of the table.
@@ -357,10 +368,11 @@ namespace com.itextpdf.layout.element
 		/// .
 		/// </remarks>
 		/// <param name="content">a content string to be added to a footer cell</param>
-		public virtual void AddFooterCell(String content)
+		public virtual com.itextpdf.layout.element.Table AddFooterCell(String content)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(content);
+			return this;
 		}
 
 		/// <summary>Gets the footer of the table.</summary>
@@ -447,7 +459,11 @@ namespace com.itextpdf.layout.element
 		/// Adds a new cell to the table. The implementation decides for itself which
 		/// row the cell will be placed on.
 		/// </remarks>
-		/// <param name="cell"/>
+		/// <param name="cell">
+		/// 
+		/// <c>Cell</c>
+		/// to add.
+		/// </param>
 		/// <returns>this element</returns>
 		public virtual com.itextpdf.layout.element.Table AddCell(Cell cell)
 		{
@@ -496,8 +512,9 @@ namespace com.itextpdf.layout.element
 		/// <param name="blockElement">a blockElement to add to the cell and then to the table
 		/// 	</param>
 		/// <returns>this element</returns>
-		public virtual com.itextpdf.layout.element.Table AddCell(BlockElement blockElement
+		public virtual com.itextpdf.layout.element.Table AddCell<T>(BlockElement<T> blockElement
 			)
+			where T : IElement
 		{
 			return AddCell(new Cell().Add(blockElement));
 		}
@@ -555,7 +572,7 @@ namespace com.itextpdf.layout.element
 		/// </returns>
 		public override IRenderer CreateRendererSubTree()
 		{
-			TableRenderer rendererRoot = ((TableRenderer)GetRenderer());
+			TableRenderer rendererRoot = (TableRenderer)GetRenderer();
 			foreach (IElement child in childElements)
 			{
 				bool childShouldBeAdded = isComplete || CellBelongsToAnyRowGroup((Cell)child, lastAddedRowGroups
@@ -566,6 +583,11 @@ namespace com.itextpdf.layout.element
 				}
 			}
 			return rendererRoot;
+		}
+
+		protected internal override IRenderer MakeNewRenderer()
+		{
+			return new TableRenderer(this);
 		}
 
 		/// <summary>Gets a table renderer for this element.</summary>
@@ -585,7 +607,7 @@ namespace com.itextpdf.layout.element
 				{
 					IRenderer renderer = nextRenderer;
 					nextRenderer = nextRenderer.GetNextRenderer();
-					return (TableRenderer)renderer;
+					return renderer;
 				}
 				else
 				{
@@ -745,7 +767,7 @@ namespace com.itextpdf.layout.element
 
 		protected internal virtual void CalculateWidths()
 		{
-			Property.UnitValue width = GetWidth();
+			UnitValue width = GetWidth();
 			float total = 0;
 			int numCols = GetNumberOfColumns();
 			for (int k = 0; k < numCols; ++k)

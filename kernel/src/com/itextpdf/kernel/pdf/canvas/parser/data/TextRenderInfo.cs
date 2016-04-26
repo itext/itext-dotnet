@@ -1,5 +1,5 @@
 /*
-$Id: 6e8b4b445277b9e76a551a3675fa706554245677 $
+$Id: 283b09c2b842ca2c2df43a3934a9d43d7e483a78 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -63,11 +63,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 	/// This is passed between the
 	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor"/>
 	/// and
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.EventListener"/>
+	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.IEventListener"/>
 	/// objects as text rendering operations are
 	/// discovered
 	/// </remarks>
-	public class TextRenderInfo : EventData
+	public class TextRenderInfo : IEventData
 	{
 		private readonly PdfString @string;
 

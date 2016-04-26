@@ -1,5 +1,5 @@
 /*
-$Id: 92f5211db7dddbc2ac0b4995a47193c2e8d6d106 $
+$Id: d7cf2e555c2bd71871a93121117638c19ede3f36 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ using com.itextpdf.kernel.pdf.canvas.parser.data;
 
 namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 {
-	public class LocationTextExtractionStrategy : TextExtractionStrategy
+	public class LocationTextExtractionStrategy : ITextExtractionStrategy
 	{
 		/// <summary>set to true for debugging</summary>
 		private static bool DUMP_STATE = false;
@@ -61,7 +61,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		private readonly IList<LocationTextExtractionStrategy.TextChunk> locationalResult
 			 = new List<LocationTextExtractionStrategy.TextChunk>();
 
-		private readonly LocationTextExtractionStrategy.TextChunkLocationStrategy tclStrat;
+		private readonly LocationTextExtractionStrategy.ITextChunkLocationStrategy tclStrat;
 
 		private bool useActualText = false;
 
@@ -69,17 +69,17 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 		/// <summary>Creates a new text extraction renderer.</summary>
 		public LocationTextExtractionStrategy()
-			: this(new _TextChunkLocationStrategy_81())
+			: this(new _ITextChunkLocationStrategy_81())
 		{
 		}
 
-		private sealed class _TextChunkLocationStrategy_81 : LocationTextExtractionStrategy.TextChunkLocationStrategy
+		private sealed class _ITextChunkLocationStrategy_81 : LocationTextExtractionStrategy.ITextChunkLocationStrategy
 		{
-			public _TextChunkLocationStrategy_81()
+			public _ITextChunkLocationStrategy_81()
 			{
 			}
 
-			public LocationTextExtractionStrategy.TextChunkLocation CreateLocation(TextRenderInfo
+			public LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo
 				 renderInfo, LineSegment baseline)
 			{
 				return new LocationTextExtractionStrategy.TextChunkLocationDefaultImp(baseline.GetStartPoint
@@ -93,7 +93,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// TextRenderInfo.
 		/// </summary>
 		/// <param name="strat">the custom strategy</param>
-		public LocationTextExtractionStrategy(LocationTextExtractionStrategy.TextChunkLocationStrategy
+		public LocationTextExtractionStrategy(LocationTextExtractionStrategy.ITextChunkLocationStrategy
 			 strat)
 		{
 			tclStrat = strat;
@@ -125,7 +125,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 			return useActualText;
 		}
 
-		public virtual void EventOccurred(EventData data, EventType type)
+		public virtual void EventOccurred(IEventData data, EventType type)
 		{
 			if (type.Equals(EventType.RENDER_TEXT))
 			{
@@ -287,13 +287,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 			return lastActualText;
 		}
 
-		public interface TextChunkLocationStrategy
+		public interface ITextChunkLocationStrategy
 		{
-			LocationTextExtractionStrategy.TextChunkLocation CreateLocation(TextRenderInfo renderInfo
+			LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo
 				, LineSegment baseline);
 		}
 
-		public interface TextChunkLocation : IComparable<LocationTextExtractionStrategy.TextChunkLocation
+		public interface ITextChunkLocation : IComparable<LocationTextExtractionStrategy.ITextChunkLocation
 			>
 		{
 			float DistParallelEnd();
@@ -310,11 +310,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 			int OrientationMagnitude();
 
-			bool SameLine(LocationTextExtractionStrategy.TextChunkLocation @as);
+			bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as);
 
-			float DistanceFromEndOf(LocationTextExtractionStrategy.TextChunkLocation other);
+			float DistanceFromEndOf(LocationTextExtractionStrategy.ITextChunkLocation other);
 
-			bool IsAtWordBoundary(LocationTextExtractionStrategy.TextChunkLocation previous);
+			bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation previous);
 		}
 
 		/// <summary>Represents a chunk of text, it's orientation, and location relative to the orientation vector
@@ -324,9 +324,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 			/// <summary>the text of the chunk</summary>
 			protected internal readonly String text;
 
-			protected internal readonly LocationTextExtractionStrategy.TextChunkLocation location;
+			protected internal readonly LocationTextExtractionStrategy.ITextChunkLocation location;
 
-			public TextChunk(String @string, LocationTextExtractionStrategy.TextChunkLocation
+			public TextChunk(String @string, LocationTextExtractionStrategy.ITextChunkLocation
 				 loc)
 			{
 				this.text = @string;
@@ -339,7 +339,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 				return text;
 			}
 
-			public virtual LocationTextExtractionStrategy.TextChunkLocation GetLocation()
+			public virtual LocationTextExtractionStrategy.ITextChunkLocation GetLocation()
 			{
 				return location;
 			}
@@ -370,7 +370,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 			}
 		}
 
-		private class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.TextChunkLocation
+		private class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.ITextChunkLocation
 		{
 			/// <summary>the starting location of the chunk</summary>
 			private readonly Vector startLocation;
@@ -470,7 +470,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 			/// <param name="as">the location to compare to</param>
 			/// <returns>true is this location is on the the same line as the other</returns>
-			public virtual bool SameLine(LocationTextExtractionStrategy.TextChunkLocation @as
+			public virtual bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as
 				)
 			{
 				return OrientationMagnitude() == @as.OrientationMagnitude() && DistPerpendicular(
@@ -490,13 +490,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 			/// <param name="other"/>
 			/// <returns>the number of spaces between the end of 'other' and the beginning of this chunk
 			/// 	</returns>
-			public virtual float DistanceFromEndOf(LocationTextExtractionStrategy.TextChunkLocation
+			public virtual float DistanceFromEndOf(LocationTextExtractionStrategy.ITextChunkLocation
 				 other)
 			{
 				return DistParallelStart() - other.DistParallelEnd();
 			}
 
-			public virtual bool IsAtWordBoundary(LocationTextExtractionStrategy.TextChunkLocation
+			public virtual bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation
 				 previous)
 			{
 				if (GetCharSpaceWidth() < 0.1f)
@@ -514,7 +514,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 				return dist < -GetCharSpaceWidth() || dist > GetCharSpaceWidth() / 2.0f;
 			}
 
-			public virtual int CompareTo(LocationTextExtractionStrategy.TextChunkLocation other
+			public virtual int CompareTo(LocationTextExtractionStrategy.ITextChunkLocation other
 				)
 			{
 				if (this == other)

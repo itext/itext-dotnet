@@ -1,5 +1,5 @@
 /*
-$Id: ab7d17211439a292d9b965a6fc9b8f3195a39c03 $
+$Id: b2aa7583072dadef21c950d5a127e8ec1461677e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -75,14 +75,14 @@ namespace com.itextpdf.io.font.cmap
 		private const int MAX_LEVEL = 10;
 
 		/// <exception cref="System.IO.IOException"/>
-		public static void ParseCid(String cmapName, AbstractCMap cmap, CMapLocation location
+		public static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
 			)
 		{
 			ParseCid(cmapName, cmap, location, 0);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private static void ParseCid(String cmapName, AbstractCMap cmap, CMapLocation location
+		private static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
 			, int level)
 		{
 			if (level >= MAX_LEVEL)
@@ -200,7 +200,7 @@ namespace com.itextpdf.io.font.cmap
 		//        --size;
 		//        int nextPlane = 0;
 		//        for (int idx = 0; idx < size; ++idx) {
-		//            char plane[] = planes.get(nextPlane);
+		//            char[] plane = planes.get(nextPlane);
 		//            int one = seqs[idx] & 0xff;
 		//            char c = plane[one];
 		//            if (c != 0 && (c & 0x8000) == 0)
@@ -212,7 +212,7 @@ namespace com.itextpdf.io.font.cmap
 		//            }
 		//            nextPlane = c & 0x7fff;
 		//        }
-		//        char plane[] = planes.get(nextPlane);
+		//        char[] plane = planes.get(nextPlane);
 		//        int one = seqs[size] & 0xff;
 		//        char c = plane[one];
 		//        if ((c & 0x8000) != 0)

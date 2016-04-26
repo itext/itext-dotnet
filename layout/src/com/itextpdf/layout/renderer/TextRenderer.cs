@@ -1,5 +1,5 @@
 /*
-$Id: da26a0b75318f800c91cdb792a9167c997eea0ff $
+$Id: c9f00dcd757c9014b63db969742564eb446aa46d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,10 +54,10 @@ using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.hyphenation;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.splitting;
 using java.lang;
 
@@ -443,7 +443,7 @@ namespace com.itextpdf.layout.renderer
 		{
 			ConvertWaitingStringToGlyphLine();
 			Character.UnicodeScript script = GetProperty(Property.FONT_SCRIPT);
-			Property.FontKerning fontKerning = GetProperty(Property.FONT_KERNING);
+			FontKerning fontKerning = GetProperty(Property.FONT_KERNING);
 			PdfFont font = GetPropertyAsFont(Property.FONT);
 			if (!otfFeaturesApplied)
 			{
@@ -486,7 +486,7 @@ namespace com.itextpdf.layout.renderer
 					if (selectScript == Character.UnicodeScript.ARABIC || selectScript == Character.UnicodeScript
 						.HEBREW && parent is LineRenderer)
 					{
-						SetProperty(Property.BASE_DIRECTION, Property.BaseDirection.DEFAULT_BIDI);
+						SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
 					}
 					if (selectScript != null && supportedScripts != null && supportedScripts.Contains
 						(selectScript))
@@ -498,7 +498,7 @@ namespace com.itextpdf.layout.renderer
 				{
 					TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
 				}
-				if (fontKerning == Property.FontKerning.YES)
+				if (fontKerning == FontKerning.YES)
 				{
 					TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
 				}
@@ -637,7 +637,7 @@ namespace com.itextpdf.layout.renderer
 				{
 					canvas.SetHorizontalScaling(horizontalScaling * 100);
 				}
-				GlyphLine.GlyphLineFilter filter = new _GlyphLineFilter_541();
+				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_545();
 				if (HasOwnProperty(Property.REVERSED))
 				{
 					//We should mark a RTL written text
@@ -670,19 +670,19 @@ namespace com.itextpdf.layout.renderer
 				{
 					foreach (Object underline in (IList)underlines)
 					{
-						if (underline is Property.Underline)
+						if (underline is Underline)
 						{
-							DrawSingleUnderline((Property.Underline)underline, fontColor, canvas, fontSize, italicSimulation
+							DrawSingleUnderline((Underline)underline, fontColor, canvas, fontSize, italicSimulation
 								 ? ITALIC_ANGLE : 0);
 						}
 					}
 				}
 				else
 				{
-					if (underlines is Property.Underline)
+					if (underlines is Underline)
 					{
-						DrawSingleUnderline((Property.Underline)underlines, fontColor, canvas, fontSize, 
-							italicSimulation ? ITALIC_ANGLE : 0);
+						DrawSingleUnderline((Underline)underlines, fontColor, canvas, fontSize, italicSimulation
+							 ? ITALIC_ANGLE : 0);
 					}
 				}
 			}
@@ -700,9 +700,9 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private sealed class _GlyphLineFilter_541 : GlyphLine.GlyphLineFilter
+		private sealed class _IGlyphLineFilter_545 : GlyphLine.IGlyphLineFilter
 		{
-			public _GlyphLineFilter_541()
+			public _IGlyphLineFilter_545()
 			{
 			}
 
@@ -714,7 +714,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override void DrawBackground(DrawContext drawContext)
 		{
-			Property.Background background = GetProperty(Property.BACKGROUND);
+			Background background = GetProperty(Property.BACKGROUND);
 			float textRise = GetPropertyAsFloat(Property.TEXT_RISE);
 			float bottomBBoxY = occupiedArea.GetBBox().GetY();
 			float leftBBoxX = occupiedArea.GetBBox().GetX();
@@ -739,13 +739,13 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		public override T GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			switch (property)
 			{
 				case Property.HORIZONTAL_SCALING:
 				{
-					return (T)float.ValueOf(1);
+					return (T1)float.ValueOf(1);
 				}
 
 				default:
@@ -992,13 +992,13 @@ namespace com.itextpdf.layout.renderer
 		protected internal virtual com.itextpdf.layout.renderer.TextRenderer CreateSplitRenderer
 			()
 		{
-			return ((com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer());
+			return (com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer();
 		}
 
 		protected internal virtual com.itextpdf.layout.renderer.TextRenderer CreateOverflowRenderer
 			()
 		{
-			return ((com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer());
+			return (com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer();
 		}
 
 		protected internal virtual com.itextpdf.layout.renderer.TextRenderer[] Split(int 
@@ -1021,8 +1021,8 @@ namespace com.itextpdf.layout.renderer
 				 };
 		}
 
-		protected internal virtual void DrawSingleUnderline(Property.Underline underline, 
-			Color fontStrokeColor, PdfCanvas canvas, float fontSize, float italicAngleTan)
+		protected internal virtual void DrawSingleUnderline(Underline underline, Color fontStrokeColor
+			, PdfCanvas canvas, float fontSize, float italicAngleTan)
 		{
 			Color underlineColor = underline.GetColor() != null ? underline.GetColor() : fontStrokeColor;
 			canvas.SaveState();

@@ -1,5 +1,5 @@
 /*
-$Id: b903c4eefa381d42f3a2530eaac05bf1354d8808 $
+$Id: 183fc6d436b44bf70e0d0529c13be3e45756ff5a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using com.itextpdf.kernel.pdf.canvas.draw;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -58,7 +58,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override LayoutResult Layout(LayoutContext layoutContext)
 		{
-			LineDrawer lineDrawer = GetProperty(Property.LINE_DRAWER);
+			ILineDrawer lineDrawer = GetProperty(Property.LINE_DRAWER);
 			float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
 			occupiedArea = layoutContext.GetArea().Clone();
 			ApplyMargins(occupiedArea.GetBBox(), false);
@@ -81,7 +81,7 @@ namespace com.itextpdf.layout.renderer
 		public override void Draw(DrawContext drawContext)
 		{
 			base.Draw(drawContext);
-			LineDrawer lineDrawer = GetProperty(Property.LINE_DRAWER);
+			ILineDrawer lineDrawer = GetProperty(Property.LINE_DRAWER);
 			if (lineDrawer != null)
 			{
 				lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());

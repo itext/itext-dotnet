@@ -1,5 +1,5 @@
 /*
-$Id: 4e1825a5f94776ae007143e26091c7437fa368ec $
+$Id: 15bd766a5b44ddf2590d7ce95094cabaa962b8fd $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,6 +50,7 @@ using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -87,8 +88,8 @@ namespace com.itextpdf.layout.renderer
 			AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != 
 				null ? overflowResult.GetAreaBreak() : null;
 			MoveToNextPage();
-			while (areaBreak != null && areaBreak.GetType() == Property.AreaBreakType.LAST_PAGE
-				 && currentPageNumber < document.GetPdfDocument().GetNumberOfPages())
+			while (areaBreak != null && areaBreak.GetType() == AreaBreakType.LAST_PAGE && currentPageNumber
+				 < document.GetPdfDocument().GetNumberOfPages())
 			{
 				MoveToNextPage();
 			}

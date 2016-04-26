@@ -1,5 +1,5 @@
 /*
-$Id: 76abedf4716eebfd612553de9b93be16f43a547b $
+$Id: 72737530632e24f878a3b9e4503df57f5d9afe7e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -156,7 +156,8 @@ namespace com.itextpdf.layout
 			return this;
 		}
 
-		public override com.itextpdf.layout.Document Add(BlockElement element)
+		public override RootElement<com.itextpdf.layout.Document> Add<T>(BlockElement<T> 
+			element)
 		{
 			CheckClosingStatus();
 			base.Add(element);
@@ -180,7 +181,7 @@ namespace com.itextpdf.layout
 		/// <see cref="com.itextpdf.layout.renderer.DocumentRenderer"/>
 		/// at runtime. Use this to customize
 		/// the Document's
-		/// <see cref="IRenderer"/>
+		/// <see cref="com.itextpdf.layout.renderer.IRenderer"/>
 		/// behavior.
 		/// </summary>
 		/// <param name="documentRenderer"/>
@@ -207,7 +208,7 @@ namespace com.itextpdf.layout
 		/// account all its current child elements. May become very
 		/// resource-intensive for large documents.
 		/// Do not use when you have set
-		/// <see cref="RootElement{Type}.immediateFlush"/>
+		/// <see cref="RootElement{T}.immediateFlush"/>
 		/// to <code>true</code>.
 		/// </remarks>
 		public virtual void Relayout()

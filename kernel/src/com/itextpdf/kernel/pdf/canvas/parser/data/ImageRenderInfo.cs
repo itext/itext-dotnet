@@ -1,5 +1,5 @@
 /*
-$Id: 0a45d738d2b511c385d58a57cb93b38cfcc625a1 $
+$Id: 3593f6cb124bc4eb67fe8da6127f79ead5a5b465 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,7 +49,7 @@ using com.itextpdf.kernel.pdf.xobject;
 namespace com.itextpdf.kernel.pdf.canvas.parser.data
 {
 	/// <summary>Represents image data from a PDF</summary>
-	public class ImageRenderInfo : EventData
+	public class ImageRenderInfo : IEventData
 	{
 		/// <summary>The coordinate transformation matrix that was in effect when the image was rendered
 		/// 	</summary>

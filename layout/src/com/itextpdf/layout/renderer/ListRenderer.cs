@@ -1,5 +1,5 @@
 /*
-$Id: 5b8f1f395309f7b71319c723f68fd7338ca1ce5a $
+$Id: a313d2211dd685f47b11b2d0fb3b5d33209eaba7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,9 +47,9 @@ using System.Collections.Generic;
 using com.itextpdf.io.font;
 using com.itextpdf.kernel.font;
 using com.itextpdf.kernel.numbering;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -103,6 +103,11 @@ namespace com.itextpdf.layout.renderer
 			return base.Layout(layoutContext);
 		}
 
+		public override IRenderer GetNextRenderer()
+		{
+			return new com.itextpdf.layout.renderer.ListRenderer((List)modelElement);
+		}
+
 		protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer 
 			renderer)
 		{
@@ -119,74 +124,74 @@ namespace com.itextpdf.layout.renderer
 				}
 				else
 				{
-					if (defaultListSymbol is Property.ListNumberingType)
+					if (defaultListSymbol is ListNumberingType)
 					{
-						Property.ListNumberingType numberingType = (Property.ListNumberingType)defaultListSymbol;
+						ListNumberingType numberingType = (ListNumberingType)defaultListSymbol;
 						String numberText;
 						List listModelElement = (List)GetModelElement();
 						switch (numberingType)
 						{
-							case Property.ListNumberingType.DECIMAL:
+							case ListNumberingType.DECIMAL:
 							{
 								numberText = com.itextpdf.GetStringValueOf(index);
 								break;
 							}
 
-							case Property.ListNumberingType.ROMAN_LOWER:
+							case ListNumberingType.ROMAN_LOWER:
 							{
 								numberText = RomanNumbering.ToRomanLowerCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.ROMAN_UPPER:
+							case ListNumberingType.ROMAN_UPPER:
 							{
 								numberText = RomanNumbering.ToRomanUpperCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.ENGLISH_LOWER:
+							case ListNumberingType.ENGLISH_LOWER:
 							{
 								numberText = EnglishAlphabetNumbering.ToLatinAlphabetNumberLowerCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.ENGLISH_UPPER:
+							case ListNumberingType.ENGLISH_UPPER:
 							{
 								numberText = EnglishAlphabetNumbering.ToLatinAlphabetNumberUpperCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.GREEK_LOWER:
+							case ListNumberingType.GREEK_LOWER:
 							{
 								numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberLowerCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.GREEK_UPPER:
+							case ListNumberingType.GREEK_UPPER:
 							{
 								numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberUpperCase(index);
 								break;
 							}
 
-							case Property.ListNumberingType.ZAPF_DINGBATS_1:
+							case ListNumberingType.ZAPF_DINGBATS_1:
 							{
 								numberText = com.itextpdf.GetStringValueOf((char)(index + 171));
 								break;
 							}
 
-							case Property.ListNumberingType.ZAPF_DINGBATS_2:
+							case ListNumberingType.ZAPF_DINGBATS_2:
 							{
 								numberText = com.itextpdf.GetStringValueOf((char)(index + 181));
 								break;
 							}
 
-							case Property.ListNumberingType.ZAPF_DINGBATS_3:
+							case ListNumberingType.ZAPF_DINGBATS_3:
 							{
 								numberText = com.itextpdf.GetStringValueOf((char)(index + 191));
 								break;
 							}
 
-							case Property.ListNumberingType.ZAPF_DINGBATS_4:
+							case ListNumberingType.ZAPF_DINGBATS_4:
 							{
 								numberText = com.itextpdf.GetStringValueOf((char)(index + 201));
 								break;
@@ -203,15 +208,14 @@ namespace com.itextpdf.layout.renderer
 						// Be careful. There is a workaround here. For Greek symbols we first set a dummy font with document=null
 						// in order for the metrics to be taken into account correctly during layout.
 						// Then on draw we set the correct font with actual document in order for the font objects to be created.
-						if (numberingType == Property.ListNumberingType.GREEK_LOWER || numberingType == Property.ListNumberingType
-							.GREEK_UPPER || numberingType == Property.ListNumberingType.ZAPF_DINGBATS_1 || numberingType
-							 == Property.ListNumberingType.ZAPF_DINGBATS_2 || numberingType == Property.ListNumberingType
-							.ZAPF_DINGBATS_3 || numberingType == Property.ListNumberingType.ZAPF_DINGBATS_4)
+						if (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
+							.GREEK_UPPER || numberingType == ListNumberingType.ZAPF_DINGBATS_1 || numberingType
+							 == ListNumberingType.ZAPF_DINGBATS_2 || numberingType == ListNumberingType.ZAPF_DINGBATS_3
+							 || numberingType == ListNumberingType.ZAPF_DINGBATS_4)
 						{
-							String constantFont = (numberingType == Property.ListNumberingType.GREEK_LOWER ||
-								 numberingType == Property.ListNumberingType.GREEK_UPPER) ? FontConstants.SYMBOL
-								 : FontConstants.ZAPFDINGBATS;
-							textRenderer = new _TextRenderer_163(constantFont, textElement).SetParent(this);
+							String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType
+								 == ListNumberingType.GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
+							textRenderer = new _TextRenderer_169(constantFont, textElement).SetParent(this);
 							try
 							{
 								textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
@@ -234,9 +238,9 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private sealed class _TextRenderer_163 : TextRenderer
+		private sealed class _TextRenderer_169 : TextRenderer
 		{
-			public _TextRenderer_163(String constantFont, Text baseArg1)
+			public _TextRenderer_169(String constantFont, Text baseArg1)
 				: base(baseArg1)
 			{
 				this.constantFont = constantFont;

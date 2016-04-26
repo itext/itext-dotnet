@@ -1,5 +1,5 @@
 /*
-$Id: 9847176dfa3fbba24513ace9f6fbb62ddcfe12ce $
+$Id: bf08c4d09a974c38abc086a8d13144f888c16efc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,10 +60,10 @@ namespace com.itextpdf.io.font
 		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.FontRegisterProvider
 			));
 
-		/// <summary>This is a map of postscriptfontnames of True Type fonts and the path of their ttf- or ttc-file.
+		/// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.
 		/// 	</summary>
-		private readonly IDictionary<String, String> trueTypeFonts = new Dictionary<String
-			, String>();
+		private readonly IDictionary<String, String> fontNames = new Dictionary<String, String
+			>();
 
 		private static String[] TTFamilyOrder = new String[] { "3", "1", "1033", "3", "0"
 			, "1033", "1", "0", "0", "0", "3", "0" };
@@ -72,55 +72,49 @@ namespace com.itextpdf.io.font
 		private readonly IDictionary<String, IList<String>> fontFamilies = new Dictionary
 			<String, IList<String>>();
 
-		/// <summary>This is the default encoding to use.</summary>
-		public String defaultEncoding = PdfEncodings.WINANSI;
-
-		/// <summary>This is the default value of the <VAR>embedded</VAR> variable.</summary>
-		public bool defaultEmbedding = false;
-
 		/// <summary>Creates new FontRegisterProvider</summary>
 		public FontRegisterProvider()
 		{
-			trueTypeFonts[FontConstants.COURIER.ToLower()] = FontConstants.COURIER;
-			trueTypeFonts[FontConstants.COURIER_BOLD.ToLower()] = FontConstants.COURIER_BOLD;
-			trueTypeFonts[FontConstants.COURIER_OBLIQUE.ToLower()] = FontConstants.COURIER_OBLIQUE;
-			trueTypeFonts[FontConstants.COURIER_BOLDOBLIQUE.ToLower()] = FontConstants.COURIER_BOLDOBLIQUE;
-			trueTypeFonts[FontConstants.HELVETICA.ToLower()] = FontConstants.HELVETICA;
-			trueTypeFonts[FontConstants.HELVETICA_BOLD.ToLower()] = FontConstants.HELVETICA_BOLD;
-			trueTypeFonts[FontConstants.HELVETICA_OBLIQUE.ToLower()] = FontConstants.HELVETICA_OBLIQUE;
-			trueTypeFonts[FontConstants.HELVETICA_BOLDOBLIQUE.ToLower()] = FontConstants.HELVETICA_BOLDOBLIQUE;
-			trueTypeFonts[FontConstants.SYMBOL.ToLower()] = FontConstants.SYMBOL;
-			trueTypeFonts[FontConstants.TIMES_ROMAN.ToLower()] = FontConstants.TIMES_ROMAN;
-			trueTypeFonts[FontConstants.TIMES_BOLD.ToLower()] = FontConstants.TIMES_BOLD;
-			trueTypeFonts[FontConstants.TIMES_ITALIC.ToLower()] = FontConstants.TIMES_ITALIC;
-			trueTypeFonts[FontConstants.TIMES_BOLDITALIC.ToLower()] = FontConstants.TIMES_BOLDITALIC;
-			trueTypeFonts[FontConstants.ZAPFDINGBATS.ToLower()] = FontConstants.ZAPFDINGBATS;
-			IList<String> tmp;
-			tmp = new List<String>();
-			tmp.Add(FontConstants.COURIER);
-			tmp.Add(FontConstants.COURIER_BOLD);
-			tmp.Add(FontConstants.COURIER_OBLIQUE);
-			tmp.Add(FontConstants.COURIER_BOLDOBLIQUE);
-			fontFamilies[FontConstants.COURIER.ToLower()] = tmp;
-			tmp = new List<String>();
-			tmp.Add(FontConstants.HELVETICA);
-			tmp.Add(FontConstants.HELVETICA_BOLD);
-			tmp.Add(FontConstants.HELVETICA_OBLIQUE);
-			tmp.Add(FontConstants.HELVETICA_BOLDOBLIQUE);
-			fontFamilies[FontConstants.HELVETICA.ToLower()] = tmp;
-			tmp = new List<String>();
-			tmp.Add(FontConstants.SYMBOL);
-			fontFamilies[FontConstants.SYMBOL.ToLower()] = tmp;
-			tmp = new List<String>();
-			tmp.Add(FontConstants.TIMES_ROMAN);
-			tmp.Add(FontConstants.TIMES_BOLD);
-			tmp.Add(FontConstants.TIMES_ITALIC);
-			tmp.Add(FontConstants.TIMES_BOLDITALIC);
-			fontFamilies[FontConstants.TIMES.ToLower()] = tmp;
-			fontFamilies[FontConstants.TIMES_ROMAN.ToLower()] = tmp;
-			tmp = new List<String>();
-			tmp.Add(FontConstants.ZAPFDINGBATS);
-			fontFamilies[FontConstants.ZAPFDINGBATS.ToLower()] = tmp;
+			fontNames[FontConstants.COURIER.ToLower()] = FontConstants.COURIER;
+			fontNames[FontConstants.COURIER_BOLD.ToLower()] = FontConstants.COURIER_BOLD;
+			fontNames[FontConstants.COURIER_OBLIQUE.ToLower()] = FontConstants.COURIER_OBLIQUE;
+			fontNames[FontConstants.COURIER_BOLDOBLIQUE.ToLower()] = FontConstants.COURIER_BOLDOBLIQUE;
+			fontNames[FontConstants.HELVETICA.ToLower()] = FontConstants.HELVETICA;
+			fontNames[FontConstants.HELVETICA_BOLD.ToLower()] = FontConstants.HELVETICA_BOLD;
+			fontNames[FontConstants.HELVETICA_OBLIQUE.ToLower()] = FontConstants.HELVETICA_OBLIQUE;
+			fontNames[FontConstants.HELVETICA_BOLDOBLIQUE.ToLower()] = FontConstants.HELVETICA_BOLDOBLIQUE;
+			fontNames[FontConstants.SYMBOL.ToLower()] = FontConstants.SYMBOL;
+			fontNames[FontConstants.TIMES_ROMAN.ToLower()] = FontConstants.TIMES_ROMAN;
+			fontNames[FontConstants.TIMES_BOLD.ToLower()] = FontConstants.TIMES_BOLD;
+			fontNames[FontConstants.TIMES_ITALIC.ToLower()] = FontConstants.TIMES_ITALIC;
+			fontNames[FontConstants.TIMES_BOLDITALIC.ToLower()] = FontConstants.TIMES_BOLDITALIC;
+			fontNames[FontConstants.ZAPFDINGBATS.ToLower()] = FontConstants.ZAPFDINGBATS;
+			IList<String> family;
+			family = new List<String>();
+			family.Add(FontConstants.COURIER);
+			family.Add(FontConstants.COURIER_BOLD);
+			family.Add(FontConstants.COURIER_OBLIQUE);
+			family.Add(FontConstants.COURIER_BOLDOBLIQUE);
+			fontFamilies[FontConstants.COURIER.ToLower()] = family;
+			family = new List<String>();
+			family.Add(FontConstants.HELVETICA);
+			family.Add(FontConstants.HELVETICA_BOLD);
+			family.Add(FontConstants.HELVETICA_OBLIQUE);
+			family.Add(FontConstants.HELVETICA_BOLDOBLIQUE);
+			fontFamilies[FontConstants.HELVETICA.ToLower()] = family;
+			family = new List<String>();
+			family.Add(FontConstants.SYMBOL);
+			fontFamilies[FontConstants.SYMBOL.ToLower()] = family;
+			family = new List<String>();
+			family.Add(FontConstants.TIMES_ROMAN);
+			family.Add(FontConstants.TIMES_BOLD);
+			family.Add(FontConstants.TIMES_ITALIC);
+			family.Add(FontConstants.TIMES_BOLDITALIC);
+			fontFamilies[FontConstants.TIMES.ToLower()] = family;
+			fontFamilies[FontConstants.TIMES_ROMAN.ToLower()] = family;
+			family = new List<String>();
+			family.Add(FontConstants.ZAPFDINGBATS);
+			fontFamilies[FontConstants.ZAPFDINGBATS.ToLower()] = family;
 		}
 
 		/// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
@@ -149,24 +143,24 @@ namespace com.itextpdf.io.font
 				return null;
 			}
 			String lowerCaseFontName = fontName.ToLower();
-			IList<String> tmp = fontFamilies[lowerCaseFontName];
-			if (tmp != null)
+			IList<String> family = fontFamilies[lowerCaseFontName];
+			if (family != null)
 			{
-				lock (tmp)
+				lock (family)
 				{
 					// some bugs were fixed here by Daniel Marczisovszky
 					int s = style == FontConstants.UNDEFINED ? FontConstants.NORMAL : style;
 					int fs = FontConstants.NORMAL;
 					bool found = false;
-					foreach (String f in tmp)
+					foreach (String f in family)
 					{
 						String lcf = f.ToLower();
 						fs = FontConstants.NORMAL;
-						if (lcf.IndexOf("bold") != -1)
+						if (lcf.Contains("bold"))
 						{
 							fs |= FontConstants.BOLD;
 						}
-						if (lcf.IndexOf("italic") != -1 || lcf.IndexOf("oblique") != -1)
+						if (lcf.Contains("italic") || lcf.Contains("oblique"))
 						{
 							fs |= FontConstants.ITALIC;
 						}
@@ -183,8 +177,7 @@ namespace com.itextpdf.io.font
 					}
 				}
 			}
-			FontProgram fontProgram = GetFontProgram(fontName, cached);
-			return fontProgram;
+			return GetFontProgram(fontName, cached);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -192,7 +185,7 @@ namespace com.itextpdf.io.font
 			)
 		{
 			FontProgram fontProgram = null;
-			fontName = trueTypeFonts[fontName.ToLower()];
+			fontName = fontNames[fontName.ToLower()];
 			// the font is not registered as truetype font
 			if (fontName != null)
 			{
@@ -221,7 +214,7 @@ namespace com.itextpdf.io.font
 		{
 			if (path != null)
 			{
-				trueTypeFonts[fullName] = path;
+				fontNames[fullName] = path;
 			}
 			IList<String> tmp;
 			lock (fontFamilies)
@@ -284,11 +277,11 @@ namespace com.itextpdf.io.font
 					FontProgram fontProgram = FontFactory.CreateFont(path);
 					Object[] allNames = new Object[] { fontProgram.GetFontNames().GetFontName(), fontProgram
 						.GetFontNames().GetFamilyName(), fontProgram.GetFontNames().GetFullName() };
-					trueTypeFonts[((String)allNames[0]).ToLower()] = path;
+					fontNames[((String)allNames[0]).ToLower()] = path;
 					if (alias != null)
 					{
 						String lcAlias = alias.ToLower();
-						trueTypeFonts[lcAlias] = path;
+						fontNames[lcAlias] = path;
 						if (lcAlias.EndsWith("regular"))
 						{
 							//do this job to give higher priority to regular fonts in comparison with light, narrow, etc
@@ -301,7 +294,7 @@ namespace com.itextpdf.io.font
 					foreach (String[] name in names)
 					{
 						String lcName = name[3].ToLower();
-						trueTypeFonts[lcName] = path;
+						fontNames[lcName] = path;
 						if (lcName.EndsWith("regular"))
 						{
 							//do this job to give higher priority to regular fonts in comparison with light, narrow, etc
@@ -373,8 +366,8 @@ namespace com.itextpdf.io.font
 							String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLower();
 							String psName = fontProgram.GetFontNames().GetFontName().ToLower();
 							RegisterFamily(familyName, fullName, null);
-							trueTypeFonts[psName] = path;
-							trueTypeFonts[fullName] = path;
+							fontNames[psName] = path;
+							fontNames[fullName] = path;
 						}
 					}
 				}
@@ -394,9 +387,9 @@ namespace com.itextpdf.io.font
 		{
 			//remove "regular" at the end of the font name
 			String alias = regularFontName.JSubstring(0, regularFontName.Length - 7).Trim();
-			if (!trueTypeFonts.ContainsKey(alias))
+			if (!fontNames.ContainsKey(alias))
 			{
-				trueTypeFonts[alias] = path;
+				fontNames[alias] = path;
 				return true;
 			}
 			return false;
@@ -493,7 +486,7 @@ namespace com.itextpdf.io.font
 		/// <returns>a set of registered fonts</returns>
 		public virtual ICollection<String> GetRegisteredFonts()
 		{
-			return trueTypeFonts.Keys;
+			return fontNames.Keys;
 		}
 
 		/// <summary>Gets a set of registered font names.</summary>
@@ -508,7 +501,7 @@ namespace com.itextpdf.io.font
 		/// <returns>true if the font is found</returns>
 		public virtual bool IsRegistered(String fontname)
 		{
-			return trueTypeFonts.ContainsKey(fontname.ToLower());
+			return fontNames.ContainsKey(fontname.ToLower());
 		}
 	}
 }

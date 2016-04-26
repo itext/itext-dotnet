@@ -1,5 +1,5 @@
 /*
-$Id: 5f10cd5318a6633332ee561169fb523482798c23 $
+$Id: eda5c231a71b9227f1fe15d41753560f3f35ecaa $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,29 +48,29 @@ using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.kernel.pdf.xobject;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
 	public class ImageRenderer : AbstractRenderer
 	{
-		internal float height;
+		private float height;
 
-		internal float width;
+		private float width;
 
-		internal float fixedXPosition;
+		protected internal float fixedXPosition;
 
-		internal float fixedYPosition;
+		protected internal float fixedYPosition;
 
-		internal float pivotY;
+		protected internal float pivotY;
 
-		internal float deltaX;
+		protected internal float deltaX;
 
-		internal float imageWidth;
+		protected internal float imageWidth;
 
-		internal float imageHeight;
+		protected internal float imageHeight;
 
 		internal float[] matrix = new float[6];
 
@@ -241,16 +241,16 @@ namespace com.itextpdf.layout.renderer
 			if (width > area.GetBBox().GetWidth())
 			{
 				SetProperty(Property.HEIGHT, area.GetBBox().GetWidth() / width * imageHeight);
-				SetProperty(Property.WIDTH, Property.UnitValue.CreatePointValue(area.GetBBox().GetWidth
-					()));
+				SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetWidth())
+					);
 				// if still image is not scaled properly
 				if (GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight())
 				{
-					SetProperty(Property.WIDTH, Property.UnitValue.CreatePointValue(area.GetBBox().GetHeight
-						() / GetPropertyAsFloat(Property.HEIGHT) * ((Property.UnitValue)GetProperty(Property
-						.WIDTH)).GetValue()));
-					SetProperty(Property.HEIGHT, Property.UnitValue.CreatePointValue(area.GetBBox().GetHeight
-						()));
+					SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight()
+						 / GetPropertyAsFloat(Property.HEIGHT) * ((UnitValue)GetProperty(Property.WIDTH)
+						).GetValue()));
+					SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(area.GetBBox().GetHeight(
+						)));
 				}
 			}
 			return this;

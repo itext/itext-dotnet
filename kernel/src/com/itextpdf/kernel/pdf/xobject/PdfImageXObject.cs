@@ -1,5 +1,5 @@
 /*
-$Id: b140fd2d9b924864d01a9cbda9d0a48dc9e7332e $
+$Id: 68bace1ea3a5e343b73cc3186131f3460e05348c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -82,12 +82,12 @@ namespace com.itextpdf.kernel.pdf.xobject
 
 		private int stride;
 
-		public PdfImageXObject(Image image)
+		public PdfImageXObject(ImageData image)
 			: this(image, null)
 		{
 		}
 
-		public PdfImageXObject(Image image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+		public PdfImageXObject(ImageData image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
 			 imageMask)
 			: this(CreatePdfStream(CheckImageType(image), imageMask))
 		{
@@ -165,7 +165,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 			bytes = GetPdfObject().GetBytes(false);
 			if (decoded)
 			{
-				IDictionary<PdfName, FilterHandler> filters = new Dictionary<PdfName, FilterHandler
+				IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler
 					>(FilterHandlers.GetDefaultFilterHandlers());
 				DoNothingFilter stubFilter = new DoNothingFilter();
 				filters[PdfName.DCTDecode] = stubFilter;
@@ -194,19 +194,19 @@ namespace com.itextpdf.kernel.pdf.xobject
 			return this;
 		}
 
-		protected internal static PdfStream CreatePdfStream(Image image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+		protected internal static PdfStream CreatePdfStream(ImageData image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
 			 imageMask)
 		{
 			PdfStream stream;
 			if (image.GetOriginalType() == ImageType.RAW)
 			{
-				RawImageHelper.UpdateImageAttributes((RawImage)image, null);
+				RawImageHelper.UpdateImageAttributes((RawImageData)image, null);
 			}
 			stream = new PdfStream(image.GetData());
 			String filter = image.GetFilter();
 			if (filter != null && filter.Equals("JPXDecode") && image.GetColorSpace() <= 0)
 			{
-				stream.SetCompressionLevel(PdfOutputStream.NO_COMPRESSION);
+				stream.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 				image.SetBpc(0);
 			}
 			stream.Put(PdfName.Type, PdfName.XObject);
@@ -278,7 +278,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 					}
 				}
 			}
-			Image mask = image.GetImageMask();
+			ImageData mask = image.GetImageMask();
 			if (mask != null)
 			{
 				if (mask.IsSoftMask())
@@ -673,9 +673,9 @@ namespace com.itextpdf.kernel.pdf.xobject
 			}
 		}
 
-		private static Image CheckImageType(Image image)
+		private static ImageData CheckImageType(ImageData image)
 		{
-			if (image is WmfImage)
+			if (image is WmfImageData)
 			{
 				throw new PdfException(PdfException.CannotCreatePdfImageXObjectByWmfImage);
 			}

@@ -1,5 +1,5 @@
 /*
-$Id: 969197ed784dbf4c992e383dc494e40e15212a7d $
+$Id: 865f018a14911eeefcbf1843289e0c264a898df1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,36 +58,36 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 	/// The only difference from
 	/// <see cref="GlyphEventListener"/>
 	/// is that this class conveniently implements
-	/// <see cref="TextExtractionStrategy"/>
+	/// <see cref="ITextExtractionStrategy"/>
 	/// and can therefore used as a strategy on its own.
 	/// </summary>
-	public class GlyphTextEventListener : GlyphEventListener, TextExtractionStrategy
+	public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy
 	{
 		/// <summary>
 		/// Constructs a
 		/// <see cref="GlyphEventListener"/>
 		/// instance by a
-		/// <see cref="TextExtractionStrategy"/>
+		/// <see cref="ITextExtractionStrategy"/>
 		/// delegate to which
 		/// the expanded text events for each glyph occurred will be passed on.
 		/// </summary>
 		/// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
-		public GlyphTextEventListener(TextExtractionStrategy delegate_)
+		public GlyphTextEventListener(ITextExtractionStrategy delegate_)
 			: base(delegate_)
 		{
 		}
 
 		/// <summary>
 		/// As an resultant text we use the the resultant text of the delegate that implement
-		/// <see cref="TextExtractionStrategy"/>
+		/// <see cref="ITextExtractionStrategy"/>
 		/// and was passed to this class.
 		/// </summary>
 		/// <returns>the resulting text extracted from the delegate</returns>
 		public virtual String GetResultantText()
 		{
-			if (delegate_ is TextExtractionStrategy)
+			if (delegate_ is ITextExtractionStrategy)
 			{
-				return ((TextExtractionStrategy)delegate_).GetResultantText();
+				return ((ITextExtractionStrategy)delegate_).GetResultantText();
 			}
 			else
 			{

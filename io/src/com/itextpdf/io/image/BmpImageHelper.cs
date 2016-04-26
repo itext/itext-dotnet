@@ -1,5 +1,5 @@
 /*
-$Id: a13bc2dc84ff65c1dead37f65a3b7e571e8df5b3 $
+$Id: 348d3bb1bb6c50d10bcf7666cfff43f7f79e0ffc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,12 +54,12 @@ namespace com.itextpdf.io.image
 	{
 		private class BmpParameters
 		{
-			public BmpParameters(BmpImage image)
+			public BmpParameters(BmpImageData image)
 			{
 				this.image = image;
 			}
 
-			internal BmpImage image;
+			internal BmpImageData image;
 
 			internal int width;
 
@@ -153,7 +153,7 @@ namespace com.itextpdf.io.image
 		// BMP Image types
 		// Color space types
 		// Compression Types
-		public static void ProcessImage(Image image)
+		public static void ProcessImage(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.BMP)
 			{
@@ -169,7 +169,7 @@ namespace com.itextpdf.io.image
 				}
 				bmpStream = new MemoryStream(image.GetData());
 				image.imageSize = image.GetData().Length;
-				bmp = new BmpImageHelper.BmpParameters((BmpImage)image);
+				bmp = new BmpImageHelper.BmpParameters((BmpImageData)image);
 				Process(bmp, bmpStream);
 				if (GetImage(bmp))
 				{

@@ -1,5 +1,5 @@
 /*
-$Id: 755679dfd5c55c9310f6c873961dd2b23e16213f $
+$Id: f99464b0c9a3c6f624d957fea615639f7f5b18a1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,57 +50,12 @@ using com.itextpdf.io.log;
 using com.itextpdf.io.source;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.pdf.filters;
-using com.itextpdf.kernel.security;
-using java.security;
-using java.security.cert;
 
 namespace com.itextpdf.kernel.pdf
 {
 	public class PdfReader
 	{
 		private const long serialVersionUID = -3584187443691964939L;
-
-		protected internal static bool correctStreamLength = true;
-
-		protected internal PdfTokenizer tokens;
-
-		protected internal PdfEncryption decrypt;
-
-		protected internal PdfVersion pdfVersion;
-
-		protected internal long lastXref;
-
-		protected internal long eofPos;
-
-		protected internal PdfDictionary trailer;
-
-		protected internal PdfDocument pdfDocument;
-
-		protected internal byte[] password;
-
-		protected internal Key certificateKey;
-
-		protected internal Certificate certificate;
-
-		protected internal String certificateKeyProvider;
-
-		protected internal ExternalDecryptionProcess externalDecryptionProcess;
-
-		private bool unethicalReading;
-
-		private PdfObject cryptoDict;
-
-		private PdfIndirectReference currentIndirectReference;
-
-		protected internal bool encrypted = false;
-
-		protected internal bool rebuiltXref = false;
-
-		protected internal bool hybridXref = false;
-
-		protected internal bool fixedXref = false;
-
-		protected internal bool xrefStm = false;
 
 		private const String endstream1 = "endstream";
 
@@ -114,30 +69,50 @@ namespace com.itextpdf.kernel.pdf
 
 		private static readonly byte[] endobj = ByteUtils.GetIsoBytes("endobj");
 
+		protected internal static bool correctStreamLength = true;
+
+		private bool unethicalReading;
+
+		private PdfIndirectReference currentIndirectReference;
+
+		protected internal PdfTokenizer tokens;
+
+		protected internal PdfEncryption decrypt;
+
+		protected internal PdfVersion headerPdfVersion;
+
+		protected internal long lastXref;
+
+		protected internal long eofPos;
+
+		protected internal PdfDictionary trailer;
+
+		protected internal PdfDocument pdfDocument;
+
+		protected internal PdfAConformanceLevel pdfAConformanceLevel;
+
+		protected internal ReaderProperties properties;
+
+		protected internal bool encrypted = false;
+
+		protected internal bool rebuiltXref = false;
+
+		protected internal bool hybridXref = false;
+
+		protected internal bool fixedXref = false;
+
+		protected internal bool xrefStm = false;
+
 		/// <summary>Constructs a new PdfReader.</summary>
-		/// <remarks>Constructs a new PdfReader. This is the master constructor.</remarks>
 		/// <param name="byteSource">source of bytes for the reader</param>
-		/// <param name="ownerPassword">the password or null if no password is required</param>
-		/// <param name="certificate">the certificate or null if no certificate is required</param>
-		/// <param name="certificateKey">the key or null if no certificate key is required</param>
-		/// <param name="certificateKeyProvider">the name of the key provider, or null if no key is required
-		/// 	</param>
-		/// <param name="externalDecryptionProcess">External decryption process</param>
+		/// <param name="properties">properties of the created reader</param>
 		/// <exception cref="System.IO.IOException"/>
-		public PdfReader(RandomAccessSource byteSource, byte[] ownerPassword, Certificate
-			 certificate, Key certificateKey, String certificateKeyProvider, ExternalDecryptionProcess
-			 externalDecryptionProcess)
+		public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties)
 		{
-			//added by ujihara for decryption
-			//added by Aiken Sam for certificate decryption
-			//added by Aiken Sam for certificate decryption
-			//added by Aiken Sam for certificate decryption
 			//indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
-			this.password = ownerPassword;
-			this.certificate = certificate;
-			this.certificateKey = certificateKey;
-			this.certificateKeyProvider = certificateKeyProvider;
-			this.externalDecryptionProcess = externalDecryptionProcess;
+			// here we store only the pdfVersion that is written in the document's header,
+			// however it could differ from the actual pdf version that could be written in document's catalog
+			this.properties = properties;
 			this.tokens = GetOffsetTokeniser(byteSource);
 		}
 
@@ -148,12 +123,11 @@ namespace com.itextpdf.kernel.pdf
 		/// containing the document. The stream is read to the
 		/// end but is not closed
 		/// </param>
-		/// <param name="ownerPassword">the password or null if no password is required</param>
+		/// <param name="properties">properties of the created reader</param>
 		/// <exception cref="System.IO.IOException">on error</exception>
 		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
-		public PdfReader(Stream @is, byte[] ownerPassword)
-			: this(new RandomAccessSourceFactory().CreateSource(@is), ownerPassword, null, null
-				, null, null)
+		public PdfReader(Stream @is, ReaderProperties properties)
+			: this(new RandomAccessSourceFactory().CreateSource(@is), properties)
 		{
 		}
 
@@ -167,19 +141,17 @@ namespace com.itextpdf.kernel.pdf
 		/// <exception cref="System.IO.IOException">on error</exception>
 		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
 		public PdfReader(Stream @is)
-			: this(@is, null)
+			: this(@is, new ReaderProperties())
 		{
 		}
 
 		/// <summary>Reads and parses a PDF document.</summary>
 		/// <param name="filename">the file name of the document</param>
-		/// <param name="certificate">the certificate or null if no certificate is required</param>
-		/// <param name="externalDecryptionProcess">External decryption process</param>
+		/// <param name="properties">properties of the created reader</param>
 		/// <exception cref="System.IO.IOException">on error</exception>
-		public PdfReader(String filename, Certificate certificate, ExternalDecryptionProcess
-			 externalDecryptionProcess)
+		public PdfReader(String filename, ReaderProperties properties)
 			: this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename
-				), null, certificate, null, null, externalDecryptionProcess)
+				), properties)
 		{
 		}
 
@@ -187,17 +159,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="filename">the file name of the document</param>
 		/// <exception cref="System.IO.IOException">on error</exception>
 		public PdfReader(String filename)
-			: this(filename, null)
-		{
-		}
-
-		/// <summary>Reads and parses a PDF document.</summary>
-		/// <param name="filename">the file name of the document</param>
-		/// <param name="ownerPassword">the password to read the document</param>
-		/// <exception cref="System.IO.IOException">on error</exception>
-		public PdfReader(String filename, byte[] ownerPassword)
-			: this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename
-				), ownerPassword, null, null, null, null)
+			: this(filename, new ReaderProperties())
 		{
 		}
 
@@ -396,7 +358,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <exception cref="com.itextpdf.kernel.PdfException">if there are any problems decoding the bytes
 		/// 	</exception>
 		public static byte[] DecodeBytes(byte[] b, PdfDictionary streamDictionary, IDictionary
-			<PdfName, FilterHandler> filterHandlers)
+			<PdfName, IFilterHandler> filterHandlers)
 		{
 			if (b == null)
 			{
@@ -447,7 +409,7 @@ namespace com.itextpdf.kernel.pdf
 			for (int j = 0; j < filters.Size(); ++j)
 			{
 				PdfName filterName = (PdfName)filters.Get(j);
-				FilterHandler filterHandler = filterHandlers[filterName];
+				IFilterHandler filterHandler = filterHandlers[filterName];
 				if (filterHandler == null)
 				{
 					filterHandler = new DoNothingFilter();
@@ -529,6 +491,23 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
+		/// <summary>Gets the declared Pdf/A conformance level of the source document that is being read.
+		/// 	</summary>
+		/// <remarks>
+		/// Gets the declared Pdf/A conformance level of the source document that is being read.
+		/// Note that this information is provided via XMP metadata and is not verified by iText.
+		/// </remarks>
+		/// <returns>
+		/// conformance level of the source document, or
+		/// <see langword="null"/>
+		/// if no Pdf/A
+		/// conformance level information is specified.
+		/// </returns>
+		public virtual PdfAConformanceLevel GetPdfAConformanceLevel()
+		{
+			return pdfAConformanceLevel;
+		}
+
 		/// <summary>Computes user password if standard encryption handler is used with Standard40, Standard128 or AES128 encryption algorithm.
 		/// 	</summary>
 		/// <returns>user password, or null if not a standard encryption handler was used or if ownerPasswordUsed wasn't use to open the document.
@@ -539,7 +518,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				return null;
 			}
-			return decrypt.ComputeUserPassword(password);
+			return decrypt.ComputeUserPassword(properties.password);
 		}
 
 		/// <summary>Parses the entire PDF</summary>
@@ -549,7 +528,7 @@ namespace com.itextpdf.kernel.pdf
 			String version = tokens.CheckPdfHeader();
 			try
 			{
-				this.pdfVersion = PdfVersion.FromString(version);
+				this.headerPdfVersion = PdfVersion.FromString(version);
 			}
 			catch (ArgumentException)
 			{
@@ -581,17 +560,16 @@ namespace com.itextpdf.kernel.pdf
 			PdfName filter = enc.GetAsName(PdfName.Filter);
 			if (PdfName.Adobe_PubSec.Equals(filter))
 			{
-				decrypt = new PdfEncryption(enc, certificateKey, certificate, certificateKeyProvider
-					, externalDecryptionProcess);
+				decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate
+					, properties.certificateKeyProvider, properties.externalDecryptionProcess);
 			}
 			else
 			{
 				if (PdfName.Standard.Equals(filter))
 				{
-					decrypt = new PdfEncryption(enc, password, GetOriginalFileId());
+					decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
 				}
 			}
-			cryptoDict = enc;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -743,7 +721,8 @@ namespace com.itextpdf.kernel.pdf
 						pdfString.SetDecryptInfoNum(currentIndirectReference.GetObjNumber());
 						pdfString.SetDecryptInfoGen(currentIndirectReference.GetGenNumber());
 					}
-					return password == null || objStm ? pdfString : pdfString.Decrypt(decrypt);
+					return properties.password == null || objStm ? pdfString : pdfString.Decrypt(decrypt
+						);
 				}
 
 				case PdfTokenizer.TokenType.Name:
@@ -1353,11 +1332,6 @@ namespace com.itextpdf.kernel.pdf
 			return encrypted;
 		}
 
-		internal virtual PdfObject GetCryptoDict()
-		{
-			return cryptoDict;
-		}
-
 		/// <summary>Utility method that checks the provided byte source to see if it has junk bytes at the beginning.
 		/// 	</summary>
 		/// <remarks>
@@ -1368,13 +1342,13 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
 		/// <exception cref="System.IO.IOException">if there is a problem reading the byte source
 		/// 	</exception>
-		private static PdfTokenizer GetOffsetTokeniser(RandomAccessSource byteSource)
+		private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource)
 		{
 			PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
 			int offset = tok.GetHeaderOffset();
 			if (offset != 0)
 			{
-				RandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset
+				IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset
 					);
 				tok = new PdfTokenizer(new RandomAccessFileOrArray(offsetSource));
 			}
@@ -1529,7 +1503,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		protected internal class ReusableRandomAccessSource : RandomAccessSource
+		protected internal class ReusableRandomAccessSource : IRandomAccessSource
 		{
 			private ByteBuffer buffer;
 

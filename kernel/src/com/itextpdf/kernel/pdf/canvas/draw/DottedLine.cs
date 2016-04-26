@@ -1,5 +1,5 @@
 /*
-$Id: 23b65aa8184ade73bf75c51b61e4bcc95075852a $
+$Id: 39f1ce997b88da6e0c0907d16493cf5fb86f593b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,11 +50,11 @@ namespace com.itextpdf.kernel.pdf.canvas.draw
 {
 	/// <summary>
 	/// Implementation of
-	/// <see cref="LineDrawer"/>
+	/// <see cref="ILineDrawer"/>
 	/// which draws a dotted horizontal line along
 	/// the bottom edge of the specified rectangle.
 	/// </summary>
-	public class DottedLine : LineDrawer
+	public class DottedLine : ILineDrawer
 	{
 		/// <summary>the gap between the dots.</summary>
 		protected internal float gap = 4;

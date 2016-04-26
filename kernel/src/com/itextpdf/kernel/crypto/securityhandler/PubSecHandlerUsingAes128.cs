@@ -1,5 +1,5 @@
 /*
-$Id: 86153d3a3d8fa70029012f71b09cafff4821852a $
+$Id: 8eff2687ed817151e9dadc211c73eca129bdb2cc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		}
 
 		public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, Key certificateKey
-			, Certificate certificate, String certificateKeyProvider, ExternalDecryptionProcess
+			, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 		{
 			InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, certificateKeyProvider
@@ -74,7 +74,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			return new OutputStreamAesEncryption(os, nextObjectKey, 0, nextObjectKeySize);
 		}
 
-		public override Decryptor GetDecryptor()
+		public override IDecryptor GetDecryptor()
 		{
 			return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
 		}

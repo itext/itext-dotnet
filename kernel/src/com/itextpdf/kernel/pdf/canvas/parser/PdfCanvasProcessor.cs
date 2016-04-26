@@ -1,5 +1,5 @@
 /*
-$Id: 20fe0eea28f23ad1b8ae73c7433da0c646e55e12 $
+$Id: 19ae9383cfded4951de446315fcea360620bc406 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -64,11 +64,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		public const String DEFAULT_OPERATOR = "DefaultOperator";
 
 		/// <summary>Listener that will be notified of render events</summary>
-		protected internal readonly EventListener eventListener;
+		protected internal readonly IEventListener eventListener;
 
 		/// <summary>
 		/// Cache supported events in case the user's
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.EventListener.GetSupportedEvents()
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.IEventListener.GetSupportedEvents()
 		/// 	"/>
 		/// method is not very efficient
 		/// </summary>
@@ -90,7 +90,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		protected internal int clippingRule;
 
 		/// <summary>A map with all supported operators (PDF syntax).</summary>
-		private IDictionary<String, ContentOperator> operators;
+		private IDictionary<String, IContentOperator> operators;
 
 		/// <summary>Resources for the content stream.</summary>
 		/// <remarks>
@@ -110,7 +110,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		private Matrix textLineMatrix;
 
 		/// <summary>A map with all supported XObject handlers</summary>
-		private IDictionary<PdfName, XObjectDoHandler> xobjectDoHandlers;
+		private IDictionary<PdfName, IXObjectDoHandler> xobjectDoHandlers;
 
 		/// <summary>The font cache</summary>
 		private IDictionary<int, PdfFont> cachedFonts = new Dictionary<int, PdfFont>();
@@ -124,16 +124,16 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// </summary>
 		/// <param name="eventListener">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.EventListener"/>
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.IEventListener"/>
 		/// that will receive rendering notifications
 		/// </param>
-		public PdfCanvasProcessor(EventListener eventListener)
+		public PdfCanvasProcessor(IEventListener eventListener)
 		{
 			this.eventListener = eventListener;
 			this.supportedEvents = eventListener.GetSupportedEvents();
-			operators = new Dictionary<String, ContentOperator>();
+			operators = new Dictionary<String, IContentOperator>();
 			PopulateOperators();
-			xobjectDoHandlers = new Dictionary<PdfName, XObjectDoHandler>();
+			xobjectDoHandlers = new Dictionary<PdfName, IXObjectDoHandler>();
 			PopulateXObjectDoHandlers();
 			Reset();
 		}
@@ -151,8 +151,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// <param name="handler">the handler that will receive notification when the Do operator for the specified subtype is encountered
 		/// 	</param>
 		/// <returns>the existing registered handler, if any</returns>
-		public virtual XObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, 
-			XObjectDoHandler handler)
+		public virtual IXObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, 
+			IXObjectDoHandler handler)
 		{
 			return xobjectDoHandlers[xobjectSubType] = handler;
 		}
@@ -170,7 +170,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// <param name="operator">the operator that will receive notification when the operator is encountered
 		/// 	</param>
 		/// <returns>the existing registered operator, if any</returns>
-		public virtual ContentOperator RegisterContentOperator(String operatorString, ContentOperator
+		public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator
 			 @operator)
 		{
 			return operators[operatorString] = @operator;
@@ -261,12 +261,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 
 		/// <summary>
 		/// Accessor method for the
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.EventListener"/>
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.IEventListener"/>
 		/// object maintained in this class.
 		/// Necessary for implementing custom ContentOperator implementations.
 		/// </summary>
 		/// <returns>the renderListener</returns>
-		public virtual EventListener GetEventListener()
+		public virtual IEventListener GetEventListener()
 		{
 			return eventListener;
 		}
@@ -438,7 +438,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		protected internal virtual void InvokeOperator(PdfLiteral @operator, IList<PdfObject
 			> operands)
 		{
-			ContentOperator op = operators[@operator.ToString()];
+			IContentOperator op = operators[@operator.ToString()];
 			if (op == null)
 			{
 				op = operators[DEFAULT_OPERATOR];
@@ -520,7 +520,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// 	</summary>
 		/// <param name="data">event data</param>
 		/// <param name="type">event type</param>
-		private void EventOccurred(EventData data, EventType type)
+		private void EventOccurred(IEventData data, EventType type)
 		{
 			if (supportedEvents == null || supportedEvents.Contains(type))
 			{
@@ -546,7 +546,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		{
 			PdfStream xobjectStream = GetXObjectStream(xobjectName);
 			PdfName subType = xobjectStream.GetAsName(PdfName.Subtype);
-			XObjectDoHandler handler = xobjectDoHandlers[subType];
+			IXObjectDoHandler handler = xobjectDoHandlers[subType];
 			if (handler == null)
 			{
 				handler = xobjectDoHandlers[PdfName.Default];
@@ -580,7 +580,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (unregistered).</summary>
-		private class IgnoreOperator : ContentOperator
+		private class IgnoreOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -590,7 +590,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (TJ).</summary>
-		private class ShowTextArrayOperator : ContentOperator
+		private class ShowTextArrayOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -614,7 +614,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (").</summary>
-		private class MoveNextLineAndShowTextWithSpacingOperator : ContentOperator
+		private class MoveNextLineAndShowTextWithSpacingOperator : IContentOperator
 		{
 			private readonly PdfCanvasProcessor.SetTextWordSpacingOperator setTextWordSpacing;
 
@@ -650,7 +650,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (').</summary>
-		private class MoveNextLineAndShowTextOperator : ContentOperator
+		private class MoveNextLineAndShowTextOperator : IContentOperator
 		{
 			private readonly PdfCanvasProcessor.TextMoveNextLineOperator textMoveNextLine;
 
@@ -672,7 +672,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tj).</summary>
-		private class ShowTextOperator : ContentOperator
+		private class ShowTextOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -683,7 +683,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (T*).</summary>
-		private class TextMoveNextLineOperator : ContentOperator
+		private class TextMoveNextLineOperator : IContentOperator
 		{
 			private readonly PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine;
 
@@ -704,7 +704,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tm).</summary>
-		private class TextSetTextMatrixOperator : ContentOperator
+		private class TextSetTextMatrixOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -721,7 +721,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (TD).</summary>
-		private class TextMoveStartNextLineWithLeadingOperator : ContentOperator
+		private class TextMoveStartNextLineWithLeadingOperator : IContentOperator
 		{
 			private readonly PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine;
 
@@ -746,7 +746,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Td).</summary>
-		private class TextMoveStartNextLineOperator : ContentOperator
+		private class TextMoveStartNextLineOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -760,7 +760,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tf).</summary>
-		private class SetTextFontOperator : ContentOperator
+		private class SetTextFontOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -778,7 +778,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tr).</summary>
-		private class SetTextRenderModeOperator : ContentOperator
+		private class SetTextRenderModeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -789,7 +789,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Ts).</summary>
-		private class SetTextRiseOperator : ContentOperator
+		private class SetTextRiseOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -800,7 +800,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (TL).</summary>
-		private class SetTextLeadingOperator : ContentOperator
+		private class SetTextLeadingOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -811,7 +811,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tz).</summary>
-		private class SetTextHorizontalScalingOperator : ContentOperator
+		private class SetTextHorizontalScalingOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -822,7 +822,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tc).</summary>
-		private class SetTextCharacterSpacingOperator : ContentOperator
+		private class SetTextCharacterSpacingOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -833,7 +833,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Tw).</summary>
-		private class SetTextWordSpacingOperator : ContentOperator
+		private class SetTextWordSpacingOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -844,7 +844,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (gs).</summary>
-		private class ProcessGraphicsStateResourceOperator : ContentOperator
+		private class ProcessGraphicsStateResourceOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -875,7 +875,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (q).</summary>
-		private class PushGraphicsStateOperator : ContentOperator
+		private class PushGraphicsStateOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -887,7 +887,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (cm).</summary>
-		private class ModifyCurrentTransformationMatrixOperator : ContentOperator
+		private class ModifyCurrentTransformationMatrixOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1050,7 +1050,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Q).</summary>
-		protected internal class PopGraphicsStateOperator : ContentOperator
+		protected internal class PopGraphicsStateOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1063,7 +1063,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (g).</summary>
-		private class SetGrayFillOperator : ContentOperator
+		private class SetGrayFillOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1073,7 +1073,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (G).</summary>
-		private class SetGrayStrokeOperator : ContentOperator
+		private class SetGrayStrokeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1083,7 +1083,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (rg).</summary>
-		private class SetRGBFillOperator : ContentOperator
+		private class SetRGBFillOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1093,7 +1093,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (RG).</summary>
-		private class SetRGBStrokeOperator : ContentOperator
+		private class SetRGBStrokeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1103,7 +1103,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (k).</summary>
-		private class SetCMYKFillOperator : ContentOperator
+		private class SetCMYKFillOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1113,7 +1113,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (K).</summary>
-		private class SetCMYKStrokeOperator : ContentOperator
+		private class SetCMYKStrokeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1123,7 +1123,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (CS).</summary>
-		private class SetColorSpaceFillOperator : ContentOperator
+		private class SetColorSpaceFillOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1155,7 +1155,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (cs).</summary>
-		private class SetColorSpaceStrokeOperator : ContentOperator
+		private class SetColorSpaceStrokeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1169,7 +1169,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (sc / scn).</summary>
-		private class SetColorFillOperator : ContentOperator
+		private class SetColorFillOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1180,7 +1180,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (SC / SCN).</summary>
-		private class SetColorStrokeOperator : ContentOperator
+		private class SetColorStrokeOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1191,7 +1191,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (BT).</summary>
-		private class BeginTextOperator : ContentOperator
+		private class BeginTextOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1203,7 +1203,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (ET).</summary>
-		private class EndTextOperator : ContentOperator
+		private class EndTextOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1215,7 +1215,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (BMC).</summary>
-		private class BeginMarkedContentOperator : ContentOperator
+		private class BeginMarkedContentOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1225,7 +1225,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (BDC).</summary>
-		private class BeginMarkedContentDictionaryOperator : ContentOperator
+		private class BeginMarkedContentDictionaryOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1248,7 +1248,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (EMC).</summary>
-		private class EndMarkedContentOperator : ContentOperator
+		private class EndMarkedContentOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1258,7 +1258,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (Do).</summary>
-		private class DoOperator : ContentOperator
+		private class DoOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1274,7 +1274,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// This not a usual operator, it will have a single operand, which will be a PdfStream object which
 		/// encapsulates inline image dictionary and bytes
 		/// </remarks>
-		private class EndImageOperator : ContentOperator
+		private class EndImageOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1285,7 +1285,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (w).</summary>
-		private class SetLineWidthOperator : ContentOperator
+		private class SetLineWidthOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject
 				> operands)
@@ -1296,7 +1296,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (J).</summary>
-		private class SetLineCapOperator : ContentOperator
+		private class SetLineCapOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject
 				> operands)
@@ -1314,7 +1314,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (j).</summary>
-		private class SetLineJoinOperator : ContentOperator
+		private class SetLineJoinOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject
 				> operands)
@@ -1332,7 +1332,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (M).</summary>
-		private class SetMiterLimitOperator : ContentOperator
+		private class SetMiterLimitOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject
 				> operands)
@@ -1350,7 +1350,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (d).</summary>
-		private class SetLineDashPatternOperator : ContentOperator
+		private class SetLineDashPatternOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject
 				> operands)
@@ -1368,7 +1368,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>An XObject subtype handler for FORM</summary>
-		private class FormXObjectDoHandler : XObjectDoHandler
+		private class FormXObjectDoHandler : IXObjectDoHandler
 		{
 			public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream stream)
 			{
@@ -1406,7 +1406,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>An XObject subtype handler for IMAGE</summary>
-		private class ImageXObjectDoHandler : XObjectDoHandler
+		private class ImageXObjectDoHandler : IXObjectDoHandler
 		{
 			public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream
 				)
@@ -1416,7 +1416,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>An XObject subtype handler that does nothing</summary>
-		private class IgnoreXObjectDoHandler : XObjectDoHandler
+		private class IgnoreXObjectDoHandler : IXObjectDoHandler
 		{
 			public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream
 				)
@@ -1426,7 +1426,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (m).</summary>
-		private class MoveToOperator : ContentOperator
+		private class MoveToOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1438,7 +1438,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (l).</summary>
-		private class LineToOperator : ContentOperator
+		private class LineToOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1450,7 +1450,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (c).</summary>
-		private class CurveOperator : ContentOperator
+		private class CurveOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1466,7 +1466,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (v).</summary>
-		private class CurveFirstPointDuplicatedOperator : ContentOperator
+		private class CurveFirstPointDuplicatedOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1480,7 +1480,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (y).</summary>
-		private class CurveFourhPointDuplicatedOperator : ContentOperator
+		private class CurveFourhPointDuplicatedOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1494,7 +1494,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (h).</summary>
-		private class CloseSubpathOperator : ContentOperator
+		private class CloseSubpathOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1504,7 +1504,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (re).</summary>
-		private class RectangleOperator : ContentOperator
+		private class RectangleOperator : IContentOperator
 		{
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
@@ -1518,7 +1518,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (S, s, f, F, f*, B, B*, b, b*).</summary>
-		private class PaintPathOperator : ContentOperator
+		private class PaintPathOperator : IContentOperator
 		{
 			private int operation;
 
@@ -1564,7 +1564,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		}
 
 		/// <summary>A content operator implementation (W, W*)</summary>
-		private class ClipPathOperator : ContentOperator
+		private class ClipPathOperator : IContentOperator
 		{
 			private int rule;
 

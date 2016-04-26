@@ -224,8 +224,11 @@ namespace com.itextpdf.kernel.xmp
 		/// <summary>XMP meta tag version old</summary>
 		public const String TAG_XAPMETA = "xapmeta";
 
-		/// <summary>Part, always 1.</summary>
+		/// <summary>Part, 1, 2, or 3</summary>
 		public const String PART = "part";
+
+		/// <summary>Conformance, A, B, or U.</summary>
+		public const String CONFORMANCE = "conformance";
 		// ---------------------------------------------------------------------------------------------
 		// Standard namespace URI constants
 		// Standard namespaces

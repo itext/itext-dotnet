@@ -1,5 +1,5 @@
 /*
-$Id: c2246b1844a693ba73b8dc711d2469289b9f6731 $
+$Id: 996a0532789c0316230fec5b66d2be8f0957f262 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -69,17 +69,7 @@ namespace com.itextpdf.kernel.pdf
 
 		private PdfOutputStream duplicateStream = null;
 
-		/// <summary>Indicates if the writer copy objects in a smart mode.</summary>
-		/// <remarks>
-		/// Indicates if the writer copy objects in a smart mode. If so PdfDictionary and PdfStream will be hashed
-		/// and reused if there's an object with the same content later.
-		/// </remarks>
-		private bool smartMode;
-
-		/// <summary>Indicates if to use full compression (using object streams).</summary>
-		protected internal bool fullCompression;
-
-		protected internal int compressionLevel = DEFAULT_COMPRESSION;
+		protected internal WriterProperties properties;
 
 		/// <summary>Currently active object stream.</summary>
 		/// <remarks>
@@ -94,32 +84,54 @@ namespace com.itextpdf.kernel.pdf
 		protected internal bool isUserWarnedAboutAcroFormCopying;
 
 		public PdfWriter(Stream os)
+			: this(os, new WriterProperties())
+		{
+		}
+
+		public PdfWriter(Stream os, WriterProperties properties)
 			: base(new BufferedOutputStream(os))
 		{
+			// For internal usage only
+			//forewarned is forearmed
+			this.properties = properties;
+			EncryptionProperties encryptProps = properties.encryptionProperties;
+			if (properties.IsStandardEncryptionUsed())
+			{
+				crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, 
+					encryptProps.standardEncryptPermissions, encryptProps.encryptionAlgorithm, PdfEncryption
+					.GenerateNewDocumentId());
+			}
+			else
+			{
+				if (properties.IsPublicKeyEncryptionUsed())
+				{
+					crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions
+						, encryptProps.encryptionAlgorithm);
+				}
+			}
+			if (properties.debugMode)
+			{
+				SetDebugMode();
+			}
 		}
 
 		/// <exception cref="java.io.FileNotFoundException"/>
 		public PdfWriter(String filename)
-			: this(new FileOutputStream(filename))
+			: this(new FileOutputStream(filename), new WriterProperties())
 		{
 		}
 
-		// For internal usage only
-		//forewarned is forearmed
+		/// <exception cref="java.io.FileNotFoundException"/>
+		public PdfWriter(String filename, WriterProperties properties)
+			: this(new FileOutputStream(filename), properties)
+		{
+		}
+
 		/// <summary>Indicates if to use full compression mode.</summary>
 		/// <returns>true if to use full compression, false otherwise.</returns>
 		public virtual bool IsFullCompression()
 		{
-			return fullCompression != null ? fullCompression : false;
-		}
-
-		/// <summary>Sets full compression mode.</summary>
-		/// <param name="fullCompression">true if to use full compression, false otherwise.</param>
-		public virtual com.itextpdf.kernel.pdf.PdfWriter SetFullCompression(bool fullCompression
-			)
-		{
-			this.fullCompression = fullCompression;
-			return this;
+			return properties.isFullCompression != null ? properties.isFullCompression : false;
 		}
 
 		/// <summary>Gets default compression level for @see PdfStream.</summary>
@@ -132,7 +144,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>compression level.</returns>
 		public virtual int GetCompressionLevel()
 		{
-			return compressionLevel;
+			return properties.compressionLevel;
 		}
 
 		/// <summary>Sets default compression level for @see PdfStream.</summary>
@@ -146,7 +158,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual com.itextpdf.kernel.pdf.PdfWriter SetCompressionLevel(int compressionLevel
 			)
 		{
-			this.compressionLevel = compressionLevel;
+			this.properties.SetCompressionLevel(compressionLevel);
 			return this;
 		}
 
@@ -162,7 +174,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		public virtual com.itextpdf.kernel.pdf.PdfWriter SetSmartMode(bool smartMode)
 		{
-			this.smartMode = smartMode;
+			this.properties.smartMode = smartMode;
 			return this;
 		}
 
@@ -204,25 +216,6 @@ namespace com.itextpdf.kernel.pdf
 			{
 				duplicateStream.Close();
 			}
-		}
-
-		/// <summary>This method activates debug mode with pdfDebug tool.</summary>
-		/// <remarks>
-		/// This method activates debug mode with pdfDebug tool.
-		/// It causes additional overhead of duplicating document bytes into memory, so use it careful.
-		/// NEVER use it in production or in any other cases except pdfDebug.
-		/// NOTE that this method MUST be called right after the constructor and before passing the
-		/// <see cref="PdfWriter"/>
-		/// instance to the document for correct debugging.
-		/// </remarks>
-		/// <returns>
-		/// this
-		/// <see cref="PdfWriter"/>
-		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.PdfWriter SetDebugMode()
-		{
-			duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
-			return this;
 		}
 
 		/// <summary>Gets the current object stream.</summary>
@@ -311,61 +304,6 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		private void MarkArrayContentToFlush(PdfArray array)
-		{
-			foreach (PdfObject item in array)
-			{
-				MarkObjectToFlush(item);
-			}
-		}
-
-		private void MarkDictionaryContentToFlush(PdfDictionary dictionary)
-		{
-			foreach (PdfObject item in dictionary.Values())
-			{
-				MarkObjectToFlush(item);
-			}
-		}
-
-		private void MarkObjectToFlush(PdfObject pdfObject)
-		{
-			if (pdfObject != null)
-			{
-				PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
-				if (indirectReference != null)
-				{
-					if (!indirectReference.CheckState(PdfObject.FLUSHED))
-					{
-						indirectReference.SetState(PdfObject.MUST_BE_FLUSHED);
-					}
-				}
-				else
-				{
-					if (pdfObject.GetType() == PdfObject.INDIRECT_REFERENCE)
-					{
-						if (!pdfObject.CheckState(PdfObject.FLUSHED))
-						{
-							pdfObject.SetState(PdfObject.MUST_BE_FLUSHED);
-						}
-					}
-					else
-					{
-						if (pdfObject.GetType() == PdfObject.ARRAY)
-						{
-							MarkArrayContentToFlush((PdfArray)pdfObject);
-						}
-						else
-						{
-							if (pdfObject.GetType() == PdfObject.DICTIONARY)
-							{
-								MarkDictionaryContentToFlush((PdfDictionary)pdfObject);
-							}
-						}
-					}
-				}
-			}
-		}
-
 		protected internal virtual PdfObject CopyObject(PdfObject @object, PdfDocument document
 			, bool allowDuplicating)
 		{
@@ -395,7 +333,7 @@ namespace com.itextpdf.kernel.pdf
 					return copiedIndirectReference.GetRefersTo();
 				}
 			}
-			if (smartMode && !CheckTypeOfPdfDictionary(@object, PdfName.Page))
+			if (properties.smartMode && !CheckTypeOfPdfDictionary(@object, PdfName.Page))
 			{
 				PdfObject copiedObject = SmartCopyObject(@object);
 				if (copiedObject != null)
@@ -521,6 +459,67 @@ namespace com.itextpdf.kernel.pdf
 			int result = @in.GetHashCode();
 			result = 31 * result + @in.GetDocument().GetHashCode();
 			return result;
+		}
+
+		private void MarkArrayContentToFlush(PdfArray array)
+		{
+			foreach (PdfObject item in array)
+			{
+				MarkObjectToFlush(item);
+			}
+		}
+
+		private void MarkDictionaryContentToFlush(PdfDictionary dictionary)
+		{
+			foreach (PdfObject item in dictionary.Values())
+			{
+				MarkObjectToFlush(item);
+			}
+		}
+
+		private void MarkObjectToFlush(PdfObject pdfObject)
+		{
+			if (pdfObject != null)
+			{
+				PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
+				if (indirectReference != null)
+				{
+					if (!indirectReference.CheckState(PdfObject.FLUSHED))
+					{
+						indirectReference.SetState(PdfObject.MUST_BE_FLUSHED);
+					}
+				}
+				else
+				{
+					if (pdfObject.GetType() == PdfObject.INDIRECT_REFERENCE)
+					{
+						if (!pdfObject.CheckState(PdfObject.FLUSHED))
+						{
+							pdfObject.SetState(PdfObject.MUST_BE_FLUSHED);
+						}
+					}
+					else
+					{
+						if (pdfObject.GetType() == PdfObject.ARRAY)
+						{
+							MarkArrayContentToFlush((PdfArray)pdfObject);
+						}
+						else
+						{
+							if (pdfObject.GetType() == PdfObject.DICTIONARY)
+							{
+								MarkDictionaryContentToFlush((PdfDictionary)pdfObject);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private com.itextpdf.kernel.pdf.PdfWriter SetDebugMode()
+		{
+			duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
+			return this;
 		}
 
 		private PdfObject SmartCopyObject(PdfObject @object)

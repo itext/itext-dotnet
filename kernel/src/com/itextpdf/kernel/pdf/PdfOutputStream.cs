@@ -1,5 +1,5 @@
 /*
-$Id: 97694299bb153c168e347c5aa19c44c67195ae5e $
+$Id: d3ee43eeb14973a4fdc5110cd805d318f3b22edb $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,8 +51,6 @@ using com.itextpdf.io.source;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.crypto;
 using com.itextpdf.kernel.pdf.filters;
-using java.security.cert;
-using java.util.zip;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -60,74 +58,6 @@ namespace com.itextpdf.kernel.pdf
 		>
 	{
 		private const long serialVersionUID = -548180479472231600L;
-
-		/// <summary>Type of encryption.</summary>
-		public const int STANDARD_ENCRYPTION_40 = 0;
-
-		/// <summary>Type of encryption.</summary>
-		public const int STANDARD_ENCRYPTION_128 = 1;
-
-		/// <summary>Type of encryption.</summary>
-		public const int ENCRYPTION_AES_128 = 2;
-
-		/// <summary>Type of encryption.</summary>
-		public const int ENCRYPTION_AES_256 = 3;
-
-		/// <summary>Mask to separate the encryption type from the encryption mode.</summary>
-		internal const int ENCRYPTION_MASK = 7;
-
-		/// <summary>Add this to the mode to keep the metadata in clear text.</summary>
-		public const int DO_NOT_ENCRYPT_METADATA = 8;
-
-		/// <summary>Add this to the mode to keep encrypt only the embedded files.</summary>
-		public const int EMBEDDED_FILES_ONLY = 24;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_PRINTING = 4 + 2048;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_MODIFY_CONTENTS = 8;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_COPY = 16;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_MODIFY_ANNOTATIONS = 32;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_FILL_IN = 256;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_SCREENREADERS = 512;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_ASSEMBLY = 1024;
-
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_DEGRADED_PRINTING = 4;
-
-		/// <summary>A possible compression level.</summary>
-		public const int UNDEFINED_COMPRESSION = int.MinValue;
-
-		/// <summary>A possible compression level.</summary>
-		public const int DEFAULT_COMPRESSION = Deflater.DEFAULT_COMPRESSION;
-
-		/// <summary>A possible compression level.</summary>
-		public const int NO_COMPRESSION = Deflater.NO_COMPRESSION;
-
-		/// <summary>A possible compression level.</summary>
-		public const int BEST_SPEED = Deflater.BEST_SPEED;
-
-		/// <summary>A possible compression level.</summary>
-		public const int BEST_COMPRESSION = Deflater.BEST_COMPRESSION;
 
 		private static readonly byte[] stream = ByteUtils.GetIsoBytes("stream\n");
 
@@ -155,9 +85,6 @@ namespace com.itextpdf.kernel.pdf
 		{
 		}
 
-		//TODO review location and use of the constants
-		// permissions
-		// compression constants
 		// For internal usage only
 		public virtual com.itextpdf.kernel.pdf.PdfOutputStream Write(PdfObject pdfObject)
 		{
@@ -174,125 +101,63 @@ namespace com.itextpdf.kernel.pdf
 			{
 				case PdfObject.ARRAY:
 				{
-					WritePdfArray((PdfArray)pdfObject);
+					Write((PdfArray)pdfObject);
 					break;
 				}
 
 				case PdfObject.DICTIONARY:
 				{
-					WritePdfDictionary((PdfDictionary)pdfObject);
+					Write((PdfDictionary)pdfObject);
 					break;
 				}
 
 				case PdfObject.INDIRECT_REFERENCE:
 				{
-					WritePdfIndirectReference((PdfIndirectReference)pdfObject);
+					Write((PdfIndirectReference)pdfObject);
 					break;
 				}
 
 				case PdfObject.NAME:
 				{
-					WritePdfName((PdfName)pdfObject);
+					Write((PdfName)pdfObject);
 					break;
 				}
 
 				case PdfObject.NULL:
 				case PdfObject.BOOLEAN:
 				{
-					WritePdfPrimitiveObject((PdfPrimitiveObject)pdfObject);
+					Write((PdfPrimitiveObject)pdfObject);
 					break;
 				}
 
 				case PdfObject.LITERAL:
 				{
-					WritePdfLiteral((PdfLiteral)pdfObject);
+					Write((PdfLiteral)pdfObject);
 					break;
 				}
 
 				case PdfObject.STRING:
 				{
-					WritePdfString((PdfString)pdfObject);
+					Write((PdfString)pdfObject);
 					break;
 				}
 
 				case PdfObject.NUMBER:
 				{
-					WritePdfNumber((PdfNumber)pdfObject);
+					Write((PdfNumber)pdfObject);
 					break;
 				}
 
 				case PdfObject.STREAM:
 				{
-					WritePdfStream((PdfStream)pdfObject);
+					Write((PdfStream)pdfObject);
 					break;
 				}
 			}
 			return this;
 		}
 
-		/// <summary>Sets the encryption options for this document.</summary>
-		/// <remarks>
-		/// Sets the encryption options for this document. The userPassword and the
-		/// ownerPassword can be null or have zero length. In this case the ownerPassword
-		/// is replaced by a random string. The open permissions for the document can be
-		/// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-		/// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
-		/// The permissions can be combined by ORing them.
-		/// </remarks>
-		/// <param name="userPassword">the user password. Can be null or empty</param>
-		/// <param name="ownerPassword">the owner password. Can be null or empty</param>
-		/// <param name="permissions">the user permissions</param>
-		/// <param name="encryptionType">
-		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
-		/// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
-		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if the document is already open
-		/// 	</exception>
-		public virtual void SetEncryption(byte[] userPassword, byte[] ownerPassword, int 
-			permissions, int encryptionType)
-		{
-			if (document != null)
-			{
-				throw new PdfException(PdfException.EncryptionCanOnlyBeAddedBeforeOpeningDocument
-					);
-			}
-			crypto = new PdfEncryption(userPassword, ownerPassword, permissions, encryptionType
-				, PdfEncryption.GenerateNewDocumentId());
-		}
-
-		/// <summary>Sets the certificate encryption options for this document.</summary>
-		/// <remarks>
-		/// Sets the certificate encryption options for this document. An array of one or more public certificates
-		/// must be provided together with an array of the same size for the permissions for each certificate.
-		/// The open permissions for the document can be
-		/// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-		/// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
-		/// The permissions can be combined by ORing them.
-		/// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
-		/// </remarks>
-		/// <param name="certs">the public certificates to be used for the encryption</param>
-		/// <param name="permissions">the user permissions for each of the certificates</param>
-		/// <param name="encryptionType">the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
-		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if the document is already open
-		/// 	</exception>
-		public virtual void SetEncryption(Certificate[] certs, int[] permissions, int encryptionType
-			)
-		{
-			if (document != null)
-			{
-				throw new PdfException(PdfException.EncryptionCanOnlyBeAddedBeforeOpeningDocument
-					);
-			}
-			crypto = new PdfEncryption(certs, permissions, encryptionType);
-		}
-
-		internal virtual PdfEncryption GetEncryption()
-		{
-			return crypto;
-		}
-
-		protected internal virtual void WritePdfArray(PdfArray pdfArray)
+		private void Write(PdfArray pdfArray)
 		{
 			WriteByte('[');
 			for (int i = 0; i < pdfArray.Size(); i++)
@@ -301,7 +166,7 @@ namespace com.itextpdf.kernel.pdf
 				PdfIndirectReference indirectReference;
 				if ((indirectReference = value.GetIndirectReference()) != null)
 				{
-					WritePdfIndirectReference(indirectReference);
+					Write(indirectReference);
 				}
 				else
 				{
@@ -315,13 +180,13 @@ namespace com.itextpdf.kernel.pdf
 			WriteByte(']');
 		}
 
-		protected internal virtual void WritePdfDictionary(PdfDictionary pdfDictionary)
+		private void Write(PdfDictionary pdfDictionary)
 		{
 			WriteBytes(openDict);
 			foreach (KeyValuePair<PdfName, PdfObject> entry in pdfDictionary.EntrySet())
 			{
 				bool isAlreadyWriteSpace = false;
-				WritePdfName(entry.Key);
+				Write(entry.Key);
 				PdfObject value = entry.Value;
 				if (value == null)
 				{
@@ -346,7 +211,7 @@ namespace com.itextpdf.kernel.pdf
 					{
 						WriteSpace();
 					}
-					WritePdfIndirectReference(indirectReference);
+					Write(indirectReference);
 				}
 				else
 				{
@@ -356,8 +221,7 @@ namespace com.itextpdf.kernel.pdf
 			WriteBytes(closeDict);
 		}
 
-		protected internal virtual void WritePdfIndirectReference(PdfIndirectReference indirectReference
-			)
+		private void Write(PdfIndirectReference indirectReference)
 		{
 			if (document != null && !indirectReference.GetDocument().Equals(document))
 			{
@@ -365,7 +229,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 			if (indirectReference.GetRefersTo() == null)
 			{
-				WritePdfPrimitiveObject(PdfNull.PDF_NULL);
+				Write(PdfNull.PDF_NULL);
 			}
 			else
 			{
@@ -382,19 +246,18 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		protected internal virtual void WritePdfPrimitiveObject(PdfPrimitiveObject pdfPrimitive
-			)
+		private void Write(PdfPrimitiveObject pdfPrimitive)
 		{
 			WriteBytes(pdfPrimitive.GetInternalContent());
 		}
 
-		protected internal virtual void WritePdfLiteral(PdfLiteral literal)
+		private void Write(PdfLiteral literal)
 		{
 			literal.SetPosition(GetCurrentPos());
 			WriteBytes(literal.GetInternalContent());
 		}
 
-		protected internal virtual void WritePdfString(PdfString pdfString)
+		private void Write(PdfString pdfString)
 		{
 			pdfString.Encrypt(crypto);
 			if (pdfString.IsHexWriting())
@@ -411,13 +274,13 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		protected internal virtual void WritePdfName(PdfName name)
+		private void Write(PdfName name)
 		{
 			WriteByte('/');
 			WriteBytes(name.GetInternalContent());
 		}
 
-		protected internal virtual void WritePdfNumber(PdfNumber pdfNumber)
+		private void Write(PdfNumber pdfNumber)
 		{
 			if (pdfNumber.HasContent())
 			{
@@ -442,18 +305,19 @@ namespace com.itextpdf.kernel.pdf
 				Type) != null && !pdfStream.GetAsName(PdfName.Type).Equals(PdfName.Metadata));
 		}
 
-		protected internal virtual void WritePdfStream(PdfStream pdfStream)
+		private void Write(PdfStream pdfStream)
 		{
 			try
 			{
-				bool userDefinedCompression = pdfStream.GetCompressionLevel() != UNDEFINED_COMPRESSION;
+				bool userDefinedCompression = pdfStream.GetCompressionLevel() != CompressionConstants
+					.UNDEFINED_COMPRESSION;
 				if (!userDefinedCompression)
 				{
 					int defaultCompressionLevel = document != null ? document.GetWriter().GetCompressionLevel
-						() : DEFAULT_COMPRESSION;
+						() : CompressionConstants.DEFAULT_COMPRESSION;
 					pdfStream.SetCompressionLevel(defaultCompressionLevel);
 				}
-				bool toCompress = pdfStream.GetCompressionLevel() != NO_COMPRESSION;
+				bool toCompress = pdfStream.GetCompressionLevel() != CompressionConstants.NO_COMPRESSION;
 				bool allowCompression = !pdfStream.ContainsKey(PdfName.Filter) && IsNotMetadataPdfStream
 					(pdfStream);
 				if (pdfStream.GetInputStream() != null)
@@ -471,7 +335,7 @@ namespace com.itextpdf.kernel.pdf
 						fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000
 							);
 					}
-					WritePdfDictionary(pdfStream);
+					this.Write((PdfDictionary)pdfStream);
 					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.stream);
 					long beginStreamContent = GetCurrentPos();
 					byte[] buf = new byte[4192];
@@ -579,7 +443,7 @@ namespace com.itextpdf.kernel.pdf
 					}
 					pdfStream.Put(PdfName.Length, new PdfNumber(byteArrayStream.Length));
 					pdfStream.UpdateLength((int)byteArrayStream.Length);
-					WritePdfDictionary(pdfStream);
+					this.Write((PdfDictionary)pdfStream);
 					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.stream);
 					byteArrayStream.WriteTo(this);
 					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.endstream);

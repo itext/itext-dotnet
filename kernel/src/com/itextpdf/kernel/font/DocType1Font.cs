@@ -1,5 +1,5 @@
 /*
-$Id: 103cc81636fed4eea92c0f9f72bfc239af576771 $
+$Id: 101a2e3ecff360dbd90575ffe68b55dd9414bc0d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,7 +50,7 @@ using com.itextpdf.kernel.pdf;
 
 namespace com.itextpdf.kernel.font
 {
-	internal class DocType1Font : Type1Font, DocFontProgram
+	internal class DocType1Font : Type1Font, IDocFontProgram
 	{
 		private const long serialVersionUID = 6260280563455951912L;
 
@@ -85,7 +85,7 @@ namespace com.itextpdf.kernel.font
 				{
 					//if there are no font modifiers, cached font could be used,
 					//otherwise a new instance should be created.
-					type1StdFont = Type1Font.CreateStandardFont(baseFont);
+					type1StdFont = (Type1Font)FontFactory.CreateRegisteredFont(baseFont);
 				}
 				catch (Exception)
 				{

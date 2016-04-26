@@ -1,5 +1,5 @@
 /*
-$Id: e451f24178ccc59d93295befdd150801617980a5 $
+$Id: 2a97a479632ade6d33ce55babe9e5656077f7f8c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -117,7 +117,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 
 		protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary
 			, PrivateKey certificateKey, Certificate certificate, String certificateKeyProvider
-			, ExternalDecryptionProcess externalDecryptionProcess, bool encryptMetadata, String
+			, IExternalDecryptionProcess externalDecryptionProcess, bool encryptMetadata, String
 			 digestAlgorithm)
 		{
 			PdfArray recipients = encryptionDictionary.GetAsArray(PdfName.Recipients);
@@ -266,7 +266,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		}
 
 		protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary
-			, Key certificateKey, Certificate certificate, String certificateKeyProvider, ExternalDecryptionProcess
+			, Key certificateKey, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 		{
 			String digestAlgorithm = GetDigestAlgorithm();

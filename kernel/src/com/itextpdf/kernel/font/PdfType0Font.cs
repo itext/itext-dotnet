@@ -1,5 +1,5 @@
 /*
-$Id: 779f950d1962cddd6b74a6010201922e8ecd22f7 $
+$Id: 317c378780fcd98af811ae76d47b020d9425ae59 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -158,8 +158,8 @@ namespace com.itextpdf.kernel.font
 				}
 				fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
 				cmapEncoding = new CMapEncoding(cmap);
-				System.Diagnostics.Debug.Assert(fontProgram is DocFontProgram);
-				embedded = ((DocFontProgram)fontProgram).GetFontFile() != null;
+				System.Diagnostics.Debug.Assert(fontProgram is IDocFontProgram);
+				embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
 				cidFontType = CID_FONT_TYPE_2;
 			}
 			else

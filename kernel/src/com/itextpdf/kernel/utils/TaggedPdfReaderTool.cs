@@ -1,5 +1,5 @@
 /*
-$Id: 760d5ff1da159ec504553965ed5c3c5d076efd71 $
+$Id: 6d4889015b256b88a4e648078eed8b2b86683163 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -192,7 +192,7 @@ namespace com.itextpdf.kernel.utils
 			int mcid = kid.GetMcid();
 			PdfDictionary pageDic = kid.GetPageObject();
 			String tagContent = "";
-			if (mcid != null)
+			if (mcid != -1)
 			{
 				if (!parsedTags.ContainsKey(pageDic))
 				{
@@ -257,6 +257,7 @@ namespace com.itextpdf.kernel.utils
 
 		/// <summary>
 		/// NOTE: copied from itext5 XMLUtils class
+		/// <p>
 		/// Escapes a string with the appropriated XML codes.
 		/// </summary>
 		/// <param name="s">the string to be escaped</param>
@@ -333,10 +334,10 @@ namespace com.itextpdf.kernel.utils
 				 && c <= 0xFFFD || c >= 0x10000 && c <= 0x10FFFF);
 		}
 
-		private class MarkedContentEventListener : EventListener
+		private class MarkedContentEventListener : IEventListener
 		{
-			private IDictionary<int, TextExtractionStrategy> contentByMcid = new Dictionary<int
-				, TextExtractionStrategy>();
+			private IDictionary<int, ITextExtractionStrategy> contentByMcid = new Dictionary<
+				int, ITextExtractionStrategy>();
 
 			public virtual IDictionary<int, String> GetMcidContent()
 			{
@@ -348,7 +349,7 @@ namespace com.itextpdf.kernel.utils
 				return content;
 			}
 
-			public virtual void EventOccurred(EventData data, EventType type)
+			public virtual void EventOccurred(IEventData data, EventType type)
 			{
 				switch (type)
 				{
@@ -358,7 +359,7 @@ namespace com.itextpdf.kernel.utils
 						int mcid = textInfo.GetMcid();
 						if (mcid != -1)
 						{
-							TextExtractionStrategy textExtractionStrategy = this.contentByMcid[mcid];
+							ITextExtractionStrategy textExtractionStrategy = this.contentByMcid[mcid];
 							if (textExtractionStrategy == null)
 							{
 								textExtractionStrategy = new LocationTextExtractionStrategy();

@@ -1,5 +1,5 @@
 /*
-$Id: d4dc87789517d879f414d059507b5b2965e1e107 $
+$Id: fbea8d2a7aacfb72a6931f6dd6ce9fbeaddb0205 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,6 +53,9 @@ namespace com.itextpdf.io
 		public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
 
 		/// <summary>Log message.</summary>
+		public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
+
+		/// <summary>Log message.</summary>
 		public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
 
 		/// <summary>Log message.</summary>
@@ -89,6 +92,12 @@ namespace com.itextpdf.io
 		public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";
 
 		/// <summary>Log message.</summary>
+		public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";
+
+		/// <summary>Log message.</summary>
+		public const String OCSP_STATUS_IS_REVOKED = "OCSP status is revoked.";
+
+		/// <summary>Log message.</summary>
 		public const String ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE = "Only one of artbox or trimbox can exist on the page. The trimbox will be deleted";
 
 		/// <summary>Log message.</summary>
@@ -111,5 +120,9 @@ namespace com.itextpdf.io
 
 		/// <summary>Log message.</summary>
 		public const String TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED = "ToUnicode CMap more than 2 bytes not supported.";
+
+		public const String WRITER_ENCRYPTION_IS_IGNORED_APPEND = "Writer encryption will be ignored, because append mode is used. Document will preserve the original encryption (or will stay unencrypted)";
+
+		public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
 	}
 }

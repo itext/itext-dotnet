@@ -1,5 +1,5 @@
 /*
-$Id: 9242cea468ad1c5ec8cd669548ea9cf27d840405 $
+$Id: 81ed63918cf78a2fbeacefa39e0f8452a322202e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,10 +49,10 @@ using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.border;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -168,7 +168,6 @@ namespace com.itextpdf.layout.renderer
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), tableWidth, 0));
 			int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
-			int numberOfRows = rows.Count;
 			horizontalBorders = new List<List<Border>>();
 			verticalBorders = new List<List<Border>>();
 			Table headerElement = tableModel.GetHeader();
@@ -177,8 +176,8 @@ namespace com.itextpdf.layout.renderer
 				 && !tableModel.IsSkipFirstHeader());
 			if (headerElement != null && headerShouldBeApplied)
 			{
-				headerRenderer = (com.itextpdf.layout.renderer.TableRenderer)((com.itextpdf.layout.renderer.TableRenderer
-					)headerElement.CreateRendererSubTree()).SetParent(this);
+				headerRenderer = (com.itextpdf.layout.renderer.TableRenderer)headerElement.CreateRendererSubTree
+					().SetParent(this);
 				LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area
 					.GetPageNumber(), layoutBox)));
 				if (result.GetStatus() != LayoutResult.FULL)
@@ -192,8 +191,8 @@ namespace com.itextpdf.layout.renderer
 			Table footerElement = tableModel.GetFooter();
 			if (footerElement != null)
 			{
-				footerRenderer = (com.itextpdf.layout.renderer.TableRenderer)((com.itextpdf.layout.renderer.TableRenderer
-					)footerElement.CreateRendererSubTree()).SetParent(this);
+				footerRenderer = (com.itextpdf.layout.renderer.TableRenderer)footerElement.CreateRendererSubTree
+					().SetParent(this);
 				LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area
 					.GetPageNumber(), layoutBox)));
 				if (result.GetStatus() != LayoutResult.FULL)
@@ -212,7 +211,7 @@ namespace com.itextpdf.layout.renderer
 			horizontalBorders.Add(tableModel.GetLastRowBottomBorder());
 			for (int row = 0; row < rows.Count; row++)
 			{
-				Property.VerticalAlignment verticalAlignment = null;
+				VerticalAlignment verticalAlignment = null;
 				CellRenderer[] currentRow = rows[row];
 				float rowHeight = 0;
 				bool split = false;
@@ -352,8 +351,8 @@ namespace com.itextpdf.layout.renderer
 											{
 												CellRenderer addRenderer = rows[addRow][addCol_1];
 												verticalAlignment = addRenderer.GetProperty(Property.VERTICAL_ALIGNMENT);
-												if (verticalAlignment != null && verticalAlignment.Equals(Property.VerticalAlignment
-													.BOTTOM))
+												if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM
+													))
 												{
 													if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow)
 													{
@@ -504,8 +503,8 @@ namespace com.itextpdf.layout.renderer
 								currentRow[col_1].isLastRendererForModelElement = false;
 								childRenderers.Add(currentRow[col_1]);
 								currentRow[col_1] = null;
-								rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)((CellRenderer)overflowCell
-									.GetRenderer()).SetParent(this);
+								rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)overflowCell.GetRenderer
+									().SetParent(this);
 							}
 						}
 					}
@@ -571,43 +570,32 @@ namespace com.itextpdf.layout.renderer
 		{
 			PdfDocument document = drawContext.GetDocument();
 			bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-			if (isTagged && ((IAccessibleElement)GetModelElement()).GetRole() != null && !((IAccessibleElement
-				)GetModelElement()).GetRole().Equals(PdfName.Artifact))
+			bool ignoreTag = false;
+			PdfName role = null;
+			if (isTagged)
 			{
-				TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer
-					();
+				role = ((IAccessibleElement)GetModelElement()).GetRole();
+				bool isHeaderOrFooter = PdfName.THead.Equals(role) || PdfName.TFoot.Equals(role);
+				bool ignoreHeaderFooterTag = document.GetTagStructureContext().GetTagStructureTargetVersion
+					().CompareTo(PdfVersion.PDF_1_5) < 0;
+				ignoreTag = isHeaderOrFooter && ignoreHeaderFooterTag;
+			}
+			if (role != null && !role.Equals(PdfName.Artifact) && !ignoreTag)
+			{
+				TagStructureContext tagStructureContext = document.GetTagStructureContext();
+				TagTreePointer tagPointer = tagStructureContext.GetAutoTaggingPointer();
 				IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-				if (!document.GetTagStructureContext().IsElementConnectedToTag(accessibleElement))
+				if (!tagStructureContext.IsElementConnectedToTag(accessibleElement))
 				{
-					AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this
-						, document);
+					AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, document);
 				}
 				Table modelElement = (Table)GetModelElement();
-				bool toRemoveConnectionsWithTags = isLastRendererForModelElement && modelElement.
-					IsComplete();
-				if (accessibleElement.GetRole().Equals(PdfName.THead) || accessibleElement.GetRole
-					().Equals(PdfName.TFoot))
-				{
-					foreach (IRenderer renderer in childRenderers)
-					{
-						if (renderer is AbstractRenderer)
-						{
-							((AbstractRenderer)renderer).isLastRendererForModelElement = toRemoveConnectionsWithTags;
-						}
-					}
-				}
-				//footer/header tags order processing
-				if (accessibleElement.GetRole().Equals(PdfName.THead))
-				{
-					tagPointer.AddTag(0, accessibleElement, true);
-				}
-				else
-				{
-					tagPointer.AddTag(accessibleElement, true);
-				}
+				tagPointer.AddTag(accessibleElement, true);
 				base.Draw(drawContext);
 				tagPointer.MoveToParent();
-				if (toRemoveConnectionsWithTags)
+				bool toRemoveConnectionsWithTag = isLastRendererForModelElement && modelElement.IsComplete
+					();
+				if (toRemoveConnectionsWithTag)
 				{
 					tagPointer.RemoveElementConnectionToTag(accessibleElement);
 				}
@@ -621,15 +609,28 @@ namespace com.itextpdf.layout.renderer
 		public override void DrawChildren(DrawContext drawContext)
 		{
 			Table modelElement = (Table)GetModelElement();
-			bool isTheVeryLast = isLastRendererForModelElement && modelElement.IsComplete();
 			if (headerRenderer != null)
 			{
-				headerRenderer.isLastRendererForModelElement = isTheVeryLast;
+				bool firstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer && !
+					modelElement.IsSkipFirstHeader();
+				bool notToTagHeader = drawContext.IsTaggingEnabled() && !firstHeader;
+				if (notToTagHeader)
+				{
+					drawContext.SetTaggingEnabled(false);
+					drawContext.GetCanvas().OpenTag(new CanvasArtifact());
+				}
 				headerRenderer.Draw(drawContext);
+				if (notToTagHeader)
+				{
+					drawContext.GetCanvas().CloseTag();
+					drawContext.SetTaggingEnabled(true);
+				}
 			}
 			bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement
 				 && !childRenderers.IsEmpty();
 			TagTreePointer tagPointer = null;
+			bool shouldHaveFooterOrHeaderTag = modelElement.GetHeader() != null || modelElement
+				.GetFooter() != null;
 			if (isTagged)
 			{
 				PdfName role = modelElement.GetRole();
@@ -637,7 +638,11 @@ namespace com.itextpdf.layout.renderer
 				{
 					tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer
 						();
-					if (modelElement.GetHeader() != null || modelElement.GetFooter() != null)
+					bool ignoreHeaderFooterTag = drawContext.GetDocument().GetTagStructureContext().GetTagStructureTargetVersion
+						().CompareTo(PdfVersion.PDF_1_5) < 0;
+					shouldHaveFooterOrHeaderTag = shouldHaveFooterOrHeaderTag && !ignoreHeaderFooterTag
+						 && (!modelElement.IsSkipFirstHeader() || !modelElement.IsSkipLastFooter());
+					if (shouldHaveFooterOrHeaderTag)
 					{
 						if (tagPointer.GetKidsRoles().Contains(PdfName.TBody))
 						{
@@ -658,7 +663,12 @@ namespace com.itextpdf.layout.renderer
 			{
 				if (isTagged)
 				{
-					int cellRow = ((Cell)child.GetModelElement()).GetRow();
+					int adjustByHeaderRowsNum = 0;
+					if (modelElement.GetHeader() != null && !modelElement.IsSkipFirstHeader() && !shouldHaveFooterOrHeaderTag)
+					{
+						adjustByHeaderRowsNum = modelElement.GetHeader().GetNumberOfRows();
+					}
+					int cellRow = ((Cell)child.GetModelElement()).GetRow() + adjustByHeaderRowsNum;
 					int rowsNum = tagPointer.GetKidsRoles().Count;
 					if (cellRow < rowsNum)
 					{
@@ -677,7 +687,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			if (isTagged)
 			{
-				if (modelElement.GetHeader() != null || modelElement.GetFooter() != null)
+				if (shouldHaveFooterOrHeaderTag)
 				{
 					tagPointer.MoveToParent();
 				}
@@ -685,8 +695,20 @@ namespace com.itextpdf.layout.renderer
 			DrawBorders(drawContext);
 			if (footerRenderer != null)
 			{
-				footerRenderer.isLastRendererForModelElement = isTheVeryLast;
+				bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !
+					modelElement.IsSkipLastFooter();
+				bool notToTagFooter = drawContext.IsTaggingEnabled() && !lastFooter;
+				if (notToTagFooter)
+				{
+					drawContext.SetTaggingEnabled(false);
+					drawContext.GetCanvas().OpenTag(new CanvasArtifact());
+				}
 				footerRenderer.Draw(drawContext);
+				if (notToTagFooter)
+				{
+					drawContext.GetCanvas().CloseTag();
+					drawContext.SetTaggingEnabled(true);
+				}
 			}
 		}
 
@@ -771,11 +793,11 @@ namespace com.itextpdf.layout.renderer
 				 };
 		}
 
-		protected internal virtual T CreateSplitRenderer<T>(Table.RowRange rowRange)
-			where T : com.itextpdf.layout.renderer.TableRenderer
+		protected internal virtual com.itextpdf.layout.renderer.TableRenderer CreateSplitRenderer
+			(Table.RowRange rowRange)
 		{
-			com.itextpdf.layout.renderer.TableRenderer splitRenderer = ((com.itextpdf.layout.renderer.TableRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.TableRenderer splitRenderer = (com.itextpdf.layout.renderer.TableRenderer
+				)GetNextRenderer();
 			splitRenderer.rowRange = rowRange;
 			splitRenderer.parent = parent;
 			splitRenderer.modelElement = modelElement;
@@ -786,20 +808,20 @@ namespace com.itextpdf.layout.renderer
 			splitRenderer.headerRenderer = headerRenderer;
 			splitRenderer.footerRenderer = footerRenderer;
 			splitRenderer.isLastRendererForModelElement = false;
-			return (T)splitRenderer;
+			return splitRenderer;
 		}
 
-		protected internal virtual T CreateOverflowRenderer<T>(Table.RowRange rowRange)
-			where T : com.itextpdf.layout.renderer.TableRenderer
+		protected internal virtual com.itextpdf.layout.renderer.TableRenderer CreateOverflowRenderer
+			(Table.RowRange rowRange)
 		{
-			com.itextpdf.layout.renderer.TableRenderer overflowRenderer = ((com.itextpdf.layout.renderer.TableRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.TableRenderer overflowRenderer = (com.itextpdf.layout.renderer.TableRenderer
+				)GetNextRenderer();
 			overflowRenderer.rowRange = rowRange;
 			overflowRenderer.parent = parent;
 			overflowRenderer.modelElement = modelElement;
 			overflowRenderer.AddAllProperties(GetOwnProperties());
 			overflowRenderer.isOriginalNonSplitRenderer = false;
-			return (T)overflowRenderer;
+			return overflowRenderer;
 		}
 
 		protected internal virtual void DrawBorders(DrawContext drawContext)
@@ -1245,7 +1267,6 @@ namespace com.itextpdf.layout.renderer
 		/// The purpose to use this method is to remove input argument RowRange from createOverflowRenderer
 		/// and createSplitRenderer methods.
 		/// </remarks>
-		/// <param name="rowRange"/>
 		private void SetRowRange(Table.RowRange rowRange)
 		{
 			this.rowRange = rowRange;

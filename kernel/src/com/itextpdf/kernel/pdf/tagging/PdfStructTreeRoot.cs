@@ -1,5 +1,5 @@
 /*
-$Id: 38e556eb8d9d13761e53d89a282fb53bef716968 $
+$Id: c29d508866437d53fe846ce5f0b598870def5e11 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -257,7 +257,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 
 		public virtual int GetParentTreeNextKey()
 		{
-			// /ParentTreeNextKey entry is always inited on MaredContentReferencesManager initialization
+			// /ParentTreeNextKey entry is always inited on ParentTreeHandler initialization
 			return GetPdfObject().GetAsNumber(PdfName.ParentTreeNextKey).IntValue();
 		}
 

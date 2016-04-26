@@ -1,5 +1,5 @@
 /*
-$Id: 16b0aaa4b9704f62668bf3d6f2072b60290dff23 $
+$Id: e9611cf18eb3ea0b2368b5b6038cdc120f77bf26 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -116,6 +116,6 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 
 		public abstract OutputStreamEncryption GetEncryptionStream(Stream os);
 
-		public abstract Decryptor GetDecryptor();
+		public abstract IDecryptor GetDecryptor();
 	}
 }

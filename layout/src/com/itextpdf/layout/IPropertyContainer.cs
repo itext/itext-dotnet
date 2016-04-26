@@ -1,5 +1,5 @@
 /*
-$Id: a550ef440cdda3db7b2be54f288c51b6ac762cc4 $
+$Id: 5626599c1c649f689c42dd7fdf8a22e7a7d2e5ef $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,22 +43,22 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout
 {
 	/// <summary>
 	/// A generic Map-like interface that defines methods for storing and retrieving
 	/// objects by an enum key of the
-	/// <see cref="Property"/>
+	/// <see cref="com.itextpdf.layout.property.Property"/>
 	/// type.
 	/// </summary>
-	/// <?/>
-	public interface IPropertyContainer<T>
+	public interface IPropertyContainer
 	{
 		/// <summary>Checks if this entity has the specified property.</summary>
 		/// <remarks>
 		/// Checks if this entity has the specified property. Compared to
-		/// <see cref="IPropertyContainer{T}.HasOwnProperty(Property)"/>
+		/// <see cref="HasOwnProperty(com.itextpdf.layout.property.Property)"/>
 		/// ,
 		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
 		/// </remarks>
@@ -88,7 +88,7 @@ namespace com.itextpdf.layout
 		/// <summary>Gets the property from this entity.</summary>
 		/// <remarks>
 		/// Gets the property from this entity. Compared to
-		/// <see cref="IPropertyContainer{T}.GetOwnProperty{T1}(Property)"/>
+		/// <see cref="GetOwnProperty{T1}(com.itextpdf.layout.property.Property)"/>
 		/// ,
 		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
 		/// </remarks>
@@ -128,12 +128,9 @@ namespace com.itextpdf.layout
 		T1 GetDefaultProperty<T1>(Property property);
 
 		/// <summary>Sets a property for this entity.</summary>
-		/// <?/>
 		/// <param name="property">the property to be set</param>
 		/// <param name="value">the value of the property</param>
-		/// <returns>this element</returns>
-		T1 SetProperty<T1>(Property property, Object value)
-			where T1 : T;
+		void SetProperty(Property property, Object value);
 
 		/// <summary>Deletes the own property of this entity.</summary>
 		/// <param name="property">the property to be deleted</param>

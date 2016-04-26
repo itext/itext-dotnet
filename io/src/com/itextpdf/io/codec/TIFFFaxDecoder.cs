@@ -433,7 +433,7 @@ namespace com.itextpdf.io.codec
 			// 1008 - 1015
 			// 1016 - 1023
 			// Additional make up codes for both White and Black runs
-			//    static short additionalMakeup[] = {
+			//    static short[] additionalMakeup = {
 			//        28679,  28679,  31752,  (short)32777,
 			//        (short)33801,  (short)34825,  (short)35849,  (short)36873,
 			//        (short)29703,  (short)29703,  (short)30727,  (short)30727,

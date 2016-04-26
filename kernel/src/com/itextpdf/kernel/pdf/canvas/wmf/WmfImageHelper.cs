@@ -1,5 +1,5 @@
 /*
-$Id: 70e10c5c3c49be89da522c49ac485a55dbec68df $
+$Id: 579b1c927f0e78b4c522eccc92456ea18a3743c7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -65,7 +65,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <remarks>Scales the WMF font size. The default value is 0.86.</remarks>
 		public static float wmfFontCorrection = 0.86f;
 
-		private WmfImage wmf;
+		private WmfImageData wmf;
 
 		private float plainWidth;
 
@@ -74,16 +74,16 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <summary>Creates a helper instance.</summary>
 		/// <param name="wmf">
 		/// the
-		/// <see cref="WmfImage"/>
+		/// <see cref="WmfImageData"/>
 		/// object
 		/// </param>
-		public WmfImageHelper(Image wmf)
+		public WmfImageHelper(ImageData wmf)
 		{
 			if (wmf.GetOriginalType() != ImageType.WMF)
 			{
 				throw new ArgumentException("WMF image expected");
 			}
-			this.wmf = (WmfImage)wmf;
+			this.wmf = (WmfImageData)wmf;
 			ProcessParameters();
 		}
 

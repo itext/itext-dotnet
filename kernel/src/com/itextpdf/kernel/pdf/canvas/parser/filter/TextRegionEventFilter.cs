@@ -1,5 +1,5 @@
 /*
-$Id: 1cfc9434ed6fb741d836a9f53a0a4be3352760d8 $
+$Id: 4ad9960990e2d1a1777731c120cf10a63fff9c4e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,11 +50,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.filter
 {
 	/// <summary>
 	/// This
-	/// <see cref="EventFilter"/>
+	/// <see cref="IEventFilter"/>
 	/// implementation only accepts text render events within the specified
 	/// rectangular region.
 	/// </summary>
-	public class TextRegionEventFilter : EventFilter
+	public class TextRegionEventFilter : IEventFilter
 	{
 		private readonly Rectangle filterRect;
 
@@ -65,7 +65,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.filter
 			this.filterRect = filterRect;
 		}
 
-		public virtual bool Accept(EventData data, EventType type)
+		public virtual bool Accept(IEventData data, EventType type)
 		{
 			if (type.Equals(EventType.RENDER_TEXT))
 			{

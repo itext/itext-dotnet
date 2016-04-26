@@ -1,5 +1,5 @@
 /*
-$Id: efde81f10e00b788f1b760678f06a9470ecb7295 $
+$Id: 3ffd43f393ded0b232275446325b2169acb160b1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -191,8 +191,8 @@ namespace com.itextpdf.io.font
 
 		private static readonly IntHashtable pdfEncoding = new IntHashtable();
 
-		private static readonly IDictionary<String, ExtraEncoding> extraEncodings = new Dictionary
-			<String, ExtraEncoding>();
+		private static readonly IDictionary<String, IExtraEncoding> extraEncodings = new 
+			Dictionary<String, IExtraEncoding>();
 
 		static PdfEncodings()
 		{
@@ -255,7 +255,7 @@ namespace com.itextpdf.io.font
 				}
 				return b;
 			}
-			ExtraEncoding extra = extraEncodings[encoding.ToLower()];
+			IExtraEncoding extra = extraEncodings[encoding.ToLower()];
 			if (extra != null)
 			{
 				byte[] b = extra.CharToByte(text, encoding);
@@ -413,7 +413,7 @@ namespace com.itextpdf.io.font
 				}
 				return new String(c);
 			}
-			ExtraEncoding extra = extraEncodings[encoding.ToLower()];
+			IExtraEncoding extra = extraEncodings[encoding.ToLower()];
 			if (extra != null)
 			{
 				String text = extra.ByteToChar(bytes, encoding);
@@ -495,7 +495,7 @@ namespace com.itextpdf.io.font
 		/// <param name="name">the name of the encoding. The encoding recognition is case insensitive
 		/// 	</param>
 		/// <param name="enc">the conversion class</param>
-		public static void AddExtraEncoding(String name, ExtraEncoding enc)
+		public static void AddExtraEncoding(String name, IExtraEncoding enc)
 		{
 			lock (extraEncodings)
 			{
@@ -503,7 +503,7 @@ namespace com.itextpdf.io.font
 			}
 		}
 
-		private class WingdingsConversion : ExtraEncoding
+		private class WingdingsConversion : IExtraEncoding
 		{
 			public virtual byte[] CharToByte(char char1, String encoding)
 			{
@@ -616,7 +616,7 @@ namespace com.itextpdf.io.font
 				(byte)0), unchecked((byte)0) };
 		}
 
-		private class Cp437Conversion : ExtraEncoding
+		private class Cp437Conversion : IExtraEncoding
 		{
 			private static IntHashtable c2b = new IntHashtable();
 
@@ -723,7 +723,7 @@ namespace com.itextpdf.io.font
 			}
 		}
 
-		private class SymbolConversion : ExtraEncoding
+		private class SymbolConversion : IExtraEncoding
 		{
 			private static readonly IntHashtable t1 = new IntHashtable();
 
@@ -878,7 +878,7 @@ namespace com.itextpdf.io.font
 			}
 		}
 
-		private class SymbolTTConversion : ExtraEncoding
+		private class SymbolTTConversion : IExtraEncoding
 		{
 			public virtual byte[] CharToByte(char char1, String encoding)
 			{

@@ -1,5 +1,5 @@
 /*
-$Id: c7b4c831b1f6c8a49036a3b11dae7667c4599f60 $
+$Id: 259c49921a216b096d3be0028c8b4f69923921da $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -49,7 +49,7 @@ using com.itextpdf.kernel.pdf;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>Handles CCITTFaxDecode filter</summary>
-	public class CCITTFaxDecodeFilter : FilterHandler
+	public class CCITTFaxDecodeFilter : IFilterHandler
 	{
 		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
 			, PdfDictionary streamDictionary)

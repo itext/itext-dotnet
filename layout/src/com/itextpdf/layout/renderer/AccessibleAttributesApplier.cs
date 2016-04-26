@@ -1,5 +1,5 @@
 /*
-$Id: 9ce50a5ebb7d3d0ab8edb51e824ea54979d7d84e $
+$Id: c7e44ab617e505b7ac553a50e2330eda9e4231cc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,9 +50,9 @@ using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagging;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.border;
 using com.itextpdf.layout.element;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -111,9 +111,9 @@ namespace com.itextpdf.layout.renderer
 			PdfName attributesType = PdfName.List;
 			attributes.Put(PdfName.O, attributesType);
 			Object listSymbol = renderer.GetProperty(Property.LIST_SYMBOL);
-			if (listSymbol is Property.ListNumberingType)
+			if (listSymbol is ListNumberingType)
 			{
-				Property.ListNumberingType numberingType = (Property.ListNumberingType)listSymbol;
+				ListNumberingType numberingType = (ListNumberingType)listSymbol;
 				attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType)
 					);
 			}
@@ -215,8 +215,7 @@ namespace com.itextpdf.layout.renderer
 			{
 				attributes.Put(PdfName.TextIndent, new PdfNumber(firstLineIndent));
 			}
-			Property.TextAlignment textAlignment = renderer.GetProperty(Property.TEXT_ALIGNMENT
-				);
+			TextAlignment textAlignment = renderer.GetProperty(Property.TEXT_ALIGNMENT);
 			if (textAlignment != null && (!role.Equals(PdfName.TH) && !role.Equals(PdfName.TD
 				)))
 			{
@@ -235,7 +234,7 @@ namespace com.itextpdf.layout.renderer
 			if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD) || role.Equals(PdfName.Table
 				))
 			{
-				Property.UnitValue width = renderer.GetProperty(Property.WIDTH);
+				UnitValue width = renderer.GetProperty(Property.WIDTH);
 				if (width != null && width.IsPointValue())
 				{
 					attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
@@ -248,15 +247,15 @@ namespace com.itextpdf.layout.renderer
 			}
 			if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD))
 			{
-				Property.HorizontalAlignment horizontalAlignment = renderer.GetProperty(Property.
-					HORIZONTAL_ALIGNMENT);
+				HorizontalAlignment horizontalAlignment = renderer.GetProperty(Property.HORIZONTAL_ALIGNMENT
+					);
 				if (horizontalAlignment != null)
 				{
 					attributes.Put(PdfName.BlockAlign, TransformBlockAlignToName(horizontalAlignment)
 						);
 				}
-				if (textAlignment != null && (textAlignment != Property.TextAlignment.JUSTIFIED &&
-					 textAlignment != Property.TextAlignment.JUSTIFIED_ALL))
+				if (textAlignment != null && (textAlignment != TextAlignment.JUSTIFIED && textAlignment
+					 != TextAlignment.JUSTIFIED_ALL))
 				{
 					//there is no justified alignment for InlineAlign attribute
 					attributes.Put(PdfName.InlineAlign, TransformTextAlignmentValueToName(textAlignment
@@ -277,18 +276,18 @@ namespace com.itextpdf.layout.renderer
 			if (underlines != null)
 			{
 				float fontSize = renderer.GetPropertyAsFloat(Property.FONT_SIZE);
-				Property.Underline underline = null;
+				Underline underline = null;
 				if (underlines is IList && !((IList)underlines).IsEmpty() && ((IList)underlines)[
-					0] is Property.Underline)
+					0] is Underline)
 				{
 					// in standard attributes only one text decoration could be described for an element. That's why we take only the first underline from the list.
-					underline = (Property.Underline)((IList)underlines)[0];
+					underline = (Underline)((IList)underlines)[0];
 				}
 				else
 				{
-					if (underlines is Property.Underline)
+					if (underlines is Underline)
 					{
-						underline = (Property.Underline)underlines;
+						underline = (Underline)underlines;
 					}
 				}
 				if (underline != null)
@@ -311,7 +310,7 @@ namespace com.itextpdf.layout.renderer
 		{
 			Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
 			attributes.Put(PdfName.BBox, new PdfArray(bbox));
-			Property.UnitValue width = renderer.GetProperty(Property.WIDTH);
+			UnitValue width = renderer.GetProperty(Property.WIDTH);
 			if (width != null && width.IsPointValue())
 			{
 				attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
@@ -470,14 +469,14 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private static PdfName TransformTextAlignmentValueToName(Property.TextAlignment textAlignment
+		private static PdfName TransformTextAlignmentValueToName(TextAlignment textAlignment
 			)
 		{
 			//TODO set rightToLeft value according with actual text content if it is possible.
 			bool isLeftToRight = true;
 			switch (textAlignment)
 			{
-				case Property.TextAlignment.LEFT:
+				case TextAlignment.LEFT:
 				{
 					if (isLeftToRight)
 					{
@@ -487,15 +486,15 @@ namespace com.itextpdf.layout.renderer
 					{
 						return PdfName.End;
 					}
-					goto case Property.TextAlignment.CENTER;
+					goto case TextAlignment.CENTER;
 				}
 
-				case Property.TextAlignment.CENTER:
+				case TextAlignment.CENTER:
 				{
 					return PdfName.Center;
 				}
 
-				case Property.TextAlignment.RIGHT:
+				case TextAlignment.RIGHT:
 				{
 					if (isLeftToRight)
 					{
@@ -505,11 +504,11 @@ namespace com.itextpdf.layout.renderer
 					{
 						return PdfName.Start;
 					}
-					goto case Property.TextAlignment.JUSTIFIED;
+					goto case TextAlignment.JUSTIFIED;
 				}
 
-				case Property.TextAlignment.JUSTIFIED:
-				case Property.TextAlignment.JUSTIFIED_ALL:
+				case TextAlignment.JUSTIFIED:
+				case TextAlignment.JUSTIFIED_ALL:
 				{
 					return PdfName.Justify;
 				}
@@ -521,14 +520,14 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private static PdfName TransformBlockAlignToName(Property.HorizontalAlignment horizontalAlignment
+		private static PdfName TransformBlockAlignToName(HorizontalAlignment horizontalAlignment
 			)
 		{
 			//TODO set rightToLeft value according with actual text content if it is possible.
 			bool isLeftToRight = true;
 			switch (horizontalAlignment)
 			{
-				case Property.HorizontalAlignment.LEFT:
+				case HorizontalAlignment.LEFT:
 				{
 					if (isLeftToRight)
 					{
@@ -538,15 +537,15 @@ namespace com.itextpdf.layout.renderer
 					{
 						return PdfName.After;
 					}
-					goto case Property.HorizontalAlignment.CENTER;
+					goto case HorizontalAlignment.CENTER;
 				}
 
-				case Property.HorizontalAlignment.CENTER:
+				case HorizontalAlignment.CENTER:
 				{
 					return PdfName.Middle;
 				}
 
-				case Property.HorizontalAlignment.RIGHT:
+				case HorizontalAlignment.RIGHT:
 				{
 					if (isLeftToRight)
 					{
@@ -622,34 +621,34 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private static PdfName TransformNumberingTypeToName(Property.ListNumberingType numberingType
+		private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType
 			)
 		{
 			switch (numberingType)
 			{
-				case Property.ListNumberingType.DECIMAL:
+				case ListNumberingType.DECIMAL:
 				{
 					return PdfName.Decimal;
 				}
 
-				case Property.ListNumberingType.ROMAN_UPPER:
+				case ListNumberingType.ROMAN_UPPER:
 				{
 					return PdfName.UpperRoman;
 				}
 
-				case Property.ListNumberingType.ROMAN_LOWER:
+				case ListNumberingType.ROMAN_LOWER:
 				{
 					return PdfName.LowerRoman;
 				}
 
-				case Property.ListNumberingType.ENGLISH_UPPER:
-				case Property.ListNumberingType.GREEK_UPPER:
+				case ListNumberingType.ENGLISH_UPPER:
+				case ListNumberingType.GREEK_UPPER:
 				{
 					return PdfName.UpperAlpha;
 				}
 
-				case Property.ListNumberingType.ENGLISH_LOWER:
-				case Property.ListNumberingType.GREEK_LOWER:
+				case ListNumberingType.ENGLISH_LOWER:
+				case ListNumberingType.GREEK_LOWER:
 				{
 					return PdfName.LowerAlpha;
 				}

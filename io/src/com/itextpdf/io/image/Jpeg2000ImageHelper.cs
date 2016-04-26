@@ -1,5 +1,5 @@
 /*
-$Id: be41e3a5eceedad729489d48ebcfacf0980c40fb $
+$Id: 9c548bf5b55b457f17e5544d269fd4e6ee365c86 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -91,21 +91,21 @@ namespace com.itextpdf.io.image
 
 		private const int JPX_JPXB = 0x6a707862;
 
-		public static void ProcessImage(Image image)
+		public static void ProcessImage(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.JPEG2000)
 			{
 				throw new ArgumentException("JPEG2000 image expected");
 			}
-			ProcessParameters((Jpeg2000Image)image);
+			ProcessParameters((Jpeg2000ImageData)image);
 			image.SetFilter("JPXDecode");
 		}
 
 		/// <summary>This method checks if the image is a valid JPEG and processes some parameters.
 		/// 	</summary>
-		private static void ProcessParameters(Jpeg2000Image jp2)
+		private static void ProcessParameters(Jpeg2000ImageData jp2)
 		{
-			jp2.parameters = new Jpeg2000Image.Parameters();
+			jp2.parameters = new Jpeg2000ImageData.Parameters();
 			try
 			{
 				if (jp2.GetData() == null)
@@ -178,7 +178,7 @@ namespace com.itextpdf.io.image
 							{
 								if (jp2.parameters.colorSpecBoxes == null)
 								{
-									jp2.parameters.colorSpecBoxes = new List<Jpeg2000Image.ColorSpecBox>();
+									jp2.parameters.colorSpecBoxes = new List<Jpeg2000ImageData.ColorSpecBox>();
 								}
 								jp2.parameters.colorSpecBoxes.Add(Jp2_read_colr(box, jpeg2000Stream));
 								try
@@ -222,11 +222,12 @@ namespace com.itextpdf.io.image
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private static Jpeg2000Image.ColorSpecBox Jp2_read_colr(Jpeg2000ImageHelper.Jpeg2000Box
+		private static Jpeg2000ImageData.ColorSpecBox Jp2_read_colr(Jpeg2000ImageHelper.Jpeg2000Box
 			 box, Stream jpeg2000Stream)
 		{
 			int readBytes = 8;
-			Jpeg2000Image.ColorSpecBox colorSpecBox = new Jpeg2000Image.ColorSpecBox();
+			Jpeg2000ImageData.ColorSpecBox colorSpecBox = new Jpeg2000ImageData.ColorSpecBox(
+				);
 			for (int i = 0; i < 3; i++)
 			{
 				colorSpecBox.Add(Cio_read(1, jpeg2000Stream));

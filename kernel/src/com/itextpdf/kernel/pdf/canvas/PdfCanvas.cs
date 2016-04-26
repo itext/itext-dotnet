@@ -1,5 +1,5 @@
 /*
-$Id: 0cfee286369d8b7c4fd2327d34713f15843368f0 $
+$Id: 0cc516a329a93e6adb6819f64fc681552bf24d98 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -377,6 +377,10 @@ namespace com.itextpdf.kernel.pdf.canvas
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas RestoreState()
 		{
 			document.CheckIsoConformance('Q', IsoKey.CANVAS_STACK);
+			if (gsStack.IsEmpty())
+			{
+				throw new PdfException(PdfException.UnbalancedSaveRestoreStateOperators);
+			}
 			currentGs = gsStack.Pop();
 			contentStream.GetOutputStream().WriteBytes(Q);
 			return this;
@@ -916,9 +920,9 @@ namespace com.itextpdf.kernel.pdf.canvas
 			}
 			double[] pt = ar[0];
 			MoveTo(pt[0], pt[1]);
-			for (int iter = 0; iter < ar.Count; ++iter)
+			for (int i = 0; i < ar.Count; ++i)
 			{
-				pt = ar[iter];
+				pt = ar[i];
 				CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
 			}
 			return this;
@@ -1113,7 +1117,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		{
 			PdfName shadingName = resources.AddShading(shading);
 			document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY);
-			contentStream.GetOutputStream().Write(shadingName).WriteSpace().WriteBytes(sh);
+			contentStream.GetOutputStream().Write((PdfObject)shadingName).WriteSpace().WriteBytes
+				(sh);
 			return this;
 		}
 
@@ -1383,8 +1388,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="array">length of the alternating dashes and gaps</param>
 		/// <param name="phase">the value of the phase</param>
 		/// <returns>current canvas.</returns>
-		public com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float[] array, float 
-			phase)
+		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float[] array
+			, float phase)
 		{
 			currentGs.SetDashPattern(GetDashPatternArray(array, phase));
 			PdfOutputStream @out = contentStream.GetOutputStream();
@@ -1724,7 +1729,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="layer">@see PdfLayer.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginLayer(PdfOCG layer)
+		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginLayer(IPdfOCG layer)
 		{
 			if (layer is PdfLayer && ((PdfLayer)layer).GetTitle() != null)
 			{
@@ -1768,7 +1773,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <returns>current canvas.</returns>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EndLayer()
 		{
-			int num = 1;
+			int num;
 			if (layerDepth != null && !layerDepth.IsEmpty())
 			{
 				num = layerDepth[layerDepth.Count - 1];
@@ -1799,8 +1804,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>created Image XObject.</returns>
-		public virtual PdfXObject AddImage(Image image, float a, float b, float c, float 
-			d, float e, float f)
+		public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float
+			 d, float e, float f)
 		{
 			return AddImage(image, a, b, c, d, e, f, false);
 		}
@@ -1820,8 +1825,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created Image XObject or null in case of in-line image (asInline = true).
 		/// 	</returns>
-		public virtual PdfXObject AddImage(Image image, float a, float b, float c, float 
-			d, float e, float f, bool asInline)
+		public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float
+			 d, float e, float f, bool asInline)
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.GRAPHIC_STATE_ONLY, null);
 			if (image.GetOriginalType() == ImageType.WMF)
@@ -1854,7 +1859,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
 		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual PdfXObject AddImage(Image image, com.itextpdf.kernel.geom.Rectangle
+		public virtual PdfXObject AddImage(ImageData image, com.itextpdf.kernel.geom.Rectangle
 			 rect, bool asInline)
 		{
 			return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect
@@ -1868,7 +1873,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
 		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual PdfXObject AddImage(Image image, float x, float y, bool asInline)
+		public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline
+			)
 		{
 			if (image.GetOriginalType() == ImageType.WMF)
 			{
@@ -1902,9 +1908,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="width"/>
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-		/// <on>error.</on>
-		public virtual PdfXObject AddImage(Image image, float x, float y, float width, bool
-			 asInline)
+		public virtual PdfXObject AddImage(ImageData image, float x, float y, float width
+			, bool asInline)
 		{
 			if (image.GetOriginalType() == ImageType.WMF)
 			{
@@ -1942,8 +1947,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="dummy"/>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
 		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual PdfXObject AddImage(Image image, float x, float y, float height, bool
-			 asInline, bool dummy)
+		public virtual PdfXObject AddImage(ImageData image, float x, float y, float height
+			, bool asInline, bool dummy)
 		{
 			return AddImage(image, height / image.GetHeight() * image.GetWidth(), 0, 0, height
 				, x, y, asInline);
@@ -1966,7 +1971,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float a, float b, float c, float d, float e, float f)
 		{
@@ -1996,7 +2000,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x"/>
 		/// <param name="y"/>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y)
 		{
@@ -2025,7 +2028,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="xObject"/>
 		/// <param name="rect"/>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, com.itextpdf.kernel.geom.Rectangle rect)
 		{
@@ -2056,7 +2058,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="width"/>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y, float width)
 		{
@@ -2088,7 +2089,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y, float height, bool dummy)
 		{
@@ -2312,7 +2312,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="d">an element of the transformation matrix</param>
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
-		/// <on>error</on>
 		protected internal virtual void AddInlineImage(PdfImageXObject imageXObject, float
 			 a, float b, float c, float d, float e, float f)
 		{
@@ -2356,7 +2355,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>current canvas.</returns>
-		/// <on>error</on>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 a, float b, float c, float d, float e, float f)
 		{
@@ -2437,7 +2435,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns/>
-		/// <on>error.</on>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 x, float y, float height, bool dummy)
 		{
@@ -2470,7 +2467,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>canvas a reference to this object.</returns>
-		/// <on>error</on>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
 			float a, float b, float c, float d, float e, float f)
 		{
@@ -2502,7 +2498,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x"/>
 		/// <param name="y"/>
 		/// <returns/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
 			float x, float y)
 		{
@@ -2517,7 +2512,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="image"/>
 		/// <param name="rect"/>
 		/// <returns/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
 			com.itextpdf.kernel.geom.Rectangle rect)
 		{
@@ -2535,7 +2529,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="width"/>
 		/// <returns/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
 			float x, float y, float width)
 		{
@@ -2554,7 +2547,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns>current canvas.</returns>
-		/// <on>error.</on>
 		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
 			float x, float y, float height, bool dummy)
 		{
@@ -2609,7 +2601,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 			currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
 		}
 
-		private void AddToPropertiesAndBeginLayer(PdfOCG layer)
+		private void AddToPropertiesAndBeginLayer(IPdfOCG layer)
 		{
 			PdfName name = resources.AddProperties(layer.GetPdfObject());
 			contentStream.GetOutputStream().Write(PdfName.OC).WriteSpace().Write(name).WriteSpace

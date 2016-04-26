@@ -1,5 +1,5 @@
 /*
-$Id: 581a4f950e2df21da9a7b8a19697e865e7c10c80 $
+$Id: 81761f885d6e6081f465b6203d9d0db5b6342903 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -745,7 +745,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 							cb.Rectangle(xDest, yDest, destWidth, destHeight);
 							cb.Clip();
 							cb.NewPath();
-							Image bmpImage = ImageFactory.GetBmpImage(b, true, b.Length);
+							ImageData bmpImage = ImageFactory.GetBmpImage(b, true, b.Length);
 							PdfImageXObject imageXObject = new PdfImageXObject(bmpImage);
 							float width = destWidth * bmpImage.GetWidth() / srcWidth;
 							float height = -destHeight * bmpImage.GetHeight() / srcHeight;
@@ -944,7 +944,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <param name="image">the BMP image to be wrapped</param>
 		/// <returns>the wrapped BMP</returns>
 		/// <exception cref="System.IO.IOException"/>
-		public static byte[] WrapBMP(Image image)
+		public static byte[] WrapBMP(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.BMP)
 			{

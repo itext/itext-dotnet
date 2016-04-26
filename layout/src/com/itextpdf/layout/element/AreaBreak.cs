@@ -1,5 +1,5 @@
 /*
-$Id: 37d545b08b324acca0d08f3f41aa5f8d76367e19 $
+$Id: 10a7b1814a3818f22cfbc3e3209af66073a3aced $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,8 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using com.itextpdf.kernel.geom;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -69,19 +70,18 @@ namespace com.itextpdf.layout.element
 		/// current one.
 		/// </remarks>
 		public AreaBreak()
-			: this(Property.AreaBreakType.NEW_AREA)
+			: this(AreaBreakType.NEW_AREA)
 		{
 		}
 
 		/// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
 		/// <param name="areaBreakType">
 		/// an
-		/// <see cref="com.itextpdf.layout.Property.AreaBreakType">area break type</see>
+		/// <see cref="com.itextpdf.layout.property.AreaBreakType">area break type</see>
 		/// </param>
-		public AreaBreak(Property.AreaBreakType areaBreakType)
+		public AreaBreak(AreaBreakType areaBreakType)
 		{
-			this.SetProperty<com.itextpdf.layout.element.AreaBreak>(Property.AREA_BREAK_TYPE, 
-				areaBreakType);
+			SetProperty(Property.AREA_BREAK_TYPE, areaBreakType);
 		}
 
 		/// <summary>Creates an AreaBreak.</summary>
@@ -91,7 +91,7 @@ namespace com.itextpdf.layout.element
 		/// </remarks>
 		/// <param name="pageSize">the size of the new content area</param>
 		public AreaBreak(PageSize pageSize)
-			: this(Property.AreaBreakType.NEW_PAGE)
+			: this(AreaBreakType.NEW_PAGE)
 		{
 			this.pageSize = pageSize;
 		}
@@ -121,12 +121,11 @@ namespace com.itextpdf.layout.element
 		/// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
 		/// <returns>
 		/// the current
-		/// <see cref="com.itextpdf.layout.Property.AreaBreakType">area break type</see>
+		/// <see cref="com.itextpdf.layout.property.AreaBreakType">area break type</see>
 		/// </returns>
-		public virtual Property.AreaBreakType GetType()
+		public virtual AreaBreakType GetType()
 		{
-			return ((Property.AreaBreakType)this.GetProperty<Property.AreaBreakType>(Property
-				.AREA_BREAK_TYPE));
+			return (AreaBreakType)((Object)GetProperty(Property.AREA_BREAK_TYPE));
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

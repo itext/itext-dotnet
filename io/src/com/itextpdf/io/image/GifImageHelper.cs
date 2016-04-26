@@ -1,5 +1,5 @@
 /*
-$Id: 0f38d17bc0170d50bb9d2543663dc63796560a9f $
+$Id: cfd32334603fedf4f149393a38da6819dca5fa2c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,7 +58,7 @@ namespace com.itextpdf.io.image
 
 		private class GifParameters
 		{
-			public GifParameters(GifImage image)
+			public GifParameters(GifImageData image)
 			{
 				// max decoder pixel stack size
 				this.image = image;
@@ -128,7 +128,7 @@ namespace com.itextpdf.io.image
 
 			internal int currentFrame;
 
-			internal GifImage image;
+			internal GifImageData image;
 			// global color table used
 			// background color index
 			// background color
@@ -150,7 +150,7 @@ namespace com.itextpdf.io.image
 		/// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)
 		/// 	</summary>
 		/// <param name="image">GifImage</param>
-		public static void ProcessImage(GifImage image)
+		public static void ProcessImage(GifImageData image)
 		{
 			ProcessImage(image, -1);
 		}
@@ -159,7 +159,7 @@ namespace com.itextpdf.io.image
 		/// 	</summary>
 		/// <param name="image">GifImage</param>
 		/// <param name="lastFrameNumber">the last frame of the gif image should be read</param>
-		public static void ProcessImage(GifImage image, int lastFrameNumber)
+		public static void ProcessImage(GifImageData image, int lastFrameNumber)
 		{
 			GifImageHelper.GifParameters gif = new GifImageHelper.GifParameters(image);
 			Stream gifStream;
@@ -409,7 +409,7 @@ namespace com.itextpdf.io.image
 				colorspace[3] = PdfEncodings.ConvertToString(gif.m_curr_table, null);
 				IDictionary<String, Object> ad = new Dictionary<String, Object>();
 				ad["ColorSpace"] = colorspace;
-				RawImage img = new RawImage(gif.m_out, ImageType.NONE);
+				RawImageData img = new RawImageData(gif.m_out, ImageType.NONE);
 				RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out
 					);
 				RawImageHelper.UpdateImageAttributes(img, ad);

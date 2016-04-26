@@ -1,5 +1,5 @@
 /*
-$Id: c45c35d20aeffc9b1b3c6b411d1020e361057c46 $
+$Id: 9f05d91ed78e032354ee26d7be5c42e21eabe8f9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -98,7 +98,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Creates a PdfStream instance.</summary>
 		/// <param name="bytes">bytes to write to the PdfStream</param>
 		public PdfStream(byte[] bytes)
-			: this(bytes, PdfWriter.UNDEFINED_COMPRESSION)
+			: this(bytes, CompressionConstants.UNDEFINED_COMPRESSION)
 		{
 		}
 
@@ -156,7 +156,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="inputStream">the data to write to this stream</param>
 		/// <exception cref="com.itextpdf.kernel.PdfException">on error.</exception>
 		public PdfStream(PdfDocument doc, Stream inputStream)
-			: this(doc, inputStream, PdfWriter.UNDEFINED_COMPRESSION)
+			: this(doc, inputStream, CompressionConstants.UNDEFINED_COMPRESSION)
 		{
 		}
 
@@ -183,7 +183,7 @@ namespace com.itextpdf.kernel.pdf
 			: base()
 		{
 			//NOTE This constructor only for PdfReader.
-			this.compressionLevel = PdfOutputStream.UNDEFINED_COMPRESSION;
+			this.compressionLevel = CompressionConstants.UNDEFINED_COMPRESSION;
 			this.offset = offset;
 			PutAll(keys);
 			PdfNumber length = GetAsNumber(PdfName.Length);

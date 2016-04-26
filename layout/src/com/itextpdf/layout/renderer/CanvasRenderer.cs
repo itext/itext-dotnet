@@ -1,5 +1,5 @@
 /*
-$Id: 220c3038d8a8a6de4e024f955328c4fa1338148b $
+$Id: ebabdd0638a0bfd873405aa67be892717d103748 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.layout;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {

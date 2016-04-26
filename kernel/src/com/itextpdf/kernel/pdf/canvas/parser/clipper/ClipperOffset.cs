@@ -1,5 +1,5 @@
 /*
-* $Id: 64c2756a7c6f8174c2e5e628c7cd570b70eb1f4f $
+* $Id: 68ce5a84a4c88520b2b626df4f2866f3ddacdb32 $
 *
 * This file is part of the iText (R) project.
 * Copyright (c) 2014-2015 iText Group NV
@@ -139,7 +139,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			normals = new List<Point.DoublePoint>();
 		}
 
-		public virtual void AddPath(Path path, Clipper.JoinType joinType, Clipper.EndType
+		public virtual void AddPath(Path path, IClipper.JoinType joinType, IClipper.EndType
 			 endType)
 		{
 			int highI = path.Count - 1;
@@ -151,7 +151,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			newNode.SetJoinType(joinType);
 			newNode.SetEndType(endType);
 			//strip duplicate points from path and also get index to the lowest point ...
-			if (endType == Clipper.EndType.CLOSED_LINE || endType == Clipper.EndType.CLOSED_POLYGON)
+			if (endType == IClipper.EndType.CLOSED_LINE || endType == IClipper.EndType.CLOSED_POLYGON)
 			{
 				while (highI > 0 && path[0] == path[highI])
 				{
@@ -174,13 +174,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					}
 				}
 			}
-			if (endType == Clipper.EndType.CLOSED_POLYGON && j < 2)
+			if (endType == IClipper.EndType.CLOSED_POLYGON && j < 2)
 			{
 				return;
 			}
 			polyNodes.AddChild(newNode);
 			//if this path's lowest pt is lower than all the others then update m_lowest
-			if (endType != Clipper.EndType.CLOSED_POLYGON)
+			if (endType != IClipper.EndType.CLOSED_POLYGON)
 			{
 				return;
 			}
@@ -200,7 +200,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 		}
 
-		public virtual void AddPaths(Paths paths, Clipper.JoinType joinType, Clipper.EndType
+		public virtual void AddPaths(Paths paths, IClipper.JoinType joinType, IClipper.EndType
 			 endType)
 		{
 			foreach (Path p in paths)
@@ -233,7 +233,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				for (int i = 0; i < polyNodes.GetChildCount(); i++)
 				{
 					PolyNode node = polyNodes.GetChilds()[i];
-					if (node.GetEndType() == Clipper.EndType.CLOSED_POLYGON)
+					if (node.GetEndType() == IClipper.EndType.CLOSED_POLYGON)
 					{
 						destPolys.Add(node.GetPolygon());
 					}
@@ -279,15 +279,15 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				PolyNode node = polyNodes.GetChilds()[i_1];
 				srcPoly = node.GetPolygon();
 				int len = srcPoly.Count;
-				if (len == 0 || (delta <= 0 && (len < 3 || node.GetEndType() != Clipper.EndType.CLOSED_POLYGON
-					)))
+				if (len == 0 || (delta <= 0 && (len < 3 || node.GetEndType() != IClipper.EndType.
+					CLOSED_POLYGON)))
 				{
 					continue;
 				}
 				destPoly = new Path();
 				if (len == 1)
 				{
-					if (node.GetJoinType() == Clipper.JoinType.ROUND)
+					if (node.GetJoinType() == IClipper.JoinType.ROUND)
 					{
 						double X = 1.0;
 						double Y = 0.0;
@@ -334,7 +334,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				{
 					normals.Add(Point.GetUnitNormal(srcPoly[j_1], srcPoly[j_1 + 1]));
 				}
-				if (node.GetEndType() == Clipper.EndType.CLOSED_LINE || node.GetEndType() == Clipper.EndType
+				if (node.GetEndType() == IClipper.EndType.CLOSED_LINE || node.GetEndType() == IClipper.EndType
 					.CLOSED_POLYGON)
 				{
 					normals.Add(Point.GetUnitNormal(srcPoly[len - 1], srcPoly[0]));
@@ -343,7 +343,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				{
 					normals.Add(new Point.DoublePoint(normals[len - 2]));
 				}
-				if (node.GetEndType() == Clipper.EndType.CLOSED_POLYGON)
+				if (node.GetEndType() == IClipper.EndType.CLOSED_POLYGON)
 				{
 					int[] k = new int[] { len - 1 };
 					for (int j = 0; j_1 < len; j_1++)
@@ -354,7 +354,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				}
 				else
 				{
-					if (node.GetEndType() == Clipper.EndType.CLOSED_LINE)
+					if (node.GetEndType() == IClipper.EndType.CLOSED_LINE)
 					{
 						int[] k = new int[] { len - 1 };
 						for (int j = 0; j_1 < len; j_1++)
@@ -386,7 +386,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							OffsetPoint(j_1, k, node.GetJoinType());
 						}
 						Point.LongPoint pt1;
-						if (node.GetEndType() == Clipper.EndType.OPEN_BUTT)
+						if (node.GetEndType() == IClipper.EndType.OPEN_BUTT)
 						{
 							int j_2 = len - 1;
 							pt1 = new Point.LongPoint(Math.Round(srcPoly[j_2].GetX() + normals[j_2].GetX() * 
@@ -402,7 +402,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							k[0] = len - 2;
 							inA = 0;
 							normals[j_2] = new Point.DoublePoint(-normals[j_2].GetX(), -normals[j_2].GetY());
-							if (node.GetEndType() == Clipper.EndType.OPEN_SQUARE)
+							if (node.GetEndType() == IClipper.EndType.OPEN_SQUARE)
 							{
 								DoSquare(j_2, k[0], true);
 							}
@@ -423,7 +423,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 						{
 							OffsetPoint(j_4, k, node.GetJoinType());
 						}
-						if (node.GetEndType() == Clipper.EndType.OPEN_BUTT)
+						if (node.GetEndType() == IClipper.EndType.OPEN_BUTT)
 						{
 							pt1 = new Point.LongPoint(Math.Round(srcPoly[0].GetX() - normals[0].GetX() * delta
 								), Math.Round(srcPoly[0].GetY() - normals[0].GetY() * delta));
@@ -436,7 +436,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 						{
 							k[0] = 1;
 							inA = 0;
-							if (node.GetEndType() == Clipper.EndType.OPEN_SQUARE)
+							if (node.GetEndType() == IClipper.EndType.OPEN_SQUARE)
 							{
 								DoSquare(0, 1, true);
 							}
@@ -493,11 +493,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			FixOrientations();
 			DoOffset(delta);
 			//now clean up 'corners' ...
-			DefaultClipper clpr = new DefaultClipper(Clipper.REVERSE_SOLUTION);
-			clpr.AddPaths(destPolys, Clipper.PolyType.SUBJECT, true);
+			DefaultClipper clpr = new DefaultClipper(IClipper.REVERSE_SOLUTION);
+			clpr.AddPaths(destPolys, IClipper.PolyType.SUBJECT, true);
 			if (delta > 0)
 			{
-				clpr.Execute(Clipper.ClipType.UNION, solution, Clipper.PolyFillType.POSITIVE, Clipper.PolyFillType
+				clpr.Execute(IClipper.ClipType.UNION, solution, IClipper.PolyFillType.POSITIVE, IClipper.PolyFillType
 					.POSITIVE);
 			}
 			else
@@ -508,8 +508,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				outer.Add(new Point.LongPoint(r.right + 10, r.bottom + 10, 0));
 				outer.Add(new Point.LongPoint(r.right + 10, r.top - 10, 0));
 				outer.Add(new Point.LongPoint(r.left - 10, r.top - 10, 0));
-				clpr.AddPath(outer, Clipper.PolyType.SUBJECT, true);
-				clpr.Execute(Clipper.ClipType.UNION, solution, Clipper.PolyFillType.NEGATIVE, Clipper.PolyFillType
+				clpr.AddPath(outer, IClipper.PolyType.SUBJECT, true);
+				clpr.Execute(IClipper.ClipType.UNION, solution, IClipper.PolyFillType.NEGATIVE, IClipper.PolyFillType
 					.NEGATIVE);
 				if (solution.Count > 0)
 				{
@@ -525,11 +525,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			FixOrientations();
 			DoOffset(delta);
 			//now clean up 'corners' ...
-			DefaultClipper clpr = new DefaultClipper(Clipper.REVERSE_SOLUTION);
-			clpr.AddPaths(destPolys, Clipper.PolyType.SUBJECT, true);
+			DefaultClipper clpr = new DefaultClipper(IClipper.REVERSE_SOLUTION);
+			clpr.AddPaths(destPolys, IClipper.PolyType.SUBJECT, true);
 			if (delta > 0)
 			{
-				clpr.Execute(Clipper.ClipType.UNION, solution, Clipper.PolyFillType.POSITIVE, Clipper.PolyFillType
+				clpr.Execute(IClipper.ClipType.UNION, solution, IClipper.PolyFillType.POSITIVE, IClipper.PolyFillType
 					.POSITIVE);
 			}
 			else
@@ -540,8 +540,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				outer.Add(new Point.LongPoint(r.right + 10, r.bottom + 10, 0));
 				outer.Add(new Point.LongPoint(r.right + 10, r.top - 10, 0));
 				outer.Add(new Point.LongPoint(r.left - 10, r.top - 10, 0));
-				clpr.AddPath(outer, Clipper.PolyType.SUBJECT, true);
-				clpr.Execute(Clipper.ClipType.UNION, solution, Clipper.PolyFillType.NEGATIVE, Clipper.PolyFillType
+				clpr.AddPath(outer, IClipper.PolyType.SUBJECT, true);
+				clpr.Execute(IClipper.ClipType.UNION, solution, IClipper.PolyFillType.NEGATIVE, IClipper.PolyFillType
 					.NEGATIVE);
 				//remove the outer PolyNode rectangle ...
 				if (solution.GetChildCount() == 1 && solution.GetChilds()[0].GetChildCount() > 0)
@@ -572,8 +572,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				for (int i = 0; i < polyNodes.GetChildCount(); i++)
 				{
 					PolyNode node = polyNodes.childs[i];
-					if (node.GetEndType() == Clipper.EndType.CLOSED_POLYGON || node.GetEndType() == Clipper.EndType
-						.CLOSED_LINE && node.GetPolygon().Orientation())
+					if (node.GetEndType() == IClipper.EndType.CLOSED_POLYGON || node.GetEndType() == 
+						IClipper.EndType.CLOSED_LINE && node.GetPolygon().Orientation())
 					{
 						java.util.Collections.Reverse(node.GetPolygon());
 					}
@@ -584,7 +584,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				for (int i = 0; i < polyNodes.GetChildCount(); i++)
 				{
 					PolyNode node = polyNodes.childs[i];
-					if (node.GetEndType() == Clipper.EndType.CLOSED_LINE && !node.GetPolygon().Orientation
+					if (node.GetEndType() == IClipper.EndType.CLOSED_LINE && !node.GetPolygon().Orientation
 						())
 					{
 						java.util.Collections.Reverse(node.GetPolygon());
@@ -593,7 +593,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 		}
 
-		private void OffsetPoint(int j, int[] kV, Clipper.JoinType jointype)
+		private void OffsetPoint(int j, int[] kV, IClipper.JoinType jointype)
 		{
 			//cross product ...
 			int k = kV[0];
@@ -643,7 +643,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			{
 				switch (jointype)
 				{
-					case Clipper.JoinType.MITER:
+					case IClipper.JoinType.MITER:
 					{
 						double r = 1 + njx * nkx + njy * nky;
 						if (r >= miterLim)
@@ -657,13 +657,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 						break;
 					}
 
-					case Clipper.JoinType.BEVEL:
+					case IClipper.JoinType.BEVEL:
 					{
 						DoSquare(j, k, false);
 						break;
 					}
 
-					case Clipper.JoinType.ROUND:
+					case IClipper.JoinType.ROUND:
 					{
 						DoRound(j, k);
 						break;

@@ -1,5 +1,5 @@
 /*
-$Id: d6c5cfb8e5fcbcc84788329e6d1618d8dc9c9356 $
+$Id: bc6b5bbb5557f8cf532f8244068e4fac05c30484 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -96,7 +96,7 @@ namespace com.itextpdf.kernel.font
 			fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding
 				), toUni);
 			fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
-			embedded = ((DocFontProgram)fontProgram).GetFontFile() != null;
+			embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
 			subset = false;
 		}
 
@@ -185,10 +185,10 @@ namespace com.itextpdf.kernel.font
 			{
 				PdfName fontFileName;
 				PdfStream fontStream;
-				if (fontProgram is DocFontProgram)
+				if (fontProgram is IDocFontProgram)
 				{
-					fontFileName = ((DocFontProgram)fontProgram).GetFontFileName();
-					fontStream = ((DocFontProgram)fontProgram).GetFontFile();
+					fontFileName = ((IDocFontProgram)fontProgram).GetFontFileName();
+					fontStream = ((IDocFontProgram)fontProgram).GetFontFile();
 				}
 				else
 				{

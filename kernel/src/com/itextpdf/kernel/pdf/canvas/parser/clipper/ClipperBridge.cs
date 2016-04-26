@@ -1,5 +1,5 @@
 /*
-$Id: 5c15516a37ac200d0ca163a2eb0d8b60d76bc834 $
+$Id: b6cd09a03ccd873499dfcac2d7bcbf2b62e29c36 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -114,19 +114,19 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// Adds iText
 		/// <see cref="Path"/>
 		/// to the given
-		/// <see cref="Clipper"/>
+		/// <see cref="IClipper"/>
 		/// object.
 		/// </summary>
 		/// <param name="clipper">
 		/// The
-		/// <see cref="Clipper"/>
+		/// <see cref="IClipper"/>
 		/// object.
 		/// </param>
 		/// <param name="path">
 		/// The
 		/// <see cref="com.itextpdf.kernel.geom.Path"/>
 		/// object to be added to the
-		/// <see cref="Clipper"/>
+		/// <see cref="IClipper"/>
 		/// .
 		/// </param>
 		/// <param name="polyType">
@@ -134,8 +134,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// <see cref="PolyType"/>
 		/// .
 		/// </param>
-		public static void AddPath(Clipper clipper, com.itextpdf.kernel.geom.Path path, Clipper.PolyType
-			 polyType)
+		public static void AddPath(IClipper clipper, com.itextpdf.kernel.geom.Path path, 
+			IClipper.PolyType polyType)
 		{
 			foreach (Subpath subpath in path.GetSubpaths())
 			{
@@ -166,7 +166,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// s of the path.
 		/// </returns>
 		public static IList<Subpath> AddPath(ClipperOffset offset, com.itextpdf.kernel.geom.Path
-			 path, Clipper.JoinType joinType, Clipper.EndType endType)
+			 path, IClipper.JoinType joinType, IClipper.EndType endType)
 		{
 			IList<Subpath> degenerateSubpaths = new List<Subpath>();
 			foreach (Subpath subpath in path.GetSubpaths())
@@ -178,11 +178,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				}
 				if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
 				{
-					Clipper.EndType et;
+					IClipper.EndType et;
 					if (subpath.IsClosed())
 					{
 						// Offsetting is never used for path being filled
-						et = Clipper.EndType.CLOSED_LINE;
+						et = IClipper.EndType.CLOSED_LINE;
 					}
 					else
 					{
@@ -240,21 +240,21 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants"/>
 		/// </param>
 		/// <returns>Clipper line join style constant.</returns>
-		public static Clipper.JoinType GetJoinType(int lineJoinStyle)
+		public static IClipper.JoinType GetJoinType(int lineJoinStyle)
 		{
 			switch (lineJoinStyle)
 			{
 				case PdfCanvasConstants.LineJoinStyle.BEVEL:
 				{
-					return Clipper.JoinType.BEVEL;
+					return IClipper.JoinType.BEVEL;
 				}
 
 				case PdfCanvasConstants.LineJoinStyle.MITER:
 				{
-					return Clipper.JoinType.MITER;
+					return IClipper.JoinType.MITER;
 				}
 			}
-			return Clipper.JoinType.ROUND;
+			return IClipper.JoinType.ROUND;
 		}
 
 		/// <summary>
@@ -266,21 +266,21 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants"/>
 		/// </param>
 		/// <returns>Clipper line cap (end type) style constant.</returns>
-		public static Clipper.EndType GetEndType(int lineCapStyle)
+		public static IClipper.EndType GetEndType(int lineCapStyle)
 		{
 			switch (lineCapStyle)
 			{
 				case PdfCanvasConstants.LineCapStyle.BUTT:
 				{
-					return Clipper.EndType.OPEN_BUTT;
+					return IClipper.EndType.OPEN_BUTT;
 				}
 
 				case PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE:
 				{
-					return Clipper.EndType.OPEN_SQUARE;
+					return IClipper.EndType.OPEN_SQUARE;
 				}
 			}
-			return Clipper.EndType.OPEN_ROUND;
+			return IClipper.EndType.OPEN_ROUND;
 		}
 
 		/// <summary>
@@ -297,12 +297,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// .
 		/// </param>
 		/// <returns>Clipper fill type constant.</returns>
-		public static Clipper.PolyFillType GetFillType(int fillingRule)
+		public static IClipper.PolyFillType GetFillType(int fillingRule)
 		{
-			Clipper.PolyFillType fillType = Clipper.PolyFillType.NON_ZERO;
+			IClipper.PolyFillType fillType = IClipper.PolyFillType.NON_ZERO;
 			if (fillingRule == PdfCanvasConstants.FillingRule.EVEN_ODD)
 			{
-				fillType = Clipper.PolyFillType.EVEN_ODD;
+				fillType = IClipper.PolyFillType.EVEN_ODD;
 			}
 			return fillType;
 		}
@@ -325,7 +325,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 		}
 
-		public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, Clipper.PolyType
+		public static void AddRectToClipper(IClipper clipper, Point[] rectVertices, IClipper.PolyType
 			 polyType)
 		{
 			clipper.AddPath(new Path(ConvertToLongPoints(new List<Point>(com.itextpdf.io.util.JavaUtil.ArraysAsList

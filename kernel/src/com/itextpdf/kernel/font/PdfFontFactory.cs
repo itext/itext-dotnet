@@ -1,5 +1,5 @@
 /*
-$Id: 7db3f2e265c12f1ec244c7efb139d23967bedcf0 $
+$Id: cbc19224d771e6e7d580f02cae3995e8c18537f2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,6 +52,15 @@ namespace com.itextpdf.kernel.font
 {
 	public sealed class PdfFontFactory
 	{
+		/// <summary>This is the default encoding to use.</summary>
+		private static String DEFAULT_ENCODING = PdfEncodings.WINANSI;
+
+		/// <summary>This is the default value of the <VAR>embedded</VAR> variable.</summary>
+		private static bool DEFAULT_EMBEDDING = false;
+
+		/// <summary>This is the default value of the <VAR>embedded</VAR> variable.</summary>
+		private static bool DEFAULT_CACHED = false;
+
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont()
 		{
@@ -94,40 +103,28 @@ namespace com.itextpdf.kernel.font
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(String path)
 		{
-			return CreateFont(path, null, false);
+			return CreateFont(path, null, DEFAULT_EMBEDDING);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(String path, String encoding)
 		{
-			return CreateFont(path, encoding, false);
+			return CreateFont(path, encoding, DEFAULT_EMBEDDING);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public static PdfFont CreateFont(byte[] ttc, int ttcIndex, String encoding)
+		public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool
+			 embedded, bool cached)
 		{
-			return CreateFont(ttc, ttcIndex, encoding, true);
-		}
-
-		/// <exception cref="System.IO.IOException"/>
-		public static PdfFont CreateFont(byte[] ttc, int ttcIndex, String encoding, bool 
-			embedded)
-		{
-			FontProgram fontProgram = FontFactory.CreateFont(ttc, ttcIndex);
+			FontProgram fontProgram = FontFactory.CreateFont(ttc, ttcIndex, cached);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public static PdfFont CreateFont(String ttcPath, int ttcIndex, String encoding)
+		public static PdfFont CreateTtcFont(String ttcPath, int ttcIndex, String encoding
+			, bool embedded, bool cached)
 		{
-			return CreateFont(ttcPath, ttcIndex, encoding, false);
-		}
-
-		/// <exception cref="System.IO.IOException"/>
-		public static PdfFont CreateFont(String ttcPath, int ttcIndex, String encoding, bool
-			 embedded)
-		{
-			FontProgram fontProgram = FontFactory.CreateFont(ttcPath, ttcIndex);
+			FontProgram fontProgram = FontFactory.CreateFont(ttcPath, ttcIndex, cached);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -197,19 +194,19 @@ namespace com.itextpdf.kernel.font
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(FontProgram fontProgram, String encoding)
 		{
-			return CreateFont(fontProgram, encoding, false);
+			return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(FontProgram fontProgram)
 		{
-			return CreateFont(fontProgram, PdfEncodings.WINANSI);
+			return CreateFont(fontProgram, DEFAULT_ENCODING);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(byte[] font, String encoding)
 		{
-			return CreateFont(font, encoding, false);
+			return CreateFont(font, encoding, DEFAULT_EMBEDDING);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -221,7 +218,14 @@ namespace com.itextpdf.kernel.font
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(byte[] font, String encoding, bool embedded)
 		{
-			FontProgram fontProgram = FontFactory.CreateFont(null, font, true);
+			return CreateFont(font, encoding, embedded, DEFAULT_CACHED);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public static PdfFont CreateFont(byte[] font, String encoding, bool embedded, bool
+			 cached)
+		{
+			FontProgram fontProgram = FontFactory.CreateFont(null, font, cached);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -241,6 +245,14 @@ namespace com.itextpdf.kernel.font
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded
+			, bool cached)
+		{
+			return CreateRegisteredFont(font, encoding, embedded, FontConstants.UNDEFINED, cached
+				);
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded
 			)
 		{
 			return CreateRegisteredFont(font, encoding, embedded, FontConstants.UNDEFINED);
@@ -250,21 +262,19 @@ namespace com.itextpdf.kernel.font
 		public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded
 			, int style)
 		{
-			return CreateRegisteredFont(font, encoding, embedded, style, false);
+			return CreateRegisteredFont(font, encoding, embedded, style, DEFAULT_CACHED);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateRegisteredFont(String font, String encoding)
 		{
-			return CreateRegisteredFont(font, encoding, false, FontConstants.UNDEFINED, false
-				);
+			return CreateRegisteredFont(font, encoding, false, FontConstants.UNDEFINED);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateRegisteredFont(String fontName)
 		{
-			return CreateRegisteredFont(fontName, null, false, FontConstants.UNDEFINED, false
-				);
+			return CreateRegisteredFont(fontName, null, false, FontConstants.UNDEFINED);
 		}
 
 		/// <summary>Register a font by giving explicitly the font family and name.</summary>

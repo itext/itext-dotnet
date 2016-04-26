@@ -1,5 +1,5 @@
 /*
-$Id: 77114223a69ed5f9689ac2eb08218d7c02abca78 $
+$Id: 52a84bade63e3bf9d0af6960021cf1207217f8ff $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,7 +46,7 @@ using com.itextpdf.kernel.geom;
 
 namespace com.itextpdf.kernel.pdf.canvas.parser.data
 {
-	public class ClippingPathInfo : EventData
+	public class ClippingPathInfo : IEventData
 	{
 		private com.itextpdf.kernel.geom.Path path;
 

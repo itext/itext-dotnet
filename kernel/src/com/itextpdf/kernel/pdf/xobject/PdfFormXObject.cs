@@ -1,5 +1,5 @@
 /*
-$Id: 801254d6ecd6fd4b639d2c795892be2316ce01ae $
+$Id: b2ee92763684c84597ef1c26d6b550bfc8c6db8f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -88,10 +88,10 @@ namespace com.itextpdf.kernel.pdf.xobject
 
 		/// <summary>
 		/// Creates a form XObject from
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.wmf.WmfImage"/>
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.wmf.WmfImageData"/>
 		/// .
 		/// Unlike other images,
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.wmf.WmfImage"/>
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.wmf.WmfImageData"/>
 		/// images are represented as
 		/// <see cref="PdfFormXObject"/>
 		/// , not as
@@ -101,7 +101,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 		/// <param name="image">image to create form object from</param>
 		/// <param name="pdfDocument">document instance which is needed for writing form stream contents
 		/// 	</param>
-		public PdfFormXObject(WmfImage image, PdfDocument pdfDocument)
+		public PdfFormXObject(WmfImageData image, PdfDocument pdfDocument)
 			: this(new WmfImageHelper(image).CreatePdfForm(pdfDocument).GetPdfObject())
 		{
 		}

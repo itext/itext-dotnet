@@ -1,5 +1,5 @@
 /*
-$Id: 69776d2e00b255ecf33e99712e69d1c50ef44e08 $
+$Id: 694ba289463011f02470e030aa55439dfe7c0ad4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using com.itextpdf.kernel.pdf;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -69,8 +69,7 @@ namespace com.itextpdf.layout.element
 		public ListItem(String text)
 			: this()
 		{
-			this.Add<Paragraph, com.itextpdf.layout.element.ListItem>(new Paragraph(text).SetMarginTop
-				(0).SetMarginBottom(0));
+			Add(new Paragraph(text).SetMarginTop(0).SetMarginBottom(0));
 		}
 
 		/// <summary>Creates a list item with an image.</summary>
@@ -78,7 +77,7 @@ namespace com.itextpdf.layout.element
 		public ListItem(Image image)
 			: this()
 		{
-			this.Add<com.itextpdf.layout.element.ListItem>(image);
+			Add(image);
 		}
 
 		/// <summary>Sets the list item symbol to be used.</summary>
@@ -98,8 +97,8 @@ namespace com.itextpdf.layout.element
 		/// <returns>this list item.</returns>
 		public virtual com.itextpdf.layout.element.ListItem SetListSymbol(Text text)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.ListItem>(Property.LIST_SYMBOL
-				, text);
+			SetProperty(Property.LIST_SYMBOL, text);
+			return this;
 		}
 
 		/// <summary>Sets the list item symbol to be used.</summary>
@@ -111,32 +110,31 @@ namespace com.itextpdf.layout.element
 		/// <returns>this list.</returns>
 		public virtual com.itextpdf.layout.element.ListItem SetListSymbol(Image image)
 		{
-			return this.SetProperty<com.itextpdf.layout.element.ListItem>(Property.LIST_SYMBOL
-				, image);
+			SetProperty(Property.LIST_SYMBOL, image);
+			return this;
 		}
 
 		/// <summary>Sets the list item numbering type to be used.</summary>
 		/// <param name="listNumberingType">
 		/// the
-		/// <see cref="com.itextpdf.layout.Property.ListNumberingType"/>
+		/// <see cref="com.itextpdf.layout.property.ListNumberingType"/>
 		/// that will generate appropriate prefixes for the
 		/// <see cref="ListItem"/>
 		/// .
 		/// </param>
 		/// <returns>this list item.</returns>
-		public virtual com.itextpdf.layout.element.ListItem SetListSymbol(Property.ListNumberingType
+		public virtual com.itextpdf.layout.element.ListItem SetListSymbol(ListNumberingType
 			 listNumberingType)
 		{
 			// Do not draw any points after ZapfDingbats special number symbol
-			if (listNumberingType == Property.ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType
-				 == Property.ListNumberingType.ZAPF_DINGBATS_2 || listNumberingType == Property.ListNumberingType
-				.ZAPF_DINGBATS_3 || listNumberingType == Property.ListNumberingType.ZAPF_DINGBATS_4)
+			if (listNumberingType == ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType ==
+				 ListNumberingType.ZAPF_DINGBATS_2 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_3
+				 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_4)
 			{
-				this.SetProperty<com.itextpdf.layout.element.ListItem>(Property.LIST_SYMBOL_POST_TEXT
-					, " ");
+				SetProperty(Property.LIST_SYMBOL_POST_TEXT, " ");
 			}
-			return this.SetProperty<com.itextpdf.layout.element.ListItem>(Property.LIST_SYMBOL
-				, listNumberingType);
+			SetProperty(Property.LIST_SYMBOL, listNumberingType);
+			return this;
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

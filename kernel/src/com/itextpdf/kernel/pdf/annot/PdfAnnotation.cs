@@ -320,7 +320,7 @@ namespace com.itextpdf.kernel.pdf.annot
 
 		/// <summary>Sets the layer this annotation belongs to.</summary>
 		/// <param name="layer">the layer this annotation belongs to</param>
-		public virtual void SetLayer(PdfOCG layer)
+		public virtual void SetLayer(IPdfOCG layer)
 		{
 			GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
 		}

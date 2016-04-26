@@ -1,5 +1,5 @@
 /*
-$Id: 4eca8ab97a3d220a7d4ba57a337f680adf8ee265 $
+$Id: ea57ba7dca902d5b67ae8c67119abd82d0c71b09 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ namespace com.itextpdf.kernel.geom
 	{
 		private Point startPoint;
 
-		private IList<Shape> segments = new List<Shape>();
+		private IList<IShape> segments = new List<IShape>();
 
 		private bool closed;
 
@@ -109,7 +109,7 @@ namespace com.itextpdf.kernel.geom
 			Point lastPoint = startPoint;
 			if (segments.Count > 0 && !closed)
 			{
-				Shape shape = segments[segments.Count - 1];
+				IShape shape = segments[segments.Count - 1];
 				lastPoint = shape.GetBasePoints()[shape.GetBasePoints().Count - 1];
 			}
 			return lastPoint;
@@ -121,7 +121,7 @@ namespace com.itextpdf.kernel.geom
 		/// Note: each new segment shall start at the end of the previous segment.
 		/// </remarks>
 		/// <param name="segment">new segment.</param>
-		public virtual void AddSegment(Shape segment)
+		public virtual void AddSegment(IShape segment)
 		{
 			if (closed)
 			{
@@ -140,7 +140,7 @@ namespace com.itextpdf.kernel.geom
 		/// comprising all the segments
 		/// the subpath made on.
 		/// </returns>
-		public virtual IList<Shape> GetSegments()
+		public virtual IList<IShape> GetSegments()
 		{
 			return segments;
 		}
@@ -208,7 +208,7 @@ namespace com.itextpdf.kernel.geom
 			{
 				return false;
 			}
-			foreach (Shape segment in segments)
+			foreach (IShape segment in segments)
 			{
 				ICollection<Point> points = new HashSet<Point>(segment.GetBasePoints());
 				// The first segment of a subpath always starts at startPoint, so...

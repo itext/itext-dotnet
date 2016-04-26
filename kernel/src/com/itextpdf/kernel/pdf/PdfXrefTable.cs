@@ -1,5 +1,5 @@
 /*
-$Id: 6f4a2cb5da0e1d34703772524a481a46ffa9eeb9 $
+$Id: fa8b8603aa8616453ce1249399d73ce6e3c44e72 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -180,7 +180,7 @@ namespace com.itextpdf.kernel.pdf
 			 fileId, PdfObject crypto)
 		{
 			PdfWriter writer = document.GetWriter();
-			if (document.appendMode)
+			if (document.IsAppendMode())
 			{
 				// Increment generation number for all freed references.
 				foreach (int objNr in freeReferences)
@@ -199,7 +199,7 @@ namespace com.itextpdf.kernel.pdf
 			IList<int> sections = new List<int>();
 			int first = 0;
 			int len = 1;
-			if (document.appendMode)
+			if (document.IsAppendMode())
 			{
 				first = 1;
 				len = 0;
@@ -209,9 +209,9 @@ namespace com.itextpdf.kernel.pdf
 				PdfIndirectReference reference = xref[i];
 				if (reference != null)
 				{
-					if ((document.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference
-						.IsFree() && reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.
-						FLUSHED)))
+					if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED))
+						 || (reference.IsFree() && reference.GetGenNumber() == 0) || (!reference.CheckState
+						(PdfObject.FLUSHED)))
 					{
 						reference = null;
 					}
@@ -243,7 +243,7 @@ namespace com.itextpdf.kernel.pdf
 				sections.Add(first);
 				sections.Add(len);
 			}
-			if (document.appendMode && sections.Count == 0)
+			if (document.properties.appendMode && sections.Count == 0)
 			{
 				// no modifications.
 				xref = null;
@@ -270,7 +270,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					index.Add(new PdfNumber(section));
 				}
-				if (document.appendMode)
+				if (document.properties.appendMode)
 				{
 					PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
 					xrefStream.Put(PdfName.Prev, lastXref);
@@ -354,7 +354,7 @@ namespace com.itextpdf.kernel.pdf
 					trailer.Put(PdfName.Encrypt, crypto);
 				}
 				writer.WriteString("trailer\n");
-				if (document.appendMode)
+				if (document.properties.appendMode)
 				{
 					PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
 					trailer.Put(PdfName.Prev, lastXref);

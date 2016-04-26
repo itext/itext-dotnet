@@ -1,5 +1,5 @@
 /*
-$Id: 38c916d5098182b88be941d085327c048310ffbb $
+$Id: b87356a4873be885037daefbbae329b50897fe20 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,6 +47,7 @@ using System.Collections.Generic;
 using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -105,28 +106,27 @@ namespace com.itextpdf.layout.renderer
 			return false;
 		}
 
-		public virtual T GetProperty<T>(Property key)
+		public virtual T1 GetProperty<T1>(Property key)
 		{
 			return null;
 		}
 
-		public virtual T GetOwnProperty<T>(Property property)
+		public virtual T1 GetOwnProperty<T1>(Property property)
 		{
 			return null;
 		}
 
-		public virtual T GetDefaultProperty<T>(Property property)
+		public virtual T1 GetDefaultProperty<T1>(Property property)
 		{
 			return null;
 		}
 
-		public virtual T GetProperty<T>(Property property, T defaultValue)
+		public virtual T1 GetProperty<T1>(Property property, T1 defaultValue)
 		{
 			throw new NotSupportedException();
 		}
 
-		public virtual T SetProperty<T>(Property property, Object value)
-			where T : IRenderer
+		public virtual void SetProperty(Property property, Object value)
 		{
 			throw new NotSupportedException();
 		}
@@ -160,7 +160,7 @@ namespace com.itextpdf.layout.renderer
 			throw new NotSupportedException();
 		}
 
-		public virtual com.itextpdf.layout.renderer.AreaBreakRenderer GetNextRenderer()
+		public virtual IRenderer GetNextRenderer()
 		{
 			return null;
 		}

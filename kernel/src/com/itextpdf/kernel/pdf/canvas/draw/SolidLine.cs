@@ -1,5 +1,5 @@
 /*
-$Id: c1049910409fd678edb59cae84174f1fc7429028 $
+$Id: 64df4bedc0f26059c84ad06e7a495874082ec59d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,11 +50,11 @@ namespace com.itextpdf.kernel.pdf.canvas.draw
 {
 	/// <summary>
 	/// Implementation of
-	/// <see cref="LineDrawer"/>
+	/// <see cref="ILineDrawer"/>
 	/// which draws a solid horizontal line along
 	/// the bottom edge of the specified rectangle.
 	/// </summary>
-	public class SolidLine : LineDrawer
+	public class SolidLine : ILineDrawer
 	{
 		private float lineWidth = 1;
 

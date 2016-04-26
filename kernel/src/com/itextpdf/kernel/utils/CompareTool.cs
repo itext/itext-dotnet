@@ -1,5 +1,5 @@
 /*
-$Id: 8cc8915a60ed95965c0fa1f8a9bb7ac0b216b9b0 $
+$Id: 8822fb48c0f216df61371571512375feb73315d5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -117,25 +117,19 @@ namespace com.itextpdf.kernel.utils
 			compareExec = com.itextpdf.GetProperty("compareExec");
 		}
 
+		/// <exception cref="System.IO.IOException"/>
 		public virtual CompareTool.CompareResult CompareByCatalog(PdfDocument outDocument
 			, PdfDocument cmpDocument)
 		{
 			CompareTool.CompareResult compareResult = null;
-			try
-			{
-				compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
-				CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
-					.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
-					().GetIndirectReference());
-				ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
-					(PdfName.Metadata, PdfName.AcroForm));
-				CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
-					GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
-			}
-			catch (System.IO.IOException e)
-			{
-				com.itextpdf.PrintStackTrace(e);
-			}
+			compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
+				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
+				().GetIndirectReference());
+			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+				(PdfName.Metadata));
+			CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
+				GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
 			return compareResult;
 		}
 
@@ -364,8 +358,10 @@ namespace com.itextpdf.kernel.utils
 		{
 			System.Console.Out.Write("[itext] INFO  Comparing document info.......");
 			String message = null;
-			PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf, outPass));
-			PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf, cmpPass));
+			PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf, new ReaderProperties
+				().SetPassword(outPass)));
+			PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf, new ReaderProperties
+				().SetPassword(cmpPass)));
 			String[] cmpInfo = ConvertInfo(cmpDocument.GetDocumentInfo());
 			String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
 			for (int i = 0; i < cmpInfo.Length; ++i)
@@ -770,7 +766,8 @@ namespace com.itextpdf.kernel.utils
 			PdfDocument outDocument;
 			try
 			{
-				outDocument = new PdfDocument(new PdfReader(outPdf, outPass));
+				outDocument = new PdfDocument(new PdfReader(outPdf, new ReaderProperties().SetPassword
+					(outPass)));
 			}
 			catch (System.IO.IOException e)
 			{
@@ -782,7 +779,8 @@ namespace com.itextpdf.kernel.utils
 			PdfDocument cmpDocument;
 			try
 			{
-				cmpDocument = new PdfDocument(new PdfReader(cmpPdf, cmpPass));
+				cmpDocument = new PdfDocument(new PdfReader(cmpPdf, new ReaderProperties().SetPassword
+					(cmpPass)));
 			}
 			catch (System.IO.IOException e)
 			{

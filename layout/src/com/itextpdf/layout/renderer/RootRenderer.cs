@@ -1,5 +1,5 @@
 /*
-$Id: 51a0fd37af3baeec76e4849af8a5ac8c255e6fb5 $
+$Id: d1e630447fd33b3db3f975bc9ed379d8baacf326 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,8 +46,8 @@ using System;
 using System.Collections.Generic;
 using com.itextpdf.io;
 using com.itextpdf.io.log;
-using com.itextpdf.layout;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {

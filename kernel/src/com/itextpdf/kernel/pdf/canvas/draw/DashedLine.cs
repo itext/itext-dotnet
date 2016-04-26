@@ -1,5 +1,5 @@
 /*
-$Id: ee42937a712431ba414353fef72c59e16cdf1147 $
+$Id: 606e61218bda991cf8e6abb65203e3d768058529 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,11 +50,11 @@ namespace com.itextpdf.kernel.pdf.canvas.draw
 {
 	/// <summary>
 	/// Implementation of
-	/// <see cref="LineDrawer"/>
+	/// <see cref="ILineDrawer"/>
 	/// which draws a dashed horizontal line over
 	/// the middle of the specified rectangle.
 	/// </summary>
-	public class DashedLine : LineDrawer
+	public class DashedLine : ILineDrawer
 	{
 		private float lineWidth = 1;
 

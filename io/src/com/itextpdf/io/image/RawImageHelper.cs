@@ -1,5 +1,5 @@
 /*
-$Id: ccce16425659e6ed0362323b05a55e05c6a9df99 $
+$Id: 578dd2949e0ccc8f78c2eb8b059b83e5b51cfbe6 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,8 +51,8 @@ namespace com.itextpdf.io.image
 {
 	public sealed class RawImageHelper
 	{
-		public static void UpdateImageAttributes(RawImage image, IDictionary<String, Object
-			> additional)
+		public static void UpdateImageAttributes(RawImageData image, IDictionary<String, 
+			Object> additional)
 		{
 			if (!image.IsRawImage())
 			{
@@ -69,25 +69,25 @@ namespace com.itextpdf.io.image
 				}
 				image.SetBpc(1);
 				image.SetFilter("CCITTFaxDecode");
-				int k = typeCCITT - RawImage.CCITTG3_1D;
+				int k = typeCCITT - RawImageData.CCITTG3_1D;
 				IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
 				if (k != 0)
 				{
 					decodeparms["K"] = k;
 				}
-				if ((colorSpace & RawImage.CCITT_BLACKIS1) != 0)
+				if ((colorSpace & RawImageData.CCITT_BLACKIS1) != 0)
 				{
 					decodeparms["BlackIs1"] = true;
 				}
-				if ((colorSpace & RawImage.CCITT_ENCODEDBYTEALIGN) != 0)
+				if ((colorSpace & RawImageData.CCITT_ENCODEDBYTEALIGN) != 0)
 				{
 					decodeparms["EncodedByteAlign"] = true;
 				}
-				if ((colorSpace & RawImage.CCITT_ENDOFLINE) != 0)
+				if ((colorSpace & RawImageData.CCITT_ENDOFLINE) != 0)
 				{
 					decodeparms["EndOfLine"] = true;
 				}
-				if ((colorSpace & RawImage.CCITT_ENDOFBLOCK) != 0)
+				if ((colorSpace & RawImageData.CCITT_ENDOFBLOCK) != 0)
 				{
 					decodeparms["EndOfBlock"] = false;
 				}
@@ -149,7 +149,7 @@ namespace com.itextpdf.io.image
 		/// <param name="bpc">bits per component. Must be 1,2,4 or 8</param>
 		/// <param name="data">the image data</param>
 		/// <exception cref="com.itextpdf.io.IOException">on error</exception>
-		protected internal static void UpdateRawImageParameters(RawImage image, int width
+		protected internal static void UpdateRawImageParameters(RawImageData image, int width
 			, int height, int components, int bpc, byte[] data)
 		{
 			image.SetHeight(height);
@@ -167,7 +167,7 @@ namespace com.itextpdf.io.image
 			image.data = data;
 		}
 
-		protected internal static void UpdateRawImageParameters(RawImage image, int width
+		protected internal static void UpdateRawImageParameters(RawImageData image, int width
 			, int height, int components, int bpc, byte[] data, int[] transparency)
 		{
 			if (transparency != null && transparency.Length != components * 2)
@@ -178,8 +178,8 @@ namespace com.itextpdf.io.image
 			if (components == 1 && bpc == 1)
 			{
 				byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
-				UpdateRawImageParameters(image, width, height, false, RawImage.CCITTG4, RawImage.
-					CCITT_BLACKIS1, g4, transparency);
+				UpdateRawImageParameters(image, width, height, false, RawImageData.CCITTG4, RawImageData
+					.CCITT_BLACKIS1, g4, transparency);
 			}
 			else
 			{
@@ -188,7 +188,7 @@ namespace com.itextpdf.io.image
 			}
 		}
 
-		protected internal static void UpdateRawImageParameters(RawImage image, int width
+		protected internal static void UpdateRawImageParameters(RawImageData image, int width
 			, int height, bool reverseBits, int typeCCITT, int parameters, byte[] data, int[]
 			 transparency)
 		{
@@ -202,11 +202,12 @@ namespace com.itextpdf.io.image
 			image.SetTransparency(transparency);
 		}
 
-		protected internal static void UpdateCcittImageParameters(RawImage image, int width
-			, int height, bool reverseBits, int typeCcitt, int parameters, byte[] data)
+		protected internal static void UpdateCcittImageParameters(RawImageData image, int
+			 width, int height, bool reverseBits, int typeCcitt, int parameters, byte[] data
+			)
 		{
-			if (typeCcitt != RawImage.CCITTG4 && typeCcitt != RawImage.CCITTG3_1D && typeCcitt
-				 != RawImage.CCITTG3_2D)
+			if (typeCcitt != RawImageData.CCITTG4 && typeCcitt != RawImageData.CCITTG3_1D && 
+				typeCcitt != RawImageData.CCITTG3_2D)
 			{
 				throw new IOException(IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
 					);

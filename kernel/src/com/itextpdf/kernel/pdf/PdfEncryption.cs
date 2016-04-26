@@ -1,5 +1,5 @@
 /*
-$Id: d642bd98c816468ca96caecf5ca9d5a32b53bfcd $
+$Id: 1711728e2e561dff367a54d6eb1b3208f9ed4a2a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -251,7 +251,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		public PdfEncryption(PdfDictionary pdfDict, Key certificateKey, Certificate certificate
-			, String certificateKeyProvider, ExternalDecryptionProcess externalDecryptionProcess
+			, String certificateKeyProvider, IExternalDecryptionProcess externalDecryptionProcess
 			)
 			: base(pdfDict)
 		{
@@ -393,7 +393,7 @@ namespace com.itextpdf.kernel.pdf
 			try
 			{
 				MemoryStream ba = new MemoryStream();
-				Decryptor dec = securityHandler.GetDecryptor();
+				IDecryptor dec = securityHandler.GetDecryptor();
 				byte[] b2 = dec.Update(b, 0, b.Length);
 				if (b2 != null)
 				{
@@ -466,12 +466,14 @@ namespace com.itextpdf.kernel.pdf
 		{
 			int revision;
 			cryptoMode = mode;
-			encryptMetadata = (mode & PdfWriter.DO_NOT_ENCRYPT_METADATA) != PdfWriter.DO_NOT_ENCRYPT_METADATA;
-			embeddedFilesOnly = (mode & PdfWriter.EMBEDDED_FILES_ONLY) == PdfWriter.EMBEDDED_FILES_ONLY;
-			mode &= PdfWriter.ENCRYPTION_MASK;
+			encryptMetadata = (mode & EncryptionConstants.DO_NOT_ENCRYPT_METADATA) != EncryptionConstants
+				.DO_NOT_ENCRYPT_METADATA;
+			embeddedFilesOnly = (mode & EncryptionConstants.EMBEDDED_FILES_ONLY) == EncryptionConstants
+				.EMBEDDED_FILES_ONLY;
+			mode &= EncryptionConstants.ENCRYPTION_MASK;
 			switch (mode)
 			{
-				case PdfWriter.STANDARD_ENCRYPTION_40:
+				case EncryptionConstants.STANDARD_ENCRYPTION_40:
 				{
 					encryptMetadata = true;
 					embeddedFilesOnly = false;
@@ -480,7 +482,7 @@ namespace com.itextpdf.kernel.pdf
 					break;
 				}
 
-				case PdfWriter.STANDARD_ENCRYPTION_128:
+				case EncryptionConstants.STANDARD_ENCRYPTION_128:
 				{
 					embeddedFilesOnly = false;
 					if (length > 0)
@@ -495,14 +497,14 @@ namespace com.itextpdf.kernel.pdf
 					break;
 				}
 
-				case PdfWriter.ENCRYPTION_AES_128:
+				case EncryptionConstants.ENCRYPTION_AES_128:
 				{
 					SetKeyLength(128);
 					revision = AES_128;
 					break;
 				}
 
-				case PdfWriter.ENCRYPTION_AES_256:
+				case EncryptionConstants.ENCRYPTION_AES_256:
 				{
 					SetKeyLength(256);
 					revision = AES_256;
@@ -531,7 +533,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				case 2:
 				{
-					cryptoMode = PdfWriter.STANDARD_ENCRYPTION_40;
+					cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
 					break;
 				}
 
@@ -547,7 +549,7 @@ namespace com.itextpdf.kernel.pdf
 					{
 						throw new PdfException(PdfException.IllegalLengthValue);
 					}
-					cryptoMode = PdfWriter.STANDARD_ENCRYPTION_128;
+					cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
 					break;
 				}
 
@@ -565,13 +567,13 @@ namespace com.itextpdf.kernel.pdf
 					}
 					if (PdfName.V2.Equals(dic.Get(PdfName.CFM)))
 					{
-						cryptoMode = PdfWriter.STANDARD_ENCRYPTION_128;
+						cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
 					}
 					else
 					{
 						if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM)))
 						{
-							cryptoMode = PdfWriter.ENCRYPTION_AES_128;
+							cryptoMode = EncryptionConstants.ENCRYPTION_AES_128;
 						}
 						else
 						{
@@ -581,18 +583,18 @@ namespace com.itextpdf.kernel.pdf
 					PdfBoolean em = encDict.GetAsBoolean(PdfName.EncryptMetadata);
 					if (em != null && !em.GetValue())
 					{
-						cryptoMode |= PdfWriter.DO_NOT_ENCRYPT_METADATA;
+						cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
 					}
 					break;
 				}
 
 				case 5:
 				{
-					cryptoMode = PdfWriter.ENCRYPTION_AES_256;
+					cryptoMode = EncryptionConstants.ENCRYPTION_AES_256;
 					PdfBoolean em5 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
 					if (em5 != null && !em5.GetValue())
 					{
-						cryptoMode |= PdfWriter.DO_NOT_ENCRYPT_METADATA;
+						cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
 					}
 					break;
 				}
@@ -621,7 +623,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				case 1:
 				{
-					cryptoMode = PdfWriter.STANDARD_ENCRYPTION_40;
+					cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
 					length = 40;
 					break;
 				}
@@ -638,7 +640,7 @@ namespace com.itextpdf.kernel.pdf
 					{
 						throw new PdfException(PdfException.IllegalLengthValue);
 					}
-					cryptoMode = PdfWriter.STANDARD_ENCRYPTION_128;
+					cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
 					break;
 				}
 
@@ -657,21 +659,21 @@ namespace com.itextpdf.kernel.pdf
 					}
 					if (PdfName.V2.Equals(dic.Get(PdfName.CFM)))
 					{
-						cryptoMode = PdfWriter.STANDARD_ENCRYPTION_128;
+						cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
 						length = 128;
 					}
 					else
 					{
 						if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM)))
 						{
-							cryptoMode = PdfWriter.ENCRYPTION_AES_128;
+							cryptoMode = EncryptionConstants.ENCRYPTION_AES_128;
 							length = 128;
 						}
 						else
 						{
 							if (PdfName.AESV3.Equals(dic.Get(PdfName.CFM)))
 							{
-								cryptoMode = PdfWriter.ENCRYPTION_AES_256;
+								cryptoMode = EncryptionConstants.ENCRYPTION_AES_256;
 								length = 256;
 							}
 							else
@@ -683,7 +685,7 @@ namespace com.itextpdf.kernel.pdf
 					PdfBoolean em = dic.GetAsBoolean(PdfName.EncryptMetadata);
 					if (em != null && !em.GetValue())
 					{
-						cryptoMode |= PdfWriter.DO_NOT_ENCRYPT_METADATA;
+						cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
 					}
 					break;
 				}

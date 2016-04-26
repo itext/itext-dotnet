@@ -1,5 +1,5 @@
 /*
-$Id: 9a02aca491932306ebb953ba4b4b0dbb7fd77fd3 $
+$Id: 1d86f5bc63960c57ad3d1df13fec396769b3e8a1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -390,6 +390,8 @@ namespace com.itextpdf.kernel
 		public const String UnbalancedBeginEndMarkedContentOperators = "unbalanced.begin.end.marked.content.operators";
 
 		public const String UnbalancedLayerOperators = "unbalanced.layer.operators";
+
+		public const String UnbalancedSaveRestoreStateOperators = "unbalanced.save.restore.state.operators";
 
 		public const String UnexpectedCharacter1FoundAfterIDInInlineImage = "unexpected.character.1.found.after.ID.in.inline.image";
 

@@ -1,5 +1,5 @@
 /*
-$Id: c0d8e0a7395c7e19d03fab40f6c88ae70f12dca9 $
+$Id: 0052e99e2ffa349c4c7771d1feba7dce4041b081 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ using com.itextpdf.io.font;
 using com.itextpdf.io.font.otf;
 using com.itextpdf.io.log;
 using com.itextpdf.kernel.font;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using java.lang;
 using java.lang.reflect;
 
@@ -96,8 +96,8 @@ namespace com.itextpdf.layout.renderer
 		}
 
 		//Shaper.applyKerning(font.getFontProgram(), text);
-		internal static byte[] GetBidiLevels(Property.BaseDirection baseDirection, int[] 
-			unicodeIds)
+		internal static byte[] GetBidiLevels(BaseDirection baseDirection, int[] unicodeIds
+			)
 		{
 			if (!TYPOGRAPHY_MODULE_INITIALIZED)
 			{
@@ -109,19 +109,19 @@ namespace com.itextpdf.layout.renderer
 				byte direction;
 				switch (baseDirection)
 				{
-					case Property.BaseDirection.LEFT_TO_RIGHT:
+					case BaseDirection.LEFT_TO_RIGHT:
 					{
 						direction = 0;
 						break;
 					}
 
-					case Property.BaseDirection.RIGHT_TO_LEFT:
+					case BaseDirection.RIGHT_TO_LEFT:
 					{
 						direction = 1;
 						break;
 					}
 
-					case Property.BaseDirection.DEFAULT_BIDI:
+					case BaseDirection.DEFAULT_BIDI:
 					default:
 					{
 						direction = 2;
@@ -251,9 +251,13 @@ namespace com.itextpdf.layout.renderer
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (Exception e)
+			catch (InvocationTargetException e)
 			{
-				throw new Exception(e);
+				throw new Exception(e.InnerException != null ? e.InnerException : null);
+			}
+			catch (Exception exc)
+			{
+				throw new Exception(exc);
 			}
 			return null;
 		}
@@ -275,9 +279,13 @@ namespace com.itextpdf.layout.renderer
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (Exception e)
+			catch (InvocationTargetException e)
 			{
-				throw new Exception(e);
+				throw new Exception(e.InnerException != null ? e.InnerException : null);
+			}
+			catch (Exception exc)
+			{
+				throw new Exception(exc);
 			}
 			return null;
 		}

@@ -1,5 +1,5 @@
 /*
-$Id: e9c6264d61698258b83b35bee5b3153232023828 $
+$Id: 5201cce481e71a551c08d92eaf2a545ebc09d2c6 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,6 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using com.itextpdf.layout;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -54,7 +55,7 @@ namespace com.itextpdf.layout.element
 	/// <see cref="IElement"/>
 	/// s on the layout surface.
 	/// </remarks>
-	public interface IElement
+	public interface IElement : IPropertyContainer
 	{
 		/// <summary>
 		/// Overrides the

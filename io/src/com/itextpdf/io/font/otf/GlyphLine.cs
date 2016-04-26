@@ -1,5 +1,5 @@
 /*
-$Id: 5fc4318b9fb49c0920ad1558f82e0c2f6c5079db $
+$Id: f1fa88d8450d4022556f7aec1089daaed281b904 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -306,7 +306,7 @@ namespace com.itextpdf.io.font.otf
 			}
 		}
 
-		public virtual com.itextpdf.io.font.otf.GlyphLine Filter(GlyphLine.GlyphLineFilter
+		public virtual com.itextpdf.io.font.otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter
 			 filter)
 		{
 			bool anythingFiltered = false;
@@ -398,7 +398,7 @@ namespace com.itextpdf.io.font.otf
 			}
 		}
 
-		public interface GlyphLineFilter
+		public interface IGlyphLineFilter
 		{
 			bool Accept(Glyph glyph);
 		}

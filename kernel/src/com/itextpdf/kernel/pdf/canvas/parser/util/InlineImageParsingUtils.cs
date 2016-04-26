@@ -1,5 +1,5 @@
 /*
-$Id: 349eb243cdf88e545a0c5a2b5f7f2c595c3c9614 $
+$Id: bb2d5998491ae594bae11143fb0bf8978548a440 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -484,7 +484,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.util
 		{
 			try
 			{
-				IDictionary<PdfName, FilterHandler> filters = new Dictionary<PdfName, FilterHandler
+				IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler
 					>(FilterHandlers.GetDefaultFilterHandlers());
 				DoNothingFilter stubfilter = new DoNothingFilter();
 				filters[PdfName.DCTDecode] = stubfilter;

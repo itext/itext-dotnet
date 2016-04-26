@@ -1,5 +1,5 @@
 /*
-$Id: 9ccb785414f403b172044c0fc7d38a471f9ffe11 $
+$Id: 752286137f385accf877f0bd3f739e408de2f1b5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,7 +60,7 @@ namespace com.itextpdf.io.source
 		public static bool plainRandomAccess = false;
 
 		/// <summary>The source that backs this object</summary>
-		private readonly RandomAccessSource byteSource;
+		private readonly IRandomAccessSource byteSource;
 
 		/// <summary>The physical location in the underlying byte source.</summary>
 		private long byteSourcePosition;
@@ -84,7 +84,7 @@ namespace com.itextpdf.io.source
 				(byteSource));
 		}
 
-		public virtual RandomAccessSource CreateSourceView()
+		public virtual IRandomAccessSource CreateSourceView()
 		{
 			return new IndependentRandomAccessSource(byteSource);
 		}
@@ -95,7 +95,7 @@ namespace com.itextpdf.io.source
 		/// this RandomAccessFileOrArray is closed.
 		/// </remarks>
 		/// <param name="byteSource">the byte source to wrap</param>
-		public RandomAccessFileOrArray(RandomAccessSource byteSource)
+		public RandomAccessFileOrArray(IRandomAccessSource byteSource)
 		{
 			this.byteSource = byteSource;
 		}

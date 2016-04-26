@@ -1,5 +1,5 @@
 /*
-$Id: 2c4f9e002daaecbc7c88be442c8a1c8aa9a71ca9 $
+$Id: 64a33a6182527f4f4faac821a6fd6c560cf095fb $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -67,7 +67,7 @@ namespace com.itextpdf.kernel.font
 				try
 				{
 					byte[] uniBytes = ((PdfStream)toUnicode).GetBytes();
-					CMapLocation lb = new CMapLocationFromBytes(uniBytes);
+					ICMapLocation lb = new CMapLocationFromBytes(uniBytes);
 					cMapToUnicode = new CMapToUnicode();
 					CMapParser.ParseCid("", cMapToUnicode, lb);
 				}

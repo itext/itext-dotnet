@@ -1,5 +1,5 @@
 /*
-$Id: 65b1406d60fc84126be39a8e95e92ac63f0fdf34 $
+$Id: ceb837e5030dc71f66c78a28f2b45c2d3057e291 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,7 +50,7 @@ using com.itextpdf.kernel.pdf.canvas;
 namespace com.itextpdf.kernel.pdf.canvas.parser.data
 {
 	/// <summary>Contains information relating to painting current path.</summary>
-	public class PathRenderInfo : EventData
+	public class PathRenderInfo : IEventData
 	{
 		/// <summary>End the path object without filling or stroking it.</summary>
 		/// <remarks>

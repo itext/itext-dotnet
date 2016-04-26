@@ -1,5 +1,5 @@
 /*
-* $Id: a49126ddda60dd207630961c3a49d882e60d9071 $
+* $Id: 0ff2f332dcfad10e983121b13201893dcc86257a $
 *
 * This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -593,7 +593,7 @@ namespace com.itextpdf.io.font
 		//     *  in the pfm file, all unused characters are given the width of space.
 		//     *  Note that this array isn't used in iText.
 		//     */
-		//    private int WinClass[] = {
+		//    private int[] WinClass = {
 		//        0, 0, 0, 0, 2, 2, 2, 0, 2, 0, 2, 2, 2, 0, 0, 0,   /* 00 */
 		//        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   /* 10 */
 		//        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   /* 20 */

@@ -1,5 +1,5 @@
 /*
-$Id: 407535137167006356ee4890bbde2d7f2ddad366 $
+$Id: 88103afd17db50bc86189254b2e10864527b7b15 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,7 @@ using System;
 namespace com.itextpdf.io.source
 {
 	/// <summary>A RandomAccessSource that is based on an underlying byte array</summary>
-	internal class ArrayRandomAccessSource : RandomAccessSource
+	internal class ArrayRandomAccessSource : IRandomAccessSource
 	{
 		private const long serialVersionUID = 8497059230517630513L;
 

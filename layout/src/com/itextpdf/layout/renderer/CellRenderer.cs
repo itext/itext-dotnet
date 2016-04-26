@@ -1,5 +1,5 @@
 /*
-$Id: 288d62abab4829c994e74ce709afc5f6c8fc8244 $
+$Id: 03c426b9b92c93ecb7caa09e64518342c85fed6f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -67,10 +68,11 @@ namespace com.itextpdf.layout.renderer
 			return base.Layout(layoutContext);
 		}
 
-		protected internal override BlockRenderer CreateSplitRenderer(int layoutResult)
+		protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult
+			)
 		{
-			com.itextpdf.layout.renderer.CellRenderer splitRenderer = ((com.itextpdf.layout.renderer.CellRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.CellRenderer splitRenderer = (com.itextpdf.layout.renderer.CellRenderer
+				)GetNextRenderer();
 			splitRenderer.parent = parent;
 			splitRenderer.modelElement = modelElement;
 			splitRenderer.occupiedArea = occupiedArea;
@@ -79,11 +81,11 @@ namespace com.itextpdf.layout.renderer
 			return splitRenderer;
 		}
 
-		protected internal override BlockRenderer CreateOverflowRenderer(int layoutResult
+		protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult
 			)
 		{
-			com.itextpdf.layout.renderer.CellRenderer overflowRenderer = ((com.itextpdf.layout.renderer.CellRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.CellRenderer overflowRenderer = (com.itextpdf.layout.renderer.CellRenderer
+				)GetNextRenderer();
 			overflowRenderer.parent = parent;
 			overflowRenderer.modelElement = modelElement;
 			overflowRenderer.AddAllProperties(GetOwnProperties());

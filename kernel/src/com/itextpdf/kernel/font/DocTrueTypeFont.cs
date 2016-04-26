@@ -1,5 +1,5 @@
 /*
-$Id: c2492c5da9f4aa9c657ae7eae6c78572c937ae9f $
+$Id: 29d414b2ac1276e6bd5af95cf92cd46a8e697670 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,7 +51,7 @@ using com.itextpdf.kernel.pdf;
 
 namespace com.itextpdf.kernel.font
 {
-	internal class DocTrueTypeFont : TrueTypeFont, DocFontProgram
+	internal class DocTrueTypeFont : TrueTypeFont, IDocFontProgram
 	{
 		private const long serialVersionUID = 4611535787920619829L;
 

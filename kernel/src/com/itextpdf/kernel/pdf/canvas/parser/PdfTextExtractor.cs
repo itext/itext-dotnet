@@ -1,5 +1,5 @@
 /*
-$Id: a3a81e3d0a96f4c9e6f2936b2a0932bf45b6ea1d $
+$Id: 7b48389d594bd76e7ed5ca63d10441a209b71f4c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,7 +58,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// <param name="page">the page for the text to be extracted from</param>
 		/// <param name="strategy">the strategy to use for extracting text</param>
 		/// <returns>the extracted text</returns>
-		public static String GetTextFromPage(PdfPage page, TextExtractionStrategy strategy
+		public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy
 			)
 		{
 			PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
@@ -71,7 +71,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// Extract text from a specified page using the default strategy.
 		/// Node: the default strategy is subject to change. If using a specific strategy
 		/// is important, please use
-		/// <see cref="GetTextFromPage(com.itextpdf.kernel.pdf.PdfPage, com.itextpdf.kernel.pdf.canvas.parser.listener.TextExtractionStrategy)
+		/// <see cref="GetTextFromPage(com.itextpdf.kernel.pdf.PdfPage, com.itextpdf.kernel.pdf.canvas.parser.listener.ITextExtractionStrategy)
 		/// 	"/>
 		/// .
 		/// </remarks>

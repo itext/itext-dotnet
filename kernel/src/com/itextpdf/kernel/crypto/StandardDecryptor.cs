@@ -1,5 +1,5 @@
 /*
-$Id: 275b7c274980d02f57c9f389ee6a4a241aa66739 $
+$Id: b3f94620622714b74033f5e2619b107b057b119d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 namespace com.itextpdf.kernel.crypto
 {
-	public class StandardDecryptor : Decryptor
+	public class StandardDecryptor : IDecryptor
 	{
 		protected internal ARCFOUREncryption arcfour;
 

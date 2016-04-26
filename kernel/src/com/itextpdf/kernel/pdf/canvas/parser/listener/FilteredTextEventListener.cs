@@ -1,5 +1,5 @@
 /*
-$Id: 719cbb6cde41317cdea64dcff13987ea6dc3cf0b $
+$Id: c49f64eb18ad8aaaecd475ef5ad5626aced0b7b4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -55,24 +55,24 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 	/// The only difference from
 	/// <see cref="FilteredEventListener"/>
 	/// is that this class conveniently implements
-	/// <see cref="TextExtractionStrategy"/>
+	/// <see cref="ITextExtractionStrategy"/>
 	/// and can therefore used as a strategy on its own, apart from the inherited
 	/// function of filtering event appropriately to its delegates.
 	/// </remarks>
-	public class FilteredTextEventListener : FilteredEventListener, TextExtractionStrategy
+	public class FilteredTextEventListener : FilteredEventListener, ITextExtractionStrategy
 	{
 		/// <summary>
 		/// Constructs a
 		/// <see cref="FilteredTextEventListener"/>
 		/// instance with a
-		/// <see cref="TextExtractionStrategy"/>
+		/// <see cref="ITextExtractionStrategy"/>
 		/// delegate.
 		/// </summary>
 		/// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
 		/// 	</param>
 		/// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
 		/// 	</param>
-		public FilteredTextEventListener(TextExtractionStrategy delegate_, params EventFilter
+		public FilteredTextEventListener(ITextExtractionStrategy delegate_, params IEventFilter
 			[] filterSet)
 			: base(delegate_, filterSet)
 		{
@@ -80,18 +80,18 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 		/// <summary>
 		/// As an resultant text we use the concatenation of all the resultant text of all the delegates that implement
-		/// <see cref="TextExtractionStrategy"/>
+		/// <see cref="ITextExtractionStrategy"/>
 		/// .
 		/// </summary>
 		/// <returns>the resulting concatenation of the text extracted from the delegates</returns>
 		public virtual String GetResultantText()
 		{
 			StringBuilder sb = new StringBuilder();
-			foreach (EventListener delegate_ in delegates)
+			foreach (IEventListener delegate_ in delegates)
 			{
-				if (delegate_ is TextExtractionStrategy)
+				if (delegate_ is ITextExtractionStrategy)
 				{
-					sb.Append(((TextExtractionStrategy)delegate_).GetResultantText());
+					sb.Append(((ITextExtractionStrategy)delegate_).GetResultantText());
 				}
 			}
 			return sb.ToString();

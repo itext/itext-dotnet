@@ -1,5 +1,5 @@
 /*
-$Id: 61fcccd801ce173158dd6597d0ce28950c77946f $
+$Id: 7dae777111fe30d4316dc3e1bca78b135a3ab0f4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,9 +58,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo"/>
 	/// instances for each glyph occurred.
 	/// </summary>
-	public class GlyphEventListener : EventListener
+	public class GlyphEventListener : IEventListener
 	{
-		protected internal readonly EventListener delegate_;
+		protected internal readonly IEventListener delegate_;
 
 		/// <summary>
 		/// Constructs a
@@ -69,12 +69,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// glyph occurred will be passed on.
 		/// </summary>
 		/// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
-		public GlyphEventListener(EventListener delegate_)
+		public GlyphEventListener(IEventListener delegate_)
 		{
 			this.delegate_ = delegate_;
 		}
 
-		public virtual void EventOccurred(EventData data, EventType type)
+		public virtual void EventOccurred(IEventData data, EventType type)
 		{
 			if (type.Equals(EventType.RENDER_TEXT))
 			{

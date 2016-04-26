@@ -1,5 +1,5 @@
 /*
-$Id: 34e5881b74b31cbfe5fe047642deb292c827c0bd $
+$Id: 519839d053cba9eb0b647d37563abd5ea83a0349 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -101,6 +101,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 			{
 				{
 					this.Add(PdfName.P);
+					this.Add(PdfName.H);
 					this.Add(PdfName.H1);
 					this.Add(PdfName.H2);
 					this.Add(PdfName.H3);
@@ -124,9 +125,9 @@ namespace com.itextpdf.kernel.pdf.tagging
 
 		public static ICollection<PdfName> blockLevelRoles = new _HashSet_96();
 
-		private sealed class _HashSet_118 : HashSet<PdfName>
+		private sealed class _HashSet_119 : HashSet<PdfName>
 		{
-			public _HashSet_118()
+			public _HashSet_119()
 			{
 				{
 					this.Add(PdfName.Span);
@@ -148,11 +149,11 @@ namespace com.itextpdf.kernel.pdf.tagging
 			}
 		}
 
-		public static ICollection<PdfName> inlineLevelRoles = new _HashSet_118();
+		public static ICollection<PdfName> inlineLevelRoles = new _HashSet_119();
 
-		private sealed class _HashSet_136 : HashSet<PdfName>
+		private sealed class _HashSet_137 : HashSet<PdfName>
 		{
-			public _HashSet_136()
+			public _HashSet_137()
 			{
 				{
 					this.Add(PdfName.Figure);
@@ -162,7 +163,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 			}
 		}
 
-		public static ICollection<PdfName> illustrationRoles = new _HashSet_136();
+		public static ICollection<PdfName> illustrationRoles = new _HashSet_137();
 
 		protected internal int type = Unknown;
 
@@ -191,23 +192,10 @@ namespace com.itextpdf.kernel.pdf.tagging
 		}
 
 		public PdfStructElem(PdfDocument document, PdfName role)
-			: this(((PdfDictionary)new PdfDictionary(new _Dictionary_166(role)).MakeIndirect(
-				document)))
+			: this(((PdfDictionary)new PdfDictionary().MakeIndirect(document)))
 		{
-		}
-
-		private sealed class _Dictionary_166 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_166(PdfName role)
-			{
-				this.role = role;
-				{
-					this[PdfName.Type] = PdfName.StructElem;
-					this[PdfName.S] = role;
-				}
-			}
-
-			private readonly PdfName role;
+			GetPdfObject().Put(PdfName.Type, PdfName.StructElem);
+			GetPdfObject().Put(PdfName.S, role);
 		}
 
 		/// <summary>Method to to distinguish struct elements from other elements of the logical tree (like mcr or struct tree root).

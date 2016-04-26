@@ -1,5 +1,5 @@
 /*
-$Id: 298bc8e8cda067a6c8e2bf00ea06b7e3cd548c50 $
+$Id: b88ac5f19ac04ddbe08055b1aa0af9a17c200049 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using java.security;
-using java.security.cert;
 using org.bouncycastle.cms;
 using org.bouncycastle.cms.jcajce;
 
@@ -69,24 +68,12 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>Entry point to encrypt a PDF document.</summary>
-		/// <remarks>
-		/// Entry point to encrypt a PDF document. The encryption parameters are the same as in
-		/// <c>PdfWriter</c>
-		/// . The userPassword and the
-		/// ownerPassword can be null or have zero length. In this case the ownerPassword
-		/// is replaced by a random string. The open permissions for the document can be
-		/// ALLOW_PRINTING, ALLOW_MODIFY_CONTENTS, ALLOW_COPY, ALLOW_MODIFY_ANNOTATIONS,
-		/// ALLOW_FILL_IN, ALLOW_SCREENREADERS, ALLOW_ASSEMBLY and ALLOW_DEGRADED_PRINTING.
-		/// The permissions can be combined by ORing them.
-		/// </remarks>
 		/// <param name="reader">the read PDF</param>
 		/// <param name="os">the output destination</param>
-		/// <param name="userPassword">the user password. Can be null or empty</param>
-		/// <param name="ownerPassword">the owner password. Can be null or empty</param>
-		/// <param name="permissions">the user permissions</param>
-		/// <param name="encryptionType">
-		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40,
-		/// STANDARD_ENCRYPTION_128 or ENCRYPTION_AES_128.
+		/// <param name="properties">
+		/// encryption properties. See
+		/// <see cref="EncryptionProperties"/>
+		/// .
 		/// </param>
 		/// <param name="newInfo">
 		/// an optional
@@ -96,108 +83,29 @@ namespace com.itextpdf.kernel.pdf
 		/// <see langword="null"/>
 		/// values delete the key in the original info dictionary
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
-		public static void Encrypt(PdfReader reader, Stream os, byte[] userPassword, byte
-			[] ownerPassword, int permissions, int encryptionType, IDictionary<String, String
-			> newInfo)
+		public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties
+			, IDictionary<String, String> newInfo)
 		{
-			PdfWriter writer = new PdfWriter(os);
-			writer.SetEncryption(userPassword, ownerPassword, permissions, encryptionType);
+			WriterProperties writerProperties = new WriterProperties();
+			writerProperties.encryptionProperties = properties;
+			PdfWriter writer = new PdfWriter(os, writerProperties);
 			PdfDocument document = new PdfDocument(reader, writer);
 			document.GetDocumentInfo().SetMoreInfo(newInfo);
 			document.Close();
 		}
 
 		/// <summary>Entry point to encrypt a PDF document.</summary>
-		/// <remarks>
-		/// Entry point to encrypt a PDF document. The encryption parameters are the same as in
-		/// <c>PdfWriter</c>
-		/// . The userPassword and the
-		/// ownerPassword can be null or have zero length. In this case the ownerPassword
-		/// is replaced by a random string. The open permissions for the document can be
-		/// ALLOW_PRINTING, ALLOW_MODIFY_CONTENTS, ALLOW_COPY, ALLOW_MODIFY_ANNOTATIONS,
-		/// ALLOW_FILL_IN, ALLOW_SCREENREADERS, ALLOW_ASSEMBLY and ALLOW_DEGRADED_PRINTING.
-		/// The permissions can be combined by ORing them.
-		/// </remarks>
 		/// <param name="reader">the read PDF</param>
 		/// <param name="os">the output destination</param>
-		/// <param name="userPassword">the user password. Can be null or empty</param>
-		/// <param name="ownerPassword">the owner password. Can be null or empty</param>
-		/// <param name="permissions">the user permissions</param>
-		/// <param name="encryptionType">
-		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40,
-		/// STANDARD_ENCRYPTION_128 or ENCRYPTION_AES_128.
+		/// <param name="properties">
+		/// encryption properties. See
+		/// <see cref="EncryptionProperties"/>
+		/// .
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
-		public static void Encrypt(PdfReader reader, Stream os, byte[] userPassword, byte
-			[] ownerPassword, int permissions, int encryptionType)
+		public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties
+			)
 		{
-			Encrypt(reader, os, userPassword, ownerPassword, permissions, encryptionType, null
-				);
-		}
-
-		/// <summary>Entry point to encrypt a PDF document.</summary>
-		/// <remarks>
-		/// Entry point to encrypt a PDF document. The encryption parameters are the same as in
-		/// <c>PdfWriter</c>
-		/// . The userPassword and the
-		/// ownerPassword can be null or have zero length. In this case the ownerPassword
-		/// is replaced by a random string. The open permissions for the document can be
-		/// ALLOW_PRINTING, ALLOW_MODIFY_CONTENTS, ALLOW_COPY, ALLOW_MODIFY_ANNOTATIONS,
-		/// ALLOW_FILL_IN, ALLOW_SCREENREADERS, ALLOW_ASSEMBLY and ALLOW_DEGRADED_PRINTING.
-		/// The permissions can be combined by ORing them.
-		/// </remarks>
-		/// <param name="reader">the read PDF</param>
-		/// <param name="os">the output destination</param>
-		/// <param name="certs">the public certificates to be used for the encryption</param>
-		/// <param name="permissions">the user permissions for each of the certificates</param>
-		/// <param name="encryptionType">
-		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40,
-		/// STANDARD_ENCRYPTION_128 or ENCRYPTION_AES_128.
-		/// </param>
-		/// <param name="newInfo">
-		/// an optional
-		/// <c>String</c>
-		/// map to add or change
-		/// the info dictionary. Entries with
-		/// <see langword="null"/>
-		/// values delete the key in the original info dictionary
-		/// </param>
-		/// <on>error</on>
-		public static void Encrypt(PdfReader reader, Stream os, Certificate[] certs, int[]
-			 permissions, int encryptionType, IDictionary<String, String> newInfo)
-		{
-			PdfWriter writer = new PdfWriter(os);
-			writer.SetEncryption(certs, permissions, encryptionType);
-			PdfDocument document = new PdfDocument(reader, writer);
-			document.GetDocumentInfo().SetMoreInfo(newInfo);
-			document.Close();
-		}
-
-		/// <summary>Entry point to encrypt a PDF document.</summary>
-		/// <remarks>
-		/// Entry point to encrypt a PDF document. The encryption parameters are the same as in
-		/// <c>PdfWriter</c>
-		/// . The userPassword and the
-		/// ownerPassword can be null or have zero length. In this case the ownerPassword
-		/// is replaced by a random string. The open permissions for the document can be
-		/// ALLOW_PRINTING, ALLOW_MODIFY_CONTENTS, ALLOW_COPY, ALLOW_MODIFY_ANNOTATIONS,
-		/// ALLOW_FILL_IN, ALLOW_SCREENREADERS, ALLOW_ASSEMBLY and ALLOW_DEGRADED_PRINTING.
-		/// The permissions can be combined by ORing them.
-		/// </remarks>
-		/// <param name="reader">the read PDF</param>
-		/// <param name="os">the output destination</param>
-		/// <param name="certs">the public certificates to be used for the encryption</param>
-		/// <param name="permissions">the user permissions for each of the certificates</param>
-		/// <param name="encryptionType">
-		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40,
-		/// STANDARD_ENCRYPTION_128 or ENCRYPTION_AES_128.
-		/// </param>
-		/// <on>error</on>
-		public static void Encrypt(PdfReader reader, Stream os, Certificate[] certs, int[]
-			 permissions, int encryptionType)
-		{
-			Encrypt(reader, os, certs, permissions, encryptionType, null);
+			Encrypt(reader, os, properties, null);
 		}
 
 		/// <summary>Give you a verbose analysis of the permissions.</summary>
@@ -206,35 +114,39 @@ namespace com.itextpdf.kernel.pdf
 		public static String GetPermissionsVerbose(int permissions)
 		{
 			StringBuilder buf = new StringBuilder("Allowed:");
-			if ((PdfWriter.ALLOW_PRINTING & permissions) == PdfWriter.ALLOW_PRINTING)
+			if ((EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.ALLOW_PRINTING)
 			{
 				buf.Append(" Printing");
 			}
-			if ((PdfWriter.ALLOW_MODIFY_CONTENTS & permissions) == PdfWriter.ALLOW_MODIFY_CONTENTS)
+			if ((EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants
+				.ALLOW_MODIFY_CONTENTS)
 			{
 				buf.Append(" Modify contents");
 			}
-			if ((PdfWriter.ALLOW_COPY & permissions) == PdfWriter.ALLOW_COPY)
+			if ((EncryptionConstants.ALLOW_COPY & permissions) == EncryptionConstants.ALLOW_COPY)
 			{
 				buf.Append(" Copy");
 			}
-			if ((PdfWriter.ALLOW_MODIFY_ANNOTATIONS & permissions) == PdfWriter.ALLOW_MODIFY_ANNOTATIONS)
+			if ((EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants
+				.ALLOW_MODIFY_ANNOTATIONS)
 			{
 				buf.Append(" Modify annotations");
 			}
-			if ((PdfWriter.ALLOW_FILL_IN & permissions) == PdfWriter.ALLOW_FILL_IN)
+			if ((EncryptionConstants.ALLOW_FILL_IN & permissions) == EncryptionConstants.ALLOW_FILL_IN)
 			{
 				buf.Append(" Fill in");
 			}
-			if ((PdfWriter.ALLOW_SCREENREADERS & permissions) == PdfWriter.ALLOW_SCREENREADERS)
+			if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants
+				.ALLOW_SCREENREADERS)
 			{
 				buf.Append(" Screen readers");
 			}
-			if ((PdfWriter.ALLOW_ASSEMBLY & permissions) == PdfWriter.ALLOW_ASSEMBLY)
+			if ((EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.ALLOW_ASSEMBLY)
 			{
 				buf.Append(" Assembly");
 			}
-			if ((PdfWriter.ALLOW_DEGRADED_PRINTING & permissions) == PdfWriter.ALLOW_DEGRADED_PRINTING)
+			if ((EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants
+				.ALLOW_DEGRADED_PRINTING)
 			{
 				buf.Append(" Degraded printing");
 			}
@@ -246,7 +158,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if printing is allowed</returns>
 		public static bool IsPrintingAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_PRINTING & permissions) == PdfWriter.ALLOW_PRINTING;
+			return (EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.
+				ALLOW_PRINTING;
 		}
 
 		/// <summary>Tells you if modifying content is allowed.</summary>
@@ -254,7 +167,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if modifying content is allowed</returns>
 		public static bool IsModifyContentsAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_MODIFY_CONTENTS & permissions) == PdfWriter.ALLOW_MODIFY_CONTENTS;
+			return (EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants
+				.ALLOW_MODIFY_CONTENTS;
 		}
 
 		/// <summary>Tells you if copying is allowed.</summary>
@@ -262,7 +176,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if copying is allowed</returns>
 		public static bool IsCopyAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_COPY & permissions) == PdfWriter.ALLOW_COPY;
+			return (EncryptionConstants.ALLOW_COPY & permissions) == EncryptionConstants.ALLOW_COPY;
 		}
 
 		/// <summary>Tells you if modifying annotations is allowed.</summary>
@@ -270,7 +184,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if modifying annotations is allowed</returns>
 		public static bool IsModifyAnnotationsAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_MODIFY_ANNOTATIONS & permissions) == PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
+			return (EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants
+				.ALLOW_MODIFY_ANNOTATIONS;
 		}
 
 		/// <summary>Tells you if filling in fields is allowed.</summary>
@@ -278,7 +193,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if filling in fields is allowed</returns>
 		public static bool IsFillInAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_FILL_IN & permissions) == PdfWriter.ALLOW_FILL_IN;
+			return (EncryptionConstants.ALLOW_FILL_IN & permissions) == EncryptionConstants.ALLOW_FILL_IN;
 		}
 
 		/// <summary>Tells you if repurposing for screenreaders is allowed.</summary>
@@ -286,7 +201,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if repurposing for screenreaders is allowed</returns>
 		public static bool IsScreenReadersAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_SCREENREADERS & permissions) == PdfWriter.ALLOW_SCREENREADERS;
+			return (EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants
+				.ALLOW_SCREENREADERS;
 		}
 
 		/// <summary>Tells you if document assembly is allowed.</summary>
@@ -294,7 +210,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if document assembly is allowed</returns>
 		public static bool IsAssemblyAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_ASSEMBLY & permissions) == PdfWriter.ALLOW_ASSEMBLY;
+			return (EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.
+				ALLOW_ASSEMBLY;
 		}
 
 		/// <summary>Tells you if degraded printing is allowed.</summary>
@@ -302,7 +219,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>true if degraded printing is allowed</returns>
 		public static bool IsDegradedPrintingAllowed(int permissions)
 		{
-			return (PdfWriter.ALLOW_DEGRADED_PRINTING & permissions) == PdfWriter.ALLOW_DEGRADED_PRINTING;
+			return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants
+				.ALLOW_DEGRADED_PRINTING;
 		}
 
 		/// <summary>Gets the content from a recipient.</summary>

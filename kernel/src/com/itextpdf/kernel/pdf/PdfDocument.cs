@@ -1,5 +1,5 @@
 /*
-$Id: b3b6010ee4359d93a303c4608de6eed33e20493c $
+$Id: 4a489fd2b2f3a5f5c9aec31b0989e20b5ddb674d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,6 +44,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using com.itextpdf.io;
+using com.itextpdf.io.log;
 using com.itextpdf.io.source;
 using com.itextpdf.io.util;
 using com.itextpdf.kernel;
@@ -105,14 +107,12 @@ namespace com.itextpdf.kernel.pdf
 		protected internal PdfDocumentInfo info = null;
 
 		/// <summary>Document version.</summary>
-		/// <remarks>Document version. 1.7 by default.</remarks>
 		protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
 		/// <summary>List of indirect objects used in the document.</summary>
 		internal readonly PdfXrefTable xref = new PdfXrefTable();
 
-		/// <summary>Indicate incremental updates mode of stamping mode.</summary>
-		protected internal readonly bool appendMode;
+		protected internal readonly StampingProperties properties;
 
 		protected internal PdfStructTreeRoot structTreeRoot;
 
@@ -153,7 +153,8 @@ namespace com.itextpdf.kernel.pdf
 				throw new ArgumentNullException("reader");
 			}
 			this.reader = reader;
-			this.appendMode = false;
+			this.properties = new StampingProperties();
+			// default values of the StampingProperties doesn't affect anything
 			Open(null);
 		}
 
@@ -164,76 +165,34 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		/// <param name="writer">PDF writer</param>
 		public PdfDocument(PdfWriter writer)
-			: this(writer, PdfVersion.PDF_1_7)
-		{
-		}
-
-		/// <summary>Open PDF document in writing mode.</summary>
-		/// <remarks>
-		/// Open PDF document in writing mode.
-		/// Document has no pages when initialized.
-		/// </remarks>
-		/// <param name="writer">PDF writer</param>
-		/// <param name="pdfVersion">pdf version of the resultant document</param>
-		public PdfDocument(PdfWriter writer, PdfVersion pdfVersion)
 		{
 			if (writer == null)
 			{
 				throw new ArgumentNullException("writer");
 			}
 			this.writer = writer;
-			this.appendMode = false;
-			this.pdfVersion = pdfVersion;
-			Open(pdfVersion);
-		}
-
-		/// <summary>Open PDF document in stamping mode.</summary>
-		/// <param name="reader">PDF reader.</param>
-		/// <param name="writer">PDF writer.</param>
-		/// <param name="append">if true, incremental updates will</param>
-		public PdfDocument(PdfReader reader, PdfWriter writer, bool append)
-			: this(reader, writer, append, null)
-		{
+			this.properties = new StampingProperties();
+			// default values of the StampingProperties doesn't affect anything
+			Open(writer.properties.pdfVersion);
 		}
 
 		/// <summary>Opens PDF document in the stamping mode.</summary>
 		/// <remarks>
 		/// Opens PDF document in the stamping mode.
 		/// <br/>
-		/// Note: to enable append mode use
-		/// <see cref="PdfDocument(PdfReader, PdfWriter, bool)"/>
-		/// instead.
 		/// </remarks>
 		/// <param name="reader">PDF reader.</param>
 		/// <param name="writer">PDF writer.</param>
 		public PdfDocument(PdfReader reader, PdfWriter writer)
-			: this(reader, writer, false)
-		{
-		}
-
-		/// <summary>Opens PDF document in the stamping mode.</summary>
-		/// <remarks>
-		/// Opens PDF document in the stamping mode.
-		/// <br/>
-		/// Note: to enable append mode use
-		/// <see cref="PdfDocument(PdfReader, PdfWriter, bool)"/>
-		/// instead.
-		/// </remarks>
-		/// <param name="reader">PDF reader.</param>
-		/// <param name="writer">PDF writer.</param>
-		/// <param name="newPdfVersion">the pdf version of the resultant file.</param>
-		public PdfDocument(PdfReader reader, PdfWriter writer, PdfVersion newPdfVersion)
-			: this(reader, writer, false, newPdfVersion)
+			: this(reader, writer, new StampingProperties())
 		{
 		}
 
 		/// <summary>Open PDF document in stamping mode.</summary>
 		/// <param name="reader">PDF reader.</param>
 		/// <param name="writer">PDF writer.</param>
-		/// <param name="append">if true, incremental updates will</param>
-		/// <param name="newPdfVersion">the pdf version of the resultant file, or null to leave it as is.
-		/// 	</param>
-		public PdfDocument(PdfReader reader, PdfWriter writer, bool append, PdfVersion newPdfVersion
+		/// <param name="properties">properties of the stamping process</param>
+		public PdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties
 			)
 		{
 			if (reader == null)
@@ -246,8 +205,22 @@ namespace com.itextpdf.kernel.pdf
 			}
 			this.reader = reader;
 			this.writer = writer;
-			this.appendMode = append;
-			Open(newPdfVersion);
+			this.properties = properties;
+			bool writerHasEncryption = writer.properties.IsStandardEncryptionUsed() || writer
+				.properties.IsPublicKeyEncryptionUsed();
+			if (properties.appendMode && writerHasEncryption)
+			{
+				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
+					));
+				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
+			}
+			if (properties.preserveEncryption && writerHasEncryption)
+			{
+				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
+					));
+				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
+			}
+			Open(writer.properties.pdfVersion);
 		}
 
 		/// <summary>Use this method to set the XMP Metadata.</summary>
@@ -676,7 +649,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual bool IsAppendMode()
 		{
 			CheckClosingStatus();
-			return appendMode;
+			return properties.appendMode;
 		}
 
 		/// <summary>Creates next available indirect reference.</summary>
@@ -725,7 +698,7 @@ namespace com.itextpdf.kernel.pdf
 						xmp.GetOutputStream().Write(xmpMetadata);
 						xmp.Put(PdfName.Type, PdfName.Metadata);
 						xmp.Put(PdfName.Subtype, PdfName.XML);
-						PdfEncryption crypto = writer.GetEncryption();
+						PdfEncryption crypto = writer.crypto;
 						if (crypto != null && !crypto.IsMetadataEncrypted())
 						{
 							PdfArray ar = new PdfArray();
@@ -736,7 +709,7 @@ namespace com.itextpdf.kernel.pdf
 					}
 					CheckIsoConformance();
 					PdfObject crypto_1 = null;
-					if (appendMode)
+					if (properties.appendMode)
 					{
 						if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified())
 						{
@@ -775,9 +748,9 @@ namespace com.itextpdf.kernel.pdf
 						writer.FlushModifiedWaitingObjects();
 						if (writer.crypto != null)
 						{
-							System.Diagnostics.Debug.Assert(reader.GetCryptoDict() == writer.crypto.GetPdfObject
+							System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject
 								(), "Conflict with source encryption");
-							crypto_1 = reader.GetCryptoDict();
+							crypto_1 = reader.decrypt.GetPdfObject();
 						}
 					}
 					else
@@ -901,15 +874,15 @@ namespace com.itextpdf.kernel.pdf
 			{
 				structTreeRoot = new PdfStructTreeRoot(this);
 				catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_817
+				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_789
 					(this)));
 				structParentIndex = 0;
 			}
 		}
 
-		private sealed class _Dictionary_817 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_789 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_817()
+			public _Dictionary_789()
 			{
 				{
 					this[PdfName.Marked] = PdfBoolean.TRUE;
@@ -945,15 +918,14 @@ namespace com.itextpdf.kernel.pdf
 		public virtual TagStructureContext GetTagStructureContext()
 		{
 			CheckClosingStatus();
-			if (tagStructureContext != null)
+			if (tagStructureContext == null)
 			{
-				return tagStructureContext;
+				if (!IsTagged())
+				{
+					throw new PdfException(PdfException.MustBeATaggedDocument);
+				}
+				InitTagStructureContext();
 			}
-			if (!IsTagged())
-			{
-				throw new PdfException(PdfException.MustBeATaggedDocument);
-			}
-			tagStructureContext = new TagStructureContext(this);
 			return tagStructureContext;
 		}
 
@@ -1457,6 +1429,18 @@ namespace com.itextpdf.kernel.pdf
 			this.userProperties = userProperties;
 		}
 
+		/// <summary>Gets list of indirect references.</summary>
+		/// <returns>list of indirect references.</returns>
+		internal virtual PdfXrefTable GetXref()
+		{
+			return xref;
+		}
+
+		protected internal virtual void InitTagStructureContext()
+		{
+			tagStructureContext = new TagStructureContext(this);
+		}
+
 		protected internal virtual void StoreLinkAnnotation(PdfPage page, PdfLinkAnnotation
 			 annotation)
 		{
@@ -1504,7 +1488,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					reader.pdfDocument = this;
 					reader.ReadPdf();
-					pdfVersion = reader.pdfVersion;
+					pdfVersion = reader.headerPdfVersion;
 					trailer = new PdfDictionary(reader.trailer);
 					catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
 					if (catalog.GetPdfObject().ContainsKey(PdfName.Version))
@@ -1522,6 +1506,14 @@ namespace com.itextpdf.kernel.pdf
 						().Get(PdfName.Metadata))
 					{
 						xmpMetadata = catalog.GetPdfObject().GetAsStream(PdfName.Metadata).GetBytes();
+						try
+						{
+							reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory
+								.ParseFromBuffer(xmpMetadata));
+						}
+						catch (XMPException)
+						{
+						}
 					}
 					PdfObject infoDict = trailer.Get(PdfName.Info, true);
 					info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : 
@@ -1533,7 +1525,7 @@ namespace com.itextpdf.kernel.pdf
 						structTreeRoot = new PdfStructTreeRoot(str);
 						structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
 					}
-					if (appendMode && (reader.HasRebuiltXref() || reader.HasFixedXref()))
+					if (properties.appendMode && (reader.HasRebuiltXref() || reader.HasFixedXref()))
 					{
 						throw new PdfException(PdfException.AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible
 							);
@@ -1541,14 +1533,19 @@ namespace com.itextpdf.kernel.pdf
 				}
 				if (writer != null)
 				{
-					if (reader != null && reader.xrefStm && writer.fullCompression == null)
+					if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression 
+						== null)
 					{
-						writer.SetFullCompression(true);
+						writer.properties.isFullCompression = true;
 					}
 					if (reader != null && !reader.IsOpenedWithFullPermission())
 					{
 						throw new BadPasswordException(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword
 							);
+					}
+					if (reader != null && properties.preserveEncryption)
+					{
+						writer.crypto = reader.decrypt;
 					}
 					writer.document = this;
 					if (reader == null)
@@ -1566,7 +1563,7 @@ namespace com.itextpdf.kernel.pdf
 					trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
 					trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
 				}
-				if (appendMode)
+				if (properties.appendMode)
 				{
 					// Due to constructor reader and writer not null.
 					System.Diagnostics.Debug.Assert(reader != null);
@@ -1580,11 +1577,7 @@ namespace com.itextpdf.kernel.pdf
 					file.Close();
 					writer.Write(unchecked((byte)'\n'));
 					//TODO log if full compression differs
-					writer.SetFullCompression(reader.HasXrefStm());
-					if (writer.crypto != null)
-					{
-					}
-					// TODO log that writer crypto will be ignored
+					writer.properties.isFullCompression = reader.HasXrefStm();
 					writer.crypto = reader.decrypt;
 					if (newPdfVersion != null)
 					{
@@ -1595,7 +1588,7 @@ namespace com.itextpdf.kernel.pdf
 							// If the header specifies a later version, or if this entry is absent, the document conforms to the
 							// version specified in the header.
 							// So only update the version if it is older than the one in the header
-							if (newPdfVersion.CompareTo(reader.pdfVersion) > 0)
+							if (newPdfVersion.CompareTo(reader.headerPdfVersion) > 0)
 							{
 								catalog.Put(PdfName.Version, newPdfVersion.ToPdfName());
 								catalog.SetModified();
@@ -1624,13 +1617,6 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		/// <summary>Gets list of indirect references.</summary>
-		/// <returns>list of indirect references.</returns>
-		internal virtual PdfXrefTable GetXref()
-		{
-			return xref;
-		}
-
 		/// <summary>List all newly added or loaded fonts</summary>
 		/// <returns>
 		/// List of
@@ -1644,7 +1630,7 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal virtual void FlushFonts()
 		{
-			if (appendMode)
+			if (properties.appendMode)
 			{
 				foreach (PdfFont font in GetDocumentFonts())
 				{

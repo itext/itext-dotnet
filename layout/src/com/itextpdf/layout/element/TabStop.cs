@@ -1,5 +1,5 @@
 /*
-$Id: d325829e0702ad50b0334a940dbcefb649c376e5 $
+$Id: 6643581b2be204b7d8c37b5554e25806f4eff387 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,7 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using com.itextpdf.kernel.pdf.canvas.draw;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.element
 {
@@ -51,24 +51,24 @@ namespace com.itextpdf.layout.element
 	{
 		private float tabPosition;
 
-		private Property.TabAlignment tabAlignment;
+		private TabAlignment tabAlignment;
 
 		private char tabAnchor;
 
-		private LineDrawer tabLeader;
+		private ILineDrawer tabLeader;
 
 		public TabStop(float tabPosition)
-			: this(tabPosition, Property.TabAlignment.LEFT)
+			: this(tabPosition, TabAlignment.LEFT)
 		{
 		}
 
-		public TabStop(float tabPosition, Property.TabAlignment tabAlignment)
+		public TabStop(float tabPosition, TabAlignment tabAlignment)
 			: this(tabPosition, tabAlignment, null)
 		{
 		}
 
-		public TabStop(float tabPosition, Property.TabAlignment tabAlignment, LineDrawer 
-			tabLeader)
+		public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader
+			)
 		{
 			this.tabPosition = tabPosition;
 			this.tabAlignment = tabAlignment;
@@ -81,12 +81,12 @@ namespace com.itextpdf.layout.element
 			return tabPosition;
 		}
 
-		public virtual Property.TabAlignment GetTabAlignment()
+		public virtual TabAlignment GetTabAlignment()
 		{
 			return tabAlignment;
 		}
 
-		public virtual void SetTabAlignment(Property.TabAlignment tabAlignment)
+		public virtual void SetTabAlignment(TabAlignment tabAlignment)
 		{
 			this.tabAlignment = tabAlignment;
 		}
@@ -101,12 +101,12 @@ namespace com.itextpdf.layout.element
 			this.tabAnchor = tabAnchor;
 		}
 
-		public virtual LineDrawer GetTabLeader()
+		public virtual ILineDrawer GetTabLeader()
 		{
 			return tabLeader;
 		}
 
-		public virtual void SetTabLeader(LineDrawer tabLeader)
+		public virtual void SetTabLeader(ILineDrawer tabLeader)
 		{
 			this.tabLeader = tabLeader;
 		}

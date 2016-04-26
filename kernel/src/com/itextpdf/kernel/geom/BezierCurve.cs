@@ -1,5 +1,5 @@
 /*
-$Id: ee9895717a3de10b155a1088feb14c24367e2b47 $
+$Id: 26f6eb88abe7a9763af7918879f0e49babd6b699 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ using System.Collections.Generic;
 namespace com.itextpdf.kernel.geom
 {
 	/// <summary>Represents a Bezier curve.</summary>
-	public class BezierCurve : Shape
+	public class BezierCurve : IShape
 	{
 		/// <summary>
 		/// If the distance between a point and a line is less than

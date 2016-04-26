@@ -1,5 +1,5 @@
 /*
-* $Id: 87ad9facb86bc14590d55e09a1345b494687c160 $
+* $Id: 6e78648b3f0fac89b356218036abde60434b1791 $
 *
 * This file is part of the iText (R) project.
 * Copyright (c) 2014-2015 iText Group NV
@@ -107,20 +107,20 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			private readonly DefaultClipper _enclosing;
 		}
 
-		private static void GetHorzDirection(Edge HorzEdge, Clipper.Direction[] Dir, long
+		private static void GetHorzDirection(Edge HorzEdge, IClipper.Direction[] Dir, long
 			[] Left, long[] Right)
 		{
 			if (HorzEdge.GetBot().GetX() < HorzEdge.GetTop().GetX())
 			{
 				Left[0] = HorzEdge.GetBot().GetX();
 				Right[0] = HorzEdge.GetTop().GetX();
-				Dir[0] = Clipper.Direction.LEFT_TO_RIGHT;
+				Dir[0] = IClipper.Direction.LEFT_TO_RIGHT;
 			}
 			else
 			{
 				Left[0] = HorzEdge.GetTop().GetX();
 				Right[0] = HorzEdge.GetBot().GetX();
-				Dir[0] = Clipper.Direction.RIGHT_TO_LEFT;
+				Dir[0] = IClipper.Direction.RIGHT_TO_LEFT;
 			}
 		}
 
@@ -244,10 +244,10 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		private static bool JoinHorz(Path.OutPt op1, Path.OutPt op1b, Path.OutPt op2, Path.OutPt
 			 op2b, Point.LongPoint Pt, bool DiscardLeft)
 		{
-			Clipper.Direction Dir1 = op1.GetPt().GetX() > op1b.GetPt().GetX() ? Clipper.Direction
-				.RIGHT_TO_LEFT : Clipper.Direction.LEFT_TO_RIGHT;
-			Clipper.Direction Dir2 = op2.GetPt().GetX() > op2b.GetPt().GetX() ? Clipper.Direction
-				.RIGHT_TO_LEFT : Clipper.Direction.LEFT_TO_RIGHT;
+			IClipper.Direction Dir1 = op1.GetPt().GetX() > op1b.GetPt().GetX() ? IClipper.Direction
+				.RIGHT_TO_LEFT : IClipper.Direction.LEFT_TO_RIGHT;
+			IClipper.Direction Dir2 = op2.GetPt().GetX() > op2b.GetPt().GetX() ? IClipper.Direction
+				.RIGHT_TO_LEFT : IClipper.Direction.LEFT_TO_RIGHT;
 			if (Dir1 == Dir2)
 			{
 				return false;
@@ -257,7 +257,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			//So, to facilitate this while inserting Op1b and Op2b ...
 			//when DiscardLeft, make sure we're AT or RIGHT of Pt before adding Op1b,
 			//otherwise make sure we're AT or LEFT of Pt. (Likewise with Op2b.)
-			if (Dir1 == Clipper.Direction.LEFT_TO_RIGHT)
+			if (Dir1 == IClipper.Direction.LEFT_TO_RIGHT)
 			{
 				while (op1.next.GetPt().GetX() <= Pt.GetX() && op1.next.GetPt().GetX() >= op1.GetPt
 					().GetX() && op1.next.GetPt().GetY() == Pt.GetY())
@@ -295,7 +295,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					op1b = op1.Duplicate(DiscardLeft);
 				}
 			}
-			if (Dir2 == Clipper.Direction.LEFT_TO_RIGHT)
+			if (Dir2 == IClipper.Direction.LEFT_TO_RIGHT)
 			{
 				while (op2.next.GetPt().GetX() <= Pt.GetX() && op2.next.GetPt().GetX() >= op2.GetPt
 					().GetX() && op2.next.GetPt().GetY() == Pt.GetY())
@@ -333,7 +333,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					op2b = op2.Duplicate(DiscardLeft);
 				}
 			}
-			if (Dir1 == Clipper.Direction.LEFT_TO_RIGHT == DiscardLeft)
+			if (Dir1 == IClipper.Direction.LEFT_TO_RIGHT == DiscardLeft)
 			{
 				op1.prev = op2;
 				op2.next = op1;
@@ -633,8 +633,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		{
 			Paths paths = Minkowski(poly1, poly2, false, true);
 			DefaultClipper c = new DefaultClipper();
-			c.AddPaths(paths, Clipper.PolyType.SUBJECT, true);
-			c.Execute(Clipper.ClipType.UNION, paths, Clipper.PolyFillType.NON_ZERO, Clipper.PolyFillType
+			c.AddPaths(paths, IClipper.PolyType.SUBJECT, true);
+			c.Execute(IClipper.ClipType.UNION, paths, IClipper.PolyFillType.NON_ZERO, IClipper.PolyFillType
 				.NON_ZERO);
 			return paths;
 		}
@@ -643,8 +643,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		{
 			Paths paths = Minkowski(pattern, path, true, pathIsClosed);
 			DefaultClipper c = new DefaultClipper();
-			c.AddPaths(paths, Clipper.PolyType.SUBJECT, true);
-			c.Execute(Clipper.ClipType.UNION, paths, Clipper.PolyFillType.NON_ZERO, Clipper.PolyFillType
+			c.AddPaths(paths, IClipper.PolyType.SUBJECT, true);
+			c.Execute(IClipper.ClipType.UNION, paths, IClipper.PolyFillType.NON_ZERO, IClipper.PolyFillType
 				.NON_ZERO);
 			return paths;
 		}
@@ -656,14 +656,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			for (int i = 0; i < paths.Count; ++i)
 			{
 				Paths tmp = Minkowski(pattern, paths[i], true, pathIsClosed);
-				c.AddPaths(tmp, Clipper.PolyType.SUBJECT, true);
+				c.AddPaths(tmp, IClipper.PolyType.SUBJECT, true);
 				if (pathIsClosed)
 				{
 					Path path = paths[i].TranslatePath(pattern[0]);
-					c.AddPath(path, Clipper.PolyType.CLIP, true);
+					c.AddPath(path, IClipper.PolyType.CLIP, true);
 				}
 			}
-			c.Execute(Clipper.ClipType.UNION, solution, Clipper.PolyFillType.NON_ZERO, Clipper.PolyFillType
+			c.Execute(IClipper.ClipType.UNION, solution, IClipper.PolyFillType.NON_ZERO, IClipper.PolyFillType
 				.NON_ZERO);
 			return solution;
 		}
@@ -691,35 +691,35 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		//------------------------------------------------------------------------------
 		public static Paths SimplifyPolygon(Path poly)
 		{
-			return SimplifyPolygon(poly, Clipper.PolyFillType.EVEN_ODD);
+			return SimplifyPolygon(poly, IClipper.PolyFillType.EVEN_ODD);
 		}
 
-		public static Paths SimplifyPolygon(Path poly, Clipper.PolyFillType fillType)
+		public static Paths SimplifyPolygon(Path poly, IClipper.PolyFillType fillType)
 		{
 			Paths result = new Paths();
 			DefaultClipper c = new DefaultClipper(STRICTLY_SIMPLE);
-			c.AddPath(poly, Clipper.PolyType.SUBJECT, true);
-			c.Execute(Clipper.ClipType.UNION, result, fillType, fillType);
+			c.AddPath(poly, IClipper.PolyType.SUBJECT, true);
+			c.Execute(IClipper.ClipType.UNION, result, fillType, fillType);
 			return result;
 		}
 
 		public static Paths SimplifyPolygons(Paths polys)
 		{
-			return SimplifyPolygons(polys, Clipper.PolyFillType.EVEN_ODD);
+			return SimplifyPolygons(polys, IClipper.PolyFillType.EVEN_ODD);
 		}
 
-		public static Paths SimplifyPolygons(Paths polys, Clipper.PolyFillType fillType)
+		public static Paths SimplifyPolygons(Paths polys, IClipper.PolyFillType fillType)
 		{
 			Paths result = new Paths();
 			DefaultClipper c = new DefaultClipper(STRICTLY_SIMPLE);
-			c.AddPaths(polys, Clipper.PolyType.SUBJECT, true);
-			c.Execute(Clipper.ClipType.UNION, result, fillType, fillType);
+			c.AddPaths(polys, IClipper.PolyType.SUBJECT, true);
+			c.Execute(IClipper.ClipType.UNION, result, fillType, fillType);
 			return result;
 		}
 
 		protected internal readonly IList<Path.OutRec> polyOuts;
 
-		private Clipper.ClipType clipType;
+		private IClipper.ClipType clipType;
 
 		private ClipperBase.Scanbeam scanbeam;
 
@@ -733,9 +733,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		private readonly Comparator<DefaultClipper.IntersectNode> intersectNodeComparer;
 
-		private Clipper.PolyFillType clipFillType;
+		private IClipper.PolyFillType clipFillType;
 
-		private Clipper.PolyFillType subjFillType;
+		private IClipper.PolyFillType subjFillType;
 
 		private readonly IList<Path.Join> joins;
 
@@ -743,7 +743,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		private bool usingPolyTree;
 
-		public Clipper.ZFillCallback zFillFunction;
+		public IClipper.IZFillCallback zFillFunction;
 
 		private readonly bool reverseSolution;
 
@@ -1565,30 +1565,30 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		}
 
 		//------------------------------------------------------------------------------
-		public virtual bool Execute(Clipper.ClipType clipType, Paths solution, Clipper.PolyFillType
+		public virtual bool Execute(IClipper.ClipType clipType, Paths solution, IClipper.PolyFillType
 			 FillType)
 		{
 			return Execute(clipType, solution, FillType, FillType);
 		}
 
-		public override bool Execute(Clipper.ClipType clipType, PolyTree polytree)
+		public override bool Execute(IClipper.ClipType clipType, PolyTree polytree)
 		{
-			return Execute(clipType, polytree, Clipper.PolyFillType.EVEN_ODD);
+			return Execute(clipType, polytree, IClipper.PolyFillType.EVEN_ODD);
 		}
 
-		public virtual bool Execute(Clipper.ClipType clipType, PolyTree polytree, Clipper.PolyFillType
+		public virtual bool Execute(IClipper.ClipType clipType, PolyTree polytree, IClipper.PolyFillType
 			 FillType)
 		{
 			return Execute(clipType, polytree, FillType, FillType);
 		}
 
-		public override bool Execute(Clipper.ClipType clipType, Paths solution)
+		public override bool Execute(IClipper.ClipType clipType, Paths solution)
 		{
-			return Execute(clipType, solution, Clipper.PolyFillType.EVEN_ODD);
+			return Execute(clipType, solution, IClipper.PolyFillType.EVEN_ODD);
 		}
 
-		public override bool Execute(Clipper.ClipType clipType, Paths solution, Clipper.PolyFillType
-			 subjFillType, Clipper.PolyFillType clipFillType)
+		public override bool Execute(IClipper.ClipType clipType, Paths solution, IClipper.PolyFillType
+			 subjFillType, IClipper.PolyFillType clipFillType)
 		{
 			lock (this)
 			{
@@ -1620,8 +1620,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 		}
 
-		public override bool Execute(Clipper.ClipType clipType, PolyTree polytree, Clipper.PolyFillType
-			 subjFillType, Clipper.PolyFillType clipFillType)
+		public override bool Execute(IClipper.ClipType clipType, PolyTree polytree, IClipper.PolyFillType
+			 subjFillType, IClipper.PolyFillType clipFillType)
 		{
 			lock (this)
 			{
@@ -2063,7 +2063,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				}
 				else
 				{
-					if (e1.polyTyp == e2.polyTyp && e1.windDelta != e2.windDelta && clipType == Clipper.ClipType
+					if (e1.polyTyp == e2.polyTyp && e1.windDelta != e2.windDelta && clipType == IClipper.ClipType
 						.UNION)
 					{
 						if (e1.windDelta == 0)
@@ -2093,7 +2093,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					{
 						if (e1.polyTyp != e2.polyTyp)
 						{
-							if (e1.windDelta == 0 && Math.Abs(e2.windCnt) == 1 && (clipType != Clipper.ClipType
+							if (e1.windDelta == 0 && Math.Abs(e2.windCnt) == 1 && (clipType != IClipper.ClipType
 								.UNION || e2.windCnt2 == 0))
 							{
 								AddOutPt(e1, pt);
@@ -2104,7 +2104,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							}
 							else
 							{
-								if (e2.windDelta == 0 && Math.Abs(e1.windCnt) == 1 && (clipType != Clipper.ClipType
+								if (e2.windDelta == 0 && Math.Abs(e1.windCnt) == 1 && (clipType != IClipper.ClipType
 									.UNION || e1.windCnt2 == 0))
 								{
 									AddOutPt(e2, pt);
@@ -2168,11 +2168,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					e2.windCnt2 = e2.windCnt2 == 0 ? 1 : 0;
 				}
 			}
-			Clipper.PolyFillType e1FillType;
-			Clipper.PolyFillType e2FillType;
-			Clipper.PolyFillType e1FillType2;
-			Clipper.PolyFillType e2FillType2;
-			if (e1.polyTyp == Clipper.PolyType.SUBJECT)
+			IClipper.PolyFillType e1FillType;
+			IClipper.PolyFillType e2FillType;
+			IClipper.PolyFillType e1FillType2;
+			IClipper.PolyFillType e2FillType2;
+			if (e1.polyTyp == IClipper.PolyType.SUBJECT)
 			{
 				e1FillType = subjFillType;
 				e1FillType2 = clipFillType;
@@ -2182,7 +2182,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				e1FillType = clipFillType;
 				e1FillType2 = subjFillType;
 			}
-			if (e2.polyTyp == Clipper.PolyType.SUBJECT)
+			if (e2.polyTyp == IClipper.PolyType.SUBJECT)
 			{
 				e2FillType = subjFillType;
 				e2FillType2 = clipFillType;
@@ -2196,13 +2196,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			int e2Wc;
 			switch (e1FillType)
 			{
-				case Clipper.PolyFillType.POSITIVE:
+				case IClipper.PolyFillType.POSITIVE:
 				{
 					e1Wc = e1.windCnt;
 					break;
 				}
 
-				case Clipper.PolyFillType.NEGATIVE:
+				case IClipper.PolyFillType.NEGATIVE:
 				{
 					e1Wc = -e1.windCnt;
 					break;
@@ -2216,13 +2216,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 			switch (e2FillType)
 			{
-				case Clipper.PolyFillType.POSITIVE:
+				case IClipper.PolyFillType.POSITIVE:
 				{
 					e2Wc = e2.windCnt;
 					break;
 				}
 
-				case Clipper.PolyFillType.NEGATIVE:
+				case IClipper.PolyFillType.NEGATIVE:
 				{
 					e2Wc = -e2.windCnt;
 					break;
@@ -2237,7 +2237,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			if (e1Contributing && e2Contributing)
 			{
 				if (e1Wc != 0 && e1Wc != 1 || e2Wc != 0 && e2Wc != 1 || e1.polyTyp != e2.polyTyp 
-					&& clipType != Clipper.ClipType.XOR)
+					&& clipType != IClipper.ClipType.XOR)
 				{
 					AddLocalMaxPoly(e1, e2, pt);
 				}
@@ -2280,13 +2280,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							int e2Wc2;
 							switch (e1FillType2)
 							{
-								case Clipper.PolyFillType.POSITIVE:
+								case IClipper.PolyFillType.POSITIVE:
 								{
 									e1Wc2 = e1.windCnt2;
 									break;
 								}
 
-								case Clipper.PolyFillType.NEGATIVE:
+								case IClipper.PolyFillType.NEGATIVE:
 								{
 									e1Wc2 = -e1.windCnt2;
 									break;
@@ -2300,13 +2300,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							}
 							switch (e2FillType2)
 							{
-								case Clipper.PolyFillType.POSITIVE:
+								case IClipper.PolyFillType.POSITIVE:
 								{
 									e2Wc2 = e2.windCnt2;
 									break;
 								}
 
-								case Clipper.PolyFillType.NEGATIVE:
+								case IClipper.PolyFillType.NEGATIVE:
 								{
 									e2Wc2 = -e2.windCnt2;
 									break;
@@ -2328,7 +2328,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 								{
 									switch (clipType)
 									{
-										case Clipper.ClipType.INTERSECTION:
+										case IClipper.ClipType.INTERSECTION:
 										{
 											if (e1Wc2 > 0 && e2Wc2 > 0)
 											{
@@ -2337,7 +2337,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 											break;
 										}
 
-										case Clipper.ClipType.UNION:
+										case IClipper.ClipType.UNION:
 										{
 											if (e1Wc2 <= 0 && e2Wc2 <= 0)
 											{
@@ -2346,17 +2346,17 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 											break;
 										}
 
-										case Clipper.ClipType.DIFFERENCE:
+										case IClipper.ClipType.DIFFERENCE:
 										{
-											if (e1.polyTyp == Clipper.PolyType.CLIP && e1Wc2 > 0 && e2Wc2 > 0 || e1.polyTyp ==
-												 Clipper.PolyType.SUBJECT && e1Wc2 <= 0 && e2Wc2 <= 0)
+											if (e1.polyTyp == IClipper.PolyType.CLIP && e1Wc2 > 0 && e2Wc2 > 0 || e1.polyTyp 
+												== IClipper.PolyType.SUBJECT && e1Wc2 <= 0 && e2Wc2 <= 0)
 											{
 												AddLocalMinPoly(e1, e2, pt);
 											}
 											break;
 										}
 
-										case Clipper.ClipType.XOR:
+										case IClipper.ClipType.XOR:
 										{
 											AddLocalMinPoly(e1, e2, pt);
 											break;
@@ -2731,7 +2731,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		private void ProcessHorizontal(Edge horzEdge)
 		{
 			LOGGER.Entering(typeof(DefaultClipper).GetName(), "isHorizontal");
-			Clipper.Direction[] dir = new Clipper.Direction[1];
+			IClipper.Direction[] dir = new IClipper.Direction[1];
 			long[] horzLeft = new long[1];
 			long[] horzRight = new long[1];
 			bool IsOpen = horzEdge.outIdx >= 0 && polyOuts[horzEdge.outIdx].isOpen;
@@ -2750,7 +2750,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			if (currMax != null)
 			{
 				//get the first maxima in range (X) ...
-				if (dir[0] == Clipper.Direction.LEFT_TO_RIGHT)
+				if (dir[0] == IClipper.Direction.LEFT_TO_RIGHT)
 				{
 					while (currMax != null && currMax.X <= horzEdge.GetBot().GetX())
 					{
@@ -2786,7 +2786,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					//'simplifying' polygons (ie if the Simplify property is set).
 					if (currMax != null)
 					{
-						if (dir[0] == Clipper.Direction.LEFT_TO_RIGHT)
+						if (dir[0] == IClipper.Direction.LEFT_TO_RIGHT)
 						{
 							while (currMax != null && currMax.X < e.GetCurrent().GetX())
 							{
@@ -2809,8 +2809,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							}
 						}
 					}
-					if (dir[0] == Clipper.Direction.LEFT_TO_RIGHT && e.GetCurrent().GetX() > horzRight
-						[0] || dir[0] == Clipper.Direction.RIGHT_TO_LEFT && e.GetCurrent().GetX() < horzLeft
+					if (dir[0] == IClipper.Direction.LEFT_TO_RIGHT && e.GetCurrent().GetX() > horzRight
+						[0] || dir[0] == IClipper.Direction.RIGHT_TO_LEFT && e.GetCurrent().GetX() < horzLeft
 						[0])
 					{
 						break;
@@ -2851,7 +2851,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 						DeleteFromAEL(eMaxPair);
 						return;
 					}
-					if (dir[0] == Clipper.Direction.LEFT_TO_RIGHT)
+					if (dir[0] == IClipper.Direction.LEFT_TO_RIGHT)
 					{
 						Point.LongPoint Pt = new Point.LongPoint(e.GetCurrent().GetX(), horzEdge.GetCurrent
 							().GetY());
@@ -3325,7 +3325,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			else
 			{
 				//ie get ready to calc WindCnt2
-				if (edge.windDelta == 0 && clipType != Clipper.ClipType.UNION)
+				if (edge.windDelta == 0 && clipType != IClipper.ClipType.UNION)
 				{
 					edge.windCnt = 1;
 					edge.windCnt2 = e.windCnt2;

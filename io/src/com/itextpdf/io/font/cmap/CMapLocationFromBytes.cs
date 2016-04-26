@@ -1,5 +1,5 @@
 /*
-$Id: f5268074ccc0cecb94bb491dd7dce455e9ae9da3 $
+$Id: 0e0095cf3599a1883bd25ce50c225fa20185144b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ using com.itextpdf.io.source;
 namespace com.itextpdf.io.font.cmap
 {
 	/// <author>psoares</author>
-	public class CMapLocationFromBytes : CMapLocation
+	public class CMapLocationFromBytes : ICMapLocation
 	{
 		private byte[] data;
 

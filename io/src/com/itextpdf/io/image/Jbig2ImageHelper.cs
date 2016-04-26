@@ -1,5 +1,5 @@
 /*
-$Id: cd74b7d69f82e0f1feb4ae60012e7ca0803d7051 $
+$Id: 10b532c9787c2dbefac813ef120756c98ae3320c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -74,16 +74,16 @@ namespace com.itextpdf.io.image
 			}
 		}
 
-		public static void ProcessImage(Image jbig2)
+		public static void ProcessImage(ImageData jbig2)
 		{
 			if (jbig2.GetOriginalType() != ImageType.JBIG2)
 			{
 				throw new ArgumentException("JBIG2 image expected");
 			}
-			Jbig2Image image = (Jbig2Image)jbig2;
+			Jbig2ImageData image = (Jbig2ImageData)jbig2;
 			try
 			{
-				RandomAccessSource ras;
+				IRandomAccessSource ras;
 				if (image.GetData() == null)
 				{
 					image.LoadData();

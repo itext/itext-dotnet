@@ -1,5 +1,5 @@
 /*
-$Id: 0cd41b1f7acb6cd999a7a80d448bd6f8f0914393 $
+$Id: 0161f46b92d17a6a468c6d26afe27ce9c102edc8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,7 +60,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		}
 
 		public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, Key certificateKey
-			, Certificate certificate, String certificateKeyProvider, ExternalDecryptionProcess
+			, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 			: base(encryptionDictionary, certificateKey, certificate, certificateKeyProvider, 
 				externalDecryptionProcess, encryptMetadata)

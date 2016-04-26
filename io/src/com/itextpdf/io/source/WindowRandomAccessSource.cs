@@ -1,5 +1,5 @@
 /*
-$Id: f566476ae10d2ed902a7a7b86a68e150779112b7 $
+$Id: bfa9555cbf7f1a8bcb9aa24d2d922e5c57c06fd8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,10 +54,10 @@ namespace com.itextpdf.io.source
 	/// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
 	/// a specific length.  Position 0 becomes the offset position in the underlying source.
 	/// </remarks>
-	public class WindowRandomAccessSource : RandomAccessSource
+	public class WindowRandomAccessSource : IRandomAccessSource
 	{
 		/// <summary>The source</summary>
-		private readonly RandomAccessSource source;
+		private readonly IRandomAccessSource source;
 
 		/// <summary>The amount to offset the source by</summary>
 		private readonly long offset;
@@ -69,7 +69,7 @@ namespace com.itextpdf.io.source
 		/// 	</summary>
 		/// <param name="source">the source</param>
 		/// <param name="offset">the amount of the offset to use</param>
-		public WindowRandomAccessSource(RandomAccessSource source, long offset)
+		public WindowRandomAccessSource(IRandomAccessSource source, long offset)
 			: this(source, offset, source.Length() - offset)
 		{
 		}
@@ -78,7 +78,7 @@ namespace com.itextpdf.io.source
 		/// <param name="source">the source</param>
 		/// <param name="offset">the amount of the offset to use</param>
 		/// <param name="length">the number of bytes to be included in this RAS</param>
-		public WindowRandomAccessSource(RandomAccessSource source, long offset, long length
+		public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length
 			)
 		{
 			this.source = source;

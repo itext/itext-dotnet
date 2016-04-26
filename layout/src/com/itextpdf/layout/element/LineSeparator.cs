@@ -1,5 +1,5 @@
 /*
-$Id: 73307fd7cc1e63df3db6cd018ed2467cc9fae4b0 $
+$Id: 03af40b6c731b061fd1b66050559a4e61991279b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas.draw;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -53,7 +53,7 @@ namespace com.itextpdf.layout.element
 	/// <summary>
 	/// This is a line separator element which is basically just a horizontal line with
 	/// a style specified by
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.LineDrawer"/>
+	/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer"/>
 	/// custom drawing interface instance.
 	/// This might be thought of as an HTML's <hr> element alternative.
 	/// </summary>
@@ -66,14 +66,13 @@ namespace com.itextpdf.layout.element
 
 		/// <summary>
 		/// Creates a custom line separator with line style defined by custom
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.LineDrawer"/>
+		/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer"/>
 		/// interface instance
 		/// </summary>
 		/// <param name="lineDrawer">line drawer instance</param>
-		public LineSeparator(LineDrawer lineDrawer)
+		public LineSeparator(ILineDrawer lineDrawer)
 		{
-			this.SetProperty<com.itextpdf.layout.element.LineSeparator>(Property.LINE_DRAWER, 
-				lineDrawer);
+			SetProperty(Property.LINE_DRAWER, lineDrawer);
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

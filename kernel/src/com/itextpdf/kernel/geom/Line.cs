@@ -1,5 +1,5 @@
 /*
-$Id: 4b9d47b9288b49244098d0a343972eb243caeb26 $
+$Id: deeb1528902604be99a3023ac2fab0361b44ef34 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,7 @@ using System.Collections.Generic;
 namespace com.itextpdf.kernel.geom
 {
 	/// <summary>Represents a line.</summary>
-	public class Line : Shape
+	public class Line : IShape
 	{
 		private readonly Point p1;
 

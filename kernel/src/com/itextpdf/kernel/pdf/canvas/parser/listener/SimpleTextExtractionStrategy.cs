@@ -1,5 +1,5 @@
 /*
-$Id: 379586af55c0b5b5dd2e1013e614b81152958f4f $
+$Id: 4b7160ae40098d75c3b8f59856abd439ec39cf4f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,7 +51,7 @@ using com.itextpdf.kernel.pdf.canvas.parser.data;
 
 namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 {
-	public class SimpleTextExtractionStrategy : TextExtractionStrategy
+	public class SimpleTextExtractionStrategy : ITextExtractionStrategy
 	{
 		private Vector lastStart;
 
@@ -60,7 +60,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// <summary>used to store the resulting String.</summary>
 		private readonly StringBuilder result = new StringBuilder();
 
-		public virtual void EventOccurred(EventData data, EventType type)
+		public virtual void EventOccurred(IEventData data, EventType type)
 		{
 			if (type.Equals(EventType.RENDER_TEXT))
 			{

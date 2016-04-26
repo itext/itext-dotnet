@@ -1,5 +1,5 @@
 /*
-$Id: ece289191055b538d8cfb46a9f91fd7d4be18b2d $
+$Id: 6c12384506ac1f19f1534bb953d68b6aaa2e6050 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,24 +51,24 @@ namespace com.itextpdf.kernel.pdf.filters
 	/// <remarks>
 	/// Encapsulates filter behavior for PDF streams.  Classes generally interace with this
 	/// using the static getDefaultFilterHandlers() method, then obtain the desired
-	/// <see cref="FilterHandler"/>
+	/// <see cref="IFilterHandler"/>
 	/// via a lookup.
 	/// </remarks>
 	public sealed class FilterHandlers
 	{
 		/// <summary>
 		/// The default
-		/// <see cref="FilterHandler"/>
+		/// <see cref="IFilterHandler"/>
 		/// s used by iText
 		/// </summary>
-		private static readonly IDictionary<PdfName, FilterHandler> defaults;
+		private static readonly IDictionary<PdfName, IFilterHandler> defaults;
 
 		static FilterHandlers()
 		{
 			// Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
 			// it may also be better to split the sub-classes out into a separate package
-			IDictionary<PdfName, FilterHandler> map = new Dictionary<PdfName, FilterHandler>(
-				);
+			IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler
+				>();
 			map[PdfName.FlateDecode] = new FlateDecodeFilter();
 			map[PdfName.FL] = new FlateDecodeFilter();
 			map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();
@@ -84,10 +84,10 @@ namespace com.itextpdf.kernel.pdf.filters
 
 		/// <returns>
 		/// the default
-		/// <see cref="FilterHandler"/>
+		/// <see cref="IFilterHandler"/>
 		/// s used by iText
 		/// </returns>
-		public static IDictionary<PdfName, FilterHandler> GetDefaultFilterHandlers()
+		public static IDictionary<PdfName, IFilterHandler> GetDefaultFilterHandlers()
 		{
 			return defaults;
 		}

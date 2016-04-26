@@ -1,5 +1,5 @@
 /*
-* $Id: 4f71558adacde358cc40486fb268c73817e09b6b $
+* $Id: f8487d32cac7adc1672ee759f0c35b6a1f86202f $
 *
 * This file is part of the iText (R) project.
 * Copyright (c) 2014-2015 iText Group NV
@@ -79,7 +79,7 @@ using java.util.logging;
 
 namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 {
-	public abstract class ClipperBase : Clipper
+	public abstract class ClipperBase : IClipper
 	{
 		protected internal class LocalMinima
 		{
@@ -121,7 +121,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			e.outIdx = Edge.UNASSIGNED;
 		}
 
-		private static void InitEdge2(Edge e, Clipper.PolyType polyType)
+		private static void InitEdge2(Edge e, IClipper.PolyType polyType)
 		{
 			if (e.GetCurrent().GetY() >= e.next.GetCurrent().GetY())
 			{
@@ -185,8 +185,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		protected internal readonly bool preserveCollinear;
 
-		private static readonly Logger LOGGER = Logger.GetLogger(typeof(Clipper).GetName(
-			));
+		private static readonly Logger LOGGER = Logger.GetLogger(typeof(IClipper).GetName
+			());
 
 		protected internal ClipperBase(bool preserveCollinear)
 		{
@@ -198,9 +198,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			edges = new List<IList<Edge>>();
 		}
 
-		public override bool AddPath(Path pg, Clipper.PolyType polyType, bool Closed)
+		public override bool AddPath(Path pg, IClipper.PolyType polyType, bool Closed)
 		{
-			if (!Closed && polyType == Clipper.PolyType.CLIP)
+			if (!Closed && polyType == IClipper.PolyType.CLIP)
 			{
 				throw new InvalidOperationException("AddPath: Open paths must be subject.");
 			}
@@ -436,7 +436,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return true;
 		}
 
-		public override bool AddPaths(Paths ppg, Clipper.PolyType polyType, bool closed)
+		public override bool AddPaths(Paths ppg, IClipper.PolyType polyType, bool closed)
 		{
 			bool result = false;
 			for (int i = 0; i < ppg.Count; ++i)
@@ -725,14 +725,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 		}
 
-		public abstract bool Execute(Clipper.ClipType arg1, Paths arg2);
+		public abstract bool Execute(IClipper.ClipType arg1, Paths arg2);
 
-		public abstract bool Execute(Clipper.ClipType arg1, Paths arg2, Clipper.PolyFillType
-			 arg3, Clipper.PolyFillType arg4);
+		public abstract bool Execute(IClipper.ClipType arg1, Paths arg2, IClipper.PolyFillType
+			 arg3, IClipper.PolyFillType arg4);
 
-		public abstract bool Execute(Clipper.ClipType arg1, PolyTree arg2);
+		public abstract bool Execute(IClipper.ClipType arg1, PolyTree arg2);
 
-		public abstract bool Execute(Clipper.ClipType arg1, PolyTree arg2, Clipper.PolyFillType
-			 arg3, Clipper.PolyFillType arg4);
+		public abstract bool Execute(IClipper.ClipType arg1, PolyTree arg2, IClipper.PolyFillType
+			 arg3, IClipper.PolyFillType arg4);
 	}
 }

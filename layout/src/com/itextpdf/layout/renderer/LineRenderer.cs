@@ -1,5 +1,5 @@
 /*
-$Id: 4c86baa905ca42d2bd7825a729ce2656b7ba90f9 $
+$Id: 2b8c225edcd6a619d38bc2c576d18586b2755ab9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,9 +48,9 @@ using System.Text;
 using com.itextpdf.io.font.otf;
 using com.itextpdf.io.util;
 using com.itextpdf.kernel.geom;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -71,20 +71,19 @@ namespace com.itextpdf.layout.renderer
 			maxAscent = 0;
 			maxDescent = 0;
 			int childPos = 0;
-			Property.BaseDirection baseDirection = GetProperty(Property.BASE_DIRECTION);
+			BaseDirection baseDirection = GetProperty(Property.BASE_DIRECTION);
 			foreach (IRenderer renderer in childRenderers)
 			{
 				if (renderer is TextRenderer)
 				{
 					((TextRenderer)renderer).ApplyOtf();
-					if (baseDirection == null || baseDirection == Property.BaseDirection.NO_BIDI)
+					if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
 					{
 						baseDirection = renderer.GetOwnProperty(Property.BASE_DIRECTION);
 					}
 				}
 			}
-			if (levels == null && baseDirection != null && baseDirection != Property.BaseDirection
-				.NO_BIDI)
+			if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI)
 			{
 				IList<int> unicodeIdsLst = new List<int>();
 				foreach (IRenderer child in childRenderers)
@@ -147,8 +146,8 @@ namespace com.itextpdf.layout.renderer
 				{
 					((TextRenderer)childRenderer).TrimFirst();
 				}
-				if (nextTabStop != null && nextTabStop.GetTabAlignment() == Property.TabAlignment
-					.ANCHOR && childRenderer is TextRenderer)
+				if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR &&
+					 childRenderer is TextRenderer)
 				{
 					childRenderer.SetProperty(Property.TAB_ANCHOR, nextTabStop.GetTabAnchor());
 				}
@@ -264,7 +263,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			// Consider for now that all the children have the same font, and that after reordering text pieces
 			// can be reordered, but cannot be split.
-			if (baseDirection != null && baseDirection != Property.BaseDirection.NO_BIDI)
+			if (baseDirection != null && baseDirection != BaseDirection.NO_BIDI)
 			{
 				IList<IRenderer> children = null;
 				if (result.GetStatus() == LayoutResult.PARTIAL)
@@ -417,16 +416,16 @@ namespace com.itextpdf.layout.renderer
 			return occupiedArea.GetBBox().GetY() - maxDescent;
 		}
 
-		public virtual float GetLeadingValue(Property.Leading leading)
+		public virtual float GetLeadingValue(Leading leading)
 		{
 			switch (leading.GetType())
 			{
-				case Property.Leading.FIXED:
+				case Leading.FIXED:
 				{
 					return leading.GetValue();
 				}
 
-				case Property.Leading.MULTIPLIED:
+				case Leading.MULTIPLIED:
 				{
 					return occupiedArea.GetBBox().GetHeight() * leading.GetValue();
 				}
@@ -543,12 +542,12 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual LineRenderer CreateSplitRenderer()
 		{
-			return ((LineRenderer)GetNextRenderer());
+			return (LineRenderer)GetNextRenderer();
 		}
 
 		protected internal virtual LineRenderer CreateOverflowRenderer()
 		{
-			return ((LineRenderer)GetNextRenderer());
+			return (LineRenderer)GetNextRenderer();
 		}
 
 		protected internal virtual LineRenderer[] Split()
@@ -652,10 +651,10 @@ namespace com.itextpdf.layout.renderer
 				return null;
 			}
 			childRenderer.SetProperty(Property.TAB_LEADER, nextTabStop.GetTabLeader());
-			childRenderer.SetProperty(Property.WIDTH, Property.UnitValue.CreatePointValue(nextTabStop
-				.GetTabPosition() - curWidth));
+			childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.
+				GetTabPosition() - curWidth));
 			childRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
-			if (nextTabStop.GetTabAlignment() == Property.TabAlignment.LEFT)
+			if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT)
 			{
 				return null;
 			}
@@ -680,19 +679,19 @@ namespace com.itextpdf.layout.renderer
 			float tabWidth = 0;
 			switch (tabStop.GetTabAlignment())
 			{
-				case Property.TabAlignment.RIGHT:
+				case TabAlignment.RIGHT:
 				{
 					tabWidth = tabStop.GetTabPosition() - curWidth - childWidth;
 					break;
 				}
 
-				case Property.TabAlignment.CENTER:
+				case TabAlignment.CENTER:
 				{
 					tabWidth = tabStop.GetTabPosition() - curWidth - childWidth / 2;
 					break;
 				}
 
-				case Property.TabAlignment.ANCHOR:
+				case TabAlignment.ANCHOR:
 				{
 					float anchorPosition = -1;
 					if (nextElementRenderer is TextRenderer)
@@ -716,8 +715,7 @@ namespace com.itextpdf.layout.renderer
 			{
 				tabWidth -= (curWidth + childWidth + tabWidth) - layoutBox.GetWidth();
 			}
-			tabRenderer.SetProperty(Property.WIDTH, Property.UnitValue.CreatePointValue(tabWidth
-				));
+			tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
 			tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
 			return tabWidth;
 		}
@@ -731,8 +729,7 @@ namespace com.itextpdf.layout.renderer
 			{
 				tabWidth = lineWidth - curWidth;
 			}
-			tabRenderer.SetProperty(Property.WIDTH, Property.UnitValue.CreatePointValue(tabWidth
-				));
+			tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
 			tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
 		}
 

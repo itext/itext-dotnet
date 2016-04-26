@@ -1,5 +1,5 @@
 /*
-$Id: ce574109c88e381d2918abe8fed8f8cc97c7eb61 $
+$Id: 240531607de4be46731cd1cef6dcf78cacf4fbbb $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,11 +52,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 {
 	/// <summary>This class allows you to find the rectangle which contains all the text in the given content stream.
 	/// 	</summary>
-	public class TextMarginFinder : EventListener
+	public class TextMarginFinder : IEventListener
 	{
 		private Rectangle textRectangle = null;
 
-		public virtual void EventOccurred(EventData data, EventType type)
+		public virtual void EventOccurred(IEventData data, EventType type)
 		{
 			if (type == EventType.RENDER_TEXT)
 			{

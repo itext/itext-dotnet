@@ -1,5 +1,5 @@
 /*
-$Id: 3306bc9bcb57aa593ad29047579059ca57d39475 $
+$Id: 5fee7b4f9d814be734de3b1c9604772728cbd2cf $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,7 +50,7 @@ using com.itextpdf.kernel.pdf;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>Handles ASCIIHexDecode filter</summary>
-	public class ASCIIHexDecodeFilter : FilterHandler
+	public class ASCIIHexDecodeFilter : IFilterHandler
 	{
 		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
 			, PdfDictionary streamDictionary)

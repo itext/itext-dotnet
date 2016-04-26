@@ -1,5 +1,5 @@
 /*
-$Id: 63ed87dc94632fd914acf873907dc9d889531dc5 $
+$Id: 121f1de144c92d181ee067b5f5f91583a31c5c64 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,10 +46,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using com.itextpdf.kernel.geom;
-using com.itextpdf.layout;
 using com.itextpdf.layout.border;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
@@ -123,7 +123,7 @@ namespace com.itextpdf.layout.renderer
 				SetProperty(Property.BORDER, Border.NO_BORDER);
 			}
 			float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
-			Property.Leading leading = GetProperty(Property.LEADING);
+			Leading leading = GetProperty(Property.LEADING);
 			float leadingValue = 0;
 			float lastLineHeight = 0;
 			while (currentRenderer != null)
@@ -150,10 +150,10 @@ namespace com.itextpdf.layout.renderer
 						processedRenderer = (LineRenderer)result.GetSplitRenderer();
 					}
 				}
-				Property.TextAlignment textAlignment = GetProperty(Property.TEXT_ALIGNMENT);
-				if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == Property.TextAlignment
-					.JUSTIFIED && !result.IsSplitForcedByNewline() || textAlignment == Property.TextAlignment
-					.JUSTIFIED_ALL)
+				TextAlignment textAlignment = GetProperty(Property.TEXT_ALIGNMENT);
+				if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.
+					JUSTIFIED && !result.IsSplitForcedByNewline() || textAlignment == TextAlignment.
+					JUSTIFIED_ALL)
 				{
 					if (processedRenderer != null)
 					{
@@ -162,20 +162,20 @@ namespace com.itextpdf.layout.renderer
 				}
 				else
 				{
-					if (textAlignment != null && textAlignment != Property.TextAlignment.LEFT && processedRenderer
+					if (textAlignment != null && textAlignment != TextAlignment.LEFT && processedRenderer
 						 != null)
 					{
 						float deltaX = availableWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth
 							();
 						switch (textAlignment)
 						{
-							case Property.TextAlignment.RIGHT:
+							case TextAlignment.RIGHT:
 							{
 								processedRenderer.Move(deltaX, 0);
 								break;
 							}
 
-							case Property.TextAlignment.CENTER:
+							case TextAlignment.CENTER:
 							{
 								processedRenderer.Move(deltaX / 2, 0);
 								break;
@@ -210,7 +210,6 @@ namespace com.itextpdf.layout.renderer
 						layoutBox = areas[++currentAreaPos].Clone();
 						lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
 						firstLineInBox = true;
-						continue;
 					}
 					else
 					{
@@ -319,12 +318,12 @@ namespace com.itextpdf.layout.renderer
 				);
 		}
 
-		public override T GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			if ((property == Property.MARGIN_TOP || property == Property.MARGIN_BOTTOM) && parent
 				 is CellRenderer)
 			{
-				return (T)float.ValueOf(0);
+				return (T1)float.ValueOf(0);
 			}
 			return base.GetDefaultProperty(property);
 		}
@@ -332,8 +331,8 @@ namespace com.itextpdf.layout.renderer
 		protected internal virtual com.itextpdf.layout.renderer.ParagraphRenderer CreateOverflowRenderer
 			()
 		{
-			com.itextpdf.layout.renderer.ParagraphRenderer overflowRenderer = ((com.itextpdf.layout.renderer.ParagraphRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.ParagraphRenderer overflowRenderer = (com.itextpdf.layout.renderer.ParagraphRenderer
+				)GetNextRenderer();
 			// Reset first line indent in case of overflow.
 			float firstLineIndent = GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
 			if (firstLineIndent != 0)
@@ -346,7 +345,7 @@ namespace com.itextpdf.layout.renderer
 		protected internal virtual com.itextpdf.layout.renderer.ParagraphRenderer CreateSplitRenderer
 			()
 		{
-			return ((com.itextpdf.layout.renderer.ParagraphRenderer)GetNextRenderer());
+			return (com.itextpdf.layout.renderer.ParagraphRenderer)GetNextRenderer();
 		}
 
 		protected internal virtual com.itextpdf.layout.renderer.ParagraphRenderer[] Split

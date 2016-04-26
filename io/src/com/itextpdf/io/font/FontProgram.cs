@@ -1,5 +1,5 @@
 /*
-$Id: 6644e56e99732b3db74a34f5102b997cf15971d8 $
+$Id: 9689ae054dca20997eeadb32e9ee8bea9a0d1a71 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -80,7 +80,7 @@ namespace com.itextpdf.io.font
 		/// The font's encoding name. This encoding is 'StandardEncoding' or 'AdobeStandardEncoding' for a font
 		/// that can be totally encoded according to the characters names. For all other names the font is treated as symbolic.
 		/// </remarks>
-		protected internal String encodingScheme = "FontSpecific";
+		protected internal String encodingScheme = FontEncoding.FONT_SPECIFIC;
 
 		protected internal String registry;
 

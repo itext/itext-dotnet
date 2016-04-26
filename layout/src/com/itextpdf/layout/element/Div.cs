@@ -1,5 +1,5 @@
 /*
-$Id: 2281a05bbd4b2999d74ea9c2fa3d569d9f90deed $
+$Id: 9eeac7092f3d5f03df0097f644a6d7144190a7e7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
+using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
 {
@@ -63,32 +64,28 @@ namespace com.itextpdf.layout.element
 		protected internal AccessibilityProperties tagProperties;
 
 		/// <summary>Adds any block element to the div's contents.</summary>
-		/// <?/>
-		/// <?/>
 		/// <param name="element">
 		/// a
 		/// <see cref="BlockElement{T}"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual T2 Add<T1, T2>(BlockElement<T1> element)
-			where T2 : Div
+		public virtual Div Add<T>(BlockElement<T> element)
+			where T : IElement
 		{
 			childElements.Add(element);
-			return (T2)this;
+			return this;
 		}
 
 		/// <summary>Adds an image to the div's contents.</summary>
-		/// <?/>
 		/// <param name="element">
 		/// an
 		/// <see cref="Image"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual T Add<T>(Image element)
-			where T : Div
+		public virtual Div Add(Image element)
 		{
 			childElements.Add(element);
-			return (T)this;
+			return this;
 		}
 
 		public override PdfName GetRole()
@@ -112,6 +109,11 @@ namespace com.itextpdf.layout.element
 				tagProperties = new AccessibilityProperties();
 			}
 			return tagProperties;
+		}
+
+		protected internal override IRenderer MakeNewRenderer()
+		{
+			return new DivRenderer(this);
 		}
 	}
 }

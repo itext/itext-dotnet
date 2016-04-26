@@ -1,5 +1,5 @@
 /*
-$Id: bf8ed8ef64cf61e96c878e09e7ff7e7e4ded2a37 $
+$Id: 3167623e7381b28b7370099fb4b8ef2e68febfcd $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -128,12 +128,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 			}
 			com.itextpdf.kernel.geom.Path pathCopy = new com.itextpdf.kernel.geom.Path(path);
 			pathCopy.CloseAllSubpaths();
-			Clipper clipper = new DefaultClipper();
-			ClipperBridge.AddPath(clipper, clippingPath, Clipper.PolyType.SUBJECT);
-			ClipperBridge.AddPath(clipper, pathCopy, Clipper.PolyType.CLIP);
+			IClipper clipper = new DefaultClipper();
+			ClipperBridge.AddPath(clipper, clippingPath, IClipper.PolyType.SUBJECT);
+			ClipperBridge.AddPath(clipper, pathCopy, IClipper.PolyType.CLIP);
 			PolyTree resultTree = new PolyTree();
-			clipper.Execute(Clipper.ClipType.INTERSECTION, resultTree, Clipper.PolyFillType.NON_ZERO
-				, ClipperBridge.GetFillType(fillingRule));
+			clipper.Execute(IClipper.ClipType.INTERSECTION, resultTree, IClipper.PolyFillType
+				.NON_ZERO, ClipperBridge.GetFillType(fillingRule));
 			clippingPath = ClipperBridge.ConvertToPath(resultTree);
 		}
 
@@ -167,17 +167,17 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		{
 			Subpath newSubpath = new Subpath();
 			newSubpath.SetClosed(subpath.IsClosed());
-			foreach (Shape segment in subpath.GetSegments())
+			foreach (IShape segment in subpath.GetSegments())
 			{
-				Shape transformedSegment = TransformSegment(segment, newCtm);
+				IShape transformedSegment = TransformSegment(segment, newCtm);
 				newSubpath.AddSegment(transformedSegment);
 			}
 			return newSubpath;
 		}
 
-		private Shape TransformSegment(Shape segment, Matrix newCtm)
+		private IShape TransformSegment(IShape segment, Matrix newCtm)
 		{
-			Shape newSegment;
+			IShape newSegment;
 			IList<Point> segBasePts = segment.GetBasePoints();
 			Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[
 				segBasePts.Count]));

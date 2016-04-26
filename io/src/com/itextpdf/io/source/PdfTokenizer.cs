@@ -1,5 +1,5 @@
 /*
-$Id: af177fde17d9d5f06baec7db058068aeedc108a4 $
+$Id: fec82720c06786394cda48dfb65c66e698e9715d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -1093,7 +1093,7 @@ namespace com.itextpdf.io.source
 			return null;
 		}
 
-		protected internal class ReusableRandomAccessSource : RandomAccessSource
+		protected internal class ReusableRandomAccessSource : IRandomAccessSource
 		{
 			private ByteBuffer buffer;
 

@@ -1,5 +1,5 @@
 /*
-$Id: 7243ab80d10a7a5ecbac984832337088d6751b10 $
+$Id: 96da8e643dfabb1a2fab26d4bc983681ce2f1d5d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,15 +48,15 @@ using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
-	public class BlockRenderer : AbstractRenderer
+	public abstract class BlockRenderer : AbstractRenderer
 	{
-		public BlockRenderer(BlockElement modelElement)
+		protected internal BlockRenderer(IElement modelElement)
 			: base(modelElement)
 		{
 		}
@@ -147,14 +147,12 @@ namespace com.itextpdf.layout.renderer
 								());
 							if (currentAreaPos + 1 == areas.Count)
 							{
-								com.itextpdf.layout.renderer.BlockRenderer splitRenderer = CreateSplitRenderer(LayoutResult
-									.PARTIAL);
+								AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
 								splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos
 									));
 								splitRenderer.childRenderers.Add(result.GetSplitRenderer());
 								splitRenderer.occupiedArea = occupiedArea;
-								com.itextpdf.layout.renderer.BlockRenderer overflowRenderer = CreateOverflowRenderer
-									(LayoutResult.PARTIAL);
+								AbstractRenderer overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
 								IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
 								overflowRendererChildren.Add(result.GetOverflowRenderer());
 								overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
@@ -181,12 +179,10 @@ namespace com.itextpdf.layout.renderer
 								bool keepTogether = GetPropertyAsBoolean(Property.KEEP_TOGETHER);
 								int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult
 									.NOTHING;
-								com.itextpdf.layout.renderer.BlockRenderer splitRenderer = CreateSplitRenderer(layoutResult
-									);
+								AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
 								splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos
 									));
-								com.itextpdf.layout.renderer.BlockRenderer overflowRenderer = CreateOverflowRenderer
-									(layoutResult);
+								AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutResult);
 								IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
 								overflowRendererChildren.Add(result.GetOverflowRenderer());
 								overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
@@ -260,16 +256,9 @@ namespace com.itextpdf.layout.renderer
 			return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
 		}
 
-		public override IRenderer GetNextRenderer()
+		protected internal virtual AbstractRenderer CreateSplitRenderer(int layoutResult)
 		{
-			return new com.itextpdf.layout.renderer.BlockRenderer((BlockElement)modelElement);
-		}
-
-		protected internal virtual com.itextpdf.layout.renderer.BlockRenderer CreateSplitRenderer
-			(int layoutResult)
-		{
-			com.itextpdf.layout.renderer.BlockRenderer splitRenderer = ((com.itextpdf.layout.renderer.BlockRenderer
-				)GetNextRenderer());
+			AbstractRenderer splitRenderer = (AbstractRenderer)GetNextRenderer();
 			splitRenderer.parent = parent;
 			splitRenderer.modelElement = modelElement;
 			splitRenderer.occupiedArea = occupiedArea;
@@ -277,11 +266,10 @@ namespace com.itextpdf.layout.renderer
 			return splitRenderer;
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.BlockRenderer CreateOverflowRenderer
-			(int layoutResult)
+		protected internal virtual AbstractRenderer CreateOverflowRenderer(int layoutResult
+			)
 		{
-			com.itextpdf.layout.renderer.BlockRenderer overflowRenderer = ((com.itextpdf.layout.renderer.BlockRenderer
-				)GetNextRenderer());
+			AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
 			overflowRenderer.parent = parent;
 			overflowRenderer.modelElement = modelElement;
 			overflowRenderer.properties = properties;
@@ -361,16 +349,15 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual void ApplyVerticalAlignment()
 		{
-			Property.VerticalAlignment verticalAlignment = GetProperty(Property.VERTICAL_ALIGNMENT
-				);
-			if (verticalAlignment != null && verticalAlignment != Property.VerticalAlignment.
-				TOP && childRenderers.Count > 0)
+			VerticalAlignment verticalAlignment = GetProperty(Property.VERTICAL_ALIGNMENT);
+			if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers
+				.Count > 0)
 			{
 				float deltaY = childRenderers[childRenderers.Count - 1].GetOccupiedArea().GetBBox
 					().GetY() - GetInnerAreaBBox().GetY();
 				switch (verticalAlignment)
 				{
-					case Property.VerticalAlignment.BOTTOM:
+					case VerticalAlignment.BOTTOM:
 					{
 						foreach (IRenderer child in childRenderers)
 						{
@@ -379,7 +366,7 @@ namespace com.itextpdf.layout.renderer
 						break;
 					}
 
-					case Property.VerticalAlignment.MIDDLE:
+					case VerticalAlignment.MIDDLE:
 					{
 						foreach (IRenderer child_1 in childRenderers)
 						{

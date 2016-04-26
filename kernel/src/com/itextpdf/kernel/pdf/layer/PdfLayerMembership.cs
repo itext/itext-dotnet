@@ -65,7 +65,7 @@ namespace com.itextpdf.kernel.pdf.layer
 	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
 	/// must be indirect.
 	/// </remarks>
-	public class PdfLayerMembership : PdfObjectWrapper<PdfDictionary>, PdfOCG
+	public class PdfLayerMembership : PdfObjectWrapper<PdfDictionary>, IPdfOCG
 	{
 		private const long serialVersionUID = -597407628148657784L;
 

@@ -1,5 +1,5 @@
 /*
-$Id: ca2c02714a8b98c0a563cebd6df4b3a8709f51ca $
+$Id: df51b43bc75f2306a0d615b14b1ef6c6556c6fff $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,6 +48,7 @@ using com.itextpdf.kernel.font;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.canvas;
 using com.itextpdf.layout.element;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 using com.itextpdf.layout.splitting;
 
@@ -55,8 +56,8 @@ namespace com.itextpdf.layout
 {
 	/// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
 	/// <?/>
-	public abstract class RootElement<Type> : IPropertyContainer<Type>
-		where Type : RootElement
+	public abstract class RootElement<T> : ElementPropertyContainer<T>
+		where T : IPropertyContainer
 	{
 		protected internal bool immediateFlush = true;
 
@@ -79,11 +80,12 @@ namespace com.itextpdf.layout
 		/// <param name="element">an element with spacial margins, tabbing, and alignment</param>
 		/// <returns>this element</returns>
 		/// <seealso cref="com.itextpdf.layout.element.BlockElement{T}"/>
-		public virtual Type Add(BlockElement element)
+		public virtual RootElement<T> Add<T2>(BlockElement<T2> element)
+			where T2 : IElement
 		{
 			childElements.Add(element);
 			EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
-			return (Type)this;
+			return this;
 		}
 
 		/// <summary>Adds an image to the root.</summary>
@@ -92,34 +94,34 @@ namespace com.itextpdf.layout
 		/// <param name="image">a graphical image element</param>
 		/// <returns>this element</returns>
 		/// <seealso cref="com.itextpdf.layout.element.Image"/>
-		public virtual Type Add(Image image)
+		public virtual RootElement<T> Add(Image image)
 		{
 			childElements.Add(image);
 			EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
-			return (Type)this;
+			return this;
 		}
 
-		public virtual bool HasProperty(Property property)
+		public override bool HasProperty(Property property)
 		{
 			return HasOwnProperty(property);
 		}
 
-		public virtual bool HasOwnProperty(Property property)
+		public override bool HasOwnProperty(Property property)
 		{
 			return properties.ContainsKey(property);
 		}
 
-		public virtual T GetProperty<T>(Property property)
+		public override T1 GetProperty<T1>(Property property)
 		{
-			return GetOwnProperty(property);
+			return ((T1)GetOwnProperty(property));
 		}
 
-		public virtual T GetOwnProperty<T>(Property property)
+		public override T1 GetOwnProperty<T1>(Property property)
 		{
-			return (T)properties[property];
+			return (T1)properties[property];
 		}
 
-		public virtual T GetDefaultProperty<T>(Property property)
+		public override T1 GetDefaultProperty<T1>(Property property)
 		{
 			try
 			{
@@ -131,7 +133,7 @@ namespace com.itextpdf.layout
 						{
 							defaultFont = PdfFontFactory.CreateFont();
 						}
-						return (T)defaultFont;
+						return (T1)defaultFont;
 					}
 
 					case Property.SPLIT_CHARACTERS:
@@ -140,37 +142,37 @@ namespace com.itextpdf.layout
 						{
 							defaultSplitCharacters = new DefaultSplitCharacters();
 						}
-						return (T)defaultSplitCharacters;
+						return (T1)defaultSplitCharacters;
 					}
 
 					case Property.FONT_SIZE:
 					{
-						return (T)System.Convert.ToInt32(12);
+						return (T1)System.Convert.ToInt32(12);
 					}
 
 					case Property.TEXT_RENDERING_MODE:
 					{
-						return (T)System.Convert.ToInt32(PdfCanvasConstants.TextRenderingMode.FILL);
+						return (T1)System.Convert.ToInt32(PdfCanvasConstants.TextRenderingMode.FILL);
 					}
 
 					case Property.TEXT_RISE:
 					{
-						return (T)float.ValueOf(0);
+						return (T1)float.ValueOf(0);
 					}
 
 					case Property.SPACING_RATIO:
 					{
-						return (T)float.ValueOf(0.75f);
+						return (T1)float.ValueOf(0.75f);
 					}
 
 					case Property.FONT_KERNING:
 					{
-						return (T)Property.FontKerning.NO;
+						return (T1)FontKerning.NO;
 					}
 
 					case Property.BASE_DIRECTION:
 					{
-						return (T)Property.BaseDirection.NO_BIDI;
+						return (T1)BaseDirection.NO_BIDI;
 					}
 
 					default:
@@ -185,15 +187,14 @@ namespace com.itextpdf.layout
 			}
 		}
 
-		public virtual void DeleteOwnProperty(Property property)
+		public override void DeleteOwnProperty(Property property)
 		{
 			properties.Remove(property);
 		}
 
-		public virtual Type SetProperty(Property property, Object value)
+		public override void SetProperty(Property property, Object value)
 		{
 			properties[property] = value;
-			return (Type)this;
 		}
 
 		/// <summary>
@@ -205,50 +206,42 @@ namespace com.itextpdf.layout
 		/// descend
 		/// from.
 		/// </summary>
-		/// <?/>
 		/// <returns>
 		/// the
 		/// <see cref="com.itextpdf.layout.renderer.RootRenderer"/>
 		/// attribute
 		/// </returns>
-		public virtual T GetRenderer<T>()
-			where T : RootRenderer
+		public virtual RootRenderer GetRenderer()
 		{
-			return (T)EnsureRootRendererNotNull();
+			return EnsureRootRendererNotNull();
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="text">text to be placed to the page</param>
 		/// <param name="x">the point about which the text will be aligned and rotated</param>
 		/// <param name="y">the point about which the text will be aligned and rotated</param>
 		/// <param name="textAlign">horizontal alignment about the specified point</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(String text, float x, float y, Property.TextAlignment
+		public virtual RootElement<T> ShowTextAligned(String text, float x, float y, TextAlignment
 			 textAlign)
-			where T : RootElement
 		{
 			return ShowTextAligned(text, x, y, textAlign, 0);
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="text">text to be placed to the page</param>
 		/// <param name="x">the point about which the text will be aligned and rotated</param>
 		/// <param name="y">the point about which the text will be aligned and rotated</param>
 		/// <param name="textAlign">horizontal alignment about the specified point</param>
 		/// <param name="angle">the angle of rotation applied to the text, in radians</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(String text, float x, float y, Property.TextAlignment
+		public virtual RootElement<T> ShowTextAligned(String text, float x, float y, TextAlignment
 			 textAlign, float angle)
-			where T : RootElement
 		{
-			return ShowTextAligned(text, x, y, textAlign, Property.VerticalAlignment.BOTTOM, 
-				angle);
+			return ShowTextAligned(text, x, y, textAlign, VerticalAlignment.BOTTOM, angle);
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="text">text to be placed to the page</param>
 		/// <param name="x">the point about which the text will be aligned and rotated</param>
 		/// <param name="y">the point about which the text will be aligned and rotated</param>
@@ -256,9 +249,8 @@ namespace com.itextpdf.layout
 		/// <param name="vertAlign">vertical alignment about the specified point</param>
 		/// <param name="angle">the angle of rotation applied to the text, in radians</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(String text, float x, float y, Property.TextAlignment
-			 textAlign, Property.VerticalAlignment vertAlign, float angle)
-			where T : RootElement
+		public virtual RootElement<T> ShowTextAligned(String text, float x, float y, TextAlignment
+			 textAlign, VerticalAlignment vertAlign, float angle)
 		{
 			Paragraph p = new Paragraph(text);
 			return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
@@ -267,7 +259,6 @@ namespace com.itextpdf.layout
 
 		/// <summary>Convenience method to write a kerned text aligned about the specified point
 		/// 	</summary>
-		/// <?/>
 		/// <param name="text">text to be placed to the page</param>
 		/// <param name="x">the point about which the text will be aligned and rotated</param>
 		/// <param name="y">the point about which the text will be aligned and rotated</param>
@@ -275,17 +266,15 @@ namespace com.itextpdf.layout
 		/// <param name="vertAlign">vertical alignment about the specified point</param>
 		/// <param name="angle">the angle of rotation applied to the text, in radians</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAlignedKerned<T>(String text, float x, float y, Property.TextAlignment
-			 textAlign, Property.VerticalAlignment vertAlign, float angle)
-			where T : RootElement
+		public virtual RootElement<T> ShowTextAlignedKerned(String text, float x, float y
+			, TextAlignment textAlign, VerticalAlignment vertAlign, float angle)
 		{
-			Paragraph p = new Paragraph(text).SetFontKerning(Property.FontKerning.YES);
+			Paragraph p = new Paragraph(text).SetFontKerning(FontKerning.YES);
 			return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
 				, angle);
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="p">
 		/// paragraph of text to be placed to the page. By default it has no leading and is written in single line.
 		/// Set width to write multiline text.
@@ -294,16 +283,14 @@ namespace com.itextpdf.layout
 		/// <param name="y">the point about which the text will be aligned and rotated</param>
 		/// <param name="textAlign">horizontal alignment about the specified point</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(Paragraph p, float x, float y, Property.TextAlignment
+		public virtual RootElement<T> ShowTextAligned(Paragraph p, float x, float y, TextAlignment
 			 textAlign)
-			where T : RootElement
 		{
-			return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, Property.VerticalAlignment
+			return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, VerticalAlignment
 				.BOTTOM, 0);
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="p">
 		/// paragraph of text to be placed to the page. By default it has no leading and is written in single line.
 		/// Set width to write multiline text.
@@ -313,16 +300,14 @@ namespace com.itextpdf.layout
 		/// <param name="textAlign">horizontal alignment about the specified point</param>
 		/// <param name="vertAlign">vertical alignment about the specified point</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(Paragraph p, float x, float y, Property.TextAlignment
-			 textAlign, Property.VerticalAlignment vertAlign)
-			where T : RootElement
+		public virtual RootElement<T> ShowTextAligned(Paragraph p, float x, float y, TextAlignment
+			 textAlign, VerticalAlignment vertAlign)
 		{
 			return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
 				, 0);
 		}
 
 		/// <summary>Convenience method to write a text aligned about the specified point</summary>
-		/// <?/>
 		/// <param name="p">
 		/// paragraph of text to be placed to the page. By default it has no leading and is written in single line.
 		/// Set width to write multiline text.
@@ -334,10 +319,8 @@ namespace com.itextpdf.layout
 		/// <param name="vertAlign">vertical alignment about the specified point</param>
 		/// <param name="angle">the angle of rotation applied to the text, in radians</param>
 		/// <returns>this object</returns>
-		public virtual T ShowTextAligned<T>(Paragraph p, float x, float y, int pageNumber
-			, Property.TextAlignment textAlign, Property.VerticalAlignment vertAlign, float 
-			angle)
-			where T : RootElement
+		public virtual RootElement<T> ShowTextAligned(Paragraph p, float x, float y, int 
+			pageNumber, TextAlignment textAlign, VerticalAlignment vertAlign, float angle)
 		{
 			Div div = new Div();
 			div.SetTextAlignment(textAlign).SetVerticalAlignment(vertAlign);
@@ -351,26 +334,26 @@ namespace com.itextpdf.layout
 			float divHeight = AbstractRenderer.INF;
 			float divX = x;
 			float divY = y;
-			if (textAlign == Property.TextAlignment.CENTER)
+			if (textAlign == TextAlignment.CENTER)
 			{
 				divX = x - divWidth / 2;
-				p.SetHorizontalAlignment(Property.HorizontalAlignment.CENTER);
+				p.SetHorizontalAlignment(HorizontalAlignment.CENTER);
 			}
 			else
 			{
-				if (textAlign == Property.TextAlignment.RIGHT)
+				if (textAlign == TextAlignment.RIGHT)
 				{
 					divX = x - divWidth;
-					p.SetHorizontalAlignment(Property.HorizontalAlignment.RIGHT);
+					p.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
 				}
 			}
-			if (vertAlign == Property.VerticalAlignment.MIDDLE)
+			if (vertAlign == VerticalAlignment.MIDDLE)
 			{
 				divY = y - divHeight / 2;
 			}
 			else
 			{
-				if (vertAlign == Property.VerticalAlignment.TOP)
+				if (vertAlign == VerticalAlignment.TOP)
 				{
 					divY = y - divHeight;
 				}
@@ -387,7 +370,7 @@ namespace com.itextpdf.layout
 			div.Add(p.SetMargins(0, 0, 0, 0));
 			div.SetRole(PdfName.Artifact);
 			this.Add(div);
-			return (T)this;
+			return this;
 		}
 
 		protected internal abstract RootRenderer EnsureRootRendererNotNull();

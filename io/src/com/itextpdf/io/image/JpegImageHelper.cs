@@ -1,5 +1,5 @@
 /*
-$Id: a74fe2e806a5829aaa48acc14cda0bda9f784dcd $
+$Id: bb85fe5546573d94aa0788515b0685c8772c65f1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -97,7 +97,7 @@ namespace com.itextpdf.io.image
 		private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d
 			, 0x03, unchecked((byte)0xed) };
 
-		public static void ProcessImage(Image image)
+		public static void ProcessImage(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.JPEG)
 			{
@@ -140,7 +140,7 @@ namespace com.itextpdf.io.image
 			UpdateAttributes(image);
 		}
 
-		private static void UpdateAttributes(Image image)
+		private static void UpdateAttributes(ImageData image)
 		{
 			image.filter = "DCTDecode";
 			if (image.GetColorTransform() == 0)
@@ -160,8 +160,8 @@ namespace com.itextpdf.io.image
 		/// 	</summary>
 		/// <exception cref="com.itextpdf.io.IOException"/>
 		/// <exception cref="System.IO.IOException"/>
-		private static void ProcessParameters(Stream jpegStream, String errorID, Image image
-			)
+		private static void ProcessParameters(Stream jpegStream, String errorID, ImageData
+			 image)
 		{
 			byte[][] icc = null;
 			if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8)

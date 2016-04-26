@@ -1,5 +1,5 @@
 /*
-$Id: 1337db7c2a4df850b1c4d6c7913edf5d431e4689 $
+$Id: abe0493282084b98618662c2c03ae9ac9070de88 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ using com.itextpdf.kernel.pdf;
 namespace com.itextpdf.kernel.pdf.filters
 {
 	/// <summary>Handles RunLengthDecode filter.</summary>
-	public class RunLengthDecodeFilter : FilterHandler
+	public class RunLengthDecodeFilter : IFilterHandler
 	{
 		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
 			, PdfDictionary streamDictionary)

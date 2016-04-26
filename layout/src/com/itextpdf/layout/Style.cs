@@ -1,5 +1,5 @@
 /*
-$Id: aac566f2b3c82b79e0eaf2d87037ec992cf10dca $
+$Id: e49d2c214e9c3acf1b081d9bae4d69e2c369f3d5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,6 +42,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using com.itextpdf.layout.property;
+
 namespace com.itextpdf.layout
 {
 	/// <summary>Container object for style properties of an element.</summary>
@@ -49,9 +51,263 @@ namespace com.itextpdf.layout
 	/// Container object for style properties of an element. A style can be used as
 	/// an effective way to define multiple equal properties to several elements.
 	/// Used in
-	/// <see cref="AbstractElement"/>
+	/// <see cref="com.itextpdf.layout.element.AbstractElement{T}"/>
 	/// </remarks>
 	public class Style : ElementPropertyContainer<Style>
 	{
+		/// <summary>Gets the current left margin width of the element.</summary>
+		/// <returns>the left margin width, as a <code>float</code></returns>
+		public virtual float GetMarginLeft()
+		{
+			return GetProperty(Property.MARGIN_LEFT);
+		}
+
+		/// <summary>Sets the left margin width of the element.</summary>
+		/// <param name="value">the new left margin width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMarginLeft(float value)
+		{
+			SetProperty(Property.MARGIN_LEFT, value);
+			return this;
+		}
+
+		/// <summary>Gets the current right margin width of the element.</summary>
+		/// <returns>the right margin width, as a <code>float</code></returns>
+		public virtual float GetMarginRight()
+		{
+			return GetProperty(Property.MARGIN_RIGHT);
+		}
+
+		/// <summary>Sets the right margin width of the element.</summary>
+		/// <param name="value">the new right margin width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMarginRight(float value)
+		{
+			SetProperty(Property.MARGIN_RIGHT, value);
+			return this;
+		}
+
+		/// <summary>Gets the current top margin width of the element.</summary>
+		/// <returns>the top margin width, as a <code>float</code></returns>
+		public virtual float GetMarginTop()
+		{
+			return GetProperty(Property.MARGIN_TOP);
+		}
+
+		/// <summary>Sets the top margin width of the element.</summary>
+		/// <param name="value">the new top margin width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMarginTop(float value)
+		{
+			SetProperty(Property.MARGIN_TOP, value);
+			return this;
+		}
+
+		/// <summary>Gets the current bottom margin width of the element.</summary>
+		/// <returns>the bottom margin width, as a <code>float</code></returns>
+		public virtual float GetMarginBottom()
+		{
+			return GetProperty(Property.MARGIN_BOTTOM);
+		}
+
+		/// <summary>Sets the bottom margin width of the element.</summary>
+		/// <param name="value">the new bottom margin width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMarginBottom(float value)
+		{
+			SetProperty(Property.MARGIN_BOTTOM, value);
+			return this;
+		}
+
+		/// <summary>Sets all margins around the element to the same width.</summary>
+		/// <param name="commonMargin">the new margin width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMargin(float commonMargin)
+		{
+			return SetMargins(commonMargin, commonMargin, commonMargin, commonMargin);
+		}
+
+		/// <summary>Sets the margins around the element to a series of new widths.</summary>
+		/// <param name="marginTop">the new margin top width</param>
+		/// <param name="marginRight">the new margin right width</param>
+		/// <param name="marginBottom">the new margin bottom width</param>
+		/// <param name="marginLeft">the new margin left width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetMargins(float marginTop, float marginRight, float marginBottom
+			, float marginLeft)
+		{
+			SetMarginTop(marginTop);
+			SetMarginRight(marginRight);
+			SetMarginBottom(marginBottom);
+			SetMarginLeft(marginLeft);
+			return this;
+		}
+
+		/// <summary>Gets the current left padding width of the element.</summary>
+		/// <returns>the left padding width, as a <code>float</code></returns>
+		public virtual float GetPaddingLeft()
+		{
+			return GetProperty(Property.PADDING_LEFT);
+		}
+
+		/// <summary>Sets the left padding width of the element.</summary>
+		/// <param name="value">the new left padding width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPaddingLeft(float value)
+		{
+			SetProperty(Property.PADDING_LEFT, value);
+			return this;
+		}
+
+		/// <summary>Gets the current right padding width of the element.</summary>
+		/// <returns>the right padding width, as a <code>float</code></returns>
+		public virtual float GetPaddingRight()
+		{
+			return GetProperty(Property.PADDING_RIGHT);
+		}
+
+		/// <summary>Sets the right padding width of the element.</summary>
+		/// <param name="value">the new right padding width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPaddingRight(float value)
+		{
+			SetProperty(Property.PADDING_RIGHT, value);
+			return this;
+		}
+
+		/// <summary>Gets the current top padding width of the element.</summary>
+		/// <returns>the top padding width, as a <code>float</code></returns>
+		public virtual float GetPaddingTop()
+		{
+			return GetProperty(Property.PADDING_TOP);
+		}
+
+		/// <summary>Sets the top padding width of the element.</summary>
+		/// <param name="value">the new top padding width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPaddingTop(float value)
+		{
+			SetProperty(Property.PADDING_TOP, value);
+			return this;
+		}
+
+		/// <summary>Gets the current bottom padding width of the element.</summary>
+		/// <returns>the bottom padding width, as a <code>float</code></returns>
+		public virtual float GetPaddingBottom()
+		{
+			return GetProperty(Property.PADDING_BOTTOM);
+		}
+
+		/// <summary>Sets the bottom padding width of the element.</summary>
+		/// <param name="value">the new bottom padding width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPaddingBottom(float value)
+		{
+			SetProperty(Property.PADDING_BOTTOM, value);
+			return this;
+		}
+
+		/// <summary>Sets all paddings around the element to the same width.</summary>
+		/// <param name="commonPadding">the new padding width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPadding(float commonPadding)
+		{
+			return SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding);
+		}
+
+		/// <summary>Sets the paddings around the element to a series of new widths.</summary>
+		/// <param name="paddingTop">the new padding top width</param>
+		/// <param name="paddingRight">the new padding right width</param>
+		/// <param name="paddingBottom">the new padding bottom width</param>
+		/// <param name="paddingLeft">the new padding left width</param>
+		/// <returns>this element</returns>
+		public virtual Style SetPaddings(float paddingTop, float paddingRight, float paddingBottom
+			, float paddingLeft)
+		{
+			SetPaddingTop(paddingTop);
+			SetPaddingRight(paddingRight);
+			SetPaddingBottom(paddingBottom);
+			SetPaddingLeft(paddingLeft);
+			return this;
+		}
+
+		/// <summary>Sets the vertical alignment of the element.</summary>
+		/// <param name="verticalAlignment">the vertical alignment setting</param>
+		/// <returns>this element</returns>
+		public virtual Style SetVerticalAlignment(VerticalAlignment verticalAlignment)
+		{
+			SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+			return this;
+		}
+
+		/// <summary>
+		/// Sets a ratio which determines in which proportion will word spacing and character spacing
+		/// be applied when horizontal alignment is justified.
+		/// </summary>
+		/// <param name="ratio">
+		/// the ratio coefficient. It must be between 0 and 1, inclusive.
+		/// It means that <b>ratio</b> part of the free space will
+		/// be compensated by word spacing, and <b>1-ratio</b> part of the free space will
+		/// be compensated by character spacing.
+		/// If <b>ratio</b> is 1, additional character spacing will not be applied.
+		/// If <b>ratio</b> is 0, additional word spacing will not be applied.
+		/// </param>
+		public virtual Style SetSpacingRatio(float ratio)
+		{
+			SetProperty(Property.SPACING_RATIO, ratio);
+			return this;
+		}
+
+		/// <summary>
+		/// Returns whether the
+		/// <see cref="com.itextpdf.layout.element.BlockElement{T}"/>
+		/// should be kept together as much
+		/// as possible.
+		/// </summary>
+		/// <returns>
+		/// the current value of the
+		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
+		/// property
+		/// </returns>
+		public virtual bool IsKeepTogether()
+		{
+			return GetProperty(Property.KEEP_TOGETHER);
+		}
+
+		/// <summary>
+		/// Sets whether the
+		/// <see cref="com.itextpdf.layout.element.BlockElement{T}"/>
+		/// should be kept together as much
+		/// as possible.
+		/// </summary>
+		/// <param name="keepTogether">
+		/// the new value of the
+		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
+		/// property
+		/// </param>
+		/// <returns>this element</returns>
+		public virtual Style SetKeepTogether(bool keepTogether)
+		{
+			SetProperty(Property.KEEP_TOGETHER, keepTogether);
+			return this;
+		}
+
+		/// <summary>Sets the rotation radAngle.</summary>
+		/// <param name="radAngle">the new rotation radAngle, as a <code>float</code></param>
+		/// <returns>this element</returns>
+		public virtual Style SetRotationAngle(float radAngle)
+		{
+			SetProperty(Property.ROTATION_ANGLE, radAngle);
+			return this;
+		}
+
+		/// <summary>Sets the rotation angle.</summary>
+		/// <param name="angle">the new rotation angle, as a <code>double</code></param>
+		/// <returns>this element</returns>
+		public virtual Style SetRotationAngle(double angle)
+		{
+			SetProperty(Property.ROTATION_ANGLE, (float)angle);
+			return this;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
-$Id: 23d3a6a2a84f205eb634cd0ca4831752d816928e $
+$Id: cfbdd64517ac805e598f9f01666c406bbbdb00ed $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -76,11 +76,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// 	</param>
 		/// <returns>the provided renderListener</returns>
 		public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<
-			String, ContentOperator> additionalContentOperators)
-			where E : EventListener
+			String, IContentOperator> additionalContentOperators)
+			where E : IEventListener
 		{
 			PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
-			foreach (KeyValuePair<String, ContentOperator> entry in additionalContentOperators)
+			foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators)
 			{
 				processor.RegisterContentOperator(entry.Key, entry.Value);
 			}
@@ -95,9 +95,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 		/// <param name="renderListener">the listener that will receive render callbacks</param>
 		/// <returns>the provided renderListener</returns>
 		public virtual E ProcessContent<E>(int pageNumber, E renderListener)
-			where E : EventListener
+			where E : IEventListener
 		{
-			return ProcessContent(pageNumber, renderListener, new Dictionary<String, ContentOperator
+			return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator
 				>());
 		}
 	}

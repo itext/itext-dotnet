@@ -1,5 +1,5 @@
 /*
-* $Id: 62d7b46dac59f33accc94952ebd58334c6bd288e $
+* $Id: e94cb55b002a8d7e5c2c06d2dfa128c929eb2ce7 $
 *
 * This file is part of the iText (R) project.
 * Copyright (c) 2014-2015 iText Group NV
@@ -160,7 +160,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		internal double deltaX;
 
-		internal Clipper.PolyType polyTyp;
+		internal IClipper.PolyType polyTyp;
 
 		internal Edge.Side side;
 
@@ -282,10 +282,10 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return result;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.canvas.parser.clipper.Edge GetNextInAEL(Clipper.Direction
+		public virtual com.itextpdf.kernel.pdf.canvas.parser.clipper.Edge GetNextInAEL(IClipper.Direction
 			 direction)
 		{
-			return direction == Clipper.Direction.LEFT_TO_RIGHT ? nextInAEL : prevInAEL;
+			return direction == IClipper.Direction.LEFT_TO_RIGHT ? nextInAEL : prevInAEL;
 		}
 
 		public virtual Point.LongPoint GetTop()
@@ -293,14 +293,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return top;
 		}
 
-		public virtual bool IsContributing(Clipper.PolyFillType clipFillType, Clipper.PolyFillType
-			 subjFillType, Clipper.ClipType clipType)
+		public virtual bool IsContributing(IClipper.PolyFillType clipFillType, IClipper.PolyFillType
+			 subjFillType, IClipper.ClipType clipType)
 		{
 			LOGGER.Entering(typeof(com.itextpdf.kernel.pdf.canvas.parser.clipper.Edge).GetName
 				(), "isContributing");
-			Clipper.PolyFillType pft;
-			Clipper.PolyFillType pft2;
-			if (polyTyp == Clipper.PolyType.SUBJECT)
+			IClipper.PolyFillType pft;
+			IClipper.PolyFillType pft2;
+			if (polyTyp == IClipper.PolyType.SUBJECT)
 			{
 				pft = subjFillType;
 				pft2 = clipFillType;
@@ -312,7 +312,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 			switch (pft)
 			{
-				case Clipper.PolyFillType.EVEN_ODD:
+				case IClipper.PolyFillType.EVEN_ODD:
 				{
 					//return false if a subj line has been flagged as inside a subj polygon
 					if (windDelta == 0 && windCnt != 1)
@@ -322,7 +322,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					break;
 				}
 
-				case Clipper.PolyFillType.NON_ZERO:
+				case IClipper.PolyFillType.NON_ZERO:
 				{
 					if (Math.Abs(windCnt) != 1)
 					{
@@ -331,7 +331,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					break;
 				}
 
-				case Clipper.PolyFillType.POSITIVE:
+				case IClipper.PolyFillType.POSITIVE:
 				{
 					if (windCnt != 1)
 					{
@@ -352,17 +352,17 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			}
 			switch (clipType)
 			{
-				case Clipper.ClipType.INTERSECTION:
+				case IClipper.ClipType.INTERSECTION:
 				{
 					switch (pft2)
 					{
-						case Clipper.PolyFillType.EVEN_ODD:
-						case Clipper.PolyFillType.NON_ZERO:
+						case IClipper.PolyFillType.EVEN_ODD:
+						case IClipper.PolyFillType.NON_ZERO:
 						{
 							return windCnt2 != 0;
 						}
 
-						case Clipper.PolyFillType.POSITIVE:
+						case IClipper.PolyFillType.POSITIVE:
 						{
 							return windCnt2 > 0;
 						}
@@ -372,20 +372,20 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							return windCnt2 < 0;
 						}
 					}
-					goto case Clipper.ClipType.UNION;
+					goto case IClipper.ClipType.UNION;
 				}
 
-				case Clipper.ClipType.UNION:
+				case IClipper.ClipType.UNION:
 				{
 					switch (pft2)
 					{
-						case Clipper.PolyFillType.EVEN_ODD:
-						case Clipper.PolyFillType.NON_ZERO:
+						case IClipper.PolyFillType.EVEN_ODD:
+						case IClipper.PolyFillType.NON_ZERO:
 						{
 							return windCnt2 == 0;
 						}
 
-						case Clipper.PolyFillType.POSITIVE:
+						case IClipper.PolyFillType.POSITIVE:
 						{
 							return windCnt2 <= 0;
 						}
@@ -395,22 +395,22 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							return windCnt2 >= 0;
 						}
 					}
-					goto case Clipper.ClipType.DIFFERENCE;
+					goto case IClipper.ClipType.DIFFERENCE;
 				}
 
-				case Clipper.ClipType.DIFFERENCE:
+				case IClipper.ClipType.DIFFERENCE:
 				{
-					if (polyTyp == Clipper.PolyType.SUBJECT)
+					if (polyTyp == IClipper.PolyType.SUBJECT)
 					{
 						switch (pft2)
 						{
-							case Clipper.PolyFillType.EVEN_ODD:
-							case Clipper.PolyFillType.NON_ZERO:
+							case IClipper.PolyFillType.EVEN_ODD:
+							case IClipper.PolyFillType.NON_ZERO:
 							{
 								return windCnt2 == 0;
 							}
 
-							case Clipper.PolyFillType.POSITIVE:
+							case IClipper.PolyFillType.POSITIVE:
 							{
 								return windCnt2 <= 0;
 							}
@@ -425,13 +425,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 					{
 						switch (pft2)
 						{
-							case Clipper.PolyFillType.EVEN_ODD:
-							case Clipper.PolyFillType.NON_ZERO:
+							case IClipper.PolyFillType.EVEN_ODD:
+							case IClipper.PolyFillType.NON_ZERO:
 							{
 								return windCnt2 != 0;
 							}
 
-							case Clipper.PolyFillType.POSITIVE:
+							case IClipper.PolyFillType.POSITIVE:
 							{
 								return windCnt2 > 0;
 							}
@@ -442,22 +442,22 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 							}
 						}
 					}
-					goto case Clipper.ClipType.XOR;
+					goto case IClipper.ClipType.XOR;
 				}
 
-				case Clipper.ClipType.XOR:
+				case IClipper.ClipType.XOR:
 				{
 					if (windDelta == 0)
 					{
 						switch (pft2)
 						{
-							case Clipper.PolyFillType.EVEN_ODD:
-							case Clipper.PolyFillType.NON_ZERO:
+							case IClipper.PolyFillType.EVEN_ODD:
+							case IClipper.PolyFillType.NON_ZERO:
 							{
 								return windCnt2 == 0;
 							}
 
-							case Clipper.PolyFillType.POSITIVE:
+							case IClipper.PolyFillType.POSITIVE:
 							{
 								return windCnt2 <= 0;
 							}
@@ -478,29 +478,29 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return true;
 		}
 
-		public virtual bool IsEvenOddAltFillType(Clipper.PolyFillType clipFillType, Clipper.PolyFillType
+		public virtual bool IsEvenOddAltFillType(IClipper.PolyFillType clipFillType, IClipper.PolyFillType
 			 subjFillType)
 		{
-			if (polyTyp == Clipper.PolyType.SUBJECT)
+			if (polyTyp == IClipper.PolyType.SUBJECT)
 			{
-				return clipFillType == Clipper.PolyFillType.EVEN_ODD;
+				return clipFillType == IClipper.PolyFillType.EVEN_ODD;
 			}
 			else
 			{
-				return subjFillType == Clipper.PolyFillType.EVEN_ODD;
+				return subjFillType == IClipper.PolyFillType.EVEN_ODD;
 			}
 		}
 
-		public virtual bool IsEvenOddFillType(Clipper.PolyFillType clipFillType, Clipper.PolyFillType
+		public virtual bool IsEvenOddFillType(IClipper.PolyFillType clipFillType, IClipper.PolyFillType
 			 subjFillType)
 		{
-			if (polyTyp == Clipper.PolyType.SUBJECT)
+			if (polyTyp == IClipper.PolyType.SUBJECT)
 			{
-				return subjFillType == Clipper.PolyFillType.EVEN_ODD;
+				return subjFillType == IClipper.PolyFillType.EVEN_ODD;
 			}
 			else
 			{
-				return clipFillType == Clipper.PolyFillType.EVEN_ODD;
+				return clipFillType == IClipper.PolyFillType.EVEN_ODD;
 			}
 		}
 

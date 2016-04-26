@@ -1,5 +1,5 @@
 /*
-$Id: 113e961edb83d2c9afa91fd06304a87968ef82bf $
+$Id: 78fb096ac85addc0f07fcec121d8979c9288e61b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -94,7 +94,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				);
 		}
 
-		public override Decryptor GetDecryptor()
+		public override IDecryptor GetDecryptor()
 		{
 			return new StandardDecryptor(nextObjectKey, 0, nextObjectKeySize);
 		}

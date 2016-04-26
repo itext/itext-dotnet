@@ -1,5 +1,5 @@
 /*
-$Id: 5db702d59e436b321f75713e936c5f3da24892dc $
+$Id: 3331d48833907c6e117abcb9b54fee0dec8467bf $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -64,7 +64,7 @@ namespace com.itextpdf.kernel.pdf.layer
 	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
 	/// must be indirect.
 	/// </remarks>
-	public class PdfLayer : PdfObjectWrapper<PdfDictionary>, PdfOCG
+	public class PdfLayer : PdfObjectWrapper<PdfDictionary>, IPdfOCG
 	{
 		private const long serialVersionUID = -5367953708241595665L;
 

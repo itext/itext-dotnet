@@ -1,5 +1,5 @@
 /*
-$Id: 3ad1a9b19a634d8047d757c970780d0ba5ee01a6 $
+$Id: 6756a536e422a536f3b0a34921efe9ea561638e1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,8 +45,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using com.itextpdf.kernel.pdf;
+using com.itextpdf.kernel.pdf.action;
 using com.itextpdf.kernel.pdf.tagutils;
 using com.itextpdf.layout;
+using com.itextpdf.layout.property;
 using com.itextpdf.layout.renderer;
 
 namespace com.itextpdf.layout.element
@@ -59,6 +61,7 @@ namespace com.itextpdf.layout.element
 	/// </summary>
 	/// <?/>
 	public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
+		where T : IElement
 	{
 		protected internal IRenderer nextRenderer;
 
@@ -117,7 +120,7 @@ namespace com.itextpdf.layout.element
 			{
 				foreach (Style style in styles)
 				{
-					result = style.GetProperty<Object>(property);
+					result = style.GetProperty(property);
 					if (result != null || base.HasProperty(property))
 					{
 						break;
@@ -141,7 +144,7 @@ namespace com.itextpdf.layout.element
 				styles = new LinkedHashSet<Style>();
 			}
 			styles.Add(style);
-			return (T)(Object)this;
+			return (T)this;
 		}
 
 		protected internal abstract IRenderer MakeNewRenderer();
@@ -161,6 +164,18 @@ namespace com.itextpdf.layout.element
 		public virtual bool IsEmpty()
 		{
 			return 0 == childElements.Count;
+		}
+
+		public virtual T SetAction(PdfAction action)
+		{
+			SetProperty(Property.ACTION, action);
+			return (T)this;
+		}
+
+		public virtual T SetPageNumber(int pageNumber)
+		{
+			SetProperty(Property.PAGE_NUMBER, pageNumber);
+			return (T)this;
 		}
 	}
 }

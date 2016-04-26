@@ -1,5 +1,5 @@
 /*
-$Id: b56cfec452db70e3ff2eaab6e2cb64ea8ac141f9 $
+$Id: bce7001945e1d6674b589eb5c8f034385e41da70 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ using com.itextpdf.io.util;
 namespace com.itextpdf.io.font.cmap
 {
 	/// <author>psoares</author>
-	public class CMapLocationResource : CMapLocation
+	public class CMapLocationResource : ICMapLocation
 	{
 		/// <exception cref="System.IO.IOException"/>
 		public virtual PdfTokenizer GetLocation(String location)

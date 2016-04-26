@@ -1,5 +1,5 @@
 /*
-* $Id: 7d09067ef18b7abaf090aa4e7d4dfa97fc591768 $
+* $Id: 788247a2670b2b0c0ac2cf8a545ef6d5cfb0a4f1 $
 *
 * This file is part of the iText (R) project.
 * Copyright (c) 2014-2015 iText Group NV
@@ -92,9 +92,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		private int index;
 
-		private Clipper.JoinType joinType;
+		private IClipper.JoinType joinType;
 
-		private Clipper.EndType endType;
+		private IClipper.EndType endType;
 
 		protected internal readonly IList<PolyNode> childs = new List<PolyNode>();
 
@@ -123,12 +123,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return polygon;
 		}
 
-		public virtual Clipper.EndType GetEndType()
+		public virtual IClipper.EndType GetEndType()
 		{
 			return endType;
 		}
 
-		public virtual Clipper.JoinType GetJoinType()
+		public virtual IClipper.JoinType GetJoinType()
 		{
 			return joinType;
 		}
@@ -196,12 +196,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return isOpen;
 		}
 
-		public virtual void SetEndType(Clipper.EndType value)
+		public virtual void SetEndType(IClipper.EndType value)
 		{
 			endType = value;
 		}
 
-		public virtual void SetJoinType(Clipper.JoinType value)
+		public virtual void SetJoinType(IClipper.JoinType value)
 		{
 			joinType = value;
 		}

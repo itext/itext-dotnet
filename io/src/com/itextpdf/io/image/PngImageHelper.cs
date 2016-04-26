@@ -1,5 +1,5 @@
 /*
-$Id: 73d0e6c28b7932b44aef667598ffd43529698d54 $
+$Id: ab334dc7c81ee1aa88df8b73a288f51dbc223ee0 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,12 +58,12 @@ namespace com.itextpdf.io.image
 	{
 		private class PngParameters
 		{
-			internal PngParameters(PngImage image)
+			internal PngParameters(PngImageData image)
 			{
 				this.image = image;
 			}
 
-			internal PngImage image;
+			internal PngImageData image;
 
 			internal Stream dataStream;
 
@@ -188,7 +188,7 @@ namespace com.itextpdf.io.image
 		private static readonly String[] intents = new String[] { "/Perceptual", "/RelativeColorimetric"
 			, "/Saturation", "/AbsoluteColorimetric" };
 
-		public static void ProcessImage(Image image)
+		public static void ProcessImage(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.PNG)
 			{
@@ -204,7 +204,7 @@ namespace com.itextpdf.io.image
 				}
 				pngStream = new MemoryStream(image.GetData());
 				image.imageSize = image.GetData().Length;
-				png = new PngImageHelper.PngParameters((PngImage)image);
+				png = new PngImageHelper.PngParameters((PngImageData)image);
 				ProcessPng(pngStream, png);
 			}
 			catch (System.IO.IOException e)
@@ -350,7 +350,7 @@ namespace com.itextpdf.io.image
 				}
 				if (png.palShades)
 				{
-					RawImage im2 = (RawImage)ImageFactory.GetRawImage(null);
+					RawImageData im2 = (RawImageData)ImageFactory.GetRawImage(null);
 					RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 8, png.smask
 						);
 					im2.MakeMask();
@@ -358,7 +358,7 @@ namespace com.itextpdf.io.image
 				}
 				if (png.genBWMask)
 				{
-					RawImage im2 = (RawImage)ImageFactory.GetRawImage(null);
+					RawImageData im2 = (RawImageData)ImageFactory.GetRawImage(null);
 					RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 1, png.smask
 						);
 					im2.MakeMask();

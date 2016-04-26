@@ -1,5 +1,5 @@
 /*
-$Id: 313187a70278b4ae8e49c0e679405c74a6241223 $
+$Id: 906e261c2a3cc6f0ff3a2f9dada85f37cb122a91 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -81,39 +81,39 @@ namespace com.itextpdf.io.image
 		private static readonly byte[] jbig2 = new byte[] { unchecked((byte)0x97), (byte)
 			('J'), (byte)('B'), (byte)('2'), (byte)('\r'), (byte)('\n'), 0x1a, (byte)('\n') };
 
-		public static Image GetImage(byte[] bytes, bool recoverImage)
+		public static ImageData GetImage(byte[] bytes, bool recoverImage)
 		{
 			return GetImageInstance(bytes, recoverImage);
 		}
 
-		public static Image GetImage(byte[] bytes)
+		public static ImageData GetImage(byte[] bytes)
 		{
 			return GetImage(bytes, false);
 		}
 
-		public static Image GetImage(Uri url, bool recoverImage)
+		public static ImageData GetImage(Uri url, bool recoverImage)
 		{
 			return GetImageInstance(url, recoverImage);
 		}
 
-		public static Image GetImage(Uri url)
+		public static ImageData GetImage(Uri url)
 		{
 			return GetImage(url, false);
 		}
 
 		/// <exception cref="java.net.MalformedURLException"/>
-		public static Image GetImage(String filename, bool recoverImage)
+		public static ImageData GetImage(String filename, bool recoverImage)
 		{
 			return GetImage(UrlUtil.ToURL(filename), recoverImage);
 		}
 
 		/// <exception cref="java.net.MalformedURLException"/>
-		public static Image GetImage(String filename)
+		public static ImageData GetImage(String filename)
 		{
 			return GetImage(filename, false);
 		}
 
-		public static Image GetImage(int width, int height, bool reverseBits, int typeCCITT
+		public static ImageData GetImage(int width, int height, bool reverseBits, int typeCCITT
 			, int parameters, byte[] data, int[] transparency)
 		{
 			if (transparency != null && transparency.Length != 2)
@@ -121,8 +121,8 @@ namespace com.itextpdf.io.image
 				throw new IOException(IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
 					);
 			}
-			if (typeCCITT != RawImage.CCITTG4 && typeCCITT != RawImage.CCITTG3_1D && typeCCITT
-				 != RawImage.CCITTG3_2D)
+			if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && 
+				typeCCITT != RawImageData.CCITTG3_2D)
 			{
 				throw new IOException(IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
 					);
@@ -131,7 +131,7 @@ namespace com.itextpdf.io.image
 			{
 				TIFFFaxDecoder.ReverseBits(data);
 			}
-			RawImage image = new RawImage(data, ImageType.RAW);
+			RawImageData image = new RawImageData(data, ImageType.RAW);
 			image.SetTypeCcitt(typeCCITT);
 			image.height = height;
 			image.width = width;
@@ -140,8 +140,8 @@ namespace com.itextpdf.io.image
 			return image;
 		}
 
-		public static Image GetImage(int width, int height, int components, int bpc, byte
-			[] data, int[] transparency)
+		public static ImageData GetImage(int width, int height, int components, int bpc, 
+			byte[] data, int[] transparency)
 		{
 			if (transparency != null && transparency.Length != components * 2)
 			{
@@ -151,10 +151,10 @@ namespace com.itextpdf.io.image
 			if (components == 1 && bpc == 1)
 			{
 				byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
-				return ImageFactory.GetImage(width, height, false, RawImage.CCITTG4, RawImage.CCITT_BLACKIS1
-					, g4, transparency);
+				return ImageFactory.GetImage(width, height, false, RawImageData.CCITTG4, RawImageData
+					.CCITT_BLACKIS1, g4, transparency);
 			}
-			RawImage image = new RawImage(data, ImageType.RAW);
+			RawImageData image = new RawImageData(data, ImageType.RAW);
 			image.height = height;
 			image.width = width;
 			if (components != 1 && components != 3 && components != 4)
@@ -178,8 +178,8 @@ namespace com.itextpdf.io.image
 		/// 	</param>
 		/// <returns>RawImage</returns>
 		/// <exception cref="System.IO.IOException"/>
-		public static Image GetImage(System.Drawing.Image image, System.Drawing.Color color
-			)
+		public static ImageData GetImage(System.Drawing.Image image, System.Drawing.Color
+			 color)
 		{
 			return ImageFactory.GetImage(image, color, false);
 		}
@@ -192,30 +192,30 @@ namespace com.itextpdf.io.image
 		/// 	</param>
 		/// <returns>RawImage</returns>
 		/// <exception cref="System.IO.IOException"/>
-		public static Image GetImage(System.Drawing.Image image, System.Drawing.Color color
-			, bool forceBW)
+		public static ImageData GetImage(System.Drawing.Image image, System.Drawing.Color
+			 color, bool forceBW)
 		{
 			return com.itextpdf.io.image.DrawingImageFactory.GetImage(image, color, forceBW);
 		}
 
-		public static Image GetBmpImage(Uri url, bool noHeader, int size)
+		public static ImageData GetBmpImage(Uri url, bool noHeader, int size)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, bmp))
 			{
-				Image image = new BmpImage(url, noHeader, size);
+				ImageData image = new BmpImageData(url, noHeader, size);
 				BmpImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("BMP image expected.");
 		}
 
-		public static Image GetBmpImage(byte[] bytes, bool noHeader, int size)
+		public static ImageData GetBmpImage(byte[] bytes, bool noHeader, int size)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (noHeader || ImageTypeIs(imageType, bmp))
 			{
-				Image image = new BmpImage(bytes, noHeader, size);
+				ImageData image = new BmpImageData(bytes, noHeader, size);
 				BmpImageHelper.ProcessImage(image);
 				return image;
 			}
@@ -226,12 +226,12 @@ namespace com.itextpdf.io.image
 		/// <remarks>Return a GifImage object. This object cannot be added to a document</remarks>
 		/// <param name="bytes"/>
 		/// <returns/>
-		public static GifImage GetGifImage(byte[] bytes)
+		public static GifImageData GetGifImage(byte[] bytes)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(bytes);
+				GifImageData image = new GifImageData(bytes);
 				GifImageHelper.ProcessImage(image);
 				return image;
 			}
@@ -242,12 +242,12 @@ namespace com.itextpdf.io.image
 		/// <param name="url">url of gif image</param>
 		/// <param name="frame">number of frame to be returned</param>
 		/// <returns/>
-		public static Image GetGifFrame(Uri url, int frame)
+		public static ImageData GetGifFrame(Uri url, int frame)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(url);
+				GifImageData image = new GifImageData(url);
 				GifImageHelper.ProcessImage(image, frame - 1);
 				return image.GetFrames()[frame - 1];
 			}
@@ -258,12 +258,12 @@ namespace com.itextpdf.io.image
 		/// <param name="bytes">byte array of gif image</param>
 		/// <param name="frame">number of frame to be returned</param>
 		/// <returns/>
-		public static Image GetGifFrame(byte[] bytes, int frame)
+		public static ImageData GetGifFrame(byte[] bytes, int frame)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(bytes);
+				GifImageData image = new GifImageData(bytes);
 				GifImageHelper.ProcessImage(image, frame - 1);
 				return image.GetFrames()[frame - 1];
 			}
@@ -274,15 +274,15 @@ namespace com.itextpdf.io.image
 		/// <param name="bytes">byte array of gif image</param>
 		/// <param name="frameNumbers">array of frame numbers of gif image</param>
 		/// <returns/>
-		public static IList<Image> GetGifFrames(byte[] bytes, int[] frameNumbers)
+		public static IList<ImageData> GetGifFrames(byte[] bytes, int[] frameNumbers)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(bytes);
+				GifImageData image = new GifImageData(bytes);
 				System.Array.Sort(frameNumbers);
 				GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
-				IList<Image> frames = new List<Image>();
+				IList<ImageData> frames = new List<ImageData>();
 				foreach (int frame in frameNumbers)
 				{
 					frames.Add(image.GetFrames()[frame - 1]);
@@ -296,15 +296,15 @@ namespace com.itextpdf.io.image
 		/// <param name="url">url of gif image</param>
 		/// <param name="frameNumbers">array of frame numbers of gif image</param>
 		/// <returns/>
-		public static IList<Image> GetGifFrames(Uri url, int[] frameNumbers)
+		public static IList<ImageData> GetGifFrames(Uri url, int[] frameNumbers)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(url);
+				GifImageData image = new GifImageData(url);
 				System.Array.Sort(frameNumbers);
 				GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
-				IList<Image> frames = new List<Image>();
+				IList<ImageData> frames = new List<ImageData>();
 				foreach (int frame in frameNumbers)
 				{
 					frames.Add(image.GetFrames()[frame - 1]);
@@ -317,12 +317,12 @@ namespace com.itextpdf.io.image
 		/// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
 		/// <param name="bytes">byte array of gif image</param>
 		/// <returns>all frames of gif image</returns>
-		public static IList<Image> GetGifFrames(byte[] bytes)
+		public static IList<ImageData> GetGifFrames(byte[] bytes)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(bytes);
+				GifImageData image = new GifImageData(bytes);
 				GifImageHelper.ProcessImage(image);
 				return image.GetFrames();
 			}
@@ -332,19 +332,19 @@ namespace com.itextpdf.io.image
 		/// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
 		/// <param name="url">url of gif image</param>
 		/// <returns>all frames of gif image</returns>
-		public static IList<Image> GetGifFrames(Uri url)
+		public static IList<ImageData> GetGifFrames(Uri url)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(url);
+				GifImageData image = new GifImageData(url);
 				GifImageHelper.ProcessImage(image);
 				return image.GetFrames();
 			}
 			throw new ArgumentException("GIF image expected.");
 		}
 
-		public static Image GetJbig2Image(Uri url, int page)
+		public static ImageData GetJbig2Image(Uri url, int page)
 		{
 			if (page < 1)
 			{
@@ -353,14 +353,14 @@ namespace com.itextpdf.io.image
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, jbig2))
 			{
-				Image image = new Jbig2Image(url, page);
+				ImageData image = new Jbig2ImageData(url, page);
 				Jbig2ImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JBIG2 image expected.");
 		}
 
-		public static Image GetJbig2Image(byte[] bytes, int page)
+		public static ImageData GetJbig2Image(byte[] bytes, int page)
 		{
 			if (page < 1)
 			{
@@ -369,122 +369,122 @@ namespace com.itextpdf.io.image
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, jbig2))
 			{
-				Image image = new Jbig2Image(bytes, page);
+				ImageData image = new Jbig2ImageData(bytes, page);
 				Jbig2ImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JBIG2 image expected.");
 		}
 
-		public static Image GetJpegImage(Uri url)
+		public static ImageData GetJpegImage(Uri url)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, jpeg))
 			{
-				Image image = new JpegImage(url);
+				ImageData image = new JpegImageData(url);
 				JpegImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JPEG image expected.");
 		}
 
-		public static Image GetJpegImage(byte[] bytes)
+		public static ImageData GetJpegImage(byte[] bytes)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, jpeg))
 			{
-				Image image = new JpegImage(bytes);
+				ImageData image = new JpegImageData(bytes);
 				JpegImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JPEG image expected.");
 		}
 
-		public static Image GetJpeg2000Image(Uri url)
+		public static ImageData GetJpeg2000Image(Uri url)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
 			{
-				Image image = new Jpeg2000Image(url);
+				ImageData image = new Jpeg2000ImageData(url);
 				Jpeg2000ImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JPEG2000 image expected.");
 		}
 
-		public static Image GetJpeg2000Image(byte[] bytes)
+		public static ImageData GetJpeg2000Image(byte[] bytes)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
 			{
-				Image image = new Jpeg2000Image(bytes);
+				ImageData image = new Jpeg2000ImageData(bytes);
 				Jpeg2000ImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("JPEG2000 image expected.");
 		}
 
-		public static Image GetPngImage(Uri url)
+		public static ImageData GetPngImage(Uri url)
 		{
 			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, png))
 			{
-				Image image = new PngImage(url);
+				ImageData image = new PngImageData(url);
 				PngImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("PNG image expected.");
 		}
 
-		public static Image GetPngImage(byte[] bytes)
+		public static ImageData GetPngImage(byte[] bytes)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, png))
 			{
-				Image image = new PngImage(bytes);
+				ImageData image = new PngImageData(bytes);
 				PngImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("PNG image expected.");
 		}
 
-		public static Image GetTiffImage(Uri url, bool recoverFromImageError, int page, bool
-			 direct)
-		{
-			byte[] imageType = ReadImageType(url);
-			if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
-			{
-				Image image = new TiffImage(url, recoverFromImageError, page, direct);
-				TiffImageHelper.ProcessImage(image);
-				return image;
-			}
-			throw new ArgumentException("TIFF image expected.");
-		}
-
-		public static Image GetTiffImage(byte[] bytes, bool recoverFromImageError, int page
+		public static ImageData GetTiffImage(Uri url, bool recoverFromImageError, int page
 			, bool direct)
 		{
-			byte[] imageType = ReadImageType(bytes);
+			byte[] imageType = ReadImageType(url);
 			if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
 			{
-				Image image = new TiffImage(bytes, recoverFromImageError, page, direct);
+				ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
 				TiffImageHelper.ProcessImage(image);
 				return image;
 			}
 			throw new ArgumentException("TIFF image expected.");
 		}
 
-		public static Image GetRawImage(byte[] bytes)
+		public static ImageData GetTiffImage(byte[] bytes, bool recoverFromImageError, int
+			 page, bool direct)
 		{
-			return new RawImage(bytes, ImageType.RAW);
+			byte[] imageType = ReadImageType(bytes);
+			if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
+			{
+				ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
+				TiffImageHelper.ProcessImage(image);
+				return image;
+			}
+			throw new ArgumentException("TIFF image expected.");
 		}
 
-		private static Image GetImageInstance(Uri source, bool recoverImage)
+		public static ImageData GetRawImage(byte[] bytes)
+		{
+			return new RawImageData(bytes, ImageType.RAW);
+		}
+
+		private static ImageData GetImageInstance(Uri source, bool recoverImage)
 		{
 			byte[] imageType = ReadImageType(source);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(source);
+				GifImageData image = new GifImageData(source);
 				GifImageHelper.ProcessImage(image, 0);
 				return image.GetFrames()[0];
 			}
@@ -492,7 +492,7 @@ namespace com.itextpdf.io.image
 			{
 				if (ImageTypeIs(imageType, jpeg))
 				{
-					Image image = new JpegImage(source);
+					ImageData image = new JpegImageData(source);
 					JpegImageHelper.ProcessImage(image);
 					return image;
 				}
@@ -500,7 +500,7 @@ namespace com.itextpdf.io.image
 				{
 					if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
 					{
-						Image image = new Jpeg2000Image(source);
+						ImageData image = new Jpeg2000ImageData(source);
 						Jpeg2000ImageHelper.ProcessImage(image);
 						return image;
 					}
@@ -508,7 +508,7 @@ namespace com.itextpdf.io.image
 					{
 						if (ImageTypeIs(imageType, png))
 						{
-							Image image = new PngImage(source);
+							ImageData image = new PngImageData(source);
 							PngImageHelper.ProcessImage(image);
 							return image;
 						}
@@ -516,7 +516,7 @@ namespace com.itextpdf.io.image
 						{
 							if (ImageTypeIs(imageType, bmp))
 							{
-								Image image = new BmpImage(source, false, 0);
+								ImageData image = new BmpImageData(source, false, 0);
 								BmpImageHelper.ProcessImage(image);
 								return image;
 							}
@@ -524,7 +524,7 @@ namespace com.itextpdf.io.image
 							{
 								if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
 								{
-									Image image = new TiffImage(source, recoverImage, 1, false);
+									ImageData image = new TiffImageData(source, recoverImage, 1, false);
 									TiffImageHelper.ProcessImage(image);
 									return image;
 								}
@@ -532,7 +532,7 @@ namespace com.itextpdf.io.image
 								{
 									if (ImageTypeIs(imageType, jbig2))
 									{
-										Image image = new Jbig2Image(source, 1);
+										ImageData image = new Jbig2ImageData(source, 1);
 										Jbig2ImageHelper.ProcessImage(image);
 										return image;
 									}
@@ -545,12 +545,12 @@ namespace com.itextpdf.io.image
 			throw new IOException(IOException.ImageFormatCannotBeRecognized);
 		}
 
-		private static Image GetImageInstance(byte[] bytes, bool recoverImage)
+		private static ImageData GetImageInstance(byte[] bytes, bool recoverImage)
 		{
 			byte[] imageType = ReadImageType(bytes);
 			if (ImageTypeIs(imageType, gif))
 			{
-				GifImage image = new GifImage(bytes);
+				GifImageData image = new GifImageData(bytes);
 				GifImageHelper.ProcessImage(image, 0);
 				return image.GetFrames()[0];
 			}
@@ -558,7 +558,7 @@ namespace com.itextpdf.io.image
 			{
 				if (ImageTypeIs(imageType, jpeg))
 				{
-					Image image = new JpegImage(bytes);
+					ImageData image = new JpegImageData(bytes);
 					JpegImageHelper.ProcessImage(image);
 					return image;
 				}
@@ -566,7 +566,7 @@ namespace com.itextpdf.io.image
 				{
 					if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
 					{
-						Image image = new Jpeg2000Image(bytes);
+						ImageData image = new Jpeg2000ImageData(bytes);
 						Jpeg2000ImageHelper.ProcessImage(image);
 						return image;
 					}
@@ -574,7 +574,7 @@ namespace com.itextpdf.io.image
 					{
 						if (ImageTypeIs(imageType, png))
 						{
-							Image image = new PngImage(bytes);
+							ImageData image = new PngImageData(bytes);
 							PngImageHelper.ProcessImage(image);
 							return image;
 						}
@@ -582,7 +582,7 @@ namespace com.itextpdf.io.image
 						{
 							if (ImageTypeIs(imageType, bmp))
 							{
-								Image image = new BmpImage(bytes, false, 0);
+								ImageData image = new BmpImageData(bytes, false, 0);
 								BmpImageHelper.ProcessImage(image);
 								return image;
 							}
@@ -590,7 +590,7 @@ namespace com.itextpdf.io.image
 							{
 								if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
 								{
-									Image image = new TiffImage(bytes, recoverImage, 1, false);
+									ImageData image = new TiffImageData(bytes, recoverImage, 1, false);
 									TiffImageHelper.ProcessImage(image);
 									return image;
 								}
@@ -598,7 +598,7 @@ namespace com.itextpdf.io.image
 								{
 									if (ImageTypeIs(imageType, jbig2))
 									{
-										Image image = new Jbig2Image(bytes, 1);
+										ImageData image = new Jbig2ImageData(bytes, 1);
 										Jbig2ImageHelper.ProcessImage(image);
 										return image;
 									}

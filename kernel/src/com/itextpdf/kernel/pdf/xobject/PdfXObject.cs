@@ -1,5 +1,5 @@
 /*
-$Id: 271637c2281a86253d32a46f6c0b1dbfcd2b2a9a $
+$Id: 86da714340e0f80947f0be5a411b40e5f695dfbf $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 
 		/// <summary>Sets the layer this XObject belongs to.</summary>
 		/// <param name="layer">the layer this XObject belongs to</param>
-		public virtual void SetLayer(PdfOCG layer)
+		public virtual void SetLayer(IPdfOCG layer)
 		{
 			GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
 		}

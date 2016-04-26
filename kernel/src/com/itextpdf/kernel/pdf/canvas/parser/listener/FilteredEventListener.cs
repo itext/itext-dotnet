@@ -1,5 +1,5 @@
 /*
-$Id: 2ba36622dd2dde484e978b12d62be3935cf3fcf0 $
+$Id: 5669e6e217ab40609ebf2b975e72639bb6afb31a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,25 +51,25 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 {
 	/// <summary>An event listener which filters events on the fly before passing them on to the delegate.
 	/// 	</summary>
-	public class FilteredEventListener : EventListener
+	public class FilteredEventListener : IEventListener
 	{
-		protected internal readonly IList<EventListener> delegates;
+		protected internal readonly IList<IEventListener> delegates;
 
-		protected internal readonly IList<EventFilter[]> filters;
+		protected internal readonly IList<IEventFilter[]> filters;
 
 		/// <summary>
 		/// Constructs a
 		/// <see cref="FilteredEventListener"/>
 		/// empty instance.
 		/// Use
-		/// <see cref="AttachEventListener{T}(EventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.EventFilter[])
+		/// <see cref="AttachEventListener{T}(IEventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.IEventFilter[])
 		/// 	"/>
 		/// to add an event listener along with its filters.
 		/// </summary>
 		public FilteredEventListener()
 		{
-			this.delegates = new List<EventListener>();
-			this.filters = new List<EventFilter[]>();
+			this.delegates = new List<IEventListener>();
+			this.filters = new List<IEventFilter[]>();
 		}
 
 		/// <summary>
@@ -77,10 +77,10 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// <see cref="FilteredEventListener"/>
 		/// instance with one delegate.
 		/// Use
-		/// <see cref="AttachEventListener{T}(EventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.EventFilter[])
+		/// <see cref="AttachEventListener{T}(IEventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.IEventFilter[])
 		/// 	"/>
 		/// to add more
-		/// <see cref="EventListener"/>
+		/// <see cref="IEventListener"/>
 		/// delegates
 		/// along with their filters.
 		/// </summary>
@@ -88,7 +88,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// 	</param>
 		/// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
 		/// 	</param>
-		public FilteredEventListener(EventListener delegate_, params EventFilter[] filterSet
+		public FilteredEventListener(IEventListener delegate_, params IEventFilter[] filterSet
 			)
 			: this()
 		{
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 		/// <summary>
 		/// Attaches another
-		/// <see cref="EventListener"/>
+		/// <see cref="IEventListener"/>
 		/// delegate with its filters.
 		/// When all the filters attached to the delegate for an event accept the event, the event will be passed on to
 		/// the delegate.
@@ -115,23 +115,23 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// 	</param>
 		/// <returns>delegate that has been passed to the method, used for convenient call chaining
 		/// 	</returns>
-		public virtual T AttachEventListener<T>(T delegate_, params EventFilter[] filterSet
+		public virtual T AttachEventListener<T>(T delegate_, params IEventFilter[] filterSet
 			)
-			where T : EventListener
+			where T : IEventListener
 		{
 			delegates.Add(delegate_);
 			filters.Add(filterSet);
 			return delegate_;
 		}
 
-		public virtual void EventOccurred(EventData data, EventType type)
+		public virtual void EventOccurred(IEventData data, EventType type)
 		{
 			for (int i = 0; i < delegates.Count; i++)
 			{
-				EventListener delegate_ = delegates[i];
+				IEventListener delegate_ = delegates[i];
 				bool filtersPassed = delegate_.GetSupportedEvents() == null || delegate_.GetSupportedEvents
 					().Contains(type);
-				foreach (EventFilter filter in filters[i])
+				foreach (IEventFilter filter in filters[i])
 				{
 					if (!filter.Accept(data, type))
 					{

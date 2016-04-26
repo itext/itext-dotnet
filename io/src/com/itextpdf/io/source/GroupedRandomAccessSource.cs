@@ -1,5 +1,5 @@
 /*
-$Id: b5141de6fa3bb75f7f4fff32b67a9b53b6fa08c4 $
+$Id: 9c1e6777f73dd56ec77d7244192f8f02e1ee149c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,7 +48,7 @@ namespace com.itextpdf.io.source
 	/// A RandomAccessSource that is based on a set of underlying sources,
 	/// treating the sources as if they were a contiguous block of data.
 	/// </summary>
-	internal class GroupedRandomAccessSource : RandomAccessSource
+	internal class GroupedRandomAccessSource : IRandomAccessSource
 	{
 		/// <summary>The underlying sources (along with some meta data to quickly determine where each source begins and ends)
 		/// 	</summary>
@@ -68,7 +68,7 @@ namespace com.itextpdf.io.source
 		/// </summary>
 		/// <param name="sources">the sources used to build this group</param>
 		/// <exception cref="System.IO.IOException"/>
-		public GroupedRandomAccessSource(RandomAccessSource[] sources)
+		public GroupedRandomAccessSource(IRandomAccessSource[] sources)
 		{
 			this.sources = new GroupedRandomAccessSource.SourceEntry[sources.Length];
 			long totalSize = 0;
@@ -147,7 +147,7 @@ namespace com.itextpdf.io.source
 		/// 	</remarks>
 		/// <param name="source">the source that is no longer the active source</param>
 		/// <exception cref="System.IO.IOException">if there are any problems</exception>
-		protected internal virtual void SourceReleased(RandomAccessSource source)
+		protected internal virtual void SourceReleased(IRandomAccessSource source)
 		{
 		}
 
@@ -157,7 +157,7 @@ namespace com.itextpdf.io.source
 		/// 	</remarks>
 		/// <param name="source">the source that is about to become the active source</param>
 		/// <exception cref="System.IO.IOException">if there are any problems</exception>
-		protected internal virtual void SourceInUse(RandomAccessSource source)
+		protected internal virtual void SourceInUse(IRandomAccessSource source)
 		{
 		}
 
@@ -239,7 +239,7 @@ namespace com.itextpdf.io.source
 		private class SourceEntry
 		{
 			/// <summary>The underlying source</summary>
-			internal readonly RandomAccessSource source;
+			internal readonly IRandomAccessSource source;
 
 			/// <summary>The first byte (in the coordinates of the GroupedRandomAccessSource) that this source contains
 			/// 	</summary>
@@ -256,7 +256,7 @@ namespace com.itextpdf.io.source
 			/// <param name="index">the index</param>
 			/// <param name="source">the source</param>
 			/// <param name="offset">the offset of the source in the GroupedRandomAccessSource</param>
-			public SourceEntry(int index, RandomAccessSource source, long offset)
+			public SourceEntry(int index, IRandomAccessSource source, long offset)
 			{
 				this.index = index;
 				this.source = source;

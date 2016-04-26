@@ -1,5 +1,5 @@
 /*
-$Id: d6ff221809d30fc541d5bf200080a8bc23411bcb $
+$Id: 4d62b4d9d52a386e6d7335a8d84a5565613efd65 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -201,7 +201,7 @@ namespace com.itextpdf.kernel.font
 		/// <param name="inlineImage">true if to add image as in-line.</param>
 		/// <returns>created Image XObject or null in case of in-line image (asInline = true).
 		/// 	</returns>
-		public override PdfXObject AddImage(Image image, float a, float b, float c, float
+		public override PdfXObject AddImage(ImageData image, float a, float b, float c, float
 			 d, float e, float f, bool inlineImage)
 		{
 			if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff

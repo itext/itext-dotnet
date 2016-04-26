@@ -1,5 +1,5 @@
 /*
-$Id: 0bed323c88cd55ae5460a7caa5b93ddfb0a4ebe0 $
+$Id: 690a09602d7ee668840ddb9d49f33c42b3976bc1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 */
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
 using com.itextpdf.layout.element;
 using com.itextpdf.layout.layout;
+using com.itextpdf.layout.property;
 
 namespace com.itextpdf.layout.renderer
 {
-	public class ListItemRenderer : BlockRenderer
+	public class ListItemRenderer : DivRenderer
 	{
 		protected internal IRenderer symbolRenderer;
 
@@ -138,11 +138,10 @@ namespace com.itextpdf.layout.renderer
 						() - symbolRenderer.GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea
 						().GetBBox().GetY());
 				}
-				Property.ListSymbolAlignment listSymbolAlignment = parent.GetProperty(Property.LIST_SYMBOL_ALIGNMENT
+				ListSymbolAlignment listSymbolAlignment = parent.GetProperty(Property.LIST_SYMBOL_ALIGNMENT
 					);
 				float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
-				if (listSymbolAlignment == null || listSymbolAlignment == Property.ListSymbolAlignment
-					.RIGHT)
+				if (listSymbolAlignment == null || listSymbolAlignment == ListSymbolAlignment.RIGHT)
 				{
 					xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth
 						();
@@ -169,10 +168,11 @@ namespace com.itextpdf.layout.renderer
 			return new com.itextpdf.layout.renderer.ListItemRenderer((ListItem)modelElement);
 		}
 
-		protected internal override BlockRenderer CreateSplitRenderer(int layoutResult)
+		protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult
+			)
 		{
-			com.itextpdf.layout.renderer.ListItemRenderer splitRenderer = ((com.itextpdf.layout.renderer.ListItemRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.ListItemRenderer splitRenderer = (com.itextpdf.layout.renderer.ListItemRenderer
+				)GetNextRenderer();
 			splitRenderer.parent = parent;
 			splitRenderer.modelElement = modelElement;
 			splitRenderer.occupiedArea = occupiedArea;
@@ -187,11 +187,11 @@ namespace com.itextpdf.layout.renderer
 			return splitRenderer;
 		}
 
-		protected internal override BlockRenderer CreateOverflowRenderer(int layoutResult
+		protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult
 			)
 		{
-			com.itextpdf.layout.renderer.ListItemRenderer overflowRenderer = ((com.itextpdf.layout.renderer.ListItemRenderer
-				)GetNextRenderer());
+			com.itextpdf.layout.renderer.ListItemRenderer overflowRenderer = (com.itextpdf.layout.renderer.ListItemRenderer
+				)GetNextRenderer();
 			overflowRenderer.parent = parent;
 			overflowRenderer.modelElement = modelElement;
 			if (layoutResult == LayoutResult.NOTHING)

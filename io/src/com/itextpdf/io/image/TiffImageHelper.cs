@@ -1,5 +1,5 @@
 /*
-$Id: b6621739e6b425a171c2f284cb2935fa27a5369a $
+$Id: 631a716aa916f4710c1ba9831cef3630e9874023 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -57,12 +57,12 @@ namespace com.itextpdf.io.image
 	{
 		private class TiffParameters
 		{
-			internal TiffParameters(TiffImage image)
+			internal TiffParameters(TiffImageData image)
 			{
 				this.image = image;
 			}
 
-			internal TiffImage image;
+			internal TiffImageData image;
 
 			internal bool jpegProcessing;
 
@@ -70,7 +70,7 @@ namespace com.itextpdf.io.image
 			//ByteArrayOutputStream stream;
 		}
 
-		public static void ProcessImage(Image image)
+		public static void ProcessImage(ImageData image)
 		{
 			if (image.GetOriginalType() != ImageType.TIFF)
 			{
@@ -78,14 +78,14 @@ namespace com.itextpdf.io.image
 			}
 			try
 			{
-				RandomAccessSource ras;
+				IRandomAccessSource ras;
 				if (image.GetData() == null)
 				{
 					image.LoadData();
 				}
 				ras = new RandomAccessSourceFactory().CreateSource(image.GetData());
 				RandomAccessFileOrArray raf = new RandomAccessFileOrArray(ras);
-				TiffImageHelper.TiffParameters tiff = new TiffImageHelper.TiffParameters((TiffImage
+				TiffImageHelper.TiffParameters tiff = new TiffImageHelper.TiffParameters((TiffImageData
 					)image);
 				ProcessTiffImage(raf, tiff);
 				raf.Close();
@@ -211,7 +211,7 @@ namespace com.itextpdf.io.image
 					long photo = dir.GetFieldAsLong(TIFFConstants.TIFFTAG_PHOTOMETRIC);
 					if (photo == TIFFConstants.PHOTOMETRIC_MINISBLACK)
 					{
-						parameters |= RawImage.CCITT_BLACKIS1;
+						parameters |= RawImageData.CCITT_BLACKIS1;
 					}
 				}
 				int imagecomp = 0;
@@ -220,26 +220,26 @@ namespace com.itextpdf.io.image
 					case TIFFConstants.COMPRESSION_CCITTRLEW:
 					case TIFFConstants.COMPRESSION_CCITTRLE:
 					{
-						imagecomp = RawImage.CCITTG3_1D;
-						parameters |= RawImage.CCITT_ENCODEDBYTEALIGN | RawImage.CCITT_ENDOFBLOCK;
+						imagecomp = RawImageData.CCITTG3_1D;
+						parameters |= RawImageData.CCITT_ENCODEDBYTEALIGN | RawImageData.CCITT_ENDOFBLOCK;
 						break;
 					}
 
 					case TIFFConstants.COMPRESSION_CCITTFAX3:
 					{
-						imagecomp = RawImage.CCITTG3_1D;
-						parameters |= RawImage.CCITT_ENDOFLINE | RawImage.CCITT_ENDOFBLOCK;
+						imagecomp = RawImageData.CCITTG3_1D;
+						parameters |= RawImageData.CCITT_ENDOFLINE | RawImageData.CCITT_ENDOFBLOCK;
 						TIFFField t4OptionsField = dir.GetField(TIFFConstants.TIFFTAG_GROUP3OPTIONS);
 						if (t4OptionsField != null)
 						{
 							tiffT4Options = t4OptionsField.GetAsLong(0);
 							if ((tiffT4Options & TIFFConstants.GROUP3OPT_2DENCODING) != 0)
 							{
-								imagecomp = RawImage.CCITTG3_2D;
+								imagecomp = RawImageData.CCITTG3_2D;
 							}
 							if ((tiffT4Options & TIFFConstants.GROUP3OPT_FILLBITS) != 0)
 							{
-								parameters |= RawImage.CCITT_ENCODEDBYTEALIGN;
+								parameters |= RawImageData.CCITT_ENCODEDBYTEALIGN;
 							}
 						}
 						break;
@@ -247,7 +247,7 @@ namespace com.itextpdf.io.image
 
 					case TIFFConstants.COMPRESSION_CCITTFAX4:
 					{
-						imagecomp = RawImage.CCITTG4;
+						imagecomp = RawImageData.CCITTG4;
 						TIFFField t6OptionsField = dir.GetField(TIFFConstants.TIFFTAG_GROUP4OPTIONS);
 						if (t6OptionsField != null)
 						{
@@ -354,8 +354,8 @@ namespace com.itextpdf.io.image
 						rowsLeft -= rowsStrip;
 					}
 					byte[] g4pic = g4.Close();
-					RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, false, RawImage.CCITTG4
-						, parameters & RawImage.CCITT_BLACKIS1, g4pic, null);
+					RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, false, RawImageData.CCITTG4
+						, parameters & RawImageData.CCITT_BLACKIS1, g4pic, null);
 				}
 				tiff.image.SetDpi(dpiX, dpiY);
 				if (dir.IsTagPresent(TIFFConstants.TIFFTAG_ICCPROFILE))
@@ -716,9 +716,9 @@ namespace com.itextpdf.io.image
 						}
 						if (bitsPerSample == 1 && samplePerPixel == 1 && photometric != TIFFConstants.PHOTOMETRIC_PALETTE)
 						{
-							RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, false, RawImage.CCITTG4
-								, photometric == TIFFConstants.PHOTOMETRIC_MINISBLACK ? RawImage.CCITT_BLACKIS1 : 
-								0, g4.Close(), null);
+							RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, false, RawImageData.CCITTG4
+								, photometric == TIFFConstants.PHOTOMETRIC_MINISBLACK ? RawImageData.CCITT_BLACKIS1
+								 : 0, g4.Close(), null);
 						}
 						else
 						{
@@ -804,7 +804,7 @@ namespace com.itextpdf.io.image
 				if (extraSamples > 0)
 				{
 					mzip.Close();
-					RawImage mimg = (RawImage)ImageFactory.GetRawImage(null);
+					RawImageData mimg = (RawImageData)ImageFactory.GetRawImage(null);
 					RawImageHelper.UpdateRawImageParameters(mimg, w, h, 1, bitsPerSample, mstream.ToArray
 						());
 					mimg.MakeMask();
