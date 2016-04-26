@@ -142,14 +142,6 @@ namespace com.itextpdf.io.util
             return i.ToString();
         }
 
-        public static void CollectionsAddAll<T>(IList<T> c, params T[] elements)
-        {
-            foreach (T element in elements)
-            {
-                c.Add(element);
-            }
-        }
-
         public static double Random()
         {
             return new Random().NextDouble();
