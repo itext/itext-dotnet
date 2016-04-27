@@ -1,5 +1,5 @@
 /*
-$Id: 8822fb48c0f216df61371571512375feb73315d5 $
+$Id: f02e0ef64556b76c6a53483ecf37b3452fa200d7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -856,10 +856,10 @@ namespace com.itextpdf.kernel.utils
 		private void LoadPagesFromReader(PdfDocument doc, IList<PdfDictionary> pages, IList
 			<PdfIndirectReference> pagesRef)
 		{
-			int numOfPages = doc.GetCatalog().GetNumberOfPages();
+			int numOfPages = doc.GetNumberOfPages();
 			for (int i = 0; i < numOfPages; ++i)
 			{
-				pages.Add(doc.GetCatalog().GetPage(i + 1).GetPdfObject());
+				pages.Add(doc.GetPage(i + 1).GetPdfObject());
 				pagesRef.Add(pages[i].GetIndirectReference());
 			}
 		}
@@ -1486,8 +1486,7 @@ namespace com.itextpdf.kernel.utils
 			)
 		{
 			IList<PdfLinkAnnotation> linkAnnotations = new List<PdfLinkAnnotation>();
-			IList<PdfAnnotation> annotations = document.GetCatalog().GetPage(pageNum).GetAnnotations
-				();
+			IList<PdfAnnotation> annotations = document.GetPage(pageNum).GetAnnotations();
 			foreach (PdfAnnotation annotation in annotations)
 			{
 				if (PdfName.Link.Equals(annotation.GetSubtype()))

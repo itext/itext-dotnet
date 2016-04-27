@@ -1,5 +1,5 @@
 /*
-$Id: 9873522694f0917bbfe1a1429668b1ca6de04633 $
+$Id: 04d33b60b5c61d7455baf63e479be522ee785d49 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -967,8 +967,7 @@ namespace com.itextpdf.kernel.pdf
 		{
 			if (this.parentPages == null)
 			{
-				PdfPagesTree pageTree = GetDocument().GetCatalog().pageTree;
-				this.parentPages = pageTree.FindPageParent(this);
+				this.parentPages = GetDocument().GetCatalog().GetPageTree().FindPageParent(this);
 			}
 		}
 

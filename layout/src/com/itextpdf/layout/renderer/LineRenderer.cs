@@ -1,5 +1,5 @@
 /*
-$Id: 2b8c225edcd6a619d38bc2c576d18586b2755ab9 $
+$Id: ad44b9969827b46bd3fcd0423fa506bc700b877d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -558,9 +558,11 @@ namespace com.itextpdf.layout.renderer
 			splitRenderer.maxAscent = maxAscent;
 			splitRenderer.maxDescent = maxDescent;
 			splitRenderer.levels = levels;
+			splitRenderer.AddAllProperties(GetOwnProperties());
 			LineRenderer overflowRenderer = CreateOverflowRenderer();
 			overflowRenderer.parent = parent;
 			overflowRenderer.levels = levels;
+			overflowRenderer.AddAllProperties(GetOwnProperties());
 			return new LineRenderer[] { splitRenderer, overflowRenderer };
 		}
 

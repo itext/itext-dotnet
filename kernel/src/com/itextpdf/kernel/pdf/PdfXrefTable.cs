@@ -1,5 +1,5 @@
 /*
-$Id: fa8b8603aa8616453ce1249399d73ce6e3c44e72 $
+$Id: fec7e070f5ef1a91e216205acd52f747c47d2359 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using com.itextpdf.io.source;
+using com.itextpdf.kernel;
 using java.text;
 
 namespace com.itextpdf.kernel.pdf
@@ -262,7 +263,7 @@ namespace com.itextpdf.kernel.pdf
 					xrefStream.Put(PdfName.Encrypt, crypto);
 				}
 				xrefStream.Put(PdfName.Size, new PdfNumber(size));
-				xrefStream.Put(PdfName.W, new PdfArray(new _List_230()));
+				xrefStream.Put(PdfName.W, new PdfArray(new _List_231()));
 				xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
 				xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
 				PdfArray index = new PdfArray();
@@ -360,14 +361,16 @@ namespace com.itextpdf.kernel.pdf
 					trailer.Put(PdfName.Prev, lastXref);
 				}
 				writer.Write(document.GetTrailer());
+				writer.Write('\n');
 			}
-			writer.WriteString("\nstartxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
+			WriteKeyInfo(writer);
+			writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
 			xref = null;
 		}
 
-		private sealed class _List_230 : List<PdfObject>
+		private sealed class _List_231 : List<PdfObject>
 		{
-			public _List_230()
+			public _List_231()
 			{
 				{
 					this.Add(new PdfNumber(1));
@@ -388,6 +391,18 @@ namespace com.itextpdf.kernel.pdf
 				xref[i] = null;
 			}
 			count = 1;
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		protected internal static void WriteKeyInfo(PdfWriter writer)
+		{
+			Version version = Version.GetInstance();
+			String k = version.GetKey();
+			if (k == null)
+			{
+				k = "iText";
+			}
+			writer.WriteString(String.Format("%%%s-%s\n", k, version.GetRelease()));
 		}
 
 		private void EnsureCount(int count)

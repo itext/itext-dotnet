@@ -1,5 +1,5 @@
 /*
-$Id: c9f00dcd757c9014b63db969742564eb446aa46d $
+$Id: cb22d256fe0cf3ab92515bc7982b5fed0e586bab $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -1012,11 +1012,13 @@ namespace com.itextpdf.layout.renderer
 			splitRenderer.yLineOffset = yLineOffset;
 			splitRenderer.otfFeaturesApplied = otfFeaturesApplied;
 			splitRenderer.isLastRendererForModelElement = false;
+			splitRenderer.AddAllProperties(GetOwnProperties());
 			com.itextpdf.layout.renderer.TextRenderer overflowRenderer = CreateOverflowRenderer
 				();
 			overflowRenderer.SetText(text, initialOverflowTextPos, text.end);
 			overflowRenderer.otfFeaturesApplied = otfFeaturesApplied;
 			overflowRenderer.parent = parent;
+			overflowRenderer.AddAllProperties(GetOwnProperties());
 			return new com.itextpdf.layout.renderer.TextRenderer[] { splitRenderer, overflowRenderer
 				 };
 		}

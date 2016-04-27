@@ -1,5 +1,5 @@
 /*
-$Id: f06ebf18e6ed720a2701f2e258e9cf5e1aef3977 $
+$Id: d18ddd5def8e56f62dbe620b0314d4847b193ee3 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -320,13 +320,14 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		//TODO comment! Add note about flush, modified flag and xref.
-		public virtual void SetModified()
+		public virtual com.itextpdf.kernel.pdf.PdfObject SetModified()
 		{
 			if (indirectReference != null)
 			{
 				indirectReference.SetState(MODIFIED);
 				SetState(FORBID_RELEASE);
 			}
+			return this;
 		}
 
 		public virtual void Release()

@@ -1,5 +1,5 @@
 /*
-$Id: a74cda8f1aa450880bf64fe471f9167b6bb33975 $
+$Id: 7633430a115ba6b74198d6850f65427031e7fd40 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -68,8 +68,8 @@ namespace com.itextpdf.layout
 	public abstract class ElementPropertyContainer<T> : IPropertyContainer
 		where T : IPropertyContainer
 	{
-		protected internal IDictionary<Property, Object> properties = new EnumMap<Property
-			, Object>(typeof(Property));
+		protected internal IDictionary<Property, Object> properties = new Dictionary<Property
+			, Object>();
 
 		public virtual void SetProperty(Property property, Object value)
 		{
@@ -201,10 +201,16 @@ namespace com.itextpdf.layout
 		/// is changed to
 		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.RELATIVE">relative</see>
 		/// .
+		/// &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 		/// <p>
 		/// The default implementation in
 		/// <see cref="com.itextpdf.layout.renderer.AbstractRenderer"/>
 		/// treats
+		/// =======
+		/// The default implementation in
+		/// <see cref="com.itextpdf.layout.renderer.AbstractRenderer"/>
+		/// treats
+		/// &gt;&gt;&gt;&gt;&gt;&gt;&gt; develop
 		/// <code>left</code> and <code>top</code> as the most important values. Only
 		/// if <code>left == 0</code> will <code>right</code> be used for the
 		/// calculation; ditto for top vs. bottom.

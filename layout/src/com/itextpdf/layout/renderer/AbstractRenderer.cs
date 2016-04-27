@@ -1,5 +1,5 @@
 /*
-$Id: 74daf77c7b5015c01e0b8169baf8739bc9c92e64 $
+$Id: 0eaa6cec51c63c6fd0e60bab1cb67ca05fd83502 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -88,10 +88,56 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal IRenderer parent;
 
-		protected internal IDictionary<Property, Object> properties = new EnumMap<Property
-			, Object>(typeof(Property));
+		protected internal IDictionary<Property, Object> properties = new Dictionary<Property
+			, Object>();
 
 		protected internal bool isLastRendererForModelElement = true;
+
+		/// <summary>
+		/// Some properties must be passed to
+		/// <see cref="com.itextpdf.layout.IPropertyContainer"/>
+		/// objects that
+		/// are lower in the document's hierarchy. Most inherited properties are
+		/// related to textual operations.
+		/// </summary>
+		/// <returns>whether or not this type of property is inheritable.</returns>
+		private static bool[] INHERITED_PROPERTIES;
+
+		static AbstractRenderer()
+		{
+			// TODO linkedList?
+			int maxOrdinal = 0;
+			foreach (Property property in Property.Values())
+			{
+				maxOrdinal = Math.Max(maxOrdinal, (int)(property));
+			}
+			INHERITED_PROPERTIES = new bool[maxOrdinal + 1];
+			INHERITED_PROPERTIES[(int)(Property.BASE_DIRECTION)] = true;
+			INHERITED_PROPERTIES[(int)(Property.BOLD_SIMULATION)] = true;
+			INHERITED_PROPERTIES[(int)(Property.CHARACTER_SPACING)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FIRST_LINE_INDENT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FONT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FONT_COLOR)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FONT_KERNING)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FONT_SCRIPT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FONT_SIZE)] = true;
+			INHERITED_PROPERTIES[(int)(Property.FORCED_PLACEMENT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.HYPHENATION)] = true;
+			INHERITED_PROPERTIES[(int)(Property.ITALIC_SIMULATION)] = true;
+			INHERITED_PROPERTIES[(int)(Property.KEEP_TOGETHER)] = true;
+			INHERITED_PROPERTIES[(int)(Property.LIST_SYMBOL)] = true;
+			INHERITED_PROPERTIES[(int)(Property.LIST_SYMBOL_PRE_TEXT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.LIST_SYMBOL_POST_TEXT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.SPACING_RATIO)] = true;
+			INHERITED_PROPERTIES[(int)(Property.SPLIT_CHARACTERS)] = true;
+			INHERITED_PROPERTIES[(int)(Property.STROKE_COLOR)] = true;
+			INHERITED_PROPERTIES[(int)(Property.STROKE_WIDTH)] = true;
+			INHERITED_PROPERTIES[(int)(Property.TEXT_ALIGNMENT)] = true;
+			INHERITED_PROPERTIES[(int)(Property.TEXT_RENDERING_MODE)] = true;
+			INHERITED_PROPERTIES[(int)(Property.TEXT_RISE)] = true;
+			INHERITED_PROPERTIES[(int)(Property.UNDERLINE)] = true;
+			INHERITED_PROPERTIES[(int)(Property.WORD_SPACING)] = true;
+		}
 
 		/// <summary>Creates a renderer.</summary>
 		protected internal AbstractRenderer()
@@ -103,7 +149,6 @@ namespace com.itextpdf.layout.renderer
 		/// 	</param>
 		protected internal AbstractRenderer(IElement modelElement)
 		{
-			// TODO linkedList?
 			this.modelElement = modelElement;
 		}
 
@@ -166,8 +211,8 @@ namespace com.itextpdf.layout.renderer
 		public virtual bool HasProperty(Property property)
 		{
 			return HasOwnProperty(property) || (modelElement != null && modelElement.HasProperty
-				(property)) || (parent != null && property.IsInherited() && parent.HasProperty(property
-				));
+				(property)) || (parent != null && INHERITED_PROPERTIES[(int)(property)] && parent
+				.HasProperty(property));
 		}
 
 		public virtual bool HasOwnProperty(Property property)
@@ -213,8 +258,8 @@ namespace com.itextpdf.layout.renderer
 				return (T1)property;
 			}
 			// TODO in some situations we will want to check inheritance with additional info, such as parent and descendant.
-			if (parent != null && key.IsInherited() && (property = parent.GetProperty(key)) !=
-				 null)
+			if (parent != null && INHERITED_PROPERTIES[(int)(key)] && (property = parent.GetProperty
+				(key)) != null)
 			{
 				return (T1)property;
 			}
@@ -696,8 +741,8 @@ namespace com.itextpdf.layout.renderer
 				array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight
 					()));
 				array.Add(new PdfNumber(1));
-				document.AddNameDestination(destination, ((PdfArray)array.MakeIndirect(document))
-					);
+				document.AddNamedDestination(destination, ((PdfArray)array.MakeIndirect(document)
+					));
 				DeleteProperty(Property.DESTINATION);
 			}
 		}
@@ -777,7 +822,7 @@ namespace com.itextpdf.layout.renderer
 		/// </returns>
 		protected internal virtual Border[] GetBorders()
 		{
-			Border border = GetProperty(Property.BORDER);
+			Border border = GetProperty<Border>(Property.BORDER);
 			Border topBorder = GetProperty(Property.BORDER_TOP);
 			Border rightBorder = GetProperty(Property.BORDER_RIGHT);
 			Border bottomBorder = GetProperty(Property.BORDER_BOTTOM);

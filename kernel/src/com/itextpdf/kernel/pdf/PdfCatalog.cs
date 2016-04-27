@@ -1,5 +1,5 @@
 /*
-$Id: d287814bdf1009f9132838b8cd7efb1532bc6402 $
+$Id: 0dd31819044f353b14beb9a1b8d406a6562b9a62 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -56,7 +56,7 @@ namespace com.itextpdf.kernel.pdf
 	{
 		private const long serialVersionUID = -1354567597112193418L;
 
-		internal readonly PdfPagesTree pageTree;
+		private readonly PdfPagesTree pageTree;
 
 		protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new Dictionary<PdfName
 			, PdfNameTree>();
@@ -92,59 +92,6 @@ namespace com.itextpdf.kernel.pdf
 		protected internal PdfCatalog(PdfDocument pdfDocument)
 			: this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)))
 		{
-		}
-
-		public virtual void AddPage(PdfPage page)
-		{
-			if (page.IsFlushed())
-			{
-				throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
-			}
-			if (page.GetDocument() != null && page.GetDocument() != GetDocument())
-			{
-				throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3
-					).SetMessageParams(page, GetDocument(), page.GetDocument());
-			}
-			pageTree.AddPage(page);
-		}
-
-		public virtual void AddPage(int index, PdfPage page)
-		{
-			if (page.IsFlushed())
-			{
-				throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
-			}
-			if (page.GetDocument() != null && page.GetDocument() != GetDocument())
-			{
-				throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3
-					).SetMessageParams(page, GetDocument(), page.GetDocument());
-			}
-			pageTree.AddPage(index, page);
-		}
-
-		public virtual PdfPage GetPage(int pageNum)
-		{
-			return pageTree.GetPage(pageNum);
-		}
-
-		public virtual PdfPage GetPage(PdfDictionary pageDictionary)
-		{
-			return pageTree.GetPage(pageDictionary);
-		}
-
-		public virtual int GetNumberOfPages()
-		{
-			return pageTree.GetNumberOfPages();
-		}
-
-		public virtual int GetPageNumber(PdfPage page)
-		{
-			return pageTree.GetPageNumber(page);
-		}
-
-		public virtual int GetPageNumber(PdfDictionary pageDictionary)
-		{
-			return pageTree.GetPageNumber(pageDictionary);
 		}
 
 		/// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.
@@ -233,24 +180,41 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</summary>
 		/// <remarks>This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
 		/// 	</remarks>
-		/// <returns/>
+		/// <returns>state of outline mode.</returns>
 		public virtual bool IsOutlineMode()
 		{
 			return outlineMode;
 		}
 
-		/// <summary>This method sets a page mode of the document</summary>
-		/// <param name="pageMode"/>
-		/// <returns/>
+		/// <summary>This method sets a page mode of the document.</summary>
+		/// <remarks>
+		/// This method sets a page mode of the document.
+		/// </p>
+		/// Valid values are:
+		/// <c>PdfName.UseNone</c>
+		/// ,
+		/// <c>PdfName.UseOutlines</c>
+		/// ,
+		/// <c>PdfName.UseThumbs</c>
+		/// ,
+		/// <c>PdfName.FullScreen</c>
+		/// ,
+		/// <c>PdfName.UseOC</c>
+		/// ,
+		/// <c>PdfName.UseAttachments</c>
+		/// .
+		/// </remarks>
+		/// <param name="pageMode">page mode.</param>
+		/// <returns>current instance of PdfCatalog</returns>
 		public virtual com.itextpdf.kernel.pdf.PdfCatalog SetPageMode(PdfName pageMode)
 		{
-			if (!pageMode.Equals(PdfName.UseNone) && !pageMode.Equals(PdfName.UseOutlines) &&
-				 !pageMode.Equals(PdfName.UseThumbs) && !pageMode.Equals(PdfName.FullScreen) && 
-				!pageMode.Equals(PdfName.UseOC) && !pageMode.Equals(PdfName.UseAttachments))
+			if (pageMode.Equals(PdfName.UseNone) || pageMode.Equals(PdfName.UseOutlines) || pageMode
+				.Equals(PdfName.UseThumbs) || pageMode.Equals(PdfName.FullScreen) || pageMode.Equals
+				(PdfName.UseOC) || pageMode.Equals(PdfName.UseAttachments))
 			{
-				return this;
+				return Put(PdfName.PageMode, pageMode);
 			}
-			return Put(PdfName.PageMode, pageMode);
+			return this;
 		}
 
 		public virtual PdfName GetPageMode()
@@ -264,14 +228,14 @@ namespace com.itextpdf.kernel.pdf
 		public virtual com.itextpdf.kernel.pdf.PdfCatalog SetPageLayout(PdfName pageLayout
 			)
 		{
-			if (!pageLayout.Equals(PdfName.SinglePage) && !pageLayout.Equals(PdfName.OneColumn
-				) && !pageLayout.Equals(PdfName.TwoColumnLeft) && !pageLayout.Equals(PdfName.TwoColumnRight
-				) && !pageLayout.Equals(PdfName.TwoPageLeft) && !pageLayout.Equals(PdfName.TwoPageRight
+			if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn)
+				 || pageLayout.Equals(PdfName.TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight
+				) || pageLayout.Equals(PdfName.TwoPageLeft) || pageLayout.Equals(PdfName.TwoPageRight
 				))
 			{
-				return this;
+				return Put(PdfName.PageLayout, pageLayout);
 			}
-			return Put(PdfName.PageLayout, pageLayout);
+			return this;
 		}
 
 		public virtual PdfName GetPageLayout()
@@ -307,7 +271,10 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>This method gets Names tree from the catalog.</summary>
 		/// <param name="treeType">type of the tree (Dests, AP, EmbeddedFiles etc).</param>
-		/// <returns/>
+		/// <returns>
+		/// returns
+		/// <see cref="PdfNameTree"/>
+		/// </returns>
 		public virtual PdfNameTree GetNameTree(PdfName treeType)
 		{
 			PdfNameTree tree = nameTrees[treeType];
@@ -320,7 +287,10 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>This method returns the NumberTree of Page Labels</summary>
-		/// <returns/>
+		/// <returns>
+		/// returns
+		/// <see cref="PdfNumTree"/>
+		/// </returns>
 		public virtual PdfNumTree GetPageLabelsTree(bool createIfNotExists)
 		{
 			if (pageLabels == null && (GetPdfObject().ContainsKey(PdfName.PageLabels) || createIfNotExists
@@ -415,9 +385,9 @@ namespace com.itextpdf.kernel.pdf
 			return ocProperties != null;
 		}
 
-		internal virtual PdfPage RemovePage(int pageNum)
+		internal virtual PdfPagesTree GetPageTree()
 		{
-			return pageTree.RemovePage(pageNum);
+			return pageTree;
 		}
 
 		/// <summary>this method return map containing all pages of the document with associated outlines.
@@ -576,7 +546,7 @@ namespace com.itextpdf.kernel.pdf
 							{
 								array.Set(0, page2page[oldPage].GetPdfObject());
 								d = new PdfStringDestination(name);
-								toDocument.AddNameDestination(name, array);
+								toDocument.AddNamedDestination(name, array);
 							}
 						}
 					}

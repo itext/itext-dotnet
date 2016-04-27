@@ -247,7 +247,7 @@ namespace com.itextpdf.layout.renderer
 				if (GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight())
 				{
 					SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight()
-						 / GetPropertyAsFloat(Property.HEIGHT) * ((UnitValue)GetProperty(Property.WIDTH)
+						 / GetPropertyAsFloat(Property.HEIGHT) * ((UnitValue)GetProperty<UnitValue>(Property.WIDTH)
 						).GetValue()));
 					SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(area.GetBBox().GetHeight(
 						)));

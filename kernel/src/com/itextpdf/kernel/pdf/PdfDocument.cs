@@ -1,5 +1,5 @@
 /*
-$Id: 4a489fd2b2f3a5f5c9aec31b0989e20b5ddb674d $
+$Id: 70d1112eafbe56ab0ef3e44eb57d55878f6b883c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using com.itextpdf.io;
 using com.itextpdf.io.log;
 using com.itextpdf.io.source;
@@ -386,7 +387,30 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfPage GetPage(int pageNum)
 		{
 			CheckClosingStatus();
-			return catalog.GetPage(pageNum);
+			return catalog.GetPageTree().GetPage(pageNum);
+		}
+
+		/// <summary>
+		/// Gets the
+		/// <see cref="PdfPage"/>
+		/// instance by
+		/// <see cref="PdfDictionary"/>
+		/// .
+		/// </summary>
+		/// <param name="pageDictionary">
+		/// 
+		/// <see cref="PdfDictionary"/>
+		/// that present page.
+		/// </param>
+		/// <returns>
+		/// page by
+		/// <see cref="PdfDictionary"/>
+		/// .
+		/// </returns>
+		public virtual PdfPage GetPage(PdfDictionary pageDictionary)
+		{
+			CheckClosingStatus();
+			return catalog.GetPageTree().GetPage(pageDictionary);
 		}
 
 		/// <summary>Get the first page of the document.</summary>
@@ -418,7 +442,7 @@ namespace com.itextpdf.kernel.pdf
 		{
 			CheckClosingStatus();
 			PdfPage page = new PdfPage(this, pageSize);
-			catalog.AddPage(page);
+			CheckAndAddPage(page);
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
 			return page;
@@ -450,7 +474,7 @@ namespace com.itextpdf.kernel.pdf
 		{
 			CheckClosingStatus();
 			PdfPage page = new PdfPage(this, pageSize);
-			catalog.AddPage(index, page);
+			CheckAndAddPage(index, page);
 			currentPage = page;
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
@@ -468,7 +492,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfPage AddPage(PdfPage page)
 		{
 			CheckClosingStatus();
-			catalog.AddPage(page);
+			CheckAndAddPage(page);
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
 			return page;
 		}
@@ -485,7 +509,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfPage AddPage(int index, PdfPage page)
 		{
 			CheckClosingStatus();
-			catalog.AddPage(index, page);
+			CheckAndAddPage(index, page);
 			currentPage = page;
 			DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
 			return currentPage;
@@ -496,7 +520,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual int GetNumberOfPages()
 		{
 			CheckClosingStatus();
-			return catalog.GetNumberOfPages();
+			return catalog.GetPageTree().GetNumberOfPages();
 		}
 
 		/// <summary>Gets page number by page.</summary>
@@ -505,7 +529,27 @@ namespace com.itextpdf.kernel.pdf
 		public virtual int GetPageNumber(PdfPage page)
 		{
 			CheckClosingStatus();
-			return catalog.GetPageNumber(page);
+			return catalog.GetPageTree().GetPageNumber(page);
+		}
+
+		/// <summary>
+		/// Gets page number by
+		/// <see cref="PdfDictionary"/>
+		/// .
+		/// </summary>
+		/// <param name="pageDictionary">
+		/// 
+		/// <see cref="PdfDictionary"/>
+		/// that present page.
+		/// </param>
+		/// <returns>
+		/// page number by
+		/// <see cref="PdfDictionary"/>
+		/// .
+		/// </returns>
+		public virtual int GetPageNumber(PdfDictionary pageDictionary)
+		{
+			return catalog.GetPageTree().GetPageNumber(pageDictionary);
 		}
 
 		/// <summary>
@@ -524,11 +568,7 @@ namespace com.itextpdf.kernel.pdf
 		{
 			CheckClosingStatus();
 			int pageNum = GetPageNumber(page);
-			if (pageNum < 1)
-			{
-				return false;
-			}
-			return RemovePage(pageNum) != null;
+			return pageNum >= 1 && RemovePage(pageNum) != null;
 		}
 
 		/// <summary>Removes page from the document by page number.</summary>
@@ -537,7 +577,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfPage RemovePage(int pageNum)
 		{
 			CheckClosingStatus();
-			PdfPage removedPage = catalog.RemovePage(pageNum);
+			PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNum);
 			if (removedPage != null)
 			{
 				catalog.RemoveOutlines(removedPage);
@@ -725,7 +765,7 @@ namespace com.itextpdf.kernel.pdf
 						{
 							catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());
 						}
-						PdfObject pageRoot = catalog.pageTree.GenerateTree();
+						PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
 						if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified())
 						{
 							catalog.GetPdfObject().Put(PdfName.Pages, pageRoot);
@@ -770,7 +810,7 @@ namespace com.itextpdf.kernel.pdf
 						{
 							catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());
 						}
-						catalog.GetPdfObject().Put(PdfName.Pages, catalog.pageTree.GenerateTree());
+						catalog.GetPdfObject().Put(PdfName.Pages, catalog.GetPageTree().GenerateTree());
 						foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees)
 						{
 							PdfNameTree tree = entry.Value;
@@ -789,7 +829,7 @@ namespace com.itextpdf.kernel.pdf
 						FlushFonts();
 						writer.FlushWaitingObjects();
 						// flush unused objects
-						if (flushUnusedObjects)
+						if (IsFlushUnusedObjects())
 						{
 							for (int i = 0; i < xref.Size(); i++)
 							{
@@ -843,7 +883,7 @@ namespace com.itextpdf.kernel.pdf
 						writer.Close();
 					}
 				}
-				catalog.pageTree.ClearPageRefs();
+				catalog.GetPageTree().ClearPageRefs();
 				RemoveAllHandlers();
 				if (reader != null && IsCloseReader())
 				{
@@ -874,15 +914,15 @@ namespace com.itextpdf.kernel.pdf
 			{
 				structTreeRoot = new PdfStructTreeRoot(this);
 				catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_789
+				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_808
 					(this)));
 				structParentIndex = 0;
 			}
 		}
 
-		private sealed class _Dictionary_789 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_808 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_789()
+			public _Dictionary_808()
 			{
 				{
 					this[PdfName.Marked] = PdfBoolean.TRUE;
@@ -1217,7 +1257,7 @@ namespace com.itextpdf.kernel.pdf
 		/// See PdfSpec 12.3.2.3 for more info.
 		/// </param>
 		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual void AddNameDestination(String key, PdfObject value)
+		public virtual void AddNamedDestination(String key, PdfObject value)
 		{
 			CheckClosingStatus();
 			catalog.AddNamedDestination(key, value);
@@ -1553,11 +1593,39 @@ namespace com.itextpdf.kernel.pdf
 						catalog = new PdfCatalog(this);
 						info = new PdfDocumentInfo(this).AddCreationDate();
 						info.AddModDate();
-						info.SetProducer(Version.GetInstance().GetVersion());
+						info.GetPdfObject().Put(PdfName.Producer, new PdfString(Version.GetInstance().GetVersion
+							()));
 					}
 					else
 					{
 						info.AddModDate();
+						String producer = null;
+						if (info.GetPdfObject().ContainsKey(PdfName.Producer))
+						{
+							producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
+						}
+						Version version = Version.GetInstance();
+						if (producer == null || !version.GetVersion().Contains(version.GetProduct()))
+						{
+							producer = version.GetVersion();
+						}
+						else
+						{
+							int idx = producer.IndexOf("; modified using");
+							StringBuilder buf;
+							if (idx == -1)
+							{
+								buf = new StringBuilder(producer);
+							}
+							else
+							{
+								buf = new StringBuilder(producer.JSubstring(0, idx));
+							}
+							buf.Append("; modified using ");
+							buf.Append(version.GetVersion());
+							producer = buf.ToString();
+						}
+						info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
 					}
 					trailer = new PdfDictionary();
 					trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
@@ -1647,6 +1715,34 @@ namespace com.itextpdf.kernel.pdf
 					font.Flush();
 				}
 			}
+		}
+
+		protected internal virtual void CheckAndAddPage(int index, PdfPage page)
+		{
+			if (page.IsFlushed())
+			{
+				throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
+			}
+			if (page.GetDocument() != null && this != page.GetDocument())
+			{
+				throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3
+					).SetMessageParams(page, this, page.GetDocument());
+			}
+			catalog.GetPageTree().AddPage(index, page);
+		}
+
+		protected internal virtual void CheckAndAddPage(PdfPage page)
+		{
+			if (page.IsFlushed())
+			{
+				throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
+			}
+			if (page.GetDocument() != null && this != page.GetDocument())
+			{
+				throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3
+					).SetMessageParams(page, this, page.GetDocument());
+			}
+			catalog.GetPageTree().AddPage(page);
 		}
 
 		/// <summary>checks whether a method is invoked at the closed document</summary>
@@ -1820,7 +1916,7 @@ namespace com.itextpdf.kernel.pdf
 							PdfObject pageObject = array.Get(0);
 							if (!pageObject.IsNumber())
 							{
-								PdfPage oldPage = catalog.GetPage((PdfDictionary)pageObject);
+								PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
 								PdfPage newPage = page2page[oldPage];
 								if (oldPage == null || newPage == null)
 								{
@@ -1833,7 +1929,7 @@ namespace com.itextpdf.kernel.pdf
 							}
 							if (dest != null)
 							{
-								toDocument.AddNameDestination(name, ((PdfArray)array.MakeIndirect(toDocument)));
+								toDocument.AddNamedDestination(name, ((PdfArray)array.MakeIndirect(toDocument)));
 							}
 						}
 					}
@@ -1844,7 +1940,7 @@ namespace com.itextpdf.kernel.pdf
 						PdfObject pageObject = destArray.Get(0);
 						if (!pageObject.IsNumber())
 						{
-							PdfPage oldPage = catalog.GetPage((PdfDictionary)pageObject);
+							PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
 							PdfPage newPage = page2page[oldPage];
 							if (oldPage == null || newPage == null)
 							{

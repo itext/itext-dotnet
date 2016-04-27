@@ -1,5 +1,5 @@
 /*
-$Id: 0b6e5f1af91accf0ed50e806ecd87d8a91f185a6 $
+$Id: a0cc51f0fc3ccce1c8fe01adfde0d4b83f296095 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -100,13 +100,6 @@ namespace com.itextpdf.kernel.pdf
 		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetCreator(String creator)
 		{
 			GetPdfObject().Put(PdfName.Creator, new PdfString(creator));
-			return this;
-		}
-
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetProducer(String creator
-			)
-		{
-			GetPdfObject().Put(PdfName.Producer, new PdfString(creator));
 			return this;
 		}
 

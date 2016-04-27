@@ -1,5 +1,5 @@
 /*
-$Id: 6d4889015b256b88a4e648078eed8b2b86683163 $
+$Id: 4cd6dabb9ff9a2fda7e07356158b9673f52e760f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -199,7 +199,7 @@ namespace com.itextpdf.kernel.utils
 					TaggedPdfReaderTool.MarkedContentEventListener listener = new TaggedPdfReaderTool.MarkedContentEventListener
 						(this);
 					PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
-					PdfPage page = document.GetCatalog().GetPage(pageDic);
+					PdfPage page = document.GetPage(pageDic);
 					processor.ProcessContent(page.GetContentBytes(), page.GetResources());
 					parsedTags[pageDic] = listener.GetMcidContent();
 				}
