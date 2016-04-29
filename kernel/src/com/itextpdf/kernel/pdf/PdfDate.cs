@@ -43,6 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace com.itextpdf.kernel.pdf
@@ -63,7 +64,7 @@ namespace com.itextpdf.kernel.pdf
 	/// section 7.2 (page 183-184)
 	/// </summary>
 	/// <seealso cref="PdfString"/>
-	/// <seealso cref="java.util.GregorianCalendar"/>
+	/// <seealso cref="System.Globalization.GregorianCalendar"/>
 	public class PdfDate : PdfObjectWrapper<PdfString>
 	{
 		private const long serialVersionUID = -7424858548790000216L;

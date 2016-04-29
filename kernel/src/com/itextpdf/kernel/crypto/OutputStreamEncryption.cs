@@ -1,5 +1,5 @@
 /*
-$Id: e47a9de986f6ab2c61f12e009f5c81726eba107b $
+$Id: bf045581647353f3ecdd0b1633b13e5a0a526df9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,7 +53,7 @@ namespace com.itextpdf.kernel.crypto
 		private byte[] sb = new byte[1];
 
 		/// <summary>Creates a new instance of OutputStreamCounter</summary>
-		public OutputStreamEncryption(Stream @out)
+		protected internal OutputStreamEncryption(Stream @out)
 		{
 			this.@out = @out;
 		}

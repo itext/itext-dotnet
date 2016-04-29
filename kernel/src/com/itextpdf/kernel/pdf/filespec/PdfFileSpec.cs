@@ -1,5 +1,5 @@
 /*
-$Id: 73dd29e0977990b6a1ead4239e9a8ad1bd23e34e $
+$Id: 91b2812929eb1eeb8b4245e53088060e369e7eb4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,6 @@ using System.IO;
 using com.itextpdf.io.font;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.collection;
-using java.io;
 
 namespace com.itextpdf.kernel.pdf.filespec
 {
@@ -101,7 +100,7 @@ namespace com.itextpdf.kernel.pdf.filespec
 			(PdfDocument doc, String filePath, String description, String fileDisplay, PdfName
 			 mimeType, PdfName afRelationshipValue, bool isUnicodeFileName)
 		{
-			PdfStream stream = new PdfStream(doc, new FileInputStream(filePath));
+			PdfStream stream = new PdfStream(doc, new FileStream(filePath));
 			return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue
 				, isUnicodeFileName);
 		}

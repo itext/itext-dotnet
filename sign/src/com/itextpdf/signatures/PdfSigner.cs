@@ -163,18 +163,17 @@ namespace com.itextpdf.signatures
 		/// </remarks>
 		/// <param name="reader">PdfReader that reads the PDF file</param>
 		/// <param name="outputStream">OutputStream to write the signed PDF file</param>
-		/// <param name="tmpFile">File to which the output is temporarily written</param>
+		/// <param name="path">File to which the output is temporarily written</param>
 		/// <param name="append">boolean to indicate whether the signing should happen in append mode or not
 		/// 	</param>
 		/// <exception cref="System.IO.IOException"/>
-		public PdfSigner(PdfReader reader, Stream outputStream, String tmpFile, bool append
-			)
+		public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
 		{
 			StampingProperties properties = new StampingProperties().PreserveEncryption();
 			File tempFile = null;
-			if (tmpFile != null)
+			if (path != null)
 			{
-				tempFile = new File(tmpFile);
+				tempFile = new File(path);
 			}
 			if (append)
 			{

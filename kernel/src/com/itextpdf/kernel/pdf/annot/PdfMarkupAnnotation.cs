@@ -1,5 +1,5 @@
 /*
-$Id: 933b1c1cacea8c4b598853f77e4801a12c198318 $
+$Id: d700db46dda67681aef715e8d9581a0a65c266f4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -56,12 +56,12 @@ namespace com.itextpdf.kernel.pdf.annot
 
 		protected internal PdfPopupAnnotation popup = null;
 
-		public PdfMarkupAnnotation(Rectangle rect)
+		protected internal PdfMarkupAnnotation(Rectangle rect)
 			: base(rect)
 		{
 		}
 
-		public PdfMarkupAnnotation(PdfDictionary pdfObject)
+		protected internal PdfMarkupAnnotation(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
 		}

@@ -1,5 +1,5 @@
 /*
-$Id: 29d414b2ac1276e6bd5af95cf92cd46a8e697670 $
+$Id: 39f3b03edafff3e8030951bc82c08a501f39c964 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -67,11 +67,11 @@ namespace com.itextpdf.kernel.font
 			PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
 			if (baseFontName != null)
 			{
-				GetFontNames().SetFontName(baseFontName.GetValue());
+				SetFontName(baseFontName.GetValue());
 			}
 			else
 			{
-				GetFontNames().SetFontName(FontUtil.CreateRandomFontName());
+				SetFontName(FontUtil.CreateRandomFontName());
 			}
 			subtype = fontDictionary.GetAsName(PdfName.Subtype);
 		}

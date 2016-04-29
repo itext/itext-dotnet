@@ -1,5 +1,5 @@
 /*
-$Id: 478e89db2dd39cb0d37368a04557f89d08e9bbd0 $
+$Id: 14fa33e41b2926e23506cccb70de7e3b1634877a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -61,27 +61,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 		}
 
 		public abstract int GetNumberOfComponents();
-
-		public abstract float[] GetDefaultColorants();
-
-		public virtual PdfName GetPdfName()
-		{
-			if (GetPdfObject() is PdfName)
-			{
-				return (PdfName)GetPdfObject();
-			}
-			else
-			{
-				if (GetPdfObject() is PdfArray)
-				{
-					return ((PdfArray)GetPdfObject()).GetAsName(0);
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
 
 		public static com.itextpdf.kernel.pdf.colorspace.PdfColorSpace MakeColorSpace(PdfObject
 			 pdfObject)

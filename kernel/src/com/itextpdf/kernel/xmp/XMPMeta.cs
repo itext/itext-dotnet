@@ -28,6 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
+using System.Globalization;
 using com.itextpdf.kernel.xmp.options;
 using com.itextpdf.kernel.xmp.properties;
 
@@ -1127,7 +1128,7 @@ namespace com.itextpdf.kernel.xmp
 		void SetPropertyCalendar(String schemaNS, String propName, Calendar propValue, PropertyOptions
 			 options);
 
-		/// <seealso cref="SetPropertyCalendar(System.String, System.String, java.util.Calendar, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, com.itextpdf.kernel.xmp.options.PropertyOptions)
 		/// 	"/>
 		/// <param name="schemaNS">The namespace URI for the property</param>
 		/// <param name="propName">The name of the property</param>

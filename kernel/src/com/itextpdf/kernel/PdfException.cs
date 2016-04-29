@@ -1,5 +1,5 @@
 /*
-$Id: 1d86f5bc63960c57ad3d1df13fec396769b3e8a1 $
+$Id: 467e36b5cdb4cb003e1a3d7865268109063d2e5b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -246,9 +246,9 @@ namespace com.itextpdf.kernel
 
 		public const String InvalidOffsetForObject1 = "invalid.offset.for.object {0}";
 
-		public const String InvalidXrefSection = "invalid.xref.section";
-
 		public const String InvalidXrefStream = "invalid.xref.stream";
+
+		public const String InvalidXrefTable = "invalid.xref.table";
 
 		public const String IoException = "io.exception";
 
@@ -489,8 +489,7 @@ namespace com.itextpdf.kernel
 			messageParams)
 		{
 			this.messageParams = new List<Object>();
-			com.itextpdf.io.util.JavaUtil.CollectionsAddAll(this.messageParams, messageParams
-				);
+			java.util.Collections.AddAll(this.messageParams, messageParams);
 			return this;
 		}
 

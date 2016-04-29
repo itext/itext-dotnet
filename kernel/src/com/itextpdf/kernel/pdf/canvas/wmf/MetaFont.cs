@@ -1,5 +1,5 @@
 /*
-$Id: de1341301c384a5d5218f98df927578d0dc417f1 $
+$Id: 5e4f3c09a5f29b2d17e2fb7df20fbe8d2d1ed5be $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -168,8 +168,8 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			{
 				return font;
 			}
-			FontProgram ff2 = FontFactory.CreateRegisteredFont(faceName, ((italic != 0) ? FontConstants
-				.ITALIC : 0) | ((bold != 0) ? FontConstants.BOLD : 0));
+			FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0
+				) ? FontConstants.ITALIC : 0) | ((bold != 0) ? FontConstants.BOLD : 0));
 			encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
 			font = ff2;
 			if (font != null)
@@ -260,7 +260,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			}
 			try
 			{
-				font = FontFactory.CreateFont(fontName);
+				font = FontProgramFactory.CreateFont(fontName);
 				encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
 			}
 			catch (Exception e)

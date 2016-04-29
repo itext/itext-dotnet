@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>5092244a-a2ed-49d2-97fb-f513d965a8f7</ProjectGuid>
+    <ProjectGuid>{14A163C0-0054-480D-A096-EDA51DD933EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>sign</RootNamespace>
@@ -40,8 +40,64 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\com\itextpdf\signatures\BouncyCastleDigest.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CertificateInfo.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CertificateUtil.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CertificateVerification.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CertificateVerifier.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CrlClientOffline.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CrlClientOnline.cs" />
+    <Compile Include="src\com\itextpdf\signatures\CRLVerifier.cs" />
+    <Compile Include="src\com\itextpdf\signatures\DigestAlgorithms.cs" />
+    <Compile Include="src\com\itextpdf\signatures\EncryptionAlgorithms.cs" />
+    <Compile Include="src\com\itextpdf\signatures\ExternalBlankSignatureContainer.cs" />
+    <Compile Include="src\com\itextpdf\signatures\ICrlClient.cs" />
+    <Compile Include="src\com\itextpdf\signatures\IExternalDigest.cs" />
+    <Compile Include="src\com\itextpdf\signatures\IExternalSignature.cs" />
+    <Compile Include="src\com\itextpdf\signatures\IExternalSignatureContainer.cs" />
+    <Compile Include="src\com\itextpdf\signatures\IOcspClient.cs" />
+    <Compile Include="src\com\itextpdf\signatures\ITSAClient.cs" />
+    <Compile Include="src\com\itextpdf\signatures\ITSAInfoBouncyCastle.cs" />
+    <Compile Include="src\com\itextpdf\signatures\KeyStoreUtil.cs" />
+    <Compile Include="src\com\itextpdf\signatures\LtvVerification.cs" />
+    <Compile Include="src\com\itextpdf\signatures\LtvVerifier.cs" />
+    <Compile Include="src\com\itextpdf\signatures\OcspClientBouncyCastle.cs" />
+    <Compile Include="src\com\itextpdf\signatures\OCSPVerifier.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfPKCS7.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfSignature.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfSignatureAppDictionary.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfSignatureAppearance.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfSignatureBuildProperties.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PdfSigner.cs" />
+    <Compile Include="src\com\itextpdf\signatures\PrivateKeySignature.cs" />
+    <Compile Include="src\com\itextpdf\signatures\ProviderDigest.cs" />
+    <Compile Include="src\com\itextpdf\signatures\RootStoreVerifier.cs" />
+    <Compile Include="src\com\itextpdf\signatures\SecurityIDs.cs" />
+    <Compile Include="src\com\itextpdf\signatures\SignaturePermissions.cs" />
+    <Compile Include="src\com\itextpdf\signatures\SignatureUtil.cs" />
+    <Compile Include="src\com\itextpdf\signatures\SignExtensions.cs" />
+    <Compile Include="src\com\itextpdf\signatures\TSAClientBouncyCastle.cs" />
+    <Compile Include="src\com\itextpdf\signatures\VerificationException.cs" />
+    <Compile Include="src\com\itextpdf\signatures\VerificationOK.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\forms\forms.csproj">
+      <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
+      <Name>forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\io\io.csproj">
+      <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
+      <Name>io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\kernel\kernel.csproj">
+      <Project>{89CA1A81-2179-424D-88B3-C2EDC9453364}</Project>
+      <Name>kernel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\layout\layout.csproj">
+      <Project>{42173642-DB52-44D3-9883-3E34C65C53BC}</Project>
+      <Name>layout</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

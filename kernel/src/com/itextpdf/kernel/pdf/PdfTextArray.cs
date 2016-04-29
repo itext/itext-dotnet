@@ -1,5 +1,5 @@
 /*
-$Id: b6d84cfabaa53995b2e7d4f166fe54f0d21d110c $
+$Id: a6df1eaf208e955503be1bb5b9cbb857f4de5204 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -158,7 +158,6 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal virtual bool Add(String text)
 		{
-			// TODO may be at least use String instead of StringBuilder?
 			if (text.Length > 0)
 			{
 				if (lastString != null)

@@ -1,5 +1,5 @@
 /*
-$Id: cad45f5b27d269ddd6beed45a368a110223163f6 $
+$Id: 4f655509bc94ee18a8b171c7dfc5e51abb8091c2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,6 +51,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class DeviceN : Color
 	{
+		public DeviceN(PdfSpecialCs.DeviceN cs)
+			: this(cs, GetDefaultColorants(cs.GetNumberOfComponents()))
+		{
+		}
+
 		public DeviceN(PdfSpecialCs.DeviceN cs, float[] value)
 			: base(cs, value)
 		{
@@ -60,6 +65,13 @@ namespace com.itextpdf.kernel.color
 			, float[] value)
 			: this(new PdfSpecialCs.DeviceN(names, alternateCs, tintTransform), value)
 		{
+		}
+
+		private static float[] GetDefaultColorants(int numOfColorants)
+		{
+			float[] colorants = new float[numOfColorants];
+			com.itextpdf.io.util.JavaUtil.Fill(colorants, 1f);
+			return colorants;
 		}
 	}
 }

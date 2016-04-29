@@ -1,5 +1,5 @@
 /*
-$Id: 19ae9383cfded4951de446315fcea360620bc406 $
+$Id: 862909e4305f817c984c7d7c15a32b029cd298e8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -1130,9 +1130,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 			{
 				PdfColorSpace pdfColorSpace = DetermineColorSpace((PdfName)operands[0], processor
 					);
-				processor.GetGraphicsState().SetFillColorSpace(pdfColorSpace);
-				processor.GetGraphicsState().SetFillColor(new Color(pdfColorSpace, pdfColorSpace.
-					GetDefaultColorants()));
+				processor.GetGraphicsState().SetFillColor(Color.MakeColor(pdfColorSpace));
 			}
 
 			internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor
@@ -1162,9 +1160,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 			{
 				PdfColorSpace pdfColorSpace = PdfCanvasProcessor.SetColorSpaceFillOperator.DetermineColorSpace
 					((PdfName)operands[0], processor);
-				processor.GetGraphicsState().SetStrokeColorSpace(pdfColorSpace);
-				processor.GetGraphicsState().SetStrokeColor(new Color(pdfColorSpace, pdfColorSpace
-					.GetDefaultColorants()));
+				processor.GetGraphicsState().SetStrokeColor(Color.MakeColor(pdfColorSpace));
 			}
 		}
 
@@ -1174,8 +1170,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 			public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList
 				<PdfObject> operands)
 			{
-				processor.GetGraphicsState().SetFillColor(GetColor(processor.GetGraphicsState().GetFillColorSpace
-					(), operands, processor.GetResources()));
+				processor.GetGraphicsState().SetFillColor(GetColor(processor.GetGraphicsState().GetFillColor
+					().GetColorSpace(), operands, processor.GetResources()));
 			}
 		}
 
@@ -1186,7 +1182,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 				<PdfObject> operands)
 			{
 				processor.GetGraphicsState().SetStrokeColor(GetColor(processor.GetGraphicsState()
-					.GetStrokeColorSpace(), operands, processor.GetResources()));
+					.GetStrokeColor().GetColorSpace(), operands, processor.GetResources()));
 			}
 		}
 

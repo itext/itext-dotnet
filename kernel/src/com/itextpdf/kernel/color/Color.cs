@@ -1,5 +1,5 @@
 /*
-$Id: 205c2ea35ca678e05e75594f394b9cfd6ccf01b5 $
+$Id: da7304f111d2fe888bf120f237e7b0ed74d4e9fb $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.colorspace;
 
 namespace com.itextpdf.kernel.color
@@ -94,17 +93,7 @@ namespace com.itextpdf.kernel.color
 
 		protected internal float[] colorValue;
 
-		public Color(PdfObject pdfObject, float[] colorValue)
-			: this(PdfColorSpace.MakeColorSpace(pdfObject), colorValue)
-		{
-		}
-
-		public Color(PdfObject pdfObject)
-			: this(pdfObject, null)
-		{
-		}
-
-		public Color(PdfColorSpace colorSpace, float[] colorValue)
+		protected internal Color(PdfColorSpace colorSpace, float[] colorValue)
 		{
 			this.colorSpace = colorSpace;
 			if (colorValue == null)
@@ -115,6 +104,136 @@ namespace com.itextpdf.kernel.color
 			{
 				this.colorValue = colorValue;
 			}
+		}
+
+		public static com.itextpdf.kernel.color.Color MakeColor(PdfColorSpace colorSpace)
+		{
+			return MakeColor(colorSpace, null);
+		}
+
+		public static com.itextpdf.kernel.color.Color MakeColor(PdfColorSpace colorSpace, 
+			float[] colorValue)
+		{
+			com.itextpdf.kernel.color.Color c = null;
+			bool unknownColorSpace = false;
+			if (colorSpace is PdfDeviceCs)
+			{
+				if (colorSpace is PdfDeviceCs.Gray)
+				{
+					c = colorValue != null ? new DeviceGray(colorValue[0]) : new DeviceGray();
+				}
+				else
+				{
+					if (colorSpace is PdfDeviceCs.Rgb)
+					{
+						c = colorValue != null ? new DeviceRgb(colorValue[0], colorValue[1], colorValue[2
+							]) : new DeviceRgb();
+					}
+					else
+					{
+						if (colorSpace is PdfDeviceCs.Cmyk)
+						{
+							c = colorValue != null ? new DeviceCmyk(colorValue[0], colorValue[1], colorValue[
+								2], colorValue[3]) : new DeviceCmyk();
+						}
+						else
+						{
+							unknownColorSpace = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				if (colorSpace is PdfCieBasedCs)
+				{
+					if (colorSpace is PdfCieBasedCs.CalGray)
+					{
+						PdfCieBasedCs.CalGray calGray = (PdfCieBasedCs.CalGray)colorSpace;
+						c = colorValue != null ? new CalGray(calGray, colorValue[0]) : new CalGray(calGray
+							);
+					}
+					else
+					{
+						if (colorSpace is PdfCieBasedCs.CalRgb)
+						{
+							PdfCieBasedCs.CalRgb calRgb = (PdfCieBasedCs.CalRgb)colorSpace;
+							c = colorValue != null ? new CalRgb(calRgb, colorValue) : new CalRgb(calRgb);
+						}
+						else
+						{
+							if (colorSpace is PdfCieBasedCs.IccBased)
+							{
+								PdfCieBasedCs.IccBased iccBased = (PdfCieBasedCs.IccBased)colorSpace;
+								c = colorValue != null ? new IccBased(iccBased, colorValue) : new IccBased(iccBased
+									);
+							}
+							else
+							{
+								if (colorSpace is PdfCieBasedCs.Lab)
+								{
+									PdfCieBasedCs.Lab lab = (PdfCieBasedCs.Lab)colorSpace;
+									c = colorValue != null ? new Lab(lab, colorValue) : new Lab(lab);
+								}
+								else
+								{
+									unknownColorSpace = true;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					if (colorSpace is PdfSpecialCs)
+					{
+						if (colorSpace is PdfSpecialCs.Separation)
+						{
+							PdfSpecialCs.Separation separation = (PdfSpecialCs.Separation)colorSpace;
+							c = colorValue != null ? new Separation(separation, colorValue[0]) : new Separation
+								(separation);
+						}
+						else
+						{
+							if (colorSpace is PdfSpecialCs.DeviceN)
+							{
+								//NChannel goes here also
+								PdfSpecialCs.DeviceN deviceN = (PdfSpecialCs.DeviceN)colorSpace;
+								c = colorValue != null ? new DeviceN(deviceN, colorValue) : new DeviceN(deviceN);
+							}
+							else
+							{
+								if (colorSpace is PdfSpecialCs.Indexed)
+								{
+									c = colorValue != null ? new Indexed(colorSpace, (int)colorValue[0]) : new Indexed
+										(colorSpace);
+								}
+								else
+								{
+									unknownColorSpace = true;
+								}
+							}
+						}
+					}
+					else
+					{
+						if (colorSpace is PdfSpecialCs.Pattern)
+						{
+							c = new com.itextpdf.kernel.color.Color(colorSpace, colorValue);
+						}
+						else
+						{
+							// TODO review this. at least log a warning
+							unknownColorSpace = true;
+						}
+					}
+				}
+			}
+			if (unknownColorSpace)
+			{
+				throw new PdfException("unknown.color.space");
+			}
+			return c;
 		}
 
 		public static DeviceRgb ConvertCmykToRgb(DeviceCmyk cmykColor)
@@ -176,9 +295,9 @@ namespace com.itextpdf.kernel.color
 				return false;
 			}
 			com.itextpdf.kernel.color.Color color = (com.itextpdf.kernel.color.Color)o;
-			return (colorSpace != null ? colorSpace.Equals(color.colorSpace) : color.colorSpace
-				 == null) && com.itextpdf.io.util.JavaUtil.ArraysEquals(colorValue, color.colorValue
-				);
+			return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject
+				()) : color.colorSpace == null) && com.itextpdf.io.util.JavaUtil.ArraysEquals(colorValue
+				, color.colorValue);
 		}
 
 		public override int GetHashCode()

@@ -1,5 +1,5 @@
 /*
-$Id: 6702b2aed28e7196bd6d475e6aac0f2d8c4fc53a $
+$Id: 83fe499df6179847a57fb7445f702929ebc4669f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -398,7 +398,6 @@ namespace com.itextpdf.kernel.font
 		/// <param name="range">the character range</param>
 		public virtual void AddSubsetRange(int[] range)
 		{
-			//TODO
 			if (subsetRanges == null)
 			{
 				subsetRanges = new List<int[]>();
@@ -493,14 +492,18 @@ namespace com.itextpdf.kernel.font
 		}
 
 		/// <summary>
-		/// TODO strange comments
-		/// If the embedded flag is
-		/// <see langword="false"/>
-		/// or if the font is one of the 14 built in types, it returns
-		/// <see langword="null"/>
-		/// ,
-		/// otherwise the font is read and output in a PdfStream object.
+		/// Create
+		/// <c>PdfStream</c>
+		/// based on
+		/// <paramref name="fontStreamBytes"/>
+		/// .
 		/// </summary>
+		/// <param name="fontStreamBytes">original font data, must be not null.</param>
+		/// <param name="fontStreamLengths">
+		/// array to generate
+		/// <c>Length*</c>
+		/// keys, must be not null.
+		/// </param>
 		/// <returns>
 		/// the PdfStream containing the font or
 		/// <see langword="null"/>

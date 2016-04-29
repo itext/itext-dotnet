@@ -1,5 +1,5 @@
 /*
-$Id: 996a0532789c0316230fec5b66d2be8f0957f262 $
+$Id: d0fbd5d03c0a4efa563eb45e98d120a27e2148d4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -580,8 +580,8 @@ namespace com.itextpdf.kernel.pdf
 
 			private MessageDigest md5;
 
-			private void SerObject(PdfObject obj, int level, ByteBuffer bb, Dictionary<int, int
-				> serialized)
+			private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, Dictionary
+				<int, int> serialized)
 			{
 				if (level <= 0)
 				{
@@ -593,7 +593,7 @@ namespace com.itextpdf.kernel.pdf
 					return;
 				}
 				PdfIndirectReference @ref = null;
-				ByteBuffer savedBb = null;
+				ByteBufferOutputStream savedBb = null;
 				if (obj.IsIndirectReference())
 				{
 					@ref = (PdfIndirectReference)obj;
@@ -606,7 +606,7 @@ namespace com.itextpdf.kernel.pdf
 					else
 					{
 						savedBb = bb;
-						bb = new ByteBuffer();
+						bb = new ByteBufferOutputStream();
 					}
 				}
 				if (obj.IsStream())
@@ -662,8 +662,8 @@ namespace com.itextpdf.kernel.pdf
 				}
 			}
 
-			private void SerDic(PdfDictionary dic, int level, ByteBuffer bb, Dictionary<int, 
-				int> serialized)
+			private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, Dictionary
+				<int, int> serialized)
 			{
 				bb.Append("$D");
 				if (level <= 0)
@@ -672,21 +672,21 @@ namespace com.itextpdf.kernel.pdf
 				}
 				Object[] keys = dic.KeySet().ToArray();
 				System.Array.Sort(keys);
-				for (int k = 0; k < keys.Length; ++k)
+				foreach (Object key in keys)
 				{
-					if (keys[k].Equals(PdfName.P) && (dic.Get((PdfName)keys[k]).IsIndirectReference()
-						 || dic.Get((PdfName)keys[k]).IsDictionary()) || keys[k].Equals(PdfName.Parent))
+					if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.
+						Get((PdfName)key).IsDictionary()) || key.Equals(PdfName.Parent))
 					{
 						// ignore recursive call
 						continue;
 					}
-					SerObject((PdfObject)keys[k], level, bb, serialized);
-					SerObject(dic.Get((PdfName)keys[k], false), level, bb, serialized);
+					SerObject((PdfObject)key, level, bb, serialized);
+					SerObject(dic.Get((PdfName)key, false), level, bb, serialized);
 				}
 			}
 
-			private void SerArray(PdfArray array, int level, ByteBuffer bb, Dictionary<int, int
-				> serialized)
+			private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, Dictionary
+				<int, int> serialized)
 			{
 				bb.Append("$A");
 				if (level <= 0)
@@ -709,7 +709,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					throw new PdfException(e);
 				}
-				ByteBuffer bb = new ByteBuffer();
+				ByteBufferOutputStream bb = new ByteBufferOutputStream();
 				int level = 100;
 				SerObject(str, level, bb, serialized);
 				this.b = bb.ToByteArray();
@@ -727,7 +727,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					throw new PdfException(e);
 				}
-				ByteBuffer bb = new ByteBuffer();
+				ByteBufferOutputStream bb = new ByteBufferOutputStream();
 				int level = 100;
 				SerObject(dict, level, bb, serialized);
 				this.b = bb.ToByteArray();
@@ -748,16 +748,8 @@ namespace com.itextpdf.kernel.pdf
 
 			public override bool Equals(Object obj)
 			{
-				if (!(obj is PdfWriter.ByteStore))
-				{
-					return false;
-				}
-				if (GetHashCode() != obj.GetHashCode())
-				{
-					return false;
-				}
-				return com.itextpdf.io.util.JavaUtil.ArraysEquals(b, ((PdfWriter.ByteStore)obj).b
-					);
+				return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && com.itextpdf.io.util.JavaUtil.ArraysEquals
+					(b, ((PdfWriter.ByteStore)obj).b);
 			}
 
 			public override int GetHashCode()

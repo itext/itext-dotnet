@@ -1,5 +1,5 @@
 /*
-$Id: 7e18cd704088e34cb2c5b02a8029b7b0fc609d6b $
+$Id: 5203a27d3756f47fc3391359b6876b72f31562e8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,7 +54,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 	{
 		private const long serialVersionUID = -2725455900398492836L;
 
-		public PdfSpecialCs(PdfArray pdfObject)
+		protected internal PdfSpecialCs(PdfArray pdfObject)
 			: base(pdfObject)
 		{
 		}
@@ -81,11 +81,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return 1;
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
 			}
 
 			public virtual PdfColorSpace GetBaseCs()
@@ -134,11 +129,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return 1;
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[] { 1f };
 			}
 
 			public virtual PdfColorSpace GetBaseCs()
@@ -195,16 +185,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return numOfComponents;
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				float[] defaultColorants = new float[GetNumberOfComponents()];
-				for (int i = 0; i < GetNumberOfComponents(); i++)
-				{
-					defaultColorants[i] = 1;
-				}
-				return defaultColorants;
 			}
 
 			public virtual PdfColorSpace GetBaseCs()
@@ -287,11 +267,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return 0;
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
 			}
 		}
 

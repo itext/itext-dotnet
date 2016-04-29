@@ -1,5 +1,5 @@
 /*
-$Id: 153eb937f785b8c75cf2903ce372d246a60ae9a9 $
+$Id: 35e3047b3b3fbd22a84adc0e33c5dca1eac936d2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -59,6 +59,11 @@ namespace com.itextpdf.kernel.color
 
 		public static readonly com.itextpdf.kernel.color.DeviceCmyk BLACK = new com.itextpdf.kernel.color.DeviceCmyk
 			(0, 0, 0, 100);
+
+		public DeviceCmyk()
+			: this(0f, 0f, 0f, 1f)
+		{
+		}
 
 		public DeviceCmyk(int c, int m, int y, int k)
 			: this(c / 100f, m / 100f, y / 100f, k / 100f)

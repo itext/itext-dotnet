@@ -1,5 +1,5 @@
 /*
-$Id: 7d60cbdcac8c8b7f1c2e171c9e0ea4aeeab03045 $
+$Id: e993296db321db852c84c94a58fd73d527740b83 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,7 +60,7 @@ namespace com.itextpdf.kernel.color
 		}
 
 		public DeviceRgb()
-			: this(0, 0, 0)
+			: this(0f, 0f, 0f)
 		{
 		}
 

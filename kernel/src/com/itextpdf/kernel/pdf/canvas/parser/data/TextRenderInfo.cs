@@ -1,5 +1,5 @@
 /*
-$Id: 283b09c2b842ca2c2df43a3934a9d43d7e483a78 $
+$Id: 4bfd8df152d3b1d95156c9260f50970f1ac39f93 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -507,7 +507,6 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 			float[] result = new float[2];
 			result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
 			result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
-			// TODO ! what about space char?
 			return result;
 		}
 

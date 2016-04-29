@@ -1,5 +1,5 @@
 /*
-$Id: c46d161dec4daa70296198e00e3706f6a9e58c8b $
+$Id: eab90171289e8913243333a67ecba338a15e75ca $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -148,7 +148,6 @@ namespace com.itextpdf.kernel.pdf
 			content.Put(PdfName.Dest, destination.GetPdfObject());
 		}
 
-		//@TODO implement adding actions
 		public virtual void AddAction(PdfAction action)
 		{
 			content.Put(PdfName.A, action.GetPdfObject());

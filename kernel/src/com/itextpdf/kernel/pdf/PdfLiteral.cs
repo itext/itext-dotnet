@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.pdf
 		public PdfLiteral(int size)
 			: this(new byte[size])
 		{
-			Arrays.Fill(content, unchecked((byte)32));
+			com.itextpdf.io.util.JavaUtil.Fill(content, unchecked((byte)32));
 		}
 
 		public PdfLiteral(String content)

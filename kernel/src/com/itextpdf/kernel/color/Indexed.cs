@@ -1,5 +1,5 @@
 /*
-$Id: fee24ce05fc137c7e760ddae056b4d66e2aa4b7d $
+$Id: 417aecf69f6792b0eb85dec8068e1b3ae3c7e6c8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,15 +42,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.pdf.colorspace;
 
 namespace com.itextpdf.kernel.color
 {
 	public class Indexed : Color
 	{
-		public Indexed(PdfObject pdfObject)
-			: base(pdfObject)
+		public Indexed(PdfColorSpace colorSpace)
+			: this(colorSpace, 0)
 		{
 		}
 

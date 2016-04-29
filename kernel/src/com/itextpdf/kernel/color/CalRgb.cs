@@ -1,5 +1,5 @@
 /*
-$Id: 9d953ae84fb3bc1a5d5c2a9d33fa7563de665d66 $
+$Id: c01b01d1824a50f7af0bea5e20962cff5d750cce $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,6 +48,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class CalRgb : Color
 	{
+		public CalRgb(PdfCieBasedCs.CalRgb cs)
+			: this(cs, new float[cs.GetNumberOfComponents()])
+		{
+		}
+
 		public CalRgb(PdfCieBasedCs.CalRgb cs, float[] value)
 			: base(cs, value)
 		{

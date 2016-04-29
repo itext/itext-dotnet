@@ -1,5 +1,5 @@
 /*
-$Id: 1965eb06177cde470a15df706f2c93a581983950 $
+$Id: 771f9b6f4413920fcf3c0454bd6807123afcedc8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,6 +50,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class Separation : Color
 	{
+		public Separation(PdfSpecialCs.Separation cs)
+			: this(cs, 1f)
+		{
+		}
+
 		public Separation(PdfSpecialCs.Separation cs, float value)
 			: base(cs, new float[] { value })
 		{

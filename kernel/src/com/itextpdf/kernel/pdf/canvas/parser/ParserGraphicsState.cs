@@ -128,12 +128,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser
 			}
 			com.itextpdf.kernel.geom.Path pathCopy = new com.itextpdf.kernel.geom.Path(path);
 			pathCopy.CloseAllSubpaths();
-			IClipper clipper = new DefaultClipper();
-			ClipperBridge.AddPath(clipper, clippingPath, IClipper.PolyType.SUBJECT);
-			ClipperBridge.AddPath(clipper, pathCopy, IClipper.PolyType.CLIP);
+			Clipper clipper = new Clipper();
+			ClipperBridge.AddPath(clipper, clippingPath, PolyType.SUBJECT);
+			ClipperBridge.AddPath(clipper, pathCopy, PolyType.CLIP);
 			PolyTree resultTree = new PolyTree();
-			clipper.Execute(IClipper.ClipType.INTERSECTION, resultTree, IClipper.PolyFillType
-				.NON_ZERO, ClipperBridge.GetFillType(fillingRule));
+			clipper.Execute(ClipType.INTERSECTION, resultTree, PolyFillType.NON_ZERO, ClipperBridge
+				.GetFillType(fillingRule));
 			clippingPath = ClipperBridge.ConvertToPath(resultTree);
 		}
 

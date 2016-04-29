@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "barcodes", "barcodes\barcod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "forms", "forms\forms.csproj", "{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sign", "sign\sign.csproj", "{14A163C0-0054-480D-A096-EDA51DD933EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A163C0-0054-480D-A096-EDA51DD933EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A163C0-0054-480D-A096-EDA51DD933EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A163C0-0054-480D-A096-EDA51DD933EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A163C0-0054-480D-A096-EDA51DD933EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

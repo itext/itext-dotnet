@@ -1,5 +1,5 @@
 /*
-$Id: c9a351975101191767f9258861a0153e1b69c63f $
+$Id: fb3a1ebabef9b8b67556009e71db462f67084bc8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,97 +42,68 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.IO;
-using com.itextpdf.io.image;
-using com.itextpdf.io.util;
+using com.itextpdf.io.codec;
 using com.itextpdf.kernel;
+using java.lang;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace com.itextpdf.kernel.log
 {
-	/// <summary>Image implementation for WMF, Windows Metafile.</summary>
-	public class WmfImageData : ImageData
+	/// <summary>Default implementation of the Counter interface that essentially doesn't do anything.
+	/// 	</summary>
+	public class DefaultCounter : Counter
 	{
-		private static readonly byte[] wmf = new byte[] { unchecked((byte)0xD7), unchecked(
-			(byte)0xCD) };
+		private volatile int count = 0;
 
-		/// <summary>Creates a WmfImage from a file.</summary>
-		/// <param name="fileName">pah to the file</param>
-		/// <exception cref="java.net.MalformedURLException"/>
-		public WmfImageData(String fileName)
-			: this(UrlUtil.ToURL(fileName))
+		private int level = 0;
+
+		private readonly int[] repeat = new int[] { 10000, 5000, 1000 };
+
+		private int repeat_level = 10000;
+
+		private static byte[] message = Base64.Decode("DQoNCllvdSBhcmUgdXNpbmcgaVRleHQgdW5kZXIgdGhlIEFHUEwuDQoNCklmIHR"
+			 + "oaXMgaXMgeW91ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG" + "93biBzb3VyY2UgY29kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4NClBsZWFzZSBsZ"
+			 + "XQgdXMga25vdyB3aGVyZSB0byBmaW5kIHlvdXIgc291cmNlIGNvZGUgYnkgc2Vu" + "ZGluZyBhIG1haWwgdG8gYWdwbEBpdGV4dHBkZi5jb20NCldlJ2QgYmUgaG9ub3J"
+			 + "lZCB0byBhZGQgaXQgdG8gb3VyIGxpc3Qgb2YgQUdQTCBwcm9qZWN0cyBidWlsdC" + "BvbiB0b3Agb2YgaVRleHQgb3IgaVRleHRTaGFycA0KYW5kIHdlJ2xsIGV4cGxha"
+			 + "W4gaG93IHRvIHJlbW92ZSB0aGlzIG1lc3NhZ2UgZnJvbSB5b3VyIGVycm9yIGxv" + "Z3MuDQoNCklmIHRoaXMgd2Fzbid0IHlvdXIgaW50ZW50aW9uLCB5b3UgYXJlIHB"
+			 + "yb2JhYmx5IHVzaW5nIGlUZXh0IGluIGEgbm9uLWZyZWUgZW52aXJvbm1lbnQuDQ" + "pJbiB0aGlzIGNhc2UsIHBsZWFzZSBjb250YWN0IHVzIGJ5IGZpbGxpbmcgb3V0I"
+			 + "HRoaXMgZm9ybTogaHR0cDovL2l0ZXh0cGRmLmNvbS9zYWxlcw0KSWYgeW91IGFy" + "ZSBhIGN1c3RvbWVyLCB3ZSdsbCBleHBsYWluIGhvdyB0byBpbnN0YWxsIHlvdXI"
+			 + "gbGljZW5zZSBrZXkgdG8gYXZvaWQgdGhpcyBtZXNzYWdlLg0KSWYgeW91J3JlIG" + "5vdCBhIGN1c3RvbWVyLCB3ZSdsbCBleHBsYWluIHRoZSBiZW5lZml0cyBvZiBiZ"
+			 + "WNvbWluZyBhIGN1c3RvbWVyLg0KDQo=");
+
+		public virtual Counter GetCounter(Class cls)
 		{
+			return this;
 		}
 
-		/// <summary>Creates a WmfImage from a URL.</summary>
-		/// <param name="url">URL to the file</param>
-		public WmfImageData(Uri url)
-			: base(url, ImageType.WMF)
+		public virtual void OnDocumentRead(long size)
 		{
-			byte[] imageType = ReadImageType(url);
-			if (!ImageTypeIs(imageType, wmf))
-			{
-				throw new PdfException(PdfException.IsNotWmfImage);
-			}
+			PlusOne();
 		}
 
-		/// <summary>Creates a WmfImage from a byte[].</summary>
-		/// <param name="bytes">the image bytes</param>
-		public WmfImageData(byte[] bytes)
-			: base(bytes, ImageType.WMF)
+		public virtual void OnDocumentWritten(long size)
 		{
-			byte[] imageType = ReadImageType(url);
-			if (!ImageTypeIs(imageType, wmf))
-			{
-				throw new PdfException(PdfException.IsNotWmfImage);
-			}
+			PlusOne();
 		}
 
-		private static bool ImageTypeIs(byte[] imageType, byte[] compareWith)
+		private void PlusOne()
 		{
-			for (int i = 0; i < compareWith.Length; i++)
+			if (++count > repeat_level)
 			{
-				if (imageType[i] != compareWith[i])
+				if (Version.IsAGPLVersion())
 				{
-					return false;
-				}
-			}
-			return true;
-		}
-
-		private static byte[] ReadImageType<T>(T source)
-		{
-			Stream @is = null;
-			try
-			{
-				if (source is Uri)
-				{
-					@is = ((Uri)source).OpenStream();
-				}
-				else
-				{
-					@is = new MemoryStream((byte[])source);
-				}
-				byte[] bytes = new byte[8];
-				@is.Read(bytes);
-				return bytes;
-			}
-			catch (System.IO.IOException e)
-			{
-				throw new PdfException(PdfException.IoException, e);
-			}
-			finally
-			{
-				if (@is != null)
-				{
-					try
+					level++;
+					if (level == 1)
 					{
-						@is.Close();
+						repeat_level = repeat[1];
 					}
-					catch (System.IO.IOException)
+					else
 					{
+						repeat_level = repeat[2];
 					}
+					System.Console.Out.WriteLine(com.itextpdf.io.util.JavaUtil.GetStringForBytes(message
+						));
 				}
+				count = 0;
 			}
 		}
 	}

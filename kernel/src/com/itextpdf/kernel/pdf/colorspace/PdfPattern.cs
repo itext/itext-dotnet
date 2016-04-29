@@ -1,5 +1,5 @@
 /*
-$Id: 077f01805e3864d44e591bd778d9806eb4b19605 $
+$Id: 2b7aabd502739397ab634690460b360304934c25 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,7 +52,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 	{
 		private const long serialVersionUID = -6771280634868639993L;
 
-		public PdfPattern(PdfDictionary pdfObject)
+		protected internal PdfPattern(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
 		}

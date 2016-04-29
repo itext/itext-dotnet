@@ -415,7 +415,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.util
 							// to flush the first whitespace, then treat the current whitespace as the first potential
 							// character for the end of stream check.  Note that we don't increment 'found' here.
 							baos.Write(accumulated.ToArray());
-							accumulated.Reset();
+							accumulated.JReset();
 							accumulated.Write(ch);
 						}
 						else
@@ -435,14 +435,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.util
 										return tmp;
 									}
 									baos.Write(accumulated.ToArray());
-									accumulated.Reset();
+									accumulated.JReset();
 									baos.Write(ch);
 									found = 0;
 								}
 								else
 								{
 									baos.Write(accumulated.ToArray());
-									accumulated.Reset();
+									accumulated.JReset();
 									baos.Write(ch);
 									found = 0;
 								}

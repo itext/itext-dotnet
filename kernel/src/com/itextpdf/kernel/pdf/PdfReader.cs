@@ -1,5 +1,5 @@
 /*
-$Id: f99464b0c9a3c6f624d957fea615639f7f5b18a1 $
+$Id: 106e7b96d27a48b64731ec0d23a05a5a00e6921e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,6 +50,7 @@ using com.itextpdf.io.log;
 using com.itextpdf.io.source;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.pdf.filters;
+using java.io;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -74,6 +75,8 @@ namespace com.itextpdf.kernel.pdf
 		private bool unethicalReading;
 
 		private PdfIndirectReference currentIndirectReference;
+
+		private String sourcePath;
 
 		protected internal PdfTokenizer tokens;
 
@@ -110,6 +113,7 @@ namespace com.itextpdf.kernel.pdf
 		public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties)
 		{
 			//indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
+			// For internal usage only
 			// here we store only the pdfVersion that is written in the document's header,
 			// however it could differ from the actual pdf version that could be written in document's catalog
 			this.properties = properties;
@@ -153,6 +157,7 @@ namespace com.itextpdf.kernel.pdf
 			: this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename
 				), properties)
 		{
+			this.sourcePath = filename;
 		}
 
 		/// <summary>Reads and parses a PDF document.</summary>
@@ -412,9 +417,9 @@ namespace com.itextpdf.kernel.pdf
 				IFilterHandler filterHandler = filterHandlers[filterName];
 				if (filterHandler == null)
 				{
-					filterHandler = new DoNothingFilter();
+					throw new PdfException(PdfException.Filter1IsNotSupported).SetMessageParams(filterName
+						);
 				}
-				//throw new PdfException(PdfException.Filter1IsNotSupported).setMessageParams(filterName); //TODO replace with some kind of UnsupportedException
 				PdfDictionary decodeParams;
 				if (j < dp.Size())
 				{
@@ -438,7 +443,6 @@ namespace com.itextpdf.kernel.pdf
 				}
 				else
 				{
-					//TODO replace with some kind of UnsupportedException
 					decodeParams = null;
 				}
 				b = filterHandler.Decode(b, filterName, decodeParams, streamDictionary);
@@ -538,8 +542,11 @@ namespace com.itextpdf.kernel.pdf
 			{
 				ReadXref();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfReader)
+					);
+				logger.Error(LogMessageConstant.XREF_ERROR, ex);
 				RebuildXref();
 			}
 			ReadDecryptObj();
@@ -939,6 +946,11 @@ namespace com.itextpdf.kernel.pdf
 				tokens.Seek(startxref);
 				trailer2 = ReadXrefSection();
 			}
+			int xrefSize = trailer.GetAsInt(PdfName.Size);
+			if (xrefSize == null || xrefSize != pdfDocument.GetXref().Size())
+			{
+				throw new PdfException(PdfException.InvalidXrefTable);
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -950,7 +962,6 @@ namespace com.itextpdf.kernel.pdf
 				tokens.ThrowError(PdfException.XrefSubsectionNotFound);
 			}
 			PdfXrefTable xref = pdfDocument.GetXref();
-			int end = 0;
 			while (true)
 			{
 				tokens.NextValidToken();
@@ -969,7 +980,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					tokens.ThrowError(PdfException.NumberOfEntriesInThisXrefSubsectionNotFound);
 				}
-				end = tokens.GetIntValue() + start;
+				int end = tokens.GetIntValue() + start;
 				for (int num = start; num < end; num++)
 				{
 					tokens.NextValidToken();
@@ -1024,11 +1035,6 @@ namespace com.itextpdf.kernel.pdf
 				}
 			}
 			PdfDictionary trailer = (PdfDictionary)ReadObject(false);
-			PdfNumber xrefSize = (PdfNumber)trailer.Get(PdfName.Size);
-			if (xrefSize == null || (xrefSize.IntValue() != end && end > 0))
-			{
-				throw new PdfException(PdfException.InvalidXrefSection);
-			}
 			PdfObject xrs = trailer.Get(PdfName.XRefStm);
 			if (xrs != null && xrs.GetType() == PdfObject.NUMBER)
 			{
@@ -1500,6 +1506,36 @@ namespace com.itextpdf.kernel.pdf
 				}
 				pdfNumber.SetValue(streamLength);
 				pdfStream.UpdateLength(streamLength);
+			}
+		}
+
+		/// <summary>This method is invoked while deserialization</summary>
+		/// <exception cref="System.IO.IOException"/>
+		/// <exception cref="java.lang.ClassNotFoundException"/>
+		private void ReadObject(ObjectInputStream @in)
+		{
+			@in.DefaultReadObject();
+			if (sourcePath != null && tokens == null)
+			{
+				tokens = GetOffsetTokeniser(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource
+					(sourcePath));
+			}
+		}
+
+		/// <summary>This method is invoked while serialization</summary>
+		/// <exception cref="System.IO.IOException"/>
+		private void WriteObject(ObjectOutputStream @out)
+		{
+			if (sourcePath != null)
+			{
+				PdfTokenizer tempTokens = tokens;
+				tokens = null;
+				@out.DefaultWriteObject();
+				tokens = tempTokens;
+			}
+			else
+			{
+				@out.DefaultWriteObject();
 			}
 		}
 

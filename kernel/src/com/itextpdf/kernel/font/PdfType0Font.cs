@@ -1,5 +1,5 @@
 /*
-$Id: 317c378780fcd98af811ae76d47b020d9425ae59 $
+$Id: 607849718264edeb9a8fad8fba2e4974c7a82be8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,6 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using com.itextpdf.io;
@@ -81,7 +82,6 @@ namespace com.itextpdf.kernel.font
 		internal PdfType0Font(TrueTypeFont ttf, String cmap)
 			: base()
 		{
-			// TODO HashSet will be enough
 			if (!cmap.Equals(PdfEncodings.IDENTITY_H) && !cmap.Equals(PdfEncodings.IDENTITY_V
 				))
 			{
@@ -115,7 +115,7 @@ namespace com.itextpdf.kernel.font
 		internal PdfType0Font(CidFont font, String cmap)
 			: base()
 		{
-			//note Make this constructor protected. Only FontFactory (kernel level) will
+			// Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
 			// be able to create Type0 font based on predefined font.
 			// Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
 			// There is no typography features in CJK fonts.
@@ -171,7 +171,7 @@ namespace com.itextpdf.kernel.font
 				{
 					try
 					{
-						fontProgram = FontFactory.CreateFont(cidFontName);
+						fontProgram = FontProgramFactory.CreateFont(cidFontName);
 						cmapEncoding = new CMapEncoding(cmap, uniMap);
 						embedded = false;
 					}
@@ -236,7 +236,6 @@ namespace com.itextpdf.kernel.font
 
 		public override byte[] ConvertToBytes(String text)
 		{
-			//TODO different with type0 and type2 could be removed after simplifying longTag
 			int len = text.Length;
 			char[] glyphs = new char[len];
 			int i = 0;
@@ -379,7 +378,6 @@ namespace com.itextpdf.kernel.font
 		public override GlyphLine CreateGlyphLine(String content)
 		{
 			IList<Glyph> glyphs = new List<Glyph>();
-			//TODO different with type0 and type2 could be removed after simplifying longTag
 			if (cidFontType == CID_FONT_TYPE_0)
 			{
 				int len = content.Length;
@@ -729,7 +727,16 @@ namespace com.itextpdf.kernel.font
 		/// <returns>the stream representing this CMap or <CODE>null</CODE></returns>
 		public virtual PdfStream GetToUnicode(Object[] metrics)
 		{
-			if (metrics.Length == 0)
+			List<int> unicodeGlyphs = new List<int>(metrics.Length);
+			for (int i = 0; i < metrics.Length; i++)
+			{
+				int[] metric = (int[])metrics[i];
+				if (fontProgram.GetGlyphByCode(metric[0]).GetChars() != null)
+				{
+					unicodeGlyphs.Add(metric[0]);
+				}
+			}
+			if (unicodeGlyphs.Count == 0)
 			{
 				return null;
 			}
@@ -739,7 +746,7 @@ namespace com.itextpdf.kernel.font
 				 + "/CMapType 2 def\n" + "1 begincodespacerange\n" + "<0000><FFFF>\n" + "endcodespacerange\n"
 				);
 			int size = 0;
-			for (int k = 0; k < metrics.Length; ++k)
+			for (int k = 0; k < unicodeGlyphs.Count; ++k)
 			{
 				if (size == 0)
 				{
@@ -747,13 +754,12 @@ namespace com.itextpdf.kernel.font
 					{
 						buf.Append("endbfrange\n");
 					}
-					size = Math.Min(100, metrics.Length - k);
+					size = Math.Min(100, unicodeGlyphs.Count - k);
 					buf.Append(size).Append(" beginbfrange\n");
 				}
 				--size;
-				int[] metric = (int[])metrics[k];
-				String fromTo = CMapContentParser.ToHex(metric[0]);
-				Glyph glyph = fontProgram.GetGlyphByCode(metric[0]);
+				String fromTo = CMapContentParser.ToHex(unicodeGlyphs[k]);
+				Glyph glyph = fontProgram.GetGlyphByCode(unicodeGlyphs[k]);
 				if (glyph.GetChars() != null)
 				{
 					StringBuilder uni = new StringBuilder(glyph.GetChars().Length);
@@ -869,7 +875,7 @@ namespace com.itextpdf.kernel.font
 			}
 		}
 
-		private class MetricComparator : Comparator<int[]>
+		private class MetricComparator : IComparer<int[]>
 		{
 			/// <summary>The method used to sort the metrics array.</summary>
 			/// <param name="o1">the first element</param>

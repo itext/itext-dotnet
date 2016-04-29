@@ -1,5 +1,5 @@
 /*
-$Id: 0dd009fff11b0f765ba55e010fcb4cb7646ffd45 $
+$Id: ebbf223f4aae081da67c8b907379c76f412eafde $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -46,7 +46,6 @@ using com.itextpdf.kernel.color;
 using com.itextpdf.kernel.font;
 using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.colorspace;
 using com.itextpdf.kernel.pdf.extgstate;
 
 namespace com.itextpdf.kernel.pdf.canvas
@@ -66,19 +65,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// "a matrix that transforms default user coordinates to device coordinates".
 		/// </remarks>
 		private Matrix ctm = new Matrix();
-
-		/// <summary>
-		/// Those two fields are currently used only in
-		/// <c>PdfContentStreamProcessor</c>
-		/// , which in it's turn doesn't work with
-		/// other than device color spaces (RGB, CMYK, GRAY). Therefore for simplicity, if current color space is not a device color space
-		/// it will have a
-		/// <see langword="null"/>
-		/// value.
-		/// </summary>
-		private PdfColorSpace strokeColorSpace = new PdfDeviceCs.Gray();
-
-		private PdfColorSpace fillColorSpace = new PdfDeviceCs.Gray();
 
 		private Color strokeColor = DeviceGray.BLACK;
 
@@ -204,26 +190,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		public virtual void UpdateCtm(Matrix newCtm)
 		{
 			ctm = newCtm.Multiply(ctm);
-		}
-
-		public virtual PdfColorSpace GetStrokeColorSpace()
-		{
-			return strokeColorSpace;
-		}
-
-		public virtual void SetStrokeColorSpace(PdfColorSpace strokeColorSpace)
-		{
-			this.strokeColorSpace = strokeColorSpace;
-		}
-
-		public virtual PdfColorSpace GetFillColorSpace()
-		{
-			return fillColorSpace;
-		}
-
-		public virtual void SetFillColorSpace(PdfColorSpace fillColorSpace)
-		{
-			this.fillColorSpace = fillColorSpace;
 		}
 
 		public virtual Color GetFillColor()
@@ -645,8 +611,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 		private void CopyFrom(com.itextpdf.kernel.pdf.canvas.CanvasGraphicsState source)
 		{
 			this.ctm = source.ctm;
-			this.strokeColorSpace = source.strokeColorSpace;
-			this.fillColorSpace = source.fillColorSpace;
 			this.strokeColor = source.strokeColor;
 			this.fillColor = source.fillColor;
 			this.charSpacing = source.charSpacing;

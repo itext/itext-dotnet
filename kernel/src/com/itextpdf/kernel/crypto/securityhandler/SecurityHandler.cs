@@ -1,5 +1,5 @@
 /*
-$Id: e9611cf18eb3ea0b2368b5b6038cdc120f77bf26 $
+$Id: d054ffe042203542349f0c931a75a79be2db2af1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -77,7 +77,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		/// <summary>Work area to prepare the object/generation bytes</summary>
 		protected internal byte[] extra = new byte[5];
 
-		public SecurityHandler()
+		protected internal SecurityHandler()
 		{
 			try
 			{

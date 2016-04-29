@@ -28,6 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
+using System.Globalization;
 using java.lang;
 
 namespace com.itextpdf.kernel.xmp

@@ -1,5 +1,5 @@
 /*
-$Id: c1170c3dbaa599e06b9b064c4d0867be4e25f3d9 $
+$Id: 64161294f378f3a0ed08987e6fa0808123051873 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -301,7 +301,7 @@ namespace com.itextpdf.kernel.pdf
 				();
 		}
 
-		// TODO: TreeSet...
+		// TODO: TreeSet or HashSet enough?
 		public virtual PdfDictionary GetResource(PdfName pdfName)
 		{
 			return GetPdfObject().GetAsDictionary(pdfName);
@@ -450,7 +450,7 @@ namespace com.itextpdf.kernel.pdf
 		//    }
 		private void CheckAndResolveCircularReferences(PdfObject pdfObject)
 		{
-			// TODO consider the situation when an XObject references the resources of the first page.
+			// Consider the situation when an XObject references the resources of the first page.
 			// We add this XObject to the first page, there is no need to resolve any circular references
 			// and then we flush this object and try to add it to the second page.
 			// Now there are circular references and we cannot resolve them because the object is flushed

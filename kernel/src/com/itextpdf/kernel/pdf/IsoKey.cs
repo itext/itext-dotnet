@@ -1,5 +1,5 @@
 /*
-$Id: c4e831f6214512c1139a87d7779ca06f47c18fc5 $
+$Id: ad663ec30aded1298aecda59ce9f4676a5684616 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -47,7 +47,6 @@ namespace com.itextpdf.kernel.pdf
 	public enum IsoKey
 	{
 		CANVAS_STACK,
-		COLOR_SPACE,
 		DRAWMODE_FILL,
 		DRAWMODE_FILL_STROKE,
 		DRAWMODE_STROKE,

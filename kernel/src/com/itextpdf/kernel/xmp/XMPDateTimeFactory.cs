@@ -28,6 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
+using System.Globalization;
 using com.itextpdf.kernel.xmp.impl;
 
 namespace com.itextpdf.kernel.xmp
@@ -69,7 +70,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <param name="month">
 		/// months from 1 to 12<br />
 		/// <em>Note:</em> Remember that the month in
-		/// <see cref="java.util.Calendar"/>
+		/// <see cref="System.Globalization.Calendar"/>
 		/// is defined from 0 to 11.
 		/// </param>
 		/// <param name="day">days</param>
@@ -88,7 +89,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <param name="month">
 		/// months from 1 to 12<br />
 		/// <em>Note:</em> Remember that the month in
-		/// <see cref="java.util.Calendar"/>
+		/// <see cref="System.Globalization.Calendar"/>
 		/// is defined from 0 to 11.
 		/// </param>
 		/// <param name="day">days</param>

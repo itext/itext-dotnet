@@ -1,5 +1,5 @@
 /*
-$Id: df89b98706db2679de381b0cb146f5759be6464e $
+$Id: d147df7f78ab6111f87da6ba8c9681431d8a43d9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,50 +42,60 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using java.lang;
 
-namespace com.itextpdf.kernel.color
+namespace com.itextpdf.kernel.log
 {
-	public class DeviceGray : Color
+	/// <summary>Factory that creates a counter for every reader or writer class.</summary>
+	/// <remarks>
+	/// Factory that creates a counter for every reader or writer class.
+	/// You can implement your own counter and declare it like this:
+	/// <code>CounterFactory.getInstance().setCounter(new SysoCounter());</code>
+	/// SysoCounter is just an example of a Counter implementation.
+	/// It writes info about files being read and written to the System.out.
+	/// <p>
+	/// This functionality can be used to create metrics in a SaaS context.
+	/// </remarks>
+	public class CounterFactory
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceGray WHITE = new com.itextpdf.kernel.color.DeviceGray
-			(1f);
+		/// <summary>The singleton instance.</summary>
+		private static com.itextpdf.kernel.log.CounterFactory instance;
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray GRAY = new com.itextpdf.kernel.color.DeviceGray
-			(.5f);
+		/// <summary>The current counter implementation.</summary>
+		private Counter counter = new DefaultCounter();
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray BLACK = new com.itextpdf.kernel.color.DeviceGray
-			();
+		static CounterFactory()
+		{
+			instance = new com.itextpdf.kernel.log.CounterFactory();
+		}
 
-		public DeviceGray(float value)
-			: base(new PdfDeviceCs.Gray(), new float[] { value })
+		/// <summary>The empty constructor.</summary>
+		private CounterFactory()
 		{
 		}
 
-		public DeviceGray()
-			: this(0f)
+		/// <summary>Returns the singleton instance of the factory.</summary>
+		public static com.itextpdf.kernel.log.CounterFactory GetInstance()
 		{
+			return instance;
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeLighter(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
+		/// <summary>Returns a counter factory.</summary>
+		public static Counter GetCounter(Class cls)
 		{
-			float v = grayColor.GetColorValue()[0];
-			if (v == 0f)
-			{
-				return new com.itextpdf.kernel.color.DeviceGray(0.3f);
-			}
-			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			return instance.counter.GetCounter(cls);
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeDarker(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
+		/// <summary>Getter for the counter.</summary>
+		public virtual Counter GetCounter()
 		{
-			float v = grayColor.GetColorValue()[0];
-			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			return counter;
+		}
+
+		/// <summary>Setter for the counter.</summary>
+		public virtual void SetCounter(Counter counter)
+		{
+			this.counter = counter;
 		}
 	}
 }

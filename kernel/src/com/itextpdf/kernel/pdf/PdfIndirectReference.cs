@@ -1,5 +1,5 @@
 /*
-$Id: 5ab3f30fd04783f83726b6986c0e4a82472cf7cb $
+$Id: c7506ee0286cbddf4c8bb77aae95184362c5b7d9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -170,19 +170,19 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>Gets refersTo object offset in a document.</summary>
-		/// <returns>object offset in a document. If refersTo object is in object stream then 0.
+		/// <returns>object offset in a document. If refersTo object is in object stream then -1.
 		/// 	</returns>
 		public virtual long GetOffset()
 		{
-			return objectStreamNumber == 0 ? offsetOrIndex : 0;
+			return objectStreamNumber == 0 ? offsetOrIndex : -1;
 		}
 
 		/// <summary>Gets refersTo object index in the object stream.</summary>
-		/// <returns>object index in a document. If refersTo object is not in object stream then 0.
+		/// <returns>object index in a document. If refersTo object is not in object stream then -1.
 		/// 	</returns>
 		public virtual int GetIndex()
 		{
-			return objectStreamNumber == 0 ? 0 : (int)offsetOrIndex;
+			return objectStreamNumber == 0 ? -1 : (int)offsetOrIndex;
 		}
 
 		public override bool Equals(Object o)
@@ -348,7 +348,6 @@ namespace com.itextpdf.kernel.pdf
 
 		internal virtual void FixOffset(long offset)
 		{
-			//TODO log invalid offsets
 			if (!IsFree())
 			{
 				this.offsetOrIndex = offset;

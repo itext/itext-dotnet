@@ -83,11 +83,11 @@ namespace com.itextpdf.kernel.pdf
 		{
 			ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream
 				().GetOutputStream();
-			prevOutputStream.Reset();
+			prevOutputStream.JReset();
 			InitOutputStream(prevOutputStream);
 			ByteArrayOutputStream prevIndexStream = ((ByteArrayOutputStream)indexStream.GetOutputStream
 				());
-			prevIndexStream.Reset();
+			prevIndexStream.JReset();
 			indexStream = new PdfOutputStream(prevIndexStream);
 		}
 

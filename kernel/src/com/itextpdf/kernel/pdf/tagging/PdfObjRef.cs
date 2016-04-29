@@ -1,5 +1,5 @@
 /*
-$Id: 8acc2bf5ead8e3aa0fc80e6d354f5a0a9f1b45df $
+$Id: 3022b54d53b3bb89523b4d77993c2c8360bbe570 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -61,10 +61,12 @@ namespace com.itextpdf.kernel.pdf.tagging
 		{
 			PdfDictionary parentObject = parent.GetPdfObject();
 			EnsureObjectIsAddedToDocument(parentObject);
+			PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
+			annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber(doc.GetNextStructParentIndex
+				()));
 			PdfDictionary dict = (PdfDictionary)GetPdfObject();
 			dict.Put(PdfName.Type, PdfName.OBJR);
-			dict.Put(PdfName.Obj, annot.Tag(parentObject.GetIndirectReference().GetDocument()
-				).GetPdfObject());
+			dict.Put(PdfName.Obj, annot.GetPdfObject());
 		}
 
 		public override int GetMcid()

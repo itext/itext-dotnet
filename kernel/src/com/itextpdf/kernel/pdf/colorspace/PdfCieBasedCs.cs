@@ -1,5 +1,5 @@
 /*
-$Id: 28e6533670796ab3e8db8c6d3a643b728f4743b6 $
+$Id: 94cc5c707710e794c3a013af826fc07bfec7fab1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -59,7 +59,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			return true;
 		}
 
-		public PdfCieBasedCs(PdfArray pdfObject)
+		protected internal PdfCieBasedCs(PdfArray pdfObject)
 			: base(pdfObject)
 		{
 		}
@@ -113,11 +113,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			{
 				return 1;
 			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
-			}
 		}
 
 		public class CalRgb : PdfCieBasedCs
@@ -130,7 +125,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			}
 
 			public CalRgb(float[] whitePoint)
-				: this(new PdfArray(new _List_120()))
+				: this(new PdfArray(new _List_115()))
 			{
 				if (whitePoint == null || whitePoint.Length != 3)
 				{
@@ -140,9 +135,9 @@ namespace com.itextpdf.kernel.pdf.colorspace
 				d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
 			}
 
-			private sealed class _List_120 : List<PdfObject>
+			private sealed class _List_115 : List<PdfObject>
 			{
-				public _List_120()
+				public _List_115()
 				{
 					{
 						this.Add(PdfName.CalRGB);
@@ -174,11 +169,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			{
 				return 3;
 			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
-			}
 		}
 
 		public class Lab : PdfCieBasedCs
@@ -191,7 +181,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			}
 
 			public Lab(float[] whitePoint)
-				: this(new PdfArray(new _List_161()))
+				: this(new PdfArray(new _List_151()))
 			{
 				if (whitePoint == null || whitePoint.Length != 3)
 				{
@@ -201,9 +191,9 @@ namespace com.itextpdf.kernel.pdf.colorspace
 				d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
 			}
 
-			private sealed class _List_161 : List<PdfObject>
+			private sealed class _List_151 : List<PdfObject>
 			{
-				public _List_161()
+				public _List_151()
 				{
 					{
 						this.Add(PdfName.Lab);
@@ -230,11 +220,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			{
 				return 3;
 			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
-			}
 		}
 
 		public class IccBased : PdfCieBasedCs
@@ -247,13 +232,13 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			}
 
 			public IccBased(Stream iccStream)
-				: this(new PdfArray(new _List_200(iccStream)))
+				: this(new PdfArray(new _List_185(iccStream)))
 			{
 			}
 
-			private sealed class _List_200 : List<PdfObject>
+			private sealed class _List_185 : List<PdfObject>
 			{
-				public _List_200(Stream iccStream)
+				public _List_185(Stream iccStream)
 				{
 					this.iccStream = iccStream;
 					{
@@ -266,13 +251,13 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			}
 
 			public IccBased(Stream iccStream, float[] range)
-				: this(new PdfArray(new _List_207(iccStream, range)))
+				: this(new PdfArray(new _List_192(iccStream, range)))
 			{
 			}
 
-			private sealed class _List_207 : List<PdfObject>
+			private sealed class _List_192 : List<PdfObject>
 			{
-				public _List_207(Stream iccStream, float[] range)
+				public _List_192(Stream iccStream, float[] range)
 				{
 					this.iccStream = iccStream;
 					this.range = range;
@@ -290,11 +275,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return ((PdfArray)GetPdfObject()).GetAsStream(1).GetAsInt(PdfName.N);
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
 			}
 
 			public static PdfStream GetIccProfileStream(Stream iccStream)

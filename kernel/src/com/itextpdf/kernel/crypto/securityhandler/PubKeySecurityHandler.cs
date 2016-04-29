@@ -1,5 +1,5 @@
 /*
-$Id: 2a97a479632ade6d33ce55babe9e5656077f7f8c $
+$Id: 5ef5296fad5c6d85277aa5d4c7ac3f181a7e0444 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -70,7 +70,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 
 		private byte[] seed = new byte[SEED_LENGTH];
 
-		public PubKeySecurityHandler()
+		protected internal PubKeySecurityHandler()
 		{
 			KeyGenerator key;
 			try

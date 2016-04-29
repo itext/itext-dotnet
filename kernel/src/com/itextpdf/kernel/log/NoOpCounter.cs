@@ -1,5 +1,5 @@
 /*
-$Id: df89b98706db2679de381b0cb146f5759be6464e $
+$Id: cf01172bdbff8c51a0f09083cfbeb0fae4201ba7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,50 +42,24 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using java.lang;
 
-namespace com.itextpdf.kernel.color
+namespace com.itextpdf.kernel.log
 {
-	public class DeviceGray : Color
+	/// <summary>Implementation of the Counter interface that doesn't do anything.</summary>
+	public class NoOpCounter : Counter
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceGray WHITE = new com.itextpdf.kernel.color.DeviceGray
-			(1f);
+		public virtual Counter GetCounter(Class cls)
+		{
+			return this;
+		}
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray GRAY = new com.itextpdf.kernel.color.DeviceGray
-			(.5f);
-
-		public static readonly com.itextpdf.kernel.color.DeviceGray BLACK = new com.itextpdf.kernel.color.DeviceGray
-			();
-
-		public DeviceGray(float value)
-			: base(new PdfDeviceCs.Gray(), new float[] { value })
+		public virtual void OnDocumentRead(long size)
 		{
 		}
 
-		public DeviceGray()
-			: this(0f)
+		public virtual void OnDocumentWritten(long size)
 		{
-		}
-
-		public static com.itextpdf.kernel.color.DeviceGray MakeLighter(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			if (v == 0f)
-			{
-				return new com.itextpdf.kernel.color.DeviceGray(0.3f);
-			}
-			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
-		}
-
-		public static com.itextpdf.kernel.color.DeviceGray MakeDarker(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
 		}
 	}
 }

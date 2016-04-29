@@ -29,6 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
+using System.Globalization;
 using com.itextpdf.kernel.xmp;
 using com.itextpdf.kernel.xmp.impl.xpath;
 using com.itextpdf.kernel.xmp.options;
@@ -862,7 +863,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			return (Calendar)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, java.util.Calendar, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, com.itextpdf.kernel.xmp.options.PropertyOptions)
 		/// 	"/>
 		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar
@@ -871,7 +872,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, java.util.Calendar)
+		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar)
 		/// 	"/>
 		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar

@@ -1,5 +1,5 @@
 /*
-$Id: 0dd31819044f353b14beb9a1b8d406a6562b9a62 $
+$Id: 2dfed4919235b9cdd7bb4bd4161e5fb2485b9644 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -174,16 +174,6 @@ namespace com.itextpdf.kernel.pdf
 		{
 			PdfAction.SetAdditionalAction(this, key, action);
 			return this;
-		}
-
-		/// <summary>This flag determines if Outline tree of the document has been built via calling getOutlines method.
-		/// 	</summary>
-		/// <remarks>This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
-		/// 	</remarks>
-		/// <returns>state of outline mode.</returns>
-		public virtual bool IsOutlineMode()
-		{
-			return outlineMode;
 		}
 
 		/// <summary>This method sets a page mode of the document.</summary>
@@ -473,6 +463,16 @@ namespace com.itextpdf.kernel.pdf
 		internal virtual bool HasOutlines()
 		{
 			return GetPdfObject().ContainsKey(PdfName.Outlines);
+		}
+
+		/// <summary>This flag determines if Outline tree of the document has been built via calling getOutlines method.
+		/// 	</summary>
+		/// <remarks>This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
+		/// 	</remarks>
+		/// <returns>state of outline mode.</returns>
+		internal virtual bool IsOutlineMode()
+		{
+			return outlineMode;
 		}
 
 		/// <summary>This method removes all outlines associated with a given page</summary>

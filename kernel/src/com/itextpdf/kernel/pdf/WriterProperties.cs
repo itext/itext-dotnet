@@ -1,5 +1,5 @@
 /*
-$Id: 38c0b8cf28ba3700846e639e45e89a6e6efe0fdb $
+$Id: dbf87f777b907fc983256617e07443369c806402 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -64,6 +64,8 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal bool debugMode;
 
+		protected internal bool addXmpMetadata;
+
 		protected internal PdfVersion pdfVersion;
 
 		protected internal EncryptionProperties encryptionProperties;
@@ -110,6 +112,22 @@ namespace com.itextpdf.kernel.pdf
 		public virtual com.itextpdf.kernel.pdf.WriterProperties UseSmartMode()
 		{
 			this.smartMode = true;
+			return this;
+		}
+
+		/// <summary>
+		/// If true, default XMPMetadata based on
+		/// <see cref="PdfDocumentInfo"/>
+		/// will be added.
+		/// </summary>
+		/// <returns>
+		/// this
+		/// <c>WriterProperties</c>
+		/// instance
+		/// </returns>
+		public virtual com.itextpdf.kernel.pdf.WriterProperties AddXmpMetadata()
+		{
+			this.addXmpMetadata = true;
 			return this;
 		}
 

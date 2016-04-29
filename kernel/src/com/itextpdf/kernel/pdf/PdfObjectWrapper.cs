@@ -1,5 +1,5 @@
 /*
-$Id: e790b89d3970e67299f2b075ff4b9c1b68e2448b $
+$Id: 117361b2769afa0b2d5d59cf0719d944f8f390ac $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,7 +53,7 @@ namespace com.itextpdf.kernel.pdf
 
 		private T pdfObject = null;
 
-		public PdfObjectWrapper(T pdfObject)
+		protected internal PdfObjectWrapper(T pdfObject)
 		{
 			this.pdfObject = pdfObject;
 			if (IsWrappedObjectMustBeIndirect())

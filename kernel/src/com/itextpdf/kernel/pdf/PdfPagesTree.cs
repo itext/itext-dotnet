@@ -1,5 +1,5 @@
 /*
-$Id: 919bd658d5db397a1c6ac4f0e064e0e634ad53b3 $
+$Id: 627dece35963dcbcf671890e962127fe4f03000c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,6 +44,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using com.itextpdf.io;
+using com.itextpdf.io.log;
 using com.itextpdf.kernel;
 
 namespace com.itextpdf.kernel.pdf
@@ -283,7 +285,11 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfPage RemovePage(int pageNum)
 		{
 			PdfPage pdfPage = GetPage(pageNum);
-			//TODO log removing flushed page
+			if (pdfPage.IsFlushed())
+			{
+				Logger logger = LoggerFactory.GetLogger(typeof(PdfPage));
+				logger.Warn(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+			}
 			if (InternalRemovePage(--pageNum))
 			{
 				return pdfPage;

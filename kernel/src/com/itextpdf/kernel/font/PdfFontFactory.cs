@@ -1,5 +1,5 @@
 /*
-$Id: cbc19224d771e6e7d580f02cae3995e8c18537f2 $
+$Id: 99631a528fcd1032c8fc325553ceff6e0f98edc4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -116,7 +116,7 @@ namespace com.itextpdf.kernel.font
 		public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool
 			 embedded, bool cached)
 		{
-			FontProgram fontProgram = FontFactory.CreateFont(ttc, ttcIndex, cached);
+			FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -124,7 +124,8 @@ namespace com.itextpdf.kernel.font
 		public static PdfFont CreateTtcFont(String ttcPath, int ttcIndex, String encoding
 			, bool embedded, bool cached)
 		{
-			FontProgram fontProgram = FontFactory.CreateFont(ttcPath, ttcIndex, cached);
+			FontProgram fontProgram = FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached
+				);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -137,7 +138,7 @@ namespace com.itextpdf.kernel.font
 		/// <exception cref="System.IO.IOException"/>
 		public static PdfFont CreateFont(String path, String encoding, bool embedded)
 		{
-			FontProgram fontProgram = FontFactory.CreateFont(path);
+			FontProgram fontProgram = FontProgramFactory.CreateFont(path);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -225,7 +226,7 @@ namespace com.itextpdf.kernel.font
 		public static PdfFont CreateFont(byte[] font, String encoding, bool embedded, bool
 			 cached)
 		{
-			FontProgram fontProgram = FontFactory.CreateFont(null, font, cached);
+			FontProgram fontProgram = FontProgramFactory.CreateFont(null, font, cached);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -239,7 +240,8 @@ namespace com.itextpdf.kernel.font
 		public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded
 			, int style, bool cached)
 		{
-			FontProgram fontProgram = FontFactory.CreateRegisteredFont(font, style, cached);
+			FontProgram fontProgram = FontProgramFactory.CreateRegisteredFont(font, style, cached
+				);
 			return CreateFont(fontProgram, encoding, embedded);
 		}
 
@@ -284,7 +286,7 @@ namespace com.itextpdf.kernel.font
 		public static void RegisterFamily(String familyName, String fullName, String path
 			)
 		{
-			FontFactory.RegisterFamily(familyName, fullName, path);
+			FontProgramFactory.RegisterFontFamily(familyName, fullName, path);
 		}
 
 		/// <summary>Register a ttf- or a ttc-file.</summary>
@@ -299,7 +301,7 @@ namespace com.itextpdf.kernel.font
 		/// <param name="alias">the alias you want to use for the font</param>
 		public static void Register(String path, String alias)
 		{
-			FontFactory.Register(path, alias);
+			FontProgramFactory.RegisterFont(path, alias);
 		}
 
 		/// <summary>Register all the fonts in a directory.</summary>
@@ -307,7 +309,7 @@ namespace com.itextpdf.kernel.font
 		/// <returns>the number of fonts registered</returns>
 		public static int RegisterDirectory(String dir)
 		{
-			return FontFactory.RegisterDirectory(dir);
+			return FontProgramFactory.RegisterFontDirectory(dir);
 		}
 
 		/// <summary>Register fonts in some probable directories.</summary>
@@ -318,21 +320,21 @@ namespace com.itextpdf.kernel.font
 		/// <returns>the number of fonts registered</returns>
 		public static int RegisterSystemDirectories()
 		{
-			return FontFactory.RegisterSystemDirectories();
+			return FontProgramFactory.RegisterSystemFontDirectories();
 		}
 
 		/// <summary>Gets a set of registered font names.</summary>
 		/// <returns>a set of registered fonts</returns>
 		public static ICollection<String> GetRegisteredFonts()
 		{
-			return FontFactory.GetRegisteredFonts();
+			return FontProgramFactory.GetRegisteredFonts();
 		}
 
 		/// <summary>Gets a set of registered font names.</summary>
 		/// <returns>a set of registered font families</returns>
 		public static ICollection<String> GetRegisteredFamilies()
 		{
-			return FontFactory.GetRegisteredFamilies();
+			return FontProgramFactory.GetRegisteredFontFamilies();
 		}
 
 		/// <summary>Checks if a certain font is registered.</summary>
@@ -340,7 +342,7 @@ namespace com.itextpdf.kernel.font
 		/// <returns>true if the font is found</returns>
 		public static bool IsRegistered(String fontname)
 		{
-			return FontFactory.IsRegistered(fontname);
+			return FontProgramFactory.IsRegisteredFont(fontname);
 		}
 
 		protected internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName

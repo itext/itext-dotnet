@@ -1,5 +1,5 @@
 /*
-$Id: 81761f885d6e6081f465b6203d9d0db5b6342903 $
+$Id: 8626c1d70d1afa0132f4af9dc43df4a6247fad1c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -745,7 +745,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 							cb.Rectangle(xDest, yDest, destWidth, destHeight);
 							cb.Clip();
 							cb.NewPath();
-							ImageData bmpImage = ImageFactory.GetBmpImage(b, true, b.Length);
+							ImageData bmpImage = ImageDataFactory.CreateBmp(b, true, b.Length);
 							PdfImageXObject imageXObject = new PdfImageXObject(bmpImage);
 							float width = destWidth * bmpImage.GetWidth() / srcWidth;
 							float height = -destHeight * bmpImage.GetHeight() / srcHeight;

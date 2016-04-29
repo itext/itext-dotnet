@@ -1,5 +1,5 @@
 /*
-$Id: 68bace1ea3a5e343b73cc3186131f3460e05348c $
+$Id: 1450942cc4e9117ef9c2a383304c1bf26b5cffd1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -134,7 +134,6 @@ namespace com.itextpdf.kernel.pdf.xobject
 			}
 		}
 
-		// TODO probably remove it. or may be not. images copying sounds not so bad.
 		public virtual com.itextpdf.kernel.pdf.xobject.PdfImageXObject CopyTo(PdfDocument
 			 document)
 		{
@@ -368,7 +367,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 							{
 								if (value is byte[])
 								{
-									//@TODO Check inline images
+									//TODO Check inline images
 									PdfStream globalsStream = new PdfStream();
 									globalsStream.GetOutputStream().WriteBytes((byte[])value);
 									dictionary.Put(PdfName.JBIG2Globals, globalsStream);

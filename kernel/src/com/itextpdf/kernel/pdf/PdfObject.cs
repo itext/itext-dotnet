@@ -1,5 +1,5 @@
 /*
-$Id: d18ddd5def8e56f62dbe620b0314d4847b193ee3 $
+$Id: e16c0ea24a407f87a38a5fc8add6b58663b85f89 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -98,10 +98,6 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</summary>
 		private short state;
 
-		public PdfObject()
-		{
-		}
-
 		// Indicates if the object has been flushed.
 		// Indicates that the indirect reference of the object could be reused or have to be marked as free.
 		// Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
@@ -140,8 +136,12 @@ namespace com.itextpdf.kernel.pdf
 		{
 			if (IsFlushed() || GetIndirectReference() == null)
 			{
-				//TODO log meaningless call of flush: object is direct or released
-				//TODO also if object is mustBeIndirect log that flush call is premature
+				//            Logger logger = LoggerFactory.getLogger(PdfObject.class);
+				//            if (isFlushed()) {
+				//                logger.warn("Meaningless call, the object has already flushed");
+				//            } else {
+				//                logger.warn("Meaningless call, the object is direct object.");
+				//            }
 				return;
 			}
 			try
@@ -192,15 +192,14 @@ namespace com.itextpdf.kernel.pdf
 		/// </returns>
 		public virtual bool IsIndirect()
 		{
-			return indirectReference != null || CheckState(com.itextpdf.kernel.pdf.PdfObject.
-				MUST_BE_INDIRECT);
+			return indirectReference != null || CheckState(PdfObject.MUST_BE_INDIRECT);
 		}
 
 		/// <summary>Marks object to be saved as indirect.</summary>
 		/// <param name="document">a document the indirect reference will belong to.</param>
 		/// <returns>object itself.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfObject MakeIndirect(PdfDocument document
-			, PdfIndirectReference reference)
+		public virtual PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference 
+			reference)
 		{
 			if (document == null || indirectReference != null)
 			{
@@ -228,8 +227,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Marks object to be saved as indirect.</summary>
 		/// <param name="document">a document the indirect reference will belong to.</param>
 		/// <returns>object itself.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfObject MakeIndirect(PdfDocument document
-			)
+		public virtual PdfObject MakeIndirect(PdfDocument document)
 		{
 			return MakeIndirect(document, null);
 		}
@@ -259,9 +257,9 @@ namespace com.itextpdf.kernel.pdf
 		/// New object shall not be used in other documents.
 		/// </remarks>
 		/// <returns>cloned object.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfObject Clone()
+		public virtual PdfObject Clone()
 		{
-			com.itextpdf.kernel.pdf.PdfObject newObject = NewInstance();
+			PdfObject newObject = NewInstance();
 			if (indirectReference != null || CheckState(MUST_BE_INDIRECT))
 			{
 				newObject.SetState(MUST_BE_INDIRECT);
@@ -278,7 +276,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		/// <param name="document">document to copy object to.</param>
 		/// <returns>copied object.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfObject CopyTo(PdfDocument document)
+		public virtual PdfObject CopyTo(PdfDocument document)
 		{
 			return CopyTo(document, true);
 		}
@@ -296,8 +294,7 @@ namespace com.itextpdf.kernel.pdf
 		/// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
 		/// </param>
 		/// <returns>copied object.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfObject CopyTo(PdfDocument document, bool
-			 allowDuplicating)
+		public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
 		{
 			if (document == null)
 			{
@@ -320,7 +317,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		//TODO comment! Add note about flush, modified flag and xref.
-		public virtual com.itextpdf.kernel.pdf.PdfObject SetModified()
+		public virtual PdfObject SetModified()
 		{
 			if (indirectReference != null)
 			{
@@ -335,8 +332,7 @@ namespace com.itextpdf.kernel.pdf
 			// In case ForbidRelease flag is set, release will not be performed.
 			if (CheckState(FORBID_RELEASE))
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfObject)
-					);
+				Logger logger = LoggerFactory.GetLogger(typeof(PdfObject));
 				logger.Warn(LogMessageConstant.FORBID_RELEASE_IS_SET);
 			}
 			else
@@ -460,10 +456,10 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Creates new instance of object.</summary>
 		/// <returns>new instance of object.</returns>
-		protected internal abstract com.itextpdf.kernel.pdf.PdfObject NewInstance();
+		protected internal abstract PdfObject NewInstance();
 
-		protected internal virtual com.itextpdf.kernel.pdf.PdfObject SetIndirectReference
-			(PdfIndirectReference indirectReference)
+		protected internal virtual PdfObject SetIndirectReference(PdfIndirectReference indirectReference
+			)
 		{
 			this.indirectReference = indirectReference;
 			return this;
@@ -479,8 +475,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Sets special states of current object.</summary>
 		/// <param name="state">special flag of current object</param>
-		protected internal virtual com.itextpdf.kernel.pdf.PdfObject SetState(short state
-			)
+		protected internal virtual PdfObject SetState(short state)
 		{
 			this.state |= state;
 			return this;
@@ -488,8 +483,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Clear state of the flag of current object.</summary>
 		/// <param name="state">special flag state to clear</param>
-		protected internal virtual com.itextpdf.kernel.pdf.PdfObject ClearState(short state
-			)
+		protected internal virtual PdfObject ClearState(short state)
 		{
 			this.state &= ~state;
 			return this;
@@ -498,8 +492,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Copies object content from object 'from'.</summary>
 		/// <param name="from">object to copy content from.</param>
 		/// <param name="document">document to copy object to.</param>
-		protected internal virtual void CopyContent(com.itextpdf.kernel.pdf.PdfObject from
-			, PdfDocument document)
+		protected internal virtual void CopyContent(PdfObject from, PdfDocument document)
 		{
 			if (IsFlushed())
 			{
@@ -524,8 +517,8 @@ namespace com.itextpdf.kernel.pdf
 		/// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
 		/// </param>
 		/// <returns>copied object.</returns>
-		internal virtual com.itextpdf.kernel.pdf.PdfObject ProcessCopying(PdfDocument documentTo
-			, bool allowDuplicating)
+		internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating
+			)
 		{
 			if (documentTo != null)
 			{
@@ -540,11 +533,10 @@ namespace com.itextpdf.kernel.pdf
 			else
 			{
 				//clone case
-				com.itextpdf.kernel.pdf.PdfObject obj = this;
+				PdfObject obj = this;
 				if (obj.IsIndirectReference())
 				{
-					com.itextpdf.kernel.pdf.PdfObject refTo = ((PdfIndirectReference)obj).GetRefersTo
-						();
+					PdfObject refTo = ((PdfIndirectReference)obj).GetRefersTo();
 					obj = refTo != null ? refTo : obj;
 				}
 				if (obj.IsIndirect() && !allowDuplicating)

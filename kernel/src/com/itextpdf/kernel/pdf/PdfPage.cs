@@ -1,5 +1,5 @@
 /*
-$Id: 04d33b60b5c61d7455baf63e479be522ee785d49 $
+$Id: 463baa9a1b9ec523b80be3c9e6ad6e687ff823bb $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -77,12 +77,19 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )
 		/// 	</summary>
-		private bool ignoreContentRotation = true;
+		private bool ignorePageRotationForContent = false;
+
+		/// <summary>
+		/// See
+		/// <see cref="IsPageRotationInverseMatrixWritten()"/>
+		/// .
+		/// </summary>
+		private bool pageRotationInverseMatrixWritten = false;
 
 		protected internal PdfPage(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
-			// TODO This key contains reference to all articles, while this articles could reference to lots of pages.
+			// This key contains reference to all articles, while this articles could reference to lots of pages.
 			// See DEVSIX-191
 			SetForbidRelease();
 			EnsureObjectIsAddedToDocument(pdfObject);
@@ -157,9 +164,10 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		public virtual void SetRotation(int degAngle)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetRotation(int degAngle)
 		{
 			GetPdfObject().Put(PdfName.Rotate, new PdfNumber(degAngle));
+			return this;
 		}
 
 		public virtual PdfStream GetContentStream(int index)
@@ -264,10 +272,12 @@ namespace com.itextpdf.kernel.pdf
 			return this.resources;
 		}
 
-		public virtual void SetResources(PdfResources pdfResources)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetResources(PdfResources pdfResources
+			)
 		{
 			GetPdfObject().Put(PdfName.Resources, pdfResources.GetPdfObject());
 			this.resources = pdfResources;
+			return this;
 		}
 
 		/// <summary>Use this method to set the XMP Metadata for each page.</summary>
@@ -483,9 +493,10 @@ namespace com.itextpdf.kernel.pdf
 			return mediaBox.ToRectangle();
 		}
 
-		public virtual void SetMediaBox(Rectangle rectangle)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetMediaBox(Rectangle rectangle)
 		{
 			GetPdfObject().Put(PdfName.MediaBox, new PdfArray(rectangle));
+			return this;
 		}
 
 		public virtual Rectangle GetCropBox()
@@ -503,12 +514,13 @@ namespace com.itextpdf.kernel.pdf
 			return cropBox.ToRectangle();
 		}
 
-		public virtual void SetCropBox(Rectangle rectangle)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetCropBox(Rectangle rectangle)
 		{
 			GetPdfObject().Put(PdfName.CropBox, new PdfArray(rectangle));
+			return this;
 		}
 
-		public virtual void SetArtBox(Rectangle rectangle)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetArtBox(Rectangle rectangle)
 		{
 			if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null)
 			{
@@ -518,6 +530,7 @@ namespace com.itextpdf.kernel.pdf
 					);
 			}
 			GetPdfObject().Put(PdfName.ArtBox, new PdfArray(rectangle));
+			return this;
 		}
 
 		public virtual Rectangle GetArtBox()
@@ -525,7 +538,7 @@ namespace com.itextpdf.kernel.pdf
 			return GetPdfObject().GetAsRectangle(PdfName.ArtBox);
 		}
 
-		public virtual void SetTrimBox(Rectangle rectangle)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetTrimBox(Rectangle rectangle)
 		{
 			if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null)
 			{
@@ -535,6 +548,7 @@ namespace com.itextpdf.kernel.pdf
 					);
 			}
 			GetPdfObject().Put(PdfName.TrimBox, new PdfArray(rectangle));
+			return this;
 		}
 
 		public virtual Rectangle GetTrimBox()
@@ -745,9 +759,9 @@ namespace com.itextpdf.kernel.pdf
 		/// true - if in case the page has a rotation, then new content will be automatically rotated in the
 		/// opposite direction. On the rotated page this would look like if new content ignores page rotation.
 		/// </returns>
-		public virtual bool IsIgnoreContentRotation()
+		public virtual bool IsIgnorePageRotationForContent()
 		{
-			return ignoreContentRotation;
+			return ignorePageRotationForContent;
 		}
 
 		/// <summary>
@@ -761,11 +775,13 @@ namespace com.itextpdf.kernel.pdf
 		/// <see langword="false"/>
 		/// .
 		/// </remarks>
-		/// <param name="ignoreContentRotation">- true to ignore rotation of the new content on the rotated page.
+		/// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
 		/// 	</param>
-		public virtual void SetIgnoreContentRotation(bool ignoreContentRotation)
+		public virtual com.itextpdf.kernel.pdf.PdfPage SetIgnorePageRotationForContent(bool
+			 ignorePageRotationForContent)
 		{
-			this.ignoreContentRotation = ignoreContentRotation;
+			this.ignorePageRotationForContent = ignorePageRotationForContent;
+			return this;
 		}
 
 		/// <summary>This method adds or replaces a page label.</summary>
@@ -860,6 +876,41 @@ namespace com.itextpdf.kernel.pdf
 		{
 			GetPdfObject().Put(key, value);
 			return this;
+		}
+
+		/// <summary>
+		/// This flag is meaningful for the case, when page rotation is applied and ignorePageRotationForContent
+		/// is set to true.
+		/// </summary>
+		/// <remarks>
+		/// This flag is meaningful for the case, when page rotation is applied and ignorePageRotationForContent
+		/// is set to true. NOTE: It is needed for the internal usage.
+		/// <br/><br/>
+		/// This flag defines if inverse matrix (which rotates content into the opposite direction from page rotation
+		/// direction in order to give the impression of the not rotated text) is already applied to the page content stream.
+		/// See
+		/// <see cref="SetIgnorePageRotationForContent(bool)"/>
+		/// </remarks>
+		/// <returns>true, if inverse matrix is already applied, false otherwise.</returns>
+		public virtual bool IsPageRotationInverseMatrixWritten()
+		{
+			return pageRotationInverseMatrixWritten;
+		}
+
+		/// <summary>NOTE: For internal usage! Use this method only if you know what you are doing.
+		/// 	</summary>
+		/// <remarks>
+		/// NOTE: For internal usage! Use this method only if you know what you are doing.
+		/// <br/><br/>
+		/// This method is called when inverse matrix (which rotates content into the opposite direction from page rotation
+		/// direction in order to give the impression of the not rotated text) is applied to the page content stream.
+		/// See
+		/// <see cref="SetIgnorePageRotationForContent(bool)"/>
+		/// </remarks>
+		public virtual void SetPageRotationInverseMatrixWritten()
+		{
+			// this method specifically return void to discourage it's unintended usage
+			pageRotationInverseMatrixWritten = true;
 		}
 
 		protected internal override bool IsWrappedObjectMustBeIndirect()

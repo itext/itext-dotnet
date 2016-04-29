@@ -1,5 +1,5 @@
 /*
-$Id: e36b72de81cae46eff79a5af12598199d418752f $
+$Id: 8f6e819edc4db32b8eae8a1f419c572b069445ba $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,6 +48,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class CalGray : Color
 	{
+		public CalGray(PdfCieBasedCs.CalGray cs)
+			: this(cs, 0f)
+		{
+		}
+
 		public CalGray(PdfCieBasedCs.CalGray cs, float value)
 			: base(cs, new float[] { value })
 		{

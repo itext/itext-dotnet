@@ -1,5 +1,5 @@
 /*
-$Id: 890c8bbde3128879bdb0879375d42a229558a4fa $
+$Id: 097a8dc1bf260733ba5a5e8299ceed19b5369667 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -50,6 +50,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class IccBased : Color
 	{
+		public IccBased(PdfCieBasedCs.IccBased cs)
+			: this(cs, new float[cs.GetNumberOfComponents()])
+		{
+		}
+
 		public IccBased(PdfCieBasedCs.IccBased cs, float[] value)
 			: base(cs, value)
 		{
@@ -62,6 +67,7 @@ namespace com.itextpdf.kernel.color
 		public IccBased(Stream iccStream)
 			: this(new PdfCieBasedCs.IccBased(iccStream), null)
 		{
+			// TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
 			colorValue = new float[GetNumberOfComponents()];
 			for (int i = 0; i < GetNumberOfComponents(); i++)
 			{

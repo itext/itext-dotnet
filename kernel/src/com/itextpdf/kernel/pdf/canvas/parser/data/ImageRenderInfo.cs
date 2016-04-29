@@ -1,5 +1,5 @@
 /*
-$Id: 3593f6cb124bc4eb67fe8da6127f79ead5a5b465 $
+$Id: dc2ab446ac76951e19264e94bc718f2416f73ec1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -87,7 +87,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 		/// <ul>
 		/// <li>get image bytes with
 		/// <see cref="com.itextpdf.kernel.pdf.xobject.PdfImageXObject.GetImageBytes(bool)"/>
-		/// ;</li>
+		/// , these image bytes
+		/// represent native image, i.e you can write these bytes to disk and get just an usual image;</li>
 		/// <li>obtain PdfStream object which contains image dictionary with
 		/// <see cref="com.itextpdf.kernel.pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
 		/// method;</li>
@@ -96,8 +97,6 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 		/// with
 		/// <see cref="com.itextpdf.kernel.pdf.xobject.PdfImageXObject.GetBufferedImage()"/>
 		/// ;</li>
-		/// //TODO: correct this when something like convertToNativeImage method is implemented
-		/// <li>convert this image to native image with PdfImageXObject#convertToNativeImage;</li>
 		/// </ul>
 		/// </remarks>
 		public virtual PdfImageXObject GetImage()

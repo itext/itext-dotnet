@@ -1,5 +1,5 @@
 /*
-$Id: 49c63d4c46293f1bf8fff21ef746ebe5af0e923f $
+$Id: 5de74f7248be1792fa140afdbed28bd326ac0607 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -55,7 +55,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			return false;
 		}
 
-		public PdfDeviceCs(PdfName pdfObject)
+		protected internal PdfDeviceCs(PdfName pdfObject)
 			: base(pdfObject)
 		{
 		}
@@ -73,11 +73,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			{
 				return 1;
 			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
-			}
 		}
 
 		public class Rgb : PdfDeviceCs
@@ -93,11 +88,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			{
 				return 3;
 			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[GetNumberOfComponents()];
-			}
 		}
 
 		public class Cmyk : PdfDeviceCs
@@ -112,11 +102,6 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			public override int GetNumberOfComponents()
 			{
 				return 4;
-			}
-
-			public override float[] GetDefaultColorants()
-			{
-				return new float[] { 0, 0, 0, 1 };
 			}
 		}
 	}

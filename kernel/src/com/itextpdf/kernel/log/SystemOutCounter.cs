@@ -1,5 +1,5 @@
 /*
-$Id: df89b98706db2679de381b0cb146f5759be6464e $
+$Id: 508bee0056ac74f67071a333deb95407d7810c5c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,49 +43,53 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using java.lang;
 
-namespace com.itextpdf.kernel.color
+namespace com.itextpdf.kernel.log
 {
-	public class DeviceGray : Color
+	/// <summary>
+	/// A
+	/// <see cref="Counter"/>
+	/// implementation that outputs information about read and written documents to
+	/// <see cref="System.Console.Out"/>
+	/// </summary>
+	public class SystemOutCounter : Counter
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceGray WHITE = new com.itextpdf.kernel.color.DeviceGray
-			(1f);
+		/// <summary>
+		/// The name of the class for which the Counter was created
+		/// (or iText if no name is available)
+		/// </summary>
+		protected internal String name;
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray GRAY = new com.itextpdf.kernel.color.DeviceGray
-			(.5f);
+		public SystemOutCounter(String name)
+		{
+			this.name = name;
+		}
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray BLACK = new com.itextpdf.kernel.color.DeviceGray
-			();
-
-		public DeviceGray(float value)
-			: base(new PdfDeviceCs.Gray(), new float[] { value })
+		public SystemOutCounter()
+			: this("iText")
 		{
 		}
 
-		public DeviceGray()
-			: this(0f)
+		public SystemOutCounter(Class cls)
+			: this(cls.GetName())
 		{
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeLighter(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
+		public virtual Counter GetCounter(Class cls)
 		{
-			float v = grayColor.GetColorValue()[0];
-			if (v == 0f)
-			{
-				return new com.itextpdf.kernel.color.DeviceGray(0.3f);
-			}
-			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			return new com.itextpdf.kernel.log.SystemOutCounter(cls);
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeDarker(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
+		public virtual void OnDocumentRead(long size)
 		{
-			float v = grayColor.GetColorValue()[0];
-			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes read", name, size));
+		}
+
+		public virtual void OnDocumentWritten(long size)
+		{
+			System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes written", name, size)
+				);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
-$Id: 4d9802cc5bee0a9a5d115ad8ff5d75836f6e5866 $
+$Id: 9f14396c6ac302841af56454210850b0fe01e249 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -51,98 +51,147 @@ namespace com.itextpdf.kernel.utils
 	{
 		private PdfDocument pdfDocument;
 
-		private IList<PdfMerger.AddedPages> pagesToCopy = new List<PdfMerger.AddedPages>(
-			);
+		private bool closeSrcDocuments;
 
-		/// <summary>This class is used to merge a number of existing documents into one;</summary>
-		/// <param name="pdfDocument">- the document into which source documents will be merged.
+		private bool mergeTags;
+
+		private bool mergeOutlines;
+
+		/// <summary>This class is used to merge a number of existing documents into one.</summary>
+		/// <remarks>
+		/// This class is used to merge a number of existing documents into one. By default, if source document
+		/// contains tags and outlines, they will be also copied to the destination document.
+		/// </remarks>
+		/// <param name="pdfDocument">the document into which source documents will be merged.
 		/// 	</param>
 		public PdfMerger(PdfDocument pdfDocument)
+			: this(pdfDocument, true, true)
 		{
-			this.pdfDocument = pdfDocument;
 		}
 
-		/// <summary>This method adds pages from the source document to the List of pages which will be merged.
-		/// 	</summary>
+		/// <summary>This class is used to merge a number of existing documents into one.</summary>
+		/// <param name="pdfDocument">the document into which source documents will be merged.
+		/// 	</param>
+		/// <param name="mergeTags">
+		/// if true, then tags from the source document are copied even if destination document is not set as
+		/// tagged. Note, that if false, tag structure is still could be copied if the destination document
+		/// is explicitly marked as tagged with
+		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument.SetTagged()"/>
+		/// .
+		/// </param>
+		/// <param name="mergeOutlines">
+		/// if true, then outlines from the source document are copied even if in destination document
+		/// outlines are not initialized. Note, that if false, outlines are still could be copied if the
+		/// destination document outlines were explicitly initialized with
+		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument.InitializeOutlines()"/>
+		/// .
+		/// </param>
+		public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines)
+		{
+			this.pdfDocument = pdfDocument;
+			this.mergeTags = mergeTags;
+			this.mergeOutlines = mergeOutlines;
+		}
+
+		/// <summary>
+		/// If set to <i>true</i> then passed to the <i>
+		/// <c>PdfMerger#merge</c>
+		/// </i> method source documents will be closed
+		/// immediately after merging specified pages into current document. If <i>false</i> - PdfDocuments are left open.
+		/// Default value - <i>false</i>.
+		/// </summary>
+		/// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.
+		/// 	</param>
+		/// <returns>
+		/// this
+		/// <c>PdfMerger</c>
+		/// instance.
+		/// </returns>
+		public virtual com.itextpdf.kernel.utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments
+			)
+		{
+			this.closeSrcDocuments = closeSourceDocuments;
+			return this;
+		}
+
+		/// <summary>This method merges pages from the source document to the current one.</summary>
+		/// <remarks>
+		/// This method merges pages from the source document to the current one.
+		/// <br/><br/>
+		/// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
+		/// <see cref="SetCloseSourceDocuments(bool)"/>
+		/// ),
+		/// passed
+		/// <c>PdfDocument</c>
+		/// will be closed after pages are merged.
+		/// </remarks>
 		/// <param name="from">- document, from which pages will be copied.</param>
 		/// <param name="fromPage">- start page in the range of pages to be copied.</param>
 		/// <param name="toPage">- end page in the range to be copied.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual void AddPages(PdfDocument from, int fromPage, int toPage)
+		/// <returns>
+		/// this
+		/// <c>PdfMerger</c>
+		/// instance.
+		/// </returns>
+		public virtual com.itextpdf.kernel.utils.PdfMerger Merge(PdfDocument from, int fromPage
+			, int toPage)
 		{
+			IList<int> pages = new List<int>(toPage - fromPage);
 			for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
 			{
-				EnqueuePageToCopy(from, pageNum);
+				pages.Add(pageNum);
 			}
+			return Merge(from, pages);
 		}
 
-		/// <summary>This method adds pages from the source document to the List of pages which will be merged.
-		/// 	</summary>
-		/// <param name="from">- document, from which pages will be copied.</param>
-		/// <param name="pages">- List of numbers of pages which will be copied.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual void AddPages(PdfDocument from, IList<int> pages)
-		{
-			foreach (int pageNum in pages)
-			{
-				EnqueuePageToCopy(from, pageNum);
-			}
-		}
-
-		/// <summary>This method gets all pages from the List of pages to be copied and merges them into one document.
-		/// 	</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual void Merge()
-		{
-			foreach (PdfMerger.AddedPages addedPages in pagesToCopy)
-			{
-				addedPages.from.CopyPagesTo(addedPages.pagesToCopy, pdfDocument);
-			}
-		}
-
-		/// <summary>This method adds to the List of pages to be copied with given page.</summary>
+		/// <summary>This method merges pages from the source document to the current one.</summary>
 		/// <remarks>
-		/// This method adds to the List of pages to be copied with given page.
-		/// Pages are stored along with their documents.
-		/// If last added page belongs to the same document as the new one, new page is added to the previous
-		/// <c>AddedPages</c>
-		/// instance.
+		/// This method merges pages from the source document to the current one.
+		/// <br/><br/>
+		/// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
+		/// <see cref="SetCloseSourceDocuments(bool)"/>
+		/// ),
+		/// passed
+		/// <c>PdfDocument</c>
+		/// will be closed after pages are merged.
 		/// </remarks>
 		/// <param name="from">- document, from which pages will be copied.</param>
-		/// <param name="pageNum">- number of page to be copied.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		private void EnqueuePageToCopy(PdfDocument from, int pageNum)
+		/// <param name="pages">- List of numbers of pages which will be copied.</param>
+		/// <returns>
+		/// this
+		/// <c>PdfMerger</c>
+		/// instance.
+		/// </returns>
+		public virtual com.itextpdf.kernel.utils.PdfMerger Merge(PdfDocument from, IList<
+			int> pages)
 		{
-			if (!pagesToCopy.IsEmpty())
+			if (mergeTags && from.IsTagged())
 			{
-				PdfMerger.AddedPages lastAddedPagesEntry = pagesToCopy[pagesToCopy.Count - 1];
-				if (lastAddedPagesEntry.from == from)
-				{
-					lastAddedPagesEntry.pagesToCopy.Add(pageNum);
-				}
-				else
-				{
-					pagesToCopy.Add(new PdfMerger.AddedPages(from, pageNum));
-				}
+				pdfDocument.SetTagged();
 			}
-			else
+			if (mergeOutlines && from.HasOutlines())
 			{
-				pagesToCopy.Add(new PdfMerger.AddedPages(from, pageNum));
+				pdfDocument.InitializeOutlines();
 			}
+			from.CopyPagesTo(pages, pdfDocument);
+			if (closeSrcDocuments)
+			{
+				from.Close();
+			}
+			return this;
 		}
 
-		internal class AddedPages
+		/// <summary>Closes the current document.</summary>
+		/// <remarks>
+		/// Closes the current document. It is a complete equivalent of calling
+		/// <c>PdfDocument#close</c>
+		/// on the PdfDocument
+		/// passed to the constructor of this PdfMerger instance. This means that it is enough to call <i>close</i> either on
+		/// passed PdfDocument or on this PdfMerger instance, but there is no need to call them both.
+		/// </remarks>
+		public virtual void Close()
 		{
-			public AddedPages(PdfDocument from, int pageNum)
-			{
-				this.from = from;
-				this.pagesToCopy = new List<int>();
-				this.pagesToCopy.Add(pageNum);
-			}
-
-			internal PdfDocument from;
-
-			internal IList<int> pagesToCopy;
+			pdfDocument.Close();
 		}
 	}
 }

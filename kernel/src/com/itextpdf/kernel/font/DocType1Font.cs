@@ -1,5 +1,5 @@
 /*
-$Id: 101a2e3ecff360dbd90575ffe68b55dd9414bc0d $
+$Id: 259d053e8741d21ea858401639cf1e061e58b5d4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -85,7 +85,7 @@ namespace com.itextpdf.kernel.font
 				{
 					//if there are no font modifiers, cached font could be used,
 					//otherwise a new instance should be created.
-					type1StdFont = (Type1Font)FontFactory.CreateRegisteredFont(baseFont);
+					type1StdFont = (Type1Font)FontProgramFactory.CreateRegisteredFont(baseFont);
 				}
 				catch (Exception)
 				{

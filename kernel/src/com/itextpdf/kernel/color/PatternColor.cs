@@ -1,5 +1,5 @@
 /*
-$Id: 8ef6ff5e85e4c462fd53bb09d1abadb6211d62ac $
+$Id: 68f5b60a23da573417683d75da413f3276233119 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -74,7 +74,7 @@ namespace com.itextpdf.kernel.color
 				throw new ArgumentException("underlyingCS");
 			}
 			this.pattern = uncoloredPattern;
-			this.underlyingColor = new Color(underlyingCS, colorValue);
+			this.underlyingColor = Color.MakeColor(underlyingCS, colorValue);
 		}
 
 		public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern
@@ -82,8 +82,8 @@ namespace com.itextpdf.kernel.color
 			: base(uncoloredTilingCS, colorValue)
 		{
 			this.pattern = uncoloredPattern;
-			this.underlyingColor = new Color(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue
-				);
+			this.underlyingColor = Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(
+				), colorValue);
 		}
 
 		public virtual PdfPattern GetPattern()
@@ -104,8 +104,8 @@ namespace com.itextpdf.kernel.color
 			}
 			com.itextpdf.kernel.color.PatternColor color = (com.itextpdf.kernel.color.PatternColor
 				)o;
-			return pattern.Equals(color.pattern) && underlyingColor != null ? underlyingColor
-				.Equals(color.underlyingColor) : color.underlyingColor == null;
+			return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor
+				.Equals(color.underlyingColor) : color.underlyingColor == null);
 		}
 	}
 }

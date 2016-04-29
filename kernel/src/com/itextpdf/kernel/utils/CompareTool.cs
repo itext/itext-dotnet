@@ -1,5 +1,5 @@
 /*
-$Id: f02e0ef64556b76c6a53483ecf37b3452fa200d7 $
+$Id: f6ce295a9a2543d6964575ee0df115f5b6df9edc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,6 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -348,8 +349,7 @@ namespace com.itextpdf.kernel.utils
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool CompareXmls(String xmlFilePath1, String xmlFilePath2)
 		{
-			return CompareXmls(new FileInputStream(xmlFilePath1), new FileInputStream(xmlFilePath2
-				));
+			return CompareXmls(new FileStream(xmlFilePath1), new FileStream(xmlFilePath2));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -557,8 +557,8 @@ namespace com.itextpdf.kernel.utils
 				}
 				System.Console.Out.Write("Comparing page " + com.itextpdf.io.util.JavaUtil.IntegerToString
 					(i + 1) + " (" + imageFiles[i].GetAbsolutePath() + ")...");
-				FileInputStream is1 = new FileInputStream(imageFiles[i]);
-				FileInputStream is2 = new FileInputStream(cmpImageFiles[i]);
+				FileStream is1 = new FileStream(imageFiles[i]);
+				FileStream is2 = new FileStream(cmpImageFiles[i]);
 				bool cmpResult = CompareStreams(is1, is2);
 				is1.Close();
 				is2.Close();
@@ -1278,10 +1278,14 @@ namespace com.itextpdf.kernel.utils
 			String errorMessage = null;
 			if (numberOfDifferentBytes > 0)
 			{
-				int lCmp = Math.Max(0, firstDifferenceOffset - 10);
-				int rCmp = Math.Min(cmpStreamBytes.Length, firstDifferenceOffset + 10);
-				int lOut = Math.Max(0, firstDifferenceOffset - 10);
-				int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + 10);
+				int diffBytesAreaL = 10;
+				int diffBytesAreaR = 10;
+				int lCmp = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
+				int rCmp = Math.Min(cmpStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR
+					);
+				int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
+				int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR
+					);
 				String cmpByte = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
 					[firstDifferenceOffset] });
 				String cmpByteNeighbours = com.itextpdf.io.util.JavaUtil.GetStringForBytes(cmpStreamBytes
@@ -1696,7 +1700,7 @@ namespace com.itextpdf.kernel.utils
 			private readonly CompareTool _enclosing;
 		}
 
-		private class ImageNameComparator : Comparator<File>
+		private class ImageNameComparator : IComparer<File>
 		{
 			public virtual int Compare(File f1, File f2)
 			{

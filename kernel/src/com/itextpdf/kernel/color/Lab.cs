@@ -1,5 +1,5 @@
 /*
-$Id: c49434e8a571293d4803d66e1751ba18230c0ebc $
+$Id: 014faf7def67c44a594ac413ce9ce055684a05a7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -48,6 +48,11 @@ namespace com.itextpdf.kernel.color
 {
 	public class Lab : Color
 	{
+		public Lab(PdfCieBasedCs.Lab cs)
+			: this(cs, new float[cs.GetNumberOfComponents()])
+		{
+		}
+
 		public Lab(PdfCieBasedCs.Lab cs, float[] value)
 			: base(cs, value)
 		{
@@ -62,5 +67,6 @@ namespace com.itextpdf.kernel.color
 			: this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value)
 		{
 		}
+		// TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
 	}
 }

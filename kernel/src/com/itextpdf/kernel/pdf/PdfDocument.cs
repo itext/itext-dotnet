@@ -1,5 +1,5 @@
 /*
-$Id: 70d1112eafbe56ab0ef3e44eb57d55878f6b883c $
+$Id: 77d4964e4c9cc6bd4b4d73236199ca717b3cc3e8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,6 +54,7 @@ using com.itextpdf.kernel.crypto;
 using com.itextpdf.kernel.events;
 using com.itextpdf.kernel.font;
 using com.itextpdf.kernel.geom;
+using com.itextpdf.kernel.log;
 using com.itextpdf.kernel.numbering;
 using com.itextpdf.kernel.pdf.annot;
 using com.itextpdf.kernel.pdf.filespec;
@@ -246,119 +247,34 @@ namespace com.itextpdf.kernel.pdf
 			SetXmpMetadata(xmpMeta, serializeOptions);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		public virtual void CreateXmpMetadata()
-		{
-			CheckClosingStatus();
-			XMPMeta xmpMeta = XMPMetaFactory.Create();
-			xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
-			xmpMeta.SetObjectName("");
-			try
-			{
-				xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-				xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion
-					());
-			}
-			catch (XMPException)
-			{
-			}
-			PdfDictionary docInfo = info.GetPdfObject();
-			if (docInfo != null)
-			{
-				PdfName key;
-				PdfObject obj;
-				String value;
-				foreach (PdfName pdfName in docInfo.KeySet())
-				{
-					key = pdfName;
-					obj = docInfo.Get(key);
-					if (obj == null)
-					{
-						continue;
-					}
-					if (obj.GetType() != PdfObject.STRING)
-					{
-						continue;
-					}
-					value = ((PdfString)obj).ToUnicodeString();
-					if (PdfName.Title.Equals(key))
-					{
-						xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst
-							.X_DEFAULT, value);
-					}
-					else
-					{
-						if (PdfName.Author.Equals(key))
-						{
-							xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Creator, new PropertyOptions(PropertyOptions
-								.ARRAY_ORDERED), value, null);
-						}
-						else
-						{
-							if (PdfName.Subject.Equals(key))
-							{
-								xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT
-									, XMPConst.X_DEFAULT, value);
-							}
-							else
-							{
-								if (PdfName.Keywords.Equals(key))
-								{
-									foreach (String v in value.Split(",|;"))
-									{
-										if (v.Trim().Length > 0)
-										{
-											xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions
-												.ARRAY), v.Trim(), null);
-										}
-									}
-									xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Keywords, value);
-								}
-								else
-								{
-									if (PdfName.Producer.Equals(key))
-									{
-										xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, value);
-									}
-									else
-									{
-										if (PdfName.Creator.Equals(key))
-										{
-											xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool, value);
-										}
-										else
-										{
-											if (PdfName.CreationDate.Equals(key))
-											{
-												xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreateDate, PdfDate.GetW3CDate(value
-													));
-											}
-											else
-											{
-												if (PdfName.ModDate.Equals(key))
-												{
-													xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.ModifyDate, PdfDate.GetW3CDate(value
-														));
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			if (IsTagged())
-			{
-				xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions
-					(PropertyOptions.SEPARATE_NODE));
-			}
-			SetXmpMetadata(xmpMeta);
-		}
-
+		/// <summary>Gets XMPMetadata.</summary>
 		public virtual byte[] GetXmpMetadata()
 		{
+			return GetXmpMetadata(false);
+		}
+
+		/// <summary>Gets XMPMetadata or create a new one.</summary>
+		/// <param name="createNew">if true, create a new empty XMPMetadata if it did not present.
+		/// 	</param>
+		/// <returns>existed or newly created XMPMetadata byte array.</returns>
+		public virtual byte[] GetXmpMetadata(bool createNew)
+		{
+			if (xmpMetadata == null && createNew)
+			{
+				XMPMeta xmpMeta = XMPMetaFactory.Create();
+				xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
+				xmpMeta.SetObjectName("");
+				try
+				{
+					xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
+					xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion
+						());
+					SetXmpMetadata(xmpMeta);
+				}
+				catch (XMPException)
+				{
+				}
+			}
 			return xmpMetadata;
 		}
 
@@ -732,7 +648,8 @@ namespace com.itextpdf.kernel.pdf
 						throw new PdfException(PdfException.CannotCloseDocumentWithAlreadyFlushedPdfCatalog
 							);
 					}
-					if (xmpMetadata != null)
+					UpdateXmpMetadata();
+					if (GetXmpMetadata() != null)
 					{
 						PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(this));
 						xmp.GetOutputStream().Write(xmpMetadata);
@@ -882,6 +799,11 @@ namespace com.itextpdf.kernel.pdf
 					{
 						writer.Close();
 					}
+					Counter counter = GetCounter();
+					if (counter != null)
+					{
+						counter.OnDocumentWritten(writer.GetCurrentPos());
+					}
 				}
 				catalog.GetPageTree().ClearPageRefs();
 				RemoveAllHandlers();
@@ -914,15 +836,15 @@ namespace com.itextpdf.kernel.pdf
 			{
 				structTreeRoot = new PdfStructTreeRoot(this);
 				catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_808
+				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_804
 					(this)));
 				structParentIndex = 0;
 			}
 		}
 
-		private sealed class _Dictionary_808 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_804 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_808()
+			public _Dictionary_804()
 			{
 				{
 					this[PdfName.Marked] = PdfBoolean.TRUE;
@@ -1125,7 +1047,7 @@ namespace com.itextpdf.kernel.pdf
 					toDocument.AddPage(newPage);
 				}
 				pageInsertIndex++;
-				if (toDocument.GetCatalog().IsOutlineMode())
+				if (toDocument.HasOutlines())
 				{
 					IList<PdfOutline> pageOutlines = page.GetOutlines(false);
 					if (pageOutlines != null)
@@ -1528,6 +1450,11 @@ namespace com.itextpdf.kernel.pdf
 				{
 					reader.pdfDocument = this;
 					reader.ReadPdf();
+					Counter counter = GetCounter();
+					if (counter != null)
+					{
+						counter.OnDocumentRead(reader.GetFileLength());
+					}
 					pdfVersion = reader.headerPdfVersion;
 					trailer = new PdfDictionary(reader.trailer);
 					catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
@@ -1685,6 +1612,123 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
+		protected internal virtual void UpdateXmpMetadata()
+		{
+			try
+			{
+				if (writer.properties.addXmpMetadata)
+				{
+					SetXmpMetadata(UpdateDefaultXmpMetadata());
+				}
+			}
+			catch (XMPException e)
+			{
+				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
+					));
+				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+			}
+		}
+
+		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		protected internal virtual XMPMeta UpdateDefaultXmpMetadata()
+		{
+			XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
+			PdfDictionary docInfo = info.GetPdfObject();
+			if (docInfo != null)
+			{
+				PdfName key;
+				PdfObject obj;
+				String value;
+				foreach (PdfName pdfName in docInfo.KeySet())
+				{
+					key = pdfName;
+					obj = docInfo.Get(key);
+					if (obj == null)
+					{
+						continue;
+					}
+					if (obj.GetType() != PdfObject.STRING)
+					{
+						continue;
+					}
+					value = ((PdfString)obj).ToUnicodeString();
+					if (PdfName.Title.Equals(key))
+					{
+						xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst
+							.X_DEFAULT, value);
+					}
+					else
+					{
+						if (PdfName.Author.Equals(key))
+						{
+							xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Creator, new PropertyOptions(PropertyOptions
+								.ARRAY_ORDERED), value, null);
+						}
+						else
+						{
+							if (PdfName.Subject.Equals(key))
+							{
+								xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT
+									, XMPConst.X_DEFAULT, value);
+							}
+							else
+							{
+								if (PdfName.Keywords.Equals(key))
+								{
+									foreach (String v in value.Split(",|;"))
+									{
+										if (v.Trim().Length > 0)
+										{
+											xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions
+												.ARRAY), v.Trim(), null);
+										}
+									}
+									xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Keywords, value);
+								}
+								else
+								{
+									if (PdfName.Creator.Equals(key))
+									{
+										xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool, value);
+									}
+									else
+									{
+										if (PdfName.Producer.Equals(key))
+										{
+											xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, value);
+										}
+										else
+										{
+											if (PdfName.CreationDate.Equals(key))
+											{
+												xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreateDate, PdfDate.GetW3CDate(value
+													));
+											}
+											else
+											{
+												if (PdfName.ModDate.Equals(key))
+												{
+													xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.ModifyDate, PdfDate.GetW3CDate(value
+														));
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (IsTagged() && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID, XMPConst.PART
+				))
+			{
+				xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions
+					(PropertyOptions.SEPARATE_NODE));
+			}
+			return xmpMeta;
+		}
+
 		/// <summary>List all newly added or loaded fonts</summary>
 		/// <returns>
 		/// List of
@@ -1753,6 +1797,11 @@ namespace com.itextpdf.kernel.pdf
 			{
 				throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
 			}
+		}
+
+		protected internal virtual Counter GetCounter()
+		{
+			return CounterFactory.GetCounter(typeof(com.itextpdf.kernel.pdf.PdfDocument));
 		}
 
 		/// <summary>This method removes all annotation entries from form fields associated with a given page.
@@ -1973,6 +2022,13 @@ namespace com.itextpdf.kernel.pdf
 				names.MakeIndirect(this);
 			}
 			names.Put(treeType, treeRoot);
+		}
+
+		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String
+			 propName)
+		{
+			return xmpMeta.GetProperty(schemaNS, propName) != null;
 		}
 	}
 }

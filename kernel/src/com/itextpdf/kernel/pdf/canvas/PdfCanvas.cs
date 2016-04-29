@@ -1,5 +1,5 @@
 /*
-$Id: 0cc516a329a93e6adb6819f64fc681552bf24d98 $
+$Id: 82c286d8ad15408e28858d52f4d067126ffb460f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -248,9 +248,9 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Convenience method for fast PdfCanvas creation by a certain page.</summary>
 		/// <param name="page">page to create canvas from.</param>
 		public PdfCanvas(PdfPage page)
-			: this(page, page.GetDocument().GetReader() != null && page.GetDocument().GetWriter
+			: this(page, (page.GetDocument().GetReader() != null && page.GetDocument().GetWriter
 				() != null && page.GetContentStreamCount() > 0 && page.GetLastContentStream().GetLength
-				() > 0)
+				() > 0) || (page.GetRotation() != 0 && page.IsIgnorePageRotationForContent()))
 		{
 		}
 
@@ -269,36 +269,12 @@ namespace com.itextpdf.kernel.pdf.canvas
 				page.NewContentStreamBefore().GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes(
 					"q\n"));
 				contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("Q\n"));
-				if (page.GetRotation() != 0 && !page.IsIgnoreContentRotation())
-				{
-					ApplyRotation(page);
-				}
 			}
-		}
-
-		private void ApplyRotation(PdfPage page)
-		{
-			com.itextpdf.kernel.geom.Rectangle rectagle = page.GetPageSizeWithRotation();
-			int rotation = page.GetRotation();
-			switch (rotation)
+			if (page.GetRotation() != 0 && page.IsIgnorePageRotationForContent() && (wrapOldContent
+				 || !page.IsPageRotationInverseMatrixWritten()))
 			{
-				case 90:
-				{
-					ConcatMatrix(0, 1, -1, 0, rectagle.GetTop(), 0);
-					break;
-				}
-
-				case 180:
-				{
-					ConcatMatrix(-1, 0, 0, -1, rectagle.GetRight(), rectagle.GetTop());
-					break;
-				}
-
-				case 270:
-				{
-					ConcatMatrix(0, -1, 1, 0, 0, rectagle.GetRight());
-					break;
-				}
+				ApplyRotation(page);
+				page.SetPageRotationInverseMatrixWritten();
 			}
 		}
 
@@ -1529,7 +1505,14 @@ namespace com.itextpdf.kernel.pdf.canvas
 				}
 				else
 				{
-					UpdateGStateColorFields(fill, newColor);
+					if (fill)
+					{
+						currentGs.SetFillColor(newColor);
+					}
+					else
+					{
+						currentGs.SetStrokeColor(newColor);
+					}
 				}
 			}
 			if (colorSpace is PdfDeviceCs.Gray)
@@ -1832,7 +1815,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 			if (image.GetOriginalType() == ImageType.WMF)
 			{
 				WmfImageHelper wmf = new WmfImageHelper(image);
-				// TODO add matrix parameters
 				PdfXObject xObject = wmf.CreatePdfForm(document);
 				AddXObject(xObject, a, b, c, d, e, f);
 				return xObject;
@@ -1879,7 +1861,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 			if (image.GetOriginalType() == ImageType.WMF)
 			{
 				WmfImageHelper wmf = new WmfImageHelper(image);
-				// TODO add matrix parameters
 				PdfXObject xObject = wmf.CreatePdfForm(document);
 				AddXObject(xObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
 				return xObject;
@@ -2554,30 +2535,6 @@ namespace com.itextpdf.kernel.pdf.canvas
 				, x, y);
 		}
 
-		private void UpdateGStateColorFields(bool fill, Color newColor)
-		{
-			if (fill)
-			{
-				currentGs.SetFillColor(newColor);
-				PdfObject colorSpaceObject = newColor.GetColorSpace().GetPdfObject();
-				if (colorSpaceObject is PdfName)
-				{
-					// see CanvasGraphicState Fill/StrokeColorSpace field comments
-					currentGs.SetFillColorSpace(newColor.GetColorSpace());
-				}
-			}
-			else
-			{
-				currentGs.SetStrokeColor(newColor);
-				PdfObject colorSpaceObject = newColor.GetColorSpace().GetPdfObject();
-				if (colorSpaceObject is PdfName)
-				{
-					// see CanvasGraphicState Fill/StrokeColorSpace field comments
-					currentGs.SetStrokeColorSpace(newColor.GetColorSpace());
-				}
-			}
-		}
-
 		private static PdfStream GetPageStream(PdfPage page)
 		{
 			PdfStream stream = page.GetContentStream(page.GetContentStreamCount() - 1);
@@ -2623,7 +2580,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 					return new PatternColor(pattern);
 				}
 			}
-			return new Color(colorSpace, colorValue);
+			return Color.MakeColor(colorSpace, colorValue);
 		}
 
 		private PdfArray GetDashPatternArray(float phase)
@@ -2645,6 +2602,32 @@ namespace com.itextpdf.kernel.pdf.canvas
 			dashPatternArray.Add(dArray);
 			dashPatternArray.Add(new PdfNumber(phase));
 			return dashPatternArray;
+		}
+
+		private void ApplyRotation(PdfPage page)
+		{
+			com.itextpdf.kernel.geom.Rectangle rectagle = page.GetPageSizeWithRotation();
+			int rotation = page.GetRotation();
+			switch (rotation)
+			{
+				case 90:
+				{
+					ConcatMatrix(0, 1, -1, 0, rectagle.GetTop(), 0);
+					break;
+				}
+
+				case 180:
+				{
+					ConcatMatrix(-1, 0, 0, -1, rectagle.GetRight(), rectagle.GetTop());
+					break;
+				}
+
+				case 270:
+				{
+					ConcatMatrix(0, -1, 1, 0, 0, rectagle.GetRight());
+					break;
+				}
+			}
 		}
 	}
 }

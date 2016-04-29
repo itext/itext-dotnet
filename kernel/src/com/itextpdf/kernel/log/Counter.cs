@@ -1,5 +1,5 @@
 /*
-$Id: df89b98706db2679de381b0cb146f5759be6464e $
+$Id: f05c81cf8890a787638bb54888623e0d268f0d03 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,50 +42,32 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using java.lang;
 
-namespace com.itextpdf.kernel.color
+namespace com.itextpdf.kernel.log
 {
-	public class DeviceGray : Color
+	/// <summary>
+	/// Interface that can be implemented if you want to count the number of documents
+	/// that are being processed by iText.
+	/// </summary>
+	/// <remarks>
+	/// Interface that can be implemented if you want to count the number of documents
+	/// that are being processed by iText.
+	/// <p>
+	/// Implementers may use this method to record actual system usage for licensing purposes
+	/// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
+	/// </remarks>
+	public interface Counter
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceGray WHITE = new com.itextpdf.kernel.color.DeviceGray
-			(1f);
+		/// <summary>Gets a Counter instance for a specific class.</summary>
+		Counter GetCounter(Class cls);
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray GRAY = new com.itextpdf.kernel.color.DeviceGray
-			(.5f);
+		/// <summary>This method gets triggered if a document is read.</summary>
+		/// <param name="size">the length of the document that was read</param>
+		void OnDocumentRead(long size);
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray BLACK = new com.itextpdf.kernel.color.DeviceGray
-			();
-
-		public DeviceGray(float value)
-			: base(new PdfDeviceCs.Gray(), new float[] { value })
-		{
-		}
-
-		public DeviceGray()
-			: this(0f)
-		{
-		}
-
-		public static com.itextpdf.kernel.color.DeviceGray MakeLighter(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			if (v == 0f)
-			{
-				return new com.itextpdf.kernel.color.DeviceGray(0.3f);
-			}
-			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
-		}
-
-		public static com.itextpdf.kernel.color.DeviceGray MakeDarker(com.itextpdf.kernel.color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
-		}
+		/// <summary>This method gets triggered if a document is written.</summary>
+		/// <param name="size">the length of the document that was written</param>
+		void OnDocumentWritten(long size);
 	}
 }

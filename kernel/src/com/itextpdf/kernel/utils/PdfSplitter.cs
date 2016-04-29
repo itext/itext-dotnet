@@ -1,5 +1,5 @@
 /*
-$Id: dd00926da26c4bb1f2a5318052fd1bef8522e299 $
+$Id: d1ac2e412472c526d44a6d58eb8b0876e87ffc54 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -54,6 +54,10 @@ namespace com.itextpdf.kernel.utils
 	{
 		private PdfDocument pdfDocument;
 
+		private bool preserveTagged;
+
+		private bool preserveOutlines;
+
 		/// <summary>Creates a new instance of PdfSplitter class.</summary>
 		/// <param name="pdfDocument">the document to be split.</param>
 		public PdfSplitter(PdfDocument pdfDocument)
@@ -63,6 +67,32 @@ namespace com.itextpdf.kernel.utils
 				throw new PdfException(PdfException.CannotSplitDocumentThatIsBeingWritten);
 			}
 			this.pdfDocument = pdfDocument;
+			this.preserveTagged = true;
+			this.preserveOutlines = true;
+		}
+
+		/// <summary>If original document is tagged, then by default all resultant document will also be tagged.
+		/// 	</summary>
+		/// <remarks>
+		/// If original document is tagged, then by default all resultant document will also be tagged.
+		/// This could be changed with this flag - if set to false, resultant documents will be not tagged, even if
+		/// original document is tagged.
+		/// </remarks>
+		public virtual void SetPreserveTagged(bool preserveTagged)
+		{
+			this.preserveTagged = preserveTagged;
+		}
+
+		/// <summary>If original document has outlines, then by default all resultant document will also have outlines.
+		/// 	</summary>
+		/// <remarks>
+		/// If original document has outlines, then by default all resultant document will also have outlines.
+		/// This could be changed with this flag - if set to false, resultant documents won't contain outlines, even if
+		/// original document had them.
+		/// </remarks>
+		public virtual void SetPreserveOutlines(bool preserveOutlines)
+		{
+			this.preserveOutlines = preserveOutlines;
 		}
 
 		/// <summary>Splits the document basing on the given size.</summary>
@@ -127,13 +157,13 @@ namespace com.itextpdf.kernel.utils
 		public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers)
 		{
 			IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-			SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_139(splitDocuments));
+			SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_158(splitDocuments));
 			return splitDocuments;
 		}
 
-		private sealed class _IDocumentReadyListener_139 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_158 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_139(IList<PdfDocument> splitDocuments)
+			public _IDocumentReadyListener_158(IList<PdfDocument> splitDocuments)
 			{
 				this.splitDocuments = splitDocuments;
 			}
@@ -178,13 +208,13 @@ namespace com.itextpdf.kernel.utils
 		public virtual IList<PdfDocument> SplitByPageCount(int pageCount)
 		{
 			IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-			SplitByPageCount(pageCount, new _IDocumentReadyListener_178(splitDocuments));
+			SplitByPageCount(pageCount, new _IDocumentReadyListener_197(splitDocuments));
 			return splitDocuments;
 		}
 
-		private sealed class _IDocumentReadyListener_178 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_197 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_178(IList<PdfDocument> splitDocuments)
+			public _IDocumentReadyListener_197(IList<PdfDocument> splitDocuments)
 			{
 				this.splitDocuments = splitDocuments;
 			}
@@ -253,11 +283,11 @@ namespace com.itextpdf.kernel.utils
 		private PdfDocument CreatePdfDocument(PageRange currentPageRange)
 		{
 			PdfDocument newDocument = new PdfDocument(GetNextPdfWriter(currentPageRange));
-			if (pdfDocument.IsTagged())
+			if (pdfDocument.IsTagged() && preserveTagged)
 			{
 				newDocument.SetTagged();
 			}
-			if (pdfDocument.GetCatalog().IsOutlineMode())
+			if (pdfDocument.HasOutlines() && preserveOutlines)
 			{
 				newDocument.InitializeOutlines();
 			}

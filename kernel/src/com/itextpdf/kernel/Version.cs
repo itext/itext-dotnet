@@ -1,5 +1,5 @@
 /*
-$Id: c9ed559d5e357ac72af2963a771af71ebd7f71e2 $
+$Id: af939423f6ab3bf2e3bd3ca1eaf77a31699851ab $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -57,6 +57,9 @@ namespace com.itextpdf.kernel
 	/// </remarks>
 	public sealed class Version
 	{
+		/// <summary>String that will indicate if the AGPL version is used.</summary>
+		private static String AGPL = " (AGPL-version)";
+
 		/// <summary>The iText version instance.</summary>
 		private static Version version = null;
 
@@ -165,11 +168,18 @@ namespace com.itextpdf.kernel
 					}
 					catch (Exception)
 					{
-						version.iTextVersion += "; AGPL";
+						version.iTextVersion += AGPL;
 					}
 				}
 			}
 			return version;
+		}
+
+		/// <summary>Checks if the AGPL version is used.</summary>
+		/// <returns>returns true if the AGPL version is used.</returns>
+		public static bool IsAGPLVersion()
+		{
+			return GetInstance().GetVersion().IndexOf(AGPL) > 0;
 		}
 
 		/// <summary>Gets the product name.</summary>

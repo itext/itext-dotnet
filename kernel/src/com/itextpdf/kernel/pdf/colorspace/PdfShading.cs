@@ -1,5 +1,5 @@
 /*
-$Id: eba41b52057d4ceefcd6a8bfd7764c547de04619 $
+$Id: 6b8daf3cda6e59d956d6e97408783b002f35c870 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -147,12 +147,13 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			return shading;
 		}
 
-		public PdfShading(PdfDictionary pdfObject)
+		protected internal PdfShading(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
 		}
 
-		public PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace)
+		protected internal PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace
+			)
 			: base(pdfObject)
 		{
 			GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));

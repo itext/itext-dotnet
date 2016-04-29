@@ -1,5 +1,5 @@
 /*
-$Id: 97e7b2f7a08b7f1c2402036a8faab13e37977918 $
+$Id: 05e7ea4f8fa106329adb944e20cd547f7ea49dd4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -303,14 +303,14 @@ namespace com.itextpdf.kernel.pdf.annot
 			return annotation;
 		}
 
-		public PdfAnnotation(Rectangle rect)
+		protected internal PdfAnnotation(Rectangle rect)
 			: this(new PdfDictionary())
 		{
 			Put(PdfName.Rect, new PdfArray(rect));
 			Put(PdfName.Subtype, GetSubtype());
 		}
 
-		public PdfAnnotation(PdfDictionary pdfObject)
+		protected internal PdfAnnotation(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
 			MarkObjectAsIndirect(GetPdfObject());
@@ -657,19 +657,6 @@ namespace com.itextpdf.kernel.pdf.annot
 		public virtual PdfDictionary GetBorderStyle()
 		{
 			return GetPdfObject().GetAsDictionary(PdfName.BS);
-		}
-
-		/// <summary>Marks annotation to be tagged.</summary>
-		/// <remarks>
-		/// Marks annotation to be tagged.
-		/// Normally it shall be done for link annotations.
-		/// </remarks>
-		/// <returns>annotation itself.</returns>
-		public virtual com.itextpdf.kernel.pdf.annot.PdfAnnotation Tag(PdfDocument pdfDocument
-			)
-		{
-			return Put(PdfName.StructParent, new PdfNumber(pdfDocument.GetNextStructParentIndex
-				()));
 		}
 
 		public static com.itextpdf.kernel.pdf.annot.PdfAnnotation MakeAnnotation(PdfObject
