@@ -179,6 +179,7 @@
     <Compile Include="itextsharp\io\util\IntHashtable.cs" />
     <Compile Include="itextsharp\io\util\JavaUtil.cs" />
     <Compile Include="itextsharp\io\util\LinkedDictionary.cs" />
+    <Compile Include="itextsharp\io\util\LinkedHashSet.cs" />
     <Compile Include="itextsharp\io\util\Properties.cs" />
     <Compile Include="itextsharp\io\util\ResourceUtil.cs" />
     <Compile Include="itextsharp\io\util\SortUtil.cs" />
