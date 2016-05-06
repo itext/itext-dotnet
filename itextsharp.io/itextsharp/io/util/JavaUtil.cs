@@ -153,6 +153,12 @@ namespace com.itextpdf.io.util
                 a[i] = val;
         }
 
+        public static void Fill(float[] a, float val)
+        {
+            for (int i = 0, len = a.Length; i < len; i++)
+                a[i] = val;
+        }
+
         public static void Fill(byte[] a, byte val)
         {
             for (int i = 0, len = a.Length; i < len; i++)

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "io.tests", "io.tests\io.tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.io", "itextsharp.io\itextsharp.io.csproj", "{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.kernel", "itextsharp.kernel\itextsharp.kernel.csproj", "{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
