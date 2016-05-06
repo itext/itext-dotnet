@@ -1,0 +1,572 @@
+/*
+$Id: 2e74d0265ba2254ff9c84eb671d3cb5f504178c8 $
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2016 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Collections.Generic;
+using System.IO;
+using com.itextpdf.io;
+using com.itextpdf.io.log;
+using com.itextpdf.io.source;
+
+namespace com.itextpdf.io.codec
+{
+	/// <summary>
+	/// Class to read a JBIG2 file at a basic level: understand all the segments,
+	/// understand what segments belong to which pages, how many pages there are,
+	/// what the width and height of each page is, and global segments if there
+	/// are any.
+	/// </summary>
+	/// <remarks>
+	/// Class to read a JBIG2 file at a basic level: understand all the segments,
+	/// understand what segments belong to which pages, how many pages there are,
+	/// what the width and height of each page is, and global segments if there
+	/// are any.  Or: the minimum required to be able to take a normal sequential
+	/// or random-access organized file, and be able to embed JBIG2 pages as images
+	/// in a PDF.
+	/// TODO: the indeterminate-segment-size value of dataLength, else?
+	/// </remarks>
+	public class Jbig2SegmentReader
+	{
+		public const int SYMBOL_DICTIONARY = 0;
+
+		public const int INTERMEDIATE_TEXT_REGION = 4;
+
+		public const int IMMEDIATE_TEXT_REGION = 6;
+
+		public const int IMMEDIATE_LOSSLESS_TEXT_REGION = 7;
+
+		public const int PATTERN_DICTIONARY = 16;
+
+		public const int INTERMEDIATE_HALFTONE_REGION = 20;
+
+		public const int IMMEDIATE_HALFTONE_REGION = 22;
+
+		public const int IMMEDIATE_LOSSLESS_HALFTONE_REGION = 23;
+
+		public const int INTERMEDIATE_GENERIC_REGION = 36;
+
+		public const int IMMEDIATE_GENERIC_REGION = 38;
+
+		public const int IMMEDIATE_LOSSLESS_GENERIC_REGION = 39;
+
+		public const int INTERMEDIATE_GENERIC_REFINEMENT_REGION = 40;
+
+		public const int IMMEDIATE_GENERIC_REFINEMENT_REGION = 42;
+
+		public const int IMMEDIATE_LOSSLESS_GENERIC_REFINEMENT_REGION = 43;
+
+		public const int PAGE_INFORMATION = 48;
+
+		public const int END_OF_PAGE = 49;
+
+		public const int END_OF_STRIPE = 50;
+
+		public const int END_OF_FILE = 51;
+
+		public const int PROFILES = 52;
+
+		public const int TABLES = 53;
+
+		public const int EXTENSION = 62;
+
+		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new 
+			SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment>();
+
+		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
+			<int, Jbig2SegmentReader.Jbig2Page>();
+
+		private readonly ICollection<Jbig2SegmentReader.Jbig2Segment> globals = new SortedSet
+			<Jbig2SegmentReader.Jbig2Segment>();
+
+		private RandomAccessFileOrArray ra;
+
+		private bool sequential;
+
+		private bool number_of_pages_known;
+
+		private int number_of_pages = -1;
+
+		private bool read = false;
+
+		/// <summary>Inner class that holds information about a JBIG2 segment.</summary>
+		public class Jbig2Segment : IComparable<Jbig2SegmentReader.Jbig2Segment>
+		{
+			public readonly int segmentNumber;
+
+			public long dataLength = -1;
+
+			public int page = -1;
+
+			public int[] referredToSegmentNumbers = null;
+
+			public bool[] segmentRetentionFlags = null;
+
+			public int type = -1;
+
+			public bool deferredNonRetain = false;
+
+			public int countOfReferredToSegments = -1;
+
+			public byte[] data = null;
+
+			public byte[] headerData = null;
+
+			public bool page_association_size = false;
+
+			public int page_association_offset = -1;
+
+			public Jbig2Segment(int segment_number)
+			{
+				//see 7.4.2.
+				//see 7.4.3.
+				//see 7.4.3.
+				//see 7.4.3.
+				//see 7.4.4.
+				//see 7.4.5.
+				//see 7.4.5.
+				//see 7.4.5.
+				//see 7.4.6.
+				//see 7.4.6.
+				//see 7.4.6.
+				//see 7.4.7.
+				//see 7.4.7.
+				//see 7.4.7.
+				//see 7.4.8.
+				//see 7.4.9.
+				//see 7.4.10.
+				//see 7.4.11.
+				//see 7.4.12.
+				//see 7.4.13.
+				//see 7.4.14.
+				this.segmentNumber = segment_number;
+			}
+
+			public virtual int CompareTo(Jbig2SegmentReader.Jbig2Segment s)
+			{
+				return this.segmentNumber - s.segmentNumber;
+			}
+		}
+
+		/// <summary>Inner class that holds information about a JBIG2 page.</summary>
+		public class Jbig2Page
+		{
+			public readonly int page;
+
+			private readonly Jbig2SegmentReader sr;
+
+			private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
+				<int, Jbig2SegmentReader.Jbig2Segment>();
+
+			public int pageBitmapWidth = -1;
+
+			public int pageBitmapHeight = -1;
+
+			public Jbig2Page(int page, Jbig2SegmentReader sr)
+			{
+				this.page = page;
+				this.sr = sr;
+			}
+
+			/// <summary>
+			/// return as a single byte array the header-data for each segment in segment number
+			/// order, EMBEDDED organization, but i am putting the needed segments in SEQUENTIAL organization.
+			/// </summary>
+			/// <remarks>
+			/// return as a single byte array the header-data for each segment in segment number
+			/// order, EMBEDDED organization, but i am putting the needed segments in SEQUENTIAL organization.
+			/// if for_embedding, skip the segment types that are known to be not for acrobat.
+			/// </remarks>
+			/// <param name="for_embedding"/>
+			/// <exception cref="System.IO.IOException"/>
+			/// <returns>a byte array</returns>
+			public virtual byte[] GetData(bool for_embedding)
+			{
+				MemoryStream os = new MemoryStream();
+				foreach (int sn in segs.Keys)
+				{
+					Jbig2SegmentReader.Jbig2Segment s = segs[sn];
+					// pdf reference 1.4, section 3.3.6 Jbig2Decode Filter
+					// D.3 Embedded organisation
+					if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE))
+					{
+						continue;
+					}
+					if (for_embedding)
+					{
+						// change the page association to page 1
+						byte[] headerData_emb = CopyByteArray(s.headerData);
+						if (s.page_association_size)
+						{
+							headerData_emb[s.page_association_offset] = 0x0;
+							headerData_emb[s.page_association_offset + 1] = 0x0;
+							headerData_emb[s.page_association_offset + 2] = 0x0;
+							headerData_emb[s.page_association_offset + 3] = 0x1;
+						}
+						else
+						{
+							headerData_emb[s.page_association_offset] = 0x1;
+						}
+						os.Write(headerData_emb);
+					}
+					else
+					{
+						os.Write(s.headerData);
+					}
+					os.Write(s.data);
+				}
+				os.Close();
+				return os.ToArray();
+			}
+
+			public virtual void AddSegment(Jbig2SegmentReader.Jbig2Segment s)
+			{
+				segs[s.segmentNumber] = s;
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public Jbig2SegmentReader(RandomAccessFileOrArray ra)
+		{
+			this.ra = ra;
+		}
+
+		public static byte[] CopyByteArray(byte[] b)
+		{
+			byte[] bc = new byte[b.Length];
+			System.Array.Copy(b, 0, bc, 0, b.Length);
+			return bc;
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		public virtual void Read()
+		{
+			if (this.read)
+			{
+				throw new InvalidOperationException("already.attempted.a.read.on.this.jbig2.file"
+					);
+			}
+			this.read = true;
+			ReadFileHeader();
+			// Annex D
+			if (this.sequential)
+			{
+				do
+				{
+					// D.1
+					Jbig2SegmentReader.Jbig2Segment tmp = ReadHeader();
+					ReadSegment(tmp);
+					segments[tmp.segmentNumber] = tmp;
+				}
+				while (this.ra.GetPosition() < this.ra.Length());
+			}
+			else
+			{
+				// D.2
+				Jbig2SegmentReader.Jbig2Segment tmp;
+				do
+				{
+					tmp = ReadHeader();
+					segments[tmp.segmentNumber] = tmp;
+				}
+				while (tmp.type != END_OF_FILE);
+				IEnumerator<int> segs = segments.Keys.GetEnumerator();
+				while (segs.MoveNext())
+				{
+					ReadSegment(segments[segs.Current]);
+				}
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s)
+		{
+			int ptr = (int)ra.GetPosition();
+			if (s.dataLength == unchecked((long)(0xffffffffl)))
+			{
+				// TODO figure this bit out, 7.2.7
+				return;
+			}
+			byte[] data = new byte[(int)s.dataLength];
+			ra.Read(data);
+			s.data = data;
+			if (s.type == PAGE_INFORMATION)
+			{
+				int last = (int)ra.GetPosition();
+				ra.Seek(ptr);
+				int page_bitmap_width = ra.ReadInt();
+				int page_bitmap_height = ra.ReadInt();
+				ra.Seek(last);
+				Jbig2SegmentReader.Jbig2Page p = pages[s.page];
+				if (p == null)
+				{
+					throw new IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1").SetMessageParams
+						(s.page);
+				}
+				p.pageBitmapWidth = page_bitmap_width;
+				p.pageBitmapHeight = page_bitmap_height;
+			}
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		internal virtual Jbig2SegmentReader.Jbig2Segment ReadHeader()
+		{
+			int ptr = (int)ra.GetPosition();
+			// 7.2.1
+			int segment_number = ra.ReadInt();
+			Jbig2SegmentReader.Jbig2Segment s = new Jbig2SegmentReader.Jbig2Segment(segment_number
+				);
+			// 7.2.3
+			int segment_header_flags = ra.Read();
+			bool deferred_non_retain = (segment_header_flags & unchecked((int)(0x80))) == unchecked(
+				(int)(0x80));
+			s.deferredNonRetain = deferred_non_retain;
+			bool page_association_size = (segment_header_flags & 0x40) == 0x40;
+			int segment_type = segment_header_flags & 0x3f;
+			s.type = segment_type;
+			//7.2.4
+			int referred_to_byte0 = ra.Read();
+			int count_of_referred_to_segments = (referred_to_byte0 & 0xE0) >> 5;
+			int[] referred_to_segment_numbers = null;
+			bool[] segment_retention_flags = null;
+			if (count_of_referred_to_segments == 7)
+			{
+				// at least five bytes
+				ra.Seek(ra.GetPosition() - 1);
+				count_of_referred_to_segments = ra.ReadInt() & 0x1fffffff;
+				segment_retention_flags = new bool[count_of_referred_to_segments + 1];
+				int i = 0;
+				int referred_to_current_byte = 0;
+				do
+				{
+					int j = i % 8;
+					if (j == 0)
+					{
+						referred_to_current_byte = ra.Read();
+					}
+					segment_retention_flags[i] = (0x1 << j & referred_to_current_byte) >> j == 0x1;
+					i++;
+				}
+				while (i <= count_of_referred_to_segments);
+			}
+			else
+			{
+				if (count_of_referred_to_segments <= 4)
+				{
+					// only one byte
+					segment_retention_flags = new bool[count_of_referred_to_segments + 1];
+					referred_to_byte0 &= 0x1f;
+					for (int i = 0; i <= count_of_referred_to_segments; i++)
+					{
+						segment_retention_flags[i] = (0x1 << i & referred_to_byte0) >> i == 0x1;
+					}
+				}
+				else
+				{
+					if (count_of_referred_to_segments == 5 || count_of_referred_to_segments == 6)
+					{
+						throw new IOException("count.of.referred.to.segments.had.bad.value.in.header.for.segment.1.starting.at.2"
+							).SetMessageParams(segment_number, ptr);
+					}
+				}
+			}
+			s.segmentRetentionFlags = segment_retention_flags;
+			s.countOfReferredToSegments = count_of_referred_to_segments;
+			// 7.2.5
+			referred_to_segment_numbers = new int[count_of_referred_to_segments + 1];
+			for (int i_1 = 1; i_1 <= count_of_referred_to_segments; i_1++)
+			{
+				if (segment_number <= 256)
+				{
+					referred_to_segment_numbers[i_1] = ra.Read();
+				}
+				else
+				{
+					if (segment_number <= 65536)
+					{
+						referred_to_segment_numbers[i_1] = ra.ReadUnsignedShort();
+					}
+					else
+					{
+						referred_to_segment_numbers[i_1] = (int)ra.ReadUnsignedInt();
+					}
+				}
+			}
+			// TODO wtf ack
+			s.referredToSegmentNumbers = referred_to_segment_numbers;
+			// 7.2.6
+			int segment_page_association;
+			int page_association_offset = (int)ra.GetPosition() - ptr;
+			if (page_association_size)
+			{
+				segment_page_association = ra.ReadInt();
+			}
+			else
+			{
+				segment_page_association = ra.Read();
+			}
+			if (segment_page_association < 0)
+			{
+				throw new IOException("page.1.invalid.for.segment.2.starting.at.3").SetMessageParams
+					(segment_page_association, segment_number, ptr);
+			}
+			s.page = segment_page_association;
+			// so we can change the page association at embedding time.
+			s.page_association_size = page_association_size;
+			s.page_association_offset = page_association_offset;
+			if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association))
+			{
+				pages[segment_page_association] = new Jbig2SegmentReader.Jbig2Page(segment_page_association
+					, this);
+			}
+			if (segment_page_association > 0)
+			{
+				pages[segment_page_association].AddSegment(s);
+			}
+			else
+			{
+				globals.Add(s);
+			}
+			// 7.2.7
+			long segment_data_length = ra.ReadUnsignedInt();
+			// TODO the 0xffffffff value that might be here, and how to understand those afflicted segments
+			s.dataLength = segment_data_length;
+			int end_ptr = (int)ra.GetPosition();
+			ra.Seek(ptr);
+			byte[] header_data = new byte[end_ptr - ptr];
+			ra.Read(header_data);
+			s.headerData = header_data;
+			return s;
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		internal virtual void ReadFileHeader()
+		{
+			ra.Seek(0);
+			byte[] idstring = new byte[8];
+			ra.Read(idstring);
+			byte[] refidstring = new byte[] { unchecked((byte)0x97), 0x4A, 0x42, 0x32, 0x0D, 
+				0x0A, 0x1A, 0x0A };
+			for (int i = 0; i < idstring.Length; i++)
+			{
+				if (idstring[i] != refidstring[i])
+				{
+					throw new IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams
+						(i);
+				}
+			}
+			int fileheaderflags = ra.Read();
+			this.sequential = (fileheaderflags & 0x1) == 0x1;
+			this.number_of_pages_known = (fileheaderflags & 0x2) == 0x0;
+			if ((fileheaderflags & unchecked((int)(0xfc))) != 0x0)
+			{
+				throw new IOException("file.header.flags.bits.2.7.not.0");
+			}
+			if (this.number_of_pages_known)
+			{
+				this.number_of_pages = ra.ReadInt();
+			}
+		}
+
+		public virtual int NumberOfPages()
+		{
+			return pages.Count;
+		}
+
+		public virtual int GetPageHeight(int i)
+		{
+			return pages[i].pageBitmapHeight;
+		}
+
+		public virtual int GetPageWidth(int i)
+		{
+			return pages[i].pageBitmapWidth;
+		}
+
+		public virtual Jbig2SegmentReader.Jbig2Page GetPage(int page)
+		{
+			return pages[page];
+		}
+
+		public virtual byte[] GetGlobal(bool for_embedding)
+		{
+			MemoryStream os = new MemoryStream();
+			try
+			{
+				foreach (Object element in globals)
+				{
+					Jbig2SegmentReader.Jbig2Segment s = (Jbig2SegmentReader.Jbig2Segment)element;
+					if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE))
+					{
+						continue;
+					}
+					os.Write(s.headerData);
+					os.Write(s.data);
+				}
+				os.Close();
+			}
+			catch (System.IO.IOException e)
+			{
+				Logger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));
+				logger.Debug(e.Message);
+			}
+			if (os.Length <= 0)
+			{
+				return null;
+			}
+			return os.ToArray();
+		}
+
+		public override String ToString()
+		{
+			if (this.read)
+			{
+				return "Jbig2SegmentReader: number of pages: " + this.NumberOfPages();
+			}
+			else
+			{
+				return "Jbig2SegmentReader in indeterminate state.";
+			}
+		}
+	}
+}

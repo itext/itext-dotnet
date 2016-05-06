@@ -149,18 +149,8 @@
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\draw\DottedLine.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\draw\ILineDrawer.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\draw\SolidLine.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\ClipperBase.cs" />
+    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\Clipper.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\ClipperBridge.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\ClipperOffset.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\DefaultClipper.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\Edge.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\IClipper.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\LongRect.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\Path.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\Paths.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\Point.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\PolyNode.cs" />
-    <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\clipper\PolyTree.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\data\ClippingPathInfo.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\data\IEventData.cs" />
     <Compile Include="src\com\itextpdf\kernel\pdf\canvas\parser\data\ImageRenderInfo.cs" />
@@ -359,9 +349,9 @@
     <Compile Include="src\com\itextpdf\kernel\xmp\XMPVersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\io\io.csproj">
+    <ProjectReference Include="..\io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
-      <Name>io</Name>
+      <Name>itextsharp.io</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

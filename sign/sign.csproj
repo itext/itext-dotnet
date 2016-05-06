@@ -86,9 +86,9 @@
       <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
       <Name>forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\io\io.csproj">
+    <ProjectReference Include="..\io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
-      <Name>io</Name>
+      <Name>itextsharp.io</Name>
     </ProjectReference>
     <ProjectReference Include="..\kernel\kernel.csproj">
       <Project>{89CA1A81-2179-424D-88B3-C2EDC9453364}</Project>
