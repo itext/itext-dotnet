@@ -81,7 +81,7 @@
     <Compile Include="src\com\itextpdf\barcodes\qrcode\WriterException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\io\itextsharp.io.csproj">
+    <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itextsharp.io</Name>
     </ProjectReference>

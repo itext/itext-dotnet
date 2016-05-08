@@ -8,7 +8,6 @@
     <ProjectGuid>{4E7819E8-7555-4E2E-9A01-D8718A2CFDDA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>itextsharp.kernel</RootNamespace>
     <AssemblyName>itextsharp.kernel</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
