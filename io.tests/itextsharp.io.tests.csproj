@@ -44,15 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\com\itextpdf\io\AdobeGlyphListTest.cs" />
-    <Compile Include="src\com\itextpdf\io\font\FontProgramTest.cs" />
-    <Compile Include="src\com\itextpdf\io\image\BmpTest.cs" />
-    <Compile Include="src\com\itextpdf\io\image\Jpeg2000Test.cs" />
-    <Compile Include="src\com\itextpdf\io\image\JpegTest.cs" />
-    <Compile Include="src\com\itextpdf\io\image\TiffTest.cs" />
-    <Compile Include="src\com\itextpdf\io\source\WriteNumbersTest.cs" />
-    <Compile Include="src\com\itextpdf\io\source\WriteStringsTest.cs" />
-    <Compile Include="src\com\itextpdf\io\UtilitiesTest.cs" />
+    <Compile Include="itextsharp\io\AdobeGlyphListTest.cs" />
+    <Compile Include="itextsharp\io\font\FontProgramTest.cs" />
+    <Compile Include="itextsharp\io\image\BmpTest.cs" />
+    <Compile Include="itextsharp\io\image\Jpeg2000Test.cs" />
+    <Compile Include="itextsharp\io\image\JpegTest.cs" />
+    <Compile Include="itextsharp\io\image\TiffTest.cs" />
+    <Compile Include="itextsharp\io\source\WriteNumbersTest.cs" />
+    <Compile Include="itextsharp\io\source\WriteStringsTest.cs" />
+    <Compile Include="itextsharp\io\UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">

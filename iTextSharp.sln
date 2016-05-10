@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "layout", "layout\layout.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sign", "sign\sign.csproj", "{14A163C0-0054-480D-A096-EDA51DD933EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "io.tests", "io.tests\io.tests.csproj", "{2D030BF2-59ED-45AC-9C4E-360753805A44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.io.tests", "io.tests\itextsharp.io.tests.csproj", "{2D030BF2-59ED-45AC-9C4E-360753805A44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.io", "itextsharp.io\itextsharp.io.csproj", "{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}"
 EndProject

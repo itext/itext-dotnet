@@ -126,8 +126,14 @@ namespace io.itextsharp.io.util {
             return false;
         }
 
-        public int Count => _map.Count;
+        public int Count
+        {
+            get { return _map.Count; }
+        }
 
-        public bool IsReadOnly => _map.IsReadOnly;
+        public bool IsReadOnly
+        {
+            get { return _map.IsReadOnly; }
+        }
     }
 }
