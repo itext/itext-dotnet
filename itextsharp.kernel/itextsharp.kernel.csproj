@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="itextsharp\kernel\color\CalGray.cs" />
@@ -354,6 +349,12 @@
     <Compile Include="itextsharp\kernel\xmp\XMPUtils.cs" />
     <Compile Include="itextsharp\kernel\xmp\XMPVersionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
+      <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
+      <Name>itextsharp.io</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
