@@ -7,6 +7,9 @@ namespace com.itextpdf.io.util {
         private readonly IDictionary<TKey, LinkedListNode<TKey>> _map = new Dictionary<TKey, LinkedListNode<TKey>>();
         private readonly LinkedList<TKey> _list = new LinkedList<TKey>();
 
+        public LinkedHashSet() {
+        } 
+
         public LinkedHashSet(ICollection<TKey> c) {
             foreach (TKey item in c) {
                 Add(item);
