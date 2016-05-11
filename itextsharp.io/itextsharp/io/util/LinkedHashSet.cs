@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace io.itextsharp.io.util {
+namespace com.itextpdf.io.util {
     public class LinkedHashSet<TKey> : ISet<TKey> {
         private readonly IDictionary<TKey, LinkedListNode<TKey>> _map = new Dictionary<TKey, LinkedListNode<TKey>>();
         private readonly LinkedList<TKey> _list = new LinkedList<TKey>();
+
+        public LinkedHashSet(ICollection<TKey> c) {
+            foreach (TKey item in c) {
+                Add(item);
+            }
+        } 
 
         public IEnumerator<TKey> GetEnumerator() {
             return _list.GetEnumerator();
