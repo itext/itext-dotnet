@@ -145,14 +145,14 @@ namespace com.itextpdf.kernel.pdf
 
 		public virtual int CompareTo(com.itextpdf.kernel.pdf.PdfVersion o)
 		{
-			int majorResult = int.Compare(major, o.major);
+			int majorResult = com.itextpdf.io.util.JavaUtil.IntegerCompare(major, o.major);
 			if (majorResult != 0)
 			{
 				return majorResult;
 			}
 			else
 			{
-				return int.Compare(minor, o.minor);
+				return com.itextpdf.io.util.JavaUtil.IntegerCompare(minor, o.minor);
 			}
 		}
 

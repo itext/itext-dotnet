@@ -145,7 +145,8 @@ namespace com.itextpdf.kernel.pdf
 					return -1;
 				}
 			}
-			return int.Compare(content.Length, o.content.Length);
+			return com.itextpdf.io.util.JavaUtil.IntegerCompare(content.Length, o.content.Length
+				);
 		}
 	}
 }

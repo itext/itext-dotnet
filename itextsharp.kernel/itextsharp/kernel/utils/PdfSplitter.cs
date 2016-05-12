@@ -307,7 +307,7 @@ namespace com.itextpdf.kernel.utils
 		/// <exception cref="com.itextpdf.kernel.PdfException"/>
 		public virtual IList<PdfDocument> SplitByOutlines(IList<String> outlineTitles)
 		{
-			if (outlineTitles == null || outlineTitles.IsEmpty())
+			if (outlineTitles == null || outlineTitles.Count == 0)
 			{
 				return java.util.Collections.EmptyList();
 			}
@@ -427,7 +427,7 @@ namespace com.itextpdf.kernel.utils
 				PdfPage page = pdfDocument.GetPage(currentPage++);
 				counter = new PdfResourceCounter(page.GetPdfObject());
 				lengthWithoutXref += counter.GetLength(resources);
-				resources.PutAll(counter.GetResources());
+				resources.AddAll(counter.GetResources());
 				if (lengthWithoutXref + XrefLength(resources.Count) > size)
 				{
 					oversized = true;

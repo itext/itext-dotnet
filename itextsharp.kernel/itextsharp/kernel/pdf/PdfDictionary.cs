@@ -80,7 +80,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="map">Map containing values to be inserted into PdfDictionary</param>
 		public PdfDictionary(IDictionary<PdfName, PdfObject> map)
 		{
-			this.map.PutAll(map);
+			this.map.AddAll(map);
 		}
 
 		/// <summary>Creates a new PdfDictionary instance.</summary>
@@ -107,7 +107,7 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</param>
 		public PdfDictionary(com.itextpdf.kernel.pdf.PdfDictionary dictionary)
 		{
-			map.PutAll(dictionary.map);
+			map.AddAll(dictionary.map);
 		}
 
 		/// <summary>Returns the number of key-value pairs in this PdfDictionary.</summary>
@@ -327,7 +327,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="d">PdfDictionary holding the key-value pairs to be copied</param>
 		public virtual void PutAll(com.itextpdf.kernel.pdf.PdfDictionary d)
 		{
-			map.PutAll(d.map);
+			map.AddAll(d.map);
 		}
 
 		/// <summary>Removes all key-value pairs from this PdfDictionary.</summary>
@@ -405,7 +405,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 			com.itextpdf.kernel.pdf.PdfDictionary dictionary = (com.itextpdf.kernel.pdf.PdfDictionary
 				)Clone();
-			map.PutAll(excluded);
+			map.AddAll(excluded);
 			return dictionary;
 		}
 
@@ -485,7 +485,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 			com.itextpdf.kernel.pdf.PdfDictionary dictionary = ((com.itextpdf.kernel.pdf.PdfDictionary
 				)CopyTo(document, allowDuplicating));
-			map.PutAll(excluded);
+			map.AddAll(excluded);
 			return dictionary;
 		}
 

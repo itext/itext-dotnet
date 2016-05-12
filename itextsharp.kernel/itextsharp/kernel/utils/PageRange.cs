@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using java.util.regex;
+using System.Text.RegularExpressions;
 
 namespace com.itextpdf.kernel.utils
 {
@@ -63,22 +63,28 @@ namespace com.itextpdf.kernel.utils
 		/// <param name="pageRange">the page range.</param>
 		public PageRange(String pageRange)
 		{
-			pageRange = pageRange.ReplaceAll("\\s+", "");
-			Pattern sequencePattern = Pattern.Compile("(\\d+)-(\\d+)");
-			Pattern singlePagePattern = Pattern.Compile("(\\d+)");
+			pageRange = com.itextpdf.io.util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
+			Regex sequencePattern = com.itextpdf.io.util.StringUtil.RegexCompile("(\\d+)-(\\d+)"
+				);
+			Regex singlePagePattern = com.itextpdf.io.util.StringUtil.RegexCompile("(\\d+)");
 			foreach (String pageRangePart in pageRange.Split(","))
 			{
-				Matcher matcher;
-				if ((matcher = sequencePattern.Matcher(pageRangePart)).Matches())
+				Match matcher;
+				if ((matcher = com.itextpdf.io.util.StringUtil.Match(sequencePattern, pageRangePart
+					)).Success)
 				{
-					sequenceStarts.Add(System.Convert.ToInt32(matcher.Group(1)));
-					sequenceEnds.Add(System.Convert.ToInt32(matcher.Group(2)));
+					sequenceStarts.Add(System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+						, 1)));
+					sequenceEnds.Add(System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+						, 2)));
 				}
 				else
 				{
-					if ((matcher = singlePagePattern.Matcher(pageRangePart)).Matches())
+					if ((matcher = com.itextpdf.io.util.StringUtil.Match(singlePagePattern, pageRangePart
+						)).Success)
 					{
-						int pageNumber = System.Convert.ToInt32(matcher.Group(1));
+						int pageNumber = System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+							, 1));
 						sequenceStarts.Add(pageNumber);
 						sequenceEnds.Add(pageNumber);
 					}

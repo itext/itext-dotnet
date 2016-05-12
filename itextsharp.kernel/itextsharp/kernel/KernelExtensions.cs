@@ -82,5 +82,13 @@ namespace com.itextpdf.kernel {
             int[][] r = col.ToArray();
             return r;
         }
+
+        public static void AddAll<T>(this ICollection<T> c, ICollection<T> collectionToAdd)
+        {
+            foreach (T o in collectionToAdd)
+            {
+                c.Add(o);
+            }
+        }
     }
 }

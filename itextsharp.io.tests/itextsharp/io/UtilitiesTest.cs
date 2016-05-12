@@ -1,7 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
 using com.itextpdf.io.util;
-using io.itextsharp.io.util;
 
 namespace com.itextpdf.io
 {

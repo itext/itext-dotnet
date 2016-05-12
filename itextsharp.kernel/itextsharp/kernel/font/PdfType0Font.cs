@@ -884,7 +884,7 @@ namespace com.itextpdf.kernel.font
 			{
 				int m1 = o1[0];
 				int m2 = o2[0];
-				return int.Compare(m1, m2);
+				return com.itextpdf.io.util.JavaUtil.IntegerCompare(m1, m2);
 			}
 		}
 	}

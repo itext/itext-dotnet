@@ -29,10 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using com.itextpdf.kernel.xmp;
 using com.itextpdf.kernel.xmp.options;
 using com.itextpdf.kernel.xmp.properties;
-using java.util.regex;
 
 namespace com.itextpdf.kernel.xmp.impl
 {
@@ -59,7 +59,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		private IDictionary aliasMap = new Hashtable();
 
 		/// <summary>The pattern that must not be contained in simple properties</summary>
-		private Pattern p = Pattern.Compile("[/*?\\[\\]]");
+		private Regex p = com.itextpdf.io.util.StringUtil.RegexCompile("[/*?\\[\\]]");
 
 		/// <summary>
 		/// Performs the initialisation of the registry with the default namespaces, aliases and global
@@ -365,7 +365,8 @@ namespace com.itextpdf.kernel.xmp.impl
 				// Fix the alias options
 				AliasOptions aliasOpts = aliasForm != null ? new AliasOptions(XMPNodeUtils.VerifySetOptions
 					(aliasForm.ToPropertyOptions(), null).GetOptions()) : new AliasOptions();
-				if (p.Matcher(aliasProp).Find() || p.Matcher(actualProp).Find())
+				if (com.itextpdf.io.util.StringUtil.Match(p, aliasProp).Find() || com.itextpdf.io.util.StringUtil.Match
+					(p, actualProp).Find())
 				{
 					throw new XMPException("Alias and actual property names must be simple", XMPError
 						.BADXPATH);

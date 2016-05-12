@@ -533,12 +533,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 					return 0;
 				}
 				int result;
-				result = int.Compare(OrientationMagnitude(), other.OrientationMagnitude());
+				result = com.itextpdf.io.util.JavaUtil.IntegerCompare(OrientationMagnitude(), other
+					.OrientationMagnitude());
 				if (result != 0)
 				{
 					return result;
 				}
-				result = int.Compare(DistPerpendicular(), other.DistPerpendicular());
+				result = com.itextpdf.io.util.JavaUtil.IntegerCompare(DistPerpendicular(), other.
+					DistPerpendicular());
 				if (result != 0)
 				{
 					return result;

@@ -140,7 +140,8 @@ namespace com.itextpdf.kernel.utils
 				if (alt != null)
 				{
 					@out.Write("<alt><![CDATA[");
-					@out.Write(alt.GetValue().ReplaceAll("[\\000]*", ""));
+					@out.Write(com.itextpdf.io.util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", 
+						""));
 					@out.WriteLine("]]></alt>");
 				}
 				InspectKids(structElemKid.GetKids());

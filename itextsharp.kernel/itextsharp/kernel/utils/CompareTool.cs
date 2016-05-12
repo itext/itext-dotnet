@@ -114,8 +114,8 @@ namespace com.itextpdf.kernel.utils
 
 		public CompareTool()
 		{
-			gsExec = com.itextpdf.GetProperty("gsExec");
-			compareExec = com.itextpdf.GetProperty("compareExec");
+			gsExec = System.Environment.GetEnvironmentVariable("gsExec");
+			compareExec = System.Environment.GetEnvironmentVariable("compareExec");
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -1288,12 +1288,12 @@ namespace com.itextpdf.kernel.utils
 					);
 				String cmpByte = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
 					[firstDifferenceOffset] });
-				String cmpByteNeighbours = com.itextpdf.io.util.JavaUtil.GetStringForBytes(cmpStreamBytes
-					, lCmp, rCmp - lCmp).ReplaceAll("\\r|\\n", " ");
+				String cmpByteNeighbours = com.itextpdf.io.util.StringUtil.ReplaceAll(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+					(cmpStreamBytes, lCmp, rCmp - lCmp), "\\r|\\n", " ");
 				String outByte = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes
 					[firstDifferenceOffset] });
-				String outBytesNeighbours = com.itextpdf.io.util.JavaUtil.GetStringForBytes(outStreamBytes
-					, lOut, rOut - lOut).ReplaceAll("\\r|\\n", " ");
+				String outBytesNeighbours = com.itextpdf.io.util.StringUtil.ReplaceAll(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+					(outStreamBytes, lOut, rOut - lOut), "\\r|\\n", " ");
 				errorMessage = String.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
 					, System.Convert.ToInt32(firstDifferenceOffset).ToString(), cmpByte, cmpByteNeighbours
 					, outByte, outBytesNeighbours, numberOfDifferentBytes);
