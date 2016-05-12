@@ -1139,18 +1139,18 @@ namespace com.itextpdf.kernel.pdf
 						type = 0;
 						for (int k_1 = 0; k_1 < wc[0]; ++k_1)
 						{
-							type = (type << 8) + (b[bptr++] & unchecked((int)(0xff)));
+							type = (type << 8) + (b[bptr++] & 0xff);
 						}
 					}
 					long field2 = 0;
 					for (int k_2 = 0; k_2 < wc[1]; ++k_2)
 					{
-						field2 = (field2 << 8) + (b[bptr++] & unchecked((int)(0xff)));
+						field2 = (field2 << 8) + (b[bptr++] & 0xff);
 					}
 					int field3 = 0;
 					for (int k_3 = 0; k_3 < wc[2]; ++k_3)
 					{
-						field3 = (field3 << 8) + (b[bptr++] & unchecked((int)(0xff)));
+						field3 = (field3 << 8) + (b[bptr++] & 0xff);
 					}
 					int @base = start;
 					PdfIndirectReference newReference;
@@ -1558,7 +1558,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					return -1;
 				}
-				return unchecked((int)(0xff)) & buffer.GetInternalBuffer()[(int)offset];
+				return 0xff & buffer.GetInternalBuffer()[(int)offset];
 			}
 
 			public virtual int Get(long offset, byte[] bytes, int off, int len)

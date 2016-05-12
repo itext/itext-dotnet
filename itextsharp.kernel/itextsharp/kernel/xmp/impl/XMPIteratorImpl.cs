@@ -139,7 +139,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			else
 			{
 				// create null iterator
-				nodeIterator = java.util.Collections.EMPTY_LIST.GetEnumerator();
+				nodeIterator = java.util.Collections.EmptyIterator();
 			}
 		}
 
@@ -228,8 +228,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			private int index = 0;
 
 			/// <summary>the iterator for each child</summary>
-			private IEnumerator subIterator = java.util.Collections.EMPTY_LIST.GetEnumerator(
-				);
+			private IEnumerator subIterator = java.util.Collections.EmptyIterator();
 
 			/// <summary>the cached <code>PropertyInfo</code> to return</summary>
 			private XMPPropertyInfo returnProperty = null;
@@ -330,7 +329,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				{
 					// setSkipSiblings(false);
 					this._enclosing.skipSiblings = false;
-					this.subIterator = java.util.Collections.EMPTY_LIST.GetEnumerator();
+					this.subIterator = java.util.Collections.EmptyIterator();
 				}
 				// create sub iterator for every child,
 				// if its the first child visited or the former child is finished

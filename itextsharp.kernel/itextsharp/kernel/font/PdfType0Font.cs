@@ -61,10 +61,8 @@ namespace com.itextpdf.kernel.font
 	{
 		private const long serialVersionUID = -8033620300884193397L;
 
-		private static readonly byte[] rotbits = new byte[] { unchecked((byte)unchecked((
-			int)(0x80))), unchecked((byte)0x40), unchecked((byte)0x20), unchecked((byte)0x10
-			), unchecked((byte)0x08), unchecked((byte)0x04), unchecked((byte)0x02), unchecked(
-			(byte)0x01) };
+		private static readonly byte[] rotbits = new byte[] { (byte)0x80, (byte)0x40, (byte
+			)0x20, (byte)0x10, (byte)0x08, (byte)0x04, (byte)0x02, (byte)0x01 };
 
 		protected internal const int CID_FONT_TYPE_0 = 0;
 
@@ -105,7 +103,7 @@ namespace com.itextpdf.kernel.font
 				byte[] bytes = new byte[1];
 				for (int k = 0; k < 256; ++k)
 				{
-					bytes[0] = unchecked((byte)k);
+					bytes[0] = (byte)k;
 					String s = PdfEncodings.ConvertToString(bytes, null);
 					char ch = s.Length > 0 ? s[0] : '?';
 					specificUnicodeDifferences[k] = ch;
@@ -246,7 +244,7 @@ namespace com.itextpdf.kernel.font
 				len = b.Length;
 				for (int k = 0; k < len; ++k)
 				{
-					Glyph glyph = fontProgram.GetGlyph(b[k] & unchecked((int)(0xff)));
+					Glyph glyph = fontProgram.GetGlyph(b[k] & 0xff);
 					if (glyph != null && !longTag.ContainsKey(glyph.GetCode()))
 					{
 						longTag[glyph.GetCode()] = new int[] { glyph.GetCode(), glyph.GetWidth(), glyph.HasValidUnicode
@@ -423,7 +421,7 @@ namespace com.itextpdf.kernel.font
 						len = b.Length;
 						for (int k = 0; k < len; ++k)
 						{
-							Glyph glyph = fontProgram.GetGlyph(b[k] & unchecked((int)(0xff)));
+							Glyph glyph = fontProgram.GetGlyph(b[k] & 0xff);
 							if (glyph != null)
 							{
 								glyphs.Add(glyph);
@@ -623,7 +621,7 @@ namespace com.itextpdf.kernel.font
 					byte[] cidSetBytes = new byte[ttf.GetFontMetrics().GetMaxGlyphId() / 8 + 1];
 					for (int i = 0; i < maxGlyphId / 8; i++)
 					{
-						cidSetBytes[i] |= unchecked((int)(0xff));
+						cidSetBytes[i] |= 0xff;
 					}
 					for (int i_1 = 0; i_1 < maxGlyphId % 8; i_1++)
 					{
@@ -790,7 +788,7 @@ namespace com.itextpdf.kernel.font
 			if (!subset && (subsetRanges != null || ttf.GetDirectoryOffset() > 0))
 			{
 				int[] rg = subsetRanges == null && ttf.GetDirectoryOffset() > 0 ? new int[] { 0, 
-					unchecked((int)(0xffff)) } : CompactRanges(subsetRanges);
+					0xffff } : CompactRanges(subsetRanges);
 				IDictionary<int, int[]> usemap = ttf.GetActiveCmap();
 				System.Diagnostics.Debug.Assert(usemap != null);
 				foreach (KeyValuePair<int, int[]> e in usemap)

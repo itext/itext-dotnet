@@ -521,12 +521,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 				int value = 0;
 				for (int i = 0; i < b.Length - 1; i++)
 				{
-					value += b[i] & unchecked((int)(0xff));
+					value += b[i] & 0xff;
 					value <<= 8;
 				}
 				if (b.Length > 0)
 				{
-					value += b[b.Length - 1] & unchecked((int)(0xff));
+					value += b[b.Length - 1] & 0xff;
 				}
 				return value;
 			}

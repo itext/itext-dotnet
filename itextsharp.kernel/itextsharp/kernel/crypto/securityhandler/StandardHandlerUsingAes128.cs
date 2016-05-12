@@ -50,8 +50,8 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 {
 	public class StandardHandlerUsingAes128 : StandardHandlerUsingStandard128
 	{
-		private static readonly byte[] salt = new byte[] { unchecked((byte)0x73), unchecked(
-			(byte)0x41), unchecked((byte)0x6c), unchecked((byte)0x54) };
+		private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)
+			0x6c, (byte)0x54 };
 
 		public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] userPassword
 			, byte[] ownerPassword, int permissions, bool encryptMetadata, bool embeddedFilesOnly
@@ -81,11 +81,11 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		{
 			md5.Reset();
 			// added by ujihara
-			extra[0] = unchecked((byte)objNumber);
-			extra[1] = unchecked((byte)(objNumber >> 8));
-			extra[2] = unchecked((byte)(objNumber >> 16));
-			extra[3] = unchecked((byte)objGeneration);
-			extra[4] = unchecked((byte)(objGeneration >> 8));
+			extra[0] = (byte)objNumber;
+			extra[1] = (byte)(objNumber >> 8);
+			extra[2] = (byte)(objNumber >> 16);
+			extra[3] = (byte)objGeneration;
+			extra[4] = (byte)(objGeneration >> 8);
 			md5.Update(mkey);
 			md5.Update(extra);
 			md5.Update(salt);

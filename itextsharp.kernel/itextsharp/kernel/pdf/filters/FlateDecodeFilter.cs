@@ -157,8 +157,8 @@ namespace com.itextpdf.kernel.pdf.filters
 						int rowStart = row * bytesPerRow;
 						for (int col = bytesPerPixel; col < bytesPerRow; col++)
 						{
-							@in[rowStart + col] = unchecked((byte)(@in[rowStart + col] + @in[rowStart + col -
-								 bytesPerPixel]));
+							@in[rowStart + col] = (byte)(@in[rowStart + col] + @in[rowStart + col - bytesPerPixel
+								]);
 						}
 					}
 				}
@@ -219,8 +219,7 @@ namespace com.itextpdf.kernel.pdf.filters
 						}
 						for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++)
 						{
-							curr[i_3] += ((curr[i_3 - bytesPerPixel] & unchecked((int)(0xff))) + (prior[i_3] 
-								& unchecked((int)(0xff)))) / 2;
+							curr[i_3] += ((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 2;
 						}
 						break;
 					}
@@ -234,9 +233,9 @@ namespace com.itextpdf.kernel.pdf.filters
 						}
 						for (int i_5 = bytesPerPixel; i_5 < bytesPerRow; i_5++)
 						{
-							int a = curr[i_5 - bytesPerPixel] & unchecked((int)(0xff));
-							int b = prior[i_5] & unchecked((int)(0xff));
-							int c = prior[i_5 - bytesPerPixel] & unchecked((int)(0xff));
+							int a = curr[i_5 - bytesPerPixel] & 0xff;
+							int b = prior[i_5] & 0xff;
+							int c = prior[i_5 - bytesPerPixel] & 0xff;
 							int p = a + b - c;
 							int pa = Math.Abs(p - a);
 							int pb = Math.Abs(p - b);
@@ -257,7 +256,7 @@ namespace com.itextpdf.kernel.pdf.filters
 									ret = c;
 								}
 							}
-							curr[i_5] += unchecked((byte)ret);
+							curr[i_5] += (byte)ret;
 						}
 						break;
 					}

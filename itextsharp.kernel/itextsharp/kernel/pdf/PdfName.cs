@@ -2524,7 +2524,7 @@ namespace com.itextpdf.kernel.pdf
 			char[] chars = value.ToCharArray();
 			for (int k = 0; k < length; k++)
 			{
-				c = (char)(chars[k] & unchecked((int)(0xff)));
+				c = (char)(chars[k] & 0xff);
 				switch (c)
 				{
 					case ' ':

@@ -1,5 +1,5 @@
 /*
-$Id: d1ac2e412472c526d44a6d58eb8b0876e87ffc54 $
+$Id: 6291782974d786b23fef4984d9604ee9700450f8 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -309,7 +309,7 @@ namespace com.itextpdf.kernel.utils
 		{
 			if (outlineTitles == null || outlineTitles.IsEmpty())
 			{
-				return java.util.Collections.EMPTY_LIST;
+				return java.util.Collections.EmptyList();
 			}
 			IList<PdfDocument> documentList = new List<PdfDocument>(outlineTitles.Count);
 			foreach (String title in outlineTitles)

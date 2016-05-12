@@ -741,7 +741,7 @@ namespace com.itextpdf.kernel.pdf
 				int len = b.Length;
 				for (int k = 0; k < len; ++k)
 				{
-					hash = hash * 31 + (b[k] & unchecked((int)(0xff)));
+					hash = hash * 31 + (b[k] & 0xff);
 				}
 				return hash;
 			}

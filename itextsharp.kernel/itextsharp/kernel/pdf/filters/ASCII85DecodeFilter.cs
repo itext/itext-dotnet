@@ -69,7 +69,7 @@ namespace com.itextpdf.kernel.pdf.filters
 			int[] chn = new int[5];
 			for (int k = 0; k < @in.Length; ++k)
 			{
-				int ch = @in[k] & unchecked((int)(0xff));
+				int ch = @in[k] & 0xff;
 				if (ch == '~')
 				{
 					break;
@@ -100,17 +100,17 @@ namespace com.itextpdf.kernel.pdf.filters
 					{
 						r = r * 85 + chn[j];
 					}
-					@out.Write(unchecked((byte)(r >> 24)));
-					@out.Write(unchecked((byte)(r >> 16)));
-					@out.Write(unchecked((byte)(r >> 8)));
-					@out.Write(unchecked((byte)r));
+					@out.Write((byte)(r >> 24));
+					@out.Write((byte)(r >> 16));
+					@out.Write((byte)(r >> 8));
+					@out.Write((byte)r);
 				}
 			}
 			if (state == 2)
 			{
 				int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + 85 * 85 * 85 + 85 * 
 					85 + 85;
-				@out.Write(unchecked((byte)(r >> 24)));
+				@out.Write((byte)(r >> 24));
 			}
 			else
 			{
@@ -118,8 +118,8 @@ namespace com.itextpdf.kernel.pdf.filters
 				{
 					int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + chn[2] * 85 * 85 + 85
 						 * 85 + 85;
-					@out.Write(unchecked((byte)(r >> 24)));
-					@out.Write(unchecked((byte)(r >> 16)));
+					@out.Write((byte)(r >> 24));
+					@out.Write((byte)(r >> 16));
 				}
 				else
 				{
@@ -127,9 +127,9 @@ namespace com.itextpdf.kernel.pdf.filters
 					{
 						int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + chn[2] * 85 * 85 + chn
 							[3] * 85 + 85;
-						@out.Write(unchecked((byte)(r >> 24)));
-						@out.Write(unchecked((byte)(r >> 16)));
-						@out.Write(unchecked((byte)(r >> 8)));
+						@out.Write((byte)(r >> 24));
+						@out.Write((byte)(r >> 16));
+						@out.Write((byte)(r >> 8));
 					}
 				}
 			}

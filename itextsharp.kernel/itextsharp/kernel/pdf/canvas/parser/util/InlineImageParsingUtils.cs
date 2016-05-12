@@ -330,7 +330,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.util
 			if (!PdfTokenizer.IsWhitespace(shouldBeWhiteSpace) || shouldBeWhiteSpace == 0)
 			{
 				// tokeniser treats 0 as whitespace, but for our purposes, we shouldn't
-				bytes[0] = unchecked((byte)shouldBeWhiteSpace);
+				bytes[0] = (byte)shouldBeWhiteSpace;
 				startIndex++;
 			}
 			for (int i = startIndex; i < bytesToRead; i++)
@@ -341,7 +341,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.util
 					throw new InlineImageParsingUtils.InlineImageParseException(PdfException.EndOfContentStreamReachedBeforeEndOfImageData
 						);
 				}
-				bytes[i] = unchecked((byte)ch);
+				bytes[i] = (byte)ch;
 			}
 			PdfObject ei = ps.ReadObject();
 			if (!ei.ToString().Equals("EI"))

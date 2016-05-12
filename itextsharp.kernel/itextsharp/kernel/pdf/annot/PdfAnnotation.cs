@@ -421,7 +421,7 @@ namespace com.itextpdf.kernel.pdf.annot
 		public virtual com.itextpdf.kernel.pdf.annot.PdfAnnotation ResetFlag(int flag)
 		{
 			int flags = GetFlags();
-			flags = flags & (~flag & unchecked((int)(0xff)));
+			flags = flags & (~flag & 0xff);
 			return SetFlags(flags);
 		}
 

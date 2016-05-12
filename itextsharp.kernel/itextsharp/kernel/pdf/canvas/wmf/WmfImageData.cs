@@ -1,5 +1,5 @@
 /*
-$Id: c9a351975101191767f9258861a0153e1b69c63f $
+$Id: 05e9aa977b97f99b8ea9993443e6fa555341302e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,8 +53,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 	/// <summary>Image implementation for WMF, Windows Metafile.</summary>
 	public class WmfImageData : ImageData
 	{
-		private static readonly byte[] wmf = new byte[] { unchecked((byte)0xD7), unchecked(
-			(byte)0xCD) };
+		private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
 
 		/// <summary>Creates a WmfImage from a file.</summary>
 		/// <param name="fileName">pah to the file</param>

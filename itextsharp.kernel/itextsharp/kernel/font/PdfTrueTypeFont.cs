@@ -150,7 +150,7 @@ namespace com.itextpdf.kernel.font
 				() > 0))
 			{
 				int[] rg = subsetRanges == null && ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset
-					() > 0 ? new int[] { 0, unchecked((int)(0xffff)) } : CompactRanges(subsetRanges);
+					() > 0 ? new int[] { 0, 0xffff } : CompactRanges(subsetRanges);
 				IDictionary<int, int[]> usemap = ((TrueTypeFont)GetFontProgram()).GetActiveCmap();
 				System.Diagnostics.Debug.Assert(usemap != null);
 				foreach (KeyValuePair<int, int[]> e in usemap)

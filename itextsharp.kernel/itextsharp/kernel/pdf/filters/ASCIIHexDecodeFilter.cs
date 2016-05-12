@@ -69,7 +69,7 @@ namespace com.itextpdf.kernel.pdf.filters
 			int n1 = 0;
 			for (int k = 0; k < @in.Length; ++k)
 			{
-				int ch = @in[k] & unchecked((int)(0xff));
+				int ch = @in[k] & 0xff;
 				if (ch == '>')
 				{
 					break;
@@ -89,13 +89,13 @@ namespace com.itextpdf.kernel.pdf.filters
 				}
 				else
 				{
-					@out.Write(unchecked((byte)((n1 << 4) + n)));
+					@out.Write((byte)((n1 << 4) + n));
 				}
 				first = !first;
 			}
 			if (!first)
 			{
-				@out.Write(unchecked((byte)(n1 << 4)));
+				@out.Write((byte)(n1 << 4));
 			}
 			return @out.ToArray();
 		}

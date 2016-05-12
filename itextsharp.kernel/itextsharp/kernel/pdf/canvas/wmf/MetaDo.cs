@@ -231,7 +231,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void ReadAll()
 		{
-			if (@in.ReadInt() != 0x9AC6CDD7)
+			if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7)))
 			{
 				throw new PdfException(PdfException.NotAPlaceableWindowsMetafile);
 			}
@@ -623,7 +623,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						int k;
 						for (k = 0; k < count; ++k)
 						{
-							byte c = unchecked((byte)@in.ReadByte());
+							byte c = (byte)@in.ReadByte();
 							if (c == 0)
 							{
 								break;
@@ -650,7 +650,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						int k;
 						for (k = 0; k < count; ++k)
 						{
-							byte c = unchecked((byte)@in.ReadByte());
+							byte c = (byte)@in.ReadByte();
 							if (c == 0)
 							{
 								break;
@@ -666,7 +666,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						{
 							s = com.itextpdf.io.util.JavaUtil.GetStringForBytes(text, 0, k);
 						}
-						count = count + 1 & unchecked((int)(0xfffe));
+						count = count + 1 & 0xfffe;
 						@in.Skip(count - k);
 						int y = @in.ReadShort();
 						int x = @in.ReadShort();
@@ -737,7 +737,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						byte[] b = new byte[tsize * 2 - (@in.GetLength() - lenMarker)];
 						for (int k = 0; k < b.Length; ++k)
 						{
-							b[k] = unchecked((byte)@in.ReadByte());
+							b[k] = (byte)@in.ReadByte();
 						}
 						try
 						{
@@ -795,7 +795,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			byte[] bytes = font.encoding.ConvertToBytes(text);
 			foreach (byte b in bytes)
 			{
-				normalizedWidth += fp.GetWidth(unchecked((int)(0xff)) & b);
+				normalizedWidth += fp.GetWidth(0xff & b);
 			}
 			float textWidth = fontSize / FontProgram.UNITS_NORMALIZATION * normalizedWidth;
 			float tx = 0;
@@ -1020,8 +1020,8 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <exception cref="System.IO.IOException"/>
 		public static void WriteWord(Stream os, int v)
 		{
-			os.Write(v & unchecked((int)(0xff)));
-			os.Write((int)(((uint)v) >> 8) & unchecked((int)(0xff)));
+			os.Write(v & 0xff);
+			os.Write((int)(((uint)v) >> 8) & 0xff);
 		}
 
 		/// <summary>Writes the specified value to the specified outputstream as a dword.</summary>
@@ -1030,8 +1030,8 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <exception cref="System.IO.IOException"/>
 		public static void WriteDWord(Stream os, int v)
 		{
-			WriteWord(os, v & unchecked((int)(0xffff)));
-			WriteWord(os, (int)(((uint)v) >> 16) & unchecked((int)(0xffff)));
+			WriteWord(os, v & 0xffff);
+			WriteWord(os, (int)(((uint)v) >> 16) & 0xffff);
 		}
 	}
 }

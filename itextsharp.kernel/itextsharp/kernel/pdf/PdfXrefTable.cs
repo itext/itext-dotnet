@@ -337,8 +337,7 @@ namespace com.itextpdf.kernel.pdf
 				{
 					first = sections[k];
 					len = sections[k + 1];
-					writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte(unchecked((byte
-						)'\n'));
+					writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
 					for (int i_2 = first; i_2 < first + len; i_2++)
 					{
 						PdfIndirectReference reference = xref.Get(i_2);
@@ -435,14 +434,13 @@ namespace com.itextpdf.kernel.pdf
 
 		private static byte[] ShortToBytes(int n)
 		{
-			return new byte[] { unchecked((byte)((n >> 8) & 0xFF)), unchecked((byte)(n & 0xFF
-				)) };
+			return new byte[] { (byte)((n >> 8) & 0xFF), (byte)(n & 0xFF) };
 		}
 
 		private static byte[] IntToBytes(int n)
 		{
-			return new byte[] { unchecked((byte)((n >> 24) & 0xFF)), unchecked((byte)((n >> 16
-				) & 0xFF)), unchecked((byte)((n >> 8) & 0xFF)), unchecked((byte)(n & 0xFF)) };
+			return new byte[] { (byte)((n >> 24) & 0xFF), (byte)((n >> 16) & 0xFF), (byte)((n
+				 >> 8) & 0xFF), (byte)(n & 0xFF) };
 		}
 	}
 }

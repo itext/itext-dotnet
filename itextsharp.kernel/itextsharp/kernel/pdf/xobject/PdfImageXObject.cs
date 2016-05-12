@@ -259,8 +259,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 			{
 				stream.PutAll(additional);
 			}
-			if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > unchecked((int)(0xff
-				))))
+			if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > 0xff))
 			{
 				stream.Put(PdfName.ImageMask, PdfBoolean.TRUE);
 			}
@@ -544,7 +543,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 							int len = imageBytes.Length;
 							for (int t = 0; t < len; ++t)
 							{
-								imageBytes[t] ^= unchecked((int)(0xff));
+								imageBytes[t] ^= 0xff;
 							}
 						}
 					}

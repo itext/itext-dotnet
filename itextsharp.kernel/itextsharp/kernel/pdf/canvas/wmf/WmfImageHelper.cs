@@ -1,5 +1,5 @@
 /*
-$Id: 70e10c5c3c49be89da522c49ac485a55dbec68df $
+$Id: 579b1c927f0e78b4c522eccc92456ea18a3743c7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -107,7 +107,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 					errorID = "Byte array";
 				}
 				InputMeta @in = new InputMeta(@is);
-				if (@in.ReadInt() != 0x9AC6CDD7)
+				if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7)))
 				{
 					throw new PdfException(PdfException._1IsNotAValidPlaceableWindowsMetafile, errorID
 						);

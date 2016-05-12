@@ -69,7 +69,7 @@ namespace com.itextpdf.kernel.pdf
 
 		private static byte[][] byteCache = new byte[byteCacheSize][];
 
-		public const byte ZERO = unchecked((byte)(byte)('0'));
+		public const byte ZERO = (byte)'0';
 
 		private static readonly char[] chars = new char[] { '0', '1', '2', '3', '4', '5', 
 			'6', '7', '8', '9' };
@@ -186,7 +186,7 @@ namespace com.itextpdf.kernel.pdf
 			size--;
 			if (i < 100)
 			{
-				cache[0] = unchecked((byte)(byte)('0'));
+				cache[0] = (byte)'0';
 			}
 			if (i % 10 != 0)
 			{
@@ -195,7 +195,7 @@ namespace com.itextpdf.kernel.pdf
 			if (i % 100 != 0)
 			{
 				cache[size--] = bytes[(i / 10) % 10];
-				cache[size--] = unchecked((byte)(byte)('.'));
+				cache[size--] = (byte)'.';
 			}
 			size = (int)Math.Floor(Math.Log(i) / Math.Log(10)) - 1;
 			int add = 0;
@@ -220,7 +220,7 @@ namespace com.itextpdf.kernel.pdf
 				System.Array.Copy(buf, 0, newbuf, 0, count);
 				buf = newbuf;
 			}
-			buf[count] = unchecked((byte)b);
+			buf[count] = (byte)b;
 			count = newcount;
 			return this;
 		}
@@ -409,8 +409,8 @@ namespace com.itextpdf.kernel.pdf
 					{
 						if (buf != null)
 						{
-							buf.Append(unchecked((byte)'-'));
-							buf.Append(unchecked((byte)'1'));
+							buf.Append((byte)'-');
+							buf.Append((byte)'1');
 							return null;
 						}
 						else
@@ -422,7 +422,7 @@ namespace com.itextpdf.kernel.pdf
 					{
 						if (buf != null)
 						{
-							buf.Append(unchecked((byte)'1'));
+							buf.Append((byte)'1');
 							return null;
 						}
 						else
@@ -436,23 +436,23 @@ namespace com.itextpdf.kernel.pdf
 					int v = (int)(d * 100000);
 					if (negative)
 					{
-						buf.Append(unchecked((byte)'-'));
+						buf.Append((byte)'-');
 					}
-					buf.Append(unchecked((byte)'0'));
-					buf.Append(unchecked((byte)'.'));
-					buf.Append(unchecked((byte)(v / 10000 + ZERO)));
+					buf.Append((byte)'0');
+					buf.Append((byte)'.');
+					buf.Append((byte)(v / 10000 + ZERO));
 					if (v % 10000 != 0)
 					{
-						buf.Append(unchecked((byte)((v / 1000) % 10 + ZERO)));
+						buf.Append((byte)((v / 1000) % 10 + ZERO));
 						if (v % 1000 != 0)
 						{
-							buf.Append(unchecked((byte)((v / 100) % 10 + ZERO)));
+							buf.Append((byte)((v / 100) % 10 + ZERO));
 							if (v % 100 != 0)
 							{
-								buf.Append(unchecked((byte)((v / 10) % 10 + ZERO)));
+								buf.Append((byte)((v / 10) % 10 + ZERO));
 								if (v % 10 != 0)
 								{
-									buf.Append(unchecked((byte)((v) % 10 + ZERO)));
+									buf.Append((byte)((v) % 10 + ZERO));
 								}
 							}
 						}
@@ -496,7 +496,7 @@ namespace com.itextpdf.kernel.pdf
 						{
 							if (negative)
 							{
-								buf.Append(unchecked((byte)'-'));
+								buf.Append((byte)'-');
 							}
 							buf.Append(byteCache[v]);
 							return null;
@@ -589,7 +589,7 @@ namespace com.itextpdf.kernel.pdf
 							}
 							if (v % 100 != 0)
 							{
-								cache[add++] = unchecked((byte)(byte)('.'));
+								cache[add++] = (byte)'.';
 								cache[add++] = bytes[(v / 10) % 10];
 								if (v % 10 != 0)
 								{
@@ -600,7 +600,7 @@ namespace com.itextpdf.kernel.pdf
 						}
 						if (negative)
 						{
-							buf.Append(unchecked((byte)'-'));
+							buf.Append((byte)'-');
 						}
 						if (v >= 1000000)
 						{
@@ -624,7 +624,7 @@ namespace com.itextpdf.kernel.pdf
 						}
 						if (v % 100 != 0)
 						{
-							buf.Append(unchecked((byte)'.'));
+							buf.Append((byte)'.');
 							buf.Append(bytes[(v / 10) % 10]);
 							if (v % 10 != 0)
 							{
@@ -767,7 +767,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <exception cref="System.IO.IOException"/>
 		public override void Write(int b)
 		{
-			Append(unchecked((byte)b));
+			Append((byte)b);
 		}
 
 		public override void Write(byte[] b, int off, int len)

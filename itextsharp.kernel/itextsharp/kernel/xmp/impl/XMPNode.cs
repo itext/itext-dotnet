@@ -332,7 +332,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 			else
 			{
-				return java.util.Collections.EMPTY_LIST.ListIterator();
+				return java.util.Collections.EmptyIterator();
 			}
 		}
 
@@ -355,7 +355,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 			else
 			{
-				return java.util.Collections.EMPTY_LIST.GetEnumerator();
+				return java.util.Collections.EmptyIterator();
 			}
 		}
 

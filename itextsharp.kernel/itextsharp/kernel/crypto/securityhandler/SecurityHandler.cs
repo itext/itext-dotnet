@@ -99,11 +99,11 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		{
 			md5.Reset();
 			// added by ujihara
-			extra[0] = unchecked((byte)objNumber);
-			extra[1] = unchecked((byte)(objNumber >> 8));
-			extra[2] = unchecked((byte)(objNumber >> 16));
-			extra[3] = unchecked((byte)objGeneration);
-			extra[4] = unchecked((byte)(objGeneration >> 8));
+			extra[0] = (byte)objNumber;
+			extra[1] = (byte)(objNumber >> 8);
+			extra[2] = (byte)(objNumber >> 16);
+			extra[3] = (byte)objGeneration;
+			extra[4] = (byte)(objGeneration >> 8);
 			md5.Update(mkey);
 			md5.Update(extra);
 			nextObjectKey = md5.Digest();

@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using com.itextpdf.io.util;
 using com.itextpdf.kernel.geom;
 using com.itextpdf.kernel.pdf.canvas.parser;
 using com.itextpdf.kernel.pdf.canvas.parser.data;

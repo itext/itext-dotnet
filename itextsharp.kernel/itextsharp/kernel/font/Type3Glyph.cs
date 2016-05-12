@@ -1,5 +1,5 @@
 /*
-$Id: d6ff221809d30fc541d5bf200080a8bc23411bcb $
+$Id: 4d62b4d9d52a386e6d7335a8d84a5565613efd65 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -204,8 +204,8 @@ namespace com.itextpdf.kernel.font
 		public override PdfXObject AddImage(ImageData image, float a, float b, float c, float
 			 d, float e, float f, bool inlineImage)
 		{
-			if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > unchecked(
-				(int)(0xff)))))
+			if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff
+				)))
 			{
 				throw new PdfException("not.colorized.typed3.fonts.only.accept.mask.images");
 			}

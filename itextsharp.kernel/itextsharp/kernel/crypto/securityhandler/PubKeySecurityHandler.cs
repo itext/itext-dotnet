@@ -104,8 +104,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				}
 				if (!encryptMetadata)
 				{
-					md.Update(new byte[] { unchecked((byte)255), unchecked((byte)255), unchecked((byte
-						)255), unchecked((byte)255) });
+					md.Update(new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 });
 				}
 			}
 			catch (Exception e)
@@ -206,8 +205,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				}
 				if (!encryptMetadata)
 				{
-					md.Update(new byte[] { unchecked((byte)255), unchecked((byte)255), unchecked((byte
-						)255), unchecked((byte)255) });
+					md.Update(new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 });
 				}
 				encryptionKey = md.Digest();
 			}
@@ -316,10 +314,10 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			permission &= unchecked((int)(0xfffffffc));
 			permission += 1;
 			byte[] pkcs7input = new byte[24];
-			byte one = unchecked((byte)permission);
-			byte two = unchecked((byte)(permission >> 8));
-			byte three = unchecked((byte)(permission >> 16));
-			byte four = unchecked((byte)(permission >> 24));
+			byte one = (byte)permission;
+			byte two = (byte)(permission >> 8);
+			byte three = (byte)(permission >> 16);
+			byte four = (byte)(permission >> 24);
 			System.Array.Copy(seed, 0, pkcs7input, 0, 20);
 			// put this seed in the pkcs7 input
 			pkcs7input[20] = four;

@@ -540,8 +540,8 @@ namespace com.itextpdf.kernel.font
 			{
 				for (int j = 0; j < range.Length; j += 2)
 				{
-					simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(unchecked(
-						(int)(0xffff)), Math.Max(range[j], range[j + 1])) });
+					simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff
+						, Math.Max(range[j], range[j + 1])) });
 				}
 			}
 			for (int k1 = 0; k1 < simp.Count - 1; ++k1)

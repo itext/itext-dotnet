@@ -114,7 +114,7 @@ namespace com.itextpdf.kernel.font
 			byte[] bytes = fontEncoding.ConvertToBytes(text);
 			foreach (byte b in bytes)
 			{
-				shortTag[b & unchecked((int)(0xff))] = 1;
+				shortTag[b & 0xff] = 1;
 			}
 			return bytes;
 		}
@@ -129,7 +129,7 @@ namespace com.itextpdf.kernel.font
 				{
 					for (int i = 0; i < glyphLine.Size(); i++)
 					{
-						bytes[ptr++] = unchecked((byte)glyphLine.Get(i).GetCode());
+						bytes[ptr++] = (byte)glyphLine.Get(i).GetCode();
 					}
 				}
 				else
@@ -138,15 +138,14 @@ namespace com.itextpdf.kernel.font
 					{
 						if (fontEncoding.CanEncode(glyphLine.Get(i).GetUnicode()))
 						{
-							bytes[ptr++] = unchecked((byte)fontEncoding.ConvertToByte(glyphLine.Get(i).GetUnicode
-								()));
+							bytes[ptr++] = (byte)fontEncoding.ConvertToByte(glyphLine.Get(i).GetUnicode());
 						}
 					}
 				}
 				bytes = ArrayUtil.ShortenArray(bytes, ptr);
 				foreach (byte b in bytes)
 				{
-					shortTag[b & unchecked((int)(0xff))] = 1;
+					shortTag[b & 0xff] = 1;
 				}
 				return bytes;
 			}
@@ -161,20 +160,20 @@ namespace com.itextpdf.kernel.font
 			byte[] bytes = new byte[1];
 			if (fontEncoding.IsFontSpecific())
 			{
-				bytes[0] = unchecked((byte)glyph.GetCode());
+				bytes[0] = (byte)glyph.GetCode();
 			}
 			else
 			{
 				if (fontEncoding.CanEncode(glyph.GetUnicode()))
 				{
-					bytes[0] = unchecked((byte)fontEncoding.ConvertToByte(glyph.GetUnicode()));
+					bytes[0] = (byte)fontEncoding.ConvertToByte(glyph.GetUnicode());
 				}
 				else
 				{
 					return emptyBytes;
 				}
 			}
-			shortTag[bytes[0] & unchecked((int)(0xff))] = 1;
+			shortTag[bytes[0] & 0xff] = 1;
 			return bytes;
 		}
 
@@ -187,7 +186,7 @@ namespace com.itextpdf.kernel.font
 			{
 				for (int i = from; i <= to; i++)
 				{
-					bytes[ptr++] = unchecked((byte)text.Get(i).GetCode());
+					bytes[ptr++] = (byte)text.Get(i).GetCode();
 				}
 			}
 			else
@@ -196,15 +195,14 @@ namespace com.itextpdf.kernel.font
 				{
 					if (fontEncoding.CanEncode(text.Get(i).GetUnicode()))
 					{
-						bytes[ptr++] = unchecked((byte)fontEncoding.ConvertToByte(text.Get(i).GetUnicode(
-							)));
+						bytes[ptr++] = (byte)fontEncoding.ConvertToByte(text.Get(i).GetUnicode());
 					}
 				}
 			}
 			bytes = ArrayUtil.ShortenArray(bytes, ptr);
 			foreach (byte b in bytes)
 			{
-				shortTag[b & unchecked((int)(0xff))] = 1;
+				shortTag[b & 0xff] = 1;
 			}
 			StreamUtil.WriteEscapedString(stream, bytes);
 		}
@@ -220,14 +218,14 @@ namespace com.itextpdf.kernel.font
 			StringBuilder builder = new StringBuilder(contentBytes.Length);
 			foreach (byte b in contentBytes)
 			{
-				int uni = fontEncoding.GetUnicode(b & unchecked((int)(0xff)));
+				int uni = fontEncoding.GetUnicode(b & 0xff);
 				if (uni > -1)
 				{
 					builder.Append((char)(int)uni);
 				}
 				else
 				{
-					Glyph glyph = fontProgram.GetGlyphByCode(b & unchecked((int)(0xff)));
+					Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
 					if (glyph != null && glyph.GetChars() != null)
 					{
 						builder.Append(glyph.GetChars());
@@ -243,7 +241,7 @@ namespace com.itextpdf.kernel.font
 			byte[] contentBytes = content.GetValueBytes();
 			foreach (byte b in contentBytes)
 			{
-				Glyph glyph = fontProgram.GetGlyphByCode(b & unchecked((int)(0xff)));
+				Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
 				width += glyph != null ? glyph.GetWidth() : 0;
 			}
 			return width;

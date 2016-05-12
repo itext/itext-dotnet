@@ -82,7 +82,7 @@ namespace com.itextpdf.kernel.pdf.filters
 		/// <param name="uncompData">Array to return the uncompressed data in.</param>
 		public virtual void Decode(byte[] data, Stream uncompData)
 		{
-			if (data[0] == unchecked((byte)0x00) && data[1] == unchecked((byte)0x01))
+			if (data[0] == (byte)0x00 && data[1] == (byte)0x01)
 			{
 				throw new PdfException(PdfException.LzwFlavourNotSupported);
 			}
@@ -138,7 +138,7 @@ namespace com.itextpdf.kernel.pdf.filters
 			for (int i = 0; i < 256; i++)
 			{
 				stringTable[i] = new byte[1];
-				stringTable[i][0] = unchecked((byte)i);
+				stringTable[i][0] = (byte)i;
 			}
 			tableIndex = 258;
 			bitsToGet = 9;
@@ -242,11 +242,11 @@ namespace com.itextpdf.kernel.pdf.filters
 			//
 			try
 			{
-				nextData = (nextData << 8) | (data[bytePointer++] & unchecked((int)(0xff)));
+				nextData = (nextData << 8) | (data[bytePointer++] & 0xff);
 				nextBits += 8;
 				if (nextBits < bitsToGet)
 				{
-					nextData = (nextData << 8) | (data[bytePointer++] & unchecked((int)(0xff)));
+					nextData = (nextData << 8) | (data[bytePointer++] & 0xff);
 					nextBits += 8;
 				}
 				int code = (nextData >> (nextBits - bitsToGet)) & andTable[bitsToGet - 9];

@@ -158,7 +158,7 @@ namespace com.itextpdf.kernel.crypto
 		/// </exception>
 		public override void Write(int b)
 		{
-			sb[0] = unchecked((byte)b);
+			sb[0] = (byte)b;
 			Write(sb, 0, 1);
 		}
 

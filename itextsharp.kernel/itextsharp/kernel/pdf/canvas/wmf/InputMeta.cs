@@ -74,7 +74,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			{
 				return 0;
 			}
-			return (k1 + (@in.Read() << 8)) & unchecked((int)(0xffff));
+			return (k1 + (@in.Read() << 8)) & 0xffff;
 		}
 
 		/// <summary>Read the next short from the InputStream.</summary>
@@ -112,7 +112,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		public virtual int ReadByte()
 		{
 			++length;
-			return @in.Read() & unchecked((int)(0xff));
+			return @in.Read() & 0xff;
 		}
 
 		/// <summary>Skips "len" amount of bytes from the InputStream.</summary>

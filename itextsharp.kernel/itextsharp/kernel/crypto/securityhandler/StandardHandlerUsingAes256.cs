@@ -151,19 +151,18 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
 				// Algorithm 3.10
 				byte[] permsp = IVGenerator.GetIV(16);
-				permsp[0] = unchecked((byte)permissions);
-				permsp[1] = unchecked((byte)(permissions >> 8));
-				permsp[2] = unchecked((byte)(permissions >> 16));
-				permsp[3] = unchecked((byte)(permissions >> 24));
-				permsp[4] = unchecked((byte)(255));
-				permsp[5] = unchecked((byte)(255));
-				permsp[6] = unchecked((byte)(255));
-				permsp[7] = unchecked((byte)(255));
-				permsp[8] = encryptMetadata ? unchecked((byte)(byte)('T')) : unchecked((byte)(byte
-					)('F'));
-				permsp[9] = unchecked((byte)(byte)('a'));
-				permsp[10] = unchecked((byte)(byte)('d'));
-				permsp[11] = unchecked((byte)(byte)('b'));
+				permsp[0] = (byte)permissions;
+				permsp[1] = (byte)(permissions >> 8);
+				permsp[2] = (byte)(permissions >> 16);
+				permsp[3] = (byte)(permissions >> 24);
+				permsp[4] = (byte)(255);
+				permsp[5] = (byte)(255);
+				permsp[6] = (byte)(255);
+				permsp[7] = (byte)(255);
+				permsp[8] = encryptMetadata ? (byte)'T' : (byte)'F';
+				permsp[9] = (byte)'a';
+				permsp[10] = (byte)'d';
+				permsp[11] = (byte)'b';
 				ac = new AESCipherCBCnoPad(true, nextObjectKey);
 				aes256Perms = ac.ProcessBlock(permsp, 0, permsp.Length);
 				this.permissions = permissions;
@@ -265,15 +264,14 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				nextObjectKeySize = 32;
 				AESCipherCBCnoPad ac_1 = new AESCipherCBCnoPad(false, nextObjectKey);
 				byte[] decPerms = ac_1.ProcessBlock(perms, 0, perms.Length);
-				if (decPerms[9] != unchecked((byte)'a') || decPerms[10] != unchecked((byte)'d') ||
-					 decPerms[11] != unchecked((byte)'b'))
+				if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte
+					)'b')
 				{
 					throw new BadPasswordException(PdfException.BadUserPassword);
 				}
-				permissions = (decPerms[0] & unchecked((int)(0xff))) | ((decPerms[1] & unchecked(
-					(int)(0xff))) << 8) | ((decPerms[2] & unchecked((int)(0xff))) << 16) | ((decPerms
-					[2] & unchecked((int)(0xff))) << 24);
-				encryptMetadata = decPerms[8] == unchecked((byte)'T');
+				permissions = (decPerms[0] & 0xff) | ((decPerms[1] & 0xff) << 8) | ((decPerms[2] 
+					& 0xff) << 16) | ((decPerms[2] & 0xff) << 24);
+				encryptMetadata = decPerms[8] == (byte)'T';
 			}
 			catch (BadPasswordException ex)
 			{

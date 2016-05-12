@@ -68,7 +68,7 @@ namespace com.itextpdf.kernel.crypto
 			int index2 = 0;
 			for (int k = 0; k < 256; ++k)
 			{
-				state[k] = unchecked((byte)k);
+				state[k] = (byte)k;
 			}
 			x = 0;
 			y = 0;
@@ -95,8 +95,8 @@ namespace com.itextpdf.kernel.crypto
 				tmp = state[x];
 				state[x] = state[y];
 				state[y] = tmp;
-				dataOut[k - off + offOut] = unchecked((byte)(dataIn[k] ^ state[(state[x] + state[
-					y]) & 255]));
+				dataOut[k - off + offOut] = (byte)(dataIn[k] ^ state[(state[x] + state[y]) & 255]
+					);
 			}
 		}
 

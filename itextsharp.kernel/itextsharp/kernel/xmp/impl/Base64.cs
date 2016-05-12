@@ -43,38 +43,24 @@ namespace com.itextpdf.kernel.xmp.impl
 	public class Base64
 	{
 		/// <summary>marker for invalid bytes</summary>
-		private const byte INVALID = -1;
+		private const byte INVALID = (byte)-1;
 
 		/// <summary>marker for accepted whitespace bytes</summary>
-		private const byte WHITESPACE = -2;
+		private const byte WHITESPACE = (byte)-2;
 
 		/// <summary>marker for an equal symbol</summary>
-		private const byte EQUAL = -3;
+		private const byte EQUAL = (byte)-3;
 
-		private static byte[] base64 = new byte[] { unchecked((byte)(byte)('A')), unchecked(
-			(byte)(byte)('B')), unchecked((byte)(byte)('C')), unchecked((byte)(byte)('D')), 
-			unchecked((byte)(byte)('E')), unchecked((byte)(byte)('F')), unchecked((byte)(byte
-			)('G')), unchecked((byte)(byte)('H')), unchecked((byte)(byte)('I')), unchecked((
-			byte)(byte)('J')), unchecked((byte)(byte)('K')), unchecked((byte)(byte)('L')), unchecked(
-			(byte)(byte)('M')), unchecked((byte)(byte)('N')), unchecked((byte)(byte)('O')), 
-			unchecked((byte)(byte)('P')), unchecked((byte)(byte)('Q')), unchecked((byte)(byte
-			)('R')), unchecked((byte)(byte)('S')), unchecked((byte)(byte)('T')), unchecked((
-			byte)(byte)('U')), unchecked((byte)(byte)('V')), unchecked((byte)(byte)('W')), unchecked(
-			(byte)(byte)('X')), unchecked((byte)(byte)('Y')), unchecked((byte)(byte)('Z')), 
-			unchecked((byte)(byte)('a')), unchecked((byte)(byte)('b')), unchecked((byte)(byte
-			)('c')), unchecked((byte)(byte)('d')), unchecked((byte)(byte)('e')), unchecked((
-			byte)(byte)('f')), unchecked((byte)(byte)('g')), unchecked((byte)(byte)('h')), unchecked(
-			(byte)(byte)('i')), unchecked((byte)(byte)('j')), unchecked((byte)(byte)('k')), 
-			unchecked((byte)(byte)('l')), unchecked((byte)(byte)('m')), unchecked((byte)(byte
-			)('n')), unchecked((byte)(byte)('o')), unchecked((byte)(byte)('p')), unchecked((
-			byte)(byte)('q')), unchecked((byte)(byte)('r')), unchecked((byte)(byte)('s')), unchecked(
-			(byte)(byte)('t')), unchecked((byte)(byte)('u')), unchecked((byte)(byte)('v')), 
-			unchecked((byte)(byte)('w')), unchecked((byte)(byte)('x')), unchecked((byte)(byte
-			)('y')), unchecked((byte)(byte)('z')), unchecked((byte)(byte)('0')), unchecked((
-			byte)(byte)('1')), unchecked((byte)(byte)('2')), unchecked((byte)(byte)('3')), unchecked(
-			(byte)(byte)('4')), unchecked((byte)(byte)('5')), unchecked((byte)(byte)('6')), 
-			unchecked((byte)(byte)('7')), unchecked((byte)(byte)('8')), unchecked((byte)(byte
-			)('9')), unchecked((byte)(byte)('+')), unchecked((byte)(byte)('/')) };
+		private static byte[] base64 = new byte[] { (byte)'A', (byte)'B', (byte)'C', (byte
+			)'D', (byte)'E', (byte)'F', (byte)'G', (byte)'H', (byte)'I', (byte)'J', (byte)'K'
+			, (byte)'L', (byte)'M', (byte)'N', (byte)'O', (byte)'P', (byte)'Q', (byte)'R', (
+			byte)'S', (byte)'T', (byte)'U', (byte)'V', (byte)'W', (byte)'X', (byte)'Y', (byte
+			)'Z', (byte)'a', (byte)'b', (byte)'c', (byte)'d', (byte)'e', (byte)'f', (byte)'g'
+			, (byte)'h', (byte)'i', (byte)'j', (byte)'k', (byte)'l', (byte)'m', (byte)'n', (
+			byte)'o', (byte)'p', (byte)'q', (byte)'r', (byte)'s', (byte)'t', (byte)'u', (byte
+			)'v', (byte)'w', (byte)'x', (byte)'y', (byte)'z', (byte)'0', (byte)'1', (byte)'2'
+			, (byte)'3', (byte)'4', (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9', (
+			byte)'+', (byte)'/' };
 
 		private static byte[] ascii = new byte[255];
 
@@ -104,7 +90,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			// valid bytes
 			for (int idx_1 = 0; idx_1 < base64.Length; idx_1++)
 			{
-				ascii[base64[idx_1]] = unchecked((byte)idx_1);
+				ascii[base64[idx_1]] = (byte)idx_1;
 			}
 			// whitespaces
 			ascii[0x09] = WHITESPACE;
@@ -182,7 +168,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				dst[didx++] = base64[bits6];
 				bits6 = (bits24 & 0x00000FC0) >> 6;
 				dst[didx++] = base64[bits6];
-				dst[didx++] = unchecked((byte)(byte)('='));
+				dst[didx++] = (byte)'=';
 			}
 			else
 			{
@@ -193,8 +179,8 @@ namespace com.itextpdf.kernel.xmp.impl
 					dst[didx++] = base64[bits6];
 					bits6 = (bits24 & 0x0003F000) >> 12;
 					dst[didx++] = base64[bits6];
-					dst[didx++] = unchecked((byte)(byte)('='));
-					dst[didx++] = unchecked((byte)(byte)('='));
+					dst[didx++] = (byte)'=';
+					dst[didx++] = (byte)'=';
 				}
 			}
 			return dst;
@@ -251,22 +237,18 @@ namespace com.itextpdf.kernel.xmp.impl
 			int didx;
 			for (sidx = 0, didx = 0; didx < dst.Length - 2; sidx += 4, didx += 3)
 			{
-				dst[didx] = unchecked((byte)(((src[sidx] << 2) & 0xFF) | ((src[sidx + 1] >> 4) & 
-					0x03)));
-				dst[didx + 1] = unchecked((byte)(((src[sidx + 1] << 4) & 0xFF) | ((src[sidx + 2] 
-					>> 2) & 0x0F)));
-				dst[didx + 2] = unchecked((byte)(((src[sidx + 2] << 6) & 0xFF) | ((src[sidx + 3])
-					 & 0x3F)));
+				dst[didx] = (byte)(((src[sidx] << 2) & 0xFF) | ((src[sidx + 1] >> 4) & 0x03));
+				dst[didx + 1] = (byte)(((src[sidx + 1] << 4) & 0xFF) | ((src[sidx + 2] >> 2) & 0x0F
+					));
+				dst[didx + 2] = (byte)(((src[sidx + 2] << 6) & 0xFF) | ((src[sidx + 3]) & 0x3F));
 			}
 			if (didx < dst.Length)
 			{
-				dst[didx] = unchecked((byte)(((src[sidx] << 2) & 0xFF) | ((src[sidx + 1] >> 4) & 
-					0x03)));
+				dst[didx] = (byte)(((src[sidx] << 2) & 0xFF) | ((src[sidx + 1] >> 4) & 0x03));
 			}
 			if (++didx < dst.Length)
 			{
-				dst[didx] = unchecked((byte)(((src[sidx + 1] << 4) & 0xFF) | ((src[sidx + 2] >> 2
-					) & 0x0F)));
+				dst[didx] = (byte)(((src[sidx + 1] << 4) & 0xFF) | ((src[sidx + 2] >> 2) & 0x0F));
 			}
 			return dst;
 		}

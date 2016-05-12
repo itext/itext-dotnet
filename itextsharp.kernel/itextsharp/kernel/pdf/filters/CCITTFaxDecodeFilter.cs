@@ -115,7 +115,7 @@ namespace com.itextpdf.kernel.pdf.filters
 				int len = outBuf.Length;
 				for (int t = 0; t < len; ++t)
 				{
-					outBuf[t] ^= unchecked((int)(0xff));
+					outBuf[t] ^= 0xff;
 				}
 			}
 			b = outBuf;

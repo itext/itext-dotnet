@@ -146,7 +146,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 				{
 					break;
 				}
-				name[k] = unchecked((byte)c);
+				name[k] = (byte)c;
 			}
 			try
 			{

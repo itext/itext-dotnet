@@ -114,7 +114,7 @@ namespace com.itextpdf.kernel.pdf
 				StringBuilder str = new StringBuilder(content.Length);
 				foreach (byte b in content)
 				{
-					str.Append((char)(b & unchecked((int)(0xff))));
+					str.Append((char)(b & 0xff));
 				}
 				this.value = str.ToString();
 			}
@@ -403,7 +403,7 @@ namespace com.itextpdf.kernel.pdf
 			StringBuilder buffer = new StringBuilder(bytes.Length);
 			foreach (byte b in bytes)
 			{
-				buffer.Append((char)(b & unchecked((int)(0xff))));
+				buffer.Append((char)(b & 0xff));
 			}
 			return buffer.ToString();
 		}

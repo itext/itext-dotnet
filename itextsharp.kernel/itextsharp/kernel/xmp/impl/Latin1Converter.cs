@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.xmp.impl
 						{
 							if (b < 0x7F)
 							{
-								@out.Append(unchecked((byte)b));
+								@out.Append((byte)b);
 							}
 							else
 							{
@@ -106,19 +106,18 @@ namespace com.itextpdf.kernel.xmp.impl
 									// start of UTF8 sequence
 									expectedBytes = -1;
 									int test = b;
-									for (; expectedBytes < 8 && (test & unchecked((int)(0x80))) == unchecked((int)(0x80
-										)); test = test << 1)
+									for (; expectedBytes < 8 && (test & 0x80) == 0x80; test = test << 1)
 									{
 										expectedBytes++;
 									}
-									readAheadBuffer[readAhead++] = unchecked((byte)b);
+									readAheadBuffer[readAhead++] = (byte)b;
 									state = STATE_UTF8CHAR;
 								}
 								else
 								{
 									//  implicitly:  b >= 0x80  &&  b < 0xC0
 									// invalid UTF8 start char, assume to be Latin-1
-									byte[] utf8 = ConvertToUTF8(unchecked((byte)b));
+									byte[] utf8 = ConvertToUTF8((byte)b);
 									@out.Append(utf8);
 								}
 							}
@@ -127,10 +126,10 @@ namespace com.itextpdf.kernel.xmp.impl
 
 						case STATE_UTF8CHAR:
 						{
-							if (expectedBytes > 0 && (b & 0xC0) == unchecked((int)(0x80)))
+							if (expectedBytes > 0 && (b & 0xC0) == 0x80)
 							{
 								// valid UTF8 char, add to readAheadBuffer
-								readAheadBuffer[readAhead++] = unchecked((byte)b);
+								readAheadBuffer[readAhead++] = (byte)b;
 								expectedBytes--;
 								if (expectedBytes == 0)
 								{
@@ -190,10 +189,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			int c = ch & 0xFF;
 			try
 			{
-				if (c >= unchecked((int)(0x80)))
+				if (c >= 0x80)
 				{
-					if (c == unchecked((int)(0x81)) || c == unchecked((int)(0x8D)) || c == unchecked(
-						(int)(0x8F)) || c == 0x90 || c == 0x9D)
+					if (c == 0x81 || c == 0x8D || c == 0x8F || c == 0x90 || c == 0x9D)
 					{
 						return new byte[] { 0x20 };
 					}

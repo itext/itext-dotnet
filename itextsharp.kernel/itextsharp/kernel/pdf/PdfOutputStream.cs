@@ -332,8 +332,8 @@ namespace com.itextpdf.kernel.pdf
 					if (toCompress && (allowCompression || userDefinedCompression))
 					{
 						UpdateCompressionFilter(pdfStream);
-						fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), unchecked(
-							(int)(0x8000)));
+						fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000
+							);
 					}
 					this.Write((PdfDictionary)pdfStream);
 					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.stream);

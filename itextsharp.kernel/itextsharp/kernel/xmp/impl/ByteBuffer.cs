@@ -236,7 +236,7 @@ namespace com.itextpdf.kernel.xmp.impl
 					}
 					else
 					{
-						if ((buffer[0] & 0xFF) < unchecked((int)(0x80)))
+						if ((buffer[0] & 0xFF) < 0x80)
 						{
 							// These cases are:
 							//   nn mm -- -- - UTF-8, includes EF BB BF case

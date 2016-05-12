@@ -52,20 +52,15 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 {
 	public class StandardHandlerUsingStandard40 : StandardSecurityHandler
 	{
-		protected internal static readonly byte[] pad = new byte[] { unchecked((byte)0x28
-			), unchecked((byte)0xBF), unchecked((byte)0x4E), unchecked((byte)0x5E), unchecked(
-			(byte)0x4E), unchecked((byte)0x75), unchecked((byte)unchecked((int)(0x8A))), unchecked(
-			(byte)0x41), unchecked((byte)0x64), unchecked((byte)0x00), unchecked((byte)0x4E)
-			, unchecked((byte)0x56), unchecked((byte)0xFF), unchecked((byte)0xFA), unchecked(
-			(byte)0x01), unchecked((byte)0x08), unchecked((byte)0x2E), unchecked((byte)0x2E)
-			, unchecked((byte)0x00), unchecked((byte)0xB6), unchecked((byte)0xD0), unchecked(
-			(byte)0x68), unchecked((byte)0x3E), unchecked((byte)unchecked((int)(0x80))), unchecked(
-			(byte)0x2F), unchecked((byte)0x0C), unchecked((byte)0xA9), unchecked((byte)0xFE)
-			, unchecked((byte)0x64), unchecked((byte)0x53), unchecked((byte)0x69), unchecked(
-			(byte)0x7A) };
+		protected internal static readonly byte[] pad = new byte[] { (byte)0x28, (byte)0xBF
+			, (byte)0x4E, (byte)0x5E, (byte)0x4E, (byte)0x75, (byte)0x8A, (byte)0x41, (byte)
+			0x64, (byte)0x00, (byte)0x4E, (byte)0x56, (byte)0xFF, (byte)0xFA, (byte)0x01, (byte
+			)0x08, (byte)0x2E, (byte)0x2E, (byte)0x00, (byte)0xB6, (byte)0xD0, (byte)0x68, (
+			byte)0x3E, (byte)0x80, (byte)0x2F, (byte)0x0C, (byte)0xA9, (byte)0xFE, (byte)0x64
+			, (byte)0x53, (byte)0x69, (byte)0x7A };
 
-		protected internal static readonly byte[] metadataPad = new byte[] { unchecked((byte
-			)255), unchecked((byte)255), unchecked((byte)255), unchecked((byte)255) };
+		protected internal static readonly byte[] metadataPad = new byte[] { (byte)255, (
+			byte)255, (byte)255, (byte)255 };
 
 		protected internal byte[] documentId;
 
@@ -153,10 +148,10 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			md5.Update(userPad);
 			md5.Update(ownerKey);
 			byte[] ext = new byte[4];
-			ext[0] = unchecked((byte)permissions);
-			ext[1] = unchecked((byte)(permissions >> 8));
-			ext[2] = unchecked((byte)(permissions >> 16));
-			ext[3] = unchecked((byte)(permissions >> 24));
+			ext[0] = (byte)permissions;
+			ext[1] = (byte)(permissions >> 8);
+			ext[2] = (byte)(permissions >> 16);
+			ext[3] = (byte)(permissions >> 24);
 			md5.Update(ext, 0, 4);
 			if (documentId != null)
 			{

@@ -1,5 +1,5 @@
 /*
-$Id: b6cd09a03ccd873499dfcac2d7bcbf2b62e29c36 $
+$Id: 9570a5b04ef5fd10b6d13862741d63e08808fc84 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -142,8 +142,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 				if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
 				{
 					IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-					clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), polyType
-						, subpath.IsClosed());
+					clipper.AddPath(ConvertToLongPoints(linearApproxPoints), polyType, subpath.IsClosed
+						());
 				}
 			}
 		}
@@ -189,8 +189,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 						et = endType;
 					}
 					IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-					offset.AddPath((List<IntPoint>)ConvertToLongPoints(linearApproxPoints), joinType, 
-						et);
+					offset.AddPath(ConvertToLongPoints(linearApproxPoints), joinType, et);
 				}
 			}
 			return degenerateSubpaths;
@@ -221,9 +220,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// <see cref="IntPoint"/>
 		/// objects.
 		/// </summary>
-		public static IList<IntPoint> ConvertToLongPoints(IList<Point> points)
+		public static List<IntPoint> ConvertToLongPoints(IList<Point> points)
 		{
-			IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
+			List<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
 			foreach (Point point in points)
 			{
 				convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier 
@@ -329,8 +328,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType
 			 polyType)
 		{
-			clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(com.itextpdf.io.util.JavaUtil.ArraysAsList
-				(rectVertices)))), polyType, true);
+			clipper.AddPath(ConvertToLongPoints(new List<Point>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+				(rectVertices))), polyType, true);
 		}
 	}
 }

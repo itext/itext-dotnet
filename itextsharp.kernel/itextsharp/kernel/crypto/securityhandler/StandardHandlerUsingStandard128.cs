@@ -86,7 +86,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			{
 				for (int j = 0; j < mkey.Length; ++j)
 				{
-					mkey[j] = unchecked((byte)(digest[j] ^ i));
+					mkey[j] = (byte)(digest[j] ^ i);
 				}
 				arcfour.PrepareARCFOURKey(mkey);
 				arcfour.EncryptARCFOUR(ownerKey);
@@ -103,10 +103,10 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			md5.Update(userPad);
 			md5.Update(ownerKey);
 			byte[] ext = new byte[4];
-			ext[0] = unchecked((byte)permissions);
-			ext[1] = unchecked((byte)(permissions >> 8));
-			ext[2] = unchecked((byte)(permissions >> 16));
-			ext[3] = unchecked((byte)(permissions >> 24));
+			ext[0] = (byte)permissions;
+			ext[1] = (byte)(permissions >> 8);
+			ext[2] = (byte)(permissions >> 16);
+			ext[3] = (byte)(permissions >> 24);
 			md5.Update(ext, 0, 4);
 			if (documentId != null)
 			{
@@ -140,7 +140,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 			{
 				for (int j = 0; j < mkey.Length; ++j)
 				{
-					digest[j] = unchecked((byte)(mkey[j] ^ i));
+					digest[j] = (byte)(mkey[j] ^ i);
 				}
 				arcfour.PrepareARCFOURKey(digest, 0, mkey.Length);
 				arcfour.EncryptARCFOUR(userKey, 0, 16);

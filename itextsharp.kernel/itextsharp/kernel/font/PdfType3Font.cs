@@ -193,7 +193,7 @@ namespace com.itextpdf.kernel.font
 				GetFontProgram()).IsColorized());
 			((Type3FontProgram)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, 
 				urx, ury }, glyph);
-			fontEncoding.AddSymbol(unchecked((byte)code), c);
+			fontEncoding.AddSymbol((byte)code, c);
 			if (!((Type3FontProgram)GetFontProgram()).IsColorized())
 			{
 				if (fontProgram.CountOfGlyphs() == 0)

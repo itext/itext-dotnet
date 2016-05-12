@@ -1570,7 +1570,7 @@ namespace com.itextpdf.kernel.pdf
 						writer.Write(buffer, 0, n);
 					}
 					file.Close();
-					writer.Write(unchecked((byte)'\n'));
+					writer.Write((byte)'\n');
 					//TODO log if full compression differs
 					writer.properties.isFullCompression = reader.HasXrefStm();
 					writer.crypto = reader.decrypt;
