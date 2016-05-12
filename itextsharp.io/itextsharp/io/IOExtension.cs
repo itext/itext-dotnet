@@ -69,7 +69,7 @@ namespace com.itextpdf.io
             return str.Split(str.ToCharArray());
         }
 
-        public static void AddAll<T>(this ICollection<T> c, ICollection<T> collectionToAdd)
+        public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd)
         {
             foreach (T o in collectionToAdd)
             {
