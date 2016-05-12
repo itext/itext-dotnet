@@ -167,6 +167,14 @@
     <Compile Include="itextsharp\io\source\RASInputStream.cs" />
     <Compile Include="itextsharp\io\source\WindowRandomAccessSource.cs" />
     <Compile Include="itextsharp\io\util\ArrayUtil.cs" />
+    <Compile Include="itextsharp\io\util\Collections\EmptyEnumerator.cs" />
+    <Compile Include="itextsharp\io\util\Collections\EmptyList.cs" />
+    <Compile Include="itextsharp\io\util\Collections\EmptyDictionary.cs" />
+    <Compile Include="itextsharp\io\util\Collections\EmptySet.cs" />
+    <Compile Include="itextsharp\io\util\Collections\SingletonList.cs" />
+    <Compile Include="itextsharp\io\util\Collections\UnmodifiableCollection.cs" />
+    <Compile Include="itextsharp\io\util\Collections\UnmodifiableDictionary.cs" />
+    <Compile Include="itextsharp\io\util\Collections\UnmodifiableSet.cs" />
     <Compile Include="itextsharp\io\util\DecimalFormatUtil.cs" />
     <Compile Include="itextsharp\io\util\EncodingUtil.cs" />
     <Compile Include="itextsharp\io\util\FileUtil.cs" />
@@ -176,6 +184,7 @@
     <Compile Include="itextsharp\io\util\IanaEncodings.cs" />
     <Compile Include="itextsharp\io\util\IdelOutputStream.cs" />
     <Compile Include="itextsharp\io\util\IntHashtable.cs" />
+    <Compile Include="itextsharp\io\util\JavaCollectionsUtil.cs" />
     <Compile Include="itextsharp\io\util\JavaUtil.cs" />
     <Compile Include="itextsharp\io\util\LinkedDictionary.cs" />
     <Compile Include="itextsharp\io\util\LinkedHashSet.cs" />
