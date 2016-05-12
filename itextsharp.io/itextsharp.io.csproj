@@ -184,6 +184,7 @@
     <Compile Include="itextsharp\io\util\SortUtil.cs" />
     <Compile Include="itextsharp\io\util\StreamUtil.cs" />
     <Compile Include="itextsharp\io\util\StringTokenizer.cs" />
+    <Compile Include="itextsharp\io\util\StringUtil.cs" />
     <Compile Include="itextsharp\io\util\TextUtil.cs" />
     <Compile Include="itextsharp\io\util\UrlUtil.cs" />
     <Compile Include="itextsharp\io\util\zlib\Adler32.cs" />

@@ -11,9 +11,7 @@ namespace com.itextpdf.io.util {
         } 
 
         public LinkedHashSet(ICollection<TKey> c) {
-            foreach (TKey item in c) {
-                Add(item);
-            }
+            this.AddAll(c);
         } 
 
         public IEnumerator<TKey> GetEnumerator() {

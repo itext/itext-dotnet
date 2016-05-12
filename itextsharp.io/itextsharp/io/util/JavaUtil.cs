@@ -164,5 +164,9 @@ namespace com.itextpdf.io.util
             for (int i = 0, len = a.Length; i < len; i++)
                 a[i] = val;
         }
+
+        public static int IntegerCompare(int a, int b) {
+            return a.CompareTo(b);
+        }
     }
 }

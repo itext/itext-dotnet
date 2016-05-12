@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using com.itextpdf.io.util;
 using com.itextpdf.kernel.pdf.colorspace;
 
 namespace com.itextpdf.kernel {
@@ -73,6 +75,12 @@ namespace com.itextpdf.kernel {
 
         public static bool Matches(this String str, String regex) {
             return Regex.IsMatch(str, regex);
+        }
+
+        public static int[][] ToArray(this ICollection<int[]> col, int[][] toArray)
+        {
+            int[][] r = col.ToArray();
+            return r;
         }
     }
 }

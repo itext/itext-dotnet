@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2D030BF2-59ED-45AC-9C4E-360753805A44}</ProjectGuid>
+    <ProjectGuid>{52A93D37-60D7-4607-8BB2-724D9C46671B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>io.tests</RootNamespace>
