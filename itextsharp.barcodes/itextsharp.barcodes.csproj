@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DCAE8241-E391-418D-BA36-C7C064D7C413}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>barcodes</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="itextsharp\barcodes\Barcode128.cs" />
+    <Compile Include="itextsharp\barcodes\Barcode1D.cs" />
+    <Compile Include="itextsharp\barcodes\Barcode2D.cs" />
+    <Compile Include="itextsharp\barcodes\Barcode39.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeCodabar.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeDataMatrix.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeEAN.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeEANSUPP.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeInter25.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodePDF417.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodePostnet.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeQRCode.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodesExtensions.cs" />
+    <Compile Include="itextsharp\barcodes\dmcode\DmParams.cs" />
+    <Compile Include="itextsharp\barcodes\dmcode\Placement.cs" />
+    <Compile Include="itextsharp\barcodes\dmcode\ReedSolomon.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\BitArray.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\BitMatrix.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\BitVector.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\BlockPair.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\ByteArray.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\ByteMatrix.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\CharacterSetECI.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\EncodeHintType.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\Encoder.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\ErrorCorrectionLevel.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\FormatInformation.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\GF256.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\GF256Poly.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\MaskUtil.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\MatrixUtil.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\Mode.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\QRCode.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\QRCodeWriter.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\ReedSolomonEncoder.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\ReedSolomonException.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\Version.cs" />
+    <Compile Include="itextsharp\barcodes\qrcode\WriterException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
+      <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
+      <Name>itextsharp.io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.kernel\itextsharp.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itextsharp.kernel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
