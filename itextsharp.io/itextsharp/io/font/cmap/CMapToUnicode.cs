@@ -54,15 +54,19 @@ namespace com.itextpdf.io.font.cmap
 	/// <author>Ben Litchfield (ben@benlitchfield.com)</author>
 	public class CMapToUnicode : AbstractCMap
 	{
+		public static com.itextpdf.io.font.cmap.CMapToUnicode EmptyCMapToUnicodeMap = new 
+			com.itextpdf.io.font.cmap.CMapToUnicode(true);
+
 		private IDictionary<int, char[]> byteMappings;
+
+		private CMapToUnicode(bool emptyCMap)
+		{
+			byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
+		}
 
 		/// <summary>Creates a new instance of CMap.</summary>
 		public CMapToUnicode()
 		{
-			//    public static CMapToUnicode EmptyCMapToUnicodeMap = new CMapToUnicode(true);
-			//    private CMapToUnicode(boolean emptyCMap) {
-			//        byteMappings = Collections.emptyMap();
-			//    }
 			byteMappings = new Dictionary<int, char[]>();
 		}
 
@@ -95,16 +99,16 @@ namespace com.itextpdf.io.font.cmap
 			int key;
 			if (length == 1)
 			{
-				key = code[offset] & unchecked((int)(0xff));
+				key = code[offset] & 0xff;
 				result = byteMappings[key];
 			}
 			else
 			{
 				if (length == 2)
 				{
-					int intKey = code[offset] & unchecked((int)(0xff));
+					int intKey = code[offset] & 0xff;
 					intKey <<= 8;
-					intKey += code[offset + 1] & unchecked((int)(0xff));
+					intKey += code[offset + 1] & 0xff;
 					key = intKey;
 					result = byteMappings[key];
 				}
@@ -206,14 +210,14 @@ namespace com.itextpdf.io.font.cmap
 		{
 			if (bytes.Length == 1)
 			{
-				return new char[] { (char)(bytes[0] & unchecked((int)(0xff))) };
+				return new char[] { (char)(bytes[0] & 0xff) };
 			}
 			else
 			{
 				char[] chars = new char[bytes.Length];
 				for (int i = 0; i < bytes.Length; i++)
 				{
-					chars[i] = (char)(bytes[i] & unchecked((int)(0xff)));
+					chars[i] = (char)(bytes[i] & 0xff);
 				}
 				return chars;
 			}
@@ -225,8 +229,7 @@ namespace com.itextpdf.io.font.cmap
 			char[] chars = new char[bytes.Length / 2];
 			for (int i = 0; i < bytes.Length; i += 2)
 			{
-				chars[i / 2] = (char)(((bytes[i] & unchecked((int)(0xff))) << 8) + (bytes[i + 1] 
-					& unchecked((int)(0xff))));
+				chars[i / 2] = (char)(((bytes[i] & 0xff) << 8) + (bytes[i + 1] & 0xff));
 			}
 			return chars;
 		}

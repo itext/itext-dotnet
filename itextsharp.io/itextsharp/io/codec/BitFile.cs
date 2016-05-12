@@ -120,16 +120,14 @@ namespace com.itextpdf.io.codec
 					if (blocks)
 					{
 						// GIF
-						buffer[index] |= unchecked((byte)((bits & ((1 << numbits) - 1)) << (8 - bitsLeft)
-							));
+						buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (8 - bitsLeft));
 						bitsWritten += numbits;
 						bitsLeft -= numbits;
 						numbits = 0;
 					}
 					else
 					{
-						buffer[index] |= unchecked((byte)((bits & ((1 << numbits) - 1)) << (bitsLeft - numbits
-							)));
+						buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (bitsLeft - numbits));
 						bitsWritten += numbits;
 						bitsLeft -= numbits;
 						numbits = 0;
@@ -143,8 +141,7 @@ namespace com.itextpdf.io.codec
 						// GIF
 						// if bits  > space left in current byte then the lowest order bits
 						// of code are taken and put in current byte and rest put in next.
-						buffer[index] |= unchecked((byte)((bits & ((1 << bitsLeft) - 1)) << (8 - bitsLeft
-							)));
+						buffer[index] |= (byte)((bits & ((1 << bitsLeft) - 1)) << (8 - bitsLeft));
 						bitsWritten += bitsLeft;
 						bits >>= bitsLeft;
 						numbits -= bitsLeft;
@@ -158,7 +155,7 @@ namespace com.itextpdf.io.codec
 						// at highest order bit location !!
 						int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 
 							1);
-						buffer[index] |= unchecked((byte)topbits);
+						buffer[index] |= (byte)topbits;
 						numbits -= bitsLeft;
 						// ok this many bits gone off the top
 						bitsWritten += bitsLeft;

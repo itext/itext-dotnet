@@ -1142,19 +1142,19 @@ namespace com.itextpdf.io.font
 			int Size = NewOffsets[NewOffsets.Length - 1];
 			// Calc the Offsize
 			byte Offsize;
-			if (Size <= unchecked((int)(0xff)))
+			if (Size <= 0xff)
 			{
 				Offsize = 1;
 			}
 			else
 			{
-				if (Size <= unchecked((int)(0xffff)))
+				if (Size <= 0xffff)
 				{
 					Offsize = 2;
 				}
 				else
 				{
-					if (Size <= unchecked((int)(0xffffff)))
+					if (Size <= 0xffffff)
 					{
 						Offsize = 3;
 					}
@@ -1172,8 +1172,8 @@ namespace com.itextpdf.io.font
 			// Write the count field
 			// There is no sense in >>> for char
 			// NewIndex[Place++] = (byte) (Count >>> 8 & 0xff);
-			NewIndex[Place++] = unchecked((byte)(Count >> 8 & unchecked((int)(0xff))));
-			NewIndex[Place++] = unchecked((byte)(Count & unchecked((int)(0xff))));
+			NewIndex[Place++] = (byte)(Count >> 8 & 0xff);
+			NewIndex[Place++] = (byte)(Count & 0xff);
 			// Write the offsize field
 			NewIndex[Place++] = Offsize;
 			// Write the offset array according to the offsize
@@ -1184,8 +1184,7 @@ namespace com.itextpdf.io.font
 				// Write in bytes according to the offsize
 				for (int i = Offsize; i > 0; i--)
 				{
-					NewIndex[Place++] = unchecked((byte)((int)(((uint)Num) >> ((i - 1) << 3)) & unchecked(
-						(int)(0xff))));
+					NewIndex[Place++] = (byte)((int)(((uint)Num) >> ((i - 1) << 3)) & 0xff);
 				}
 			}
 			// Write the new object array one by one
@@ -1479,19 +1478,19 @@ namespace com.itextpdf.io.font
 			int origStringsLen = stringOffsets[stringOffsets.Length - 1] - stringOffsets[0];
 			int stringsBaseOffset = stringOffsets[0] - 1;
 			byte stringsIndexOffSize;
-			if (origStringsLen + extraStrings.Length <= unchecked((int)(0xff)))
+			if (origStringsLen + extraStrings.Length <= 0xff)
 			{
 				stringsIndexOffSize = 1;
 			}
 			else
 			{
-				if (origStringsLen + extraStrings.Length <= unchecked((int)(0xffff)))
+				if (origStringsLen + extraStrings.Length <= 0xffff)
 				{
 					stringsIndexOffSize = 2;
 				}
 				else
 				{
-					if (origStringsLen + extraStrings.Length <= unchecked((int)(0xffffff)))
+					if (origStringsLen + extraStrings.Length <= 0xffffff)
 					{
 						stringsIndexOffSize = 3;
 					}

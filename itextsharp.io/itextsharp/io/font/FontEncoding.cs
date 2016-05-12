@@ -218,7 +218,7 @@ namespace com.itextpdf.io.font
 			{
 				if (unicodeToCode.ContainsKey(text[i]))
 				{
-					bytes[ptr++] = unchecked((byte)ConvertToByte(text[i]));
+					bytes[ptr++] = (byte)ConvertToByte(text[i]);
 				}
 			}
 			return ArrayUtil.ShortenArray(bytes, ptr);
@@ -353,7 +353,7 @@ namespace com.itextpdf.io.font
 			byte[] b = new byte[256];
 			for (int k = 0; k < 256; ++k)
 			{
-				b[k] = unchecked((byte)k);
+				b[k] = (byte)k;
 			}
 			String str = PdfEncodings.ConvertToString(b, baseEncoding);
 			char[] encoded = str.ToCharArray();

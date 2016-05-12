@@ -1,5 +1,5 @@
 /*
-$Id: 2664550cdb00bde628e6a75ef2b088a9636b2fb5 $
+$Id: b80d63da9e3bf3de752decad9aec40b09ba859a2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -53,34 +53,28 @@ namespace com.itextpdf.io.image
 {
 	public sealed class ImageDataFactory
 	{
-		private static readonly byte[] gif = new byte[] { (byte)('G'), (byte)('I'), (byte
-			)('F') };
+		private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F'
+			 };
 
-		private static readonly byte[] jpeg = new byte[] { unchecked((byte)0xFF), unchecked(
-			(byte)0xD8) };
+		private static readonly byte[] jpeg = new byte[] { (byte)0xFF, (byte)0xD8 };
 
 		private static readonly byte[] jpeg2000_1 = new byte[] { 0x00, 0x00, 0x00, 0x0c };
 
-		private static readonly byte[] jpeg2000_2 = new byte[] { unchecked((byte)unchecked(
-			(int)(0xff))), unchecked((byte)0x4f), unchecked((byte)unchecked((int)(0xff))), 0x51
-			 };
+		private static readonly byte[] jpeg2000_2 = new byte[] { (byte)0xff, (byte)0x4f, 
+			(byte)0xff, 0x51 };
 
-		private static readonly byte[] png = new byte[] { unchecked((byte)137), 80, 78, 71
-			 };
+		private static readonly byte[] png = new byte[] { (byte)137, 80, 78, 71 };
 
-		private static readonly byte[] wmf = new byte[] { unchecked((byte)0xD7), unchecked(
-			(byte)0xCD) };
+		private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
 
-		private static readonly byte[] bmp = new byte[] { (byte)('B'), (byte)('M') };
+		private static readonly byte[] bmp = new byte[] { (byte)'B', (byte)'M' };
 
-		private static readonly byte[] tiff_1 = new byte[] { (byte)('M'), (byte)('M'), 0, 
-			42 };
+		private static readonly byte[] tiff_1 = new byte[] { (byte)'M', (byte)'M', 0, 42 };
 
-		private static readonly byte[] tiff_2 = new byte[] { (byte)('I'), (byte)('I'), 42
-			, 0 };
+		private static readonly byte[] tiff_2 = new byte[] { (byte)'I', (byte)'I', 42, 0 };
 
-		private static readonly byte[] jbig2 = new byte[] { unchecked((byte)0x97), (byte)
-			('J'), (byte)('B'), (byte)('2'), (byte)('\r'), (byte)('\n'), 0x1a, (byte)('\n') };
+		private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)
+			'B', (byte)'2', (byte)'\r', (byte)'\n', 0x1a, (byte)'\n' };
 
 		private ImageDataFactory()
 		{

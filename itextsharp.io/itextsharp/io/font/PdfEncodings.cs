@@ -1,5 +1,5 @@
 /*
-$Id: 3ffd43f393ded0b232275446325b2169acb160b1 $
+$Id: b5459ab6ead6d421c9e84e794b20458467b9f9d5 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -155,22 +155,22 @@ namespace com.itextpdf.io.font
 			char)0x2022, (char)0x2020, (char)0x2021, (char)0x2026, (char)0x2014, (char)0x2013
 			, (char)0x0192, (char)0x2044, (char)0x2039, (char)0x203a, (char)0x2212, (char)0x2030
 			, (char)0x201e, (char)0x201c, (char)0x201d, (char)0x2018, (char)0x2019, (char)0x201a
-			, (char)0x2122, (char)unchecked((int)(0xfb01)), (char)unchecked((int)(0xfb02)), 
-			(char)0x0141, (char)0x0152, (char)0x0160, (char)0x0178, (char)0x017d, (char)0x0131
-			, (char)0x0142, (char)0x0153, (char)0x0161, (char)0x017e, (char)65533, (char)0x20ac
-			, (char)161, (char)162, (char)163, (char)164, (char)165, (char)166, (char)167, (
-			char)168, (char)169, (char)170, (char)171, (char)172, (char)173, (char)174, (char
-			)175, (char)176, (char)177, (char)178, (char)179, (char)180, (char)181, (char)182
-			, (char)183, (char)184, (char)185, (char)186, (char)187, (char)188, (char)189, (
-			char)190, (char)191, (char)192, (char)193, (char)194, (char)195, (char)196, (char
-			)197, (char)198, (char)199, (char)200, (char)201, (char)202, (char)203, (char)204
-			, (char)205, (char)206, (char)207, (char)208, (char)209, (char)210, (char)211, (
-			char)212, (char)213, (char)214, (char)215, (char)216, (char)217, (char)218, (char
-			)219, (char)220, (char)221, (char)222, (char)223, (char)224, (char)225, (char)226
-			, (char)227, (char)228, (char)229, (char)230, (char)231, (char)232, (char)233, (
-			char)234, (char)235, (char)236, (char)237, (char)238, (char)239, (char)240, (char
-			)241, (char)242, (char)243, (char)244, (char)245, (char)246, (char)247, (char)248
-			, (char)249, (char)250, (char)251, (char)252, (char)253, (char)254, (char)255 };
+			, (char)0x2122, (char)0xfb01, (char)0xfb02, (char)0x0141, (char)0x0152, (char)0x0160
+			, (char)0x0178, (char)0x017d, (char)0x0131, (char)0x0142, (char)0x0153, (char)0x0161
+			, (char)0x017e, (char)65533, (char)0x20ac, (char)161, (char)162, (char)163, (char
+			)164, (char)165, (char)166, (char)167, (char)168, (char)169, (char)170, (char)171
+			, (char)172, (char)173, (char)174, (char)175, (char)176, (char)177, (char)178, (
+			char)179, (char)180, (char)181, (char)182, (char)183, (char)184, (char)185, (char
+			)186, (char)187, (char)188, (char)189, (char)190, (char)191, (char)192, (char)193
+			, (char)194, (char)195, (char)196, (char)197, (char)198, (char)199, (char)200, (
+			char)201, (char)202, (char)203, (char)204, (char)205, (char)206, (char)207, (char
+			)208, (char)209, (char)210, (char)211, (char)212, (char)213, (char)214, (char)215
+			, (char)216, (char)217, (char)218, (char)219, (char)220, (char)221, (char)222, (
+			char)223, (char)224, (char)225, (char)226, (char)227, (char)228, (char)229, (char
+			)230, (char)231, (char)232, (char)233, (char)234, (char)235, (char)236, (char)237
+			, (char)238, (char)239, (char)240, (char)241, (char)242, (char)243, (char)244, (
+			char)245, (char)246, (char)247, (char)248, (char)249, (char)250, (char)251, (char
+			)252, (char)253, (char)254, (char)255 };
 
 		internal static readonly int[] standardEncoding = new int[] { 0, 0, 0, 0, 0, 0, 0
 			, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 
@@ -251,7 +251,7 @@ namespace com.itextpdf.io.font
 				byte[] b = new byte[len];
 				for (int k = 0; k < len; ++k)
 				{
-					b[k] = unchecked((byte)text[k]);
+					b[k] = (byte)text[k];
 				}
 				return b;
 			}
@@ -296,7 +296,7 @@ namespace com.itextpdf.io.font
 					}
 					if (c != 0)
 					{
-						b[ptr++] = unchecked((byte)c);
+						b[ptr++] = (byte)c;
 					}
 				}
 				if (ptr == len)
@@ -340,7 +340,7 @@ namespace com.itextpdf.io.font
 		{
 			if (encoding == null || encoding.Length == 0)
 			{
-				return new byte[] { unchecked((byte)ch) };
+				return new byte[] { (byte)ch };
 			}
 			IntHashtable hash = null;
 			if (encoding.Equals(WINANSI))
@@ -367,7 +367,7 @@ namespace com.itextpdf.io.font
 				}
 				if (c != 0)
 				{
-					return new byte[] { unchecked((byte)c) };
+					return new byte[] { (byte)c };
 				}
 				else
 				{
@@ -409,7 +409,7 @@ namespace com.itextpdf.io.font
 				char[] c = new char[bytes.Length];
 				for (int k = 0; k < bytes.Length; ++k)
 				{
-					c[k] = (char)(bytes[k] & unchecked((int)(0xff)));
+					c[k] = (char)(bytes[k] & 0xff);
 				}
 				return new String(c);
 			}
@@ -440,7 +440,7 @@ namespace com.itextpdf.io.font
 				char[] c = new char[len];
 				for (int k = 0; k < len; ++k)
 				{
-					c[k] = ch[bytes[k] & unchecked((int)(0xff))];
+					c[k] = ch[bytes[k] & 0xff];
 				}
 				return new String(c);
 			}
@@ -509,7 +509,7 @@ namespace com.itextpdf.io.font
 			{
 				if (char1 == ' ')
 				{
-					return new byte[] { unchecked((byte)char1) };
+					return new byte[] { (byte)char1 };
 				}
 				else
 				{
@@ -536,7 +536,7 @@ namespace com.itextpdf.io.font
 					char c = cc[k];
 					if (c == ' ')
 					{
-						b[ptr++] = unchecked((byte)c);
+						b[ptr++] = (byte)c;
 					}
 					else
 					{
@@ -564,56 +564,35 @@ namespace com.itextpdf.io.font
 				return null;
 			}
 
-			private static readonly byte[] table = new byte[] { unchecked((byte)0), unchecked(
-				(byte)35), unchecked((byte)34), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)41), unchecked((byte)62), unchecked((byte)81), unchecked(
-				(byte)42), unchecked((byte)0), unchecked((byte)0), unchecked((byte)65), unchecked(
-				(byte)63), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)-4), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)-5), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)86), unchecked((byte)0), unchecked((byte)88), unchecked(
-				(byte)89), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)-75), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)-74), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)-83), unchecked(
-				(byte)-81), unchecked((byte)-84), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)124), unchecked((byte)123), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)84), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)-90), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)113), unchecked((byte)114), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)117), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)125), unchecked((byte)126), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)-116), unchecked((byte)-115), unchecked((byte)-114), unchecked(
-				(byte)-113), unchecked((byte)-112), unchecked((byte)-111), unchecked((byte)-110)
-				, unchecked((byte)-109), unchecked((byte)-108), unchecked((byte)-107), unchecked(
-				(byte)-127), unchecked((byte)-126), unchecked((byte)-125), unchecked((byte)-124)
-				, unchecked((byte)-123), unchecked((byte)-122), unchecked((byte)-121), unchecked(
-				(byte)-120), unchecked((byte)-119), unchecked((byte)-118), unchecked((byte)-116)
-				, unchecked((byte)-115), unchecked((byte)-114), unchecked((byte)-113), unchecked(
-				(byte)-112), unchecked((byte)-111), unchecked((byte)-110), unchecked((byte)-109)
-				, unchecked((byte)-108), unchecked((byte)-107), unchecked((byte)-24), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)-24), unchecked((byte)-40), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)-60), unchecked((byte)-58), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)-16), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)-36), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0), unchecked((byte)0), unchecked((byte)0), unchecked(
-				(byte)0), unchecked((byte)0) };
+			private static readonly byte[] table = new byte[] { (byte)0x00, (byte)0x23, (byte
+				)0x22, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x29, (byte)0x3e, (byte)0x51, (
+				byte)0x2a, (byte)0x00, (byte)0x00, (byte)0x41, (byte)0x3f, (byte)0x00, (byte)0x00
+				, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xfc, (byte)0x00, (byte)0x00, (byte)
+				0x00, (byte)0xfb, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte
+				)0x00, (byte)0x56, (byte)0x00, (byte)0x58, (byte)0x59, (byte)0x00, (byte)0x00, (
+				byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xb5
+				, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xb6, (byte)
+				0x00, (byte)0x00, (byte)0x00, (byte)0xad, (byte)0xaf, (byte)0xac, (byte)0x00, (byte
+				)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (
+				byte)0x7c, (byte)0x7b, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x54, (byte)0x00
+				, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)
+				0x00, (byte)0xa6, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x71, (byte)0x72, (byte
+				)0x00, (byte)0x00, (byte)0x00, (byte)0x75, (byte)0x00, (byte)0x00, (byte)0x00, (
+				byte)0x00, (byte)0x00, (byte)0x00, (byte)0x7d, (byte)0x7e, (byte)0x00, (byte)0x00
+				, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)
+				0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte
+				)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (
+				byte)0x00, (byte)0x8c, (byte)0x8d, (byte)0x8e, (byte)0x8f, (byte)0x90, (byte)0x91
+				, (byte)0x92, (byte)0x93, (byte)0x94, (byte)0x95, (byte)0x81, (byte)0x82, (byte)
+				0x83, (byte)0x84, (byte)0x85, (byte)0x86, (byte)0x87, (byte)0x88, (byte)0x89, (byte
+				)0x8a, (byte)0x8c, (byte)0x8d, (byte)0x8e, (byte)0x8f, (byte)0x90, (byte)0x91, (
+				byte)0x92, (byte)0x93, (byte)0x94, (byte)0x95, (byte)0xe8, (byte)0x00, (byte)0x00
+				, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)
+				0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xe8, (byte)0xd8, (byte)0x00, (byte
+				)0x00, (byte)0xc4, (byte)0xc6, (byte)0x00, (byte)0x00, (byte)0xf0, (byte)0x00, (
+				byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
+				, (byte)0x00, (byte)0xdc, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)
+				0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 };
 		}
 
 		private class Cp437Conversion : IExtraEncoding
@@ -631,11 +610,11 @@ namespace com.itextpdf.io.font
 					char c = cc[k];
 					if (c < 128)
 					{
-						b[ptr++] = unchecked((byte)c);
+						b[ptr++] = (byte)c;
 					}
 					else
 					{
-						byte v = unchecked((byte)c2b.Get(c));
+						byte v = (byte)c2b.Get(c);
 						if (v != 0)
 						{
 							b[ptr++] = v;
@@ -655,11 +634,11 @@ namespace com.itextpdf.io.font
 			{
 				if (char1 < 128)
 				{
-					return new byte[] { unchecked((byte)char1) };
+					return new byte[] { (byte)char1 };
 				}
 				else
 				{
-					byte v = unchecked((byte)c2b.Get(char1));
+					byte v = (byte)c2b.Get(char1);
 					if (v != 0)
 					{
 						return new byte[] { v };
@@ -678,7 +657,7 @@ namespace com.itextpdf.io.font
 				int ptr = 0;
 				for (int k = 0; k < len; ++k)
 				{
-					int c = b[k] & unchecked((int)(0xff));
+					int c = b[k] & 0xff;
 					if (c < ' ')
 					{
 						continue;
@@ -756,7 +735,7 @@ namespace com.itextpdf.io.font
 				for (int k = 0; k < len; ++k)
 				{
 					char c = cc[k];
-					byte v = unchecked((byte)translation.Get(c));
+					byte v = (byte)translation.Get(c);
 					if (v != 0)
 					{
 						b[ptr++] = v;
@@ -773,7 +752,7 @@ namespace com.itextpdf.io.font
 
 			public virtual byte[] CharToByte(char char1, String encoding)
 			{
-				byte v = unchecked((byte)translation.Get(char1));
+				byte v = (byte)translation.Get(char1);
 				if (v != 0)
 				{
 					return new byte[] { v };
@@ -791,7 +770,7 @@ namespace com.itextpdf.io.font
 				int ptr = 0;
 				for (int k = 0; k < len; ++k)
 				{
-					int c = b[k] & unchecked((int)(0xff));
+					int c = b[k] & 0xff;
 					char v = byteToChar[c];
 					cc[ptr++] = v;
 				}
@@ -882,10 +861,9 @@ namespace com.itextpdf.io.font
 		{
 			public virtual byte[] CharToByte(char char1, String encoding)
 			{
-				if ((char1 & unchecked((int)(0xff00))) == 0 || (char1 & unchecked((int)(0xff00)))
-					 == unchecked((int)(0xf000)))
+				if ((char1 & 0xff00) == 0 || (char1 & 0xff00) == 0xf000)
 				{
-					return new byte[] { unchecked((byte)char1) };
+					return new byte[] { (byte)char1 };
 				}
 				else
 				{
@@ -902,10 +880,9 @@ namespace com.itextpdf.io.font
 				for (int k = 0; k < len; ++k)
 				{
 					char c = ch[k];
-					if ((c & unchecked((int)(0xff00))) == 0 || (c & unchecked((int)(0xff00))) == unchecked(
-						(int)(0xf000)))
+					if ((c & 0xff00) == 0 || (c & 0xff00) == 0xf000)
 					{
-						b[ptr++] = unchecked((byte)c);
+						b[ptr++] = (byte)c;
 					}
 				}
 				if (ptr == len)

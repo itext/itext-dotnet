@@ -184,7 +184,7 @@ namespace com.itextpdf.io.codec
 			for (int q_1 = 0; q_1 < w; q_1++)
 			{
 				//AddCharString((short) 0xFFFF, (byte) q);    // init with no prefix
-				AddCharString((short)-1, unchecked((byte)q_1));
+				AddCharString((short)-1, (byte)q_1);
 			}
 		}
 

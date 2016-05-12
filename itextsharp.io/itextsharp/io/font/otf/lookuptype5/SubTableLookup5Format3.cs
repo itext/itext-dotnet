@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using com.itextpdf.io.font.otf;
+using com.itextpdf.io.util;
 
 namespace com.itextpdf.io.font.otf.lookuptype5
 {
@@ -68,13 +69,9 @@ namespace com.itextpdf.io.font.otf.lookuptype5
 			if (ruleFormat3.coverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag
 				))
 			{
-				//return Collections.singletonList(this.substitutionRule);
-				IList<ContextualSubstRule> rules = new List<ContextualSubstRule>(1);
-				rules.Add(this.substitutionRule);
-				return rules;
+				return JavaCollectionsUtil.SingletonList(this.substitutionRule);
 			}
-			//return Collections.emptyList();
-			return new List<ContextualSubstRule>(0);
+			return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
 		}
 
 		public class SubstRuleFormat3 : ContextualSubstRule

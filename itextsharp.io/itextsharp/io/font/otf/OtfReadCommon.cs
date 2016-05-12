@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using com.itextpdf.io.source;
+using com.itextpdf.io.util;
 
 namespace com.itextpdf.io.font.otf
 {
@@ -113,8 +114,7 @@ namespace com.itextpdf.io.font.otf
 						));
 				}
 			}
-			//return Collections.unmodifiableList(glyphIds);
-			return glyphIds;
+			return JavaCollectionsUtil.UnmodifiableList(glyphIds);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

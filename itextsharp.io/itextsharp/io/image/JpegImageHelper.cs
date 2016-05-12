@@ -1,5 +1,5 @@
 /*
-$Id: 7fc5df53bb326c7c1051b0774e4ebfaf75516478 $
+$Id: bb85fe5546573d94aa0788515b0685c8772c65f1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -95,7 +95,7 @@ namespace com.itextpdf.io.image
 
 		/// <summary>sequence preceding Photoshop resolution data</summary>
 		private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d
-			, 0x03, unchecked((byte)unchecked((int)(0xed))) };
+			, 0x03, (byte)0xed };
 
 		public static void ProcessImage(ImageData image)
 		{
@@ -235,7 +235,7 @@ namespace com.itextpdf.io.image
 						byte[] byteappe = new byte[len];
 						for (int k = 0; k < len; ++k)
 						{
-							byteappe[k] = unchecked((byte)jpegStream.Read());
+							byteappe[k] = (byte)jpegStream.Read();
 						}
 						if (byteappe.Length >= 12)
 						{
@@ -254,7 +254,7 @@ namespace com.itextpdf.io.image
 						byte[] byteapp2 = new byte[len];
 						for (int k = 0; k < len; ++k)
 						{
-							byteapp2[k] = unchecked((byte)jpegStream.Read());
+							byteapp2[k] = (byte)jpegStream.Read();
 						}
 						if (byteapp2.Length >= 14)
 						{
@@ -262,8 +262,8 @@ namespace com.itextpdf.io.image
 								);
 							if (app2.Equals("ICC_PROFILE"))
 							{
-								int order = byteapp2[12] & unchecked((int)(0xff));
-								int count = byteapp2[13] & unchecked((int)(0xff));
+								int order = byteapp2[12] & 0xff;
+								int count = byteapp2[13] & 0xff;
 								// some jpeg producers don't know how to count to 1
 								if (order < 1)
 								{
@@ -288,7 +288,7 @@ namespace com.itextpdf.io.image
 						byte[] byteappd = new byte[len];
 						for (int k = 0; k < len; k++)
 						{
-							byteappd[k] = unchecked((byte)jpegStream.Read());
+							byteappd[k] = (byte)jpegStream.Read();
 						}
 						// search for '8BIM Resolution' marker
 						int k_1;
@@ -334,19 +334,19 @@ namespace com.itextpdf.io.image
 								continue;
 							}
 							k_1 += 4;
-							int dx = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & unchecked((int)(0xff)));
+							int dx = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & 0xff);
 							k_1 += 2;
 							// skip 2 unknown bytes
 							k_1 += 2;
-							int unitsx = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & unchecked((int)(0xff)));
+							int unitsx = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & 0xff);
 							k_1 += 2;
 							// skip 2 unknown bytes
 							k_1 += 2;
-							int dy = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & unchecked((int)(0xff)));
+							int dy = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & 0xff);
 							k_1 += 2;
 							// skip 2 unknown bytes
 							k_1 += 2;
-							int unitsy = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & unchecked((int)(0xff)));
+							int unitsy = (byteappd[k_1] << 8) + (byteappd[k_1 + 1] & 0xff);
 							if (unitsx == 1 || unitsx == 2)
 							{
 								dx = (unitsx == 2 ? (int)(dx * 2.54f + 0.5f) : dx);

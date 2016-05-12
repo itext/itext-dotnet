@@ -177,7 +177,7 @@ namespace com.itextpdf.io.font
 			foreach (byte b in bytes)
 			{
 				result <<= 8;
-				result += b & unchecked((int)(0xff));
+				result += b & 0xff;
 			}
 			return result;
 		}

@@ -129,7 +129,7 @@ namespace com.itextpdf.io.source
 
 		public virtual com.itextpdf.io.source.ByteBuffer Append(int b)
 		{
-			return Append(unchecked((byte)b));
+			return Append((byte)b);
 		}
 
 		public virtual com.itextpdf.io.source.ByteBuffer Append(String str)

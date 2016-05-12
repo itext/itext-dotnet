@@ -1,5 +1,5 @@
 /*
-$Id: 210b35cd6b0067326561da4669dd33350650d7be $
+$Id: cfd32334603fedf4f149393a38da6819dca5fa2c $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -221,7 +221,7 @@ namespace com.itextpdf.io.image
 			gif.image.SetLogicalHeight(ReadShort(gif));
 			// packed fields
 			int packed = gif.input.Read();
-			gif.gctFlag = (packed & unchecked((int)(0x80))) != 0;
+			gif.gctFlag = (packed & 0x80) != 0;
 			// 1   : global color table flag
 			gif.m_gbpc = (packed & 7) + 1;
 			gif.bgIndex = gif.input.Read();
@@ -317,14 +317,14 @@ namespace com.itextpdf.io.image
 						code = gif.input.Read();
 						switch (code)
 						{
-							case unchecked((int)(0xf9)):
+							case 0xf9:
 							{
 								// graphics control extension
 								ReadGraphicControlExt(gif);
 								break;
 							}
 
-							case unchecked((int)(0xff)):
+							case 0xff:
 							{
 								// application extension
 								ReadBlock(gif);
@@ -362,7 +362,7 @@ namespace com.itextpdf.io.image
 			gif.iw = ReadShort(gif);
 			gif.ih = ReadShort(gif);
 			int packed = gif.input.Read();
-			gif.lctFlag = (packed & unchecked((int)(0x80))) != 0;
+			gif.lctFlag = (packed & 0x80) != 0;
 			// 1 - local color table flag
 			gif.interlace = (packed & 0x40) != 0;
 			// 2 - interlace flag
@@ -476,7 +476,7 @@ namespace com.itextpdf.io.image
 			for (code = 0; code < clear; code++)
 			{
 				gif.prefix[code] = 0;
-				gif.suffix[code] = unchecked((byte)code);
+				gif.suffix[code] = (byte)code;
 			}
 			//  Decode GIF pixel stream.
 			datum = bits = count = first = top = bi = 0;
@@ -498,7 +498,7 @@ namespace com.itextpdf.io.image
 							}
 							bi = 0;
 						}
-						datum += (gif.block[bi] & unchecked((int)(0xff))) << bits;
+						datum += (gif.block[bi] & 0xff) << bits;
 						bits += 8;
 						bi++;
 						count--;
@@ -532,7 +532,7 @@ namespace com.itextpdf.io.image
 					in_code = code;
 					if (code == available)
 					{
-						gif.pixelStack[top++] = unchecked((byte)first);
+						gif.pixelStack[top++] = (byte)first;
 						code = old_code;
 					}
 					while (code > clear)
@@ -540,15 +540,15 @@ namespace com.itextpdf.io.image
 						gif.pixelStack[top++] = gif.suffix[code];
 						code = gif.prefix[code];
 					}
-					first = gif.suffix[code] & unchecked((int)(0xff));
+					first = gif.suffix[code] & 0xff;
 					//  Add a new string to the string table,
 					if (available >= MAX_STACK_SIZE)
 					{
 						break;
 					}
-					gif.pixelStack[top++] = unchecked((byte)first);
+					gif.pixelStack[top++] = (byte)first;
 					gif.prefix[available] = (short)old_code;
-					gif.suffix[available] = unchecked((byte)first);
+					gif.suffix[available] = (byte)first;
 					available++;
 					if ((available & code_mask) == 0 && available < MAX_STACK_SIZE)
 					{
@@ -624,13 +624,13 @@ namespace com.itextpdf.io.image
 			if (gif.m_bpc == 8)
 			{
 				int pos = x + gif.iw * y;
-				gif.m_out[pos] = unchecked((byte)v);
+				gif.m_out[pos] = (byte)v;
 			}
 			else
 			{
 				int pos = gif.m_line_stride * y + x / (8 / gif.m_bpc);
 				int vout = v << 8 - gif.m_bpc * (x % (8 / gif.m_bpc)) - gif.m_bpc;
-				gif.m_out[pos] |= unchecked((byte)vout);
+				gif.m_out[pos] |= (byte)vout;
 			}
 		}
 

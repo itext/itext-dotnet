@@ -637,7 +637,7 @@ namespace com.itextpdf.io.font
 				raf.SkipBytes(2);
 				length = raf.ReadUnsignedShort();
 				int coverage = raf.ReadUnsignedShort();
-				if ((coverage & unchecked((int)(0xfff7))) == 0x0001)
+				if ((coverage & 0xfff7) == 0x0001)
 				{
 					int nPairs = raf.ReadUnsignedShort();
 					raf.SkipBytes(6);
@@ -1255,9 +1255,9 @@ namespace com.itextpdf.io.font
 					// (j & 0xff00) == 0xf000) means, that it is private area of unicode
 					// So, in case symbol font (cmap 3/0) we add both char codes:
 					// j & 0xff and j. It will simplify unicode conversion in TrueTypeFont
-					if (fontSpecific && ((j & unchecked((int)(0xff00))) == unchecked((int)(0xf000))))
+					if (fontSpecific && ((j & 0xff00) == 0xf000))
 					{
-						h[j & unchecked((int)(0xff))] = r;
+						h[j & 0xff] = r;
 					}
 					h[j] = r;
 				}

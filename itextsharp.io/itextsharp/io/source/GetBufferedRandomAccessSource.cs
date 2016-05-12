@@ -83,7 +83,7 @@ namespace com.itextpdf.io.source
 				getBufferEnd = position + count - 1;
 			}
 			int bufPos = (int)(position - getBufferStart);
-			return unchecked((int)(0xff)) & getBuffer[bufPos];
+			return 0xff & getBuffer[bufPos];
 		}
 
 		/// <summary><inheritDoc/></summary>

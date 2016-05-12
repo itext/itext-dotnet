@@ -1,5 +1,5 @@
 /*
-$Id: 7101613e94e1956bd9341e9dbf4b720ecd4bdae8 $
+$Id: 2359d934e1afaf18dd69f4374e6830877df153a1 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -221,7 +221,7 @@ namespace com.itextpdf.io.font
 				int bytePtr = 0;
 				for (int k = 0; k < 3; ++k)
 				{
-					if (raf.Read() != unchecked((int)(0x80)))
+					if (raf.Read() != 0x80)
 					{
 						Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.Type1Font));
 						logger.Error(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);

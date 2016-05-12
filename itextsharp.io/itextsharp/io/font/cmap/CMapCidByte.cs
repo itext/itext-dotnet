@@ -87,7 +87,7 @@ namespace com.itextpdf.io.font.cmap
 				foreach (byte b in bytes)
 				{
 					byteCode <<= 8;
-					byteCode += b & unchecked((int)(0xff));
+					byteCode += b & 0xff;
 				}
 				code2cid.Put(byteCode, cid);
 			}

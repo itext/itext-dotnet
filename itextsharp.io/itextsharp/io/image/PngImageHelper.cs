@@ -241,7 +241,7 @@ namespace com.itextpdf.io.image
 				{
 					for (int k = 0; k < png.trans.Length; ++k)
 					{
-						int n = png.trans[k] & unchecked((int)(0xff));
+						int n = png.trans[k] & 0xff;
 						if (n == 0)
 						{
 							++pal0;
@@ -555,7 +555,7 @@ namespace com.itextpdf.io.image
 									png.trans = new byte[len];
 									for (int k = 0; k < len; ++k)
 									{
-										png.trans[k] = unchecked((byte)pngStream.Read());
+										png.trans[k] = (byte)pngStream.Read();
 									}
 									len = 0;
 								}
@@ -1044,7 +1044,7 @@ namespace com.itextpdf.io.image
 			if (bitDepth == 8)
 			{
 				int pos = bytesPerRow * y + x;
-				return image[pos] & unchecked((int)(0xff));
+				return image[pos] & 0xff;
 			}
 			else
 			{
@@ -1062,7 +1062,7 @@ namespace com.itextpdf.io.image
 				int pos = bytesPerRow * y + size * x;
 				for (int k = 0; k < size; ++k)
 				{
-					image[pos + k] = unchecked((byte)data[k + offset]);
+					image[pos + k] = (byte)data[k + offset];
 				}
 			}
 			else
@@ -1072,14 +1072,14 @@ namespace com.itextpdf.io.image
 					int pos = bytesPerRow * y + size * x;
 					for (int k = 0; k < size; ++k)
 					{
-						image[pos + k] = unchecked((byte)((int)(((uint)data[k + offset]) >> 8)));
+						image[pos + k] = (byte)((int)(((uint)data[k + offset]) >> 8));
 					}
 				}
 				else
 				{
 					int pos = bytesPerRow * y + x / (8 / bitDepth);
 					int v = data[offset] << (8 - bitDepth * (x % (8 / bitDepth)) - bitDepth);
-					image[pos] |= unchecked((byte)v);
+					image[pos] |= (byte)v;
 				}
 			}
 		}
@@ -1093,7 +1093,7 @@ namespace com.itextpdf.io.image
 					int[] res = new int[curr.Length];
 					for (int k = 0; k < res.Length; ++k)
 					{
-						res[k] = curr[k] & unchecked((int)(0xff));
+						res[k] = curr[k] & 0xff;
 					}
 					return res;
 				}
@@ -1103,8 +1103,7 @@ namespace com.itextpdf.io.image
 					int[] res = new int[curr.Length / 2];
 					for (int k = 0; k < res.Length; ++k)
 					{
-						res[k] = ((curr[k * 2] & unchecked((int)(0xff))) << 8) + (curr[k * 2 + 1] & unchecked(
-							(int)(0xff)));
+						res[k] = ((curr[k * 2] & 0xff) << 8) + (curr[k * 2 + 1] & 0xff);
 					}
 					return res;
 				}
@@ -1131,9 +1130,9 @@ namespace com.itextpdf.io.image
 		{
 			for (int i = bpp; i < count; i++)
 			{
-				int val = curr[i] & unchecked((int)(0xff));
-				val += curr[i - bpp] & unchecked((int)(0xff));
-				curr[i] = unchecked((byte)val);
+				int val = curr[i] & 0xff;
+				val += curr[i - bpp] & 0xff;
+				curr[i] = (byte)val;
 			}
 		}
 
@@ -1141,9 +1140,9 @@ namespace com.itextpdf.io.image
 		{
 			for (int i = 0; i < count; i++)
 			{
-				int raw = curr[i] & unchecked((int)(0xff));
-				int prior = prev[i] & unchecked((int)(0xff));
-				curr[i] = unchecked((byte)(raw + prior));
+				int raw = curr[i] & 0xff;
+				int prior = prev[i] & 0xff;
+				curr[i] = (byte)(raw + prior);
 			}
 		}
 
@@ -1155,16 +1154,16 @@ namespace com.itextpdf.io.image
 			int priorRow;
 			for (int i = 0; i < bpp; i++)
 			{
-				raw = curr[i] & unchecked((int)(0xff));
-				priorRow = prev[i] & unchecked((int)(0xff));
-				curr[i] = unchecked((byte)(raw + priorRow / 2));
+				raw = curr[i] & 0xff;
+				priorRow = prev[i] & 0xff;
+				curr[i] = (byte)(raw + priorRow / 2);
 			}
 			for (int i_1 = bpp; i_1 < count; i_1++)
 			{
-				raw = curr[i_1] & unchecked((int)(0xff));
-				priorPixel = curr[i_1 - bpp] & unchecked((int)(0xff));
-				priorRow = prev[i_1] & unchecked((int)(0xff));
-				curr[i_1] = unchecked((byte)(raw + (priorPixel + priorRow) / 2));
+				raw = curr[i_1] & 0xff;
+				priorPixel = curr[i_1 - bpp] & 0xff;
+				priorRow = prev[i_1] & 0xff;
+				curr[i_1] = (byte)(raw + (priorPixel + priorRow) / 2);
 			}
 		}
 
@@ -1200,18 +1199,17 @@ namespace com.itextpdf.io.image
 			int priorRowPixel;
 			for (int i = 0; i < bpp; i++)
 			{
-				raw = curr[i] & unchecked((int)(0xff));
-				priorRow = prev[i] & unchecked((int)(0xff));
-				curr[i] = unchecked((byte)(raw + priorRow));
+				raw = curr[i] & 0xff;
+				priorRow = prev[i] & 0xff;
+				curr[i] = (byte)(raw + priorRow);
 			}
 			for (int i_1 = bpp; i_1 < count; i_1++)
 			{
-				raw = curr[i_1] & unchecked((int)(0xff));
-				priorPixel = curr[i_1 - bpp] & unchecked((int)(0xff));
-				priorRow = prev[i_1] & unchecked((int)(0xff));
-				priorRowPixel = prev[i_1 - bpp] & unchecked((int)(0xff));
-				curr[i_1] = unchecked((byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel
-					)));
+				raw = curr[i_1] & 0xff;
+				priorPixel = curr[i_1 - bpp] & 0xff;
+				priorRow = prev[i_1] & 0xff;
+				priorRowPixel = prev[i_1 - bpp] & 0xff;
+				curr[i_1] = (byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel));
 			}
 		}
 

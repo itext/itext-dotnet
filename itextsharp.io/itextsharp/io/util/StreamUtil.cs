@@ -1,5 +1,5 @@
 /*
-$Id: 8b8239bb6f6f5adb697f76ccf9ad9391a27906b8 $
+$Id: da5acb7961c621ce690b613ccbc7244b687bedff $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -165,39 +165,39 @@ namespace com.itextpdf.io.util
 			{
 				switch (b)
 				{
-					case (byte)('\r'):
+					case (byte)'\r':
 					{
 						buf.Append(escR);
 						break;
 					}
 
-					case (byte)('\n'):
+					case (byte)'\n':
 					{
 						buf.Append(escN);
 						break;
 					}
 
-					case (byte)('\t'):
+					case (byte)'\t':
 					{
 						buf.Append(escT);
 						break;
 					}
 
-					case (byte)('\b'):
+					case (byte)'\b':
 					{
 						buf.Append(escB);
 						break;
 					}
 
-					case (byte)('\f'):
+					case (byte)'\f':
 					{
 						buf.Append(escF);
 						break;
 					}
 
-					case (byte)('('):
-					case (byte)(')'):
-					case (byte)('\\'):
+					case (byte)'(':
+					case (byte)')':
+					case (byte)'\\':
 					{
 						buf.Append('\\').Append(b);
 						break;

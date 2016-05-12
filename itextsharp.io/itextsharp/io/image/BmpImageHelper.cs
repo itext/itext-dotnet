@@ -1,5 +1,5 @@
 /*
-$Id: 681c9bdd941e02fd7ac60a8d8be5f98c0b291564 $
+$Id: 348d3bb1bb6c50d10bcf7666cfff43f7f79e0ffc $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -1255,12 +1255,12 @@ namespace com.itextpdf.io.image
 						{
 							v = ReadWord(bmp.inputStream);
 						}
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / 
-							red_factor));
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256
-							 / green_factor));
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 
-							/ blue_factor));
+						bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor
+							);
+						bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor
+							);
+						bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor
+							);
 					}
 					for (int m = 0; m < padding; m++)
 					{
@@ -1282,12 +1282,12 @@ namespace com.itextpdf.io.image
 						{
 							v = ReadWord(bmp.inputStream);
 						}
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / 
-							red_factor));
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256
-							 / green_factor));
-						bdata[l++] = unchecked((byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 
-							/ blue_factor));
+						bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor
+							);
+						bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor
+							);
+						bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor
+							);
 					}
 					for (int m = 0; m < padding; m++)
 					{
@@ -1382,11 +1382,11 @@ namespace com.itextpdf.io.image
 				{
 					if ((w & 1) == 0)
 					{
-						bdata[sh + w / 2] = unchecked((byte)(val[ptr++] << 4));
+						bdata[sh + w / 2] = (byte)(val[ptr++] << 4);
 					}
 					else
 					{
-						bdata[sh + w / 2] |= unchecked((byte)(val[ptr++] & 0x0f));
+						bdata[sh + w / 2] |= (byte)(val[ptr++] & 0x0f);
 					}
 				}
 				sh += stride;
@@ -1405,24 +1405,23 @@ namespace com.itextpdf.io.image
 				int q = 0;
 				for (int y = 0; y < bmp.height && ptr < values.Length; )
 				{
-					int count = values[ptr++] & unchecked((int)(0xff));
+					int count = values[ptr++] & 0xff;
 					if (count != 0)
 					{
 						// encoded mode
-						int bt = values[ptr++] & unchecked((int)(0xff));
+						int bt = values[ptr++] & 0xff;
 						if (is8)
 						{
 							for (int i = count; i != 0; --i)
 							{
-								val[q++] = unchecked((byte)bt);
+								val[q++] = (byte)bt;
 							}
 						}
 						else
 						{
 							for (int i = 0; i < count; ++i)
 							{
-								val[q++] = unchecked((byte)((i & 1) == 1 ? bt & 0x0f : (int)(((uint)bt) >> 4) & 0x0f
-									));
+								val[q++] = (byte)((i & 1) == 1 ? bt & 0x0f : (int)(((uint)bt) >> 4) & 0x0f);
 							}
 						}
 						x += count;
@@ -1430,7 +1429,7 @@ namespace com.itextpdf.io.image
 					else
 					{
 						// escape mode
-						count = values[ptr++] & unchecked((int)(0xff));
+						count = values[ptr++] & 0xff;
 						if (count == 1)
 						{
 							break;
@@ -1448,8 +1447,8 @@ namespace com.itextpdf.io.image
 							case 2:
 							{
 								// delta mode
-								x += values[ptr++] & unchecked((int)(0xff));
-								y += values[ptr++] & unchecked((int)(0xff));
+								x += values[ptr++] & 0xff;
+								y += values[ptr++] & 0xff;
 								q = y * bmp.width + x;
 								break;
 							}
@@ -1461,7 +1460,7 @@ namespace com.itextpdf.io.image
 								{
 									for (int i = count; i != 0; --i)
 									{
-										val[q++] = unchecked((byte)(values[ptr++] & unchecked((int)(0xff))));
+										val[q++] = (byte)(values[ptr++] & 0xff);
 									}
 								}
 								else
@@ -1471,10 +1470,9 @@ namespace com.itextpdf.io.image
 									{
 										if ((i & 1) == 0)
 										{
-											bt = values[ptr++] & unchecked((int)(0xff));
+											bt = values[ptr++] & 0xff;
 										}
-										val[q++] = unchecked((byte)((i & 1) == 1 ? bt & 0x0f : (int)(((uint)bt) >> 4) & 0x0f
-											));
+										val[q++] = (byte)((i & 1) == 1 ? bt & 0x0f : (int)(((uint)bt) >> 4) & 0x0f);
 									}
 								}
 								x += count;
@@ -1511,7 +1509,7 @@ namespace com.itextpdf.io.image
 		/// <exception cref="System.IO.IOException"/>
 		private static int ReadUnsignedByte(Stream stream)
 		{
-			return stream.Read() & unchecked((int)(0xff));
+			return stream.Read() & 0xff;
 		}
 
 		// Unsigned 2 bytes
@@ -1520,7 +1518,7 @@ namespace com.itextpdf.io.image
 		{
 			int b1 = ReadUnsignedByte(stream);
 			int b2 = ReadUnsignedByte(stream);
-			return (b2 << 8 | b1) & unchecked((int)(0xffff));
+			return (b2 << 8 | b1) & 0xffff;
 		}
 
 		// Signed 16 bits

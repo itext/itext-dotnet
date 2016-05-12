@@ -143,7 +143,7 @@ namespace com.itextpdf.io.font.cmap
 				StringBuilder str = new StringBuilder(content.Length);
 				foreach (byte b in content)
 				{
-					str.Append((char)(b & unchecked((int)(0xff))));
+					str.Append((char)(b & 0xff));
 				}
 				return str.ToString();
 			}

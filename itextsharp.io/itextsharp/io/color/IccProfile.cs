@@ -115,9 +115,8 @@ namespace com.itextpdf.io.color
 				{
 					throw new IOException(IOException.InvalidIccProfile);
 				}
-				remain = (head[0] & unchecked((int)(0xff))) << 24 | (head[1] & unchecked((int)(0xff
-					))) << 16 | (head[2] & unchecked((int)(0xff))) << 8 | head[3] & unchecked((int)(
-					0xff));
+				remain = (head[0] & 0xff) << 24 | (head[1] & 0xff) << 16 | (head[2] & 0xff) << 8 
+					| head[3] & 0xff;
 				byte[] icc = new byte[remain];
 				System.Array.Copy(head, 0, icc, 0, head.Length);
 				remain -= head.Length;

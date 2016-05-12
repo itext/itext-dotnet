@@ -135,7 +135,7 @@ namespace com.itextpdf.io.font.otf
 			this.yPlacement = (short)yPlacement;
 			this.xAdvance = (short)xAdvance;
 			this.yAdvance = (short)yAdvance;
-			this.anchorDelta = unchecked((byte)anchorDelta);
+			this.anchorDelta = (byte)anchorDelta;
 		}
 
 		public Glyph(com.itextpdf.io.font.otf.Glyph glyph, int unicode)

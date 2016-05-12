@@ -103,11 +103,11 @@ namespace com.itextpdf.io.font.cmap
 			int currentPlane = 0;
 			while (cursor.offset < end)
 			{
-				int one = cidBytes[cursor.offset++] & unchecked((int)(0xff));
+				int one = cidBytes[cursor.offset++] & 0xff;
 				cursor.length--;
 				char[] plane = planes[currentPlane];
 				int cid = plane[one];
-				if ((cid & unchecked((int)(0x8000))) == 0)
+				if ((cid & 0x8000) == 0)
 				{
 					return cid;
 				}
@@ -126,24 +126,24 @@ namespace com.itextpdf.io.font.cmap
 			for (int idx = 0; idx < size; ++idx)
 			{
 				char[] plane = planes[nextPlane];
-				int one = seq[idx] & unchecked((int)(0xff));
+				int one = seq[idx] & 0xff;
 				char c = plane[one];
-				if (c != 0 && (c & unchecked((int)(0x8000))) == 0)
+				if (c != 0 && (c & 0x8000) == 0)
 				{
 					throw new IOException("inconsistent.mapping");
 				}
 				if (c == 0)
 				{
 					planes.Add(new char[256]);
-					c = (char)(planes.Count - 1 | unchecked((int)(0x8000)));
+					c = (char)(planes.Count - 1 | 0x8000);
 					plane[one] = c;
 				}
 				nextPlane = c & 0x7fff;
 			}
 			char[] plane_1 = planes[nextPlane];
-			int one_1 = seq[size] & unchecked((int)(0xff));
+			int one_1 = seq[size] & 0xff;
 			char c_1 = plane_1[one_1];
-			if ((c_1 & unchecked((int)(0x8000))) != 0)
+			if ((c_1 & 0x8000) != 0)
 			{
 				throw new IOException("inconsistent.mapping");
 			}

@@ -168,8 +168,8 @@ namespace com.itextpdf.io.codec
 				: base(tag, 3, 1)
 			{
 				data = new byte[2];
-				data[0] = unchecked((byte)(value >> 8));
-				data[1] = unchecked((byte)value);
+				data[0] = (byte)(value >> 8);
+				data[1] = (byte)value;
 			}
 
 			public FieldShort(int tag, int[] values)
@@ -179,8 +179,8 @@ namespace com.itextpdf.io.codec
 				int ptr = 0;
 				foreach (int value in values)
 				{
-					data[ptr++] = unchecked((byte)(value >> 8));
-					data[ptr++] = unchecked((byte)value);
+					data[ptr++] = (byte)(value >> 8);
+					data[ptr++] = (byte)value;
 				}
 			}
 		}
@@ -192,10 +192,10 @@ namespace com.itextpdf.io.codec
 				: base(tag, 4, 1)
 			{
 				data = new byte[4];
-				data[0] = unchecked((byte)(value >> 24));
-				data[1] = unchecked((byte)(value >> 16));
-				data[2] = unchecked((byte)(value >> 8));
-				data[3] = unchecked((byte)value);
+				data[0] = (byte)(value >> 24);
+				data[1] = (byte)(value >> 16);
+				data[2] = (byte)(value >> 8);
+				data[3] = (byte)value;
 			}
 
 			public FieldLong(int tag, int[] values)
@@ -205,10 +205,10 @@ namespace com.itextpdf.io.codec
 				int ptr = 0;
 				foreach (int value in values)
 				{
-					data[ptr++] = unchecked((byte)(value >> 24));
-					data[ptr++] = unchecked((byte)(value >> 16));
-					data[ptr++] = unchecked((byte)(value >> 8));
-					data[ptr++] = unchecked((byte)value);
+					data[ptr++] = (byte)(value >> 24);
+					data[ptr++] = (byte)(value >> 16);
+					data[ptr++] = (byte)(value >> 8);
+					data[ptr++] = (byte)value;
 				}
 			}
 		}
@@ -228,14 +228,14 @@ namespace com.itextpdf.io.codec
 				int ptr = 0;
 				foreach (int[] value in values)
 				{
-					data[ptr++] = unchecked((byte)(value[0] >> 24));
-					data[ptr++] = unchecked((byte)(value[0] >> 16));
-					data[ptr++] = unchecked((byte)(value[0] >> 8));
-					data[ptr++] = unchecked((byte)value[0]);
-					data[ptr++] = unchecked((byte)(value[1] >> 24));
-					data[ptr++] = unchecked((byte)(value[1] >> 16));
-					data[ptr++] = unchecked((byte)(value[1] >> 8));
-					data[ptr++] = unchecked((byte)value[1]);
+					data[ptr++] = (byte)(value[0] >> 24);
+					data[ptr++] = (byte)(value[0] >> 16);
+					data[ptr++] = (byte)(value[0] >> 8);
+					data[ptr++] = (byte)value[0];
+					data[ptr++] = (byte)(value[1] >> 24);
+					data[ptr++] = (byte)(value[1] >> 16);
+					data[ptr++] = (byte)(value[1] >> 8);
+					data[ptr++] = (byte)value[1];
 				}
 			}
 		}
@@ -285,17 +285,17 @@ namespace com.itextpdf.io.codec
 		/// <exception cref="System.IO.IOException"/>
 		public static void WriteShort(int v, Stream stream)
 		{
-			stream.Write((v >> 8) & unchecked((int)(0xff)));
-			stream.Write(v & unchecked((int)(0xff)));
+			stream.Write((v >> 8) & 0xff);
+			stream.Write(v & 0xff);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public static void WriteLong(int v, Stream stream)
 		{
-			stream.Write((v >> 24) & unchecked((int)(0xff)));
-			stream.Write((v >> 16) & unchecked((int)(0xff)));
-			stream.Write((v >> 8) & unchecked((int)(0xff)));
-			stream.Write(v & unchecked((int)(0xff)));
+			stream.Write((v >> 24) & 0xff);
+			stream.Write((v >> 16) & 0xff);
+			stream.Write((v >> 8) & 0xff);
+			stream.Write(v & 0xff);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

@@ -114,11 +114,11 @@ namespace com.itextpdf.io.font.cmap
 			{
 				sout = DecodeStringToByte(code.ToString());
 			}
-			int start = a1[a1.Length - 1] & unchecked((int)(0xff));
-			int end = a2[a2.Length - 1] & unchecked((int)(0xff));
+			int start = a1[a1.Length - 1] & 0xff;
+			int end = a2[a2.Length - 1] & 0xff;
 			for (int k = start; k <= end; ++k)
 			{
-				a1[a1.Length - 1] = unchecked((byte)k);
+				a1[a1.Length - 1] = (byte)k;
 				String mark = PdfEncodings.ConvertToString(a1, null);
 				if (code.IsArray())
 				{
@@ -158,7 +158,7 @@ namespace com.itextpdf.io.font.cmap
 			byte[] bytes = new byte[range.Length];
 			for (int i = 0; i < range.Length; i++)
 			{
-				bytes[i] = unchecked((byte)range[i]);
+				bytes[i] = (byte)range[i];
 			}
 			return bytes;
 		}
@@ -173,8 +173,7 @@ namespace com.itextpdf.io.font.cmap
 			}
 			else
 			{
-				if (bytes.Length >= 2 && bytes[0] == unchecked((byte)254) && bytes[1] == unchecked(
-					(byte)255))
+				if (bytes.Length >= 2 && bytes[0] == (byte)254 && bytes[1] == (byte)255)
 				{
 					return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG);
 				}

@@ -1,5 +1,5 @@
 /*
-$Id: 831c816b907c7c4b8c6dd6baff5a5d7603ee5585 $
+$Id: 72c816dc107f81202aa2ad52dc4e1e4c64bce5f0 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -231,7 +231,7 @@ namespace com.itextpdf.io.image
 		{
 			if (IsRawImage())
 			{
-				if (bpc > unchecked((int)(0xff)))
+				if (bpc > 0xff)
 				{
 					return true;
 				}

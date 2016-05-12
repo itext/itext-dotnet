@@ -327,7 +327,7 @@ namespace com.itextpdf.io.codec
 				case TIFF_BYTE:
 				case TIFF_UNDEFINED:
 				{
-					return ((byte[])data)[index] & unchecked((int)(0xff));
+					return ((byte[])data)[index] & 0xff;
 				}
 
 				case TIFF_SBYTE:
@@ -337,7 +337,7 @@ namespace com.itextpdf.io.codec
 
 				case TIFF_SHORT:
 				{
-					return ((char[])data)[index] & unchecked((int)(0xffff));
+					return ((char[])data)[index] & 0xffff;
 				}
 
 				case TIFF_SSHORT:
@@ -379,7 +379,7 @@ namespace com.itextpdf.io.codec
 				case TIFF_BYTE:
 				case TIFF_UNDEFINED:
 				{
-					return ((byte[])data)[index] & unchecked((int)(0xff));
+					return ((byte[])data)[index] & 0xff;
 				}
 
 				case TIFF_SBYTE:
@@ -389,7 +389,7 @@ namespace com.itextpdf.io.codec
 
 				case TIFF_SHORT:
 				{
-					return ((char[])data)[index] & unchecked((int)(0xffff));
+					return ((char[])data)[index] & 0xffff;
 				}
 
 				case TIFF_SSHORT:
@@ -431,7 +431,7 @@ namespace com.itextpdf.io.codec
 			{
 				case TIFF_BYTE:
 				{
-					return ((byte[])data)[index] & unchecked((int)(0xff));
+					return ((byte[])data)[index] & 0xff;
 				}
 
 				case TIFF_SBYTE:
@@ -441,7 +441,7 @@ namespace com.itextpdf.io.codec
 
 				case TIFF_SHORT:
 				{
-					return ((char[])data)[index] & unchecked((int)(0xffff));
+					return ((char[])data)[index] & 0xffff;
 				}
 
 				case TIFF_SSHORT:
@@ -503,7 +503,7 @@ namespace com.itextpdf.io.codec
 			{
 				case TIFF_BYTE:
 				{
-					return ((byte[])data)[index] & unchecked((int)(0xff));
+					return ((byte[])data)[index] & 0xff;
 				}
 
 				case TIFF_SBYTE:
@@ -513,7 +513,7 @@ namespace com.itextpdf.io.codec
 
 				case TIFF_SHORT:
 				{
-					return ((char[])data)[index] & unchecked((int)(0xffff));
+					return ((char[])data)[index] & 0xffff;
 				}
 
 				case TIFF_SSHORT:

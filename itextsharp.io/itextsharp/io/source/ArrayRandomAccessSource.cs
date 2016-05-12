@@ -68,7 +68,7 @@ namespace com.itextpdf.io.source
 			{
 				return -1;
 			}
-			return unchecked((int)(0xff)) & array[(int)offset];
+			return 0xff & array[(int)offset];
 		}
 
 		public virtual int Get(long offset, byte[] bytes, int off, int len)

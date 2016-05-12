@@ -155,7 +155,7 @@ namespace com.itextpdf.io.font
 			try
 			{
 				byte i = buf.ReadByte();
-				return (char)(i & unchecked((int)(0xff)));
+				return (char)(i & 0xff);
 			}
 			catch (Exception e)
 			{
@@ -305,7 +305,7 @@ namespace com.itextpdf.io.font
 				}
 				if (b0 >= 32 && b0 <= 246)
 				{
-					byte item = unchecked((byte)(b0 - 139));
+					byte item = (byte)(b0 - 139);
 					args[arg_count] = (int)item;
 					arg_count++;
 					//System.err.println(item+" ");
@@ -368,19 +368,19 @@ namespace com.itextpdf.io.font
 								break;
 							}
 
-							case unchecked((int)(0xc)):
+							case 0xc:
 							{
 								item.Append("E-");
 								break;
 							}
 
-							case unchecked((int)(0xe)):
+							case 0xe:
 							{
 								item.Append("-");
 								break;
 							}
 
-							case unchecked((int)(0xf)):
+							case 0xf:
 							{
 								done = true;
 								break;
@@ -538,8 +538,8 @@ namespace com.itextpdf.io.font
 				{
 					for (int i = 0; i < size; i++)
 					{
-						buffer[myOffset + i] = unchecked((byte)((int)(((uint)value) >> ((size - 1 - i) <<
-							 3)) & 0xFF));
+						buffer[myOffset + i] = (byte)((int)(((uint)value) >> ((size - 1 - i) << 3)) & 0xFF
+							);
 					}
 				}
 			}
@@ -622,14 +622,10 @@ namespace com.itextpdf.io.font
 				if (size == 5)
 				{
 					buffer[myOffset] = 29;
-					buffer[myOffset + 1] = unchecked((byte)((int)(((uint)value) >> 24) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 2] = unchecked((byte)((int)(((uint)value) >> 16) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 3] = unchecked((byte)((int)(((uint)value) >> 8) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 4] = unchecked((byte)((int)(((uint)value) >> 0) & unchecked((int
-						)(0xff))));
+					buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 24) & 0xff);
+					buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 16) & 0xff);
+					buffer[myOffset + 3] = (byte)((int)(((uint)value) >> 8) & 0xff);
+					buffer[myOffset + 4] = (byte)((int)(((uint)value) >> 0) & 0xff);
 				}
 			}
 		}
@@ -653,12 +649,9 @@ namespace com.itextpdf.io.font
 			// this is incomplete!
 			public override void Emit(byte[] buffer)
 			{
-				buffer[myOffset + 0] = unchecked((byte)((int)(((uint)value) >> 16) & unchecked((int
-					)(0xff))));
-				buffer[myOffset + 1] = unchecked((byte)((int)(((uint)value) >> 8) & unchecked((int
-					)(0xff))));
-				buffer[myOffset + 2] = unchecked((byte)((int)(((uint)value) >> 0) & unchecked((int
-					)(0xff))));
+				buffer[myOffset + 0] = (byte)((int)(((uint)value) >> 16) & 0xff);
+				buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 8) & 0xff);
+				buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 0) & 0xff);
 			}
 		}
 
@@ -681,14 +674,10 @@ namespace com.itextpdf.io.font
 			// this is incomplete!
 			public override void Emit(byte[] buffer)
 			{
-				buffer[myOffset + 0] = unchecked((byte)((int)(((uint)value) >> 24) & unchecked((int
-					)(0xff))));
-				buffer[myOffset + 1] = unchecked((byte)((int)(((uint)value) >> 16) & unchecked((int
-					)(0xff))));
-				buffer[myOffset + 2] = unchecked((byte)((int)(((uint)value) >> 8) & unchecked((int
-					)(0xff))));
-				buffer[myOffset + 3] = unchecked((byte)((int)(((uint)value) >> 0) & unchecked((int
-					)(0xff))));
+				buffer[myOffset + 0] = (byte)((int)(((uint)value) >> 24) & 0xff);
+				buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 16) & 0xff);
+				buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 8) & 0xff);
+				buffer[myOffset + 3] = (byte)((int)(((uint)value) >> 0) & 0xff);
 			}
 		}
 
@@ -714,8 +703,8 @@ namespace com.itextpdf.io.font
 				//            Simplify from: there is no sense in >>> for unsigned char.
 				//            buffer[myOffset+0] = (byte) (value >>> 8 & 0xff);
 				//            buffer[myOffset+1] = (byte) (value >>> 0 & 0xff);
-				buffer[myOffset + 0] = unchecked((byte)(value >> 8 & unchecked((int)(0xff))));
-				buffer[myOffset + 1] = unchecked((byte)(value >> 0 & unchecked((int)(0xff))));
+				buffer[myOffset + 0] = (byte)(value >> 8 & 0xff);
+				buffer[myOffset + 1] = (byte)(value >> 0 & 0xff);
 			}
 		}
 
@@ -739,7 +728,7 @@ namespace com.itextpdf.io.font
 			public override void Emit(byte[] buffer)
 			{
 				//buffer[myOffset+0] = (byte) (value >>> 0 & 0xff);
-				buffer[myOffset + 0] = unchecked((byte)(value & unchecked((int)(0xff))));
+				buffer[myOffset + 0] = (byte)(value & 0xff);
 			}
 		}
 
@@ -762,7 +751,7 @@ namespace com.itextpdf.io.font
 			{
 				for (int i = 0; i < s.Length; i++)
 				{
-					buffer[myOffset + i] = unchecked((byte)(s[i] & unchecked((int)(0xff))));
+					buffer[myOffset + i] = (byte)(s[i] & 0xff);
 				}
 			}
 		}
@@ -796,14 +785,10 @@ namespace com.itextpdf.io.font
 				if (size == 5)
 				{
 					buffer[myOffset] = 29;
-					buffer[myOffset + 1] = unchecked((byte)((int)(((uint)value) >> 24) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 2] = unchecked((byte)((int)(((uint)value) >> 16) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 3] = unchecked((byte)((int)(((uint)value) >> 8) & unchecked((int
-						)(0xff))));
-					buffer[myOffset + 4] = unchecked((byte)((int)(((uint)value) >> 0) & unchecked((int
-						)(0xff))));
+					buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 24) & 0xff);
+					buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 16) & 0xff);
+					buffer[myOffset + 3] = (byte)((int)(((uint)value) >> 8) & 0xff);
+					buffer[myOffset + 4] = (byte)((int)(((uint)value) >> 0) & 0xff);
 				}
 			}
 		}
@@ -991,19 +976,19 @@ namespace com.itextpdf.io.font
 				int origStringsLen = stringOffsets[stringOffsets.Length - 1] - stringOffsets[0];
 				int stringsBaseOffset = stringOffsets[0] - 1;
 				byte stringsIndexOffSize;
-				if (origStringsLen + extraStrings.Length <= unchecked((int)(0xff)))
+				if (origStringsLen + extraStrings.Length <= 0xff)
 				{
 					stringsIndexOffSize = 1;
 				}
 				else
 				{
-					if (origStringsLen + extraStrings.Length <= unchecked((int)(0xffff)))
+					if (origStringsLen + extraStrings.Length <= 0xffff)
 					{
 						stringsIndexOffSize = 2;
 					}
 					else
 					{
-						if (origStringsLen + extraStrings.Length <= unchecked((int)(0xffffff)))
+						if (origStringsLen + extraStrings.Length <= 0xffffff)
 						{
 							stringsIndexOffSize = 3;
 						}

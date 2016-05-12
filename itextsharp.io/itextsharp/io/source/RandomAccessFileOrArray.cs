@@ -118,7 +118,7 @@ namespace com.itextpdf.io.source
 			if (isBack)
 			{
 				isBack = false;
-				return back & unchecked((int)(0xff));
+				return back & 0xff;
 			}
 			return byteSource.Get(byteSourcePosition++);
 		}
@@ -269,7 +269,7 @@ namespace com.itextpdf.io.source
 			{
 				throw new EndOfStreamException();
 			}
-			return unchecked((byte)(ch));
+			return (byte)(ch);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

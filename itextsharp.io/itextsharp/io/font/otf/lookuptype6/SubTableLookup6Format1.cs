@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using com.itextpdf.io.font.otf;
+using com.itextpdf.io.util;
 
 namespace com.itextpdf.io.font.otf.lookuptype6
 {
@@ -68,8 +69,7 @@ namespace com.itextpdf.io.font.otf.lookuptype6
 			{
 				return substMap[startGlyphId];
 			}
-			//return Collections.emptyList();
-			return new List<ContextualSubstRule>(0);
+			return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
 		}
 
 		public class SubstRuleFormat1 : ContextualSubstRule

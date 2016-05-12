@@ -623,14 +623,13 @@ namespace com.itextpdf.io.image
 							int tableoffset = 0;
 							int tablelength = temp.Length;
 							// remove FFD8 from start
-							if (temp[0] == unchecked((byte)0xFF) && temp[1] == unchecked((byte)0xD8))
+							if (temp[0] == (byte)0xFF && temp[1] == (byte)0xD8)
 							{
 								tableoffset = 2;
 								tablelength -= 2;
 							}
 							// remove FFD9 from end
-							if (temp[temp.Length - 2] == unchecked((byte)0xFF) && temp[temp.Length - 1] == unchecked(
-								(byte)0xD9))
+							if (temp[temp.Length - 2] == (byte)0xFF && temp[temp.Length - 1] == (byte)0xD9)
 							{
 								tablelength -= 2;
 							}
@@ -759,9 +758,9 @@ namespace com.itextpdf.io.image
 						for (int k = 0; k < gColor; ++k)
 						{
 							//there is no sense in >>> for unsigned char
-							palette[k * 3] = unchecked((byte)(rgb[k] >> 8));
-							palette[k * 3 + 1] = unchecked((byte)(rgb[k + gColor] >> 8));
-							palette[k * 3 + 2] = unchecked((byte)(rgb[k + bColor] >> 8));
+							palette[k * 3] = (byte)(rgb[k] >> 8);
+							palette[k * 3 + 1] = (byte)(rgb[k + gColor] >> 8);
+							palette[k * 3 + 2] = (byte)(rgb[k + bColor] >> 8);
 						}
 						// Colormap components are supposed to go from 0 to 655535 but,
 						// as usually, some tiff producers just put values from 0 to 255.
@@ -779,9 +778,9 @@ namespace com.itextpdf.io.image
 						{
 							for (int k_2 = 0; k_2 < gColor; ++k_2)
 							{
-								palette[k_2 * 3] = unchecked((byte)rgb[k_2]);
-								palette[k_2 * 3 + 1] = unchecked((byte)rgb[k_2 + gColor]);
-								palette[k_2 * 3 + 2] = unchecked((byte)rgb[k_2 + bColor]);
+								palette[k_2 * 3] = (byte)rgb[k_2];
+								palette[k_2 * 3 + 1] = (byte)rgb[k_2 + gColor];
+								palette[k_2 * 3 + 2] = (byte)rgb[k_2 + bColor];
 							}
 						}
 						Object[] indexed = new Object[4];

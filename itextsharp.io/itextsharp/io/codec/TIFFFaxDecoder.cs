@@ -81,77 +81,50 @@ namespace com.itextpdf.io.codec
 		private bool recoverFromImageError;
 
 		internal static int[] table1 = new int[] { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f
-			, 0x7f, unchecked((int)(0xff)) };
+			, 0x7f, 0xff };
 
-		internal static int[] table2 = new int[] { 0x00, unchecked((int)(0x80)), unchecked(
-			(int)(0xc0)), unchecked((int)(0xe0)), unchecked((int)(0xf0)), unchecked((int)(0xf8
-			)), unchecked((int)(0xfc)), unchecked((int)(0xfe)), unchecked((int)(0xff)) };
+		internal static int[] table2 = new int[] { 0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc
+			, 0xfe, 0xff };
 
-		public static byte[] flipTable = new byte[] { unchecked((byte)0), unchecked((byte
-			)-128), unchecked((byte)64), unchecked((byte)-64), unchecked((byte)32), unchecked(
-			(byte)-96), unchecked((byte)96), unchecked((byte)-32), unchecked((byte)16), unchecked(
-			(byte)-112), unchecked((byte)80), unchecked((byte)-48), unchecked((byte)48), unchecked(
-			(byte)-80), unchecked((byte)112), unchecked((byte)-16), unchecked((byte)8), unchecked(
-			(byte)-120), unchecked((byte)72), unchecked((byte)-56), unchecked((byte)40), unchecked(
-			(byte)-88), unchecked((byte)104), unchecked((byte)-24), unchecked((byte)24), unchecked(
-			(byte)-104), unchecked((byte)88), unchecked((byte)-40), unchecked((byte)56), unchecked(
-			(byte)-72), unchecked((byte)120), unchecked((byte)-8), unchecked((byte)4), unchecked(
-			(byte)-124), unchecked((byte)68), unchecked((byte)-60), unchecked((byte)36), unchecked(
-			(byte)-92), unchecked((byte)100), unchecked((byte)-28), unchecked((byte)20), unchecked(
-			(byte)-108), unchecked((byte)84), unchecked((byte)-44), unchecked((byte)52), unchecked(
-			(byte)-76), unchecked((byte)116), unchecked((byte)-12), unchecked((byte)12), unchecked(
-			(byte)-116), unchecked((byte)76), unchecked((byte)-52), unchecked((byte)44), unchecked(
-			(byte)-84), unchecked((byte)108), unchecked((byte)-20), unchecked((byte)28), unchecked(
-			(byte)-100), unchecked((byte)92), unchecked((byte)-36), unchecked((byte)60), unchecked(
-			(byte)-68), unchecked((byte)124), unchecked((byte)-4), unchecked((byte)2), unchecked(
-			(byte)-126), unchecked((byte)66), unchecked((byte)-62), unchecked((byte)34), unchecked(
-			(byte)-94), unchecked((byte)98), unchecked((byte)-30), unchecked((byte)18), unchecked(
-			(byte)-110), unchecked((byte)82), unchecked((byte)-46), unchecked((byte)50), unchecked(
-			(byte)-78), unchecked((byte)114), unchecked((byte)-14), unchecked((byte)10), unchecked(
-			(byte)-118), unchecked((byte)74), unchecked((byte)-54), unchecked((byte)42), unchecked(
-			(byte)-86), unchecked((byte)106), unchecked((byte)-22), unchecked((byte)26), unchecked(
-			(byte)-102), unchecked((byte)90), unchecked((byte)-38), unchecked((byte)58), unchecked(
-			(byte)-70), unchecked((byte)122), unchecked((byte)-6), unchecked((byte)6), unchecked(
-			(byte)-122), unchecked((byte)70), unchecked((byte)-58), unchecked((byte)38), unchecked(
-			(byte)-90), unchecked((byte)102), unchecked((byte)-26), unchecked((byte)22), unchecked(
-			(byte)-106), unchecked((byte)86), unchecked((byte)-42), unchecked((byte)54), unchecked(
-			(byte)-74), unchecked((byte)118), unchecked((byte)-10), unchecked((byte)14), unchecked(
-			(byte)-114), unchecked((byte)78), unchecked((byte)-50), unchecked((byte)46), unchecked(
-			(byte)-82), unchecked((byte)110), unchecked((byte)-18), unchecked((byte)30), unchecked(
-			(byte)-98), unchecked((byte)94), unchecked((byte)-34), unchecked((byte)62), unchecked(
-			(byte)-66), unchecked((byte)126), unchecked((byte)-2), unchecked((byte)1), unchecked(
-			(byte)-127), unchecked((byte)65), unchecked((byte)-63), unchecked((byte)33), unchecked(
-			(byte)-95), unchecked((byte)97), unchecked((byte)-31), unchecked((byte)17), unchecked(
-			(byte)-111), unchecked((byte)81), unchecked((byte)-47), unchecked((byte)49), unchecked(
-			(byte)-79), unchecked((byte)113), unchecked((byte)-15), unchecked((byte)9), unchecked(
-			(byte)-119), unchecked((byte)73), unchecked((byte)-55), unchecked((byte)41), unchecked(
-			(byte)-87), unchecked((byte)105), unchecked((byte)-23), unchecked((byte)25), unchecked(
-			(byte)-103), unchecked((byte)89), unchecked((byte)-39), unchecked((byte)57), unchecked(
-			(byte)-71), unchecked((byte)121), unchecked((byte)-7), unchecked((byte)5), unchecked(
-			(byte)-123), unchecked((byte)69), unchecked((byte)-59), unchecked((byte)37), unchecked(
-			(byte)-91), unchecked((byte)101), unchecked((byte)-27), unchecked((byte)21), unchecked(
-			(byte)-107), unchecked((byte)85), unchecked((byte)-43), unchecked((byte)53), unchecked(
-			(byte)-75), unchecked((byte)117), unchecked((byte)-11), unchecked((byte)13), unchecked(
-			(byte)-115), unchecked((byte)77), unchecked((byte)-51), unchecked((byte)45), unchecked(
-			(byte)-83), unchecked((byte)109), unchecked((byte)-19), unchecked((byte)29), unchecked(
-			(byte)-99), unchecked((byte)93), unchecked((byte)-35), unchecked((byte)61), unchecked(
-			(byte)-67), unchecked((byte)125), unchecked((byte)-3), unchecked((byte)3), unchecked(
-			(byte)-125), unchecked((byte)67), unchecked((byte)-61), unchecked((byte)35), unchecked(
-			(byte)-93), unchecked((byte)99), unchecked((byte)-29), unchecked((byte)19), unchecked(
-			(byte)-109), unchecked((byte)83), unchecked((byte)-45), unchecked((byte)51), unchecked(
-			(byte)-77), unchecked((byte)115), unchecked((byte)-13), unchecked((byte)11), unchecked(
-			(byte)-117), unchecked((byte)75), unchecked((byte)-53), unchecked((byte)43), unchecked(
-			(byte)-85), unchecked((byte)107), unchecked((byte)-21), unchecked((byte)27), unchecked(
-			(byte)-101), unchecked((byte)91), unchecked((byte)-37), unchecked((byte)59), unchecked(
-			(byte)-69), unchecked((byte)123), unchecked((byte)-5), unchecked((byte)7), unchecked(
-			(byte)-121), unchecked((byte)71), unchecked((byte)-57), unchecked((byte)39), unchecked(
-			(byte)-89), unchecked((byte)103), unchecked((byte)-25), unchecked((byte)23), unchecked(
-			(byte)-105), unchecked((byte)87), unchecked((byte)-41), unchecked((byte)55), unchecked(
-			(byte)-73), unchecked((byte)119), unchecked((byte)-9), unchecked((byte)15), unchecked(
-			(byte)-113), unchecked((byte)79), unchecked((byte)-49), unchecked((byte)47), unchecked(
-			(byte)-81), unchecked((byte)111), unchecked((byte)-17), unchecked((byte)31), unchecked(
-			(byte)-97), unchecked((byte)95), unchecked((byte)-33), unchecked((byte)63), unchecked(
-			(byte)-65), unchecked((byte)127), unchecked((byte)-1) };
+		public static byte[] flipTable = new byte[] { (byte)0x00, (byte)0x80, (byte)0x40, 
+			(byte)0xc0, (byte)0x20, (byte)0xa0, (byte)0x60, (byte)0xe0, (byte)0x10, (byte)0x90
+			, (byte)0x50, (byte)0xd0, (byte)0x30, (byte)0xb0, (byte)0x70, (byte)0xf0, (byte)
+			0x08, (byte)0x88, (byte)0x48, (byte)0xc8, (byte)0x28, (byte)0xa8, (byte)0x68, (byte
+			)0xe8, (byte)0x18, (byte)0x98, (byte)0x58, (byte)0xd8, (byte)0x38, (byte)0xb8, (
+			byte)0x78, (byte)0xf8, (byte)0x04, (byte)0x84, (byte)0x44, (byte)0xc4, (byte)0x24
+			, (byte)0xa4, (byte)0x64, (byte)0xe4, (byte)0x14, (byte)0x94, (byte)0x54, (byte)
+			0xd4, (byte)0x34, (byte)0xb4, (byte)0x74, (byte)0xf4, (byte)0x0c, (byte)0x8c, (byte
+			)0x4c, (byte)0xcc, (byte)0x2c, (byte)0xac, (byte)0x6c, (byte)0xec, (byte)0x1c, (
+			byte)0x9c, (byte)0x5c, (byte)0xdc, (byte)0x3c, (byte)0xbc, (byte)0x7c, (byte)0xfc
+			, (byte)0x02, (byte)0x82, (byte)0x42, (byte)0xc2, (byte)0x22, (byte)0xa2, (byte)
+			0x62, (byte)0xe2, (byte)0x12, (byte)0x92, (byte)0x52, (byte)0xd2, (byte)0x32, (byte
+			)0xb2, (byte)0x72, (byte)0xf2, (byte)0x0a, (byte)0x8a, (byte)0x4a, (byte)0xca, (
+			byte)0x2a, (byte)0xaa, (byte)0x6a, (byte)0xea, (byte)0x1a, (byte)0x9a, (byte)0x5a
+			, (byte)0xda, (byte)0x3a, (byte)0xba, (byte)0x7a, (byte)0xfa, (byte)0x06, (byte)
+			0x86, (byte)0x46, (byte)0xc6, (byte)0x26, (byte)0xa6, (byte)0x66, (byte)0xe6, (byte
+			)0x16, (byte)0x96, (byte)0x56, (byte)0xd6, (byte)0x36, (byte)0xb6, (byte)0x76, (
+			byte)0xf6, (byte)0x0e, (byte)0x8e, (byte)0x4e, (byte)0xce, (byte)0x2e, (byte)0xae
+			, (byte)0x6e, (byte)0xee, (byte)0x1e, (byte)0x9e, (byte)0x5e, (byte)0xde, (byte)
+			0x3e, (byte)0xbe, (byte)0x7e, (byte)0xfe, (byte)0x01, (byte)0x81, (byte)0x41, (byte
+			)0xc1, (byte)0x21, (byte)0xa1, (byte)0x61, (byte)0xe1, (byte)0x11, (byte)0x91, (
+			byte)0x51, (byte)0xd1, (byte)0x31, (byte)0xb1, (byte)0x71, (byte)0xf1, (byte)0x09
+			, (byte)0x89, (byte)0x49, (byte)0xc9, (byte)0x29, (byte)0xa9, (byte)0x69, (byte)
+			0xe9, (byte)0x19, (byte)0x99, (byte)0x59, (byte)0xd9, (byte)0x39, (byte)0xb9, (byte
+			)0x79, (byte)0xf9, (byte)0x05, (byte)0x85, (byte)0x45, (byte)0xc5, (byte)0x25, (
+			byte)0xa5, (byte)0x65, (byte)0xe5, (byte)0x15, (byte)0x95, (byte)0x55, (byte)0xd5
+			, (byte)0x35, (byte)0xb5, (byte)0x75, (byte)0xf5, (byte)0x0d, (byte)0x8d, (byte)
+			0x4d, (byte)0xcd, (byte)0x2d, (byte)0xad, (byte)0x6d, (byte)0xed, (byte)0x1d, (byte
+			)0x9d, (byte)0x5d, (byte)0xdd, (byte)0x3d, (byte)0xbd, (byte)0x7d, (byte)0xfd, (
+			byte)0x03, (byte)0x83, (byte)0x43, (byte)0xc3, (byte)0x23, (byte)0xa3, (byte)0x63
+			, (byte)0xe3, (byte)0x13, (byte)0x93, (byte)0x53, (byte)0xd3, (byte)0x33, (byte)
+			0xb3, (byte)0x73, (byte)0xf3, (byte)0x0b, (byte)0x8b, (byte)0x4b, (byte)0xcb, (byte
+			)0x2b, (byte)0xab, (byte)0x6b, (byte)0xeb, (byte)0x1b, (byte)0x9b, (byte)0x5b, (
+			byte)0xdb, (byte)0x3b, (byte)0xbb, (byte)0x7b, (byte)0xfb, (byte)0x07, (byte)0x87
+			, (byte)0x47, (byte)0xc7, (byte)0x27, (byte)0xa7, (byte)0x67, (byte)0xe7, (byte)
+			0x17, (byte)0x97, (byte)0x57, (byte)0xd7, (byte)0x37, (byte)0xb7, (byte)0x77, (byte
+			)0xf7, (byte)0x0f, (byte)0x8f, (byte)0x4f, (byte)0xcf, (byte)0x2f, (byte)0xaf, (
+			byte)0x6f, (byte)0xef, (byte)0x1f, (byte)0x9f, (byte)0x5f, (byte)0xdf, (byte)0x3f
+			, (byte)0xbf, (byte)0x7f, (byte)0xff };
 
 		internal static short[] white = new short[] { 6430, 6400, 6400, 6400, 3225, 3225, 
 			3225, 3225, 944, 944, 944, 944, 976, 976, 976, 976, 1456, 1456, 1456, 1456, 1488
@@ -542,7 +515,7 @@ namespace com.itextpdf.io.codec
 		{
 			for (int k = 0; k < b.Length; ++k)
 			{
-				b[k] = flipTable[b[k] & unchecked((int)(0xff))];
+				b[k] = flipTable[b[k] & 0xff];
 			}
 		}
 
@@ -793,7 +766,7 @@ namespace com.itextpdf.io.codec
 						// Get the next seven bits
 						entry = NextLesserThan8Bits(7);
 						// Run these through the 2DCodes table
-						entry = twoDCodes[entry] & unchecked((int)(0xff));
+						entry = twoDCodes[entry] & 0xff;
 						// Get the code and the number of bits used up
 						code = (int)(((uint)(entry & 0x78)) >> 3);
 						bits = entry & 0x07;
@@ -935,7 +908,7 @@ namespace com.itextpdf.io.codec
 					// Get the next seven bits
 					entry = NextLesserThan8Bits(7);
 					// Run these through the 2DCodes table
-					entry = twoDCodes[entry] & unchecked((int)(0xff));
+					entry = twoDCodes[entry] & 0xff;
 					// Get the code and the number of bits used up
 					code = (int)(((uint)(entry & 0x78)) >> 3);
 					bits = entry & 0x07;
@@ -1118,7 +1091,7 @@ escape_break: ;
 				byte val = buffer[byteNum];
 				while (maskVal > 0 && bitNum < lastBit)
 				{
-					val |= unchecked((byte)maskVal);
+					val |= (byte)maskVal;
 					maskVal >>= 1;
 					++bitNum;
 				}
@@ -1128,7 +1101,7 @@ escape_break: ;
 			byteNum = bitNum >> 3;
 			while (bitNum < lastBit - 7)
 			{
-				buffer[byteNum++] = unchecked((byte)255);
+				buffer[byteNum++] = (byte)255;
 				bitNum += 8;
 			}
 			// Fill in remaining bits
@@ -1141,7 +1114,7 @@ escape_break: ;
 				else
 				{
 					// do nothing
-					buffer[byteNum] |= unchecked((byte)(1 << (7 - (bitNum & 0x7))));
+					buffer[byteNum] |= (byte)(1 << (7 - (bitNum & 0x7)));
 				}
 				++bitNum;
 			}
@@ -1442,7 +1415,7 @@ escape_break: ;
 			{
 				if (fillOrder == 2)
 				{
-					b = flipTable[data[bp] & unchecked((int)(0xff))];
+					b = flipTable[data[bp] & 0xff];
 					if (bp == l)
 					{
 						next = 0x00;
@@ -1452,13 +1425,13 @@ escape_break: ;
 					{
 						if ((bp + 1) == l)
 						{
-							next = flipTable[data[bp + 1] & unchecked((int)(0xff))];
+							next = flipTable[data[bp + 1] & 0xff];
 							next2next = 0x00;
 						}
 						else
 						{
-							next = flipTable[data[bp + 1] & unchecked((int)(0xff))];
-							next2next = flipTable[data[bp + 2] & unchecked((int)(0xff))];
+							next = flipTable[data[bp + 1] & 0xff];
+							next2next = flipTable[data[bp + 2] & 0xff];
 						}
 					}
 				}
@@ -1532,14 +1505,14 @@ escape_break: ;
 					else
 					{
 						// do nothing
-						b = flipTable[data[bp] & unchecked((int)(0xff))];
+						b = flipTable[data[bp] & 0xff];
 						if (bp == l)
 						{
 							next = 0x00;
 						}
 						else
 						{
-							next = flipTable[data[bp + 1] & unchecked((int)(0xff))];
+							next = flipTable[data[bp + 1] & 0xff];
 						}
 					}
 				}

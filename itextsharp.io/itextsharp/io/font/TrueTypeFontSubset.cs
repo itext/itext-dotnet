@@ -46,6 +46,7 @@ using System;
 using System.Collections.Generic;
 using com.itextpdf.io;
 using com.itextpdf.io.source;
+using com.itextpdf.io.util;
 
 namespace com.itextpdf.io.font
 {
@@ -531,16 +532,16 @@ namespace com.itextpdf.io.font
 
 		protected internal virtual void WriteFontShort(int n)
 		{
-			outFont[fontPtr++] = unchecked((byte)(n >> 8));
-			outFont[fontPtr++] = unchecked((byte)n);
+			outFont[fontPtr++] = (byte)(n >> 8);
+			outFont[fontPtr++] = (byte)n;
 		}
 
 		protected internal virtual void WriteFontInt(int n)
 		{
-			outFont[fontPtr++] = unchecked((byte)(n >> 24));
-			outFont[fontPtr++] = unchecked((byte)(n >> 16));
-			outFont[fontPtr++] = unchecked((byte)(n >> 8));
-			outFont[fontPtr++] = unchecked((byte)n);
+			outFont[fontPtr++] = (byte)(n >> 24);
+			outFont[fontPtr++] = (byte)(n >> 16);
+			outFont[fontPtr++] = (byte)(n >> 8);
+			outFont[fontPtr++] = (byte)n;
 		}
 
 		protected internal virtual void WriteFontString(String s)
@@ -560,10 +561,10 @@ namespace com.itextpdf.io.font
 			int ptr = 0;
 			for (int k = 0; k < len; ++k)
 			{
-				v3 += b[ptr++] & unchecked((int)(0xff));
-				v2 += b[ptr++] & unchecked((int)(0xff));
-				v1 += b[ptr++] & unchecked((int)(0xff));
-				v0 += b[ptr++] & unchecked((int)(0xff));
+				v3 += b[ptr++] & 0xff;
+				v2 += b[ptr++] & 0xff;
+				v1 += b[ptr++] & 0xff;
+				v0 += b[ptr++] & 0xff;
 			}
 			return v0 + (v1 << 8) + (v2 << 16) + (v3 << 24);
 		}

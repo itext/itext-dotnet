@@ -1,5 +1,5 @@
 /*
-$Id: 117de96e52382fd8e917dc2346300ce01fd6a181 $
+$Id: 578dd2949e0ccc8f78c2eb8b059b83e5b51cfbe6 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -61,7 +61,7 @@ namespace com.itextpdf.io.image
 			// will also have the CCITT parameters
 			int colorSpace = image.GetColorSpace();
 			int typeCCITT = image.GetTypeCcitt();
-			if (typeCCITT > unchecked((int)(0xff)))
+			if (typeCCITT > 0xff)
 			{
 				if (!image.IsMask())
 				{

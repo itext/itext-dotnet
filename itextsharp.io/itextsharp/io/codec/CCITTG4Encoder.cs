@@ -151,7 +151,7 @@ namespace com.itextpdf.io.codec
 			{
 				data |= bits >> (length - bit);
 				length -= bit;
-				outBuf.Append(unchecked((byte)data));
+				outBuf.Append((byte)data);
 				data = 0;
 				bit = 8;
 			}
@@ -159,7 +159,7 @@ namespace com.itextpdf.io.codec
 			bit -= length;
 			if (bit == 0)
 			{
-				outBuf.Append(unchecked((byte)data));
+				outBuf.Append((byte)data);
 				data = 0;
 				bit = 8;
 			}
@@ -225,7 +225,7 @@ namespace com.itextpdf.io.codec
 			PutBits(EOL, 12);
 			if (bit != 8)
 			{
-				outBuf.Append(unchecked((byte)data));
+				outBuf.Append((byte)data);
 				data = 0;
 				bit = 8;
 			}
@@ -245,8 +245,7 @@ namespace com.itextpdf.io.codec
 			{
 				return 0;
 			}
-			return ((data[offset + (bit >> 3)] & unchecked((int)(0xff))) >> (7 - ((bit) & 7))
-				) & 1;
+			return ((data[offset + (bit >> 3)] & 0xff) >> (7 - ((bit) & 7))) & 1;
 		}
 
 		private static int Find1span(byte[] bp, int offset, int bs, int be)
@@ -260,7 +259,7 @@ namespace com.itextpdf.io.codec
 			*/
 			if (bits > 0 && (n = (bs & 7)) != 0)
 			{
-				span = oneruns[(bp[pos] << n) & unchecked((int)(0xff))];
+				span = oneruns[(bp[pos] << n) & 0xff];
 				if (span > 8 - n)
 				{
 					/* table value too generous */
@@ -291,7 +290,7 @@ namespace com.itextpdf.io.codec
 				if (bp[pos] != -1)
 				{
 					/* end of run */
-					return (span + oneruns[bp[pos] & unchecked((int)(0xff))]);
+					return (span + oneruns[bp[pos] & 0xff]);
 				}
 				span += 8;
 				bits -= 8;
@@ -302,7 +301,7 @@ namespace com.itextpdf.io.codec
 			*/
 			if (bits > 0)
 			{
-				n = oneruns[bp[pos] & unchecked((int)(0xff))];
+				n = oneruns[bp[pos] & 0xff];
 				span += (n > bits ? bits : n);
 			}
 			return span;
@@ -319,7 +318,7 @@ namespace com.itextpdf.io.codec
 			*/
 			if (bits > 0 && (n = (bs & 7)) != 0)
 			{
-				span = zeroruns[(bp[pos] << n) & unchecked((int)(0xff))];
+				span = zeroruns[(bp[pos] << n) & 0xff];
 				if (span > 8 - n)
 				{
 					/* table value too generous */
@@ -350,7 +349,7 @@ namespace com.itextpdf.io.codec
 				if (bp[pos] != 0)
 				{
 					/* end of run */
-					return (span + zeroruns[bp[pos] & unchecked((int)(0xff))]);
+					return (span + zeroruns[bp[pos] & 0xff]);
 				}
 				span += 8;
 				bits -= 8;
@@ -361,7 +360,7 @@ namespace com.itextpdf.io.codec
 			*/
 			if (bits > 0)
 			{
-				n = zeroruns[bp[pos] & unchecked((int)(0xff))];
+				n = zeroruns[bp[pos] & 0xff];
 				span += (n > bits ? bits : n);
 			}
 			return span;
@@ -419,25 +418,24 @@ namespace com.itextpdf.io.codec
 		private const int G3CODE_INCOMP = -4;
 
 		private int[][] TIFFFaxWhiteCodes = new int[][] { new int[] { 8, 0x35, 0 }, new int
-			[] { 6, 0x7, 1 }, new int[] { 4, 0x7, 2 }, new int[] { 4, unchecked((int)(0x8)), 
-			3 }, new int[] { 4, 0xB, 4 }, new int[] { 4, 0xC, 5 }, new int[] { 4, 0xE, 6 }, 
-			new int[] { 4, 0xF, 7 }, new int[] { 5, 0x13, 8 }, new int[] { 5, 0x14, 9 }, new 
-			int[] { 5, 0x7, 10 }, new int[] { 5, unchecked((int)(0x8)), 11 }, new int[] { 6, 
-			unchecked((int)(0x8)), 12 }, new int[] { 6, 0x3, 13 }, new int[] { 6, 0x34, 14 }
-			, new int[] { 6, 0x35, 15 }, new int[] { 6, 0x2A, 16 }, new int[] { 6, 0x2B, 17 }
-			, new int[] { 7, 0x27, 18 }, new int[] { 7, 0xC, 19 }, new int[] { 7, unchecked(
-			(int)(0x8)), 20 }, new int[] { 7, 0x17, 21 }, new int[] { 7, 0x3, 22 }, new int[
-			] { 7, 0x4, 23 }, new int[] { 7, 0x28, 24 }, new int[] { 7, 0x2B, 25 }, new int[
-			] { 7, 0x13, 26 }, new int[] { 7, 0x24, 27 }, new int[] { 7, 0x18, 28 }, new int
-			[] { 8, 0x2, 29 }, new int[] { 8, 0x3, 30 }, new int[] { 8, 0x1A, 31 }, new int[
-			] { 8, 0x1B, 32 }, new int[] { 8, 0x12, 33 }, new int[] { 8, 0x13, 34 }, new int
-			[] { 8, 0x14, 35 }, new int[] { 8, 0x15, 36 }, new int[] { 8, 0x16, 37 }, new int
-			[] { 8, 0x17, 38 }, new int[] { 8, 0x28, 39 }, new int[] { 8, 0x29, 40 }, new int
-			[] { 8, 0x2A, 41 }, new int[] { 8, 0x2B, 42 }, new int[] { 8, 0x2C, 43 }, new int
-			[] { 8, 0x2D, 44 }, new int[] { 8, 0x4, 45 }, new int[] { 8, 0x5, 46 }, new int[
-			] { 8, 0xA, 47 }, new int[] { 8, 0xB, 48 }, new int[] { 8, 0x52, 49 }, new int[]
-			 { 8, 0x53, 50 }, new int[] { 8, 0x54, 51 }, new int[] { 8, 0x55, 52 }, new int[
-			] { 8, 0x24, 53 }, new int[] { 8, 0x25, 54 }, new int[] { 8, 0x58, 55 }, new int
+			[] { 6, 0x7, 1 }, new int[] { 4, 0x7, 2 }, new int[] { 4, 0x8, 3 }, new int[] { 
+			4, 0xB, 4 }, new int[] { 4, 0xC, 5 }, new int[] { 4, 0xE, 6 }, new int[] { 4, 0xF
+			, 7 }, new int[] { 5, 0x13, 8 }, new int[] { 5, 0x14, 9 }, new int[] { 5, 0x7, 10
+			 }, new int[] { 5, 0x8, 11 }, new int[] { 6, 0x8, 12 }, new int[] { 6, 0x3, 13 }
+			, new int[] { 6, 0x34, 14 }, new int[] { 6, 0x35, 15 }, new int[] { 6, 0x2A, 16 }
+			, new int[] { 6, 0x2B, 17 }, new int[] { 7, 0x27, 18 }, new int[] { 7, 0xC, 19 }
+			, new int[] { 7, 0x8, 20 }, new int[] { 7, 0x17, 21 }, new int[] { 7, 0x3, 22 }, 
+			new int[] { 7, 0x4, 23 }, new int[] { 7, 0x28, 24 }, new int[] { 7, 0x2B, 25 }, 
+			new int[] { 7, 0x13, 26 }, new int[] { 7, 0x24, 27 }, new int[] { 7, 0x18, 28 }, 
+			new int[] { 8, 0x2, 29 }, new int[] { 8, 0x3, 30 }, new int[] { 8, 0x1A, 31 }, new 
+			int[] { 8, 0x1B, 32 }, new int[] { 8, 0x12, 33 }, new int[] { 8, 0x13, 34 }, new 
+			int[] { 8, 0x14, 35 }, new int[] { 8, 0x15, 36 }, new int[] { 8, 0x16, 37 }, new 
+			int[] { 8, 0x17, 38 }, new int[] { 8, 0x28, 39 }, new int[] { 8, 0x29, 40 }, new 
+			int[] { 8, 0x2A, 41 }, new int[] { 8, 0x2B, 42 }, new int[] { 8, 0x2C, 43 }, new 
+			int[] { 8, 0x2D, 44 }, new int[] { 8, 0x4, 45 }, new int[] { 8, 0x5, 46 }, new int
+			[] { 8, 0xA, 47 }, new int[] { 8, 0xB, 48 }, new int[] { 8, 0x52, 49 }, new int[
+			] { 8, 0x53, 50 }, new int[] { 8, 0x54, 51 }, new int[] { 8, 0x55, 52 }, new int
+			[] { 8, 0x24, 53 }, new int[] { 8, 0x25, 54 }, new int[] { 8, 0x58, 55 }, new int
 			[] { 8, 0x59, 56 }, new int[] { 8, 0x5A, 57 }, new int[] { 8, 0x5B, 58 }, new int
 			[] { 8, 0x4A, 59 }, new int[] { 8, 0x4B, 60 }, new int[] { 8, 0x32, 61 }, new int
 			[] { 8, 0x33, 62 }, new int[] { 8, 0x34, 63 }, new int[] { 5, 0x1B, 64 }, new int
@@ -450,14 +448,14 @@ namespace com.itextpdf.io.codec
 			9, 0xD8, 1216 }, new int[] { 9, 0xD9, 1280 }, new int[] { 9, 0xDA, 1344 }, new int
 			[] { 9, 0xDB, 1408 }, new int[] { 9, 0x98, 1472 }, new int[] { 9, 0x99, 1536 }, 
 			new int[] { 9, 0x9A, 1600 }, new int[] { 6, 0x18, 1664 }, new int[] { 9, 0x9B, 1728
-			 }, new int[] { 11, unchecked((int)(0x8)), 1792 }, new int[] { 11, 0xC, 1856 }, 
-			new int[] { 11, 0xD, 1920 }, new int[] { 12, 0x12, 1984 }, new int[] { 12, 0x13, 
-			2048 }, new int[] { 12, 0x14, 2112 }, new int[] { 12, 0x15, 2176 }, new int[] { 
-			12, 0x16, 2240 }, new int[] { 12, 0x17, 2304 }, new int[] { 12, 0x1C, 2368 }, new 
-			int[] { 12, 0x1D, 2432 }, new int[] { 12, 0x1E, 2496 }, new int[] { 12, 0x1F, 2560
-			 }, new int[] { 12, 0x1, G3CODE_EOL }, new int[] { 9, 0x1, G3CODE_INVALID }, new 
-			int[] { 10, 0x1, G3CODE_INVALID }, new int[] { 11, 0x1, G3CODE_INVALID }, new int
-			[] { 12, 0x0, G3CODE_INVALID } };
+			 }, new int[] { 11, 0x8, 1792 }, new int[] { 11, 0xC, 1856 }, new int[] { 11, 0xD
+			, 1920 }, new int[] { 12, 0x12, 1984 }, new int[] { 12, 0x13, 2048 }, new int[] 
+			{ 12, 0x14, 2112 }, new int[] { 12, 0x15, 2176 }, new int[] { 12, 0x16, 2240 }, 
+			new int[] { 12, 0x17, 2304 }, new int[] { 12, 0x1C, 2368 }, new int[] { 12, 0x1D
+			, 2432 }, new int[] { 12, 0x1E, 2496 }, new int[] { 12, 0x1F, 2560 }, new int[] 
+			{ 12, 0x1, G3CODE_EOL }, new int[] { 9, 0x1, G3CODE_INVALID }, new int[] { 10, 0x1
+			, G3CODE_INVALID }, new int[] { 11, 0x1, G3CODE_INVALID }, new int[] { 12, 0x0, 
+			G3CODE_INVALID } };
 
 		private int[][] TIFFFaxBlackCodes = new int[][] { new int[] { 10, 0x37, 0 }, new 
 			int[] { 3, 0x2, 1 }, new int[] { 2, 0x3, 2 }, new int[] { 2, 0x2, 3 }, new int[]
@@ -465,40 +463,40 @@ namespace com.itextpdf.io.codec
 			0x3, 7 }, new int[] { 6, 0x5, 8 }, new int[] { 6, 0x4, 9 }, new int[] { 7, 0x4, 
 			10 }, new int[] { 7, 0x5, 11 }, new int[] { 7, 0x7, 12 }, new int[] { 8, 0x4, 13
 			 }, new int[] { 8, 0x7, 14 }, new int[] { 9, 0x18, 15 }, new int[] { 10, 0x17, 16
-			 }, new int[] { 10, 0x18, 17 }, new int[] { 10, unchecked((int)(0x8)), 18 }, new 
-			int[] { 11, 0x67, 19 }, new int[] { 11, 0x68, 20 }, new int[] { 11, 0x6C, 21 }, 
-			new int[] { 11, 0x37, 22 }, new int[] { 11, 0x28, 23 }, new int[] { 11, 0x17, 24
-			 }, new int[] { 11, 0x18, 25 }, new int[] { 12, 0xCA, 26 }, new int[] { 12, 0xCB
-			, 27 }, new int[] { 12, 0xCC, 28 }, new int[] { 12, 0xCD, 29 }, new int[] { 12, 
-			0x68, 30 }, new int[] { 12, 0x69, 31 }, new int[] { 12, 0x6A, 32 }, new int[] { 
-			12, 0x6B, 33 }, new int[] { 12, 0xD2, 34 }, new int[] { 12, 0xD3, 35 }, new int[
-			] { 12, 0xD4, 36 }, new int[] { 12, 0xD5, 37 }, new int[] { 12, 0xD6, 38 }, new 
-			int[] { 12, 0xD7, 39 }, new int[] { 12, 0x6C, 40 }, new int[] { 12, 0x6D, 41 }, 
-			new int[] { 12, 0xDA, 42 }, new int[] { 12, 0xDB, 43 }, new int[] { 12, 0x54, 44
-			 }, new int[] { 12, 0x55, 45 }, new int[] { 12, 0x56, 46 }, new int[] { 12, 0x57
-			, 47 }, new int[] { 12, 0x64, 48 }, new int[] { 12, 0x65, 49 }, new int[] { 12, 
-			0x52, 50 }, new int[] { 12, 0x53, 51 }, new int[] { 12, 0x24, 52 }, new int[] { 
-			12, 0x37, 53 }, new int[] { 12, 0x38, 54 }, new int[] { 12, 0x27, 55 }, new int[
-			] { 12, 0x28, 56 }, new int[] { 12, 0x58, 57 }, new int[] { 12, 0x59, 58 }, new 
-			int[] { 12, 0x2B, 59 }, new int[] { 12, 0x2C, 60 }, new int[] { 12, 0x5A, 61 }, 
-			new int[] { 12, 0x66, 62 }, new int[] { 12, 0x67, 63 }, new int[] { 10, 0xF, 64 }
-			, new int[] { 12, 0xC8, 128 }, new int[] { 12, 0xC9, 192 }, new int[] { 12, 0x5B
-			, 256 }, new int[] { 12, 0x33, 320 }, new int[] { 12, 0x34, 384 }, new int[] { 12
-			, 0x35, 448 }, new int[] { 13, 0x6C, 512 }, new int[] { 13, 0x6D, 576 }, new int
-			[] { 13, 0x4A, 640 }, new int[] { 13, 0x4B, 704 }, new int[] { 13, 0x4C, 768 }, 
-			new int[] { 13, 0x4D, 832 }, new int[] { 13, 0x72, 896 }, new int[] { 13, 0x73, 
-			960 }, new int[] { 13, 0x74, 1024 }, new int[] { 13, 0x75, 1088 }, new int[] { 13
-			, 0x76, 1152 }, new int[] { 13, 0x77, 1216 }, new int[] { 13, 0x52, 1280 }, new 
-			int[] { 13, 0x53, 1344 }, new int[] { 13, 0x54, 1408 }, new int[] { 13, 0x55, 1472
-			 }, new int[] { 13, 0x5A, 1536 }, new int[] { 13, 0x5B, 1600 }, new int[] { 13, 
-			0x64, 1664 }, new int[] { 13, 0x65, 1728 }, new int[] { 11, unchecked((int)(0x8)
-			), 1792 }, new int[] { 11, 0xC, 1856 }, new int[] { 11, 0xD, 1920 }, new int[] { 
-			12, 0x12, 1984 }, new int[] { 12, 0x13, 2048 }, new int[] { 12, 0x14, 2112 }, new 
-			int[] { 12, 0x15, 2176 }, new int[] { 12, 0x16, 2240 }, new int[] { 12, 0x17, 2304
-			 }, new int[] { 12, 0x1C, 2368 }, new int[] { 12, 0x1D, 2432 }, new int[] { 12, 
-			0x1E, 2496 }, new int[] { 12, 0x1F, 2560 }, new int[] { 12, 0x1, G3CODE_EOL }, new 
-			int[] { 9, 0x1, G3CODE_INVALID }, new int[] { 10, 0x1, G3CODE_INVALID }, new int
-			[] { 11, 0x1, G3CODE_INVALID }, new int[] { 12, 0x0, G3CODE_INVALID } };
+			 }, new int[] { 10, 0x18, 17 }, new int[] { 10, 0x8, 18 }, new int[] { 11, 0x67, 
+			19 }, new int[] { 11, 0x68, 20 }, new int[] { 11, 0x6C, 21 }, new int[] { 11, 0x37
+			, 22 }, new int[] { 11, 0x28, 23 }, new int[] { 11, 0x17, 24 }, new int[] { 11, 
+			0x18, 25 }, new int[] { 12, 0xCA, 26 }, new int[] { 12, 0xCB, 27 }, new int[] { 
+			12, 0xCC, 28 }, new int[] { 12, 0xCD, 29 }, new int[] { 12, 0x68, 30 }, new int[
+			] { 12, 0x69, 31 }, new int[] { 12, 0x6A, 32 }, new int[] { 12, 0x6B, 33 }, new 
+			int[] { 12, 0xD2, 34 }, new int[] { 12, 0xD3, 35 }, new int[] { 12, 0xD4, 36 }, 
+			new int[] { 12, 0xD5, 37 }, new int[] { 12, 0xD6, 38 }, new int[] { 12, 0xD7, 39
+			 }, new int[] { 12, 0x6C, 40 }, new int[] { 12, 0x6D, 41 }, new int[] { 12, 0xDA
+			, 42 }, new int[] { 12, 0xDB, 43 }, new int[] { 12, 0x54, 44 }, new int[] { 12, 
+			0x55, 45 }, new int[] { 12, 0x56, 46 }, new int[] { 12, 0x57, 47 }, new int[] { 
+			12, 0x64, 48 }, new int[] { 12, 0x65, 49 }, new int[] { 12, 0x52, 50 }, new int[
+			] { 12, 0x53, 51 }, new int[] { 12, 0x24, 52 }, new int[] { 12, 0x37, 53 }, new 
+			int[] { 12, 0x38, 54 }, new int[] { 12, 0x27, 55 }, new int[] { 12, 0x28, 56 }, 
+			new int[] { 12, 0x58, 57 }, new int[] { 12, 0x59, 58 }, new int[] { 12, 0x2B, 59
+			 }, new int[] { 12, 0x2C, 60 }, new int[] { 12, 0x5A, 61 }, new int[] { 12, 0x66
+			, 62 }, new int[] { 12, 0x67, 63 }, new int[] { 10, 0xF, 64 }, new int[] { 12, 0xC8
+			, 128 }, new int[] { 12, 0xC9, 192 }, new int[] { 12, 0x5B, 256 }, new int[] { 12
+			, 0x33, 320 }, new int[] { 12, 0x34, 384 }, new int[] { 12, 0x35, 448 }, new int
+			[] { 13, 0x6C, 512 }, new int[] { 13, 0x6D, 576 }, new int[] { 13, 0x4A, 640 }, 
+			new int[] { 13, 0x4B, 704 }, new int[] { 13, 0x4C, 768 }, new int[] { 13, 0x4D, 
+			832 }, new int[] { 13, 0x72, 896 }, new int[] { 13, 0x73, 960 }, new int[] { 13, 
+			0x74, 1024 }, new int[] { 13, 0x75, 1088 }, new int[] { 13, 0x76, 1152 }, new int
+			[] { 13, 0x77, 1216 }, new int[] { 13, 0x52, 1280 }, new int[] { 13, 0x53, 1344 }
+			, new int[] { 13, 0x54, 1408 }, new int[] { 13, 0x55, 1472 }, new int[] { 13, 0x5A
+			, 1536 }, new int[] { 13, 0x5B, 1600 }, new int[] { 13, 0x64, 1664 }, new int[] 
+			{ 13, 0x65, 1728 }, new int[] { 11, 0x8, 1792 }, new int[] { 11, 0xC, 1856 }, new 
+			int[] { 11, 0xD, 1920 }, new int[] { 12, 0x12, 1984 }, new int[] { 12, 0x13, 2048
+			 }, new int[] { 12, 0x14, 2112 }, new int[] { 12, 0x15, 2176 }, new int[] { 12, 
+			0x16, 2240 }, new int[] { 12, 0x17, 2304 }, new int[] { 12, 0x1C, 2368 }, new int
+			[] { 12, 0x1D, 2432 }, new int[] { 12, 0x1E, 2496 }, new int[] { 12, 0x1F, 2560 }
+			, new int[] { 12, 0x1, G3CODE_EOL }, new int[] { 9, 0x1, G3CODE_INVALID }, new int
+			[] { 10, 0x1, G3CODE_INVALID }, new int[] { 11, 0x1, G3CODE_INVALID }, new int[]
+			 { 12, 0x0, G3CODE_INVALID } };
 
 		private int[] horizcode = new int[] { 3, 0x1, 0 };
 
@@ -509,7 +507,7 @@ namespace com.itextpdf.io.codec
 			, new int[] { 6, 0x02, 0 }, new int[] { 7, 0x02, 0 } };
 
 		private int[] msbmask = new int[] { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f
-			, unchecked((int)(0xff)) };
+			, 0xff };
 		/* 0x00 - 0x0f */
 		/* 0x10 - 0x1f */
 		/* 0x20 - 0x2f */

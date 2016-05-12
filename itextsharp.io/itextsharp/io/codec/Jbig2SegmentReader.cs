@@ -358,8 +358,7 @@ namespace com.itextpdf.io.codec
 				);
 			// 7.2.3
 			int segment_header_flags = ra.Read();
-			bool deferred_non_retain = (segment_header_flags & unchecked((int)(0x80))) == unchecked(
-				(int)(0x80));
+			bool deferred_non_retain = (segment_header_flags & 0x80) == 0x80;
 			s.deferredNonRetain = deferred_non_retain;
 			bool page_association_size = (segment_header_flags & 0x40) == 0x40;
 			int segment_type = segment_header_flags & 0x3f;
@@ -485,8 +484,8 @@ namespace com.itextpdf.io.codec
 			ra.Seek(0);
 			byte[] idstring = new byte[8];
 			ra.Read(idstring);
-			byte[] refidstring = new byte[] { unchecked((byte)0x97), 0x4A, 0x42, 0x32, 0x0D, 
-				0x0A, 0x1A, 0x0A };
+			byte[] refidstring = new byte[] { (byte)0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 
+				0x0A };
 			for (int i = 0; i < idstring.Length; i++)
 			{
 				if (idstring[i] != refidstring[i])
@@ -498,7 +497,7 @@ namespace com.itextpdf.io.codec
 			int fileheaderflags = ra.Read();
 			this.sequential = (fileheaderflags & 0x1) == 0x1;
 			this.number_of_pages_known = (fileheaderflags & 0x2) == 0x0;
-			if ((fileheaderflags & unchecked((int)(0xfc))) != 0x0)
+			if ((fileheaderflags & 0xfc) != 0x0)
 			{
 				throw new IOException("file.header.flags.bits.2.7.not.0");
 			}

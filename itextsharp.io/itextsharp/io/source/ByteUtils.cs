@@ -1,5 +1,5 @@
 /*
-$Id: 6f51def04e11d9e0544f21d21e423e96759ef5c0 $
+$Id: 79cfe603ad8954b987547ed0dd6b7081cbc73910 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,7 +58,7 @@ namespace com.itextpdf.io.source
 
 		private static readonly byte[] one = new byte[] { 49 };
 
-		private static readonly byte[] negOne = new byte[] { (byte)('-'), 49 };
+		private static readonly byte[] negOne = new byte[] { (byte)'-', 49 };
 
 		public static byte[] GetIsoBytes(String text)
 		{
@@ -70,14 +70,14 @@ namespace com.itextpdf.io.source
 			byte[] b = new byte[len];
 			for (int k = 0; k < len; ++k)
 			{
-				b[k] = unchecked((byte)text[k]);
+				b[k] = (byte)text[k];
 			}
 			return b;
 		}
 
 		public static byte[] GetIsoBytes(byte pre, String text)
 		{
-			return GetIsoBytes(pre, text, unchecked((byte)0));
+			return GetIsoBytes(pre, text, (byte)0);
 		}
 
 		public static byte[] GetIsoBytes(byte pre, String text, byte post)
@@ -108,7 +108,7 @@ namespace com.itextpdf.io.source
 			}
 			for (int k = 0; k < text.Length; ++k)
 			{
-				b[k + start] = unchecked((byte)text[k]);
+				b[k + start] = (byte)text[k];
 			}
 			return b;
 		}
@@ -140,7 +140,7 @@ namespace com.itextpdf.io.source
 			}
 			if (negative)
 			{
-				buf.Prepend(unchecked((byte)'-'));
+				buf.Prepend((byte)'-');
 			}
 			return buffer == null ? buf.GetInternalBuffer() : null;
 		}
@@ -225,10 +225,10 @@ namespace com.itextpdf.io.source
 					buf.Prepend(bytes[v % 10]);
 					v /= 10;
 				}
-				buf.Prepend(unchecked((byte)'.')).Prepend(unchecked((byte)'0'));
+				buf.Prepend((byte)'.').Prepend((byte)'0');
 				if (negative)
 				{
-					buf.Prepend(unchecked((byte)'-'));
+					buf.Prepend((byte)'-');
 				}
 			}
 			else
@@ -295,7 +295,7 @@ namespace com.itextpdf.io.source
 					}
 					if (fracLen > 0)
 					{
-						buf.Prepend(unchecked((byte)'.'));
+						buf.Prepend((byte)'.');
 					}
 					for (int i_1 = 0; i_1 < intLen; i_1++)
 					{
@@ -304,7 +304,7 @@ namespace com.itextpdf.io.source
 					}
 					if (negative)
 					{
-						buf.Prepend(unchecked((byte)'-'));
+						buf.Prepend((byte)'-');
 					}
 				}
 				else
@@ -320,7 +320,7 @@ namespace com.itextpdf.io.source
 					}
 					if (negative)
 					{
-						buf.Prepend(unchecked((byte)'-'));
+						buf.Prepend((byte)'-');
 					}
 				}
 			}

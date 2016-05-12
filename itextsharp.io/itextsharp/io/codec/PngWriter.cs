@@ -50,8 +50,8 @@ namespace com.itextpdf.io.codec
 	/// <summary>Writes a PNG image.</summary>
 	public class PngWriter
 	{
-		private static readonly byte[] PNG_SIGNTURE = new byte[] { unchecked((byte)137), 
-			80, 78, 71, 13, 10, 26, 10 };
+		private static readonly byte[] PNG_SIGNTURE = new byte[] { (byte)137, 80, 78, 71, 
+			13, 10, 26, 10 };
 
 		private static readonly byte[] IHDR = ByteUtils.GetIsoBytes("IHDR");
 
@@ -126,9 +126,9 @@ namespace com.itextpdf.io.codec
 		public virtual void WriteIccProfile(byte[] data)
 		{
 			MemoryStream stream = new MemoryStream();
-			stream.Write(unchecked((byte)'I'));
-			stream.Write(unchecked((byte)'C'));
-			stream.Write(unchecked((byte)'C'));
+			stream.Write((byte)'I');
+			stream.Write((byte)'C');
+			stream.Write((byte)'C');
 			stream.Write(0);
 			stream.Write(0);
 			DeflaterOutputStream zip = new DeflaterOutputStream(stream);
@@ -172,8 +172,7 @@ namespace com.itextpdf.io.codec
 			}
 			for (int n = 0; n < len; n++)
 			{
-				c = crc_table[(c ^ buf[n + offset]) & unchecked((int)(0xff))] ^ ((int)(((uint)c) 
-					>> 8));
+				c = crc_table[(c ^ buf[n + offset]) & 0xff] ^ ((int)(((uint)c) >> 8));
 			}
 			return c;
 		}
@@ -197,10 +196,10 @@ namespace com.itextpdf.io.codec
 		/// <exception cref="System.IO.IOException"/>
 		public static void OutputInt(int n, Stream s)
 		{
-			s.Write(unchecked((byte)(n >> 24)));
-			s.Write(unchecked((byte)(n >> 16)));
-			s.Write(unchecked((byte)(n >> 8)));
-			s.Write(unchecked((byte)n));
+			s.Write((byte)(n >> 24));
+			s.Write((byte)(n >> 16));
+			s.Write((byte)(n >> 8));
+			s.Write((byte)n);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

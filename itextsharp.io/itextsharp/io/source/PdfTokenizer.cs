@@ -257,7 +257,7 @@ namespace com.itextpdf.io.source
 		{
 			if (ch != -1)
 			{
-				file.PushBack(unchecked((byte)ch));
+				file.PushBack((byte)ch);
 			}
 		}
 
@@ -791,7 +791,7 @@ namespace com.itextpdf.io.source
 									break;
 								}
 								octal = (octal << 3) + ch - '0';
-								ch = octal & unchecked((int)(0xff));
+								ch = octal & 0xff;
 								break;
 							}
 						}
@@ -1003,14 +1003,14 @@ namespace com.itextpdf.io.source
 							break;
 						}
 						prevWasWhitespace = true;
-						buffer.Append(unchecked((byte)c));
+						buffer.Append((byte)c);
 						break;
 					}
 
 					default:
 					{
 						prevWasWhitespace = false;
-						buffer.Append(unchecked((byte)c));
+						buffer.Append((byte)c);
 						break;
 					}
 				}
@@ -1112,7 +1112,7 @@ namespace com.itextpdf.io.source
 				{
 					return -1;
 				}
-				return unchecked((int)(0xff)) & buffer.GetInternalBuffer()[(int)offset];
+				return 0xff & buffer.GetInternalBuffer()[(int)offset];
 			}
 
 			public virtual int Get(long offset, byte[] bytes, int off, int len)
