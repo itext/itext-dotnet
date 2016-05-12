@@ -52,6 +52,8 @@
     <Compile Include="itextsharp\kernel\crypto\AesDecryptor.cs" />
     <Compile Include="itextsharp\kernel\crypto\ARCFOUREncryption.cs" />
     <Compile Include="itextsharp\kernel\crypto\BadPasswordException.cs" />
+    <Compile Include="itextsharp\kernel\crypto\securityhandler\EncryptionUtils.cs" />
+    <Compile Include="itextsharp\kernel\crypto\SystemUtility.cs" />
     <Compile Include="itextsharp\kernel\crypto\IDecryptor.cs" />
     <Compile Include="itextsharp\kernel\crypto\IVGenerator.cs" />
     <Compile Include="itextsharp\kernel\crypto\OutputStreamAesEncryption.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="itextsharp\kernel\crypto\securityhandler\StandardHandlerUsingStandard40.cs" />
     <Compile Include="itextsharp\kernel\crypto\securityhandler\StandardSecurityHandler.cs" />
     <Compile Include="itextsharp\kernel\crypto\StandardDecryptor.cs" />
+    <Compile Include="itextsharp\kernel\crypto\DigestExtensions.cs" />
     <Compile Include="itextsharp\kernel\events\Event.cs" />
     <Compile Include="itextsharp\kernel\events\EventDispatcher.cs" />
     <Compile Include="itextsharp\kernel\events\IEventDispatcher.cs" />
