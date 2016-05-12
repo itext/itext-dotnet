@@ -42,25 +42,25 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
 namespace com.itextpdf.kernel.crypto.securityhandler
 {
 	public class PublicKeyRecipient
 	{
-		private Certificate certificate = null;
+		private X509Certificate certificate = null;
 
 		private int permission = 0;
 
 		protected internal byte[] cms = null;
 
-		public PublicKeyRecipient(Certificate certificate, int permission)
+		public PublicKeyRecipient(X509Certificate certificate, int permission)
 		{
 			this.certificate = certificate;
 			this.permission = permission;
 		}
 
-		public virtual Certificate GetCertificate()
+		public virtual X509Certificate GetCertificate()
 		{
 			return certificate;
 		}

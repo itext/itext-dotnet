@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Org.BouncyCastle.Crypto;
 using com.itextpdf.io.util;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.crypto;
 using com.itextpdf.kernel.pdf;
-using java.security;
 
 namespace com.itextpdf.kernel.crypto.securityhandler
 {
@@ -121,7 +121,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				nextObjectKey = IVGenerator.GetIV(32);
 				nextObjectKeySize = 32;
 				// Algorithm 3.8.1
-				MessageDigest md = MessageDigest.GetInstance("SHA-256");
+				IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
 				md.Update(userPassword, 0, Math.Min(userPassword.Length, 127));
 				md.Update(uvs);
 				userKey = new byte[48];
@@ -231,7 +231,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 				byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
 				PdfNumber pValue = (PdfNumber)encryptionDictionary.Get(PdfName.P);
 				this.permissions = pValue.LongValue();
-				MessageDigest md = MessageDigest.GetInstance("SHA-256");
+				IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
 				md.Update(password, 0, Math.Min(password.Length, 127));
 				md.Update(oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
 				md.Update(uValue, 0, OU_LENGTH);

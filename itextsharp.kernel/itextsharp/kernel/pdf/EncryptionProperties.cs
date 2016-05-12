@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -60,7 +60,7 @@ namespace com.itextpdf.kernel.pdf
 		protected internal int standardEncryptPermissions;
 
 		/// <summary>PublicKeyEncryption properties</summary>
-		protected internal Certificate[] publicCertificates;
+		protected internal X509Certificate[] publicCertificates;
 
 		protected internal int[] publicKeyEncryptPermissions;
 
@@ -114,8 +114,8 @@ namespace com.itextpdf.kernel.pdf
 		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
 		/// ENCRYPTION_AES128 or ENCRYPTION_AES256.
 		/// </param>
-		public virtual EncryptionProperties SetPublicKeyEncryption(Certificate[] certs, int
-			[] permissions, int encryptionAlgorithm)
+		public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs
+			, int[] permissions, int encryptionAlgorithm)
 		{
 			ClearEncryption();
 			this.publicCertificates = certs;

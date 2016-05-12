@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using org.bouncycastle.crypto;
-using org.bouncycastle.crypto.@params;
-using org.bouncycastle.crypto.engines;
-using org.bouncycastle.crypto.modes;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace com.itextpdf.kernel.crypto
 {
@@ -54,13 +54,13 @@ namespace com.itextpdf.kernel.crypto
 	/// <author>Paulo Soares</author>
 	public class AESCipherCBCnoPad
 	{
-		private BlockCipher cbc;
+		private IBlockCipher cbc;
 
 		/// <summary>Creates a new instance of AESCipher</summary>
 		public AESCipherCBCnoPad(bool forEncryption, byte[] key)
 		{
-			BlockCipher aes = new AESFastEngine();
-			cbc = new CBCBlockCipher(aes);
+			IBlockCipher aes = new AesFastEngine();
+			cbc = new CbcBlockCipher(aes);
 			KeyParameter kp = new KeyParameter(key);
 			cbc.Init(forEncryption, kp);
 		}

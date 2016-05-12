@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using org.bouncycastle.crypto;
-using org.bouncycastle.crypto.@params;
-using org.bouncycastle.crypto.engines;
-using org.bouncycastle.crypto.modes;
-using org.bouncycastle.crypto.paddings;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Paddings;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace com.itextpdf.kernel.crypto
 {
@@ -60,8 +60,8 @@ namespace com.itextpdf.kernel.crypto
 		/// <summary>Creates a new instance of AESCipher</summary>
 		public AESCipher(bool forEncryption, byte[] key, byte[] iv)
 		{
-			BlockCipher aes = new AESFastEngine();
-			BlockCipher cbc = new CBCBlockCipher(aes);
+			IBlockCipher aes = new AesFastEngine();
+			IBlockCipher cbc = new CbcBlockCipher(aes);
 			bp = new PaddedBufferedBlockCipher(cbc);
 			KeyParameter kp = new KeyParameter(key);
 			ParametersWithIV piv = new ParametersWithIV(kp, iv);

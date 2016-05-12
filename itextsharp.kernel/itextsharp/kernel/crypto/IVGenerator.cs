@@ -1,5 +1,5 @@
 /*
-$Id: ebdd7a8ef204fd5d0758781a24f7a6e1f923db48 $
+$Id: 61febeeb74696be15a4969fe277c8744dc3d3ac0 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.lang;
 
 namespace com.itextpdf.kernel.crypto
 {
@@ -58,8 +57,8 @@ namespace com.itextpdf.kernel.crypto
 		static IVGenerator()
 		{
 			arcfour = new ARCFOUREncryption();
-			long time = com.itextpdf.CurrentTimeMillis();
-			long mem = Runtime.GetRuntime().FreeMemory();
+			long time = SystemUtility.GetCurrentTimeMillis();
+			long mem = SystemUtility.GetFreeMemory();
 			String s = time + "+" + mem;
 			arcfour.PrepareARCFOURKey(s.GetBytes());
 		}

@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -226,7 +226,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetPublicKeyEncryption(Certificate
+		public virtual com.itextpdf.kernel.pdf.WriterProperties SetPublicKeyEncryption(X509Certificate
 			[] certs, int[] permissions, int encryptionAlgorithm)
 		{
 			encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm

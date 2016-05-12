@@ -45,12 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Org.BouncyCastle.Crypto;
 using com.itextpdf.io;
 using com.itextpdf.io.log;
 using com.itextpdf.io.source;
 using com.itextpdf.kernel;
 using java.io;
-using java.security;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -578,7 +578,7 @@ namespace com.itextpdf.kernel.pdf
 
 			private readonly int hash;
 
-			private MessageDigest md5;
+			private IDigest md5;
 
 			private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, Dictionary
 				<int, int> serialized)
@@ -703,7 +703,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				try
 				{
-					md5 = MessageDigest.GetInstance("MD5");
+					md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
 				}
 				catch (Exception e)
 				{
@@ -721,7 +721,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				try
 				{
-					md5 = MessageDigest.GetInstance("MD5");
+					md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
 				}
 				catch (Exception e)
 				{

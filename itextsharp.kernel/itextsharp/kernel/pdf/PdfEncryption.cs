@@ -1,5 +1,5 @@
 /*
-$Id: 1711728e2e561dff367a54d6eb1b3208f9ed4a2a $
+$Id: d5687397f018ef5c37e35f7b4a0759ca4971a19a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,14 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using com.itextpdf.io.source;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.crypto;
 using com.itextpdf.kernel.crypto.securityhandler;
 using com.itextpdf.kernel.security;
-using java.lang;
-using java.security;
-using java.security.cert;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -69,7 +68,7 @@ namespace com.itextpdf.kernel.pdf
 
 		private const int AES_256 = 5;
 
-		private static long seq = com.itextpdf.CurrentTimeMillis();
+		private static long seq = SystemUtility.GetCurrentTimeMillis();
 
 		private int cryptoMode;
 
@@ -167,7 +166,8 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</param>
 		/// <exception cref="com.itextpdf.kernel.PdfException">if the document is already open
 		/// 	</exception>
-		public PdfEncryption(Certificate[] certs, int[] permissions, int encryptionType)
+		public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType
+			)
 			: base(new PdfDictionary())
 		{
 			int revision = SetCryptoMode(encryptionType);
@@ -250,8 +250,8 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		public PdfEncryption(PdfDictionary pdfDict, Key certificateKey, Certificate certificate
-			, String certificateKeyProvider, IExternalDecryptionProcess externalDecryptionProcess
+		public PdfEncryption(PdfDictionary pdfDict, ICipherParameters certificateKey, X509Certificate
+			 certificate, String certificateKeyProvider, IExternalDecryptionProcess externalDecryptionProcess
 			)
 			: base(pdfDict)
 		{
@@ -295,17 +295,17 @@ namespace com.itextpdf.kernel.pdf
 
 		public static byte[] GenerateNewDocumentId()
 		{
-			MessageDigest md5;
+			IDigest md5;
 			try
 			{
-				md5 = MessageDigest.GetInstance("MD5");
+				md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
 			}
 			catch (Exception e)
 			{
 				throw new PdfException(PdfException.PdfEncryption, e);
 			}
-			long time = com.itextpdf.CurrentTimeMillis();
-			long mem = Runtime.GetRuntime().FreeMemory();
+			long time = SystemUtility.GetCurrentTimeMillis();
+			long mem = SystemUtility.GetFreeMemory();
 			String s = time + "+" + mem + "+" + (seq++);
 			return md5.Digest(s.GetBytes());
 		}

@@ -46,7 +46,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using java.security;
+using Org.BouncyCastle.Crypto;
 using org.bouncycastle.cms;
 using org.bouncycastle.cms.jcajce;
 
@@ -225,8 +225,8 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Gets the content from a recipient.</summary>
 		/// <exception cref="org.bouncycastle.cms.CMSException"/>
-		public static byte[] GetContent(RecipientInformation recipientInfo, PrivateKey certificateKey
-			, String certificateKeyProvider)
+		public static byte[] GetContent(RecipientInformation recipientInfo, ICipherParameters
+			 certificateKey, String certificateKeyProvider)
 		{
 			Recipient jceKeyTransRecipient = new JceKeyTransEnvelopedRecipient(certificateKey
 				).SetProvider(certificateKeyProvider);

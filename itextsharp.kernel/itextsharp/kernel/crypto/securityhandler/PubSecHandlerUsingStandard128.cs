@@ -43,24 +43,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.security;
-using java.security;
-using java.security.cert;
 
 namespace com.itextpdf.kernel.crypto.securityhandler
 {
 	public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40
 	{
-		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, Certificate
+		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate
 			[] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
 			: base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly
 				)
 		{
 		}
 
-		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, Key certificateKey
-			, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
+		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters
+			 certificateKey, X509Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 			: base(encryptionDictionary, certificateKey, certificate, certificateKeyProvider, 
 				externalDecryptionProcess, encryptMetadata)

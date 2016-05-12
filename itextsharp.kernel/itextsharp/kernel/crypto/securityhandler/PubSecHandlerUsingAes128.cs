@@ -44,25 +44,25 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using com.itextpdf.kernel.crypto;
 using com.itextpdf.kernel.pdf;
 using com.itextpdf.kernel.security;
-using java.security;
-using java.security.cert;
 
 namespace com.itextpdf.kernel.crypto.securityhandler
 {
 	public class PubSecHandlerUsingAes128 : PubKeySecurityHandler
 	{
-		public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, Certificate[]
-			 certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
+		public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate
+			[] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
 		{
 			InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata
 				, embeddedFilesOnly);
 		}
 
-		public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, Key certificateKey
-			, Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
+		public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, ICipherParameters
+			 certificateKey, X509Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
 			 externalDecryptionProcess, bool encryptMetadata)
 		{
 			InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, certificateKeyProvider

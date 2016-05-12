@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Org.BouncyCastle.Crypto;
 using com.itextpdf.kernel;
 using com.itextpdf.kernel.crypto;
-using java.security;
 
 namespace com.itextpdf.kernel.crypto.securityhandler
 {
@@ -72,7 +72,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		/// </summary>
 		protected internal int nextObjectKeySize;
 
-		protected internal MessageDigest md5;
+		protected internal IDigest md5;
 
 		/// <summary>Work area to prepare the object/generation bytes</summary>
 		protected internal byte[] extra = new byte[5];
@@ -81,7 +81,7 @@ namespace com.itextpdf.kernel.crypto.securityhandler
 		{
 			try
 			{
-				md5 = MessageDigest.GetInstance("MD5");
+				md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
 			}
 			catch (Exception e)
 			{

@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
 using com.itextpdf.kernel.security;
-using java.security;
-using java.security.cert;
 
 namespace com.itextpdf.kernel.pdf
 {
@@ -55,9 +55,9 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal byte[] password;
 
-		protected internal Key certificateKey;
+		protected internal ICipherParameters certificateKey;
 
-		protected internal Certificate certificate;
+		protected internal X509Certificate certificate;
 
 		protected internal String certificateKeyProvider;
 
@@ -83,9 +83,9 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
 		/// 	</summary>
-		public virtual ReaderProperties SetPublicKeySecurityParams(Certificate certificate
-			, Key certificateKey, String certificateKeyProvider, IExternalDecryptionProcess 
-			externalDecryptionProcess)
+		public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
+			, ICipherParameters certificateKey, String certificateKeyProvider, IExternalDecryptionProcess
+			 externalDecryptionProcess)
 		{
 			ClearEncryptionParams();
 			this.certificate = certificate;
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
 		/// 	</summary>
-		public virtual ReaderProperties SetPublicKeySecurityParams(Certificate certificate
+		public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
 			, IExternalDecryptionProcess externalDecryptionProcess)
 		{
 			ClearEncryptionParams();
