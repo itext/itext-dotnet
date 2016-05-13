@@ -82,7 +82,7 @@
     <Compile Include="src\com\itextpdf\signatures\VerificationOK.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\forms\forms.csproj">
+    <ProjectReference Include="..\itextsharp.forms\itextsharp.forms.csproj">
       <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
       <Name>forms</Name>
     </ProjectReference>
@@ -90,13 +90,13 @@
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itextsharp.io</Name>
     </ProjectReference>
-    <ProjectReference Include="..\kernel\kernel.csproj">
-      <Project>{89CA1A81-2179-424D-88B3-C2EDC9453364}</Project>
-      <Name>kernel</Name>
+    <ProjectReference Include="..\itextsharp.kernel\itextsharp.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itextsharp.kernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\layout\layout.csproj">
-      <Project>{42173642-DB52-44D3-9883-3E34C65C53BC}</Project>
-      <Name>layout</Name>
+    <ProjectReference Include="..\itextsharp.layout\itextsharp.layout.csproj">
+      <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
+      <Name>itextsharp.layout</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
