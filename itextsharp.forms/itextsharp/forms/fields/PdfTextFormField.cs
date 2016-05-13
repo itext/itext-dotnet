@@ -1,5 +1,5 @@
 /*
-$Id: e062cf92f87211615b44261491376fabc7d41f88 $
+$Id: 05876976c39e9753bb64b8d2250f3f6edada467e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.forms.fields
+namespace iTextSharp.Forms.Fields
 {
 	/// <summary>An AcroForm field containing textual data.</summary>
 	public class PdfTextFormField : PdfFormField
@@ -80,7 +80,7 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Returns <code>Tx</code>, the form type for textual form fields.</summary>
 		/// <returns>
 		/// the form type, as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
 		/// </returns>
 		public override PdfName GetFormType()
 		{
@@ -95,10 +95,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetMultiline(bool multiline
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMultiline(bool multiline
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_MULTILINE, multiline
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_MULTILINE, multiline
 				);
 		}
 
@@ -113,10 +113,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetPassword(bool password
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetPassword(bool password
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_PASSWORD, password
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_PASSWORD, password
 				);
 		}
 
@@ -139,10 +139,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetFileSelect(bool fileSelect
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetFileSelect(bool fileSelect
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_FILE_SELECT, fileSelect
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_FILE_SELECT, fileSelect
 				);
 		}
 
@@ -159,10 +159,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetSpellCheck(bool spellCheck
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetSpellCheck(bool spellCheck
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
 				, !spellCheck);
 		}
 
@@ -195,10 +195,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetScroll(bool scroll)
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetScroll(bool scroll)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SCROLL, 
-				!scroll);
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SCROLL, !
+				scroll);
 		}
 
 		/// <summary>
@@ -232,9 +232,9 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetComb(bool comb)
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetComb(bool comb)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_COMB, comb);
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_COMB, comb);
 		}
 
 		/// <summary>If true, the value of this field should be represented as a rich text string.
@@ -260,10 +260,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfTextFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetRichText(bool richText
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetRichText(bool richText
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)SetFieldFlag(FF_RICH_TEXT, richText
+			return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_RICH_TEXT, richText
 				);
 		}
 
@@ -282,9 +282,9 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Sets the maximum length of the field?s text, in characters.</summary>
 		/// <param name="maxLen">the maximum text length</param>
 		/// <returns>current</returns>
-		public virtual com.itextpdf.forms.fields.PdfTextFormField SetMaxLen(int maxLen)
+		public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen)
 		{
-			return (com.itextpdf.forms.fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber
+			return (iTextSharp.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber
 				(maxLen));
 		}
 	}

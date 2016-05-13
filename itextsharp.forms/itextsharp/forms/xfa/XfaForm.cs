@@ -45,17 +45,17 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.forms;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.xmp;
-using java.io;
-using javax.xml.parsers;
-using org.w3c.dom;
-using org.xml.sax;
+using Java.IO;
+using Javax.Xml.Parsers;
+using Org.W3c.Dom;
+using Org.Xml.Sax;
+using iTextSharp.Forms;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.forms.xfa
+namespace iTextSharp.Forms.Xfa
 {
 	/// <summary>Processes XFA forms.</summary>
 	public class XfaForm
@@ -98,7 +98,7 @@ namespace com.itextpdf.forms.xfa
 
 		/// <summary>
 		/// Creates an XFA form by the
-		/// <see cref="org.w3c.dom.Document"/>
+		/// <see cref="Org.W3c.Dom.Document"/>
 		/// containing all xml information
 		/// </summary>
 		public XfaForm(Document domDocument)
@@ -108,10 +108,10 @@ namespace com.itextpdf.forms.xfa
 
 		/// <summary>
 		/// A constructor from a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDictionary"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
 		/// . It is assumed, but not
 		/// necessary for correct initialization, that the dictionary is actually a
-		/// <see cref="com.itextpdf.forms.PdfAcroForm"/>
+		/// <see cref="iTextSharp.Forms.PdfAcroForm"/>
 		/// . An entry in the dictionary with the <code>XFA</code>
 		/// key must contain correct XFA syntax. If the <code>XFA</code> key is
 		/// absent, then the constructor essentially does nothing.
@@ -160,7 +160,7 @@ namespace com.itextpdf.forms.xfa
 		/// <param name="form">the data</param>
 		/// <param name="pdfDocument">pdfDocument</param>
 		/// <exception cref="System.IO.IOException">on IO error</exception>
-		public static void SetXfaForm(com.itextpdf.forms.xfa.XfaForm form, PdfDocument pdfDocument
+		public static void SetXfaForm(iTextSharp.Forms.Xfa.XfaForm form, PdfDocument pdfDocument
 			)
 		{
 			PdfDictionary af = PdfAcroForm.GetAcroForm(pdfDocument, true).GetPdfObject();
@@ -208,7 +208,7 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Extracts DOM nodes from an XFA document.</summary>
 		/// <param name="domDocument">
 		/// an XFA file as a
-		/// <see cref="org.w3c.dom.Document">
+		/// <see cref="Org.W3c.Dom.Document">
 		/// DOM
 		/// document
 		/// </see>
@@ -217,7 +217,7 @@ namespace com.itextpdf.forms.xfa
 		/// a
 		/// <see cref="System.Collections.IDictionary{K, V}"/>
 		/// of XFA packet names and their associated
-		/// <see cref="org.w3c.dom.Node">DOM nodes</see>
+		/// <see cref="Org.W3c.Dom.Node">DOM nodes</see>
 		/// </returns>
 		public static IDictionary<String, Node> ExtractXFANodes(Document domDocument)
 		{
@@ -280,7 +280,7 @@ namespace com.itextpdf.forms.xfa
 				if (name != null)
 				{
 					name = Xml2Som.GetShortName(name);
-					return com.itextpdf.forms.xfa.XfaForm.GetNodeText(FindDatasetsNode(name));
+					return iTextSharp.Forms.Xfa.XfaForm.GetNodeText(FindDatasetsNode(name));
 				}
 			}
 			return null;
@@ -397,7 +397,7 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="java.io.File">
+		/// <see cref="Java.IO.File">
 		/// file
 		/// object
 		/// </see>
@@ -406,11 +406,11 @@ namespace com.itextpdf.forms.xfa
 		/// </remarks>
 		/// <param name="file">
 		/// the
-		/// <see cref="java.io.File"/>
+		/// <see cref="Java.IO.File"/>
 		/// </param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(File file)
 		{
@@ -420,7 +420,7 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="java.io.File">
+		/// <see cref="Java.IO.File">
 		/// file
 		/// object
 		/// </see>
@@ -428,16 +428,16 @@ namespace com.itextpdf.forms.xfa
 		/// </remarks>
 		/// <param name="file">
 		/// the
-		/// <see cref="java.io.File"/>
+		/// <see cref="Java.IO.File"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(File file, bool readOnly)
 		{
-			FillXfaForm(new FileInputStream(file), readOnly);
+			FillXfaForm(new FileStream(file), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -453,7 +453,7 @@ namespace com.itextpdf.forms.xfa
 		/// </param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(Stream @is)
 		{
@@ -473,7 +473,7 @@ namespace com.itextpdf.forms.xfa
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(Stream @is, bool readOnly)
 		{
@@ -483,17 +483,17 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="org.xml.sax.InputSource">SAX input source</see>
+		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// to fill this object with XFA data. The resulting DOM
 		/// document may be modified.
 		/// </remarks>
 		/// <param name="is">
 		/// the
-		/// <see cref="org.xml.sax.InputSource">SAX input source</see>
+		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// </param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(InputSource @is)
 		{
@@ -503,17 +503,17 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="org.xml.sax.InputSource">SAX input source</see>
+		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// to fill this object with XFA data.
 		/// </remarks>
 		/// <param name="is">
 		/// the
-		/// <see cref="org.xml.sax.InputSource">SAX input source</see>
+		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
-		/// <see cref="org.xml.sax.InputSource"/>
+		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(InputSource @is, bool readOnly)
 		{
@@ -538,7 +538,7 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <param name="node">
 		/// the input
-		/// <see cref="org.w3c.dom.Node"/>
+		/// <see cref="Org.W3c.Dom.Node"/>
 		/// </param>
 		public virtual void FillXfaForm(Node node)
 		{
@@ -548,7 +548,7 @@ namespace com.itextpdf.forms.xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <param name="node">
 		/// the input
-		/// <see cref="org.w3c.dom.Node"/>
+		/// <see cref="Org.W3c.Dom.Node"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		public virtual void FillXfaForm(Node node, bool readOnly)
@@ -649,8 +649,8 @@ namespace com.itextpdf.forms.xfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(PdfObject xfa)
 		{
 			MemoryStream bout = new MemoryStream();
@@ -679,9 +679,9 @@ namespace com.itextpdf.forms.xfa
 			InitXfaForm(new MemoryStream(bout.ToArray()));
 		}
 
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(Stream inputStream)
 		{
 			DocumentBuilderFactory fact = DocumentBuilderFactory.NewInstance();

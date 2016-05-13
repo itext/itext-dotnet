@@ -45,9 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using org.w3c.dom;
+using Org.W3c.Dom;
 
-namespace com.itextpdf.forms.xfa
+namespace iTextSharp.Forms.Xfa
 {
 	/// <summary>A class for some basic SOM processing.</summary>
 	internal class Xml2Som

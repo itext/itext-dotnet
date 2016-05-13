@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using org.w3c.dom;
+using Org.W3c.Dom;
 
-namespace com.itextpdf.forms.xfa
+namespace iTextSharp.Forms.Xfa
 {
 	/// <summary>Processes the datasets section in the XFA form.</summary>
 	internal class Xml2SomDatasets : Xml2Som

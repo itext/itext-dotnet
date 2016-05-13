@@ -42,11 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.forms;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
+using iTextSharp.Forms;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.forms.fields
+namespace iTextSharp.Forms.Fields
 {
 	/// <summary>An AcroForm field containing signature data.</summary>
 	public class PdfSignatureFormField : PdfFormField
@@ -70,7 +70,7 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Returns <code>Sig</code>, the form type for signature form fields.</summary>
 		/// <returns>
 		/// the form type, as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
 		/// </returns>
 		public override PdfName GetFormType()
 		{
@@ -81,20 +81,20 @@ namespace com.itextpdf.forms.fields
 		/// <param name="value">the signature to be contained in the signature field, or an indirect reference to it
 		/// 	</param>
 		/// <returns>the edited field</returns>
-		public virtual com.itextpdf.forms.fields.PdfSignatureFormField SetValue(PdfObject
-			 value)
+		public virtual iTextSharp.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value
+			)
 		{
-			return (com.itextpdf.forms.fields.PdfSignatureFormField)Put(PdfName.V, value);
+			return (iTextSharp.Forms.Fields.PdfSignatureFormField)Put(PdfName.V, value);
 		}
 
 		/// <summary>
 		/// Gets the
-		/// <see cref="com.itextpdf.forms.PdfSigFieldLockDictionary"/>
+		/// <see cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
 		/// , which contains fields that
 		/// must be locked if the document is signed.
 		/// </summary>
 		/// <returns>a dictionary containing locked fields.</returns>
-		/// <seealso cref="com.itextpdf.forms.PdfSigFieldLockDictionary"/>
+		/// <seealso cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
 		public virtual PdfSigFieldLockDictionary GetSigFieldLockDictionary()
 		{
 			PdfDictionary sigLockDict = (PdfDictionary)GetPdfObject().Get(PdfName.Lock);
