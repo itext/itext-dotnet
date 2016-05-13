@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.kernel", "itexts
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.io.tests", "itextsharp.io.tests\itextsharp.io.tests.csproj", "{52A93D37-60D7-4607-8BB2-724D9C46671B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.barcodes.tests", "itextsharp.barcodes.tests\itextsharp.barcodes.tests.csproj", "{D015A3AA-613C-45D9-B908-7D47C4B613AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{52A93D37-60D7-4607-8BB2-724D9C46671B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A93D37-60D7-4607-8BB2-724D9C46671B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A93D37-60D7-4607-8BB2-724D9C46671B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D015A3AA-613C-45D9-B908-7D47C4B613AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D015A3AA-613C-45D9-B908-7D47C4B613AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D015A3AA-613C-45D9-B908-7D47C4B613AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D015A3AA-613C-45D9-B908-7D47C4B613AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
