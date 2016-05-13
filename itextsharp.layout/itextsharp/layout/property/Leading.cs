@@ -42,7 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.layout.property
+using System;
+
+namespace iTextSharp.Layout.Property
 {
 	/// <summary>
 	/// A specialized class that specifies the leading, "the vertical distance between
@@ -56,7 +58,7 @@ namespace com.itextpdf.layout.property
 	/// This class is meant to be used as the value for the
 	/// <see cref="Property.LEADING"/>
 	/// key in an
-	/// <see cref="com.itextpdf.layout.IPropertyContainer"/>
+	/// <see cref="iTextSharp.Layout.IPropertyContainer"/>
 	/// .
 	/// </remarks>
 	public class Leading
@@ -103,6 +105,12 @@ namespace com.itextpdf.layout.property
 		public virtual float GetValue()
 		{
 			return value;
+		}
+
+		public override bool Equals(Object obj)
+		{
+			return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading
+				)obj).type && value == ((iTextSharp.Layout.Property.Leading)obj).value;
 		}
 	}
 }

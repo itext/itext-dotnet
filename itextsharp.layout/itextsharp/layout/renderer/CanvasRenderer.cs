@@ -42,12 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout;
+using iTextSharp.Layout.Layout;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public class CanvasRenderer : RootRenderer
 	{
@@ -96,7 +95,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				SetProperty(Property.FULL, true);
+				SetProperty(iTextSharp.Layout.Property.Property.FULL, true);
 				currentArea = null;
 			}
 			return currentArea;

@@ -1,5 +1,5 @@
 /*
-$Id: 5626599c1c649f689c42dd7fdf8a22e7a7d2e5ef $
+$Id: 05684aaf2fcd538c1fcade5b48c2d87ce69f095a $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,14 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.layout.property;
 
-namespace com.itextpdf.layout
+namespace iTextSharp.Layout
 {
 	/// <summary>
 	/// A generic Map-like interface that defines methods for storing and retrieving
 	/// objects by an enum key of the
-	/// <see cref="com.itextpdf.layout.property.Property"/>
+	/// <see cref="iTextSharp.Layout.Property.Property"/>
 	/// type.
 	/// </summary>
 	public interface IPropertyContainer
@@ -58,7 +57,7 @@ namespace com.itextpdf.layout
 		/// <summary>Checks if this entity has the specified property.</summary>
 		/// <remarks>
 		/// Checks if this entity has the specified property. Compared to
-		/// <see cref="HasOwnProperty(com.itextpdf.layout.property.Property)"/>
+		/// <see cref="HasOwnProperty(int)"/>
 		/// ,
 		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
 		/// </remarks>
@@ -70,7 +69,7 @@ namespace com.itextpdf.layout
 		/// <see langword="false"/>
 		/// otherwise
 		/// </returns>
-		bool HasProperty(Property property);
+		bool HasProperty(int property);
 
 		/// <summary>Checks if this entity has the specified property, i.e.</summary>
 		/// <remarks>Checks if this entity has the specified property, i.e. if it was set to this very element earlier
@@ -83,12 +82,12 @@ namespace com.itextpdf.layout
 		/// <see langword="false"/>
 		/// otherwise
 		/// </returns>
-		bool HasOwnProperty(Property property);
+		bool HasOwnProperty(int property);
 
 		/// <summary>Gets the property from this entity.</summary>
 		/// <remarks>
 		/// Gets the property from this entity. Compared to
-		/// <see cref="GetOwnProperty{T1}(com.itextpdf.layout.property.Property)"/>
+		/// <see cref="GetOwnProperty{T1}(int)"/>
 		/// ,
 		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
 		/// </remarks>
@@ -99,7 +98,7 @@ namespace com.itextpdf.layout
 		/// <see langword="null"/>
 		/// will be returned if the property value was not found
 		/// </returns>
-		T1 GetProperty<T1>(Property property);
+		T1 GetProperty<T1>(int property);
 
 		/// <summary>Gets own property from this entity.</summary>
 		/// <remarks>
@@ -115,7 +114,7 @@ namespace com.itextpdf.layout
 		/// <see langword="null"/>
 		/// will be returned if the property value was not found
 		/// </returns>
-		T1 GetOwnProperty<T1>(Property property);
+		T1 GetOwnProperty<T1>(int property);
 
 		/// <summary>Gets the default property from this entity.</summary>
 		/// <?/>
@@ -125,15 +124,15 @@ namespace com.itextpdf.layout
 		/// <see langword="null"/>
 		/// will be returned
 		/// </returns>
-		T1 GetDefaultProperty<T1>(Property property);
+		T1 GetDefaultProperty<T1>(int property);
 
 		/// <summary>Sets a property for this entity.</summary>
 		/// <param name="property">the property to be set</param>
 		/// <param name="value">the value of the property</param>
-		void SetProperty(Property property, Object value);
+		void SetProperty(int property, Object value);
 
 		/// <summary>Deletes the own property of this entity.</summary>
 		/// <param name="property">the property to be deleted</param>
-		void DeleteOwnProperty(Property property);
+		void DeleteOwnProperty(int property);
 	}
 }

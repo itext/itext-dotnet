@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.layout.layout
+namespace iTextSharp.Layout.Layout
 {
 	public class LayoutContext
 	{

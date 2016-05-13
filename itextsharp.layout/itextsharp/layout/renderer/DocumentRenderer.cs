@@ -1,5 +1,5 @@
 /*
-$Id: 15bd766a5b44ddf2590d7ce95094cabaa962b8fd $
+$Id: 0b9e0bc9e77c9f264babf7adb71fbc5707c9e35b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,15 +44,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.layout;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Layout;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public class DocumentRenderer : RootRenderer
 	{

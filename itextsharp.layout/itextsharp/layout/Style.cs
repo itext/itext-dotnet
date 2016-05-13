@@ -42,16 +42,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.layout.property;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout
+namespace iTextSharp.Layout
 {
 	/// <summary>Container object for style properties of an element.</summary>
 	/// <remarks>
 	/// Container object for style properties of an element. A style can be used as
 	/// an effective way to define multiple equal properties to several elements.
 	/// Used in
-	/// <see cref="com.itextpdf.layout.element.AbstractElement{T}"/>
+	/// <see cref="iTextSharp.Layout.Element.AbstractElement{T}"/>
 	/// </remarks>
 	public class Style : ElementPropertyContainer<Style>
 	{
@@ -59,7 +59,7 @@ namespace com.itextpdf.layout
 		/// <returns>the left margin width, as a <code>float</code></returns>
 		public virtual float GetMarginLeft()
 		{
-			return GetProperty(Property.MARGIN_LEFT);
+			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
 		}
 
 		/// <summary>Sets the left margin width of the element.</summary>
@@ -67,7 +67,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetMarginLeft(float value)
 		{
-			SetProperty(Property.MARGIN_LEFT, value);
+			SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, value);
 			return this;
 		}
 
@@ -75,7 +75,7 @@ namespace com.itextpdf.layout
 		/// <returns>the right margin width, as a <code>float</code></returns>
 		public virtual float GetMarginRight()
 		{
-			return GetProperty(Property.MARGIN_RIGHT);
+			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT);
 		}
 
 		/// <summary>Sets the right margin width of the element.</summary>
@@ -83,7 +83,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetMarginRight(float value)
 		{
-			SetProperty(Property.MARGIN_RIGHT, value);
+			SetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT, value);
 			return this;
 		}
 
@@ -91,7 +91,7 @@ namespace com.itextpdf.layout
 		/// <returns>the top margin width, as a <code>float</code></returns>
 		public virtual float GetMarginTop()
 		{
-			return GetProperty(Property.MARGIN_TOP);
+			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP);
 		}
 
 		/// <summary>Sets the top margin width of the element.</summary>
@@ -99,7 +99,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetMarginTop(float value)
 		{
-			SetProperty(Property.MARGIN_TOP, value);
+			SetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP, value);
 			return this;
 		}
 
@@ -107,7 +107,7 @@ namespace com.itextpdf.layout
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
 		public virtual float GetMarginBottom()
 		{
-			return GetProperty(Property.MARGIN_BOTTOM);
+			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
 		}
 
 		/// <summary>Sets the bottom margin width of the element.</summary>
@@ -115,7 +115,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetMarginBottom(float value)
 		{
-			SetProperty(Property.MARGIN_BOTTOM, value);
+			SetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM, value);
 			return this;
 		}
 
@@ -147,7 +147,7 @@ namespace com.itextpdf.layout
 		/// <returns>the left padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingLeft()
 		{
-			return GetProperty(Property.PADDING_LEFT);
+			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_LEFT);
 		}
 
 		/// <summary>Sets the left padding width of the element.</summary>
@@ -155,7 +155,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetPaddingLeft(float value)
 		{
-			SetProperty(Property.PADDING_LEFT, value);
+			SetProperty(iTextSharp.Layout.Property.Property.PADDING_LEFT, value);
 			return this;
 		}
 
@@ -163,7 +163,7 @@ namespace com.itextpdf.layout
 		/// <returns>the right padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingRight()
 		{
-			return GetProperty(Property.PADDING_RIGHT);
+			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_RIGHT);
 		}
 
 		/// <summary>Sets the right padding width of the element.</summary>
@@ -171,7 +171,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetPaddingRight(float value)
 		{
-			SetProperty(Property.PADDING_RIGHT, value);
+			SetProperty(iTextSharp.Layout.Property.Property.PADDING_RIGHT, value);
 			return this;
 		}
 
@@ -179,7 +179,7 @@ namespace com.itextpdf.layout
 		/// <returns>the top padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingTop()
 		{
-			return GetProperty(Property.PADDING_TOP);
+			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_TOP);
 		}
 
 		/// <summary>Sets the top padding width of the element.</summary>
@@ -187,7 +187,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetPaddingTop(float value)
 		{
-			SetProperty(Property.PADDING_TOP, value);
+			SetProperty(iTextSharp.Layout.Property.Property.PADDING_TOP, value);
 			return this;
 		}
 
@@ -195,7 +195,7 @@ namespace com.itextpdf.layout
 		/// <returns>the bottom padding width, as a <code>float</code></returns>
 		public virtual float GetPaddingBottom()
 		{
-			return GetProperty(Property.PADDING_BOTTOM);
+			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_BOTTOM);
 		}
 
 		/// <summary>Sets the bottom padding width of the element.</summary>
@@ -203,7 +203,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetPaddingBottom(float value)
 		{
-			SetProperty(Property.PADDING_BOTTOM, value);
+			SetProperty(iTextSharp.Layout.Property.Property.PADDING_BOTTOM, value);
 			return this;
 		}
 
@@ -236,7 +236,8 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetVerticalAlignment(VerticalAlignment verticalAlignment)
 		{
-			SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+			SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment
+				);
 			return this;
 		}
 
@@ -254,41 +255,41 @@ namespace com.itextpdf.layout
 		/// </param>
 		public virtual Style SetSpacingRatio(float ratio)
 		{
-			SetProperty(Property.SPACING_RATIO, ratio);
+			SetProperty(iTextSharp.Layout.Property.Property.SPACING_RATIO, ratio);
 			return this;
 		}
 
 		/// <summary>
 		/// Returns whether the
-		/// <see cref="com.itextpdf.layout.element.BlockElement{T}"/>
+		/// <see cref="iTextSharp.Layout.Element.BlockElement{T}"/>
 		/// should be kept together as much
 		/// as possible.
 		/// </summary>
 		/// <returns>
 		/// the current value of the
-		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.KEEP_TOGETHER"/>
 		/// property
 		/// </returns>
 		public virtual bool IsKeepTogether()
 		{
-			return GetProperty(Property.KEEP_TOGETHER);
+			return GetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER);
 		}
 
 		/// <summary>
 		/// Sets whether the
-		/// <see cref="com.itextpdf.layout.element.BlockElement{T}"/>
+		/// <see cref="iTextSharp.Layout.Element.BlockElement{T}"/>
 		/// should be kept together as much
 		/// as possible.
 		/// </summary>
 		/// <param name="keepTogether">
 		/// the new value of the
-		/// <see cref="com.itextpdf.layout.property.Property.KEEP_TOGETHER"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.KEEP_TOGETHER"/>
 		/// property
 		/// </param>
 		/// <returns>this element</returns>
 		public virtual Style SetKeepTogether(bool keepTogether)
 		{
-			SetProperty(Property.KEEP_TOGETHER, keepTogether);
+			SetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER, keepTogether);
 			return this;
 		}
 
@@ -297,7 +298,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetRotationAngle(float radAngle)
 		{
-			SetProperty(Property.ROTATION_ANGLE, radAngle);
+			SetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE, radAngle);
 			return this;
 		}
 
@@ -306,7 +307,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual Style SetRotationAngle(double angle)
 		{
-			SetProperty(Property.ROTATION_ANGLE, (float)angle);
+			SetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE, (float)angle);
 			return this;
 		}
 	}

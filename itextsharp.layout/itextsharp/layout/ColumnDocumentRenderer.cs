@@ -1,5 +1,5 @@
 /*
-$Id: 506ca9a093b706ea3e123025205ecd3d632d0f4d $
+$Id: aa67ac68edb42906194cda77e3d790dd5ec4b20b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,12 +42,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.renderer;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout
+namespace iTextSharp.Layout
 {
 	/// <summary>This class is used for convenient multi-column Document Layouting</summary>
 	public class ColumnDocumentRenderer : DocumentRenderer
@@ -73,7 +73,7 @@ namespace com.itextpdf.layout
 			)
 		{
 			if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult
-				.GetAreaBreak().GetType() != AreaBreakType.NEW_AREA)
+				.GetAreaBreak().GetType() != AreaBreakType.NEXT_AREA)
 			{
 				nextAreaNumber = 0;
 			}

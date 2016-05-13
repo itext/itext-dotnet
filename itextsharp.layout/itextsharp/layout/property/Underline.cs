@@ -42,13 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
-
-namespace com.itextpdf.layout.property
+namespace iTextSharp.Layout.Property
 {
 	public class Underline
 	{
-		protected internal Color color;
+		protected internal iTextSharp.Kernel.Color.Color color;
 
 		protected internal float thickness;
 
@@ -60,8 +58,8 @@ namespace com.itextpdf.layout.property
 
 		protected internal int lineCapStyle;
 
-		public Underline(Color color, float thickness, float thicknessMul, float yPosition
-			, float yPositionMul, int lineCapStyle)
+		public Underline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul
+			, float yPosition, float yPositionMul, int lineCapStyle)
 		{
 			this.color = color;
 			this.thickness = thickness;
@@ -71,7 +69,7 @@ namespace com.itextpdf.layout.property
 			this.lineCapStyle = lineCapStyle;
 		}
 
-		public virtual Color GetColor()
+		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
 			return color;
 		}

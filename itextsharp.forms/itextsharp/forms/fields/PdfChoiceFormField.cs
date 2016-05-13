@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.forms.fields
+namespace iTextSharp.Forms.Fields
 {
 	/// <summary>An AcroForm field type representing any type of choice field.</summary>
 	/// <remarks>
@@ -87,7 +87,7 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Returns <code>Ch</code>, the form type for choice form fields.</summary>
 		/// <returns>
 		/// the form type, as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
 		/// </returns>
 		public override PdfName GetFormType()
 		{
@@ -100,8 +100,7 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetTopIndex(int index
-			)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetTopIndex(int index)
 		{
 			Put(PdfName.TI, new PdfNumber(index));
 			RegenerateField();
@@ -111,7 +110,7 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Gets the current index of the first option in a scrollable list.</summary>
 		/// <returns>
 		/// the index of the first option, as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfNumber"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfNumber"/>
 		/// </returns>
 		public virtual PdfNumber GetTopIndex()
 		{
@@ -125,10 +124,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetIndices(PdfArray indices
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetIndices(PdfArray indices
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)Put(PdfName.I, indices);
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)Put(PdfName.I, indices);
 		}
 
 		/// <summary>Highlights the options.</summary>
@@ -141,8 +140,8 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetListSelected(String
-			[] optionValues)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(String[]
+			 optionValues)
 		{
 			PdfArray options = GetOptions();
 			PdfArray indices = new PdfArray();
@@ -197,8 +196,8 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetListSelected(int[]
-			 optionNumbers)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers
+			)
 		{
 			PdfArray indices = new PdfArray();
 			PdfArray values = new PdfArray();
@@ -252,10 +251,9 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetCombo(bool combo)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetCombo(bool combo)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_COMBO, combo
-				);
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_COMBO, combo);
 		}
 
 		/// <summary>If true, the field is a combo box; if false, the field is a list box.</summary>
@@ -279,9 +277,9 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetEdit(bool edit)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetEdit(bool edit)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_EDIT, edit);
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_EDIT, edit);
 		}
 
 		/// <summary>
@@ -309,9 +307,9 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetSort(bool sort)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetSort(bool sort)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_SORT, sort);
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_SORT, sort);
 		}
 
 		/// <summary>If true, the field???s option items shall be sorted alphabetically.</summary>
@@ -334,11 +332,11 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetMultiSelect(bool multiSelect
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetMultiSelect(bool multiSelect
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT
-				, multiSelect);
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT, 
+				multiSelect);
 		}
 
 		/// <summary>If true, more than one of the field???s option items may be selected simultaneously; if false, at most one item shall be selected.
@@ -356,10 +354,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetSpellCheck(bool spellCheck
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetSpellCheck(bool spellCheck
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
 				, !spellCheck);
 		}
 
@@ -377,10 +375,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfChoiceFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfChoiceFormField SetCommitOnSelChange(
-			bool commitOnSelChange)
+		public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetCommitOnSelChange(bool
+			 commitOnSelChange)
 		{
-			return (com.itextpdf.forms.fields.PdfChoiceFormField)SetFieldFlag(FF_COMMIT_ON_SEL_CHANGE
+			return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_COMMIT_ON_SEL_CHANGE
 				, commitOnSelChange);
 		}
 

@@ -1,5 +1,5 @@
 /*
-$Id: a313d2211dd685f47b11b2d0fb3b5d33209eaba7 $
+$Id: 9f23e6f5b5fd954c214188f77e93ba618c27adb3 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.numbering;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Numbering;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public class ListRenderer : BlockRenderer
 	{
@@ -64,40 +64,49 @@ namespace com.itextpdf.layout.renderer
 		// https://jira.itextsupport.com/browse/SUP-952
 		public override LayoutResult Layout(LayoutContext layoutContext)
 		{
-			IList<IRenderer> symbolRenderers = new List<IRenderer>();
-			int listItemNum = GetProperty(Property.LIST_START, 1);
-			for (int i = 0; i < childRenderers.Count; i++)
+			if (!HasOwnProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED))
 			{
-				if (childRenderers[i].GetModelElement() is ListItem)
+				IList<IRenderer> symbolRenderers = new List<IRenderer>();
+				int listItemNum = GetProperty(iTextSharp.Layout.Property.Property.LIST_START, 1);
+				for (int i = 0; i < childRenderers.Count; i++)
 				{
-					IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers
-						[i]);
-					symbolRenderers.Add(currentSymbolRenderer);
-					LayoutResult listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
-					if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL)
+					if (childRenderers[i].GetModelElement() is ListItem)
 					{
-						return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+						childRenderers[i].SetParent(this);
+						IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers
+							[i]);
+						childRenderers[i].SetParent(null);
+						symbolRenderers.Add(currentSymbolRenderer);
+						LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout
+							(layoutContext);
+						currentSymbolRenderer.SetParent(null);
+						if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL)
+						{
+							return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+						}
 					}
 				}
-			}
-			float maxSymbolWidth = 0;
-			foreach (IRenderer symbolRenderer in symbolRenderers)
-			{
-				maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox
-					().GetWidth());
-			}
-			float symbolIndent = (float)modelElement.GetProperty(Property.LIST_SYMBOL_INDENT);
-			listItemNum = 0;
-			foreach (IRenderer childRenderer in childRenderers)
-			{
-				childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-				childRenderer.SetProperty(Property.MARGIN_LEFT, childRenderer.GetProperty(Property
-					.MARGIN_LEFT, 0f) + maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f));
-				if (childRenderer.GetModelElement() is ListItem)
+				float maxSymbolWidth = 0;
+				foreach (IRenderer symbolRenderer in symbolRenderers)
 				{
-					IRenderer symbolRenderer_1 = symbolRenderers[listItemNum++];
-					((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer_1, maxSymbolWidth
-						);
+					maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox
+						().GetWidth());
+				}
+				float symbolIndent = modelElement.GetProperty(iTextSharp.Layout.Property.Property
+					.LIST_SYMBOL_INDENT);
+				listItemNum = 0;
+				foreach (IRenderer childRenderer in childRenderers)
+				{
+					childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
+					childRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, childRenderer
+						.GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0f) + maxSymbolWidth
+						 + (symbolIndent != null ? symbolIndent : 0f));
+					if (childRenderer.GetModelElement() is ListItem)
+					{
+						IRenderer symbolRenderer_1 = symbolRenderers[listItemNum++];
+						((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer_1, maxSymbolWidth
+							);
+					}
 				}
 			}
 			return base.Layout(layoutContext);
@@ -105,22 +114,41 @@ namespace com.itextpdf.layout.renderer
 
 		public override IRenderer GetNextRenderer()
 		{
-			return new com.itextpdf.layout.renderer.ListRenderer((List)modelElement);
+			return new iTextSharp.Layout.Renderer.ListRenderer((List)modelElement);
+		}
+
+		protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult
+			)
+		{
+			AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
+			splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
+				, bool.ValueOf(true));
+			return splitRenderer;
+		}
+
+		protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult
+			)
+		{
+			AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
+			overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
+				, bool.ValueOf(true));
+			return overflowRenderer;
 		}
 
 		protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer 
 			renderer)
 		{
-			Object defaultListSymbol = renderer.GetProperty(Property.LIST_SYMBOL);
+			Object defaultListSymbol = renderer.GetProperty(iTextSharp.Layout.Property.Property
+				.LIST_SYMBOL);
 			if (defaultListSymbol is Text)
 			{
-				return new TextRenderer((Text)defaultListSymbol).SetParent(this);
+				return new TextRenderer((Text)defaultListSymbol);
 			}
 			else
 			{
 				if (defaultListSymbol is Image)
 				{
-					return new ImageRenderer((Image)defaultListSymbol).SetParent(this);
+					return new ImageRenderer((Image)defaultListSymbol);
 				}
 				else
 				{
@@ -128,12 +156,11 @@ namespace com.itextpdf.layout.renderer
 					{
 						ListNumberingType numberingType = (ListNumberingType)defaultListSymbol;
 						String numberText;
-						List listModelElement = (List)GetModelElement();
 						switch (numberingType)
 						{
 							case ListNumberingType.DECIMAL:
 							{
-								numberText = com.itextpdf.GetStringValueOf(index);
+								numberText = index.ToString();
 								break;
 							}
 
@@ -175,25 +202,25 @@ namespace com.itextpdf.layout.renderer
 
 							case ListNumberingType.ZAPF_DINGBATS_1:
 							{
-								numberText = com.itextpdf.GetStringValueOf((char)(index + 171));
+								numberText = (char)(index + 171).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_2:
 							{
-								numberText = com.itextpdf.GetStringValueOf((char)(index + 181));
+								numberText = (char)(index + 181).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_3:
 							{
-								numberText = com.itextpdf.GetStringValueOf((char)(index + 191));
+								numberText = (char)(index + 191).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_4:
 							{
-								numberText = com.itextpdf.GetStringValueOf((char)(index + 201));
+								numberText = (char)(index + 201).ToString();
 								break;
 							}
 
@@ -202,8 +229,9 @@ namespace com.itextpdf.layout.renderer
 								throw new InvalidOperationException();
 							}
 						}
-						Text textElement = new Text(renderer.GetProperty(Property.LIST_SYMBOL_PRE_TEXT) +
-							 numberText + renderer.GetProperty(Property.LIST_SYMBOL_POST_TEXT));
+						Text textElement = new Text(renderer.GetProperty(iTextSharp.Layout.Property.Property
+							.LIST_SYMBOL_PRE_TEXT) + numberText + renderer.GetProperty(iTextSharp.Layout.Property.Property
+							.LIST_SYMBOL_POST_TEXT));
 						IRenderer textRenderer;
 						// Be careful. There is a workaround here. For Greek symbols we first set a dummy font with document=null
 						// in order for the metrics to be taken into account correctly during layout.
@@ -215,10 +243,11 @@ namespace com.itextpdf.layout.renderer
 						{
 							String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType
 								 == ListNumberingType.GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-							textRenderer = new _TextRenderer_169(constantFont, textElement).SetParent(this);
+							textRenderer = new _TextRenderer_187(constantFont, textElement);
 							try
 							{
-								textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
+								textRenderer.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory
+									.CreateFont(constantFont));
 							}
 							catch (System.IO.IOException)
 							{
@@ -226,7 +255,7 @@ namespace com.itextpdf.layout.renderer
 						}
 						else
 						{
-							textRenderer = new TextRenderer(textElement).SetParent(this);
+							textRenderer = new TextRenderer(textElement);
 						}
 						return textRenderer;
 					}
@@ -238,9 +267,9 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private sealed class _TextRenderer_169 : TextRenderer
+		private sealed class _TextRenderer_187 : TextRenderer
 		{
-			public _TextRenderer_169(String constantFont, Text baseArg1)
+			public _TextRenderer_187(String constantFont, Text baseArg1)
 				: base(baseArg1)
 			{
 				this.constantFont = constantFont;
@@ -250,7 +279,8 @@ namespace com.itextpdf.layout.renderer
 			{
 				try
 				{
-					this.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
+					this.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont
+						(constantFont));
 				}
 				catch (System.IO.IOException)
 				{

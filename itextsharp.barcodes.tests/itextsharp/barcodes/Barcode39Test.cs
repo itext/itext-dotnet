@@ -14,7 +14,7 @@ namespace iTextSharp.Barcodes
 
 		public const String destinationFolder = "./target/test/com/itextpdf/barcodes/Barcode39/";
 
-		[NUnit.Framework.BeforeClass]
+		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			new File(destinationFolder).Mkdirs();

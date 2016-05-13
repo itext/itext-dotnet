@@ -1,5 +1,5 @@
 /*
-$Id: fc0ee1c51c0efb0d85153bc47c98e23fc94d1bd5 $
+$Id: 41eb010f6edda2bd93a00245f95e23cab873cfc4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,11 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.layout;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Layout;
+using iTextSharp.Layout.Layout;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	/// <summary>
 	/// A renderer object is responsible for drawing a corresponding layout object on
@@ -57,7 +56,7 @@ namespace com.itextpdf.layout.renderer
 	/// A renderer object is responsible for drawing a corresponding layout object on
 	/// a document or canvas. Every layout object has a renderer, by default one of
 	/// the corresponding type, e.g. you can ask an
-	/// <see cref="com.itextpdf.layout.element.Image"/>
+	/// <see cref="iTextSharp.Layout.Element.Image"/>
 	/// for its
 	/// <see cref="ImageRenderer"/>
 	/// .
@@ -73,14 +72,14 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>
 		/// This method simulates positioning of the renderer, including all of its children, and returns
 		/// the
-		/// <see cref="com.itextpdf.layout.layout.LayoutResult"/>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutResult"/>
 		/// , representing the layout result, including occupied area, status, i.e.
 		/// if there was enough place to fit the renderer subtree, etc.
-		/// <see cref="com.itextpdf.layout.layout.LayoutResult"/>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutResult"/>
 		/// can be extended to return custom layout results for custom elements, e.g.
 		/// <see cref="TextRenderer"/>
 		/// uses
-		/// <see cref="com.itextpdf.layout.layout.TextLayoutResult"/>
+		/// <see cref="iTextSharp.Layout.Layout.TextLayoutResult"/>
 		/// as its result.
 		/// This method can be called standalone to learn how much area the renderer subtree needs, or can be called
 		/// before
@@ -96,15 +95,15 @@ namespace com.itextpdf.layout.renderer
 		/// <remarks>
 		/// Flushes the renderer subtree contents, i.e. draws itself on canvas,
 		/// adds necessary objects to the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
 		/// etc.
 		/// </remarks>
 		/// <param name="drawContext">
 		/// contains the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
 		/// to which the renderer subtree if flushed,
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
 		/// on which the renderer subtree is drawn and other additional parameters
 		/// needed to perform drawing
 		/// </param>
@@ -112,12 +111,12 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Gets the resultant occupied area after the last call to the
-		/// <see cref="Layout(com.itextpdf.layout.layout.LayoutContext)"/>
+		/// <see cref="Layout(iTextSharp.Layout.Layout.LayoutContext)"/>
 		/// method.
 		/// </summary>
 		/// <returns>
 		/// 
-		/// <see cref="com.itextpdf.layout.layout.LayoutArea"/>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutArea"/>
 		/// instance
 		/// </returns>
 		LayoutArea GetOccupiedArea();
@@ -133,7 +132,7 @@ namespace com.itextpdf.layout.renderer
 		/// <param name="property">the property to be retrieved</param>
 		/// <param name="defaultValue">a fallback value</param>
 		/// <returns>the value of the given property</returns>
-		T1 GetProperty<T1>(Property property, T1 defaultValue);
+		T1 GetProperty<T1>(int property, T1 defaultValue);
 
 		/// <summary>
 		/// Explicitly sets this object as the child of another
@@ -149,7 +148,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Gets the model element associated with this renderer.</summary>
 		/// <returns>
 		/// the model element, as a
-		/// <see cref="com.itextpdf.layout.IPropertyContainer">container of properties</see>
+		/// <see cref="iTextSharp.Layout.IPropertyContainer">container of properties</see>
 		/// </returns>
 		IPropertyContainer GetModelElement();
 
@@ -186,7 +185,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
-		/// <see cref="Layout(com.itextpdf.layout.layout.LayoutContext)"/>
+		/// <see cref="Layout(iTextSharp.Layout.Layout.LayoutContext)"/>
 		/// is called more than once.
 		/// </summary>
 		/// <returns>new renderer instance</returns>

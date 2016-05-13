@@ -1,5 +1,5 @@
 /*
-$Id: cb22d256fe0cf3ab92515bc7982b5fed0e586bab $
+$Id: 982dfa5d4017b12ef68b7a5ef570d06a2a4fecda $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,29 +45,28 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.hyphenation;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.splitting;
-using java.lang;
+using Java.Lang;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Hyphenation;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
+using iTextSharp.Layout.Splitting;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	/// <summary>
 	/// This class represents the
 	/// <see cref="IRenderer">renderer</see>
 	/// object for a
-	/// <see cref="com.itextpdf.layout.element.Text"/>
+	/// <see cref="iTextSharp.Layout.Element.Text"/>
 	/// object. It will draw the glyphs of the textual content on the
 	/// <see cref="DrawContext"/>
 	/// .
@@ -97,7 +96,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
 		/// <param name="textElement">
 		/// the
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// which this object should manage
 		/// </param>
 		public TextRenderer(Text textElement)
@@ -108,12 +107,12 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>
 		/// Creates a TextRenderer from its corresponding layout object, with a custom
 		/// text to replace the contents of the
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// .
 		/// </summary>
 		/// <param name="textElement">
 		/// the
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// which this object should manage
 		/// </param>
 		/// <param name="text">the replacement text</param>
@@ -123,7 +122,7 @@ namespace com.itextpdf.layout.renderer
 			this.strToBeConverted = text;
 		}
 
-		protected internal TextRenderer(com.itextpdf.layout.renderer.TextRenderer other)
+		protected internal TextRenderer(iTextSharp.Layout.Renderer.TextRenderer other)
 			: base(other)
 		{
 			this.text = other.text;
@@ -137,22 +136,30 @@ namespace com.itextpdf.layout.renderer
 		{
 			ConvertWaitingStringToGlyphLine();
 			LayoutArea area = layoutContext.GetArea();
-			Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), false);
-			ApplyBorderBox(layoutBox, false);
+			float[] margins = GetMargins();
+			Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
+			iTextSharp.Layout.Border.Border[] borders = GetBorders();
+			ApplyBorderBox(layoutBox, borders, false);
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), 0, 0));
 			bool anythingPlaced = false;
 			int currentTextPos = text.start;
-			float fontSize = GetPropertyAsFloat(Property.FONT_SIZE);
-			float textRise = GetPropertyAsFloat(Property.TEXT_RISE);
-			float characterSpacing = GetPropertyAsFloat(Property.CHARACTER_SPACING);
-			float wordSpacing = GetPropertyAsFloat(Property.WORD_SPACING);
-			PdfFont font = GetPropertyAsFont(Property.FONT);
-			float hScale = GetProperty(Property.HORIZONTAL_SCALING);
-			ISplitCharacters splitCharacters = GetProperty(Property.SPLIT_CHARACTERS);
-			float italicSkewAddition = bool.ValueOf(true).Equals(GetPropertyAsBoolean(Property
+			float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+				);
+			float textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
+				);
+			float characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
+				);
+			float wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
+				);
+			PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
+			float hScale = GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, 1f);
+			ISplitCharacters splitCharacters = GetProperty(iTextSharp.Layout.Property.Property
+				.SPLIT_CHARACTERS);
+			float italicSkewAddition = bool.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 				.ITALIC_SIMULATION)) ? ITALIC_ANGLE * fontSize : 0;
-			float boldSimulationAddition = bool.ValueOf(true).Equals(GetPropertyAsBoolean(Property
+			float boldSimulationAddition = bool.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 				.BOLD_SIMULATION)) ? BOLD_SIMULATION_STROKE_COEFF * fontSize : 0;
 			line = new GlyphLine(text);
 			line.start = line.end = -1;
@@ -177,7 +184,8 @@ namespace com.itextpdf.layout.renderer
 			int initialLineTextPos = currentTextPos;
 			float currentLineWidth = 0;
 			int previousCharPos = -1;
-			char tabAnchorCharacter = GetProperty(Property.TAB_ANCHOR);
+			char tabAnchorCharacter = GetProperty(iTextSharp.Layout.Property.Property.TAB_ANCHOR
+				);
 			TextLayoutResult result = null;
 			// true in situations like "\nHello World"
 			bool isSplitForcedByImmediateNewLine = false;
@@ -284,10 +292,9 @@ namespace com.itextpdf.layout.renderer
 						))
 					{
 						// the line does not fit because of height - full overflow
-						com.itextpdf.layout.renderer.TextRenderer[] splitResult = Split(initialLineTextPos
-							);
-						ApplyBorderBox(occupiedArea.GetBBox(), true);
-						ApplyMargins(occupiedArea.GetBBox(), true);
+						iTextSharp.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
+						ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+						ApplyMargins(occupiedArea.GetBBox(), margins, true);
 						return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult
 							[1]);
 					}
@@ -296,7 +303,8 @@ namespace com.itextpdf.layout.renderer
 						// cannot fit a word as a whole
 						bool wordSplit = false;
 						bool hyphenationApplied = false;
-						HyphenationConfig hyphenationConfig = GetProperty(Property.HYPHENATION);
+						HyphenationConfig hyphenationConfig = GetProperty(iTextSharp.Layout.Property.Property
+							.HYPHENATION);
 						if (hyphenationConfig != null)
 						{
 							int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math
@@ -304,7 +312,8 @@ namespace com.itextpdf.layout.renderer
 							if (wordBounds != null)
 							{
 								String word = text.ToUnicodeString(wordBounds[0], wordBounds[1]);
-								Hyphenation hyph = hyphenationConfig.Hyphenate(word);
+								iTextSharp.Layout.Hyphenation.Hyphenation hyph = hyphenationConfig.Hyphenate(word
+									);
 								if (hyph != null)
 								{
 									for (int i = hyph.Length() - 1; i >= 0; i--)
@@ -389,11 +398,11 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				if (currentLineHeight > layoutBox.GetHeight() && !GetPropertyAsBoolean(Property.FORCED_PLACEMENT
-					))
+				if (currentLineHeight > layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean
+					(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT)))
 				{
-					ApplyBorderBox(occupiedArea.GetBBox(), true);
-					ApplyMargins(occupiedArea.GetBBox(), true);
+					ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+					ApplyMargins(occupiedArea.GetBBox(), margins, true);
 					return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
 				}
 				yLineOffset = currentLineAscender * fontSize / TEXT_SPACE_COEFF;
@@ -405,11 +414,11 @@ namespace com.itextpdf.layout.renderer
 				layoutBox.SetHeight(area.GetBBox().GetHeight() - currentLineHeight);
 				occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + italicSkewAddition
 					 + boldSimulationAddition);
-				ApplyBorderBox(occupiedArea.GetBBox(), true);
-				ApplyMargins(occupiedArea.GetBBox(), true);
+				ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+				ApplyMargins(occupiedArea.GetBBox(), margins, true);
 				if (result != null)
 				{
-					com.itextpdf.layout.renderer.TextRenderer[] split;
+					iTextSharp.Layout.Renderer.TextRenderer[] split;
 					if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
 					{
 						// ignore '\n'
@@ -442,9 +451,8 @@ namespace com.itextpdf.layout.renderer
 		public virtual void ApplyOtf()
 		{
 			ConvertWaitingStringToGlyphLine();
-			Character.UnicodeScript script = GetProperty(Property.FONT_SCRIPT);
-			FontKerning fontKerning = GetProperty(Property.FONT_KERNING);
-			PdfFont font = GetPropertyAsFont(Property.FONT);
+			Character.UnicodeScript script = GetProperty(iTextSharp.Layout.Property.Property.
+				FONT_SCRIPT);
 			if (!otfFeaturesApplied)
 			{
 				if (script == null && TypographyUtils.IsTypographyModuleInitialized())
@@ -486,7 +494,8 @@ namespace com.itextpdf.layout.renderer
 					if (selectScript == Character.UnicodeScript.ARABIC || selectScript == Character.UnicodeScript
 						.HEBREW && parent is LineRenderer)
 					{
-						SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
+						SetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI
+							);
 					}
 					if (selectScript != null && supportedScripts != null && supportedScripts.Contains
 						(selectScript))
@@ -494,10 +503,13 @@ namespace com.itextpdf.layout.renderer
 						script = selectScript;
 					}
 				}
+				PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
 				if (IsOtfFont(font) && script != null)
 				{
 					TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
 				}
+				FontKerning fontKerning = GetProperty(iTextSharp.Layout.Property.Property.FONT_KERNING
+					);
 				if (fontKerning == FontKerning.YES)
 				{
 					TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
@@ -537,27 +549,34 @@ namespace com.itextpdf.layout.renderer
 					}
 				}
 			}
-			int position = GetPropertyAsInteger(Property.POSITION);
-			if (position == LayoutPosition.RELATIVE)
+			bool isRelativePosition = IsRelativePosition();
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(false);
 			}
 			float leftBBoxX = occupiedArea.GetBBox().GetX();
 			if (line.end > line.start)
 			{
-				PdfFont font = GetPropertyAsFont(Property.FONT);
-				float fontSize = GetPropertyAsFloat(Property.FONT_SIZE);
-				Color fontColor = GetPropertyAsColor(Property.FONT_COLOR);
-				int textRenderingMode = GetProperty(Property.TEXT_RENDERING_MODE);
-				float textRise = GetPropertyAsFloat(Property.TEXT_RISE);
-				float characterSpacing = GetPropertyAsFloat(Property.CHARACTER_SPACING);
-				float wordSpacing = GetPropertyAsFloat(Property.WORD_SPACING);
-				float horizontalScaling = GetProperty(Property.HORIZONTAL_SCALING);
-				float[] skew = GetProperty(Property.SKEW);
-				bool italicSimulation = bool.ValueOf(true).Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION
-					));
-				bool boldSimulation = bool.ValueOf(true).Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION
-					));
+				PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
+				float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+					);
+				iTextSharp.Kernel.Color.Color fontColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
+					.FONT_COLOR);
+				int textRenderingMode = GetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
+					);
+				float textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
+					);
+				float characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
+					);
+				float wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
+					);
+				float horizontalScaling = GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+					);
+				float[] skew = GetProperty(iTextSharp.Layout.Property.Property.SKEW);
+				bool italicSimulation = bool.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+					.ITALIC_SIMULATION));
+				bool boldSimulation = bool.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+					.BOLD_SIMULATION));
 				float strokeWidth = null;
 				if (boldSimulation)
 				{
@@ -601,13 +620,15 @@ namespace com.itextpdf.layout.renderer
 				{
 					if (strokeWidth == null)
 					{
-						strokeWidth = GetPropertyAsFloat(Property.STROKE_WIDTH);
+						strokeWidth = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.STROKE_WIDTH
+							);
 					}
 					if (strokeWidth != null && strokeWidth != 1f)
 					{
 						canvas.SetLineWidth(strokeWidth);
 					}
-					Color strokeColor = GetPropertyAsColor(Property.STROKE_COLOR);
+					iTextSharp.Kernel.Color.Color strokeColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
+						.STROKE_COLOR);
 					if (strokeColor == null)
 					{
 						strokeColor = fontColor;
@@ -637,8 +658,8 @@ namespace com.itextpdf.layout.renderer
 				{
 					canvas.SetHorizontalScaling(horizontalScaling * 100);
 				}
-				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_545();
-				if (HasOwnProperty(Property.REVERSED))
+				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_547();
+				if (HasOwnProperty(iTextSharp.Layout.Property.Property.REVERSED))
 				{
 					//We should mark a RTL written text
 					IDictionary<GlyphLine, bool> outputs = GetOutputChunks();
@@ -665,7 +686,7 @@ namespace com.itextpdf.layout.renderer
 				{
 					canvas.CloseTag();
 				}
-				Object underlines = GetProperty(Property.UNDERLINE);
+				Object underlines = GetProperty(iTextSharp.Layout.Property.Property.UNDERLINE);
 				if (underlines is IList)
 				{
 					foreach (Object underline in (IList)underlines)
@@ -686,7 +707,7 @@ namespace com.itextpdf.layout.renderer
 					}
 				}
 			}
-			if (position == LayoutPosition.RELATIVE)
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(false);
 			}
@@ -700,22 +721,24 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private sealed class _IGlyphLineFilter_545 : GlyphLine.IGlyphLineFilter
+		private sealed class _IGlyphLineFilter_547 : GlyphLine.IGlyphLineFilter
 		{
-			public _IGlyphLineFilter_545()
+			public _IGlyphLineFilter_547()
 			{
 			}
 
 			public bool Accept(Glyph glyph)
 			{
-				return !com.itextpdf.layout.renderer.TextRenderer.NoPrint(glyph);
+				return !iTextSharp.Layout.Renderer.TextRenderer.NoPrint(glyph);
 			}
 		}
 
 		public override void DrawBackground(DrawContext drawContext)
 		{
-			Background background = GetProperty(Property.BACKGROUND);
-			float textRise = GetPropertyAsFloat(Property.TEXT_RISE);
+			Background background = GetProperty(iTextSharp.Layout.Property.Property.BACKGROUND
+				);
+			float textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
+				);
 			float bottomBBoxY = occupiedArea.GetBBox().GetY();
 			float leftBBoxX = occupiedArea.GetBBox().GetX();
 			if (background != null)
@@ -739,25 +762,9 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		public override T1 GetDefaultProperty<T1>(Property property)
-		{
-			switch (property)
-			{
-				case Property.HORIZONTAL_SCALING:
-				{
-					return (T1)float.ValueOf(1);
-				}
-
-				default:
-				{
-					return base.GetDefaultProperty(property);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Trims any whitespace characters from the start of the
-		/// <see cref="com.itextpdf.io.font.otf.GlyphLine"/>
+		/// <see cref="iTextSharp.IO.Font.Otf.GlyphLine"/>
 		/// to be rendered.
 		/// </summary>
 		public virtual void TrimFirst()
@@ -776,7 +783,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Trims any whitespace characters from the end of the
-		/// <see cref="com.itextpdf.io.font.otf.GlyphLine"/>
+		/// <see cref="iTextSharp.IO.Font.Otf.GlyphLine"/>
 		/// to
 		/// be rendered.
 		/// </summary>
@@ -788,10 +795,14 @@ namespace com.itextpdf.layout.renderer
 			{
 				return trimmedSpace;
 			}
-			float fontSize = GetPropertyAsFloat(Property.FONT_SIZE);
-			float characterSpacing = GetPropertyAsFloat(Property.CHARACTER_SPACING);
-			float wordSpacing = GetPropertyAsFloat(Property.WORD_SPACING);
-			float hScale = GetProperty(Property.HORIZONTAL_SCALING);
+			float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+				);
+			float characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
+				);
+			float wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
+				);
+			float hScale = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, 1f);
 			int firstNonSpaceCharIndex = line.end - 1;
 			while (firstNonSpaceCharIndex >= line.start)
 			{
@@ -817,7 +828,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Gets the maximum offset above the base line that this Text extends to.</summary>
 		/// <returns>
 		/// the upwards vertical offset of this
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// </returns>
 		public virtual float GetAscent()
 		{
@@ -827,18 +838,18 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Gets the maximum offset below the base line that this Text extends to.</summary>
 		/// <returns>
 		/// the downwards vertical offset of this
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// </returns>
 		public virtual float GetDescent()
 		{
-			return -(occupiedArea.GetBBox().GetHeight() - yLineOffset - GetPropertyAsFloat(Property
+			return -(occupiedArea.GetBBox().GetHeight() - yLineOffset - GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 				.TEXT_RISE));
 		}
 
 		/// <summary>
 		/// Gets the position on the canvas of the imaginary horizontal line upon which
 		/// the
-		/// <see cref="com.itextpdf.layout.element.Text"/>
+		/// <see cref="iTextSharp.Layout.Element.Text"/>
 		/// 's contents will be written.
 		/// </summary>
 		/// <returns>
@@ -848,7 +859,7 @@ namespace com.itextpdf.layout.renderer
 		public virtual float GetYLine()
 		{
 			return occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - yLineOffset
-				 - GetPropertyAsFloat(Property.TEXT_RISE);
+				 - GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE);
 		}
 
 		/// <summary>Moves the vertical position to the parameter's value.</summary>
@@ -877,7 +888,7 @@ namespace com.itextpdf.layout.renderer
 		/// </summary>
 		/// <param name="text">
 		/// a
-		/// <see cref="com.itextpdf.io.font.otf.GlyphLine"/>
+		/// <see cref="iTextSharp.IO.Font.Otf.GlyphLine"/>
 		/// </param>
 		/// <param name="leftPos">the leftmost end of the GlyphLine</param>
 		/// <param name="rightPos">the rightmost end of the GlyphLine</param>
@@ -923,7 +934,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override IRenderer GetNextRenderer()
 		{
-			return new com.itextpdf.layout.renderer.TextRenderer((Text)modelElement, null);
+			return new iTextSharp.Layout.Renderer.TextRenderer((Text)modelElement, null);
 		}
 
 		private bool IsNewLine(GlyphLine text, int ind)
@@ -933,7 +944,7 @@ namespace com.itextpdf.layout.renderer
 
 		private GlyphLine ConvertToGlyphLine(String text)
 		{
-			PdfFont font = GetPropertyAsFont(Property.FONT);
+			PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
 			return font.CreateGlyphLine(text);
 		}
 
@@ -989,22 +1000,22 @@ namespace com.itextpdf.layout.renderer
 			return spaces;
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TextRenderer CreateSplitRenderer
+		protected internal virtual iTextSharp.Layout.Renderer.TextRenderer CreateSplitRenderer
 			()
 		{
-			return (com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer();
+			return (iTextSharp.Layout.Renderer.TextRenderer)GetNextRenderer();
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TextRenderer CreateOverflowRenderer
+		protected internal virtual iTextSharp.Layout.Renderer.TextRenderer CreateOverflowRenderer
 			()
 		{
-			return (com.itextpdf.layout.renderer.TextRenderer)GetNextRenderer();
+			return (iTextSharp.Layout.Renderer.TextRenderer)GetNextRenderer();
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TextRenderer[] Split(int 
-			initialOverflowTextPos)
+		protected internal virtual iTextSharp.Layout.Renderer.TextRenderer[] Split(int initialOverflowTextPos
+			)
 		{
-			com.itextpdf.layout.renderer.TextRenderer splitRenderer = CreateSplitRenderer();
+			iTextSharp.Layout.Renderer.TextRenderer splitRenderer = CreateSplitRenderer();
 			splitRenderer.SetText(text, text.start, initialOverflowTextPos);
 			splitRenderer.line = line;
 			splitRenderer.occupiedArea = occupiedArea.Clone();
@@ -1013,20 +1024,21 @@ namespace com.itextpdf.layout.renderer
 			splitRenderer.otfFeaturesApplied = otfFeaturesApplied;
 			splitRenderer.isLastRendererForModelElement = false;
 			splitRenderer.AddAllProperties(GetOwnProperties());
-			com.itextpdf.layout.renderer.TextRenderer overflowRenderer = CreateOverflowRenderer
+			iTextSharp.Layout.Renderer.TextRenderer overflowRenderer = CreateOverflowRenderer
 				();
 			overflowRenderer.SetText(text, initialOverflowTextPos, text.end);
 			overflowRenderer.otfFeaturesApplied = otfFeaturesApplied;
 			overflowRenderer.parent = parent;
 			overflowRenderer.AddAllProperties(GetOwnProperties());
-			return new com.itextpdf.layout.renderer.TextRenderer[] { splitRenderer, overflowRenderer
+			return new iTextSharp.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer
 				 };
 		}
 
-		protected internal virtual void DrawSingleUnderline(Underline underline, Color fontStrokeColor
-			, PdfCanvas canvas, float fontSize, float italicAngleTan)
+		protected internal virtual void DrawSingleUnderline(Underline underline, iTextSharp.Kernel.Color.Color
+			 fontStrokeColor, PdfCanvas canvas, float fontSize, float italicAngleTan)
 		{
-			Color underlineColor = underline.GetColor() != null ? underline.GetColor() : fontStrokeColor;
+			iTextSharp.Kernel.Color.Color underlineColor = underline.GetColor() != null ? underline
+				.GetColor() : fontStrokeColor;
 			canvas.SaveState();
 			if (underlineColor != null)
 			{
@@ -1048,9 +1060,10 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual float CalculateLineWidth()
 		{
-			return GetGlyphLineWidth(line, GetPropertyAsFloat(Property.FONT_SIZE), GetPropertyAsFloat
-				(Property.HORIZONTAL_SCALING), GetPropertyAsFloat(Property.CHARACTER_SPACING), GetPropertyAsFloat
-				(Property.WORD_SPACING));
+			return GetGlyphLineWidth(line, GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.FONT_SIZE), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, 1f), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING)
+				, GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
 		}
 
 		/// <summary>This method return a LinkedHashMap with glyphlines as its keys.</summary>
@@ -1058,10 +1071,10 @@ namespace com.itextpdf.layout.renderer
 		/// This method return a LinkedHashMap with glyphlines as its keys. Values are boolean flags indicating if a
 		/// glyphline is written in a reversed order (right to left text).
 		/// </remarks>
-		/// <returns/>
 		private IDictionary<GlyphLine, bool> GetOutputChunks()
 		{
-			IList<int[]> reversedRange = GetProperty(Property.REVERSED);
+			IList<int[]> reversedRange = GetProperty(iTextSharp.Layout.Property.Property.REVERSED
+				);
 			IDictionary<GlyphLine, bool> outputs = new LinkedDictionary<GlyphLine, bool>();
 			if (reversedRange != null)
 			{

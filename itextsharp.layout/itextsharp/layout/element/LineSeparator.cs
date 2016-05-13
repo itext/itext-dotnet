@@ -42,22 +42,21 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas.draw;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.renderer;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas.Draw;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.element
+namespace iTextSharp.Layout.Element
 {
 	/// <summary>
 	/// This is a line separator element which is basically just a horizontal line with
 	/// a style specified by
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
 	/// custom drawing interface instance.
 	/// This might be thought of as an HTML's <hr> element alternative.
 	/// </summary>
-	public class LineSeparator : BlockElement<com.itextpdf.layout.element.LineSeparator
+	public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator
 		>
 	{
 		protected internal PdfName role = PdfName.Artifact;
@@ -66,13 +65,13 @@ namespace com.itextpdf.layout.element
 
 		/// <summary>
 		/// Creates a custom line separator with line style defined by custom
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
 		/// interface instance
 		/// </summary>
 		/// <param name="lineDrawer">line drawer instance</param>
 		public LineSeparator(ILineDrawer lineDrawer)
 		{
-			SetProperty(Property.LINE_DRAWER, lineDrawer);
+			SetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER, lineDrawer);
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

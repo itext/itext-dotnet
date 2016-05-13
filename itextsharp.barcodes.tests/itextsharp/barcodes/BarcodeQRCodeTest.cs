@@ -15,7 +15,7 @@ namespace iTextSharp.Barcodes
 
 		public const String destinationFolder = "./target/test/com/itextpdf/barcodes/BarcodeQRCode/";
 
-		[NUnit.Framework.BeforeClass]
+		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			File dir = new File(destinationFolder);

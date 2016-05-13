@@ -1,5 +1,5 @@
 /*
-$Id: 10a7b1814a3818f22cfbc3e3209af66073a3aced $
+$Id: c885933ba27d4915e44fa83ff9a4aeea221fad29 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.renderer;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Layout.Property;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.element
+namespace iTextSharp.Layout.Element
 {
 	/// <summary>
 	/// A layout object that terminates the current content area and creates a new
@@ -56,11 +56,11 @@ namespace com.itextpdf.layout.element
 	/// <remarks>
 	/// A layout object that terminates the current content area and creates a new
 	/// one. If no
-	/// <see cref="com.itextpdf.kernel.geom.PageSize"/>
+	/// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
 	/// is given, the new content area will have the same
 	/// size as the current one.
 	/// </remarks>
-	public class AreaBreak : AbstractElement<com.itextpdf.layout.element.AreaBreak>
+	public class AreaBreak : AbstractElement<iTextSharp.Layout.Element.AreaBreak>
 	{
 		protected internal PageSize pageSize;
 
@@ -70,18 +70,18 @@ namespace com.itextpdf.layout.element
 		/// current one.
 		/// </remarks>
 		public AreaBreak()
-			: this(AreaBreakType.NEW_AREA)
+			: this(AreaBreakType.NEXT_AREA)
 		{
 		}
 
 		/// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
 		/// <param name="areaBreakType">
 		/// an
-		/// <see cref="com.itextpdf.layout.property.AreaBreakType">area break type</see>
+		/// <see cref="iTextSharp.Layout.Property.AreaBreakType">area break type</see>
 		/// </param>
 		public AreaBreak(AreaBreakType areaBreakType)
 		{
-			SetProperty(Property.AREA_BREAK_TYPE, areaBreakType);
+			SetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE, areaBreakType);
 		}
 
 		/// <summary>Creates an AreaBreak.</summary>
@@ -91,7 +91,7 @@ namespace com.itextpdf.layout.element
 		/// </remarks>
 		/// <param name="pageSize">the size of the new content area</param>
 		public AreaBreak(PageSize pageSize)
-			: this(AreaBreakType.NEW_PAGE)
+			: this(AreaBreakType.NEXT_PAGE)
 		{
 			this.pageSize = pageSize;
 		}
@@ -99,7 +99,7 @@ namespace com.itextpdf.layout.element
 		/// <summary>Gets the page size.</summary>
 		/// <returns>
 		/// the
-		/// <see cref="com.itextpdf.kernel.geom.PageSize">page size</see>
+		/// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
 		/// of the next content area.
 		/// </returns>
 		public virtual PageSize GetPageSize()
@@ -110,7 +110,7 @@ namespace com.itextpdf.layout.element
 		/// <summary>Sets the page size.</summary>
 		/// <param name="pageSize">
 		/// the new
-		/// <see cref="com.itextpdf.kernel.geom.PageSize">page size</see>
+		/// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
 		/// of the next content area.
 		/// </param>
 		public virtual void SetPageSize(PageSize pageSize)
@@ -121,11 +121,12 @@ namespace com.itextpdf.layout.element
 		/// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
 		/// <returns>
 		/// the current
-		/// <see cref="com.itextpdf.layout.property.AreaBreakType">area break type</see>
+		/// <see cref="iTextSharp.Layout.Property.AreaBreakType">area break type</see>
 		/// </returns>
 		public virtual AreaBreakType GetType()
 		{
-			return (AreaBreakType)((Object)GetProperty(Property.AREA_BREAK_TYPE));
+			return (AreaBreakType)((Object)GetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
+				));
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

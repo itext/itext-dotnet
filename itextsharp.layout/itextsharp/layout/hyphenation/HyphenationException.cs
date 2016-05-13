@@ -16,7 +16,7 @@
 */
 using System;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <p>An hyphenation exception.</p>

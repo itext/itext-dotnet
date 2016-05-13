@@ -1,5 +1,5 @@
 /*
-$Id: a4b7ad7754f10356eb46bec7e8764e9abd028940 $
+$Id: 24fa5dd751b381b6d991b3019ac4a32e6a63e82d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,18 +44,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.forms.fields;
-using com.itextpdf.forms.xfa;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.Forms.Fields;
+using iTextSharp.Forms.Xfa;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.forms
+namespace iTextSharp.Forms
 {
 	/// <summary>This class represents the static form technology AcroForm on a PDF file.
 	/// 	</summary>
@@ -105,7 +105,7 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// A map of field names and their associated
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// objects.
 		/// </summary>
 		protected internal IDictionary<String, PdfFormField> fields = new LinkedDictionary
@@ -131,28 +131,29 @@ namespace com.itextpdf.forms
 		/// the dictionary.
 		/// </remarks>
 		/// <param name="pdfObject">the PdfDictionary to be wrapped</param>
-		public PdfAcroForm(PdfDictionary pdfObject)
+		private PdfAcroForm(PdfDictionary pdfObject, PdfDocument pdfDocument)
 			: base(pdfObject)
 		{
+			document = pdfDocument;
 			GetFormFields();
 			xfaForm = new XfaForm(pdfObject);
 		}
 
 		/// <summary>
 		/// Creates a PdfAcroForm from a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// of fields.
 		/// Also initializes an empty XFA form.
 		/// </summary>
 		/// <param name="fields">
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// of
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDictionary"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
 		/// objects
 		/// </param>
-		public PdfAcroForm(PdfArray fields)
-			: this(CreateAcroFormDictionaryByFields(fields))
+		private PdfAcroForm(PdfArray fields)
+			: this(CreateAcroFormDictionaryByFields(fields), null)
 		{
 			SetForbidRelease();
 		}
@@ -175,20 +176,20 @@ namespace com.itextpdf.forms
 		/// </param>
 		/// <returns>
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument">document</see>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument">document</see>
 		/// 's AcroForm, or a new one
 		/// </returns>
-		public static com.itextpdf.forms.PdfAcroForm GetAcroForm(PdfDocument document, bool
+		public static iTextSharp.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool
 			 createIfNotExist)
 		{
 			PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary
 				(PdfName.AcroForm);
-			com.itextpdf.forms.PdfAcroForm acroForm = null;
+			iTextSharp.Forms.PdfAcroForm acroForm = null;
 			if (acroFormDictionary == null)
 			{
 				if (createIfNotExist)
 				{
-					acroForm = new com.itextpdf.forms.PdfAcroForm(new PdfArray());
+					acroForm = new iTextSharp.Forms.PdfAcroForm(new PdfArray());
 					acroForm.MakeIndirect(document);
 					document.GetCatalog().Put(PdfName.AcroForm, acroForm.GetPdfObject());
 					document.GetCatalog().SetModified();
@@ -197,7 +198,7 @@ namespace com.itextpdf.forms
 			}
 			else
 			{
-				acroForm = new com.itextpdf.forms.PdfAcroForm(acroFormDictionary);
+				acroForm = new iTextSharp.Forms.PdfAcroForm(acroFormDictionary, document);
 			}
 			if (acroForm != null)
 			{
@@ -219,7 +220,7 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="field">
 		/// the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// to be added to the form
 		/// </param>
 		public virtual void AddField(PdfFormField field)
@@ -236,12 +237,12 @@ namespace com.itextpdf.forms
 		/// <summary>This method adds the field to a specific page.</summary>
 		/// <param name="field">
 		/// the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// to be added to the form
 		/// </param>
 		/// <param name="page">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfPage"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
 		/// on which to add the field
 		/// </param>
 		public virtual void AddField(PdfFormField field, PdfPage page)
@@ -260,7 +261,7 @@ namespace com.itextpdf.forms
 				IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
 				foreach (PdfDictionary resDict in resources)
 				{
-					MergeResources(defaultResources, resDict, field);
+					MergeResources(defaultResources, resDict);
 				}
 				if (!defaultResources.IsEmpty())
 				{
@@ -285,12 +286,12 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="field">
 		/// the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// to be added to the form
 		/// </param>
 		/// <param name="page">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfPage"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
 		/// on which to add the field
 		/// </param>
 		public virtual void AddFieldAppearanceToPage(PdfFormField field, PdfPage page)
@@ -316,14 +317,14 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Gets the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s as a
 		/// <see cref="System.Collections.IDictionary{K, V}"/>
 		/// .
 		/// </summary>
 		/// <returns>
 		/// a map of field names and their associated
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// objects
 		/// </returns>
 		public virtual IDictionary<String, PdfFormField> GetFormFields()
@@ -347,7 +348,7 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
 		/// <returns>current AcroForm.</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetNeedAppearances(bool needAppearances
+		public virtual iTextSharp.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances
 			)
 		{
 			return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
@@ -365,7 +366,7 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <returns>
 		/// the <code>NeedAppearances</code> property as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfBoolean"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfBoolean"/>
 		/// . Default value is <code>false</code>
 		/// </returns>
 		public virtual PdfBoolean GetNeedAppearances()
@@ -391,7 +392,7 @@ namespace com.itextpdf.forms
 		/// Use bitwise OR operator to combine these values. Default value is <code>0</code>
 		/// </param>
 		/// <returns>current AcroForm.</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetSignatureFlags(int sigFlags)
+		public virtual iTextSharp.Forms.PdfAcroForm SetSignatureFlags(int sigFlags)
 		{
 			return Put(PdfName.SigFlags, new PdfNumber(sigFlags));
 		}
@@ -415,7 +416,7 @@ namespace com.itextpdf.forms
 		/// Use bitwise OR operator to combine these values. Default is <code>0</code>
 		/// </param>
 		/// <returns>current AcroForm.</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetSignatureFlag(int sigFlag)
+		public virtual iTextSharp.Forms.PdfAcroForm SetSignatureFlag(int sigFlag)
 		{
 			int flags = GetSignatureFlags();
 			flags = flags | sigFlag;
@@ -458,7 +459,7 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="calculationOrder">an array of indirect references</param>
 		/// <returns>current AcroForm</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetCalculationOrder(PdfArray calculationOrder
+		public virtual iTextSharp.Forms.PdfAcroForm SetCalculationOrder(PdfArray calculationOrder
 			)
 		{
 			return Put(PdfName.CO, calculationOrder);
@@ -495,7 +496,7 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="defaultResources">a resource dictionary</param>
 		/// <returns>current AcroForm</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetDefaultResources(PdfDictionary defaultResources
+		public virtual iTextSharp.Forms.PdfAcroForm SetDefaultResources(PdfDictionary defaultResources
 			)
 		{
 			return Put(PdfName.DR, defaultResources);
@@ -524,14 +525,14 @@ namespace com.itextpdf.forms
 		/// Sets the <code>DA</code> String property on the AcroForm.
 		/// This method sets a default (fallback value) for the <code>DA</code>
 		/// attribute of variable text
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s.
 		/// </remarks>
 		/// <param name="appearance">a String containing a sequence of valid PDF syntax</param>
 		/// <returns>current AcroForm</returns>
-		/// <seealso cref="com.itextpdf.forms.fields.PdfFormField.SetDefaultAppearance(System.String)
+		/// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)
 		/// 	"></seealso>
-		public virtual com.itextpdf.forms.PdfAcroForm SetDefaultAppearance(String appearance
+		public virtual iTextSharp.Forms.PdfAcroForm SetDefaultAppearance(String appearance
 			)
 		{
 			return Put(PdfName.DA, new PdfString(appearance));
@@ -542,7 +543,7 @@ namespace com.itextpdf.forms
 		/// Gets the <code>DA</code> String property on the AcroForm.
 		/// This method returns the default (fallback value) for the <code>DA</code>
 		/// attribute of variable text
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s.
 		/// </remarks>
 		/// <returns>the form-wide default appearance, as a <code>String</code></returns>
@@ -556,13 +557,13 @@ namespace com.itextpdf.forms
 		/// Sets the <code>Q</code> integer property on the AcroForm.
 		/// This method sets a default (fallback value) for the <code>Q</code>
 		/// attribute of variable text
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s.
 		/// </remarks>
 		/// <param name="justification">an integer representing a justification value</param>
 		/// <returns>current AcroForm</returns>
-		/// <seealso cref="com.itextpdf.forms.fields.PdfFormField.SetJustification(int)"></seealso>
-		public virtual com.itextpdf.forms.PdfAcroForm SetDefaultJustification(int justification
+		/// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.SetJustification(int)"></seealso>
+		public virtual iTextSharp.Forms.PdfAcroForm SetDefaultJustification(int justification
 			)
 		{
 			return Put(PdfName.Q, new PdfNumber(justification));
@@ -573,11 +574,11 @@ namespace com.itextpdf.forms
 		/// Gets the <code>Q</code> integer property on the AcroForm.
 		/// This method gets the default (fallback value) for the <code>Q</code>
 		/// attribute of variable text
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s.
 		/// </remarks>
 		/// <returns>an integer representing a justification value</returns>
-		/// <seealso cref="com.itextpdf.forms.fields.PdfFormField.GetJustification()"></seealso>
+		/// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.GetJustification()"></seealso>
 		public virtual PdfNumber GetDefaultJustification()
 		{
 			return GetPdfObject().GetAsNumber(PdfName.Q);
@@ -587,16 +588,15 @@ namespace com.itextpdf.forms
 		/// <remarks>
 		/// Sets the <code>XFA</code> property on the AcroForm.
 		/// <code>XFA</code> can either be a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfStream"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
 		/// or a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// .
 		/// Its contents must be valid XFA.
 		/// </remarks>
 		/// <param name="xfaResource">a stream containing the XDP</param>
 		/// <returns>current AcroForm</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetXFAResource(PdfStream xfaResource
-			)
+		public virtual iTextSharp.Forms.PdfAcroForm SetXFAResource(PdfStream xfaResource)
 		{
 			return Put(PdfName.XFA, xfaResource);
 		}
@@ -605,9 +605,9 @@ namespace com.itextpdf.forms
 		/// <remarks>
 		/// Sets the <code>XFA</code> property on the AcroForm.
 		/// <code>XFA</code> can either be a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfStream"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
 		/// or a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// .
 		/// Its contents must be valid XFA.
 		/// </remarks>
@@ -617,8 +617,7 @@ namespace com.itextpdf.forms
 		/// section 12.7.2 "Interactive Form Dictionary")
 		/// </param>
 		/// <returns>current AcroForm</returns>
-		public virtual com.itextpdf.forms.PdfAcroForm SetXFAResource(PdfArray xfaResource
-			)
+		public virtual iTextSharp.Forms.PdfAcroForm SetXFAResource(PdfArray xfaResource)
 		{
 			return Put(PdfName.XFA, xfaResource);
 		}
@@ -626,9 +625,9 @@ namespace com.itextpdf.forms
 		/// <summary>Gets the <code>XFA</code> property on the AcroForm.</summary>
 		/// <returns>
 		/// an object representing the entire XDP. It can either be a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfStream"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
 		/// or a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// .
 		/// </returns>
 		public virtual PdfObject GetXFAResource()
@@ -638,17 +637,17 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Gets a
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// by its name.
 		/// </summary>
 		/// <param name="fieldName">
 		/// the name of the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// to retrieve
 		/// </param>
 		/// <returns>
 		/// the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// , or <code>null</code> if it
 		/// isn't present
 		/// </returns>
@@ -661,7 +660,7 @@ namespace com.itextpdf.forms
 		/// Gets the attribute generateAppearance, which tells
 		/// <see cref="FlattenFields()"/>
 		/// to generate an appearance Stream for all
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s
 		/// that don't have one.
 		/// </summary>
@@ -675,7 +674,7 @@ namespace com.itextpdf.forms
 		/// Sets the attribute generateAppearance, which tells
 		/// <see cref="FlattenFields()"/>
 		/// to generate an appearance Stream for all
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s
 		/// that don't have one.
 		/// Not generating appearances will speed up form flattening but the results
@@ -697,7 +696,7 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Flattens interactive
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// s in the document. If
 		/// no fields have been explicitly included via {#link #partialFormFlattening},
 		/// then all fields are flattened. Otherwise only the included fields are
@@ -852,13 +851,13 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Tries to remove the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// with the specified
 		/// name from the document.
 		/// </summary>
 		/// <param name="fieldName">
 		/// the name of the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// to remove
 		/// </param>
 		/// <returns>a boolean representing whether or not the removal succeeded.</returns>
@@ -893,13 +892,13 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Adds a
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// , identified by name, to the list of fields to be flattened.
 		/// Does not perform a flattening operation in itself.
 		/// </summary>
 		/// <param name="fieldName">
 		/// the name of the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// to be flattened
 		/// </param>
 		public virtual void PartialFormFlattening(String fieldName)
@@ -913,7 +912,7 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Changes the identifier of a
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// .
 		/// </summary>
 		/// <param name="oldName">the current name of the field</param>
@@ -936,18 +935,18 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Creates an in-memory copy of a
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// . This new field is
 		/// not added to the document.
 		/// </summary>
 		/// <param name="name">
 		/// the name of the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// to be copied
 		/// </param>
 		/// <returns>
 		/// a clone of the original
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// </returns>
 		public virtual PdfFormField CopyField(String name)
 		{
@@ -963,19 +962,19 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Replaces the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// of a certain name with another
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// .
 		/// </summary>
 		/// <param name="name">
 		/// the name of the
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField">form field</see>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
 		/// to be replaced
 		/// </param>
 		/// <param name="field">
 		/// the new
-		/// <see cref="com.itextpdf.forms.fields.PdfFormField"/>
+		/// <see cref="iTextSharp.Forms.Fields.PdfFormField"/>
 		/// </param>
 		public virtual void ReplaceField(String name, PdfFormField field)
 		{
@@ -986,7 +985,7 @@ namespace com.itextpdf.forms
 		/// <summary>Gets all AcroForm fields in the document.</summary>
 		/// <returns>
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// of field dictionaries
 		/// </returns>
 		protected internal virtual PdfArray GetFields()
@@ -1031,7 +1030,7 @@ namespace com.itextpdf.forms
 				fields[name] = formField;
 				if (formField.GetKids() != null)
 				{
-					fields.PutAll(IterateFields(formField.GetKids()));
+					fields.AddAll(IterateFields(formField.GetKids()));
 				}
 			}
 			return fields;
@@ -1106,7 +1105,7 @@ namespace com.itextpdf.forms
 						);
 				}
 				PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
-				PdfPage widgetPage = doc.GetCatalog().GetPage(pageDic);
+				PdfPage widgetPage = doc.GetPage(pageDic);
 				AddWidgetAnnotationToPage(widgetPage, annot);
 			}
 			else
@@ -1189,19 +1188,16 @@ namespace com.itextpdf.forms
 		/// </remarks>
 		/// <param name="result">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDictionary"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
 		/// which may get extra entries from source
 		/// </param>
 		/// <param name="source">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDictionary"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
 		/// whose entries may be merged into result
 		/// </param>
-		/// <param name="field"/>
-		public virtual void MergeResources(PdfDictionary result, PdfDictionary source, PdfFormField
-			 field)
+		private void MergeResources(PdfDictionary result, PdfDictionary source)
 		{
-			// TODO: determine whether we need the parameter called field
 			foreach (PdfName name in resourceNames)
 			{
 				PdfDictionary dic = source.GetAsDictionary(name);
@@ -1227,7 +1223,7 @@ namespace com.itextpdf.forms
 
 		/// <summary>
 		/// Gets the
-		/// <see cref="com.itextpdf.forms.xfa.XfaForm"/>
+		/// <see cref="iTextSharp.Forms.Xfa.XfaForm"/>
 		/// atribute.
 		/// </summary>
 		/// <returns>the XFA form object</returns>
@@ -1248,7 +1244,7 @@ namespace com.itextpdf.forms
 			}
 		}
 
-		public virtual com.itextpdf.forms.PdfAcroForm Put(PdfName key, PdfObject value)
+		public virtual iTextSharp.Forms.PdfAcroForm Put(PdfName key, PdfObject value)
 		{
 			GetPdfObject().Put(key, value);
 			return this;
@@ -1258,7 +1254,7 @@ namespace com.itextpdf.forms
 		/// <remarks>
 		/// Releases underlying pdf object and other pdf entities used by wrapper.
 		/// This method should be called instead of direct call to
-		/// <see cref="com.itextpdf.kernel.pdf.PdfObject.Release()"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfObject.Release()"/>
 		/// if the wrapper is used.
 		/// </remarks>
 		public virtual void Release()
@@ -1284,7 +1280,7 @@ namespace com.itextpdf.forms
 			PdfDictionary pageDic = annotDic.GetAsDictionary(PdfName.P);
 			if (pageDic != null)
 			{
-				return document.GetCatalog().GetPage(pageDic);
+				return document.GetPage(pageDic);
 			}
 			for (int i = 1; i <= document.GetNumberOfPages(); i++)
 			{

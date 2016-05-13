@@ -1,5 +1,5 @@
 /*
-$Id: 61e7688fd68aba3c8f247ef1f6b201e178b7d85a $
+$Id: 78d9490820078798a57701d1fa55a49c0ade6b9b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.forms.fields;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
+using iTextSharp.Forms.Fields;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.forms
+namespace iTextSharp.Forms
 {
 	/// <summary>
 	/// A sample implementation of the {#link IPdfPageExtraCopier} interface which

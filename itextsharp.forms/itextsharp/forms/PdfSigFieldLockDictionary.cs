@@ -1,5 +1,5 @@
 /*
-$Id: b867564e65f390428d3208e6c713e54befaa4c21 $
+$Id: c9beafcc47eeedd8cff2689e0a60400f489a9140 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.forms
+namespace iTextSharp.Forms
 {
 	/// <summary>A signature field lock dictionary.</summary>
 	/// <remarks>
@@ -96,8 +96,8 @@ namespace com.itextpdf.forms
 		/// <see cref="PdfSigFieldLockDictionary"/>
 		/// object.
 		/// </returns>
-		public virtual com.itextpdf.forms.PdfSigFieldLockDictionary SetDocumentPermissions
-			(PdfSigFieldLockDictionary.LockPermissions permissions)
+		public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(
+			PdfSigFieldLockDictionary.LockPermissions permissions)
 		{
 			GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
 			return this;
@@ -114,7 +114,7 @@ namespace com.itextpdf.forms
 		/// <see cref="PdfSigFieldLockDictionary"/>
 		/// object.
 		/// </returns>
-		public virtual com.itextpdf.forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
+		public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
 			 action, params String[] fields)
 		{
 			PdfArray fieldsArray = new PdfArray();

@@ -1,5 +1,5 @@
 /*
-$Id: 78a8e605519d67ef7d6708ce434c0f6801f78433 $
+$Id: c43a1d19e81043e77034671cd586ae228ee49f0f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,14 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout.border;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.renderer;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout.Border;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.element
+namespace iTextSharp.Layout.Element
 {
 	/// <summary>
 	/// A
@@ -71,9 +70,10 @@ namespace com.itextpdf.layout.element
 	/// <see cref="BlockElement{T}"/>
 	/// .
 	/// </summary>
-	public class Cell : BlockElement<com.itextpdf.layout.element.Cell>
+	public class Cell : BlockElement<iTextSharp.Layout.Element.Cell>
 	{
-		private static readonly Border DEFAULT_BORDER = new SolidBorder(0.5f);
+		private static readonly iTextSharp.Layout.Border.Border DEFAULT_BORDER = new SolidBorder
+			(0.5f);
 
 		private int row;
 
@@ -108,7 +108,7 @@ namespace com.itextpdf.layout.element
 		/// <remarks>
 		/// Gets a cell renderer for this element. Note that this method can be called more than once.
 		/// By default each element should define its own renderer, but the renderer can be overridden by
-		/// <see cref="AbstractElement{T}.SetNextRenderer(com.itextpdf.layout.renderer.IRenderer)
+		/// <see cref="AbstractElement{T}.SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)
 		/// 	"/>
 		/// method call.
 		/// </remarks>
@@ -160,7 +160,7 @@ namespace com.itextpdf.layout.element
 		/// <see cref="BlockElement{T}"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual com.itextpdf.layout.element.Cell Add<T>(BlockElement<T> element)
+		public virtual iTextSharp.Layout.Element.Cell Add<T>(BlockElement<T> element)
 			where T : IElement
 		{
 			childElements.Add(element);
@@ -173,7 +173,7 @@ namespace com.itextpdf.layout.element
 		/// <see cref="Image"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual com.itextpdf.layout.element.Cell Add(Image element)
+		public virtual iTextSharp.Layout.Element.Cell Add(Image element)
 		{
 			childElements.Add(element);
 			return this;
@@ -185,7 +185,7 @@ namespace com.itextpdf.layout.element
 		/// <see cref="Table"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual com.itextpdf.layout.element.Cell Add(Table element)
+		public virtual iTextSharp.Layout.Element.Cell Add(Table element)
 		{
 			childElements.Add(element);
 			return this;
@@ -201,7 +201,7 @@ namespace com.itextpdf.layout.element
 		/// <see cref="System.String"/>
 		/// </param>
 		/// <returns>this Element</returns>
-		public virtual com.itextpdf.layout.element.Cell Add(String content)
+		public virtual iTextSharp.Layout.Element.Cell Add(String content)
 		{
 			return Add(new Paragraph(content));
 		}
@@ -211,13 +211,13 @@ namespace com.itextpdf.layout.element
 		/// <param name="includeContent">whether or not to also include the contents of the cell.
 		/// 	</param>
 		/// <returns>a clone of this Element</returns>
-		public virtual com.itextpdf.layout.element.Cell Clone(bool includeContent)
+		public virtual iTextSharp.Layout.Element.Cell Clone(bool includeContent)
 		{
-			com.itextpdf.layout.element.Cell newCell = new com.itextpdf.layout.element.Cell(rowspan
+			iTextSharp.Layout.Element.Cell newCell = new iTextSharp.Layout.Element.Cell(rowspan
 				, colspan);
 			newCell.row = row;
 			newCell.col = col;
-			newCell.properties = new Dictionary<Property, Object>(properties);
+			newCell.properties = new Dictionary<int, Object>(properties);
 			if (includeContent)
 			{
 				newCell.childElements = new List<IElement>(childElements);
@@ -225,19 +225,19 @@ namespace com.itextpdf.layout.element
 			return newCell;
 		}
 
-		public override T1 GetDefaultProperty<T1>(Property property)
+		public override T1 GetDefaultProperty<T1>(int property)
 		{
 			switch (property)
 			{
-				case Property.BORDER:
+				case iTextSharp.Layout.Property.Property.BORDER:
 				{
 					return (T1)DEFAULT_BORDER;
 				}
 
-				case Property.PADDING_BOTTOM:
-				case Property.PADDING_LEFT:
-				case Property.PADDING_RIGHT:
-				case Property.PADDING_TOP:
+				case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
+				case iTextSharp.Layout.Property.Property.PADDING_LEFT:
+				case iTextSharp.Layout.Property.Property.PADDING_RIGHT:
+				case iTextSharp.Layout.Property.Property.PADDING_TOP:
 				{
 					return (T1)float.ValueOf(2);
 				}
@@ -283,8 +283,8 @@ namespace com.itextpdf.layout.element
 			return new CellRenderer(this);
 		}
 
-		protected internal virtual com.itextpdf.layout.element.Cell UpdateCellIndexes(int
-			 row, int col, int numberOfColumns)
+		protected internal virtual iTextSharp.Layout.Element.Cell UpdateCellIndexes(int row
+			, int col, int numberOfColumns)
 		{
 			this.row = row;
 			this.col = col;

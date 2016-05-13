@@ -1,5 +1,5 @@
 /*
-$Id: b87356a4873be885037daefbbae329b50897fe20 $
+$Id: ff4de15035b7c3deec42da5d5c1bc3d13d10ab86 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,16 +44,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.layout;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Layout;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	/// <summary>
 	/// Renderer object for the
-	/// <see cref="com.itextpdf.layout.element.AreaBreak"/>
+	/// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
 	/// layout element. Will terminate the
 	/// current content area and initialize a new one.
 	/// </summary>
@@ -64,7 +63,7 @@ namespace com.itextpdf.layout.renderer
 		/// <summary>Creates an AreaBreakRenderer.</summary>
 		/// <param name="areaBreak">
 		/// the
-		/// <see cref="com.itextpdf.layout.element.AreaBreak"/>
+		/// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
 		/// that will be rendered by this object
 		/// </param>
 		public AreaBreakRenderer(AreaBreak areaBreak)
@@ -96,42 +95,42 @@ namespace com.itextpdf.layout.renderer
 			throw new NotSupportedException();
 		}
 
-		public virtual bool HasProperty(Property property)
+		public virtual bool HasProperty(int property)
 		{
 			return false;
 		}
 
-		public virtual bool HasOwnProperty(Property property)
+		public virtual bool HasOwnProperty(int property)
 		{
 			return false;
 		}
 
-		public virtual T1 GetProperty<T1>(Property key)
+		public virtual T1 GetProperty<T1>(int key)
 		{
 			return null;
 		}
 
-		public virtual T1 GetOwnProperty<T1>(Property property)
+		public virtual T1 GetOwnProperty<T1>(int property)
 		{
 			return null;
 		}
 
-		public virtual T1 GetDefaultProperty<T1>(Property property)
+		public virtual T1 GetDefaultProperty<T1>(int property)
 		{
 			return null;
 		}
 
-		public virtual T1 GetProperty<T1>(Property property, T1 defaultValue)
+		public virtual T1 GetProperty<T1>(int property, T1 defaultValue)
 		{
 			throw new NotSupportedException();
 		}
 
-		public virtual void SetProperty(Property property, Object value)
+		public virtual void SetProperty(int property, Object value)
 		{
 			throw new NotSupportedException();
 		}
 
-		public virtual void DeleteOwnProperty(Property property)
+		public virtual void DeleteOwnProperty(int property)
 		{
 		}
 

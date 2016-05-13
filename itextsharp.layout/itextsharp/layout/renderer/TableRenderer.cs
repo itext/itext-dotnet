@@ -1,5 +1,5 @@
 /*
-$Id: 81ed63918cf78a2fbeacefa39e0f8452a322202e $
+$Id: 48343c01d51b136c3d13066de56f7a39c21b315f $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,27 +44,26 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout.border;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	/// <summary>
 	/// This class represents the
 	/// <see cref="IRenderer">renderer</see>
 	/// object for a
-	/// <see cref="com.itextpdf.layout.element.Table"/>
+	/// <see cref="iTextSharp.Layout.Element.Table"/>
 	/// object. It will delegate its drawing operations on to the
 	/// <see cref="CellRenderer"/>
 	/// instances associated with the
-	/// <see cref="com.itextpdf.layout.element.Cell">table cells</see>
+	/// <see cref="iTextSharp.Layout.Element.Cell">table cells</see>
 	/// .
 	/// </summary>
 	public class TableRenderer : AbstractRenderer
@@ -73,18 +72,18 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal Table.RowRange rowRange;
 
-		protected internal com.itextpdf.layout.renderer.TableRenderer headerRenderer;
+		protected internal iTextSharp.Layout.Renderer.TableRenderer headerRenderer;
 
-		protected internal com.itextpdf.layout.renderer.TableRenderer footerRenderer;
+		protected internal iTextSharp.Layout.Renderer.TableRenderer footerRenderer;
 
 		/// <summary>True for newly created renderer.</summary>
 		/// <remarks>True for newly created renderer. For split renderers this is set to false. Used for tricky layout.
 		/// 	</remarks>
 		protected internal bool isOriginalNonSplitRenderer = true;
 
-		private List<List<Border>> horizontalBorders;
+		private List<List<iTextSharp.Layout.Border.Border>> horizontalBorders;
 
-		private List<List<Border>> verticalBorders;
+		private List<List<iTextSharp.Layout.Border.Border>> verticalBorders;
 
 		private float[] columnWidths = null;
 
@@ -96,7 +95,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Creates a TableRenderer from a
-		/// <see cref="com.itextpdf.layout.element.Table"/>
+		/// <see cref="iTextSharp.Layout.Element.Table"/>
 		/// which will partially render
 		/// the table.
 		/// </summary>
@@ -111,7 +110,7 @@ namespace com.itextpdf.layout.renderer
 
 		/// <summary>
 		/// Creates a TableRenderer from a
-		/// <see cref="com.itextpdf.layout.element.Table"/>
+		/// <see cref="iTextSharp.Layout.Element.Table"/>
 		/// .
 		/// </summary>
 		/// <param name="modelElement">the table to be rendered by this renderer</param>
@@ -124,7 +123,6 @@ namespace com.itextpdf.layout.renderer
 		{
 			if (renderer is CellRenderer)
 			{
-				renderer.SetParent(this);
 				// In case rowspan or colspan save cell into bottom left corner.
 				// In in this case it will be easier handle row heights in case rowspan.
 				Cell cell = (Cell)renderer.GetModelElement();
@@ -133,7 +131,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.layout.renderer.TableRenderer
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.TableRenderer
 					));
 				logger.Error("Only BlockRenderer with Cell layout element could be added");
 			}
@@ -145,17 +143,17 @@ namespace com.itextpdf.layout.renderer
 			Rectangle layoutBox = area.GetBBox().Clone();
 			if (!((Table)modelElement).IsComplete())
 			{
-				SetProperty(Property.MARGIN_BOTTOM, 0);
+				SetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM, 0);
 			}
 			if (rowRange.GetStartRow() != 0)
 			{
-				SetProperty(Property.MARGIN_TOP, 0);
+				SetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP, 0);
 			}
 			ApplyMargins(layoutBox, false);
 			ApplyBorderBox(layoutBox, false);
 			if (IsPositioned())
 			{
-				float x = GetPropertyAsFloat(Property.X);
+				float x = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
 				layoutBox.SetX(relativeX + x);
 			}
@@ -168,15 +166,15 @@ namespace com.itextpdf.layout.renderer
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), tableWidth, 0));
 			int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
-			horizontalBorders = new List<List<Border>>();
-			verticalBorders = new List<List<Border>>();
+			horizontalBorders = new List<List<iTextSharp.Layout.Border.Border>>();
+			verticalBorders = new List<List<iTextSharp.Layout.Border.Border>>();
 			Table headerElement = tableModel.GetHeader();
 			bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
 			bool headerShouldBeApplied = !rows.IsEmpty() && (!isOriginalNonSplitRenderer || isFirstHeader
 				 && !tableModel.IsSkipFirstHeader());
 			if (headerElement != null && headerShouldBeApplied)
 			{
-				headerRenderer = (com.itextpdf.layout.renderer.TableRenderer)headerElement.CreateRendererSubTree
+				headerRenderer = (iTextSharp.Layout.Renderer.TableRenderer)headerElement.CreateRendererSubTree
 					().SetParent(this);
 				LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area
 					.GetPageNumber(), layoutBox)));
@@ -191,7 +189,7 @@ namespace com.itextpdf.layout.renderer
 			Table footerElement = tableModel.GetFooter();
 			if (footerElement != null)
 			{
-				footerRenderer = (com.itextpdf.layout.renderer.TableRenderer)footerElement.CreateRendererSubTree
+				footerRenderer = (iTextSharp.Layout.Renderer.TableRenderer)footerElement.CreateRendererSubTree
 					().SetParent(this);
 				LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area
 					.GetPageNumber(), layoutBox)));
@@ -211,6 +209,13 @@ namespace com.itextpdf.layout.renderer
 			horizontalBorders.Add(tableModel.GetLastRowBottomBorder());
 			for (int row = 0; row < rows.Count; row++)
 			{
+				// if forced placement was earlier set, this means the element did not fit into the area, and in this case
+				// we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
+				if (row == 1 && true.Equals(GetOwnProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
+					)))
+				{
+					DeleteOwnProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT);
+				}
 				VerticalAlignment verticalAlignment = null;
 				CellRenderer[] currentRow = rows[row];
 				float rowHeight = 0;
@@ -255,8 +260,10 @@ namespace com.itextpdf.layout.renderer
 					targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
 					// This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
 					bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
-					int colspan = cell.GetPropertyAsInteger(Property.COLSPAN);
-					int rowspan = cell.GetPropertyAsInteger(Property.ROWSPAN);
+					int colspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.COLSPAN
+						);
+					int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
+						);
 					float cellWidth = 0;
 					float colOffset = 0;
 					for (int i = col_1; i < col_1 + colspan; i++)
@@ -281,10 +288,13 @@ namespace com.itextpdf.layout.renderer
 						, cellWidth, cellLayoutBoxHeight);
 					LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox
 						);
-					verticalAlignment = cell.GetProperty(Property.VERTICAL_ALIGNMENT);
-					cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
-					LayoutResult cellResult = cell.Layout(new LayoutContext(cellArea));
-					cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+					verticalAlignment = cell.GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT
+						);
+					cell.SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, null);
+					LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea)
+						);
+					cell.SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment
+						);
 					//width of BlockRenderer depends on child areas, while in cell case it is hardly define.
 					if (cellResult.GetStatus() != LayoutResult.NOTHING)
 					{
@@ -350,11 +360,13 @@ namespace com.itextpdf.layout.renderer
 											if (rows[addRow][addCol_1] != null)
 											{
 												CellRenderer addRenderer = rows[addRow][addCol_1];
-												verticalAlignment = addRenderer.GetProperty(Property.VERTICAL_ALIGNMENT);
+												verticalAlignment = addRenderer.GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT
+													);
 												if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM
 													))
 												{
-													if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow)
+													if (row + addRenderer.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
+														) - 1 < addRow)
 													{
 														cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, 
 															addRow));
@@ -392,7 +404,8 @@ namespace com.itextpdf.layout.renderer
 												}
 												else
 												{
-													if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow)
+													if (row + addRenderer.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
+														) - 1 >= addRow)
 													{
 														cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, 
 															addRow));
@@ -431,7 +444,8 @@ namespace com.itextpdf.layout.renderer
 							continue;
 						}
 						float height = 0;
-						int rowspan = cell.GetPropertyAsInteger(Property.ROWSPAN);
+						int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
+							);
 						for (int i = row; i > targetOverflowRowIndex[col_1] - rowspan && i >= 0; i--)
 						{
 							height += heights[i];
@@ -459,7 +473,7 @@ namespace com.itextpdf.layout.renderer
 				}
 				if (split)
 				{
-					com.itextpdf.layout.renderer.TableRenderer[] splitResult = Split(row, hasContent);
+					iTextSharp.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
 					for (int col_1 = 0; col_1 < currentRow.Length; col_1++)
 					{
 						if (splits[col_1] != null)
@@ -524,8 +538,8 @@ namespace com.itextpdf.layout.renderer
 					}
 					ApplyBorderBox(occupiedArea.GetBBox(), true);
 					ApplyMargins(occupiedArea.GetBBox(), true);
-					if (GetPropertyAsBoolean(Property.KEEP_TOGETHER) && !GetPropertyAsBoolean(Property
-						.FORCED_PLACEMENT))
+					if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+						.FORCED_PLACEMENT)) && !(this.parent is CellRenderer))
 					{
 						return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
 					}
@@ -533,8 +547,8 @@ namespace com.itextpdf.layout.renderer
 					{
 						int status = (childRenderers.IsEmpty() && footerRenderer == null) ? LayoutResult.
 							NOTHING : LayoutResult.PARTIAL;
-						if (status == LayoutResult.NOTHING && GetPropertyAsBoolean(Property.FORCED_PLACEMENT
-							))
+						if (status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+							.FORCED_PLACEMENT)))
 						{
 							return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
 						}
@@ -552,7 +566,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			if (IsPositioned())
 			{
-				float y = GetPropertyAsFloat(Property.Y);
+				float y = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
@@ -714,7 +728,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override IRenderer GetNextRenderer()
 		{
-			com.itextpdf.layout.renderer.TableRenderer nextTable = new com.itextpdf.layout.renderer.TableRenderer
+			iTextSharp.Layout.Renderer.TableRenderer nextTable = new iTextSharp.Layout.Renderer.TableRenderer
 				();
 			nextTable.modelElement = modelElement;
 			return nextTable;
@@ -750,16 +764,16 @@ namespace com.itextpdf.layout.renderer
 			return columnWidths;
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TableRenderer[] Split(int
-			 row)
+		protected internal virtual iTextSharp.Layout.Renderer.TableRenderer[] Split(int row
+			)
 		{
 			return Split(row, false);
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TableRenderer[] Split(int
-			 row, bool hasContent)
+		protected internal virtual iTextSharp.Layout.Renderer.TableRenderer[] Split(int row
+			, bool hasContent)
 		{
-			com.itextpdf.layout.renderer.TableRenderer splitRenderer = CreateSplitRenderer(new 
+			iTextSharp.Layout.Renderer.TableRenderer splitRenderer = CreateSplitRenderer(new 
 				Table.RowRange(rowRange.GetStartRow(), rowRange.GetStartRow() + row));
 			splitRenderer.rows = rows.SubList(0, row);
 			int rowN = row;
@@ -767,17 +781,18 @@ namespace com.itextpdf.layout.renderer
 			{
 				rowN++;
 			}
-			splitRenderer.horizontalBorders = new List<List<Border>>();
+			splitRenderer.horizontalBorders = new List<List<iTextSharp.Layout.Border.Border>>
+				();
 			//splitRenderer.horizontalBorders.addAll(horizontalBorders);
 			for (int i = 0; i <= rowN; i++)
 			{
 				splitRenderer.horizontalBorders.Add(horizontalBorders[i]);
 			}
-			splitRenderer.verticalBorders = new List<List<Border>>();
+			splitRenderer.verticalBorders = new List<List<iTextSharp.Layout.Border.Border>>();
 			//        splitRenderer.verticalBorders.addAll(verticalBorders);
 			for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++)
 			{
-				splitRenderer.verticalBorders.Add(new List<Border>());
+				splitRenderer.verticalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 				for (int j = 0; j < rowN; j++)
 				{
 					splitRenderer.verticalBorders[i_1].Add(verticalBorders[i_1][j]);
@@ -785,18 +800,18 @@ namespace com.itextpdf.layout.renderer
 			}
 			splitRenderer.heights = heights;
 			splitRenderer.columnWidths = columnWidths;
-			com.itextpdf.layout.renderer.TableRenderer overflowRenderer = CreateOverflowRenderer
+			iTextSharp.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer
 				(new Table.RowRange(rowRange.GetStartRow() + row, rowRange.GetFinishRow()));
 			overflowRenderer.rows = rows.SubList(row, rows.Count);
 			splitRenderer.occupiedArea = occupiedArea;
-			return new com.itextpdf.layout.renderer.TableRenderer[] { splitRenderer, overflowRenderer
+			return new iTextSharp.Layout.Renderer.TableRenderer[] { splitRenderer, overflowRenderer
 				 };
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TableRenderer CreateSplitRenderer
+		protected internal virtual iTextSharp.Layout.Renderer.TableRenderer CreateSplitRenderer
 			(Table.RowRange rowRange)
 		{
-			com.itextpdf.layout.renderer.TableRenderer splitRenderer = (com.itextpdf.layout.renderer.TableRenderer
+			iTextSharp.Layout.Renderer.TableRenderer splitRenderer = (iTextSharp.Layout.Renderer.TableRenderer
 				)GetNextRenderer();
 			splitRenderer.rowRange = rowRange;
 			splitRenderer.parent = parent;
@@ -811,10 +826,10 @@ namespace com.itextpdf.layout.renderer
 			return splitRenderer;
 		}
 
-		protected internal virtual com.itextpdf.layout.renderer.TableRenderer CreateOverflowRenderer
+		protected internal virtual iTextSharp.Layout.Renderer.TableRenderer CreateOverflowRenderer
 			(Table.RowRange rowRange)
 		{
-			com.itextpdf.layout.renderer.TableRenderer overflowRenderer = (com.itextpdf.layout.renderer.TableRenderer
+			iTextSharp.Layout.Renderer.TableRenderer overflowRenderer = (iTextSharp.Layout.Renderer.TableRenderer
 				)GetNextRenderer();
 			overflowRenderer.rowRange = rowRange;
 			overflowRenderer.parent = parent;
@@ -836,11 +851,19 @@ namespace com.itextpdf.layout.renderer
 			foreach (IRenderer child in childRenderers)
 			{
 				CellRenderer cell = (CellRenderer)child;
+				if (((Cell)cell.GetModelElement()).GetRow() == this.rowRange.GetStartRow())
+				{
+					startY = cell.GetOccupiedArea().GetBBox().GetY() + cell.GetOccupiedArea().GetBBox
+						().GetHeight();
+					break;
+				}
+			}
+			foreach (IRenderer child_1 in childRenderers)
+			{
+				CellRenderer cell = (CellRenderer)child_1;
 				if (((Cell)cell.GetModelElement()).GetCol() == 0)
 				{
 					startX = cell.GetOccupiedArea().GetBBox().GetX();
-					startY = cell.GetOccupiedArea().GetBBox().GetY() + cell.GetOccupiedArea().GetBBox
-						().GetHeight();
 					break;
 				}
 			}
@@ -852,7 +875,7 @@ namespace com.itextpdf.layout.renderer
 			float y1 = startY;
 			for (int i = 0; i < horizontalBorders.Count; i++)
 			{
-				List<Border> borders = horizontalBorders[i];
+				List<iTextSharp.Layout.Border.Border> borders = horizontalBorders[i];
 				float x1 = startX;
 				float x2 = x1 + columnWidths[0];
 				if (i == 0)
@@ -860,7 +883,7 @@ namespace com.itextpdf.layout.renderer
 					if (verticalBorders != null && verticalBorders.Count > 0 && verticalBorders[0].Count
 						 > 0 && verticalBorders[verticalBorders.Count - 1].Count > 0)
 					{
-						Border firstBorder = verticalBorders[0][0];
+						iTextSharp.Layout.Border.Border firstBorder = verticalBorders[0][0];
 						if (firstBorder != null)
 						{
 							x1 -= firstBorder.GetWidth() / 2;
@@ -875,7 +898,8 @@ namespace com.itextpdf.layout.renderer
 							 > 0 && verticalBorders[verticalBorders.Count - 1] != null && verticalBorders[verticalBorders
 							.Count - 1].Count > 0 && verticalBorders[0] != null)
 						{
-							Border firstBorder = verticalBorders[0][verticalBorders[0].Count - 1];
+							iTextSharp.Layout.Border.Border firstBorder = verticalBorders[0][verticalBorders[
+								0].Count - 1];
 							if (firstBorder != null)
 							{
 								x1 -= firstBorder.GetWidth() / 2;
@@ -886,8 +910,8 @@ namespace com.itextpdf.layout.renderer
 				int j;
 				for (j = 1; j < borders.Count; j++)
 				{
-					Border prevBorder = borders[j - 1];
-					Border curBorder = borders[j];
+					iTextSharp.Layout.Border.Border prevBorder = borders[j - 1];
+					iTextSharp.Layout.Border.Border curBorder = borders[j];
 					if (prevBorder != null)
 					{
 						if (!prevBorder.Equals(curBorder))
@@ -906,7 +930,8 @@ namespace com.itextpdf.layout.renderer
 						x2 += columnWidths[j];
 					}
 				}
-				Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
+				iTextSharp.Layout.Border.Border lastBorder = borders.Count > j - 1 ? borders[j - 
+					1] : null;
 				if (lastBorder != null)
 				{
 					if (verticalBorders[j].Count > 0)
@@ -934,7 +959,7 @@ namespace com.itextpdf.layout.renderer
 			float x1_1 = startX;
 			for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++)
 			{
-				List<Border> borders = verticalBorders[i_1];
+				List<iTextSharp.Layout.Border.Border> borders = verticalBorders[i_1];
 				y1 = startY;
 				float y2 = y1;
 				if (!heights.IsEmpty())
@@ -944,8 +969,8 @@ namespace com.itextpdf.layout.renderer
 				int j;
 				for (j = 1; j < borders.Count; j++)
 				{
-					Border prevBorder = borders[j - 1];
-					Border curBorder = borders[j];
+					iTextSharp.Layout.Border.Border prevBorder = borders[j - 1];
+					iTextSharp.Layout.Border.Border curBorder = borders[j];
 					if (prevBorder != null)
 					{
 						if (!prevBorder.Equals(curBorder))
@@ -969,7 +994,7 @@ namespace com.itextpdf.layout.renderer
 					x1_1 += columnWidths[i_1];
 					continue;
 				}
-				Border lastBorder = borders[j - 1];
+				iTextSharp.Layout.Border.Border lastBorder = borders[j - 1];
 				if (lastBorder != null)
 				{
 					lastBorder.DrawCellBorder(drawContext.GetCanvas(), x1_1, y1, x1_1, y2);
@@ -1021,8 +1046,10 @@ namespace com.itextpdf.layout.renderer
 					{
 						continue;
 					}
-					int colspan = cell.GetPropertyAsInteger(Property.COLSPAN);
-					int rowspan = cell.GetPropertyAsInteger(Property.ROWSPAN);
+					int colspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.COLSPAN
+						);
+					int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
+						);
 					float cellWidth = 0;
 					float colOffset = 0;
 					for (int i = col; i < col + colspan; i++)
@@ -1042,7 +1069,8 @@ namespace com.itextpdf.layout.renderer
 					Rectangle cellLayoutBox = new Rectangle(layoutArea.GetBBox().GetX() + colOffset, 
 						layoutArea.GetBBox().GetY(), cellWidth, cellLayoutBoxHeight);
 					LayoutArea cellArea = new LayoutArea(layoutArea.GetPageNumber(), cellLayoutBox);
-					LayoutResult cellResult = cell.Layout(new LayoutContext(cellArea));
+					LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea)
+						);
 					if (cellResult.GetStatus() != LayoutResult.FULL)
 					{
 						return false;
@@ -1060,7 +1088,7 @@ namespace com.itextpdf.layout.renderer
 			, bool hasContent)
 		{
 			int colN = ((Cell)cell.GetModelElement()).GetCol();
-			Border[] cellBorders = cell.GetBorders();
+			iTextSharp.Layout.Border.Border[] cellBorders = cell.GetBorders();
 			if (row + 1 - rowspan < 0)
 			{
 				rowspan = row + 1;
@@ -1100,9 +1128,9 @@ namespace com.itextpdf.layout.renderer
 				{
 					if (row + 1 == horizontalBorders.Count)
 					{
-						horizontalBorders.Add(new List<Border>());
+						horizontalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 					}
-					List<Border> borders = horizontalBorders[row + 1];
+					List<iTextSharp.Layout.Border.Border> borders = horizontalBorders[row + 1];
 					if (borders.Count <= colN + i_1)
 					{
 						for (int count = borders.Count; count < colN + i_1; count++)
@@ -1127,7 +1155,7 @@ namespace com.itextpdf.layout.renderer
 				{
 					if (row == horizontalBorders.Count)
 					{
-						horizontalBorders.Add(new List<Border>());
+						horizontalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 					}
 					horizontalBorders[row].Insert(colN + i_1, cellBorders[2]);
 				}
@@ -1137,7 +1165,7 @@ namespace com.itextpdf.layout.renderer
 				int numOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
 				for (int i = row - rowspan + 1; i_1 <= row; i_1++)
 				{
-					List<Border> borders = horizontalBorders[i_1];
+					List<iTextSharp.Layout.Border.Border> borders = horizontalBorders[i_1];
 					if (borders.Count < numOfColumns)
 					{
 						for (int j = borders.Count; j < numOfColumns; j++)
@@ -1175,7 +1203,7 @@ namespace com.itextpdf.layout.renderer
 				{
 					if (verticalBorders.IsEmpty())
 					{
-						verticalBorders.Add(new List<Border>());
+						verticalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 					}
 					if (verticalBorders[0].Count <= i_1)
 					{
@@ -1196,7 +1224,7 @@ namespace com.itextpdf.layout.renderer
 			{
 				for (int i = colN; i_2 <= colspan + colN; i_2++)
 				{
-					List<Border> borders = verticalBorders[i_2];
+					List<iTextSharp.Layout.Border.Border> borders = verticalBorders[i_2];
 					if (borders.Count < row + rowspan)
 					{
 						for (int j = borders.Count; j < row + rowspan; j++)
@@ -1208,17 +1236,17 @@ namespace com.itextpdf.layout.renderer
 			}
 		}
 
-		private bool CheckAndReplaceBorderInArray(List<List<Border>> borderArray, int i, 
-			int j, Border borderToAdd)
+		private bool CheckAndReplaceBorderInArray(List<List<iTextSharp.Layout.Border.Border
+			>> borderArray, int i, int j, iTextSharp.Layout.Border.Border borderToAdd)
 		{
 			if (borderArray.Count <= i)
 			{
 				for (int count = borderArray.Count; count <= i; count++)
 				{
-					borderArray.Add(new List<Border>());
+					borderArray.Add(new List<iTextSharp.Layout.Border.Border>());
 				}
 			}
-			List<Border> borders = borderArray[i];
+			List<iTextSharp.Layout.Border.Border> borders = borderArray[i];
 			if (borders.IsEmpty())
 			{
 				for (int count = 0; count < j; count++)
@@ -1240,7 +1268,7 @@ namespace com.itextpdf.layout.renderer
 					borders.Insert(count, null);
 				}
 			}
-			Border neighbour = borders[j];
+			iTextSharp.Layout.Border.Border neighbour = borders[j];
 			if (neighbour == null)
 			{
 				borders[j] = borderToAdd;

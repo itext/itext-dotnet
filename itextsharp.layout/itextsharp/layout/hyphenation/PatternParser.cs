@@ -18,13 +18,13 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using java.io;
-using java.net;
-using javax.xml.parsers;
-using org.xml.sax;
-using org.xml.sax.helpers;
+using Java.IO;
+using Java.Net;
+using Javax.Xml.Parsers;
+using Org.Xml.Sax;
+using Org.Xml.Sax.Helpers;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <p>A SAX document handler to read and parse hyphenation patterns
@@ -59,7 +59,7 @@ namespace com.itextpdf.layout.hyphenation
 
 		/// <summary>Construct a pattern parser.</summary>
 		/// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		private PatternParser()
 		{
 			token = new StringBuilder();
@@ -72,7 +72,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <summary>Construct a pattern parser.</summary>
 		/// <param name="consumer">a pattern consumer</param>
 		/// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public PatternParser(IPatternConsumer consumer)
 			: this()
 		{
@@ -83,7 +83,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <summary>Parses a hyphenation pattern file.</summary>
 		/// <param name="filename">the filename</param>
 		/// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void Parse(String filename)
 		{
 			try
@@ -106,7 +106,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <param name="stream">the InputStream for the file</param>
 		/// <param name="name">unique key representing country-language combination</param>
 		/// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void Parse(Stream stream, String name)
 		{
 			InputSource source = new InputSource(stream);
@@ -169,7 +169,7 @@ namespace com.itextpdf.layout.hyphenation
 				// chars.delete(0,i);
 				for (int countr = i; countr < chars.Length; countr++)
 				{
-					com.itextpdf.SetCharAt(chars, countr - i, chars[countr]);
+					iTextSharp.SetCharAt(chars, countr - i, chars[countr]);
 				}
 				chars.Length = chars.Length - i;
 				if (token.Length > 0)
@@ -192,7 +192,7 @@ namespace com.itextpdf.layout.hyphenation
 			// chars.delete(0,i);
 			for (int countr_1 = i; countr_1 < chars.Length; countr_1++)
 			{
-				com.itextpdf.SetCharAt(chars, countr_1 - i, chars[countr_1]);
+				iTextSharp.SetCharAt(chars, countr_1 - i, chars[countr_1]);
 			}
 			chars.Length = chars.Length - i;
 			if (space)
@@ -303,14 +303,14 @@ namespace com.itextpdf.layout.hyphenation
 			return il.ToString();
 		}
 
-		/// <exception cref="org.xml.sax.SAXException">if not caught</exception>
+		/// <exception cref="Org.Xml.Sax.SAXException">if not caught</exception>
 		protected internal virtual void GetExternalClasses()
 		{
 			XMLReader mainParser = parser;
 			parser = CreateParser();
 			parser.SetContentHandler(this);
 			parser.SetErrorHandler(this);
-			Stream stream = typeof(com.itextpdf.layout.hyphenation.PatternParser).GetResourceAsStream
+			Stream stream = typeof(iTextSharp.Layout.Hyphenation.PatternParser).GetResourceAsStream
 				("classes.xml");
 			InputSource source = new InputSource(stream);
 			try
@@ -331,7 +331,7 @@ namespace com.itextpdf.layout.hyphenation
 		// ContentHandler methods
 		//
 		/// <summary><inheritDoc/></summary>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		public override void StartElement(String uri, String local, String raw, Attributes
 			 attrs)
 		{
@@ -504,7 +504,7 @@ namespace com.itextpdf.layout.hyphenation
 		}
 
 		/// <summary><inheritDoc/></summary>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		public override void FatalError(SAXParseException ex)
 		{
 			errMsg = "[Fatal Error] " + GetLocationString(ex) + ": " + ex.Message;

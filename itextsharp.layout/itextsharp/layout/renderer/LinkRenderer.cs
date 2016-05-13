@@ -1,5 +1,5 @@
 /*
-$Id: 8bc5dba458371ca8eba2f45d38bc54d8b7090da0 $
+$Id: 8e6be20522f8c403b4cedcc88861813c15300835 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,14 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.layout.border;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Layout.Element;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public class LinkRenderer : TextRenderer
 	{
@@ -67,14 +64,15 @@ namespace com.itextpdf.layout.renderer
 		public override void Draw(DrawContext drawContext)
 		{
 			base.Draw(drawContext);
-			int position = GetPropertyAsInteger(Property.POSITION);
-			if (position == LayoutPosition.RELATIVE)
+			bool isRelativePosition = IsRelativePosition();
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(false);
 			}
 			PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
 			linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-			Border border = GetProperty(Property.BORDER);
+			iTextSharp.Layout.Border.Border border = GetProperty(iTextSharp.Layout.Property.Property
+				.BORDER);
 			if (border != null)
 			{
 				linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -83,7 +81,7 @@ namespace com.itextpdf.layout.renderer
 			{
 				linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
 			}
-			if (position == LayoutPosition.RELATIVE)
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(true);
 			}
@@ -93,7 +91,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override IRenderer GetNextRenderer()
 		{
-			return new com.itextpdf.layout.renderer.LinkRenderer((Link)modelElement, null);
+			return new iTextSharp.Layout.Renderer.LinkRenderer((Link)modelElement, null);
 		}
 	}
 }

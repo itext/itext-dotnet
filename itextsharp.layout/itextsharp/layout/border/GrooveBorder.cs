@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Color;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.layout.border
+namespace iTextSharp.Layout.Border
 {
 	public class GrooveBorder : Border3D
 	{
@@ -71,7 +71,7 @@ namespace com.itextpdf.layout.border
 
 		public override int GetType()
 		{
-			return Border._3D_GROOVE;
+			return iTextSharp.Layout.Border.Border._3D_GROOVE;
 		}
 
 		protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side 

@@ -44,14 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.xobject;
-using java.io;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.forms.fields
+namespace iTextSharp.Forms.Fields
 {
 	/// <summary>An interactive control on the screen that raises events and/or can retain data.
 	/// 	</summary>
@@ -85,7 +84,7 @@ namespace com.itextpdf.forms.fields
 		/// <summary>Returns <code>Btn</code>, the form type for choice form fields.</summary>
 		/// <returns>
 		/// the form type, as a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
 		/// </returns>
 		public override PdfName GetFormType()
 		{
@@ -119,10 +118,9 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfButtonFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetRadio(bool radio)
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadio(bool radio)
 		{
-			return (com.itextpdf.forms.fields.PdfButtonFormField)SetFieldFlag(FF_RADIO, radio
-				);
+			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIO, radio);
 		}
 
 		/// <summary>
@@ -151,10 +149,10 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfButtonFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetToggleOff(bool toggleOff
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetToggleOff(bool toggleOff
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfButtonFormField)SetFieldFlag(FF_NO_TOGGLE_TO_OFF
+			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_NO_TOGGLE_TO_OFF
 				, !toggleOff);
 		}
 
@@ -173,11 +171,11 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfButtonFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetPushButton(bool pushButton
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetPushButton(bool pushButton
 			)
 		{
-			return (com.itextpdf.forms.fields.PdfButtonFormField)SetFieldFlag(FF_PUSH_BUTTON, 
-				pushButton);
+			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_PUSH_BUTTON, pushButton
+				);
 		}
 
 		/// <summary>
@@ -213,18 +211,17 @@ namespace com.itextpdf.forms.fields
 		/// current
 		/// <see cref="PdfButtonFormField"/>
 		/// </returns>
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetRadiosInUnison(bool
-			 radiosInUnison)
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadiosInUnison(bool 
+			radiosInUnison)
 		{
-			return (com.itextpdf.forms.fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON
+			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON
 				, radiosInUnison);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetImage(String image
-			)
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image)
 		{
-			Stream @is = new FileInputStream(image);
+			Stream @is = new FileStream(image);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int r = @is.Read();
 			while (r != -1)
@@ -233,10 +230,10 @@ namespace com.itextpdf.forms.fields
 				r = @is.Read();
 			}
 			String str = Base64.EncodeBytes(baos.ToArray());
-			return (com.itextpdf.forms.fields.PdfButtonFormField)SetValue(str);
+			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetValue(str);
 		}
 
-		public virtual com.itextpdf.forms.fields.PdfButtonFormField SetImageAsForm(PdfFormXObject
+		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImageAsForm(PdfFormXObject
 			 form)
 		{
 			this.form = form;

@@ -42,14 +42,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.canvas.draw;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Canvas.Draw;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public class TabRenderer : AbstractRenderer
 	{
@@ -62,7 +61,7 @@ namespace com.itextpdf.layout.renderer
 		{
 			LayoutArea area = layoutContext.GetArea();
 			float width = RetrieveWidth(area.GetBBox().GetWidth());
-			float height = GetPropertyAsFloat(Property.HEIGHT);
+			float height = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT);
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().
 				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), width, height));
 			return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
@@ -70,7 +69,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override void Draw(DrawContext drawContext)
 		{
-			ILineDrawer leader = GetProperty(Property.TAB_LEADER);
+			ILineDrawer leader = GetProperty(iTextSharp.Layout.Property.Property.TAB_LEADER);
 			if (leader == null)
 			{
 				return;
@@ -89,7 +88,7 @@ namespace com.itextpdf.layout.renderer
 
 		public override IRenderer GetNextRenderer()
 		{
-			return new com.itextpdf.layout.renderer.TabRenderer((Tab)modelElement);
+			return new iTextSharp.Layout.Renderer.TabRenderer((Tab)modelElement);
 		}
 	}
 }

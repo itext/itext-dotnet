@@ -1,5 +1,5 @@
 /*
-$Id: d1e630447fd33b3db3f975bc9ed379d8baacf326 $
+$Id: 0f90b3401844bfcb5983bcd8263440b8fac1e00d $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,12 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.Layout.Layout;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public abstract class RootRenderer : AbstractRenderer
 	{
@@ -70,12 +69,14 @@ namespace com.itextpdf.layout.renderer
 			if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers
 				.Count - 1] == renderer)
 			{
+				childRenderers.RemoveAt(childRenderers.Count - 1);
 				IList<IRenderer> resultRenderers = new List<IRenderer>();
 				LayoutResult result = null;
 				LayoutArea storedArea = null;
 				LayoutArea nextStoredArea = null;
-				while (currentArea != null && renderer != null && (result = renderer.Layout(new LayoutContext
-					(currentArea.Clone()))).GetStatus() != LayoutResult.FULL)
+				while (currentArea != null && renderer != null && (result = renderer.SetParent(this
+					).Layout(new LayoutContext(currentArea.Clone()))).GetStatus() != LayoutResult.FULL
+					)
 				{
 					if (result.GetStatus() == LayoutResult.PARTIAL)
 					{
@@ -115,11 +116,11 @@ namespace com.itextpdf.layout.renderer
 							{
 								if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
 								{
-									if (bool.ValueOf(true).Equals(result.GetOverflowRenderer().GetModelElement().GetProperty
-										(Property.KEEP_TOGETHER)))
+									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty(iTextSharp.Layout.Property.Property
+										.KEEP_TOGETHER)))
 									{
-										result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER
-											, false);
+										result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
+											.KEEP_TOGETHER, false);
 										Logger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
 										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
 											));
@@ -133,7 +134,8 @@ namespace com.itextpdf.layout.renderer
 									}
 									else
 									{
-										result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
+										result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
+											, true);
 										Logger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
 										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
 									}
@@ -149,6 +151,8 @@ namespace com.itextpdf.layout.renderer
 				}
 				if (currentArea != null)
 				{
+					System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null
+						);
 					currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea
 						().GetBBox().GetHeight());
 					currentArea.SetEmptyArea(false);
@@ -157,7 +161,6 @@ namespace com.itextpdf.layout.renderer
 						ProcessRenderer(renderer, resultRenderers);
 					}
 				}
-				childRenderers.RemoveAt(childRenderers.Count - 1);
 				if (!immediateFlush)
 				{
 					childRenderers.AddAll(resultRenderers);
@@ -168,13 +171,14 @@ namespace com.itextpdf.layout.renderer
 				if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
 					 - 1] == renderer)
 				{
-					int positionedPageNumber = renderer.GetProperty(Property.PAGE_NUMBER);
+					int positionedPageNumber = renderer.GetProperty(iTextSharp.Layout.Property.Property
+						.PAGE_NUMBER);
 					if (positionedPageNumber == null)
 					{
 						positionedPageNumber = currentPageNumber;
 					}
-					renderer.Layout(new LayoutContext(new LayoutArea(positionedPageNumber, currentArea
-						.GetBBox().Clone())));
+					renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(positionedPageNumber
+						, currentArea.GetBBox().Clone())));
 					if (immediateFlush)
 					{
 						FlushSingleRenderer(renderer);

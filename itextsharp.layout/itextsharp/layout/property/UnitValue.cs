@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.layout.property
+namespace iTextSharp.Layout.Property
 {
 	/// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
 	public class UnitValue
@@ -79,10 +79,9 @@ namespace com.itextpdf.layout.property
 		/// 
 		/// <see cref="UnitValue"/>
 		/// </returns>
-		public static com.itextpdf.layout.property.UnitValue CreatePointValue(float value
-			)
+		public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value)
 		{
-			return new com.itextpdf.layout.property.UnitValue(POINT, value);
+			return new iTextSharp.Layout.Property.UnitValue(POINT, value);
 		}
 
 		/// <summary>Creates a UnitValue PERCENT object with a specified value.</summary>
@@ -93,10 +92,10 @@ namespace com.itextpdf.layout.property
 		/// 
 		/// <see cref="UnitValue"/>
 		/// </returns>
-		public static com.itextpdf.layout.property.UnitValue CreatePercentValue(float value
+		public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value
 			)
 		{
-			return new com.itextpdf.layout.property.UnitValue(PERCENT, value);
+			return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
 		}
 
 		public virtual int GetUnitType()
@@ -131,21 +130,21 @@ namespace com.itextpdf.layout.property
 
 		public override bool Equals(Object obj)
 		{
-			if (!(obj is com.itextpdf.layout.property.UnitValue))
+			if (!(obj is iTextSharp.Layout.Property.UnitValue))
 			{
 				return false;
 			}
-			com.itextpdf.layout.property.UnitValue other = (com.itextpdf.layout.property.UnitValue
+			iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue
 				)obj;
-			return int.Compare(unitType, other.unitType) == 0 && float.Compare(value, other.value
-				) == 0;
+			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 
+				&& float.Compare(value, other.value) == 0;
 		}
 
 		public override int GetHashCode()
 		{
 			int hash = 7;
 			hash = 71 * hash + this.unitType;
-			hash = 71 * hash + com.itextpdf.io.util.JavaUtil.FloatToIntBits(this.value);
+			hash = 71 * hash + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(this.value);
 			return hash;
 		}
 	}

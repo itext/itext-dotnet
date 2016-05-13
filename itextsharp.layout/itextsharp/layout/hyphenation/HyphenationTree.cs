@@ -19,10 +19,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using java.io;
-using java.net;
+using Java.IO;
+using Java.Net;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <p>This tree structure stores the hyphenation patterns in an efficient
@@ -89,14 +90,14 @@ namespace com.itextpdf.layout.hyphenation
 			for (i = 0; i < n; i++)
 			{
 				int j = i >> 1;
-				byte v = unchecked((byte)((values[i] - (byte)('0') + 1) & 0x0f));
+				byte v = (byte)((values[i] - '0' + 1) & 0x0f);
 				if ((i & 1) == 1)
 				{
-					va[j + offset] = unchecked((byte)(va[j + offset] | v));
+					va[j + offset] = (byte)(va[j + offset] | v);
 				}
 				else
 				{
-					va[j + offset] = unchecked((byte)(v << 4));
+					va[j + offset] = (byte)(v << 4);
 				}
 			}
 			// big endian
@@ -131,7 +132,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <summary>Read hyphenation patterns from an XML file.</summary>
 		/// <param name="filename">the filename</param>
 		/// <exception cref="HyphenationException">In case the parsing fails</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void LoadPatterns(String filename)
 		{
 			File f = new File(filename);
@@ -155,7 +156,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <param name="stream">the InputSource for the file</param>
 		/// <param name="name">unique key representing country-language combination</param>
 		/// <exception cref="HyphenationException">In case the parsing fails</exception>
-		/// <exception cref="com.itextpdf.layout.hyphenation.HyphenationException"/>
+		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void LoadPatterns(Stream stream, String name)
 		{
 			PatternParser pp = new PatternParser(this);
@@ -231,7 +232,7 @@ namespace com.itextpdf.layout.hyphenation
 			byte[] res = new byte[buf.Length];
 			for (int i = 0; i < res.Length; i++)
 			{
-				res[i] = unchecked((byte)buf[i]);
+				res[i] = (byte)buf[i];
 			}
 			return res;
 		}
@@ -354,15 +355,15 @@ namespace com.itextpdf.layout.hyphenation
 		/// object representing
 		/// the hyphenated word or null if word is not hyphenated.
 		/// </returns>
-		public virtual Hyphenation Hyphenate(String word, int remainCharCount, int pushCharCount
-			)
+		public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word, int
+			 remainCharCount, int pushCharCount)
 		{
 			char[] w = word.ToCharArray();
 			if (IsMultiPartWord(w, w.Length))
 			{
 				IList<char[]> words = SplitOnNonCharacters(w);
-				return new Hyphenation(new String(w), GetHyphPointsForWords(words, remainCharCount
-					, pushCharCount));
+				return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords
+					(words, remainCharCount, pushCharCount));
 			}
 			else
 			{
@@ -402,7 +403,7 @@ namespace com.itextpdf.layout.hyphenation
 			IList<int> breakPoints = GetNonLetterBreaks(word);
 			if (breakPoints.Count == 0)
 			{
-				return java.util.Collections.EmptyList();
+				return JavaCollectionsUtil.EmptyList();
 			}
 			IList<char[]> words = new List<char[]>();
 			for (int ibreak = 0; ibreak < breakPoints.Count; ibreak++)
@@ -463,9 +464,9 @@ namespace com.itextpdf.layout.hyphenation
 				++)
 			{
 				char[] nonLetterWord = nonLetterWords[iNonLetterWord];
-				Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord.Length, (iNonLetterWord
-					 == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords.Count - 1) ? pushCharCount
-					 : 1);
+				iTextSharp.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord
+					.Length, (iNonLetterWord == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords
+					.Count - 1) ? pushCharCount : 1);
 				if (curHyph == null)
 				{
 					continue;
@@ -512,8 +513,8 @@ namespace com.itextpdf.layout.hyphenation
 		/// object representing
 		/// the hyphenated word or null if word is not hyphenated.
 		/// </returns>
-		public virtual Hyphenation Hyphenate(char[] w, int offset, int len, int remainCharCount
-			, int pushCharCount)
+		public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int 
+			offset, int len, int remainCharCount, int pushCharCount)
 		{
 			int i;
 			char[] word = new char[len + 3];
@@ -615,7 +616,8 @@ namespace com.itextpdf.layout.hyphenation
 				// trim result array
 				int[] res = new int[k];
 				System.Array.Copy(result, 0, res, 0, k);
-				return new Hyphenation(new String(w, offset, len), res);
+				return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w, offset, len), 
+					res);
 			}
 			else
 			{

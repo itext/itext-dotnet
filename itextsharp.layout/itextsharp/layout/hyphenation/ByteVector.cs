@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <p>This class implements a simple byte vector with access to the

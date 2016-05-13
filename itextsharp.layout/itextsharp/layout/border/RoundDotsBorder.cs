@@ -43,10 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.layout.border
+namespace iTextSharp.Layout.Border
 {
 	/// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
 	/// <remarks>
@@ -54,7 +53,7 @@ namespace com.itextpdf.layout.border
 	/// <see cref="DottedBorder"/>
 	/// .
 	/// </remarks>
-	public class RoundDotsBorder : Border
+	public class RoundDotsBorder : iTextSharp.Layout.Border.Border
 	{
 		private const float GAP_MODIFIER = 2.5f;
 
@@ -70,14 +69,14 @@ namespace com.itextpdf.layout.border
 		/// 	</summary>
 		/// <param name="color">color of the border</param>
 		/// <param name="width">width of the border</param>
-		public RoundDotsBorder(Color color, float width)
+		public RoundDotsBorder(iTextSharp.Kernel.Color.Color color, float width)
 			: base(color, width)
 		{
 		}
 
 		public override int GetType()
 		{
-			return Border.ROUND_DOTS;
+			return iTextSharp.Layout.Border.Border.ROUND_DOTS;
 		}
 
 		public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2

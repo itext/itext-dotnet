@@ -17,7 +17,7 @@
 using System;
 using System.Collections;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <h2>Ternary Search Tree.</h2>
@@ -120,7 +120,7 @@ namespace com.itextpdf.layout.hyphenation
 			Init();
 		}
 
-		internal TernaryTree(com.itextpdf.layout.hyphenation.TernaryTree tt)
+		internal TernaryTree(iTextSharp.Layout.Hyphenation.TernaryTree tt)
 		{
 			this.root = tt.root;
 			this.freenode = tt.freenode;
@@ -170,7 +170,7 @@ namespace com.itextpdf.layout.hyphenation
 				RedimNodeArrays(eq.Length + BLOCK_SIZE);
 			}
 			char[] strkey = new char[len--];
-			com.itextpdf.GetCharsForString(key, 0, len, strkey, 0);
+			iTextSharp.GetCharsForString(key, 0, len, strkey, 0);
 			strkey[len] = (char)0;
 			root = Insert(root, strkey, 0, val);
 		}
@@ -373,7 +373,7 @@ namespace com.itextpdf.layout.hyphenation
 		{
 			int len = key.Length;
 			char[] strkey = new char[len + 1];
-			com.itextpdf.GetCharsForString(key, 0, len, strkey, 0);
+			iTextSharp.GetCharsForString(key, 0, len, strkey, 0);
 			strkey[len] = (char)0;
 			return Find(strkey, 0);
 		}
@@ -532,14 +532,14 @@ namespace com.itextpdf.layout.hyphenation
 			// ok, compact kv array
 			CharVector kx = new CharVector();
 			kx.Alloc(1);
-			com.itextpdf.layout.hyphenation.TernaryTree map = new com.itextpdf.layout.hyphenation.TernaryTree
+			iTextSharp.Layout.Hyphenation.TernaryTree map = new iTextSharp.Layout.Hyphenation.TernaryTree
 				();
 			Compact(kx, map, root);
 			kv = kx;
 			kv.TrimToSize();
 		}
 
-		private void Compact(CharVector kx, com.itextpdf.layout.hyphenation.TernaryTree map
+		private void Compact(CharVector kx, iTextSharp.Layout.Hyphenation.TernaryTree map
 			, char p)
 		{
 			int k;

@@ -17,11 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
-using java.io;
+using Java.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary><p>This class is the main entry point to the hyphenation package.</summary>
 	/// <remarks>
@@ -34,7 +34,7 @@ namespace com.itextpdf.layout.hyphenation
 		private const String HYPHENATION_DEFAULT_RESOURCE = "com/itextpdf/hyph/";
 
 		/// <summary>Logging instance.</summary>
-		private static Logger log = LoggerFactory.GetLogger(typeof(com.itextpdf.layout.hyphenation.Hyphenator
+		private static Logger log = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Hyphenation.Hyphenator
 			));
 
 		private static HyphenationTreeCache hTreeCache;
@@ -247,7 +247,7 @@ namespace com.itextpdf.layout.hyphenation
 			String name = key + ".xml";
 			try
 			{
-				Stream fis = new FileInputStream(new File(new File(searchDirectory), name));
+				Stream fis = new FileStream(new File(new File(searchDirectory), name));
 				return GetHyphenationTree(fis, name);
 			}
 			catch (System.IO.IOException ioe)
@@ -305,8 +305,9 @@ namespace com.itextpdf.layout.hyphenation
 		/// <param name="rightMin">the minimum number of characters after the hyphenation point
 		/// 	</param>
 		/// <returns>the hyphenation result</returns>
-		public static Hyphenation Hyphenate(String lang, String country, IDictionary<String
-			, String> hyphPathNames, String word, int leftMin, int rightMin)
+		public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String
+			 country, IDictionary<String, String> hyphPathNames, String word, int leftMin, int
+			 rightMin)
 		{
 			HyphenationTree hTree = GetHyphenationTree(lang, country, hyphPathNames);
 			if (hTree == null)
@@ -325,12 +326,12 @@ namespace com.itextpdf.layout.hyphenation
 				int leftInd = 0;
 				int rightInd = softHyphens.Count - 1;
 				while (leftInd < softHyphens.Count && word.JSubstring(0, softHyphens[leftInd]).Replace
-					(com.itextpdf.GetStringValueOf(softHyphen), "").Length < leftMin)
+					(softHyphen.ToString(), "").Length < leftMin)
 				{
 					leftInd++;
 				}
-				while (rightInd >= 0 && word.Substring(softHyphens[rightInd] + 1).Replace(com.itextpdf.GetStringValueOf
-					(softHyphen), "").Length < rightMin)
+				while (rightInd >= 0 && word.Substring(softHyphens[rightInd] + 1).Replace(softHyphen
+					.ToString(), "").Length < rightMin)
 				{
 					rightInd--;
 				}
@@ -341,7 +342,7 @@ namespace com.itextpdf.layout.hyphenation
 					{
 						hyphenationPoints[i - leftInd] = softHyphens[i];
 					}
-					return new Hyphenation(word, hyphenationPoints);
+					return new iTextSharp.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
 				}
 				else
 				{
@@ -360,8 +361,8 @@ namespace com.itextpdf.layout.hyphenation
 		/// <param name="rightMin">the minimum number of characters after the hyphenation point
 		/// 	</param>
 		/// <returns>the hyphenation result</returns>
-		public static Hyphenation Hyphenate(String lang, String country, String word, int
-			 leftMin, int rightMin)
+		public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String
+			 country, String word, int leftMin, int rightMin)
 		{
 			return Hyphenate(lang, country, null, word, leftMin, rightMin);
 		}
@@ -369,7 +370,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <summary>Hyphenates a word.</summary>
 		/// <param name="word">the word to hyphenate</param>
 		/// <returns>the hyphenation result</returns>
-		public Hyphenation Hyphenate(String word)
+		public iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word)
 		{
 			return Hyphenate(lang, country, hyphPathNames, word, leftMin, rightMin);
 		}

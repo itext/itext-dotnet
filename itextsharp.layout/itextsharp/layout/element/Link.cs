@@ -43,20 +43,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.action;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.navigation;
-using com.itextpdf.layout.renderer;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Action;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Navigation;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.element
+namespace iTextSharp.Layout.Element
 {
 	/// <summary>
 	/// A clickable piece of
 	/// <see cref="Text"/>
 	/// which contains a
-	/// <see cref="com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation">link annotation dictionary
+	/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary
 	/// 	</see>
 	/// . The concept is largely similar to that of the
 	/// HTML anchor tag.
@@ -69,7 +69,7 @@ namespace com.itextpdf.layout.element
 		/// <param name="text">the textual contents of the link</param>
 		/// <param name="linkAnnotation">
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
 		/// </param>
 		public Link(String text, PdfLinkAnnotation linkAnnotation)
 			: base(text)
@@ -82,7 +82,7 @@ namespace com.itextpdf.layout.element
 		/// <param name="text">the textual contents of the link</param>
 		/// <param name="action">
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.action.PdfAction"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Action.PdfAction"/>
 		/// </param>
 		public Link(String text, PdfAction action)
 			: this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0))
@@ -94,7 +94,7 @@ namespace com.itextpdf.layout.element
 		/// <param name="text">the textual contents of the link</param>
 		/// <param name="destination">
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.navigation.PdfDestination"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Navigation.PdfDestination"/>
 		/// </param>
 		public Link(String text, PdfDestination destination)
 			: this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination
@@ -105,7 +105,7 @@ namespace com.itextpdf.layout.element
 		/// <summary>Gets the link annotation dictionary associated with this link.</summary>
 		/// <returns>
 		/// a
-		/// <see cref="com.itextpdf.kernel.pdf.annot.PdfLinkAnnotation"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
 		/// </returns>
 		public virtual PdfLinkAnnotation GetLinkAnnotation()
 		{

@@ -1,5 +1,5 @@
 /*
-$Id: 7633430a115ba6b74198d6850f65427031e7fd40 $
+$Id: 6e417f5612777079caf9f0053776695a26193d57 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,86 +45,74 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.layout.border;
-using com.itextpdf.layout.hyphenation;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.splitting;
-using java.lang;
+using Java.Lang;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Layout.Hyphenation;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
+using iTextSharp.Layout.Splitting;
 
-namespace com.itextpdf.layout
+namespace iTextSharp.Layout
 {
 	/// <summary>A generic abstract element that fits in a PDF layout object hierarchy.</summary>
 	/// <remarks>
 	/// A generic abstract element that fits in a PDF layout object hierarchy.
 	/// A superclass of all
-	/// <see cref="com.itextpdf.layout.element.IElement">layout object</see>
+	/// <see cref="iTextSharp.Layout.Element.IElement">layout object</see>
 	/// implementations.
 	/// </remarks>
 	/// <?/>
 	public abstract class ElementPropertyContainer<T> : IPropertyContainer
 		where T : IPropertyContainer
 	{
-		protected internal IDictionary<Property, Object> properties = new Dictionary<Property
-			, Object>();
+		protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
+			>();
 
-		public virtual void SetProperty(Property property, Object value)
+		public virtual void SetProperty(int property, Object value)
 		{
 			properties[property] = value;
 		}
 
-		public virtual bool HasProperty(Property property)
+		public virtual bool HasProperty(int property)
 		{
 			return HasOwnProperty(property);
 		}
 
-		public virtual bool HasOwnProperty(Property property)
+		public virtual bool HasOwnProperty(int property)
 		{
 			return properties.ContainsKey(property);
 		}
 
-		public virtual void DeleteOwnProperty(Property property)
+		public virtual void DeleteOwnProperty(int property)
 		{
 			properties.Remove(property);
 		}
 
-		public virtual T1 GetProperty<T1>(Property property)
+		public virtual T1 GetProperty<T1>(int property)
 		{
 			return GetOwnProperty(property);
 		}
 
-		public virtual T1 GetOwnProperty<T1>(Property property)
+		public virtual T1 GetOwnProperty<T1>(int property)
 		{
 			return (T1)properties[property];
 		}
 
-		public virtual T1 GetDefaultProperty<T1>(Property property)
+		public virtual T1 GetDefaultProperty<T1>(int property)
 		{
 			switch (property)
 			{
-				case Property.MARGIN_TOP:
-				case Property.MARGIN_RIGHT:
-				case Property.MARGIN_BOTTOM:
-				case Property.MARGIN_LEFT:
-				case Property.PADDING_TOP:
-				case Property.PADDING_RIGHT:
-				case Property.PADDING_BOTTOM:
-				case Property.PADDING_LEFT:
+				case iTextSharp.Layout.Property.Property.MARGIN_TOP:
+				case iTextSharp.Layout.Property.Property.MARGIN_RIGHT:
+				case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
+				case iTextSharp.Layout.Property.Property.MARGIN_LEFT:
+				case iTextSharp.Layout.Property.Property.PADDING_TOP:
+				case iTextSharp.Layout.Property.Property.PADDING_RIGHT:
+				case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
+				case iTextSharp.Layout.Property.Property.PADDING_LEFT:
 				{
 					return (T1)float.ValueOf(0);
-				}
-
-				case Property.POSITION:
-				{
-					return (T1)System.Convert.ToInt32(LayoutPosition.STATIC);
-				}
-
-				case Property.FORCED_PLACEMENT:
-				{
-					return (T1)false;
 				}
 
 				default:
@@ -136,10 +124,10 @@ namespace com.itextpdf.layout
 
 		/// <summary>Gets the width property of the Element.</summary>
 		/// <returns>the width of the element, with a value and a measurement unit.</returns>
-		/// <seealso cref="com.itextpdf.layout.property.UnitValue"/>
+		/// <seealso cref="iTextSharp.Layout.Property.UnitValue"/>
 		public virtual UnitValue GetWidth()
 		{
-			return GetProperty(Property.WIDTH);
+			return GetProperty(iTextSharp.Layout.Property.Property.WIDTH);
 		}
 
 		/// <summary>Sets the width property of the Element, measured in points.</summary>
@@ -147,7 +135,8 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetWidth(float width)
 		{
-			SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
+			SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
+				(width));
 			return (T)this;
 		}
 
@@ -156,24 +145,25 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetWidthPercent(float widthPercent)
 		{
-			SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
+			SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePercentValue
+				(widthPercent));
 			return (T)this;
 		}
 
 		/// <summary>
 		/// Sets the width property of the Element with a
-		/// <see cref="com.itextpdf.layout.property.UnitValue"/>
+		/// <see cref="iTextSharp.Layout.Property.UnitValue"/>
 		/// .
 		/// </summary>
 		/// <param name="width">
 		/// a
-		/// <see cref="com.itextpdf.layout.property.UnitValue"/>
+		/// <see cref="iTextSharp.Layout.Property.UnitValue"/>
 		/// object
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetWidth(UnitValue width)
 		{
-			SetProperty(Property.WIDTH, width);
+			SetProperty(iTextSharp.Layout.Property.Property.WIDTH, width);
 			return (T)this;
 		}
 
@@ -181,7 +171,7 @@ namespace com.itextpdf.layout
 		/// <returns>the height of the element, as a floating point value.</returns>
 		public virtual float GetHeight()
 		{
-			return GetProperty(Property.HEIGHT);
+			return GetProperty(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
 
 		/// <summary>Sets the height property of the Element.</summary>
@@ -189,7 +179,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetHeight(float height)
 		{
-			SetProperty(Property.HEIGHT, height);
+			SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, height);
 			return (T)this;
 		}
 
@@ -197,20 +187,13 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets values for a relative repositioning of the Element. Also has as a
 		/// side effect that the Element's
-		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
 		/// is changed to
-		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.RELATIVE">relative</see>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutPosition.RELATIVE">relative</see>
 		/// .
-		/// &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-		/// <p>
 		/// The default implementation in
-		/// <see cref="com.itextpdf.layout.renderer.AbstractRenderer"/>
+		/// <see cref="iTextSharp.Layout.Renderer.AbstractRenderer"/>
 		/// treats
-		/// =======
-		/// The default implementation in
-		/// <see cref="com.itextpdf.layout.renderer.AbstractRenderer"/>
-		/// treats
-		/// &gt;&gt;&gt;&gt;&gt;&gt;&gt; develop
 		/// <code>left</code> and <code>top</code> as the most important values. Only
 		/// if <code>left == 0</code> will <code>right</code> be used for the
 		/// calculation; ditto for top vs. bottom.
@@ -220,15 +203,16 @@ namespace com.itextpdf.layout
 		/// <param name="right">movement to the right</param>
 		/// <param name="bottom">movement downwards on the page</param>
 		/// <returns>this Element.</returns>
-		/// <seealso cref="com.itextpdf.layout.layout.LayoutPosition.RELATIVE"/>
+		/// <seealso cref="iTextSharp.Layout.Layout.LayoutPosition.RELATIVE"/>
 		public virtual T SetRelativePosition(float left, float top, float right, float bottom
 			)
 		{
-			SetProperty(Property.POSITION, LayoutPosition.RELATIVE);
-			SetProperty(Property.LEFT, left);
-			SetProperty(Property.RIGHT, right);
-			SetProperty(Property.TOP, top);
-			SetProperty(Property.BOTTOM, bottom);
+			SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.RELATIVE
+				);
+			SetProperty(iTextSharp.Layout.Property.Property.LEFT, left);
+			SetProperty(iTextSharp.Layout.Property.Property.RIGHT, right);
+			SetProperty(iTextSharp.Layout.Property.Property.TOP, top);
+			SetProperty(iTextSharp.Layout.Property.Property.BOTTOM, bottom);
 			return (T)this;
 		}
 
@@ -236,9 +220,9 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element. Also has as a
 		/// side effect that the Element's
-		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
 		/// is changed to
-		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
 		/// .
 		/// </remarks>
 		/// <param name="x">horizontal position on the page</param>
@@ -255,24 +239,24 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element. Also has as a
 		/// side effect that the Element's
-		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
 		/// is changed to
-		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
 		/// .
 		/// </remarks>
 		/// <param name="x">horizontal position on the page</param>
 		/// <param name="y">vertical position on the page</param>
 		/// <param name="width">
 		/// a
-		/// <see cref="com.itextpdf.layout.property.UnitValue"/>
+		/// <see cref="iTextSharp.Layout.Property.UnitValue"/>
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetFixedPosition(float x, float y, UnitValue width)
 		{
-			SetProperty(Property.POSITION, LayoutPosition.FIXED);
-			SetProperty(Property.X, x);
-			SetProperty(Property.Y, y);
-			SetProperty(Property.WIDTH, width);
+			SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+			SetProperty(iTextSharp.Layout.Property.Property.X, x);
+			SetProperty(iTextSharp.Layout.Property.Property.Y, y);
+			SetProperty(iTextSharp.Layout.Property.Property.WIDTH, width);
 			return (T)this;
 		}
 
@@ -283,9 +267,9 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element, on a specific
 		/// page. Also has as a side effect that the Element's
-		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
 		/// is changed to
-		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
 		/// .
 		/// </remarks>
 		/// <param name="pageNumber">the page where the element must be positioned</param>
@@ -296,7 +280,7 @@ namespace com.itextpdf.layout
 		public virtual T SetFixedPosition(int pageNumber, float x, float y, float width)
 		{
 			SetFixedPosition(x, y, width);
-			SetProperty(Property.PAGE_NUMBER, pageNumber);
+			SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
 			return (T)this;
 		}
 
@@ -307,9 +291,9 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets values for a absolute repositioning of the Element, on a specific
 		/// page. Also has as a side effect that the Element's
-		/// <see cref="com.itextpdf.layout.property.Property.POSITION"/>
+		/// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
 		/// is changed to
-		/// <see cref="com.itextpdf.layout.layout.LayoutPosition.FIXED">fixed</see>
+		/// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
 		/// .
 		/// </remarks>
 		/// <param name="pageNumber">the page where the element must be positioned</param>
@@ -321,44 +305,45 @@ namespace com.itextpdf.layout
 			)
 		{
 			SetFixedPosition(x, y, width);
-			SetProperty(Property.PAGE_NUMBER, pageNumber);
+			SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
 			return (T)this;
 		}
 
 		/// <summary>Sets the horizontal alignment of this Element.</summary>
 		/// <param name="horizontalAlignment">
 		/// an enum value of type
-		/// <see cref="com.itextpdf.layout.property.HorizontalAlignment"/>
+		/// <see cref="iTextSharp.Layout.Property.HorizontalAlignment"/>
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetHorizontalAlignment(HorizontalAlignment horizontalAlignment)
 		{
-			SetProperty(Property.HORIZONTAL_ALIGNMENT, horizontalAlignment);
+			SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT, horizontalAlignment
+				);
 			return (T)this;
 		}
 
 		/// <summary>Sets the font of this Element.</summary>
 		/// <param name="font">
 		/// a
-		/// <see cref="com.itextpdf.kernel.font.PdfFont">font program</see>
+		/// <see cref="iTextSharp.Kernel.Font.PdfFont">font program</see>
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetFont(PdfFont font)
 		{
-			SetProperty(Property.FONT, font);
+			SetProperty(iTextSharp.Layout.Property.Property.FONT, font);
 			return (T)this;
 		}
 
 		/// <summary>Sets the font color of this Element.</summary>
 		/// <param name="fontColor">
 		/// a
-		/// <see cref="com.itextpdf.kernel.color.Color"/>
+		/// <see cref="iTextSharp.Kernel.Color.Color"/>
 		/// for the text in this Element.
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetFontColor(Color fontColor)
+		public virtual T SetFontColor(iTextSharp.Kernel.Color.Color fontColor)
 		{
-			SetProperty(Property.FONT_COLOR, fontColor);
+			SetProperty(iTextSharp.Layout.Property.Property.FONT_COLOR, fontColor);
 			return (T)this;
 		}
 
@@ -367,19 +352,19 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetFontSize(float fontSize)
 		{
-			SetProperty(Property.FONT_SIZE, fontSize);
+			SetProperty(iTextSharp.Layout.Property.Property.FONT_SIZE, fontSize);
 			return (T)this;
 		}
 
 		/// <summary>Sets the font size of this Element.</summary>
 		/// <param name="alignment">
 		/// an enum value of type
-		/// <see cref="com.itextpdf.layout.property.TextAlignment"/>
+		/// <see cref="iTextSharp.Layout.Property.TextAlignment"/>
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetTextAlignment(TextAlignment alignment)
 		{
-			SetProperty(Property.TEXT_ALIGNMENT, alignment);
+			SetProperty(iTextSharp.Layout.Property.Property.TEXT_ALIGNMENT, alignment);
 			return (T)this;
 		}
 
@@ -393,7 +378,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetCharacterSpacing(float charSpacing)
 		{
-			SetProperty(Property.CHARACTER_SPACING, charSpacing);
+			SetProperty(iTextSharp.Layout.Property.Property.CHARACTER_SPACING, charSpacing);
 			return (T)this;
 		}
 
@@ -406,7 +391,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetWordSpacing(float wordSpacing)
 		{
-			SetProperty(Property.WORD_SPACING, wordSpacing);
+			SetProperty(iTextSharp.Layout.Property.Property.WORD_SPACING, wordSpacing);
 			return (T)this;
 		}
 
@@ -421,14 +406,15 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetFontKerning(FontKerning fontKerning)
 		{
-			SetProperty(Property.FONT_KERNING, fontKerning);
+			SetProperty(iTextSharp.Layout.Property.Property.FONT_KERNING, fontKerning);
 			return (T)this;
 		}
 
 		/// <summary>Specifies a background color for the Element.</summary>
 		/// <param name="backgroundColor">the background color</param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBackgroundColor(Color backgroundColor)
+		public virtual T SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor
+			)
 		{
 			return SetBackgroundColor(backgroundColor, 0, 0, 0, 0);
 		}
@@ -443,11 +429,11 @@ namespace com.itextpdf.layout
 		/// <param name="extraRight">extra coloring to the right side</param>
 		/// <param name="extraBottom">extra coloring at the bottom</param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBackgroundColor(Color backgroundColor, float extraLeft, float
-			 extraTop, float extraRight, float extraBottom)
+		public virtual T SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor
+			, float extraLeft, float extraTop, float extraRight, float extraBottom)
 		{
-			SetProperty(Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop
-				, extraRight, extraBottom));
+			SetProperty(iTextSharp.Layout.Property.Property.BACKGROUND, new Background(backgroundColor
+				, extraLeft, extraTop, extraRight, extraBottom));
 			return (T)this;
 		}
 
@@ -455,12 +441,12 @@ namespace com.itextpdf.layout
 		/// 	</summary>
 		/// <param name="border">
 		/// a customized
-		/// <see cref="com.itextpdf.layout.border.Border"/>
+		/// <see cref="iTextSharp.Layout.Border.Border"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBorder(Border border)
+		public virtual T SetBorder(iTextSharp.Layout.Border.Border border)
 		{
-			SetProperty(Property.BORDER, border);
+			SetProperty(iTextSharp.Layout.Property.Property.BORDER, border);
 			return (T)this;
 		}
 
@@ -468,12 +454,12 @@ namespace com.itextpdf.layout
 		/// 	</summary>
 		/// <param name="border">
 		/// a customized
-		/// <see cref="com.itextpdf.layout.border.Border"/>
+		/// <see cref="iTextSharp.Layout.Border.Border"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBorderTop(Border border)
+		public virtual T SetBorderTop(iTextSharp.Layout.Border.Border border)
 		{
-			SetProperty(Property.BORDER_TOP, border);
+			SetProperty(iTextSharp.Layout.Property.Property.BORDER_TOP, border);
 			return (T)this;
 		}
 
@@ -481,12 +467,12 @@ namespace com.itextpdf.layout
 		/// 	</summary>
 		/// <param name="border">
 		/// a customized
-		/// <see cref="com.itextpdf.layout.border.Border"/>
+		/// <see cref="iTextSharp.Layout.Border.Border"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBorderRight(Border border)
+		public virtual T SetBorderRight(iTextSharp.Layout.Border.Border border)
 		{
-			SetProperty(Property.BORDER_RIGHT, border);
+			SetProperty(iTextSharp.Layout.Property.Property.BORDER_RIGHT, border);
 			return (T)this;
 		}
 
@@ -494,12 +480,12 @@ namespace com.itextpdf.layout
 		/// 	</summary>
 		/// <param name="border">
 		/// a customized
-		/// <see cref="com.itextpdf.layout.border.Border"/>
+		/// <see cref="iTextSharp.Layout.Border.Border"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBorderBottom(Border border)
+		public virtual T SetBorderBottom(iTextSharp.Layout.Border.Border border)
 		{
-			SetProperty(Property.BORDER_BOTTOM, border);
+			SetProperty(iTextSharp.Layout.Property.Property.BORDER_BOTTOM, border);
 			return (T)this;
 		}
 
@@ -507,12 +493,12 @@ namespace com.itextpdf.layout
 		/// 	</summary>
 		/// <param name="border">
 		/// a customized
-		/// <see cref="com.itextpdf.layout.border.Border"/>
+		/// <see cref="iTextSharp.Layout.Border.Border"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetBorderLeft(Border border)
+		public virtual T SetBorderLeft(iTextSharp.Layout.Border.Border border)
 		{
-			SetProperty(Property.BORDER_LEFT, border);
+			SetProperty(iTextSharp.Layout.Property.Property.BORDER_LEFT, border);
 			return (T)this;
 		}
 
@@ -520,27 +506,28 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets a rule for splitting strings when they don't fit into one line.
 		/// The default implementation is
-		/// <see cref="com.itextpdf.layout.splitting.DefaultSplitCharacters"/>
+		/// <see cref="iTextSharp.Layout.Splitting.DefaultSplitCharacters"/>
 		/// </remarks>
 		/// <param name="splitCharacters">
 		/// an implementation of
-		/// <see cref="com.itextpdf.layout.splitting.ISplitCharacters"/>
+		/// <see cref="iTextSharp.Layout.Splitting.ISplitCharacters"/>
 		/// </param>
 		/// <returns>this Element.</returns>
 		public virtual T SetSplitCharacters(ISplitCharacters splitCharacters)
 		{
-			SetProperty(Property.SPLIT_CHARACTERS, splitCharacters);
+			SetProperty(iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS, splitCharacters
+				);
 			return (T)this;
 		}
 
 		/// <summary>Gets a rule for splitting strings when they don't fit into one line.</summary>
 		/// <returns>
 		/// the current string splitting rule, an implementation of
-		/// <see cref="com.itextpdf.layout.splitting.ISplitCharacters"/>
+		/// <see cref="iTextSharp.Layout.Splitting.ISplitCharacters"/>
 		/// </returns>
 		public virtual ISplitCharacters GetSplitCharacters()
 		{
-			return GetProperty(Property.SPLIT_CHARACTERS);
+			return GetProperty(iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS);
 		}
 
 		/// <summary>
@@ -549,11 +536,11 @@ namespace com.itextpdf.layout
 		/// boundary, or some combination of the three.
 		/// </summary>
 		/// <returns>the current text rendering mode</returns>
-		/// <seealso cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.TextRenderingMode
-		/// 	"/>
+		/// <seealso cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"
+		/// 	/>
 		public virtual int GetTextRenderingMode()
 		{
-			return GetProperty(Property.TEXT_RENDERING_MODE);
+			return GetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE);
 		}
 
 		/// <summary>
@@ -563,11 +550,12 @@ namespace com.itextpdf.layout
 		/// </summary>
 		/// <param name="textRenderingMode">an <code>int</code> value</param>
 		/// <returns>this Element.</returns>
-		/// <seealso cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.TextRenderingMode
-		/// 	"/>
+		/// <seealso cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"
+		/// 	/>
 		public virtual T SetTextRenderingMode(int textRenderingMode)
 		{
-			SetProperty(Property.TEXT_RENDERING_MODE, textRenderingMode);
+			SetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE, textRenderingMode
+				);
 			return (T)this;
 		}
 
@@ -577,9 +565,9 @@ namespace com.itextpdf.layout
 		/// The stroke color is the color of the outlines or edges of a shape.
 		/// </remarks>
 		/// <returns>the current stroke color</returns>
-		public virtual Color GetStrokeColor()
+		public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
 		{
-			return GetProperty(Property.STROKE_COLOR);
+			return GetProperty(iTextSharp.Layout.Property.Property.STROKE_COLOR);
 		}
 
 		/// <summary>Sets the stroke color for the current element.</summary>
@@ -589,9 +577,9 @@ namespace com.itextpdf.layout
 		/// </remarks>
 		/// <param name="strokeColor">a new stroke color</param>
 		/// <returns>this Element.</returns>
-		public virtual T SetStrokeColor(Color strokeColor)
+		public virtual T SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor)
 		{
-			SetProperty(Property.STROKE_COLOR, strokeColor);
+			SetProperty(iTextSharp.Layout.Property.Property.STROKE_COLOR, strokeColor);
 			return (T)this;
 		}
 
@@ -603,7 +591,7 @@ namespace com.itextpdf.layout
 		/// <returns>the current stroke width</returns>
 		public virtual float GetStrokeWidth()
 		{
-			return GetProperty(Property.STROKE_WIDTH);
+			return GetProperty(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
 		}
 
 		/// <summary>Sets the stroke width for the current element.</summary>
@@ -615,7 +603,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetStrokeWidth(float strokeWidth)
 		{
-			SetProperty(Property.STROKE_WIDTH, strokeWidth);
+			SetProperty(iTextSharp.Layout.Property.Property.STROKE_WIDTH, strokeWidth);
 			return (T)this;
 		}
 
@@ -627,7 +615,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual T SetBold()
 		{
-			SetProperty(Property.BOLD_SIMULATION, true);
+			SetProperty(iTextSharp.Layout.Property.Property.BOLD_SIMULATION, true);
 			return (T)this;
 		}
 
@@ -639,7 +627,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual T SetItalic()
 		{
-			SetProperty(Property.ITALIC_SIMULATION, true);
+			SetProperty(iTextSharp.Layout.Property.Property.ITALIC_SIMULATION, true);
 			return (T)this;
 		}
 
@@ -647,7 +635,7 @@ namespace com.itextpdf.layout
 		/// <remarks>
 		/// Sets default line-through attributes for text.
 		/// See
-		/// <see cref="ElementPropertyContainer{T}.SetUnderline(com.itextpdf.kernel.color.Color, float, float, float, float, int)
+		/// <see cref="ElementPropertyContainer{T}.SetUnderline(iTextSharp.Kernel.Color.Color, float, float, float, float, int)
 		/// 	"/>
 		/// for more fine tuning.
 		/// </remarks>
@@ -710,15 +698,16 @@ namespace com.itextpdf.layout
 		/// <param name="yPositionMul">the position multiplication factor with the font size</param>
 		/// <param name="lineCapStyle">
 		/// the end line cap style. Allowed values are enumerated in
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineCapStyle"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
 		/// </param>
 		/// <returns>this element</returns>
-		public virtual T SetUnderline(Color color, float thickness, float thicknessMul, float
-			 yPosition, float yPositionMul, int lineCapStyle)
+		public virtual T SetUnderline(iTextSharp.Kernel.Color.Color color, float thickness
+			, float thicknessMul, float yPosition, float yPositionMul, int lineCapStyle)
 		{
 			Underline newUnderline = new Underline(color, thickness, thicknessMul, yPosition, 
 				yPositionMul, lineCapStyle);
-			Object currentProperty = GetProperty(Property.UNDERLINE);
+			Object currentProperty = GetProperty(iTextSharp.Layout.Property.Property.UNDERLINE
+				);
 			if (currentProperty is IList)
 			{
 				((IList)currentProperty).Add(newUnderline);
@@ -727,12 +716,12 @@ namespace com.itextpdf.layout
 			{
 				if (currentProperty is Underline)
 				{
-					SetProperty(Property.UNDERLINE, com.itextpdf.io.util.JavaUtil.ArraysAsList((Underline
-						)currentProperty, newUnderline));
+					SetProperty(iTextSharp.Layout.Property.Property.UNDERLINE, iTextSharp.IO.Util.JavaUtil.ArraysAsList
+						((Underline)currentProperty, newUnderline));
 				}
 				else
 				{
-					SetProperty(Property.UNDERLINE, newUnderline);
+					SetProperty(iTextSharp.Layout.Property.Property.UNDERLINE, newUnderline);
 				}
 			}
 			return (T)this;
@@ -747,7 +736,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual T SetBaseDirection(BaseDirection baseDirection)
 		{
-			SetProperty(Property.BASE_DIRECTION, baseDirection);
+			SetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION, baseDirection);
 			return (T)this;
 		}
 
@@ -759,7 +748,7 @@ namespace com.itextpdf.layout
 		/// <returns>this element</returns>
 		public virtual T SetHyphenation(HyphenationConfig hyphenationConfig)
 		{
-			SetProperty(Property.HYPHENATION, hyphenationConfig);
+			SetProperty(iTextSharp.Layout.Property.Property.HYPHENATION, hyphenationConfig);
 			return (T)this;
 		}
 
@@ -768,7 +757,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetFontScript(Character.UnicodeScript script)
 		{
-			SetProperty(Property.FONT_SCRIPT, script);
+			SetProperty(iTextSharp.Layout.Property.Property.FONT_SCRIPT, script);
 			return (T)this;
 		}
 
@@ -778,7 +767,7 @@ namespace com.itextpdf.layout
 		/// <returns>this Element.</returns>
 		public virtual T SetDestination(String destination)
 		{
-			SetProperty(Property.DESTINATION, destination);
+			SetProperty(iTextSharp.Layout.Property.Property.DESTINATION, destination);
 			return (T)this;
 		}
 	}

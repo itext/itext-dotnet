@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>This is the class used to configure hyphenation on layout level</summary>
 	public class HyphenationConfig
@@ -113,7 +113,7 @@ namespace com.itextpdf.layout.hyphenation
 		/// <see langword="null"/>
 		/// if no hyphenation points are found.
 		/// </returns>
-		public virtual Hyphenation Hyphenate(String word)
+		public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word)
 		{
 			return hyphenator != null ? hyphenator.Hyphenate(word) : null;
 		}

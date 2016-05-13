@@ -1,5 +1,5 @@
 /*
-$Id: 96da8e643dfabb1a2fab26d4bc983681ce2f1d5d $
+$Id: b17f3a07f33a857bee0566bc53787b1dfef25fa7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,15 +44,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.layout;
-using com.itextpdf.layout.property;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Layout;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	public abstract class BlockRenderer : AbstractRenderer
 	{
@@ -65,7 +66,7 @@ namespace com.itextpdf.layout.renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (GetProperty(Property.ROTATION_ANGLE) != null)
+			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -76,24 +77,28 @@ namespace com.itextpdf.layout.renderer
 			{
 				return new LayoutResult(LayoutResult.NOTHING, null, null, this);
 			}
-			ApplyMargins(parentBBox, false);
-			ApplyBorderBox(parentBBox, false);
-			if (IsPositioned())
+			float[] margins = GetMargins();
+			ApplyMargins(parentBBox, margins, false);
+			iTextSharp.Layout.Border.Border[] borders = GetBorders();
+			ApplyBorderBox(parentBBox, borders, false);
+			bool isPositioned = IsPositioned();
+			if (isPositioned)
 			{
-				float x = GetPropertyAsFloat(Property.X);
+				float x = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
 			float blockWidth = RetrieveWidth(parentBBox.GetWidth());
-			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned()))
+			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned))
 			{
 				parentBBox.SetWidth(blockWidth);
 			}
-			ApplyPaddings(parentBBox, false);
+			float[] paddings = GetPaddings();
+			ApplyPaddings(parentBBox, paddings, false);
 			IList<Rectangle> areas;
-			if (IsPositioned())
+			if (isPositioned)
 			{
-				areas = java.util.Collections.SingletonList(parentBBox);
+				areas = JavaCollectionsUtil.SingletonList(parentBBox);
 			}
 			else
 			{
@@ -108,8 +113,9 @@ namespace com.itextpdf.layout.renderer
 			{
 				IRenderer childRenderer = childRenderers[childPos];
 				LayoutResult result;
-				while ((result = childRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber
-					, layoutBox)))).GetStatus() != LayoutResult.FULL)
+				childRenderer.SetParent(this);
+				while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea
+					(pageNumber, layoutBox)))).GetStatus() != LayoutResult.FULL)
 				{
 					if (result.GetOccupiedArea() != null)
 					{
@@ -118,7 +124,7 @@ namespace com.itextpdf.layout.renderer
 						layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
 							());
 					}
-					if (childRenderer.GetProperty(Property.WIDTH) != null)
+					if (childRenderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH) != null)
 					{
 						AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
 					}
@@ -158,9 +164,9 @@ namespace com.itextpdf.layout.renderer
 								overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
 									.Count));
 								overflowRenderer.childRenderers = overflowRendererChildren;
-								ApplyPaddings(occupiedArea.GetBBox(), true);
-								ApplyBorderBox(occupiedArea.GetBBox(), true);
-								ApplyMargins(occupiedArea.GetBBox(), true);
+								ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
+								ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+								ApplyMargins(occupiedArea.GetBBox(), margins, true);
 								return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer
 									);
 							}
@@ -176,21 +182,21 @@ namespace com.itextpdf.layout.renderer
 						{
 							if (result.GetStatus() == LayoutResult.NOTHING)
 							{
-								bool keepTogether = GetPropertyAsBoolean(Property.KEEP_TOGETHER);
+								bool keepTogether = IsKeepTogether();
 								int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult
 									.NOTHING;
 								AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
 								splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos
 									));
+								foreach (IRenderer renderer in splitRenderer.childRenderers)
+								{
+									renderer.SetParent(splitRenderer);
+								}
 								AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutResult);
 								IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
 								overflowRendererChildren.Add(result.GetOverflowRenderer());
 								overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
 									.Count));
-								foreach (IRenderer renderer in overflowRendererChildren)
-								{
-									renderer.SetParent(overflowRenderer);
-								}
 								overflowRenderer.childRenderers = overflowRendererChildren;
 								if (keepTogether)
 								{
@@ -198,10 +204,11 @@ namespace com.itextpdf.layout.renderer
 									overflowRenderer.childRenderers.Clear();
 									overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
 								}
-								ApplyPaddings(occupiedArea.GetBBox(), true);
-								ApplyBorderBox(occupiedArea.GetBBox(), true);
-								ApplyMargins(occupiedArea.GetBBox(), true);
-								if (GetPropertyAsBoolean(Property.FORCED_PLACEMENT))
+								ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
+								ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+								ApplyMargins(occupiedArea.GetBBox(), margins, true);
+								if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
+									)))
 								{
 									return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
 								}
@@ -221,32 +228,33 @@ namespace com.itextpdf.layout.renderer
 				{
 					layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
 						());
-					if (childRenderer.GetProperty(Property.WIDTH) != null)
+					if (childRenderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH) != null)
 					{
 						AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
 					}
 				}
 			}
-			ApplyPaddings(occupiedArea.GetBBox(), true);
+			ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
 			if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
 			{
 				occupiedArea.GetBBox().MoveDown(blockHeight - occupiedArea.GetBBox().GetHeight())
 					.SetHeight(blockHeight);
 			}
-			if (IsPositioned())
+			if (isPositioned)
 			{
-				float y = GetPropertyAsFloat(Property.Y);
+				float y = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
-			ApplyBorderBox(occupiedArea.GetBBox(), true);
-			ApplyMargins(occupiedArea.GetBBox(), true);
-			if (GetProperty(Property.ROTATION_ANGLE) != null)
+			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+			ApplyMargins(occupiedArea.GetBBox(), margins, true);
+			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))
 				{
-					if (!GetPropertyAsBoolean(Property.FORCED_PLACEMENT))
+					if (!true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
+						)))
 					{
 						return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
 					}
@@ -310,8 +318,8 @@ namespace com.itextpdf.layout.renderer
 					isTagged = false;
 				}
 			}
-			int position = GetPropertyAsInteger(Property.POSITION);
-			if (position == LayoutPosition.RELATIVE)
+			bool isRelativePosition = IsRelativePosition();
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(false);
 			}
@@ -320,7 +328,7 @@ namespace com.itextpdf.layout.renderer
 			DrawBorder(drawContext);
 			DrawChildren(drawContext);
 			EndRotationIfApplied(drawContext.GetCanvas());
-			if (position == LayoutPosition.RELATIVE)
+			if (isRelativePosition)
 			{
 				ApplyAbsolutePositioningTranslation(true);
 			}
@@ -338,18 +346,22 @@ namespace com.itextpdf.layout.renderer
 		public override Rectangle GetOccupiedAreaBBox()
 		{
 			Rectangle bBox = occupiedArea.GetBBox().Clone();
-			float rotationAngle = GetProperty(Property.ROTATION_ANGLE);
+			float rotationAngle = GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+				);
 			if (rotationAngle != null)
 			{
-				bBox.SetWidth(GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
-				bBox.SetHeight(GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT));
+				bBox.SetWidth(GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
+					));
+				bBox.SetHeight(GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+					));
 			}
 			return bBox;
 		}
 
 		protected internal virtual void ApplyVerticalAlignment()
 		{
-			VerticalAlignment verticalAlignment = GetProperty(Property.VERTICAL_ALIGNMENT);
+			VerticalAlignment verticalAlignment = GetProperty(iTextSharp.Layout.Property.Property
+				.VERTICAL_ALIGNMENT);
 			if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers
 				.Count > 0)
 			{
@@ -380,20 +392,22 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual void ApplyRotationLayout(Rectangle layoutBox)
 		{
-			float rotationPointX = GetPropertyAsFloat(Property.ROTATION_POINT_X);
-			float rotationPointY = GetPropertyAsFloat(Property.ROTATION_POINT_Y);
+			float rotationPointX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+				);
+			float rotationPointY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+				);
 			if (rotationPointX == null || rotationPointY == null)
 			{
 				// if rotation point was not specified, the most bottom-left point is used
 				rotationPointX = occupiedArea.GetBBox().GetX();
 				rotationPointY = occupiedArea.GetBBox().GetY();
-				SetProperty(Property.ROTATION_POINT_X, rotationPointX);
-				SetProperty(Property.ROTATION_POINT_Y, rotationPointY);
+				SetProperty(iTextSharp.Layout.Property.Property.ROTATION_POINT_X, rotationPointX);
+				SetProperty(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y, rotationPointY);
 			}
 			float height = occupiedArea.GetBBox().GetHeight();
 			float width = occupiedArea.GetBBox().GetWidth();
-			SetProperty(Property.ROTATION_INITIAL_WIDTH, width);
-			SetProperty(Property.ROTATION_INITIAL_HEIGHT, height);
+			SetProperty(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH, width);
+			SetProperty(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT, height);
 			if (!IsPositioned())
 			{
 				IList<Point> rotatedPoints = new List<Point>();
@@ -432,22 +446,28 @@ namespace com.itextpdf.layout.renderer
 				dy = (float)shift.GetY();
 				dx = (float)shift.GetX();
 			}
-			float angle = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+				);
 			AffineTransform transform = new AffineTransform();
 			transform.Rotate(angle);
 			float[] ctm = new float[6];
 			transform.GetMatrix(ctm);
-			ctm[4] = GetPropertyAsFloat(Property.ROTATION_POINT_X) + dx;
-			ctm[5] = GetPropertyAsFloat(Property.ROTATION_POINT_Y) + dy;
+			ctm[4] = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X)
+				 + dx;
+			ctm[5] = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y)
+				 + dy;
 			return ctm;
 		}
 
 		private Point GetLayoutShiftAndRotatedPoints(IList<Point> rotatedPoints, float shiftX
 			, float shiftY)
 		{
-			float angle = GetPropertyAsFloat(Property.ROTATION_ANGLE);
-			float width = GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH);
-			float height = GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT);
+			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+				);
+			float width = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
+				);
+			float height = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+				);
 			float left = occupiedArea.GetBBox().GetX() - shiftX;
 			float bottom = occupiedArea.GetBBox().GetY() - shiftY;
 			float right = left + width;
@@ -479,13 +499,16 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas)
 		{
-			float angle = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+				);
 			if (angle != null)
 			{
-				float heightDiff = GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea
-					.GetBBox().GetHeight();
-				float shiftX = GetPropertyAsFloat(Property.ROTATION_POINT_X);
-				float shiftY = GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
+				float heightDiff = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+					) - occupiedArea.GetBBox().GetHeight();
+				float shiftX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+					);
+				float shiftY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+					) + heightDiff;
 				Move(-shiftX, -shiftY);
 				float[] ctm = ApplyRotation();
 				canvas.SaveState().ConcatMatrix(ctm[0], ctm[1], ctm[2], ctm[3], ctm[4], ctm[5]);
@@ -494,13 +517,16 @@ namespace com.itextpdf.layout.renderer
 
 		protected internal virtual void EndRotationIfApplied(PdfCanvas canvas)
 		{
-			float angle = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+				);
 			if (angle != null)
 			{
-				float heightDiff = GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea
-					.GetBBox().GetHeight();
-				float shiftX = GetPropertyAsFloat(Property.ROTATION_POINT_X);
-				float shiftY = GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
+				float heightDiff = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+					) - occupiedArea.GetBBox().GetHeight();
+				float shiftX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+					);
+				float shiftY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+					) + heightDiff;
 				canvas.RestoreState();
 				Move(shiftX, shiftY);
 			}
@@ -509,7 +535,7 @@ namespace com.itextpdf.layout.renderer
 		private IList<Point> TransformBBox(float left, float bottom, float right, float top
 			, AffineTransform transform, IList<Point> bBoxPoints)
 		{
-			bBoxPoints.AddAll(com.itextpdf.io.util.JavaUtil.ArraysAsList(new Point(left, bottom
+			bBoxPoints.AddAll(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Point(left, bottom
 				), new Point(right, bottom), new Point(right, top), new Point(left, top)));
 			foreach (Point point in bBoxPoints)
 			{

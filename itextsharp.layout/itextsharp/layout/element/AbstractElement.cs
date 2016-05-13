@@ -1,5 +1,5 @@
 /*
-$Id: 6756a536e422a536f3b0a34921efe9ea561638e1 $
+$Id: 637c668320c370638048dbfffe2e8d070d2bd585 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.action;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.layout;
-using com.itextpdf.layout.property;
-using com.itextpdf.layout.renderer;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Action;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Layout;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.element
+namespace iTextSharp.Layout.Element
 {
 	/// <summary>
 	/// Defines the most common properties that most
@@ -95,7 +95,7 @@ namespace com.itextpdf.layout.element
 			return rendererRoot;
 		}
 
-		public override bool HasProperty(Property property)
+		public override bool HasProperty(int property)
 		{
 			bool hasProperty = base.HasProperty(property);
 			if (styles != null && styles.Count > 0 && !hasProperty)
@@ -112,7 +112,7 @@ namespace com.itextpdf.layout.element
 			return hasProperty;
 		}
 
-		public override T1 GetProperty<T1>(Property property)
+		public override T1 GetProperty<T1>(int property)
 		{
 			Object result = base.GetProperty(property);
 			if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property
@@ -168,13 +168,13 @@ namespace com.itextpdf.layout.element
 
 		public virtual T SetAction(PdfAction action)
 		{
-			SetProperty(Property.ACTION, action);
+			SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
 			return (T)this;
 		}
 
 		public virtual T SetPageNumber(int pageNumber)
 		{
-			SetProperty(Property.PAGE_NUMBER, pageNumber);
+			SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
 			return (T)this;
 		}
 	}

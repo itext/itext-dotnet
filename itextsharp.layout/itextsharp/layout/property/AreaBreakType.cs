@@ -1,5 +1,5 @@
 /*
-$Id: dc626fd44661f1b7040178d77e3b6840f6ee9fb6 $
+$Id: 7d385978f9150486f000b928eae9650fc426a802 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,12 +42,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.layout.property
+namespace iTextSharp.Layout.Property
 {
 	public enum AreaBreakType
 	{
-		NEW_AREA,
-		NEW_PAGE,
+		NEXT_AREA,
+		NEXT_PAGE,
 		LAST_PAGE
 	}
 }

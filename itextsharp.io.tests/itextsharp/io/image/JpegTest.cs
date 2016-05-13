@@ -5,7 +5,7 @@ namespace iTextSharp.IO.Image
 {
 	public class JpegTest
 	{
-        public const String sourceFolder = @"..\..\resources\image\";
+		public const String sourceFolder = "./src/test/resources/com/itextpdf/io/image/";
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]

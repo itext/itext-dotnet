@@ -44,15 +44,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel.font;
-using com.itextpdf.layout.property;
-using java.lang;
-using java.lang.reflect;
+using System.Reflection;
+using Java.Lang;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Layout.Property;
 
-namespace com.itextpdf.layout.renderer
+namespace iTextSharp.Layout.Renderer
 {
 	internal class TypographyUtils
 	{
@@ -61,8 +61,31 @@ namespace com.itextpdf.layout.renderer
 
 		private const String TYPOGRAPHY_PACKAGE = "com.itextpdf.typography.";
 
-		private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED = CheckTypographyModulePresence
-			();
+		private static readonly ICollection<Character.UnicodeScript> SUPPORTED_SCRIPTS;
+
+		private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
+
+		static TypographyUtils()
+		{
+			bool moduleFound = false;
+			try
+			{
+				iTextSharp.GetType("com.itextpdf.typography.shaping.Shaper");
+				moduleFound = true;
+			}
+			catch (TypeLoadException)
+			{
+			}
+			TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
+			if (moduleFound)
+			{
+				SUPPORTED_SCRIPTS = GetSupportedScripts();
+			}
+			else
+			{
+				SUPPORTED_SCRIPTS = null;
+			}
+		}
 
 		internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, Character.UnicodeScript
 			 script)
@@ -74,7 +97,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyOtfScript", new Class[] { 
+				CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyOtfScript", new Type[] { 
 					typeof(TrueTypeFont), typeof(GlyphLine), typeof(Character.UnicodeScript) }, fontProgram
 					, text, script);
 			}
@@ -90,7 +113,7 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyKerning", new Class[] { typeof(
+				CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyKerning", new Type[] { typeof(
 					FontProgram), typeof(GlyphLine) }, fontProgram, text);
 			}
 		}
@@ -130,22 +153,22 @@ namespace com.itextpdf.layout.renderer
 				}
 				int len = unicodeIds.Length;
 				byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiCharacterMap", "getCharacterTypes"
-					, new Class[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+					, new Type[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
 				//byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, text.end - text.start;
 				byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", 
-					"getBracketTypes", new Class[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds
+					"getBracketTypes", new Type[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds
 					, 0, len);
 				//byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, text.end - text.start);
 				int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", 
-					"getBracketValues", new Class[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds
+					"getBracketValues", new Type[] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds
 					, 0, len);
 				//int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, text.end - text.start);
 				Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", new 
-					Class[] { typeof(byte[]), typeof(byte[]), typeof(int[]), typeof(byte) }, types, 
-					pairTypes, pairValues, direction);
+					Type[] { typeof(byte[]), typeof(byte[]), typeof(int[]), typeof(byte) }, types, pairTypes
+					, pairValues, direction);
 				//BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction);
 				return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "getLevels", 
-					bidiReorder, new Class[] { typeof(int[]) }, new int[] { len });
+					bidiReorder, new Type[] { typeof(int[]) }, new int[] { len });
 			}
 			//levels = bidiReorder.getLevels(new int[]{text.end - text.start});
 			return null;
@@ -166,7 +189,7 @@ namespace com.itextpdf.layout.renderer
 					return null;
 				}
 				int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "computeReordering"
-					, new Class[] { typeof(byte[]) }, lineLevels);
+					, new Type[] { typeof(byte[]) }, lineLevels);
 				//int[] reorder = BidiAlgorithm.computeReordering(lineLevels);
 				IList<LineRenderer.RendererGlyph> reorderedLine = new List<LineRenderer.RendererGlyph
 					>(lineLevels.Length);
@@ -179,8 +202,9 @@ namespace com.itextpdf.layout.renderer
 						if (reorderedLine[i].glyph.HasValidUnicode())
 						{
 							int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getPairedBracket"
-								, new Class[] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
-							PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
+								, new Type[] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
+							PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(iTextSharp.Layout.Property.Property
+								.FONT);
 							//BidiBracketMap.getPairedBracket(reorderedLine.get(i).getUnicode())
 							reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine
 								[i].renderer);
@@ -204,8 +228,15 @@ namespace com.itextpdf.layout.renderer
 			}
 			else
 			{
-				return (ICollection<Character.UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper"
-					, "getSupportedScripts", new Class[] {  });
+				if (SUPPORTED_SCRIPTS != null)
+				{
+					return SUPPORTED_SCRIPTS;
+				}
+				else
+				{
+					return (ICollection<Character.UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper"
+						, "getSupportedScripts", new Type[] {  });
+				}
 			}
 		}
 
@@ -214,32 +245,19 @@ namespace com.itextpdf.layout.renderer
 			return TYPOGRAPHY_MODULE_INITIALIZED;
 		}
 
-		private static bool CheckTypographyModulePresence()
-		{
-			bool moduleFound = false;
-			try
-			{
-				Class.ForName("com.itextpdf.typography.shaping.Shaper");
-				moduleFound = true;
-			}
-			catch (ClassNotFoundException)
-			{
-			}
-			return moduleFound;
-		}
-
-		private static Object CallMethod(String className, String methodName, Class[] parameterTypes
+		private static Object CallMethod(String className, String methodName, Type[] parameterTypes
 			, params Object[] args)
 		{
 			return CallMethod(className, methodName, null, parameterTypes, args);
 		}
 
 		private static Object CallMethod(String className, String methodName, Object target
-			, Class[] parameterTypes, params Object[] args)
+			, Type[] parameterTypes, params Object[] args)
 		{
 			try
 			{
-				Method method = Class.ForName(className).GetMethod(methodName, parameterTypes);
+				MethodInfo method = iTextSharp.GetType(className).GetMethod(methodName, parameterTypes
+					);
 				return method.Invoke(target, args);
 			}
 			catch (MissingMethodException)
@@ -247,11 +265,11 @@ namespace com.itextpdf.layout.renderer
 				logger.Warn(String.Format("Cannot find method {0} for class {1}", methodName, className
 					));
 			}
-			catch (ClassNotFoundException)
+			catch (TypeLoadException)
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (InvocationTargetException e)
+			catch (TargetInvocationException e)
 			{
 				throw new Exception(e.InnerException != null ? e.InnerException : null);
 			}
@@ -262,24 +280,24 @@ namespace com.itextpdf.layout.renderer
 			return null;
 		}
 
-		private static Object CallConstructor(String className, Class[] parameterTypes, params 
+		private static Object CallConstructor(String className, Type[] parameterTypes, params 
 			Object[] args)
 		{
-			Constructor constructor = null;
 			try
 			{
-				constructor = Class.ForName(className).GetConstructor(parameterTypes);
+				ConstructorInfo constructor = iTextSharp.GetType(className).GetConstructor(parameterTypes
+					);
 				return constructor.NewInstance(args);
 			}
 			catch (MissingMethodException)
 			{
 				logger.Warn(String.Format("Cannot find constructor for class {0}", className));
 			}
-			catch (ClassNotFoundException)
+			catch (TypeLoadException)
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (InvocationTargetException e)
+			catch (TargetInvocationException e)
 			{
 				throw new Exception(e.InnerException != null ? e.InnerException : null);
 			}

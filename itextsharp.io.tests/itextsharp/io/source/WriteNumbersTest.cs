@@ -1,4 +1,5 @@
 using System;
+using Java.Math;
 using NUnit.Framework;
 using iTextSharp.IO.Util;
 
@@ -8,7 +9,9 @@ namespace iTextSharp.IO.Source
 	{
 		public static double Round(double value, int places)
 		{
-			return 5;
+			BigDecimal bd = new BigDecimal(value);
+			bd = bd.SetScale(places, RoundingMode.HALF_UP);
+			return bd;
 		}
 
 		[Test]
@@ -26,8 +29,8 @@ namespace iTextSharp.IO.Source
 				}
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes();
-				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}
@@ -41,14 +44,14 @@ namespace iTextSharp.IO.Source
 			{
 				double d = (double)rnd.Next(1000000) / 1000000;
 				d = Round(d, 5);
-				if (Math.Abs(d) < 0.000015)
+				if (System.Math.Abs(d) < 0.000015)
 				{
 					continue;
 				}
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes();
-				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}
@@ -68,8 +71,8 @@ namespace iTextSharp.IO.Source
 				d = Round(d, 0);
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes();
-				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}

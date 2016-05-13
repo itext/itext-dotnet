@@ -17,7 +17,7 @@
 using System;
 using System.Text;
 
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>Represents a hyphen.</summary>
 	public class Hyphen

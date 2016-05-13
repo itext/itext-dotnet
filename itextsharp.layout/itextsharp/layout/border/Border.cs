@@ -1,5 +1,5 @@
 /*
-$Id: 25da63d876d4eeb6710437b88024567cd1b64944 $
+$Id: f1d5074c8616b5459b2b72a3e9627c3063766014 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,14 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.layout.border
+namespace iTextSharp.Layout.Border
 {
 	public abstract class Border
 	{
-		public static readonly com.itextpdf.layout.border.Border NO_BORDER = null;
+		public static readonly iTextSharp.Layout.Border.Border NO_BORDER = null;
 
 		public const int SOLID = 0;
 
@@ -70,7 +69,7 @@ namespace com.itextpdf.layout.border
 
 		public const int _3D_RIDGE = 8;
 
-		protected internal Color color;
+		protected internal iTextSharp.Kernel.Color.Color color;
 
 		protected internal float width;
 
@@ -78,12 +77,12 @@ namespace com.itextpdf.layout.border
 
 		private int hash;
 
-		public Border(float width)
-			: this(Color.BLACK, width)
+		protected internal Border(float width)
+			: this(iTextSharp.Kernel.Color.Color.BLACK, width)
 		{
 		}
 
-		public Border(Color color, float width)
+		protected internal Border(iTextSharp.Kernel.Color.Color color, float width)
 		{
 			this.color = color;
 			this.width = width;
@@ -132,7 +131,7 @@ namespace com.itextpdf.layout.border
 
 		public abstract int GetType();
 
-		public virtual Color GetColor()
+		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
 			return color;
 		}
@@ -148,10 +147,10 @@ namespace com.itextpdf.layout.border
 			{
 				return true;
 			}
-			if (anObject is com.itextpdf.layout.border.Border)
+			if (anObject is iTextSharp.Layout.Border.Border)
 			{
-				com.itextpdf.layout.border.Border anotherBorder = (com.itextpdf.layout.border.Border
-					)anObject;
+				iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)
+					anObject;
 				if (anotherBorder.GetType() != GetType() || anotherBorder.GetColor() != GetColor(
 					) || anotherBorder.GetWidth() != GetWidth())
 				{

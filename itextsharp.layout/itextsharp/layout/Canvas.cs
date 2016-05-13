@@ -43,18 +43,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
-using com.itextpdf.layout.element;
-using com.itextpdf.layout.renderer;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
+using iTextSharp.Layout.Element;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout
+namespace iTextSharp.Layout
 {
 	/// <summary>
 	/// This class is used for adding content directly onto a specified
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
 	/// .
 	/// <see cref="Canvas"/>
 	/// does not know the concept of a page, so it can't reflow to a 'next'
@@ -63,7 +63,7 @@ namespace com.itextpdf.layout
 	/// This class effectively acts as a bridge between the high-level <em>layout</em>
 	/// API and the low-level <em>kernel</em> API.
 	/// </summary>
-	public class Canvas : RootElement<com.itextpdf.layout.Canvas>
+	public class Canvas : RootElement<iTextSharp.Layout.Canvas>
 	{
 		protected internal PdfCanvas pdfCanvas;
 
@@ -71,7 +71,7 @@ namespace com.itextpdf.layout
 
 		/// <summary>
 		/// Is initialized and used only when Canvas element autotagging is enabled, see
-		/// <see cref="EnableAutoTagging(com.itextpdf.kernel.pdf.PdfPage)"/>
+		/// <see cref="EnableAutoTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
 		/// .
 		/// It is also used to determine if autotagging is enabled.
 		/// </summary>
@@ -83,6 +83,7 @@ namespace com.itextpdf.layout
 		/// 	</param>
 		/// <param name="rootArea">the maximum area that the Canvas may write upon</param>
 		public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
+			: base()
 		{
 			this.pdfDocument = pdfDocument;
 			this.pdfCanvas = pdfCanvas;
@@ -96,31 +97,28 @@ namespace com.itextpdf.layout
 		/// <param name="rootArea">the maximum area that the Canvas may write upon</param>
 		public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool
 			 immediateFlush)
+			: this(pdfCanvas, pdfDocument, rootArea)
 		{
-			this.pdfDocument = pdfDocument;
-			this.pdfCanvas = pdfCanvas;
-			this.rootArea = rootArea;
 			this.immediateFlush = immediateFlush;
 		}
 
 		/// <summary>
 		/// Creates a new Canvas to manipulate a specific
-		/// <see cref="com.itextpdf.kernel.pdf.xobject.PdfFormXObject"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
 		/// .
 		/// </summary>
 		/// <param name="formXObject">the form</param>
 		/// <param name="pdfDocument">the document that the resulting content stream will be written to
 		/// 	</param>
 		public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
+			: this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox(
+				).ToRectangle())
 		{
-			this.pdfDocument = pdfDocument;
-			this.pdfCanvas = new PdfCanvas(formXObject, pdfDocument);
-			this.rootArea = formXObject.GetBBox().ToRectangle();
 		}
 
 		/// <summary>
 		/// Gets the
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
 		/// for this canvas.
 		/// </summary>
 		/// <returns>the document that the resulting content stream will be written to</returns>
@@ -138,7 +136,7 @@ namespace com.itextpdf.layout
 
 		/// <summary>
 		/// Gets the
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
 		/// .
 		/// </summary>
 		/// <returns>the low-level content stream writer</returns>
@@ -149,7 +147,7 @@ namespace com.itextpdf.layout
 
 		/// <summary>
 		/// Sets the
-		/// <see cref="com.itextpdf.layout.renderer.IRenderer"/>
+		/// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
 		/// for this Canvas.
 		/// </summary>
 		/// <param name="canvasRenderer">a renderer specific for canvas operations</param>

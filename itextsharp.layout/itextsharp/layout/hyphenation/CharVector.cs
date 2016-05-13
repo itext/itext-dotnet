@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-namespace com.itextpdf.layout.hyphenation
+namespace iTextSharp.Layout.Hyphenation
 {
 	/// <summary>
 	/// <p>This class implements a simple char vector with access to the
@@ -84,7 +84,7 @@ namespace com.itextpdf.layout.hyphenation
 			n = a.Length;
 		}
 
-		public CharVector(com.itextpdf.layout.hyphenation.CharVector cv)
+		public CharVector(iTextSharp.Layout.Hyphenation.CharVector cv)
 		{
 			this.array = (char[])cv.array.Clone();
 			this.blockSize = cv.blockSize;

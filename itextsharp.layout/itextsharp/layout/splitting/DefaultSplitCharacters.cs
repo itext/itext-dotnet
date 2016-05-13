@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.io.font.otf;
+using iTextSharp.IO.Font.Otf;
 
-namespace com.itextpdf.layout.splitting
+namespace iTextSharp.Layout.Splitting
 {
 	/// <summary>
 	/// The default implementation of

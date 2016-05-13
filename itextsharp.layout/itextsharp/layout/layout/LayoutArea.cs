@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.layout.renderer;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Layout.Renderer;
 
-namespace com.itextpdf.layout.layout
+namespace iTextSharp.Layout.Layout
 {
 	public class LayoutArea
 	{
@@ -88,9 +88,9 @@ namespace com.itextpdf.layout.layout
 			this.emptyArea = emptyArea;
 		}
 
-		public virtual com.itextpdf.layout.layout.LayoutArea Clone()
+		public virtual iTextSharp.Layout.Layout.LayoutArea Clone()
 		{
-			com.itextpdf.layout.layout.LayoutArea area = new com.itextpdf.layout.layout.LayoutArea
+			iTextSharp.Layout.Layout.LayoutArea area = new iTextSharp.Layout.Layout.LayoutArea
 				(pageNumber, bBox.Clone());
 			area.SetEmptyArea(emptyArea);
 			return area;
@@ -98,12 +98,11 @@ namespace com.itextpdf.layout.layout
 
 		public override bool Equals(Object obj)
 		{
-			if (!(obj is com.itextpdf.layout.layout.LayoutArea))
+			if (!(obj is iTextSharp.Layout.Layout.LayoutArea))
 			{
 				return false;
 			}
-			com.itextpdf.layout.layout.LayoutArea that = (com.itextpdf.layout.layout.LayoutArea
-				)obj;
+			iTextSharp.Layout.Layout.LayoutArea that = (iTextSharp.Layout.Layout.LayoutArea)obj;
 			return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer
 				.EPS);
 		}

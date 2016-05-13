@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.layout.property
+namespace iTextSharp.Layout.Property
 {
 	/// <summary>A specialized enum containing alignment properties for list symbols.</summary>
 	public enum ListSymbolAlignment

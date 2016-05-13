@@ -1,5 +1,5 @@
 /*
-$Id: 24036b843f1c7956eb87d6ba908366c7765582a9 $
+$Id: a3d4c3639f54ffac65611068a735f92216c0ed00 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,13 +42,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Color;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.layout.border
+namespace iTextSharp.Layout.Border
 {
 	/// <summary>Represents a border that is displayed using a 3D effect.</summary>
-	public abstract class Border3D : Border
+	public abstract class Border3D : iTextSharp.Layout.Border.Border
 	{
 		private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
@@ -56,7 +56,7 @@ namespace com.itextpdf.layout.border
 		/// <remarks>Creates a Border3D instance with the specified width. Also sets the color to gray.
 		/// 	</remarks>
 		/// <param name="width">with of the border</param>
-		public Border3D(float width)
+		protected internal Border3D(float width)
 			: this(GRAY, width)
 		{
 		}
@@ -64,7 +64,7 @@ namespace com.itextpdf.layout.border
 		/// <summary>Creates a Border3D instance with the specified width and color.</summary>
 		/// <param name="color">color of the border</param>
 		/// <param name="width">with of the border</param>
-		public Border3D(DeviceRgb color, float width)
+		protected internal Border3D(DeviceRgb color, float width)
 			: base(color, width)
 		{
 		}
@@ -72,7 +72,7 @@ namespace com.itextpdf.layout.border
 		/// <summary>Creates a Border3D instance with the specified width and color.</summary>
 		/// <param name="color">color of the border</param>
 		/// <param name="width">with of the border</param>
-		public Border3D(DeviceCmyk color, float width)
+		protected internal Border3D(DeviceCmyk color, float width)
 			: base(color, width)
 		{
 		}
@@ -80,7 +80,7 @@ namespace com.itextpdf.layout.border
 		/// <summary>Creates a Border3D instance with the specified width and color.</summary>
 		/// <param name="color">color of the border</param>
 		/// <param name="width">with of the border</param>
-		public Border3D(DeviceGray color, float width)
+		protected internal Border3D(DeviceGray color, float width)
 			: base(color, width)
 		{
 		}
@@ -187,7 +187,7 @@ namespace com.itextpdf.layout.border
 				(x2, y2).Stroke().RestoreState();
 		}
 
-		protected internal virtual Color GetDarkerColor()
+		protected internal virtual iTextSharp.Kernel.Color.Color GetDarkerColor()
 		{
 			if (color is DeviceRgb)
 			{
