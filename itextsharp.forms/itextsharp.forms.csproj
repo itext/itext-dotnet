@@ -8,7 +8,6 @@
     <ProjectGuid>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>forms</RootNamespace>
     <AssemblyName>forms</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -9,9 +9,9 @@ namespace iTextSharp.Barcodes
 {
 	public class BarcodeInter25Test
 	{
-		public const String sourceFolder = "./src/test/resources/com/itextpdf/barcodes/";
+		public const String sourceFolder = "../../resources/itextsharp/barcodes/";
 
-		public const String destinationFolder = "./target/test/com/itextpdf/barcodes/BarcodeInter25/";
+		public const String destinationFolder = "test/itextsharp/barcodes/BarcodeInter25/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

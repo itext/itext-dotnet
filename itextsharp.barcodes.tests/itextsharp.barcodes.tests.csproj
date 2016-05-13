@@ -7,7 +7,6 @@
     <ProjectGuid>{D015A3AA-613C-45D9-B908-7D47C4B613AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>itextsharp.barcodes.tests</RootNamespace>
     <AssemblyName>itextsharp.barcodes.tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
