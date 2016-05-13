@@ -401,7 +401,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					if (currNode.GetParent().GetOptions().IsArray())
 					{
 						separator = "";
-						segmentName = "[" + iTextSharp.GetStringValueOf(currentIndex) + "]";
+						segmentName = "[" + currentIndex.ToString() + "]";
 					}
 					else
 					{

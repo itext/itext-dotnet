@@ -450,7 +450,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 			}
 			else
 			{
-				return GetStringWidth(iTextSharp.GetStringValueOf(charToUse));
+				return GetStringWidth(charToUse.ToString());
 			}
 		}
 

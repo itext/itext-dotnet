@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Java.Lang;
 
 namespace iTextSharp.Kernel.Log
 {
@@ -71,12 +70,12 @@ namespace iTextSharp.Kernel.Log
 		{
 		}
 
-		public SystemOutCounter(Class cls)
-			: this(cls.GetName())
+		public SystemOutCounter(Type cls)
+			: this(cls.FullName)
 		{
 		}
 
-		public virtual Counter GetCounter(Class cls)
+		public virtual Counter GetCounter(Type cls)
 		{
 			return new iTextSharp.Kernel.Log.SystemOutCounter(cls);
 		}

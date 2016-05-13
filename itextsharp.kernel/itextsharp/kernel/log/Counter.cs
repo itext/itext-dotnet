@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Java.Lang;
+using System;
 
 namespace iTextSharp.Kernel.Log
 {
@@ -60,7 +60,7 @@ namespace iTextSharp.Kernel.Log
 	public interface Counter
 	{
 		/// <summary>Gets a Counter instance for a specific class.</summary>
-		Counter GetCounter(Class cls);
+		Counter GetCounter(Type cls);
 
 		/// <summary>This method gets triggered if a document is read.</summary>
 		/// <param name="size">the length of the document that was read</param>

@@ -191,7 +191,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				return true;
 			}
-			if (o == null || GetClass() != o.GetClass())
+			if (o == null || GetType() != o.GetType())
 			{
 				return false;
 			}

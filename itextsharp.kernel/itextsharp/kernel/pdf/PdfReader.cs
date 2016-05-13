@@ -437,7 +437,7 @@ namespace iTextSharp.Kernel.Pdf
 						else
 						{
 							throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams
-								(dpEntry.GetClass().ToString());
+								(dpEntry.GetType().ToString());
 						}
 					}
 				}
@@ -1509,7 +1509,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>This method is invoked while deserialization</summary>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="Java.Lang.ClassNotFoundException"/>
+		/// <exception cref="System.TypeLoadException"/>
 		private void ReadObject(ObjectInputStream @in)
 		{
 			@in.DefaultReadObject();

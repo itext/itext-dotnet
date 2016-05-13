@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Java.Lang;
+using System;
 using iTextSharp.IO.Codec;
 using iTextSharp.Kernel;
 
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Log
 			 + "gbGljZW5zZSBrZXkgdG8gYXZvaWQgdGhpcyBtZXNzYWdlLg0KSWYgeW91J3JlIG" + "5vdCBhIGN1c3RvbWVyLCB3ZSdsbCBleHBsYWluIHRoZSBiZW5lZml0cyBvZiBiZ"
 			 + "WNvbWluZyBhIGN1c3RvbWVyLg0KDQo=");
 
-		public virtual Counter GetCounter(Class cls)
+		public virtual Counter GetCounter(Type cls)
 		{
 			return this;
 		}

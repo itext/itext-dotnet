@@ -227,7 +227,7 @@ namespace iTextSharp.Kernel.Geom
 			{
 				return false;
 			}
-			if (GetClass() != obj.GetClass())
+			if (GetType() != obj.GetType())
 			{
 				return false;
 			}

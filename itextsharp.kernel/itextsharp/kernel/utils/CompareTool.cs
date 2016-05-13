@@ -1050,8 +1050,8 @@ namespace iTextSharp.Kernel.Utils
 					if (cmpDirectObj.GetType() != outDirectObj.GetType())
 					{
 						compareResult.AddError(currentPath, String.Format("Types do not match. Expected: {0}. Found: {1}."
-							, cmpDirectObj.GetClass().GetSimpleName(), outDirectObj.GetClass().GetSimpleName
-							()));
+							, cmpDirectObj.GetType().GetSimpleName(), outDirectObj.GetType().GetSimpleName()
+							));
 						return false;
 					}
 					else
@@ -1770,7 +1770,7 @@ namespace iTextSharp.Kernel.Utils
 					();
 				Element root = xmlReport.CreateElement("report");
 				Element errors = xmlReport.CreateElement("errors");
-				errors.SetAttribute("count", iTextSharp.GetStringValueOf(this.differences.Count));
+				errors.SetAttribute("count", this.differences.Count.ToString());
 				root.AppendChild(errors);
 				foreach (KeyValuePair<CompareTool.ObjectPath, String> entry in this.differences)
 				{
@@ -2064,7 +2064,7 @@ namespace iTextSharp.Kernel.Utils
 
 				public override String ToString()
 				{
-					return "Array index: " + iTextSharp.GetStringValueOf(this.index);
+					return "Array index: " + this.index.ToString();
 				}
 
 				public override int GetHashCode()
@@ -2081,8 +2081,7 @@ namespace iTextSharp.Kernel.Utils
 				protected internal override Node ToXmlNode(Document document)
 				{
 					Node element = document.CreateElement("arrayIndex");
-					element.AppendChild(document.CreateTextNode(iTextSharp.GetStringValueOf(this.index
-						)));
+					element.AppendChild(document.CreateTextNode(this.index.ToString()));
 					return element;
 				}
 
@@ -2112,7 +2111,7 @@ namespace iTextSharp.Kernel.Utils
 
 				public override String ToString()
 				{
-					return "Offset: " + iTextSharp.GetStringValueOf(this.offset);
+					return "Offset: " + this.offset.ToString();
 				}
 
 				public override int GetHashCode()
@@ -2129,8 +2128,7 @@ namespace iTextSharp.Kernel.Utils
 				protected internal override Node ToXmlNode(Document document)
 				{
 					Node element = document.CreateElement("offset");
-					element.AppendChild(document.CreateTextNode(iTextSharp.GetStringValueOf(this.offset
-						)));
+					element.AppendChild(document.CreateTextNode(this.offset.ToString()));
 					return element;
 				}
 

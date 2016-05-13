@@ -42,14 +42,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Java.Lang;
+using System;
 
 namespace iTextSharp.Kernel.Log
 {
 	/// <summary>Implementation of the Counter interface that doesn't do anything.</summary>
 	public class NoOpCounter : Counter
 	{
-		public virtual Counter GetCounter(Class cls)
+		public virtual Counter GetCounter(Type cls)
 		{
 			return this;
 		}

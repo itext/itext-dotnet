@@ -554,7 +554,7 @@ namespace iTextSharp.Kernel.Pdf
 						else
 						{
 							throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams
-								(decodeParms.GetClass().ToString());
+								(decodeParms.GetType().ToString());
 						}
 					}
 				}
@@ -617,7 +617,7 @@ namespace iTextSharp.Kernel.Pdf
 					else
 					{
 						throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams
-							(decodeParamsObject.GetClass().ToString());
+							(decodeParamsObject.GetType().ToString());
 					}
 				}
 			}

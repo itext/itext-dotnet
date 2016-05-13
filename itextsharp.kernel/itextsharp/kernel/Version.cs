@@ -43,8 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Java.Lang;
-using Java.Lang.Reflect;
+using System.Reflection;
 
 namespace iTextSharp.Kernel
 {
@@ -105,9 +104,9 @@ namespace iTextSharp.Kernel
 				{
 					try
 					{
-						Class klass = Class.ForName("com.itextpdf.licensekey.LicenseKey");
-						Method m = klass.GetMethod("getLicenseeInfo");
-						String[] info = (String[])m.Invoke(klass.NewInstance());
+						Type klass = iTextSharp.GetType("com.itextpdf.licensekey.LicenseKey");
+						MethodInfo m = klass.GetMethod("getLicenseeInfo");
+						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass));
 						if (info[3] != null && info[3].Trim().Length > 0)
 						{
 							version.key = info[3];

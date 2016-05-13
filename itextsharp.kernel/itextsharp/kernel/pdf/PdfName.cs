@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Java.Lang.Reflect;
 using iTextSharp.IO.Source;
@@ -2248,19 +2249,20 @@ namespace iTextSharp.Kernel.Pdf
 			//  '}'
 			//  '/'
 			//  '#'
-			Field[] fields = typeof(iTextSharp.Kernel.Pdf.PdfName).GetDeclaredFields();
+			FieldInfo[] fields = iTextSharp.GetDeclaredFields(typeof(iTextSharp.Kernel.Pdf.PdfName
+				));
 			staticNames = new Dictionary<String, iTextSharp.Kernel.Pdf.PdfName>(fields.Length
 				);
 			int flags = Modifier.STATIC | Modifier.PUBLIC | Modifier.FINAL;
 			try
 			{
-				foreach (Field field in fields)
+				foreach (FieldInfo field in fields)
 				{
 					if ((field.GetModifiers() & flags) == flags && field.GetType().Equals(typeof(iTextSharp.Kernel.Pdf.PdfName
 						)))
 					{
-						iTextSharp.Kernel.Pdf.PdfName name = (iTextSharp.Kernel.Pdf.PdfName)field.Get(null
-							);
+						iTextSharp.Kernel.Pdf.PdfName name = (iTextSharp.Kernel.Pdf.PdfName)field.GetValue
+							(null);
 						staticNames[name.GetValue()] = name;
 					}
 				}
@@ -2384,7 +2386,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				return true;
 			}
-			if (o == null || GetClass() != o.GetClass())
+			if (o == null || GetType() != o.GetType())
 			{
 				return false;
 			}

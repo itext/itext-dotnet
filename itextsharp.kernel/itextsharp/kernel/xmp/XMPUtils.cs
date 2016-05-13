@@ -316,7 +316,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>The string representation of the int.</returns>
 		public static String ConvertFromInteger(int value)
 		{
-			return iTextSharp.GetStringValueOf(value);
+			return value.ToString();
 		}
 
 		/// <summary>Converts a string value to a <code>long</code>.</summary>
@@ -355,7 +355,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>The string representation of the long.</returns>
 		public static String ConvertFromLong(long value)
 		{
-			return iTextSharp.GetStringValueOf(value);
+			return value.ToString();
 		}
 
 		/// <summary>Converts a string value to a <code>double</code>.</summary>
@@ -390,7 +390,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>The string representation of the long.</returns>
 		public static String ConvertFromDouble(double value)
 		{
-			return iTextSharp.GetStringValueOf(value);
+			return value.ToString();
 		}
 
 		/// <summary>Converts a string value to an <code>XMPDateTime</code>.</summary>

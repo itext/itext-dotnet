@@ -290,7 +290,7 @@ namespace iTextSharp.Kernel.Color
 			{
 				return true;
 			}
-			if (o == null || GetClass() != o.GetClass())
+			if (o == null || GetType() != o.GetType())
 			{
 				return false;
 			}
