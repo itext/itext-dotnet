@@ -1,4 +1,5 @@
 using System;
+using Java.Math;
 using NUnit.Framework;
 using iTextSharp.IO.Util;
 
@@ -8,7 +9,9 @@ namespace iTextSharp.IO.Source
 	{
 		public static double Round(double value, int places)
 		{
-			return Math.Round(value * Math.Pow(10, places)) / Math.Pow(10, places);
+			BigDecimal bd = new BigDecimal(value);
+			bd = bd.SetScale(places, RoundingMode.HALF_UP);
+			return bd;
 		}
 
 		[Test]
@@ -41,7 +44,7 @@ namespace iTextSharp.IO.Source
 			{
 				double d = (double)rnd.Next(1000000) / 1000000;
 				d = Round(d, 5);
-				if (Math.Abs(d) < 0.000015)
+				if (System.Math.Abs(d) < 0.000015)
 				{
 					continue;
 				}
