@@ -1,6 +1,6 @@
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.security;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Security;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Cms;
@@ -9,7 +9,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	internal class EncryptionUtils
 	{

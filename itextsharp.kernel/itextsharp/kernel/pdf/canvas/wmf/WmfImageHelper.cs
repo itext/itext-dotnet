@@ -1,5 +1,5 @@
 /*
-$Id: 70e10c5c3c49be89da522c49ac485a55dbec68df $
+$Id: 579b1c927f0e78b4c522eccc92456ea18a3743c7 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,19 +44,19 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io.image;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Image;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>Helper class for the WmfImage implementation.</summary>
 	/// <remarks>
 	/// Helper class for the WmfImage implementation. Assists in the creation of a
-	/// <see cref="com.itextpdf.kernel.pdf.xobject.PdfFormXObject"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
 	/// .
 	/// </remarks>
 	public class WmfImageHelper
@@ -89,7 +89,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>This method checks if the image is a valid WMF and processes some parameters.
 		/// 	</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		private void ProcessParameters()
 		{
 			Stream @is = null;

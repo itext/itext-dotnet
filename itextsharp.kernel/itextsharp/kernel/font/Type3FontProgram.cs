@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.otf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Otf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	public class Type3FontProgram : FontProgram
 	{

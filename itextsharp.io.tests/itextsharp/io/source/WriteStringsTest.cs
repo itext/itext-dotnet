@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class WriteStringsTest
 	{
@@ -17,7 +17,7 @@ namespace com.itextpdf.io.source
 		public virtual void WriteNameTest()
 		{
 			String str = "SomeName";
-			byte[] content = ByteUtils.GetIsoBytes(unchecked((byte)'/'), str);
+			byte[] content = ByteUtils.GetIsoBytes((byte)'/', str);
 			NUnit.Framework.Assert.AreEqual(("/" + str).GetBytes(), content);
 		}
 
@@ -25,8 +25,7 @@ namespace com.itextpdf.io.source
 		public virtual void WritePdfStringTest()
 		{
 			String str = "Some PdfString";
-			byte[] content = ByteUtils.GetIsoBytes(unchecked((byte)'('), str, unchecked((byte
-				)')'));
+			byte[] content = ByteUtils.GetIsoBytes((byte)'(', str, (byte)')');
 			NUnit.Framework.Assert.AreEqual(("(" + str + ")").GetBytes(), content);
 		}
 	}

@@ -43,9 +43,9 @@
 * use in the design, construction, operation or maintenance of any
 * nuclear facility.
 */
-using com.itextpdf.io;
+using iTextSharp.IO;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Class that can decode TIFF files.</summary>
 	public class TIFFFaxDecoder

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 using NUnit.Framework;
 
-namespace com.itextpdf.io
+namespace iTextSharp.IO
 {
     public class JavaUtilTest
     {

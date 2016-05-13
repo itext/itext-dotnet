@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp
+namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>
 	/// The schema registry keeps track of all namespaces and aliases used in the XMP
@@ -90,7 +90,7 @@ namespace com.itextpdf.kernel.xmp
 		/// otherwise the existing prefix.
 		/// </returns>
 		/// <exception cref="XMPException">If the parameters are not accordingly set</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		String RegisterNamespace(String namespaceURI, String suggestedPrefix);
 
 		/// <summary>Obtain the prefix for a registered namespace URI.</summary>

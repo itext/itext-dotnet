@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	/// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
 	/// <author>Paulo Soares</author>
@@ -522,7 +522,7 @@ namespace com.itextpdf.io.font
 			rf.ReadFully(buf);
 			try
 			{
-				return com.itextpdf.io.util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
+				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
 			}
 			catch (Exception e)
 			{

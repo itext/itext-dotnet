@@ -46,10 +46,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>
 	/// A class representing an Image File Directory (IFD) from a TIFF 6.0
@@ -284,8 +284,8 @@ namespace com.itextpdf.io.codec
 									{
 									}
 									// When we encountered zero, means one string has ended
-									v.Add(com.itextpdf.io.util.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index 
-										- prevIndex)));
+									v.Add(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index - 
+										prevIndex)));
 									prevIndex = index;
 								}
 								count = v.Count;

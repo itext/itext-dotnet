@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	internal class DocType1Font : Type1Font, IDocFontProgram
 	{
@@ -96,7 +96,7 @@ namespace com.itextpdf.kernel.font
 					return type1StdFont;
 				}
 			}
-			com.itextpdf.kernel.font.DocType1Font fontProgram = new com.itextpdf.kernel.font.DocType1Font
+			iTextSharp.Kernel.Font.DocType1Font fontProgram = new iTextSharp.Kernel.Font.DocType1Font
 				(baseFont);
 			PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
 			fontProgram.subtype = fontDesc.GetAsName(PdfName.Subtype);
@@ -156,8 +156,8 @@ namespace com.itextpdf.kernel.font
 			return subtype;
 		}
 
-		internal static void FillFontDescriptor(com.itextpdf.kernel.font.DocType1Font font
-			, PdfDictionary fontDesc)
+		internal static void FillFontDescriptor(iTextSharp.Kernel.Font.DocType1Font font, 
+			PdfDictionary fontDesc)
 		{
 			if (fontDesc == null)
 			{

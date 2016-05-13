@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>These are a set of hints that you may pass to Writers to specify their behavior.
 	/// 	</summary>
@@ -51,12 +51,12 @@ namespace com.itextpdf.barcodes.qrcode
 	{
 		/// <summary>Specifies what degree of error correction to use, for example in QR Codes (type Integer).
 		/// 	</summary>
-		public static readonly com.itextpdf.barcodes.qrcode.EncodeHintType ERROR_CORRECTION
-			 = new com.itextpdf.barcodes.qrcode.EncodeHintType();
+		public static readonly iTextSharp.Barcodes.Qrcode.EncodeHintType ERROR_CORRECTION
+			 = new iTextSharp.Barcodes.Qrcode.EncodeHintType();
 
 		/// <summary>Specifies what character encoding to use where applicable (type String)</summary>
-		public static readonly com.itextpdf.barcodes.qrcode.EncodeHintType CHARACTER_SET = 
-			new com.itextpdf.barcodes.qrcode.EncodeHintType();
+		public static readonly iTextSharp.Barcodes.Qrcode.EncodeHintType CHARACTER_SET = 
+			new iTextSharp.Barcodes.Qrcode.EncodeHintType();
 
 		private EncodeHintType()
 		{

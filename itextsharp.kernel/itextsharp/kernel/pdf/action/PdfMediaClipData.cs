@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.filespec;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Filespec;
 
-namespace com.itextpdf.kernel.pdf.action
+namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary>
 	{

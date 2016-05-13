@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	/// <summary>Represents segment from a PDF path.</summary>
 	public interface IShape

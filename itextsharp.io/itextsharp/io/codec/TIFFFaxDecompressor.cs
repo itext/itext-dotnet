@@ -44,9 +44,9 @@
 * nuclear facility.
 */
 using System;
-using com.itextpdf.io;
+using iTextSharp.IO;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Class that can decompress TIFF files.</summary>
 	public class TIFFFaxDecompressor

@@ -29,16 +29,16 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace com.itextpdf.kernel.xmp.options
+namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>
 	/// Options for
-	/// <see cref="com.itextpdf.kernel.xmp.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
+	/// <see cref="iTextSharp.Kernel.Xmp.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
 	/// 	"/>
 	/// .
 	/// </summary>
 	/// <since>24.01.2006</since>
-	public sealed class ParseOptions : Options
+	public sealed class ParseOptions : iTextSharp.Kernel.Xmp.Options.Options
 	{
 		/// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.
 		/// 	</summary>
@@ -71,7 +71,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.ParseOptions SetRequireXMPMeta(bool value)
+		public iTextSharp.Kernel.Xmp.Options.ParseOptions SetRequireXMPMeta(bool value)
 		{
 			SetOption(REQUIRE_XMP_META, value);
 			return this;
@@ -85,7 +85,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.ParseOptions SetStrictAliasing(bool value)
+		public iTextSharp.Kernel.Xmp.Options.ParseOptions SetStrictAliasing(bool value)
 		{
 			SetOption(STRICT_ALIASING, value);
 			return this;
@@ -99,8 +99,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.ParseOptions SetFixControlChars(bool value
-			)
+		public iTextSharp.Kernel.Xmp.Options.ParseOptions SetFixControlChars(bool value)
 		{
 			SetOption(FIX_CONTROL_CHARS, value);
 			return this;
@@ -114,7 +113,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.ParseOptions SetOmitNormalization(bool value
+		public iTextSharp.Kernel.Xmp.Options.ParseOptions SetOmitNormalization(bool value
 			)
 		{
 			SetOption(OMIT_NORMALIZATION, value);
@@ -129,7 +128,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.ParseOptions SetAcceptLatin1(bool value)
+		public iTextSharp.Kernel.Xmp.Options.ParseOptions SetAcceptLatin1(bool value)
 		{
 			SetOption(ACCEPT_LATIN_1, value);
 			return this;

@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas.parser.listener;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	/// <summary>
 	/// A utility class that makes it cleaner to process content from pages of a
-	/// <see cref="com.itextpdf.kernel.pdf.PdfDocument"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
 	/// through a specified RenderListener.
 	/// </summary>
 	public class PdfDocumentContentParser

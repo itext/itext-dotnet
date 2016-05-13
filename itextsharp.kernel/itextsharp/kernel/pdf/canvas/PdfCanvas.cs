@@ -44,24 +44,24 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.image;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas.wmf;
-using com.itextpdf.kernel.pdf.colorspace;
-using com.itextpdf.kernel.pdf.extgstate;
-using com.itextpdf.kernel.pdf.layer;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Image;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Color;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas.Wmf;
+using iTextSharp.Kernel.Pdf.Colorspace;
+using iTextSharp.Kernel.Pdf.Extgstate;
+using iTextSharp.Kernel.Pdf.Layer;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.kernel.pdf.canvas
+namespace iTextSharp.Kernel.Pdf.Canvas
 {
 	/// <summary>PdfCanvas class represents an algorithm for writing data into content stream.
 	/// 	</summary>
@@ -217,7 +217,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		protected internal PdfStream contentStream;
 
 		/// <summary>the resources for the page that this canvas belongs to.</summary>
-		/// <seealso cref="com.itextpdf.kernel.pdf.PdfResources"/>
+		/// <seealso cref="iTextSharp.Kernel.Pdf.PdfResources"/>
 		protected internal PdfResources resources;
 
 		/// <summary>the document that the resulting content stream of this canvas will be written to.
@@ -339,7 +339,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Saves graphics state.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SaveState()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SaveState()
 		{
 			document.CheckIsoConformance('q', IsoKey.CANVAS_STACK);
 			gsStack.Push(currentGs);
@@ -350,7 +350,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Restores graphics state.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas RestoreState()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas RestoreState()
 		{
 			document.CheckIsoConformance('Q', IsoKey.CANVAS_STACK);
 			if (gsStack.IsEmpty())
@@ -379,7 +379,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">operand 3,1 in the matrix.</param>
 		/// <param name="f">operand 3,2 in the matrix.</param>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ConcatMatrix(double a, double
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(double a, double
 			 b, double c, double d, double e, double f)
 		{
 			currentGs.UpdateCtm((float)a, (float)b, (float)c, (float)d, (float)e, (float)f);
@@ -400,7 +400,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <see cref="ConcatMatrix(double, double, double, double, double, double)"/>
 		/// </remarks>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ConcatMatrix(AffineTransform
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(AffineTransform
 			 transform)
 		{
 			float[] matrix = new float[6];
@@ -411,7 +411,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Begins text block (PDF BT operator).</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginText()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas BeginText()
 		{
 			contentStream.GetOutputStream().WriteBytes(BT);
 			return this;
@@ -419,7 +419,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Ends text block (PDF ET operator).</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EndText()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EndText()
 		{
 			contentStream.GetOutputStream().WriteBytes(ET);
 			return this;
@@ -427,14 +427,14 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Begins variable text block</summary>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginVariableText()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas BeginVariableText()
 		{
 			return BeginMarkedContent(PdfName.Tx);
 		}
 
 		/// <summary>Ends variable text block</summary>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EndVariableText()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EndVariableText()
 		{
 			return EndMarkedContent();
 		}
@@ -443,7 +443,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="font">@see PdfFont.</param>
 		/// <param name="size">Font size.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFontAndSize(PdfFont font
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFontAndSize(PdfFont font
 			, float size)
 		{
 			if (size < 0.0001f && size > -0.0001f)
@@ -463,8 +463,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">x coordinate.</param>
 		/// <param name="y">y coordinate.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas MoveText(double x, double
-			 y)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas MoveText(double x, double y
+			)
 		{
 			contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace
 				().WriteBytes(Td);
@@ -480,7 +480,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="leading">the new leading.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLeading(float leading)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLeading(float leading)
 		{
 			currentGs.SetLeading(leading);
 			contentStream.GetOutputStream().WriteFloat(leading).WriteSpace().WriteBytes(TL);
@@ -497,8 +497,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">offset of the new current point</param>
 		/// <param name="y">y-coordinate of the new current point</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas MoveTextWithLeading(float
-			 x, float y)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas MoveTextWithLeading(float x
+			, float y)
 		{
 			currentGs.SetLeading(-y);
 			contentStream.GetOutputStream().WriteFloat(x).WriteSpace().WriteFloat(y).WriteSpace
@@ -508,7 +508,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Moves to the start of the next line.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas NewlineText()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas NewlineText()
 		{
 			contentStream.GetOutputStream().WriteBytes(TStar);
 			return this;
@@ -521,7 +521,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </summary>
 		/// <param name="text">the text to write</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas NewlineShowText(String text
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(String text
 			)
 		{
 			document.CheckShowTextIsoConformance(currentGs, resources);
@@ -536,7 +536,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="charSpacing">a parameter</param>
 		/// <param name="text">the text to write</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas NewlineShowText(float wordSpacing
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas NewlineShowText(float wordSpacing
 			, float charSpacing, String text)
 		{
 			document.CheckShowTextIsoConformance(currentGs, resources);
@@ -554,8 +554,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Sets text rendering mode.</summary>
 		/// <param name="textRenderingMode">text rendering mode @see PdfCanvasConstants.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetTextRenderingMode(int 
-			textRenderingMode)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetTextRenderingMode(int textRenderingMode
+			)
 		{
 			currentGs.SetTextRenderingMode(textRenderingMode);
 			contentStream.GetOutputStream().WriteInteger(textRenderingMode).WriteSpace().WriteBytes
@@ -571,8 +571,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="textRise">a parameter</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetTextRise(float textRise
-			)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetTextRise(float textRise)
 		{
 			currentGs.SetTextRise(textRise);
 			contentStream.GetOutputStream().WriteFloat(textRise).WriteSpace().WriteBytes(Ts);
@@ -582,7 +581,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Sets the word spacing parameter.</summary>
 		/// <param name="wordSpacing">a parameter</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetWordSpacing(float wordSpacing
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetWordSpacing(float wordSpacing
 			)
 		{
 			currentGs.SetWordSpacing(wordSpacing);
@@ -594,8 +593,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Sets the character spacing parameter.</summary>
 		/// <param name="charSpacing">a parameter</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetCharacterSpacing(float
-			 charSpacing)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetCharacterSpacing(float charSpacing
+			)
 		{
 			currentGs.SetCharSpacing(charSpacing);
 			contentStream.GetOutputStream().WriteFloat(charSpacing).WriteSpace().WriteBytes(Tc
@@ -606,8 +605,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Sets the horizontal scaling parameter.</summary>
 		/// <param name="scale">a parameter.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetHorizontalScaling(float
-			 scale)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetHorizontalScaling(float 
+			scale)
 		{
 			currentGs.SetHorizontalScaling(scale);
 			contentStream.GetOutputStream().WriteFloat(scale).WriteSpace().WriteBytes(Tz);
@@ -626,7 +625,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">operand 3,1 in the matrix.</param>
 		/// <param name="y">operand 3,2 in the matrix.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetTextMatrix(float a, float
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(float a, float
 			 b, float c, float d, float x, float y)
 		{
 			contentStream.GetOutputStream().WriteFloat(a).WriteSpace().WriteFloat(b).WriteSpace
@@ -639,7 +638,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">operand 3,1 in the matrix.</param>
 		/// <param name="y">operand 3,2 in the matrix.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetTextMatrix(float x, float
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(float x, float
 			 y)
 		{
 			return SetTextMatrix(1, 0, 0, 1, x, y);
@@ -648,7 +647,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Shows text (operator Tj).</summary>
 		/// <param name="text">text to show.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ShowText(String text)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ShowText(String text)
 		{
 			document.CheckShowTextIsoConformance(currentGs, resources);
 			ShowTextInt(text);
@@ -659,7 +658,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Shows text (operator Tj).</summary>
 		/// <param name="text">text to show.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ShowText(GlyphLine text)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text)
 		{
 			document.CheckShowTextIsoConformance(currentGs, resources);
 			PdfFont font;
@@ -765,7 +764,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// This amount is subtracted from the current horizontal or vertical coordinate, depending on the writing mode.
 		/// </param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ShowText(PdfArray textArray
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray
 			)
 		{
 			if (currentGs.GetFont() == null)
@@ -800,8 +799,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">x coordinate.</param>
 		/// <param name="y">y coordinate.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas MoveTo(double x, double y
-			)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas MoveTo(double x, double y)
 		{
 			contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace
 				().WriteBytes(m);
@@ -816,8 +814,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x">x coordinate.</param>
 		/// <param name="y">y coordinate.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas LineTo(double x, double y
-			)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas LineTo(double x, double y)
 		{
 			contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace
 				().WriteBytes(l);
@@ -833,8 +830,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x3">x coordinate of the ending point.</param>
 		/// <param name="y3">y coordinate of the ending point.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas CurveTo(double x1, double
-			 y1, double x2, double y2, double x3, double y3)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x1, double y1
+			, double x2, double y2, double x3, double y3)
 		{
 			contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace
 				().WriteDouble(x2).WriteSpace().WriteDouble(y2).WriteSpace().WriteDouble(x3).WriteSpace
@@ -848,8 +845,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x3">x coordinate of the ending point.</param>
 		/// <param name="y3">y coordinate of the ending point.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas CurveTo(double x2, double
-			 y2, double x3, double y3)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x2, double y2
+			, double x3, double y3)
 		{
 			contentStream.GetOutputStream().WriteDouble(x2).WriteSpace().WriteDouble(y2).WriteSpace
 				().WriteDouble(x3).WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes(v);
@@ -862,7 +859,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x3">x coordinate of the ending point.</param>
 		/// <param name="y3">y coordinate of the ending point.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas CurveFromTo(double x1, double
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas CurveFromTo(double x1, double
 			 y1, double x3, double y3)
 		{
 			contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace
@@ -886,8 +883,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="startAng">starting angle in degrees.</param>
 		/// <param name="extent">angle extent in degrees.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Arc(double x1, double y1, 
-			double x2, double y2, double startAng, double extent)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Arc(double x1, double y1, double
+			 x2, double y2, double startAng, double extent)
 		{
 			IList<double[]> ar = BezierArc(x1, y1, x2, y2, startAng, extent);
 			if (ar.IsEmpty())
@@ -910,8 +907,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x2">a corner of the enclosing rectangle</param>
 		/// <param name="y2">a corner of the enclosing rectangle</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Ellipse(double x1, double
-			 y1, double x2, double y2)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Ellipse(double x1, double y1
+			, double x2, double y2)
 		{
 			return Arc(x1, y1, x2, y2, 0f, 360f);
 		}
@@ -1008,8 +1005,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="width">width.</param>
 		/// <param name="height">height.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Rectangle(double x, double
-			 y, double width, double height)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Rectangle(double x, double 
+			y, double width, double height)
 		{
 			contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace
 				().WriteDouble(width).WriteSpace().WriteDouble(height).WriteSpace().WriteBytes(re
@@ -1020,7 +1017,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Draws a rectangle.</summary>
 		/// <param name="rectangle">a rectangle to be drawn</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Rectangle(com.itextpdf.kernel.geom.Rectangle
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Rectangle(iTextSharp.Kernel.Geom.Rectangle
 			 rectangle)
 		{
 			return Rectangle(rectangle.GetX(), rectangle.GetY(), rectangle.GetWidth(), rectangle
@@ -1034,8 +1031,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height">height.</param>
 		/// <param name="radius">radius of the arc corner.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas RoundRectangle(double x, 
-			double y, double width, double height, double radius)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas RoundRectangle(double x, double
+			 y, double width, double height, double radius)
 		{
 			if (width < 0)
 			{
@@ -1073,8 +1070,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y">y center of circle.</param>
 		/// <param name="r">radius of circle.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Circle(double x, double y
-			, double r)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Circle(double x, double y, 
+			double r)
 		{
 			double curve = 0.5523f;
 			MoveTo(x + r, y);
@@ -1088,7 +1085,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Paints a shading object and adds it to the resources of this canvas</summary>
 		/// <param name="shading"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas PaintShading(PdfShading shading
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas PaintShading(PdfShading shading
 			)
 		{
 			PdfName shadingName = resources.AddShading(shading);
@@ -1103,7 +1100,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// to the starting point of the subpath.
 		/// </summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ClosePath()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ClosePath()
 		{
 			contentStream.GetOutputStream().WriteBytes(h);
 			return this;
@@ -1112,7 +1109,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Closes the path, fills it using the even-odd rule to determine the region to fill and strokes it.
 		/// 	</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ClosePathEoFillStroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ClosePathEoFillStroke()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
 			contentStream.GetOutputStream().WriteBytes(bStar);
@@ -1122,7 +1119,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Closes the path, fills it using the non-zero winding number rule to determine the region to fill and strokes it.
 		/// 	</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ClosePathFillStroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ClosePathFillStroke()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
 			contentStream.GetOutputStream().WriteBytes(b);
@@ -1131,7 +1128,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Ends the path without filling or stroking it.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas NewPath()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas NewPath()
 		{
 			contentStream.GetOutputStream().WriteBytes(n);
 			return this;
@@ -1139,7 +1136,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Strokes the path.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Stroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Stroke()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_STROKE, resources);
 			contentStream.GetOutputStream().WriteBytes(S);
@@ -1151,7 +1148,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// nonzero winding rule to determine which regions lie inside the clipping path.
 		/// </summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Clip()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Clip()
 		{
 			contentStream.GetOutputStream().WriteBytes(W);
 			return this;
@@ -1162,7 +1159,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// even-odd rule to determine which regions lie inside the clipping path.
 		/// </summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EoClip()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EoClip()
 		{
 			contentStream.GetOutputStream().WriteBytes(WStar);
 			return this;
@@ -1170,7 +1167,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Closes the path and strokes it.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ClosePathStroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ClosePathStroke()
 		{
 			contentStream.GetOutputStream().WriteBytes(s);
 			return this;
@@ -1178,7 +1175,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Fills current path.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas Fill()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas Fill()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
 			contentStream.GetOutputStream().WriteBytes(f);
@@ -1188,7 +1185,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Fills the path using the non-zero winding number rule to determine the region to fill and strokes it.
 		/// 	</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas FillStroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas FillStroke()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
 			contentStream.GetOutputStream().WriteBytes(B);
@@ -1197,7 +1194,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>EOFills current path.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EoFill()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EoFill()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL, resources);
 			contentStream.GetOutputStream().WriteBytes(fStar);
@@ -1207,7 +1204,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Fills the path, using the even-odd rule to determine the region to fill and strokes it.
 		/// 	</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EoFillStroke()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EoFillStroke()
 		{
 			document.CheckIsoConformance(currentGs, IsoKey.DRAWMODE_FILL_STROKE, resources);
 			contentStream.GetOutputStream().WriteBytes(BStar);
@@ -1217,7 +1214,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Sets line width.</summary>
 		/// <param name="lineWidth">line width.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineWidth(float lineWidth
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineWidth(float lineWidth
 			)
 		{
 			if (currentGs.GetLineWidth() == lineWidth)
@@ -1236,7 +1233,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="lineCapStyle"/>
 		/// <returns>current canvas.</returns>
 		/// <seealso cref="LineCapStyle">for possible values.</seealso>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineCapStyle(int lineCapStyle
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineCapStyle(int lineCapStyle
 			)
 		{
 			if (currentGs.GetLineCapStyle() == lineCapStyle)
@@ -1256,7 +1253,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="lineJoinStyle"/>
 		/// <returns>current canvas.</returns>
 		/// <seealso cref="LineJoinStyle">for possible values.</seealso>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineJoinStyle(int lineJoinStyle
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineJoinStyle(int lineJoinStyle
 			)
 		{
 			if (currentGs.GetLineJoinStyle() == lineJoinStyle)
@@ -1275,7 +1272,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </summary>
 		/// <param name="miterLimit"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetMiterLimit(float miterLimit
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetMiterLimit(float miterLimit
 			)
 		{
 			if (currentGs.GetMiterLimit() == miterLimit)
@@ -1298,7 +1295,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="phase">the value of the phase</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float phase)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float phase)
 		{
 			currentGs.SetDashPattern(GetDashPatternArray(phase));
 			contentStream.GetOutputStream().WriteByte('[').WriteByte(']').WriteSpace().WriteFloat
@@ -1319,8 +1316,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="unitsOn">the number of units that must be 'on' (equals the number of units that must be 'off').
 		/// 	</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float unitsOn
-			, float phase)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, 
+			float phase)
 		{
 			currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn }, phase));
 			contentStream.GetOutputStream().WriteByte('[').WriteFloat(unitsOn).WriteByte(']')
@@ -1341,8 +1338,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="unitsOn">the number of units that must be 'on'</param>
 		/// <param name="unitsOff">the number of units that must be 'off'</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float unitsOn
-			, float unitsOff, float phase)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, 
+			float unitsOff, float phase)
 		{
 			currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn, unitsOff }, phase
 				));
@@ -1364,8 +1361,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="array">length of the alternating dashes and gaps</param>
 		/// <param name="phase">the value of the phase</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetLineDash(float[] array
-			, float phase)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float[] array, 
+			float phase)
 		{
 			currentGs.SetDashPattern(GetDashPatternArray(array, phase));
 			PdfOutputStream @out = contentStream.GetOutputStream();
@@ -1389,8 +1386,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="renderingIntent">a PdfName containing a color metric</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetRenderingIntent(PdfName
-			 renderingIntent)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetRenderingIntent(PdfName 
+			renderingIntent)
 		{
 			document.CheckIsoConformance(renderingIntent, IsoKey.RENDERING_INTENT);
 			if (renderingIntent.Equals(currentGs.GetRenderingIntent()))
@@ -1412,8 +1409,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="flatnessTolerance">a value</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFlatnessTolerance(float
-			 flatnessTolerance)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFlatnessTolerance(float 
+			flatnessTolerance)
 		{
 			if (currentGs.GetFlatnessTolerance() == flatnessTolerance)
 			{
@@ -1428,7 +1425,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Changes the current color for filling paths.</summary>
 		/// <param name="color">fill color.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFillColor(Color color)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFillColor(iTextSharp.Kernel.Color.Color
+			 color)
 		{
 			return SetColor(color, true);
 		}
@@ -1436,8 +1434,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Changes the current color for stroking paths.</summary>
 		/// <param name="color">stroke color.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetStrokeColor(Color color
-			)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColor(iTextSharp.Kernel.Color.Color
+			 color)
 		{
 			return SetColor(color, false);
 		}
@@ -1447,8 +1445,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)
 		/// 	</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetColor(Color color, bool
-			 fill)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetColor(iTextSharp.Kernel.Color.Color
+			 color, bool fill)
 		{
 			if (color is PatternColor)
 			{
@@ -1468,7 +1466,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)
 		/// 	</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetColor(PdfColorSpace colorSpace
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetColor(PdfColorSpace colorSpace
 			, float[] colorValue, bool fill)
 		{
 			return SetColor(colorSpace, colorValue, null, fill);
@@ -1482,12 +1480,14 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)
 		/// 	</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetColor(PdfColorSpace colorSpace
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetColor(PdfColorSpace colorSpace
 			, float[] colorValue, PdfPattern pattern, bool fill)
 		{
 			bool setColorValueOnly = false;
-			Color oldColor = fill ? currentGs.GetFillColor() : currentGs.GetStrokeColor();
-			Color newColor = CreateColor(colorSpace, colorValue, pattern);
+			iTextSharp.Kernel.Color.Color oldColor = fill ? currentGs.GetFillColor() : currentGs
+				.GetStrokeColor();
+			iTextSharp.Kernel.Color.Color newColor = CreateColor(colorSpace, colorValue, pattern
+				);
 			if (oldColor.Equals(newColor))
 			{
 				return this;
@@ -1574,7 +1574,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Changes the current color for filling paths to a grayscale value.</summary>
 		/// <param name="g">a grayscale value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFillColorGray(float g)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFillColorGray(float g)
 		{
 			return SetColor(gray, new float[] { g }, true);
 		}
@@ -1582,22 +1582,21 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Changes the current color for stroking paths to a grayscale value.</summary>
 		/// <param name="g">a grayscale value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetStrokeColorGray(float 
-			g)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColorGray(float g)
 		{
 			return SetColor(gray, new float[] { g }, false);
 		}
 
 		/// <summary>Changes the current color for filling paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetFillColorGray()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetFillColorGray()
 		{
 			return SetFillColorGray(0);
 		}
 
 		/// <summary>Changes the current color for stroking paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetStrokeColorGray()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetStrokeColorGray()
 		{
 			return SetStrokeColorGray(0);
 		}
@@ -1607,8 +1606,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="g">a green value in the range [0,1]</param>
 		/// <param name="b">a blue value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFillColorRgb(float r, 
-			float g, float b)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFillColorRgb(float r, float
+			 g, float b)
 		{
 			return SetColor(rgb, new float[] { r, g, b }, true);
 		}
@@ -1618,8 +1617,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="g">a green value in the range [0,1]</param>
 		/// <param name="b">a blue value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetStrokeColorRgb(float r
-			, float g, float b)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColorRgb(float r, 
+			float g, float b)
 		{
 			return SetColor(rgb, new float[] { r, g, b }, false);
 		}
@@ -1627,7 +1626,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Adds or changes the shading of the current fill color path.</summary>
 		/// <param name="shading">the shading</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFillColorShading(PdfPattern.Shading
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFillColorShading(PdfPattern.Shading
 			 shading)
 		{
 			return SetColor(pattern, null, shading, true);
@@ -1636,7 +1635,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Adds or changes the shading of the current stroke color path.</summary>
 		/// <param name="shading">the shading</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetStrokeColorShading(PdfPattern.Shading
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColorShading(PdfPattern.Shading
 			 shading)
 		{
 			return SetColor(pattern, null, shading, false);
@@ -1644,14 +1643,14 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Changes the current color for filling paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetFillColorRgb()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetFillColorRgb()
 		{
 			return ResetFillColorGray();
 		}
 
 		/// <summary>Changes the current color for stroking paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetStrokeColorRgb()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetStrokeColorRgb()
 		{
 			return ResetStrokeColorGray();
 		}
@@ -1662,8 +1661,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y">a yellow value in the range [0,1]</param>
 		/// <param name="k">a key (black) value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetFillColorCmyk(float c, 
-			float m, float y, float k)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetFillColorCmyk(float c, float
+			 m, float y, float k)
 		{
 			return SetColor(cmyk, new float[] { c, m, y, k }, true);
 		}
@@ -1674,22 +1673,22 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y">a yellow value in the range [0,1]</param>
 		/// <param name="k">a key (black) value in the range [0,1]</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetStrokeColorCmyk(float 
-			c, float m, float y, float k)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColorCmyk(float c, 
+			float m, float y, float k)
 		{
 			return SetColor(cmyk, new float[] { c, m, y, k }, false);
 		}
 
 		/// <summary>Changes the current color for filling paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetFillColorCmyk()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetFillColorCmyk()
 		{
 			return SetFillColorCmyk(0, 0, 0, 1);
 		}
 
 		/// <summary>Changes the current color for stroking paths to black.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas ResetStrokeColorCmyk()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas ResetStrokeColorCmyk()
 		{
 			return SetStrokeColorCmyk(0, 0, 0, 1);
 		}
@@ -1702,7 +1701,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <see cref="EndLayer()"/>
 		/// .<p>
 		/// Note that nested layers with
-		/// <see cref="com.itextpdf.kernel.pdf.layer.PdfLayer.AddChild(com.itextpdf.kernel.pdf.layer.PdfLayer)
+		/// <see cref="iTextSharp.Kernel.Pdf.Layer.PdfLayer.AddChild(iTextSharp.Kernel.Pdf.Layer.PdfLayer)
 		/// 	"/>
 		/// only require a single
 		/// call to this method and a single call to
@@ -1712,7 +1711,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="layer">@see PdfLayer.</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginLayer(IPdfOCG layer)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas BeginLayer(IPdfOCG layer)
 		{
 			if (layer is PdfLayer && ((PdfLayer)layer).GetTitle() != null)
 			{
@@ -1754,7 +1753,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Ends OCG layer.</summary>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EndLayer()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EndLayer()
 		{
 			int num;
 			if (layerDepth != null && !layerDepth.IsEmpty())
@@ -1840,8 +1839,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="rect"/>
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual PdfXObject AddImage(ImageData image, com.itextpdf.kernel.geom.Rectangle
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual PdfXObject AddImage(ImageData image, iTextSharp.Kernel.Geom.Rectangle
 			 rect, bool asInline)
 		{
 			return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect
@@ -1854,7 +1853,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline
 			)
 		{
@@ -1927,7 +1926,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="asInline">true if to add image as in-line.</param>
 		/// <param name="dummy"/>
 		/// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfXObject AddImage(ImageData image, float x, float y, float height
 			, bool asInline, bool dummy)
 		{
@@ -1952,7 +1951,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float a, float b, float c, float d, float e, float f)
 		{
 			if (xObject is PdfFormXObject)
@@ -1981,7 +1980,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x"/>
 		/// <param name="y"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y)
 		{
 			if (xObject is PdfFormXObject)
@@ -2009,8 +2008,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="xObject"/>
 		/// <param name="rect"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
-			, com.itextpdf.kernel.geom.Rectangle rect)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject
+			, iTextSharp.Kernel.Geom.Rectangle rect)
 		{
 			if (xObject is PdfFormXObject)
 			{
@@ -2039,7 +2038,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="width"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y, float width)
 		{
 			if (xObject is PdfFormXObject)
@@ -2070,7 +2069,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas AddXObject(PdfXObject xObject
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject
 			, float x, float y, float height, bool dummy)
 		{
 			if (xObject is PdfFormXObject)
@@ -2094,8 +2093,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="extGState">a dictionary that maps resource names to graphics state parameter dictionaries
 		/// 	</param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas SetExtGState(PdfExtGState
-			 extGState)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas SetExtGState(PdfExtGState extGState
+			)
 		{
 			if (!extGState.IsFlushed())
 			{
@@ -2121,8 +2120,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <remarks>Manually start a Marked Content sequence. Used primarily for Tagged PDF</remarks>
 		/// <param name="tag">the type of content contained</param>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginMarkedContent(PdfName
-			 tag)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas BeginMarkedContent(PdfName 
+			tag)
 		{
 			return BeginMarkedContent(tag, null);
 		}
@@ -2134,8 +2133,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="properties">the properties of the content, including Marked Content ID. If null, the PDF marker is BMC, else it is BDC
 		/// 	</param>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas BeginMarkedContent(PdfName
-			 tag, PdfDictionary properties)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas BeginMarkedContent(PdfName 
+			tag, PdfDictionary properties)
 		{
 			mcDepth++;
 			PdfOutputStream @out = contentStream.GetOutputStream().Write(tag).WriteSpace();
@@ -2160,7 +2159,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <summary>Manually end a Marked Content sequence.</summary>
 		/// <remarks>Manually end a Marked Content sequence. Used primarily for Tagged PDF</remarks>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas EndMarkedContent()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas EndMarkedContent()
 		{
 			if (--mcDepth < 0)
 			{
@@ -2175,7 +2174,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// 	</remarks>
 		/// <param name="tag">the type of content that will be contained</param>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas OpenTag(CanvasTag tag)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas OpenTag(CanvasTag tag)
 		{
 			if (tag.GetRole() == null)
 			{
@@ -2195,7 +2194,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="tagReference">reference to the tag from the document logical structure
 		/// 	</param>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas OpenTag(TagReference tagReference
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas OpenTag(TagReference tagReference
 			)
 		{
 			if (tagReference.GetRole() == null)
@@ -2212,7 +2211,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <remarks>Manually close a tag, ending a Marked Content sequence. Used primarily for Tagged PDF
 		/// 	</remarks>
 		/// <returns>current canvas</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas CloseTag()
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas CloseTag()
 		{
 			return EndMarkedContent();
 		}
@@ -2227,7 +2226,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <c>String</c>
 		/// </param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas WriteLiteral(String s)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas WriteLiteral(String s)
 		{
 			contentStream.GetOutputStream().WriteString(s);
 			return this;
@@ -2243,7 +2242,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <c>char</c>
 		/// </param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas WriteLiteral(char c)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas WriteLiteral(char c)
 		{
 			contentStream.GetOutputStream().WriteInteger((int)c);
 			return this;
@@ -2259,7 +2258,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <c>float</c>
 		/// </param>
 		/// <returns>current canvas.</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.PdfCanvas WriteLiteral(float n)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.PdfCanvas WriteLiteral(float n)
 		{
 			contentStream.GetOutputStream().WriteFloat(n);
 			return this;
@@ -2336,7 +2335,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>current canvas.</returns>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 a, float b, float c, float d, float e, float f)
 		{
 			SaveState();
@@ -2356,8 +2355,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x"/>
 		/// <param name="y"/>
 		/// <returns>current canvas.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 x, float y)
 		{
 			return AddForm(form, 1, 0, 0, 1, x, y);
@@ -2371,8 +2370,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="form"/>
 		/// <param name="rect"/>
 		/// <returns>current canvas.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, com.itextpdf.kernel.geom.Rectangle
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, iTextSharp.Kernel.Geom.Rectangle
 			 rect)
 		{
 			return AddForm(form, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY
@@ -2389,8 +2388,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="width"/>
 		/// <returns>current canvas.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 x, float y, float width)
 		{
 			PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
@@ -2416,7 +2415,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddForm(PdfFormXObject form, float
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float
 			 x, float y, float height, bool dummy)
 		{
 			PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
@@ -2448,8 +2447,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="e">an element of the transformation matrix</param>
 		/// <param name="f">an element of the transformation matrix</param>
 		/// <returns>canvas a reference to this object.</returns>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
-			float a, float b, float c, float d, float e, float f)
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float
+			 a, float b, float c, float d, float e, float f)
 		{
 			SaveState();
 			ConcatMatrix(a, b, c, d, e, f);
@@ -2459,7 +2458,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 			return this;
 		}
 
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfXObject xObject, float
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfXObject xObject, float
 			 a, float b, float c, float d, float e, float f)
 		{
 			SaveState();
@@ -2479,8 +2478,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="x"/>
 		/// <param name="y"/>
 		/// <returns/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
-			float x, float y)
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float
+			 x, float y)
 		{
 			return AddImage(image, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
 		}
@@ -2493,8 +2492,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="image"/>
 		/// <param name="rect"/>
 		/// <returns/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
-			com.itextpdf.kernel.geom.Rectangle rect)
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, iTextSharp.Kernel.Geom.Rectangle
+			 rect)
 		{
 			return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect
 				.GetY());
@@ -2510,8 +2509,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="y"/>
 		/// <param name="width"/>
 		/// <returns/>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
-			float x, float y, float width)
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float
+			 x, float y, float width)
 		{
 			return AddImage(image, width, 0, 0, width / image.GetWidth() * image.GetHeight(), 
 				x, y);
@@ -2528,8 +2527,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// <param name="height"/>
 		/// <param name="dummy"/>
 		/// <returns>current canvas.</returns>
-		private com.itextpdf.kernel.pdf.canvas.PdfCanvas AddImage(PdfImageXObject image, 
-			float x, float y, float height, bool dummy)
+		private iTextSharp.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float
+			 x, float y, float height, bool dummy)
 		{
 			return AddImage(image, height / image.GetHeight() * image.GetWidth(), 0, 0, height
 				, x, y);
@@ -2565,8 +2564,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 				().WriteBytes(BDC).WriteNewLine();
 		}
 
-		private Color CreateColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern
-			 pattern)
+		private iTextSharp.Kernel.Color.Color CreateColor(PdfColorSpace colorSpace, float
+			[] colorValue, PdfPattern pattern)
 		{
 			if (colorSpace is PdfSpecialCs.UncoloredTilingPattern)
 			{
@@ -2580,7 +2579,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 					return new PatternColor(pattern);
 				}
 			}
-			return Color.MakeColor(colorSpace, colorValue);
+			return iTextSharp.Kernel.Color.Color.MakeColor(colorSpace, colorValue);
 		}
 
 		private PdfArray GetDashPatternArray(float phase)
@@ -2606,7 +2605,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		private void ApplyRotation(PdfPage page)
 		{
-			com.itextpdf.kernel.geom.Rectangle rectagle = page.GetPageSizeWithRotation();
+			iTextSharp.Kernel.Geom.Rectangle rectagle = page.GetPageSizeWithRotation();
 			int rotation = page.GetRotation();
 			switch (rotation)
 			{

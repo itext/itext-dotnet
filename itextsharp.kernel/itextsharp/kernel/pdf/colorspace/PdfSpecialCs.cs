@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.function;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Function;
 
-namespace com.itextpdf.kernel.pdf.colorspace
+namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfSpecialCs : PdfColorSpace
 	{
@@ -285,7 +285,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 			}
 
 			public UncoloredTilingPattern(PdfColorSpace underlyingColorSpace)
-				: base(new PdfArray(com.itextpdf.io.util.JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace
+				: base(new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace
 					.GetPdfObject())))
 			{
 			}

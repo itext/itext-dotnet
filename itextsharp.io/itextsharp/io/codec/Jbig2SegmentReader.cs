@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>
 	/// Class to read a JBIG2 file at a basic level: understand all the segments,

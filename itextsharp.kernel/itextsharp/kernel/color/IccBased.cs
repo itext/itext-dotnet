@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.color
+namespace iTextSharp.Kernel.Color
 {
-	public class IccBased : Color
+	public class IccBased : iTextSharp.Kernel.Color.Color
 	{
 		public IccBased(PdfCieBasedCs.IccBased cs)
 			: this(cs, new float[cs.GetNumberOfComponents()])
@@ -63,7 +63,7 @@ namespace com.itextpdf.kernel.color
 		/// <summary>Creates IccBased color.</summary>
 		/// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public IccBased(Stream iccStream)
 			: this(new PdfCieBasedCs.IccBased(iccStream), null)
 		{
@@ -79,7 +79,7 @@ namespace com.itextpdf.kernel.color
 		/// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.
 		/// 	</param>
 		/// <param name="value">color value.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public IccBased(Stream iccStream, float[] value)
 			: this(new PdfCieBasedCs.IccBased(iccStream), value)
 		{

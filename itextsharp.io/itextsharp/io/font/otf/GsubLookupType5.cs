@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font.otf.lookuptype5;
+using iTextSharp.IO.Font.Otf.Lookuptype5;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	/// <summary>LookupType 5: Contextual Substitution Subtable</summary>
 	public class GsubLookupType5 : OpenTableLookup

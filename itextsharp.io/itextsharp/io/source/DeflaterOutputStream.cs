@@ -1,8 +1,7 @@
 using System.IO;
 using System.util.zlib;
 
-namespace com.itextpdf.io.source
-{
+namespace iTextSharp.IO.Source {
 	public class DeflaterOutputStream : ZDeflaterOutputStream
 	{
 		public DeflaterOutputStream(Stream outp, int level, int size)

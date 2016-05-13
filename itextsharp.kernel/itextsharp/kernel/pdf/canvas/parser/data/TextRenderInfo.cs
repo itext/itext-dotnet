@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.data
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 {
 	/// <summary>
 	/// Provides information and calculations needed by render listeners
@@ -61,9 +61,9 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 	/// to display/evaluate text render operations.
 	/// <br /><br />
 	/// This is passed between the
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
 	/// and
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.listener.IEventListener"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
 	/// objects as text rendering operations are
 	/// discovered
 	/// </remarks>
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 			this.@string = @string;
 			this.textToUserSpaceTransformMatrix = textMatrix.Multiply(gs.GetCtm());
 			this.gs = gs;
-			this.canvasTagHierarchy = java.util.Collections.UnmodifiableList(new List<CanvasTag
+			this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList(new List<CanvasTag
 				>(canvasTagHierarchy));
 			this.fontMatrix = gs.GetFont().GetFontMatrix();
 		}
@@ -107,8 +107,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 		/// <param name="string">the content of a TextRenderInfo</param>
 		/// <param name="horizontalOffset">the unscaled horizontal offset of the character that this TextRenderInfo represents
 		/// 	</param>
-		private TextRenderInfo(com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo 
-			parent, PdfString @string, float horizontalOffset)
+		private TextRenderInfo(iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent
+			, PdfString @string, float horizontalOffset)
 		{
 			this.@string = @string;
 			this.textToUserSpaceTransformMatrix = new Matrix(horizontalOffset, 0).Multiply(parent
@@ -282,24 +282,23 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 		/// <see cref="TextRenderInfo"/>
 		/// objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
 		/// </returns>
-		public virtual IList<com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo> GetCharacterRenderInfos
+		public virtual IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos
 			()
 		{
-			IList<com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo> rslt = new List<
-				com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo>(@string.GetValue().Length
-				);
+			IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> rslt = new List<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
+				>(@string.GetValue().Length);
 			PdfString[] strings = SplitString(@string);
 			float totalWidth = 0;
 			foreach (PdfString str in strings)
 			{
 				float[] widthAndWordSpacing = GetWidthAndWordSpacing(str);
-				com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo subInfo = new com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo
+				iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo subInfo = new iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
 					(this, str, totalWidth);
 				rslt.Add(subInfo);
 				totalWidth += (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + 
 					widthAndWordSpacing[1]) * (gs.GetHorizontalScaling() / 100f);
 			}
-			foreach (com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo tri in rslt)
+			foreach (iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt)
 			{
 				tri.GetUnscaledWidth();
 			}
@@ -333,13 +332,13 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 		}
 
 		/// <returns>the current fill color.</returns>
-		public virtual Color GetFillColor()
+		public virtual iTextSharp.Kernel.Color.Color GetFillColor()
 		{
 			return gs.GetFillColor();
 		}
 
 		/// <returns>the current stroke color.</returns>
-		public virtual Color GetStrokeColor()
+		public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
 		{
 			return gs.GetStrokeColor();
 		}
@@ -451,7 +450,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 			}
 			else
 			{
-				return GetStringWidth(com.itextpdf.GetStringValueOf(charToUse));
+				return GetStringWidth(iTextSharp.GetStringValueOf(charToUse));
 			}
 		}
 

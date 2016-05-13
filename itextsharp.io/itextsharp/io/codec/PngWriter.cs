@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.io.source;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Writes a PNG image.</summary>
 	public class PngWriter

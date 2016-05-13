@@ -1,5 +1,5 @@
 /*
-$Id: c9a351975101191767f9258861a0153e1b69c63f $
+$Id: 05e9aa977b97f99b8ea9993443e6fa555341302e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io.image;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
+using iTextSharp.IO.Image;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>Image implementation for WMF, Windows Metafile.</summary>
 	public class WmfImageData : ImageData
@@ -57,7 +57,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>Creates a WmfImage from a file.</summary>
 		/// <param name="fileName">pah to the file</param>
-		/// <exception cref="java.net.MalformedURLException"/>
+		/// <exception cref="Java.Net.MalformedURLException"/>
 		public WmfImageData(String fileName)
 			: this(UrlUtil.ToURL(fileName))
 		{

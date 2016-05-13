@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.barcodes.dmcode
+namespace iTextSharp.Barcodes.Dmcode
 {
 	public class DmParams
 	{

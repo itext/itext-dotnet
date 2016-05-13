@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	public sealed class PdfFontFactory
 	{

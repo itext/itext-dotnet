@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.IO;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Came from GIFEncoder initially.</summary>
 	/// <remarks>

@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.source;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNumber : PdfPrimitiveObject
 	{
@@ -142,7 +142,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>object itself.</returns>
 		public override PdfObject MakeIndirect(PdfDocument document)
 		{
-			return (com.itextpdf.kernel.pdf.PdfNumber)base.MakeIndirect(document);
+			return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
 		}
 
 		/// <summary>Marks object to be saved as indirect.</summary>
@@ -151,7 +151,7 @@ namespace com.itextpdf.kernel.pdf
 		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
 			 reference)
 		{
-			return (com.itextpdf.kernel.pdf.PdfNumber)base.MakeIndirect(document, reference);
+			return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -163,7 +163,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document)
 		{
-			return (com.itextpdf.kernel.pdf.PdfNumber)base.CopyTo(document, true);
+			return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -180,25 +180,25 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
 		{
-			return (com.itextpdf.kernel.pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
+			return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
 		}
 
 		public override String ToString()
 		{
 			if (content != null)
 			{
-				return com.itextpdf.io.util.JavaUtil.GetStringForBytes(content);
+				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
 			}
 			else
 			{
 				if (isDouble)
 				{
-					return com.itextpdf.io.util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue
+					return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue
 						()));
 				}
 				else
 				{
-					return com.itextpdf.io.util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue
+					return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue
 						()));
 				}
 			}
@@ -206,7 +206,7 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal override PdfObject NewInstance()
 		{
-			return new com.itextpdf.kernel.pdf.PdfNumber();
+			return new iTextSharp.Kernel.Pdf.PdfNumber();
 		}
 
 		protected internal virtual bool IsDoubleNumber()
@@ -230,7 +230,7 @@ namespace com.itextpdf.kernel.pdf
 		{
 			try
 			{
-				value = System.Double.Parse(com.itextpdf.io.util.JavaUtil.GetStringForBytes(content
+				value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content
 					));
 			}
 			catch (FormatException)
@@ -244,7 +244,7 @@ namespace com.itextpdf.kernel.pdf
 			)
 		{
 			base.CopyContent(from, document);
-			com.itextpdf.kernel.pdf.PdfNumber number = (com.itextpdf.kernel.pdf.PdfNumber)from;
+			iTextSharp.Kernel.Pdf.PdfNumber number = (iTextSharp.Kernel.Pdf.PdfNumber)from;
 			value = number.value;
 			isDouble = number.isDouble;
 		}

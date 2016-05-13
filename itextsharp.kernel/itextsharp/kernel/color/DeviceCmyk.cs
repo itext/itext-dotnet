@@ -42,22 +42,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.color
+namespace iTextSharp.Kernel.Color
 {
-	public class DeviceCmyk : Color
+	public class DeviceCmyk : iTextSharp.Kernel.Color.Color
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceCmyk CYAN = new com.itextpdf.kernel.color.DeviceCmyk
+		public static readonly iTextSharp.Kernel.Color.DeviceCmyk CYAN = new iTextSharp.Kernel.Color.DeviceCmyk
 			(100, 0, 0, 0);
 
-		public static readonly com.itextpdf.kernel.color.DeviceCmyk MAGENTA = new com.itextpdf.kernel.color.DeviceCmyk
+		public static readonly iTextSharp.Kernel.Color.DeviceCmyk MAGENTA = new iTextSharp.Kernel.Color.DeviceCmyk
 			(0, 100, 0, 0);
 
-		public static readonly com.itextpdf.kernel.color.DeviceCmyk YELLOW = new com.itextpdf.kernel.color.DeviceCmyk
+		public static readonly iTextSharp.Kernel.Color.DeviceCmyk YELLOW = new iTextSharp.Kernel.Color.DeviceCmyk
 			(0, 0, 100, 0);
 
-		public static readonly com.itextpdf.kernel.color.DeviceCmyk BLACK = new com.itextpdf.kernel.color.DeviceCmyk
+		public static readonly iTextSharp.Kernel.Color.DeviceCmyk BLACK = new iTextSharp.Kernel.Color.DeviceCmyk
 			(0, 0, 0, 100);
 
 		public DeviceCmyk()
@@ -75,7 +75,7 @@ namespace com.itextpdf.kernel.color
 		{
 		}
 
-		public static com.itextpdf.kernel.color.DeviceCmyk MakeLighter(com.itextpdf.kernel.color.DeviceCmyk
+		public static iTextSharp.Kernel.Color.DeviceCmyk MakeLighter(iTextSharp.Kernel.Color.DeviceCmyk
 			 cmykColor)
 		{
 			DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
@@ -83,7 +83,7 @@ namespace com.itextpdf.kernel.color
 			return ConvertRgbToCmyk(lighterRgb);
 		}
 
-		public static com.itextpdf.kernel.color.DeviceCmyk MakeDarker(com.itextpdf.kernel.color.DeviceCmyk
+		public static iTextSharp.Kernel.Color.DeviceCmyk MakeDarker(iTextSharp.Kernel.Color.DeviceCmyk
 			 cmykColor)
 		{
 			DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);

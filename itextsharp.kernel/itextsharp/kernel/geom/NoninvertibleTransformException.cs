@@ -20,7 +20,7 @@
 */
 using System;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	public class NoninvertibleTransformException : Exception
 	{

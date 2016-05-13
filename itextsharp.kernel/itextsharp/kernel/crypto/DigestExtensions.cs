@@ -1,7 +1,7 @@
 ﻿using System;
 using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.kernel {
+namespace iTextSharp.Kernel {
     internal static class DigestExtensions {
         public static void Update(this IDigest dgst, byte[] input) {
             dgst.Update(input, 0, input.Length);

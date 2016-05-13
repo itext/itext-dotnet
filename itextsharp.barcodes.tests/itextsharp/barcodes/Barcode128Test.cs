@@ -1,12 +1,11 @@
 using System;
+using Java.IO;
 using NUnit.Framework;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.utils;
-using java.io;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Utils;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class Barcode128Test
 	{
@@ -14,14 +13,14 @@ namespace com.itextpdf.barcodes
 
 		public const String destinationFolder = "./target/test/com/itextpdf/barcodes/Barcode128/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.BeforeClass]
 		public static void BeforeClass()
 		{
 			new File(destinationFolder).Mkdirs();
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void Barcode01Test()
@@ -35,14 +34,15 @@ namespace com.itextpdf.barcodes
 			barcode.SetCodeType(Barcode128.CODE128);
 			barcode.SetCode("9781935182610");
 			barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-			barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
+			barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color
+				.BLACK);
 			document.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void Barcode02Test()
@@ -56,7 +56,8 @@ namespace com.itextpdf.barcodes
 			barcode.SetCodeType(Barcode128.CODE128);
 			barcode.SetCode("9781935182610");
 			barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-			barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
+			barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color
+				.BLACK);
 			document.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));

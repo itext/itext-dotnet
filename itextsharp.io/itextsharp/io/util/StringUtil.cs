@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 	public static class StringUtil
 	{
 	    public static String ReplaceAll(String srcString, String regex, String replacement) {

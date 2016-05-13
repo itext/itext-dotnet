@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfAnnotationAppearance : PdfObjectWrapper<PdfDictionary>
 	{
@@ -62,14 +62,14 @@ namespace com.itextpdf.kernel.pdf.annot
 		{
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfAnnotationAppearance SetState(PdfName
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetState(PdfName
 			 stateName, PdfFormXObject state)
 		{
 			GetPdfObject().Put(stateName, state.GetPdfObject());
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfAnnotationAppearance SetStateObject
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetStateObject
 			(PdfName stateName, PdfStream state)
 		{
 			GetPdfObject().Put(stateName, state);

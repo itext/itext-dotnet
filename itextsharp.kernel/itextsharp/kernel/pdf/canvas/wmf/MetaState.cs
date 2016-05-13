@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Color;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>Class to keep the state.</summary>
 	public class MetaState
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		public const int WINDING = 2;
 
 		/// <summary>Stack of saved states.</summary>
-		public Stack<com.itextpdf.kernel.pdf.canvas.wmf.MetaState> savedStates;
+		public Stack<iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState> savedStates;
 
 		/// <summary>List of MetaObjects.</summary>
 		public IList<MetaObject> MetaObjects;
@@ -97,11 +97,11 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>The current background color.</summary>
 		/// <remarks>The current background color. Default value is DeviceRgb#WHITE.</remarks>
-		public Color currentBackgroundColor = DeviceRgb.WHITE;
+		public iTextSharp.Kernel.Color.Color currentBackgroundColor = DeviceRgb.WHITE;
 
 		/// <summary>Current text color.</summary>
 		/// <remarks>Current text color. Default value is DeviceRgb#BLACK.</remarks>
-		public Color currentTextColor = DeviceRgb.BLACK;
+		public iTextSharp.Kernel.Color.Color currentTextColor = DeviceRgb.BLACK;
 
 		/// <summary>The current background mode.</summary>
 		/// <remarks>The current background mode. Default value is OPAQUE.</remarks>
@@ -139,7 +139,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <summary>Creates new MetaState</summary>
 		public MetaState()
 		{
-			savedStates = new Stack<com.itextpdf.kernel.pdf.canvas.wmf.MetaState>();
+			savedStates = new Stack<iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState>();
 			MetaObjects = new List<MetaObject>();
 			currentPoint = new Point(0, 0);
 			currentPen = new MetaPen();
@@ -149,7 +149,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>Clones a new MetaState from the specified MetaState.</summary>
 		/// <param name="state">the state to clone</param>
-		public MetaState(com.itextpdf.kernel.pdf.canvas.wmf.MetaState state)
+		public MetaState(iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state)
 		{
 			SetMetaState(state);
 		}
@@ -157,7 +157,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <summary>Sets every field of this MetaState to the values of the fields of the specified MetaState.
 		/// 	</summary>
 		/// <param name="state">state to copy</param>
-		public virtual void SetMetaState(com.itextpdf.kernel.pdf.canvas.wmf.MetaState state
+		public virtual void SetMetaState(iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state
 			)
 		{
 			savedStates = state.savedStates;
@@ -214,14 +214,14 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 					style = currentBrush.GetStyle();
 					if (style == MetaBrush.BS_SOLID)
 					{
-						Color color = currentBrush.GetColor();
+						iTextSharp.Kernel.Color.Color color = currentBrush.GetColor();
 						cb.SetFillColor(color);
 					}
 					else
 					{
 						if (style == MetaBrush.BS_HATCHED)
 						{
-							Color color = currentBackgroundColor;
+							iTextSharp.Kernel.Color.Color color = currentBackgroundColor;
 							cb.SetFillColor(color);
 						}
 					}
@@ -234,7 +234,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 					style = currentPen.GetStyle();
 					if (style != MetaPen.PS_NULL)
 					{
-						Color color = currentPen.GetColor();
+						iTextSharp.Kernel.Color.Color color = currentPen.GetColor();
 						cb.SetStrokeColor(color);
 						cb.SetLineWidth(Math.Abs(currentPen.GetPenWidth() * scalingX / extentWx));
 						switch (style)
@@ -293,7 +293,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		public virtual void SaveState(PdfCanvas cb)
 		{
 			cb.SaveState();
-			com.itextpdf.kernel.pdf.canvas.wmf.MetaState state = new com.itextpdf.kernel.pdf.canvas.wmf.MetaState
+			iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state = new iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState
 				(this);
 			savedStates.Push(state);
 		}
@@ -316,7 +316,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			{
 				return;
 			}
-			com.itextpdf.kernel.pdf.canvas.wmf.MetaState state = null;
+			iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state = null;
 			while (pops-- != 0)
 			{
 				cb.RestoreState();
@@ -445,7 +445,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>Getter for property currentBackgroundColor.</summary>
 		/// <returns>Value of property currentBackgroundColor.</returns>
-		public virtual Color GetCurrentBackgroundColor()
+		public virtual iTextSharp.Kernel.Color.Color GetCurrentBackgroundColor()
 		{
 			return currentBackgroundColor;
 		}
@@ -453,21 +453,23 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 		/// <summary>Setter for property currentBackgroundColor.</summary>
 		/// <param name="currentBackgroundColor">New value of property currentBackgroundColor.
 		/// 	</param>
-		public virtual void SetCurrentBackgroundColor(Color currentBackgroundColor)
+		public virtual void SetCurrentBackgroundColor(iTextSharp.Kernel.Color.Color currentBackgroundColor
+			)
 		{
 			this.currentBackgroundColor = currentBackgroundColor;
 		}
 
 		/// <summary>Getter for property currentTextColor.</summary>
 		/// <returns>Value of property currentTextColor.</returns>
-		public virtual Color GetCurrentTextColor()
+		public virtual iTextSharp.Kernel.Color.Color GetCurrentTextColor()
 		{
 			return currentTextColor;
 		}
 
 		/// <summary>Setter for property currentTextColor.</summary>
 		/// <param name="currentTextColor">New value of property currentTextColor.</param>
-		public virtual void SetCurrentTextColor(Color currentTextColor)
+		public virtual void SetCurrentTextColor(iTextSharp.Kernel.Color.Color currentTextColor
+			)
 		{
 			this.currentTextColor = currentTextColor;
 		}
@@ -516,8 +518,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>
 		/// Sets the line join style to
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineJoinStyle.MITER"
-		/// 	/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle.MITER"/>
 		/// if lineJoin isn't 0.
 		/// </summary>
 		/// <param name="cb">PdfCanvas to set the line join style</param>
@@ -532,8 +533,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>
 		/// Sets the line join style to
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineJoinStyle.ROUND"
-		/// 	/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle.ROUND"/>
 		/// if lineJoin is 0.
 		/// </summary>
 		/// <param name="cb">PdfCanvas to set the line join style</param>

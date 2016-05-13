@@ -1,5 +1,5 @@
 /*
-$Id: 9aabcb0607eddd58d98af996076dde22ad0162da $
+$Id: b2b452c81da374e3b587c6cba0d2246f191b0ee4 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,15 +43,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class BarcodeEAN : Barcode1D
 	{
@@ -649,8 +648,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
 		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
 		/// <returns>the dimensions the barcode occupies</returns>
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor
-			)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 barColor, iTextSharp.Kernel.Color.Color textColor)
 		{
 			Rectangle rect = GetBarcodeSize();
 			float barStartX = 0;
@@ -746,7 +745,7 @@ namespace com.itextpdf.barcodes
 				float w = bars[k] * x;
 				if (print)
 				{
-					if (com.itextpdf.io.util.JavaUtil.ArraysBinarySearch(guard, k) >= 0)
+					if (iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(guard, k) >= 0)
 					{
 						canvas.Rectangle(barStartX, barStartY - gd, w - inkSpreading, barHeight + gd);
 					}

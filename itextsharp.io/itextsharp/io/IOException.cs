@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io
+namespace iTextSharp.IO
 {
 	public class IOException : Exception
 	{
@@ -280,7 +280,7 @@ namespace com.itextpdf.io
 			}
 		}
 
-		public virtual com.itextpdf.io.IOException SetMessageParams(params Object[] messageParams
+		public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams
 			)
 		{
 			this.messageParams = new List<Object>();

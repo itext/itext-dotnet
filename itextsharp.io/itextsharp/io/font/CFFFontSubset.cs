@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	/// <summary>This Class subsets a CFF Type Font.</summary>
 	/// <remarks>

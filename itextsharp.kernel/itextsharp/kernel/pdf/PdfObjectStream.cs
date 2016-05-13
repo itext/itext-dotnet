@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	internal class PdfObjectStream : PdfStream
 	{
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.pdf
 		/// NOTE Only for internal use in PdfWriter!
 		/// </remarks>
 		/// <param name="prev">previous PdfObjectStream.</param>
-		internal PdfObjectStream(com.itextpdf.kernel.pdf.PdfObjectStream prev)
+		internal PdfObjectStream(iTextSharp.Kernel.Pdf.PdfObjectStream prev)
 			: this(prev.GetIndirectReference().GetDocument())
 		{
 			ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream
@@ -93,7 +93,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Adds object to the object stream.</summary>
 		/// <param name="object">object to add.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual void AddObject(PdfObject @object)
 		{
 			if (size.IntValue() == MAX_OBJ_STREAM_SIZE)

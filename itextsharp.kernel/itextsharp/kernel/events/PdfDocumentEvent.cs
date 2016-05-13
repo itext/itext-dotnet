@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.events
+namespace iTextSharp.Kernel.Events
 {
 	/// <summary>Event dispatched by PdfDocument.</summary>
 	public class PdfDocumentEvent : Event

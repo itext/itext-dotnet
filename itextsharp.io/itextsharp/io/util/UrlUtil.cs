@@ -47,8 +47,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
     public sealed class UrlUtil
     {
         private UrlUtil()

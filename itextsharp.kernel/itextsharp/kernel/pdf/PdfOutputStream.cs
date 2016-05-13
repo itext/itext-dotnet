@@ -45,16 +45,16 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.pdf.filters;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Pdf.Filters;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfOutputStream : OutputStream<com.itextpdf.kernel.pdf.PdfOutputStream
+	public class PdfOutputStream : OutputStream<iTextSharp.Kernel.Pdf.PdfOutputStream
 		>
 	{
 		private const long serialVersionUID = -548180479472231600L;
@@ -86,7 +86,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		// For internal usage only
-		public virtual com.itextpdf.kernel.pdf.PdfOutputStream Write(PdfObject pdfObject)
+		public virtual iTextSharp.Kernel.Pdf.PdfOutputStream Write(PdfObject pdfObject)
 		{
 			if (pdfObject.CheckState(PdfObject.MUST_BE_INDIRECT) && document != null)
 			{
@@ -190,7 +190,7 @@ namespace com.itextpdf.kernel.pdf
 				PdfObject value = entry.Value;
 				if (value == null)
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfOutputStream
+					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream
 						));
 					logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
 						, entry.Key));
@@ -336,7 +336,7 @@ namespace com.itextpdf.kernel.pdf
 							);
 					}
 					this.Write((PdfDictionary)pdfStream);
-					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.stream);
+					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
 					long beginStreamContent = GetCurrentPos();
 					byte[] buf = new byte[4192];
 					while (true)
@@ -359,7 +359,7 @@ namespace com.itextpdf.kernel.pdf
 					PdfNumber length = pdfStream.GetAsNumber(PdfName.Length);
 					length.SetValue((int)(GetCurrentPos() - beginStreamContent));
 					pdfStream.UpdateLength(length.IntValue());
-					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.endstream);
+					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.endstream);
 				}
 				else
 				{
@@ -444,9 +444,9 @@ namespace com.itextpdf.kernel.pdf
 					pdfStream.Put(PdfName.Length, new PdfNumber(byteArrayStream.Length));
 					pdfStream.UpdateLength((int)byteArrayStream.Length);
 					this.Write((PdfDictionary)pdfStream);
-					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.stream);
+					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
 					byteArrayStream.WriteTo(this);
-					WriteBytes(com.itextpdf.kernel.pdf.PdfOutputStream.endstream);
+					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.endstream);
 				}
 			}
 			catch (System.IO.IOException e)

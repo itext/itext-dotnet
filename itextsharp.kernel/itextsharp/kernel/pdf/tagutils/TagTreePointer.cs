@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.tagging;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace com.itextpdf.kernel.pdf.tagutils
+namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	/// <summary>
 	/// <c>TagTreePointer</c>
@@ -100,7 +100,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <c>TagTreePointer</c>
 		/// from which current position and page are copied.
 		/// </param>
-		public TagTreePointer(com.itextpdf.kernel.pdf.tagutils.TagTreePointer tagPointer)
+		public TagTreePointer(iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer tagPointer)
 		{
 			this.tagStructureContext = tagPointer.tagStructureContext;
 			SetCurrentStructElem(tagPointer.GetCurrentStructElem());
@@ -121,15 +121,15 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <li>Pass
 		/// <c>PdfTagReference</c>
 		/// to the
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas.OpenTag(TagReference)"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
 		/// method of the page's
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
 		/// to start marked content item;</li>
 		/// <li>Draw content on
 		/// <c>PdfCanvas</c>
 		/// ;</li>
 		/// <li>Use
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas.CloseTag()"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas.CloseTag()"/>
 		/// to finish marked content item.</li>
 		/// </ol>
 		/// </summary>
@@ -143,8 +143,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer SetPageForTagging(
-			PdfPage page)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetPageForTagging(PdfPage
+			 page)
 		{
 			if (page.IsFlushed())
 			{
@@ -185,7 +185,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see langword="null"/>
 		/// if content stream tagging is finished.
 		/// </param>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer SetContentStreamForTagging
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetContentStreamForTagging
 			(PdfStream contentStream)
 		{
 			this.contentStream = contentStream;
@@ -221,8 +221,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(PdfName role
-			)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(PdfName role)
 		{
 			AddTag(-1, role);
 			return this;
@@ -238,7 +237,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// This call is equivalent of calling sequentially
 		/// <see cref="SetNextNewKidIndex(int)"/>
 		/// and
-		/// <see cref="AddTag(com.itextpdf.kernel.pdf.PdfName)"/>
+		/// <see cref="AddTag(iTextSharp.Kernel.Pdf.PdfName)"/>
 		/// .
 		/// </remarks>
 		/// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.
@@ -249,8 +248,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(int index, 
-			PdfName role)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, PdfName
+			 role)
 		{
 			AddTag(index, new DummyAccessibleElement(role, null));
 			return this;
@@ -271,7 +270,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(IAccessibleElement
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement
 			 element)
 		{
 			AddTag(element, false);
@@ -306,7 +305,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(IAccessibleElement
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement
 			 element, bool keepConnectedToTag)
 		{
 			AddTag(-1, element, keepConnectedToTag);
@@ -335,8 +334,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(int index, 
-			IAccessibleElement element)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement
+			 element)
 		{
 			AddTag(index, element, false);
 			return this;
@@ -380,8 +379,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddTag(int index, 
-			IAccessibleElement element, bool keepConnectedToTag)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement
+			 element, bool keepConnectedToTag)
 		{
 			tagStructureContext.ThrowExceptionIfRoleIsInvalid(element.GetRole());
 			if (!tagStructureContext.IsElementConnectedToTag(element))
@@ -417,7 +416,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// (see
 		/// <see cref="TagStructureContext.GetAutoTaggingPointer()"/>
 		/// ). If you want to add annotation tag manually, be sure to use
-		/// <see cref="com.itextpdf.kernel.pdf.PdfPage.AddAnnotation(int, com.itextpdf.kernel.pdf.annot.PdfAnnotation, bool)
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfPage.AddAnnotation(int, iTextSharp.Kernel.Pdf.Annot.PdfAnnotation, bool)
 		/// 	"/>
 		/// method with <i>false</i> for boolean flag.
 		/// </summary>
@@ -431,7 +430,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer AddAnnotationTag(PdfAnnotation
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddAnnotationTag(PdfAnnotation
 			 annotation)
 		{
 			ThrowExceptionIfCurrentPageIsNotInited();
@@ -453,12 +452,12 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// all tags added after will be added with the default behaviour.
 		/// <br/><br/>
 		/// This method could be used with any overload of
-		/// <see cref="AddTag(com.itextpdf.kernel.pdf.PdfName)"/>
+		/// <see cref="AddTag(iTextSharp.Kernel.Pdf.PdfName)"/>
 		/// method,
 		/// with
 		/// <see cref="RelocateKid(int, TagTreePointer)"/>
 		/// and
-		/// <see cref="AddAnnotationTag(com.itextpdf.kernel.pdf.annot.PdfAnnotation)"/>
+		/// <see cref="AddAnnotationTag(iTextSharp.Kernel.Pdf.Annot.PdfAnnotation)"/>
 		/// .
 		/// <br/>
 		/// Keep in mind, that this method set property to the
@@ -472,8 +471,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagTreePointer"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer SetNextNewKidIndex
-			(int nextNewKidIndex)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetNextNewKidIndex(int
+			 nextNewKidIndex)
 		{
 			if (nextNewKidIndex > -1)
 			{
@@ -537,7 +536,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer RemoveTag()
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer RemoveTag()
 		{
 			IPdfStructElem parentElem = GetCurrentStructElem().GetParent();
 			if (parentElem is PdfStructTreeRoot)
@@ -586,8 +585,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer RelocateKid(int kidIndex
-			, com.itextpdf.kernel.pdf.tagutils.TagTreePointer pointerToNewParent)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer RelocateKid(int kidIndex
+			, iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer pointerToNewParent)
 		{
 			if (GetDocument() != pointerToNewParent.GetDocument())
 			{
@@ -616,9 +615,9 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <remarks>
 		/// Creates a reference to the current tag, which could be used to associate a content on the PdfCanvas with current tag.
 		/// See
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas.OpenTag(TagReference)"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
 		/// and
-		/// <see cref="SetPageForTagging(com.itextpdf.kernel.pdf.PdfPage)"/>
+		/// <see cref="SetPageForTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
 		/// .
 		/// </remarks>
 		/// <returns>the reference to the current tag.</returns>
@@ -632,9 +631,9 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <remarks>
 		/// Creates a reference to the current tag, which could be used to associate a content on the PdfCanvas with current tag.
 		/// See
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvas.OpenTag(TagReference)"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
 		/// and
-		/// <see cref="SetPageForTagging(com.itextpdf.kernel.pdf.PdfPage)"/>
+		/// <see cref="SetPageForTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
 		/// .
 		/// </remarks>
 		/// <param name="index">zero-based index in kids array of tag. These indexes define the logical order of the content on the page.
@@ -655,7 +654,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToRoot()
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToRoot()
 		{
 			SetCurrentStructElem(tagStructureContext.GetRootTag());
 			return this;
@@ -671,7 +670,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToParent()
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToParent()
 		{
 			if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject
 				())
@@ -703,7 +702,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToKid(int kidIndex
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int kidIndex
 			)
 		{
 			IPdfStructElem kid = GetCurrentStructElem().GetKids()[kidIndex];
@@ -739,8 +738,8 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToKid(PdfName 
-			role)
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(PdfName role
+			)
 		{
 			MoveToKid(0, role);
 			return this;
@@ -761,7 +760,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToKid(int n, PdfName
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, PdfName
 			 role)
 		{
 			if (PdfName.MCR.Equals(role))
@@ -807,7 +806,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer MoveToTag(IAccessibleElement
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToTag(IAccessibleElement
 			 element)
 		{
 			tagStructureContext.MoveTagPointerToTag(element, this);
@@ -864,7 +863,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer FlushTag()
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer FlushTag()
 		{
 			if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject
 				())
@@ -956,7 +955,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		/// <see cref="TagStructureContext"/>
 		/// instance.
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer SetRole(PdfName role
+		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetRole(PdfName role
 			)
 		{
 			IAccessibleElement connectedElement = tagStructureContext.GetModelConnectedToStruct
@@ -993,7 +992,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 			return mcr.GetMcid();
 		}
 
-		internal virtual com.itextpdf.kernel.pdf.tagutils.TagTreePointer SetCurrentStructElem
+		internal virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetCurrentStructElem
 			(PdfStructElem structElem)
 		{
 			currentStructElem = structElem;

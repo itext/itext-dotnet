@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
     public static class JavaUtil
     {

@@ -44,10 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.tagging;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace com.itextpdf.kernel.pdf.tagutils
+namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	internal class BackedAccessibleProperties : AccessibilityProperties
 	{
@@ -108,7 +109,7 @@ namespace com.itextpdf.kernel.pdf.tagutils
 		public override AccessibilityProperties AddAttributes(PdfDictionary attributes)
 		{
 			PdfObject attributesObject = backingElem.GetAttributes(false);
-			PdfObject combinedAttributes = CombineAttributesList(attributesObject, Collections
+			PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil
 				.SingletonList(attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
 			backingElem.SetAttributes(combinedAttributes);
 			return this;

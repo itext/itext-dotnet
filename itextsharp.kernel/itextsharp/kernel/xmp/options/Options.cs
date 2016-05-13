@@ -30,9 +30,9 @@
 using System;
 using System.Collections;
 using System.Text;
-using com.itextpdf.kernel.xmp;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.kernel.xmp.options
+namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>The base class for a collection of 32 flag bits.</summary>
 	/// <remarks>
@@ -55,7 +55,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <summary>Constructor with the options bit mask.</summary>
 		/// <param name="options">the options bit mask</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the options are not correct
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not correct
 		/// 	</exception>
 		public Options(int options)
 		{
@@ -114,7 +114,7 @@ namespace com.itextpdf.kernel.xmp.options
 		}
 
 		/// <param name="options">The options to set.</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
 		public virtual void SetOptions(int options)
 		{
 			AssertOptionsValid(options);
@@ -124,8 +124,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// <seealso cref="System.Object.Equals(System.Object)"/>
 		public override bool Equals(Object obj)
 		{
-			return GetOptions() == ((com.itextpdf.kernel.xmp.options.Options)obj).GetOptions(
-				);
+			return GetOptions() == ((iTextSharp.Kernel.Xmp.Options.Options)obj).GetOptions();
 		}
 
 		/// <seealso cref="System.Object.GetHashCode()"/>
@@ -173,7 +172,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// <returns>Returns the options as hex bitmask.</returns>
 		public override String ToString()
 		{
-			return "0x" + com.itextpdf.io.util.JavaUtil.IntegerToHexString(options);
+			return "0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(options);
 		}
 
 		/// <summary>To be implemeted by inheritants.</summary>
@@ -195,7 +194,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// (it has to be made public therefore).
 		/// </remarks>
 		/// <param name="options">the bitmask to check.</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the options are not consistent.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are not consistent.
 		/// 	</exception>
 		protected internal virtual void AssertConsistency(int options)
 		{
@@ -211,7 +210,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// -method is called.
 		/// </remarks>
 		/// <param name="options">the options to check</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the options are invalid.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are invalid.
 		/// 	</exception>
 		private void AssertOptionsValid(int options)
 		{
@@ -222,7 +221,7 @@ namespace com.itextpdf.kernel.xmp.options
 			}
 			else
 			{
-				throw new XMPException("The option bit(s) 0x" + com.itextpdf.io.util.JavaUtil.IntegerToHexString
+				throw new XMPException("The option bit(s) 0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
 					(invalidOptions) + " are invalid!", XMPError.BADOPTIONS);
 			}
 		}

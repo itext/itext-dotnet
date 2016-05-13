@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	/// <author>psoares</author>
 	public class MarkTable
@@ -53,7 +53,7 @@ namespace com.itextpdf.io.font.otf
 
 		public static bool IsMark(int charPoint)
 		{
-			int p = com.itextpdf.io.util.JavaUtil.ArraysBinarySearch(markTable, charPoint);
+			int p = iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(markTable, charPoint);
 			if (p >= 0)
 			{
 				return true;

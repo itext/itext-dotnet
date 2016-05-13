@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.navigation
+namespace iTextSharp.Kernel.Pdf.Navigation
 {
 	public class PdfExplicitDestination : PdfDestination
 	{
@@ -74,127 +74,127 @@ namespace com.itextpdf.kernel.pdf.navigation
 			return this;
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateXYZ
-			(PdfPage page, float left, float top, float zoom)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateXYZ(PdfPage
+			 page, float left, float top, float zoom)
 		{
 			return Create(page, PdfName.XYZ, left, float.NaN, float.NaN, top, zoom);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateXYZ
-			(int pageNum, float left, float top, float zoom)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateXYZ(int
+			 pageNum, float left, float top, float zoom)
 		{
 			return Create(pageNum, PdfName.XYZ, left, float.NaN, float.NaN, top, zoom);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFit
-			(PdfPage page)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFit(PdfPage
+			 page)
 		{
 			return Create(page, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFit
-			(int pageNum)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFit(int
+			 pageNum)
 		{
 			return Create(pageNum, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitH
-			(PdfPage page, float top)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitH(
+			PdfPage page, float top)
 		{
 			return Create(page, PdfName.FitH, float.NaN, float.NaN, float.NaN, top, float.NaN
 				);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitH
-			(int pageNum, float top)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitH(
+			int pageNum, float top)
 		{
 			return Create(pageNum, PdfName.FitH, float.NaN, float.NaN, float.NaN, top, float.
 				NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitV
-			(PdfPage page, float left)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitV(
+			PdfPage page, float left)
 		{
 			return Create(page, PdfName.FitV, left, float.NaN, float.NaN, float.NaN, float.NaN
 				);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitV
-			(int pageNum, float left)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitV(
+			int pageNum, float left)
 		{
 			return Create(pageNum, PdfName.FitV, left, float.NaN, float.NaN, float.NaN, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitR
-			(PdfPage page, float left, float bottom, float right, float top)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitR(
+			PdfPage page, float left, float bottom, float right, float top)
 		{
 			return Create(page, PdfName.FitR, left, bottom, right, top, float.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitR
-			(int pageNum, float left, float bottom, float right, float top)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitR(
+			int pageNum, float left, float bottom, float right, float top)
 		{
 			return Create(pageNum, PdfName.FitR, left, bottom, right, top, float.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitB
-			(PdfPage page)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitB(
+			PdfPage page)
 		{
 			return Create(page, PdfName.FitB, float.NaN, float.NaN, float.NaN, float.NaN, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitB
-			(int pageNum)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitB(
+			int pageNum)
 		{
 			return Create(pageNum, PdfName.FitB, float.NaN, float.NaN, float.NaN, float.NaN, 
 				float.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitBH
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBH
 			(PdfPage page, float top)
 		{
 			return Create(page, PdfName.FitBH, float.NaN, float.NaN, float.NaN, top, float.NaN
 				);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitBH
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBH
 			(int pageNum, float top)
 		{
 			return Create(pageNum, PdfName.FitBH, float.NaN, float.NaN, float.NaN, top, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitBV
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV
 			(PdfPage page, float left)
 		{
 			return Create(page, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float.NaN
 				);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination CreateFitBV
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV
 			(int pageNum, float left)
 		{
 			return Create(pageNum, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float
 				.NaN);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Create(PdfPage
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Create(PdfPage
 			 page, PdfName type, float left, float bottom, float right, float top, float zoom
 			)
 		{
-			return new com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination().Add(page).
-				Add(type).Add(left).Add(bottom).Add(right).Add(top).Add(zoom);
+			return new iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination().Add(page).Add
+				(type).Add(left).Add(bottom).Add(right).Add(top).Add(zoom);
 		}
 
-		public static com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Create(int
-			 pageNum, PdfName type, float left, float bottom, float right, float top, float 
-			zoom)
+		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Create(int 
+			pageNum, PdfName type, float left, float bottom, float right, float top, float zoom
+			)
 		{
-			return new com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination().Add(--pageNum
+			return new iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination().Add(--pageNum
 				).Add(type).Add(left).Add(bottom).Add(right).Add(top).Add(zoom);
 		}
 
@@ -203,8 +203,7 @@ namespace com.itextpdf.kernel.pdf.navigation
 			return false;
 		}
 
-		private com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Add(float value
-			)
+		private iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Add(float value)
 		{
 			if (!float.IsNaN(value))
 			{
@@ -213,21 +212,19 @@ namespace com.itextpdf.kernel.pdf.navigation
 			return this;
 		}
 
-		private com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Add(int value)
+		private iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Add(int value)
 		{
 			((PdfArray)GetPdfObject()).Add(new PdfNumber(value));
 			return this;
 		}
 
-		private com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Add(PdfPage page
-			)
+		private iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Add(PdfPage page)
 		{
 			((PdfArray)GetPdfObject()).Add(page.GetPdfObject());
 			return this;
 		}
 
-		private com.itextpdf.kernel.pdf.navigation.PdfExplicitDestination Add(PdfName type
-			)
+		private iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Add(PdfName type)
 		{
 			((PdfArray)GetPdfObject()).Add(type);
 			return this;

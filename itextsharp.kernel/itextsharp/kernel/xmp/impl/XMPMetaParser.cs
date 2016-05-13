@@ -29,15 +29,15 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.IO;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
-using java.io;
-using javax.xml;
-using javax.xml.parsers;
-using org.w3c.dom;
-using org.xml.sax;
+using Java.IO;
+using Javax.Xml;
+using Javax.Xml.Parsers;
+using Org.W3c.Dom;
+using Org.Xml.Sax;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// This class replaces the <code>ExpatAdapter.cpp</code> and does the
@@ -72,7 +72,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </param>
 		/// <param name="options">the parse options</param>
 		/// <returns>Returns the resulting XMP metadata object</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if parsing or normalisation fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if parsing or normalisation fails.
 		/// 	</exception>
 		public static XMPMeta Parse(Object input, ParseOptions options)
 		{
@@ -121,7 +121,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the parsed XML document or an exception.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the parsing fails for different reasons
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the parsing fails for different reasons
 		/// 	</exception>
 		private static Document ParseXml(Object input, ParseOptions options)
 		{
@@ -151,7 +151,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="stream">an <code>InputStream</code></param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static Document ParseXmlFromInputStream(Stream stream, ParseOptions options
 			)
@@ -182,7 +182,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="buffer">a byte buffer containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static Document ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options
 			)
@@ -234,7 +234,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="input">a <code>String</code> containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static Document ParseXmlFromString(String input, ParseOptions options)
 		{
@@ -260,7 +260,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <summary>Runs the XML-Parser.</summary>
 		/// <param name="source">an <code>InputSource</code></param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Wraps parsing and I/O-exceptions into an XMPException.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Wraps parsing and I/O-exceptions into an XMPException.
 		/// 	</exception>
 		private static Document ParseInputSource(InputSource source)
 		{

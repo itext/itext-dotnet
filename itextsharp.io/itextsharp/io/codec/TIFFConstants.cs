@@ -26,7 +26,7 @@
 * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
 * OF THIS SOFTWARE.
 */
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>A list of constants used in class TIFFImage.</summary>
 	public class TIFFConstants

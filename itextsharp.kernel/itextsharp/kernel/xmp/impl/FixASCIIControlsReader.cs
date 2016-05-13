@@ -27,9 +27,9 @@
 //        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
-using java.io;
+using Java.IO;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>22.08.2006</since>
 	public class FixASCIIControlsReader : PushbackReader
@@ -58,14 +58,14 @@ namespace com.itextpdf.kernel.xmp.impl
 		private int digits = 0;
 
 		/// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-		/// <seealso cref="java.io.PushbackReader.PushbackReader(java.io.Reader, int)"/>
+		/// <seealso cref="Java.IO.PushbackReader.PushbackReader(Java.IO.Reader, int)"/>
 		/// <param name="in">a Reader</param>
 		public FixASCIIControlsReader(Reader @in)
 			: base(@in, BUFFER_SIZE)
 		{
 		}
 
-		/// <seealso cref="java.io.Reader.Read(char[], int, int)"/>
+		/// <seealso cref="Java.IO.Reader.Read(char[], int, int)"/>
 		/// <exception cref="System.IO.IOException"/>
 		public override int Read(char[] cbuf, int off, int len)
 		{

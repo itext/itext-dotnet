@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public enum ImageType
 	{

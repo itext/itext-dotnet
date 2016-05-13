@@ -45,9 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	public class GlyphLine
 	{
@@ -87,7 +87,7 @@ namespace com.itextpdf.io.font.otf
 			this.actualText = actualText;
 		}
 
-		public GlyphLine(com.itextpdf.io.font.otf.GlyphLine other)
+		public GlyphLine(iTextSharp.IO.Font.Otf.GlyphLine other)
 		{
 			this.glyphs = other.glyphs;
 			this.actualText = other.actualText;
@@ -96,7 +96,7 @@ namespace com.itextpdf.io.font.otf
 			this.idx = other.idx;
 		}
 
-		public GlyphLine(com.itextpdf.io.font.otf.GlyphLine other, int start, int end)
+		public GlyphLine(iTextSharp.IO.Font.Otf.GlyphLine other, int start, int end)
 		{
 			this.glyphs = other.glyphs.SubList(start, end);
 			if (other.actualText != null)
@@ -141,9 +141,9 @@ namespace com.itextpdf.io.font.otf
 			return str.ToString();
 		}
 
-		public virtual com.itextpdf.io.font.otf.GlyphLine Copy(int left, int right)
+		public virtual iTextSharp.IO.Font.Otf.GlyphLine Copy(int left, int right)
 		{
-			com.itextpdf.io.font.otf.GlyphLine glyphLine = new com.itextpdf.io.font.otf.GlyphLine
+			iTextSharp.IO.Font.Otf.GlyphLine glyphLine = new iTextSharp.IO.Font.Otf.GlyphLine
 				();
 			glyphLine.start = 0;
 			glyphLine.end = right - left;
@@ -189,7 +189,7 @@ namespace com.itextpdf.io.font.otf
 			actualText = null;
 		}
 
-		public virtual void ReplaceContent(com.itextpdf.io.font.otf.GlyphLine other)
+		public virtual void ReplaceContent(iTextSharp.IO.Font.Otf.GlyphLine other)
 		{
 			glyphs.Clear();
 			glyphs.AddAll(other.glyphs);
@@ -306,7 +306,7 @@ namespace com.itextpdf.io.font.otf
 			}
 		}
 
-		public virtual com.itextpdf.io.font.otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter
+		public virtual iTextSharp.IO.Font.Otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter
 			 filter)
 		{
 			bool anythingFiltered = false;
@@ -330,8 +330,8 @@ namespace com.itextpdf.io.font.otf
 			}
 			if (anythingFiltered)
 			{
-				return new com.itextpdf.io.font.otf.GlyphLine(filteredGlyphs, filteredActualText, 
-					0, filteredGlyphs.Count);
+				return new iTextSharp.IO.Font.Otf.GlyphLine(filteredGlyphs, filteredActualText, 0
+					, filteredGlyphs.Count);
 			}
 			else
 			{

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.numbering
+namespace iTextSharp.Kernel.Numbering
 {
 	/// <summary>
 	/// This class is responsible for converting integer numbers to their

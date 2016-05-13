@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.IO;
-using com.itextpdf.kernel.xmp.options;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// Serializes the <code>XMPMeta</code>-object to an <code>OutputStream</code> according to the
@@ -50,7 +50,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="out">the output stream to serialize to</param>
 		/// <param name="options">serialization options, can be <code>null</code> for default.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static void Serialize(XMPMetaImpl xmp, Stream @out, SerializeOptions options
 			)
 		{
@@ -72,11 +72,11 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmp">a metadata implementation object</param>
 		/// <param name="options">
 		/// Options to control the serialization (see
-		/// <see cref="com.itextpdf.kernel.xmp.options.SerializeOptions"/>
+		/// <see cref="iTextSharp.Kernel.Xmp.Options.SerializeOptions"/>
 		/// ).
 		/// </param>
 		/// <returns>Returns a string containing the serialized RDF.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">on serializsation errors.</exception>
 		public static String SerializeToString(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			// forces the encoding to be UTF-16 to get the correct string length
@@ -100,11 +100,11 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmp">a metadata implementation object</param>
 		/// <param name="options">
 		/// Options to control the serialization (see
-		/// <see cref="com.itextpdf.kernel.xmp.options.SerializeOptions"/>
+		/// <see cref="iTextSharp.Kernel.Xmp.Options.SerializeOptions"/>
 		/// ).
 		/// </param>
 		/// <returns>Returns a byte buffer containing the serialized RDF.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">on serializsation errors.</exception>
 		public static byte[] SerializeToBuffer(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			MemoryStream @out = new MemoryStream(2048);

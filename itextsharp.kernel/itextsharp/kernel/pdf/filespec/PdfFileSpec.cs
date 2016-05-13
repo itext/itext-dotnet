@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.collection;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Collection;
 
-namespace com.itextpdf.kernel.pdf.filespec
+namespace iTextSharp.Kernel.Pdf.Filespec
 {
 	public class PdfFileSpec : PdfObjectWrapper<PdfObject>
 	{
@@ -59,21 +59,21 @@ namespace com.itextpdf.kernel.pdf.filespec
 		{
 		}
 
-		public static com.itextpdf.kernel.pdf.filespec.PdfFileSpec CreateExternalFileSpec
-			(PdfDocument doc, String filePath, bool isUnicodeFileName)
+		public static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument
+			 doc, String filePath, bool isUnicodeFileName)
 		{
 			PdfDictionary dict = new PdfDictionary();
 			dict.Put(PdfName.Type, PdfName.Filespec);
 			dict.Put(PdfName.F, new PdfString(filePath));
 			dict.Put(PdfName.UF, new PdfString(filePath, isUnicodeFileName ? PdfEncodings.UNICODE_BIG
 				 : PdfEncodings.PDF_DOC_ENCODING));
-			return (com.itextpdf.kernel.pdf.filespec.PdfFileSpec)new com.itextpdf.kernel.pdf.filespec.PdfFileSpec
+			return (iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec)new iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec
 				(dict).MakeIndirect(doc);
 		}
 
-		public static com.itextpdf.kernel.pdf.filespec.PdfFileSpec CreateEmbeddedFileSpec
-			(PdfDocument doc, byte[] fileStore, String description, String fileDisplay, PdfName
-			 mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue, bool isUnicodeFileName
+		public static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument
+			 doc, byte[] fileStore, String description, String fileDisplay, PdfName mimeType
+			, PdfDictionary fileParameter, PdfName afRelationshipValue, bool isUnicodeFileName
 			)
 		{
 			PdfStream stream = ((PdfStream)new PdfStream(fileStore).MakeIndirect(doc));
@@ -95,27 +95,27 @@ namespace com.itextpdf.kernel.pdf.filespec
 				, isUnicodeFileName);
 		}
 
-		/// <exception cref="java.io.FileNotFoundException"/>
-		public static com.itextpdf.kernel.pdf.filespec.PdfFileSpec CreateEmbeddedFileSpec
-			(PdfDocument doc, String filePath, String description, String fileDisplay, PdfName
-			 mimeType, PdfName afRelationshipValue, bool isUnicodeFileName)
+		/// <exception cref="Java.IO.FileNotFoundException"/>
+		public static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument
+			 doc, String filePath, String description, String fileDisplay, PdfName mimeType, 
+			PdfName afRelationshipValue, bool isUnicodeFileName)
 		{
 			PdfStream stream = new PdfStream(doc, new FileStream(filePath));
 			return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue
 				, isUnicodeFileName);
 		}
 
-		public static com.itextpdf.kernel.pdf.filespec.PdfFileSpec CreateEmbeddedFileSpec
-			(PdfDocument doc, Stream @is, String description, String fileDisplay, PdfName mimeType
-			, PdfName afRelationshipValue, bool isUnicodeFileName)
+		public static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument
+			 doc, Stream @is, String description, String fileDisplay, PdfName mimeType, PdfName
+			 afRelationshipValue, bool isUnicodeFileName)
 		{
 			PdfStream stream = new PdfStream(doc, @is);
 			return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue
 				, isUnicodeFileName);
 		}
 
-		private static com.itextpdf.kernel.pdf.filespec.PdfFileSpec CreateEmbeddedFileSpec
-			(PdfDocument doc, PdfStream stream, String description, String fileDisplay, PdfName
+		private static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(
+			PdfDocument doc, PdfStream stream, String description, String fileDisplay, PdfName
 			 mimeType, PdfName afRelationshipValue, bool isUnicodeFileName)
 		{
 			PdfDictionary dict = new PdfDictionary();
@@ -148,11 +148,11 @@ namespace com.itextpdf.kernel.pdf.filespec
 			ef.Put(PdfName.F, stream);
 			ef.Put(PdfName.UF, stream);
 			dict.Put(PdfName.EF, ef);
-			return (com.itextpdf.kernel.pdf.filespec.PdfFileSpec)new com.itextpdf.kernel.pdf.filespec.PdfFileSpec
+			return (iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec)new iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec
 				(dict).MakeIndirect(doc);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.filespec.PdfFileSpec SetFileIdentifier(PdfArray
+		public virtual iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec SetFileIdentifier(PdfArray
 			 fileIdentifier)
 		{
 			return Put(PdfName.ID, fileIdentifier);
@@ -163,8 +163,8 @@ namespace com.itextpdf.kernel.pdf.filespec
 			return ((PdfDictionary)GetPdfObject()).GetAsArray(PdfName.ID);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.filespec.PdfFileSpec SetVolatile(PdfBoolean
-			 isVolatile)
+		public virtual iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec SetVolatile(PdfBoolean 
+			isVolatile)
 		{
 			return Put(PdfName.Volatile, isVolatile);
 		}
@@ -174,13 +174,13 @@ namespace com.itextpdf.kernel.pdf.filespec
 			return ((PdfDictionary)GetPdfObject()).GetAsBoolean(PdfName.Volatile);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.filespec.PdfFileSpec SetCollectionItem(PdfCollectionItem
+		public virtual iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec SetCollectionItem(PdfCollectionItem
 			 item)
 		{
 			return Put(PdfName.CI, item.GetPdfObject());
 		}
 
-		public virtual com.itextpdf.kernel.pdf.filespec.PdfFileSpec Put(PdfName key, PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec Put(PdfName key, PdfObject
 			 value)
 		{
 			((PdfDictionary)GetPdfObject()).Put(key, value);

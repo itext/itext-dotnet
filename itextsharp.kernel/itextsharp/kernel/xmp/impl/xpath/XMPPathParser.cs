@@ -28,11 +28,11 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl.xpath
+namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 {
 	/// <summary>Parser for XMP XPaths.</summary>
 	/// <since>01.03.2006</since>
@@ -92,7 +92,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// <param name="schemaNS">schema namespace</param>
 		/// <param name="path">property name</param>
 		/// <returns>Returns the expandet XMPPath.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the format is not correct somehow.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the format is not correct somehow.
 		/// 	</exception>
 		public static XMPPath ExpandXPath(String schemaNS, String path)
 		{
@@ -167,7 +167,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 
 		/// <param name="path"/>
 		/// <param name="pos"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void SkipPathDelimiter(String path, PathPosition pos)
 		{
 			if (path[pos.stepBegin] == '/')
@@ -194,7 +194,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// <summary>Parses a struct segment</summary>
 		/// <param name="pos">the current position in the path</param>
 		/// <returns>Retusn the segment or an errror</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the sement is empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the sement is empty</exception>
 		private static XMPPathSegment ParseStructSegment(PathPosition pos)
 		{
 			pos.nameStart = pos.stepBegin;
@@ -216,7 +216,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// <summary>Parses an array index segment.</summary>
 		/// <param name="pos">the xmp path</param>
 		/// <returns>Returns the segment or an error</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thrown on xmp path errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thrown on xmp path errors</exception>
 		private static XMPPathSegment ParseIndexSegment(PathPosition pos)
 		{
 			XMPPathSegment segment;
@@ -305,7 +305,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// <param name="schemaNS">the root namespace</param>
 		/// <param name="pos">the parsing position helper</param>
 		/// <param name="expandedXPath">the path to contribute to</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the path is not valid.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the path is not valid.</exception>
 		private static void ParseRootNode(String schemaNS, PathPosition pos, XMPPath expandedXPath
 			)
 		{
@@ -363,7 +363,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// namespace prefix has not been registered.
 		/// </summary>
 		/// <param name="qualName">a qualifier name</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the name is not conformant
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the name is not conformant
 		/// 	</exception>
 		private static void VerifyQualName(String qualName)
 		{
@@ -387,7 +387,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 
 		/// <summary>Verify if an XML name is conformant.</summary>
 		/// <param name="name">an XML name</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">When the name is not XML conformant
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">When the name is not XML conformant
 		/// 	</exception>
 		private static void VerifySimpleXMLName(String name)
 		{
@@ -410,7 +410,7 @@ namespace com.itextpdf.kernel.xmp.impl.xpath
 		/// <param name="schemaNS">schema namespace</param>
 		/// <param name="rootProp">the root xpath segment</param>
 		/// <returns>Returns root QName.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the format is not correct somehow.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the format is not correct somehow.
 		/// 	</exception>
 		private static String VerifyXPathRoot(String schemaNS, String rootProp)
 		{

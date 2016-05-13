@@ -1,5 +1,5 @@
 /*
-$Id: f80580d2fda37ea55b9538bccdab91685607002d $
+$Id: a90ca3120cec3bae50087e9ac2ced88bd603e8ae $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,15 +45,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class BarcodePDF417 : Barcode2D
 	{
@@ -647,13 +646,14 @@ namespace com.itextpdf.barcodes
 			return new Rectangle(0, 0, bitColumns, codeRows);
 		}
 
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 foreground)
 		{
 			return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE);
 		}
 
-		public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleWidth
-			, float moduleHeight)
+		public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 foreground, float moduleWidth, float moduleHeight)
 		{
 			PaintCode();
 			int stride = (bitColumns + 7) / 8;
@@ -890,8 +890,8 @@ namespace com.itextpdf.barcodes
 		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
 		/// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
 		/// <returns>the XObject.</returns>
-		public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document
-			)
+		public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+			, PdfDocument document)
 		{
 			return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE, document
 				);
@@ -903,8 +903,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="moduleWidth">the width of the pixels.</param>
 		/// <param name="moduleHeight">the height of the pixels.</param>
 		/// <returns>the XObject.</returns>
-		public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleWidth
-			, float moduleHeight, PdfDocument document)
+		public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+			, float moduleWidth, float moduleHeight, PdfDocument document)
 		{
 			PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
 			Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleWidth
@@ -1103,10 +1103,10 @@ namespace com.itextpdf.barcodes
 		{
 			int bytePtr = bitPtr / 8;
 			int bit = bitPtr - bytePtr * 8;
-			outBits[bytePtr++] |= unchecked((byte)(codeword >> 9 + bit));
-			outBits[bytePtr++] |= unchecked((byte)(codeword >> 1 + bit));
+			outBits[bytePtr++] |= (byte)(codeword >> 9 + bit);
+			outBits[bytePtr++] |= (byte)(codeword >> 1 + bit);
 			codeword <<= 8;
-			outBits[bytePtr] |= unchecked((byte)(codeword >> 1 + bit));
+			outBits[bytePtr] |= (byte)(codeword >> 1 + bit);
 			bitPtr += 17;
 		}
 
@@ -1114,10 +1114,10 @@ namespace com.itextpdf.barcodes
 		{
 			int bytePtr = bitPtr / 8;
 			int bit = bitPtr - bytePtr * 8;
-			outBits[bytePtr++] |= unchecked((byte)(codeword >> 10 + bit));
-			outBits[bytePtr++] |= unchecked((byte)(codeword >> 2 + bit));
+			outBits[bytePtr++] |= (byte)(codeword >> 10 + bit);
+			outBits[bytePtr++] |= (byte)(codeword >> 2 + bit);
 			codeword <<= 8;
-			outBits[bytePtr] |= unchecked((byte)(codeword >> 2 + bit));
+			outBits[bytePtr] |= (byte)(codeword >> 2 + bit);
 			if (bit == 7)
 			{
 				outBits[++bytePtr] |= 0x80;
@@ -1704,7 +1704,7 @@ namespace com.itextpdf.barcodes
 		private void Append(int @in, int len)
 		{
 			StringBuilder sb = new StringBuilder(len + 1);
-			sb.Append(com.itextpdf.io.util.JavaUtil.IntegerToString(@in));
+			sb.Append(iTextSharp.IO.Util.JavaUtil.IntegerToString(@in));
 			for (int i = sb.Length; i < len; i++)
 			{
 				sb.Insert(0, "0");

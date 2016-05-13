@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.extgstate
+namespace iTextSharp.Kernel.Pdf.Extgstate
 {
 	public class PdfExtGState : PdfObjectWrapper<PdfDictionary>
 	{
@@ -99,8 +99,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.LW);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetLineWidth(float 
-			lineWidth)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineWidth(float lineWidth
+			)
 		{
 			return Put(PdfName.LW, new PdfNumber(lineWidth));
 		}
@@ -110,8 +110,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsInt(PdfName.LC);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetLineCapStryle(int
-			 lineCapStyle)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int 
+			lineCapStyle)
 		{
 			return Put(PdfName.LC, new PdfNumber(lineCapStyle));
 		}
@@ -121,8 +121,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsInt(PdfName.LJ);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetLineJoinStyle(int
-			 lineJoinStyle)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineJoinStyle(int 
+			lineJoinStyle)
 		{
 			return Put(PdfName.LJ, new PdfNumber(lineJoinStyle));
 		}
@@ -132,8 +132,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.ML);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetMiterLimit(float
-			 miterLimit)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetMiterLimit(float miterLimit
+			)
 		{
 			return Put(PdfName.ML, new PdfNumber(miterLimit));
 		}
@@ -143,7 +143,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsArray(PdfName.D);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetDashPattern(PdfArray
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetDashPattern(PdfArray
 			 dashPattern)
 		{
 			return Put(PdfName.D, dashPattern);
@@ -154,8 +154,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsName(PdfName.RI);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetRenderingIntent(
-			PdfName renderingIntent)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetRenderingIntent(PdfName
+			 renderingIntent)
 		{
 			return Put(PdfName.RI, renderingIntent);
 		}
@@ -165,8 +165,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsInt(PdfName.OPM);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetOverprintMode(int
-			 overprintMode)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetOverprintMode(int 
+			overprintMode)
 		{
 			return Put(PdfName.OPM, new PdfNumber(overprintMode));
 		}
@@ -176,8 +176,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsBool(PdfName.op);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetFillOverPrintFlag
-			(bool fillOverprintFlag)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(
+			bool fillOverprintFlag)
 		{
 			return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
 		}
@@ -187,7 +187,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsBool(PdfName.OP);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetStrokeOverPrintFlag
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOverPrintFlag
 			(bool strokeOverPrintFlag)
 		{
 			return Put(PdfName.OP, new PdfBoolean(strokeOverPrintFlag));
@@ -198,7 +198,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsArray(PdfName.Font);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetFont(PdfArray font
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFont(PdfArray font
 			)
 		{
 			return Put(PdfName.Font, font);
@@ -209,7 +209,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.BG);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetBlackGenerationFunction
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction
 			(PdfObject blackGenerationFunction)
 		{
 			return Put(PdfName.BG, blackGenerationFunction);
@@ -220,7 +220,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.BG2);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetBlackGenerationFunction2
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction2
 			(PdfObject blackGenerationFunction2)
 		{
 			return Put(PdfName.BG2, blackGenerationFunction2);
@@ -231,7 +231,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.UCR);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetUndercolorRemovalFunction
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction
 			(PdfObject undercolorRemovalFunction)
 		{
 			return Put(PdfName.UCR, undercolorRemovalFunction);
@@ -242,7 +242,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.UCR2);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetUndercolorRemovalFunction2
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction2
 			(PdfObject undercolorRemovalFunction2)
 		{
 			return Put(PdfName.UCR2, undercolorRemovalFunction2);
@@ -253,8 +253,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.TR);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetTransferFunction
-			(PdfObject transferFunction)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction(PdfObject
+			 transferFunction)
 		{
 			return Put(PdfName.TR, transferFunction);
 		}
@@ -264,8 +264,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.TR2);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetTransferFunction2
-			(PdfObject transferFunction)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction2(
+			PdfObject transferFunction)
 		{
 			return Put(PdfName.TR2, transferFunction);
 		}
@@ -275,7 +275,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.HT);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetHalftone(PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetHalftone(PdfObject
 			 halftone)
 		{
 			return Put(PdfName.HT, halftone);
@@ -286,8 +286,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.HTP);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetHTP(PdfObject htp
-			)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetHTP(PdfObject htp)
 		{
 			return Put(PdfName.HTP, htp);
 		}
@@ -297,8 +296,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.FT);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetFlatnessTolerance
-			(float flatnessTolerance)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFlatnessTolerance(
+			float flatnessTolerance)
 		{
 			return Put(PdfName.FT, new PdfNumber(flatnessTolerance));
 		}
@@ -308,7 +307,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.SM);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetSmoothnessTolerance
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSmoothnessTolerance
 			(float smoothnessTolerance)
 		{
 			return Put(PdfName.SM, new PdfNumber(smoothnessTolerance));
@@ -319,7 +318,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsBool(PdfName.SA);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetAutomaticStrokeAdjustmentFlag
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAutomaticStrokeAdjustmentFlag
 			(bool strokeAdjustment)
 		{
 			return Put(PdfName.SA, new PdfBoolean(strokeAdjustment));
@@ -330,7 +329,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.BM);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetBlendMode(PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlendMode(PdfObject
 			 blendMode)
 		{
 			return Put(PdfName.BM, blendMode);
@@ -341,7 +340,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().Get(PdfName.SMask);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetSoftMask(PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSoftMask(PdfObject
 			 sMask)
 		{
 			return Put(PdfName.SMask, sMask);
@@ -352,7 +351,7 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.CA);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetStrokeOpacity(float
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOpacity(float
 			 strokingAlphaConstant)
 		{
 			return Put(PdfName.CA, new PdfNumber(strokingAlphaConstant));
@@ -363,8 +362,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsFloat(PdfName.ca);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetFillOpacity(float
-			 fillingAlphaConstant)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOpacity(float 
+			fillingAlphaConstant)
 		{
 			return Put(PdfName.ca, new PdfNumber(fillingAlphaConstant));
 		}
@@ -374,8 +373,8 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsBool(PdfName.AIS);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetAlphaSourceFlag(
-			bool alphaSourceFlag)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAlphaSourceFlag(bool
+			 alphaSourceFlag)
 		{
 			return Put(PdfName.AIS, new PdfBoolean(alphaSourceFlag));
 		}
@@ -385,13 +384,13 @@ namespace com.itextpdf.kernel.pdf.extgstate
 			return GetPdfObject().GetAsBool(PdfName.TK);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState SetTextKnockoutFlag
-			(bool textKnockoutFlag)
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTextKnockoutFlag(bool
+			 textKnockoutFlag)
 		{
 			return Put(PdfName.TK, new PdfBoolean(textKnockoutFlag));
 		}
 
-		public virtual com.itextpdf.kernel.pdf.extgstate.PdfExtGState Put(PdfName key, PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject
 			 value)
 		{
 			GetPdfObject().Put(key, value);

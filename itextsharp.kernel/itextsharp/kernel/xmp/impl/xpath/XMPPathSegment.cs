@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace com.itextpdf.kernel.xmp.impl.xpath
+namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 {
 	/// <summary>A segment of a parsed <code>XMPPath</code>.</summary>
 	/// <since>23.06.2006</since>

@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfStampAnnotation : PdfMarkupAnnotation
 	{
@@ -66,10 +66,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return PdfName.Stamp;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfStampAnnotation SetStampName(PdfName
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation SetStampName(PdfName
 			 name)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfStampAnnotation)Put(PdfName.Name, name);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
 		}
 
 		public virtual PdfName GetStampName()

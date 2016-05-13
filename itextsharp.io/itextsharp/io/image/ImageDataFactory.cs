@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public sealed class ImageDataFactory
 	{
@@ -100,13 +100,13 @@ namespace com.itextpdf.io.image
 			return Create(url, false);
 		}
 
-		/// <exception cref="java.net.MalformedURLException"/>
+		/// <exception cref="Java.Net.MalformedURLException"/>
 		public static ImageData Create(String filename, bool recoverImage)
 		{
 			return Create(UrlUtil.ToURL(filename), recoverImage);
 		}
 
-		/// <exception cref="java.net.MalformedURLException"/>
+		/// <exception cref="Java.Net.MalformedURLException"/>
 		public static ImageData Create(String filename)
 		{
 			return Create(filename, false);
@@ -150,7 +150,7 @@ namespace com.itextpdf.io.image
 			if (components == 1 && bpc == 1)
 			{
 				byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
-				return com.itextpdf.io.image.ImageDataFactory.Create(width, height, false, RawImageData
+				return iTextSharp.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData
 					.CCITTG4, RawImageData.CCITT_BLACKIS1, g4, transparency);
 			}
 			RawImageData image = new RawImageData(data, ImageType.RAW);
@@ -180,7 +180,7 @@ namespace com.itextpdf.io.image
 		public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color
 			)
 		{
-			return com.itextpdf.io.image.ImageDataFactory.Create(image, color, false);
+			return iTextSharp.IO.Image.ImageDataFactory.Create(image, color, false);
 		}
 
 		/// <summary>Gets an instance of an Image from a java.awt.Image.</summary>

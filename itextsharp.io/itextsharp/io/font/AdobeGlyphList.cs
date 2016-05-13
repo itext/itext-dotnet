@@ -45,9 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class AdobeGlyphList
 	{

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	/// <summary>As subpath is a part of a path comprising a sequence of connected segments.
 	/// 	</summary>
@@ -63,7 +63,7 @@ namespace com.itextpdf.kernel.geom
 
 		/// <summary>Copy constuctor.</summary>
 		/// <param name="subpath"/>
-		public Subpath(com.itextpdf.kernel.geom.Subpath subpath)
+		public Subpath(iTextSharp.Kernel.Geom.Subpath subpath)
 		{
 			this.startPoint = subpath.startPoint;
 			this.segments.AddAll(subpath.GetSegments());

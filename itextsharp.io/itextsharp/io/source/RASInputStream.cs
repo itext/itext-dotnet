@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 
-namespace com.itextpdf.io.source
-{
+namespace iTextSharp.IO.Source {
 	/// <summary>
 	/// An input stream that uses a
 	/// <see cref="RandomAccessSource"/>

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.crypto
+namespace iTextSharp.Kernel.Crypto
 {
 	/// <summary>An initialization vector generator for a CBC block encryption.</summary>
 	/// <remarks>An initialization vector generator for a CBC block encryption. It's a random generator based on ARCFOUR.

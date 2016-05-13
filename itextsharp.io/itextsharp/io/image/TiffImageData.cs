@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public class TiffImageData : RawImageData
 	{
@@ -78,15 +78,15 @@ namespace com.itextpdf.io.image
 		private static ImageData GetImage(Uri url, bool recoverFromImageError, int page, 
 			bool direct)
 		{
-			return new com.itextpdf.io.image.TiffImageData(url, recoverFromImageError, page, 
-				direct);
+			return new iTextSharp.IO.Image.TiffImageData(url, recoverFromImageError, page, direct
+				);
 		}
 
 		private static ImageData GetImage(byte[] bytes, bool recoverFromImageError, int page
 			, bool direct)
 		{
-			return new com.itextpdf.io.image.TiffImageData(bytes, recoverFromImageError, page
-				, direct);
+			return new iTextSharp.IO.Image.TiffImageData(bytes, recoverFromImageError, page, 
+				direct);
 		}
 
 		/// <summary>Gets the number of pages the TIFF document has.</summary>

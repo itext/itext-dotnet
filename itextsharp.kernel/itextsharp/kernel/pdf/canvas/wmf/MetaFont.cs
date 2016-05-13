@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
+using iTextSharp.IO.Font;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>A Meta Font.</summary>
 	public class MetaFont : MetaObject
@@ -150,11 +150,11 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 			}
 			try
 			{
-				faceName = com.itextpdf.io.util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
+				faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
 			}
 			catch (ArgumentException)
 			{
-				faceName = com.itextpdf.io.util.JavaUtil.GetStringForBytes(name, 0, k);
+				faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
 			}
 			faceName = faceName.ToLower();
 		}

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace com.itextpdf.barcodes.dmcode
+namespace iTextSharp.Barcodes.Dmcode
 {
 	public class Placement
 	{
@@ -69,7 +69,7 @@ namespace com.itextpdf.barcodes.dmcode
 			{
 				return pc;
 			}
-			com.itextpdf.barcodes.dmcode.Placement p = new com.itextpdf.barcodes.dmcode.Placement
+			iTextSharp.Barcodes.Dmcode.Placement p = new iTextSharp.Barcodes.Dmcode.Placement
 				();
 			p.nrow = nrow;
 			p.ncol = ncol;
@@ -164,7 +164,7 @@ namespace com.itextpdf.barcodes.dmcode
 			int col;
 			int chr;
 			/* First, fill the array[] with invalid entries */
-			com.itextpdf.io.util.JavaUtil.Fill(array, (short)0);
+			iTextSharp.IO.Util.JavaUtil.Fill(array, (short)0);
 			/* Starting in the correct location for character #1, bit 8,... */
 			chr = 1;
 			row = 4;

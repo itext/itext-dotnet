@@ -43,9 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.filters
+namespace iTextSharp.Kernel.Pdf.Filters
 {
 	/// <summary>Encapsulates filter behavior for PDF streams.</summary>
 	/// <remarks>
@@ -79,7 +80,7 @@ namespace com.itextpdf.kernel.pdf.filters
 			map[PdfName.CCITTFaxDecode] = new CCITTFaxDecodeFilter();
 			map[PdfName.Crypt] = new DoNothingFilter();
 			map[PdfName.RunLengthDecode] = new RunLengthDecodeFilter();
-			defaults = java.util.Collections.UnmodifiableMap(map);
+			defaults = JavaCollectionsUtil.UnmodifiableMap(map);
 		}
 
 		/// <returns>

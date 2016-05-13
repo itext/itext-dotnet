@@ -29,11 +29,11 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
-using org.w3c.dom;
+using Org.W3c.Dom;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Parser for "normal" XML serialisation of RDF.</summary>
 	/// <since>14.07.2006</since>
@@ -94,7 +94,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </remarks>
 		/// <param name="xmlRoot">the XML root node</param>
 		/// <returns>Returns an XMP metadata object (not normalized)</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Occurs if the parsing fails for any reason.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Occurs if the parsing fails for any reason.
 		/// 	</exception>
 		internal static XMPMetaImpl Parse(Node xmlRoot)
 		{
@@ -114,7 +114,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </remarks>
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		internal static void Rdf_RDF(XMPMetaImpl xmp, Node rdfRdfNode)
 		{
 			if (rdfRdfNode.HasAttributes())
@@ -135,7 +135,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_NodeElementList(XMPMetaImpl xmp, XMPNode xmpParent, Node 
 			rdfRdfNode)
 		{
@@ -165,7 +165,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_NodeElement(XMPMetaImpl xmp, XMPNode xmpParent, Node xmlNode
 			, bool isTopLevel)
 		{
@@ -215,7 +215,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_NodeElementAttrs(XMPMetaImpl xmp, XMPNode xmpParent, Node
 			 xmlNode, bool isTopLevel)
 		{
@@ -286,7 +286,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlParent">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_PropertyElementList(XMPMetaImpl xmp, XMPNode xmpParent, Node
 			 xmlParent, bool isTopLevel)
 		{
@@ -398,7 +398,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_PropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, Node 
 			xmlNode, bool isTopLevel)
 		{
@@ -532,7 +532,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ResourcePropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
 			, Node xmlNode, bool isTopLevel)
 		{
@@ -664,7 +664,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_LiteralPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
 			, Node xmlNode, bool isTopLevel)
 		{
@@ -720,7 +720,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// literal
 		/// end-element()
 		/// </summary>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeLiteralPropertyElement()
 		{
 			throw new XMPException("ParseTypeLiteral property element not allowed", BADXMP);
@@ -747,7 +747,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeResourcePropertyElement(XMPMetaImpl xmp, XMPNode
 			 xmpParent, Node xmlNode, bool isTopLevel)
 		{
@@ -797,7 +797,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// nodeElementList
 		/// end-element()
 		/// </summary>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeCollectionPropertyElement()
 		{
 			throw new XMPException("ParseTypeCollection property element not allowed", BADXMP
@@ -810,7 +810,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// propertyEltList
 		/// end-element()
 		/// </summary>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeOtherPropertyElement()
 		{
 			throw new XMPException("ParseTypeOther property element not allowed", BADXMP);
@@ -867,7 +867,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_EmptyPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, 
 			Node xmlNode, bool isTopLevel)
 		{
@@ -1049,7 +1049,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="value">Node value</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <returns>Returns the newly created child node.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static XMPNode AddChildNode(XMPMetaImpl xmp, XMPNode xmpParent, Node xmlNode
 			, String value, bool isTopLevel)
 		{
@@ -1140,7 +1140,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </param>
 		/// <param name="value">the value of the qualifier</param>
 		/// <returns>Returns the newly created child node.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static XMPNode AddQualifierNode(XMPNode xmpParent, String name, String value
 			)
 		{
@@ -1162,7 +1162,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// the others.
 		/// </remarks>
 		/// <param name="xmpParent">the parent xmp node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void FixupQualifiedNode(XMPNode xmpParent)
 		{
 			System.Diagnostics.Debug.Assert(xmpParent.GetOptions().IsStruct() && xmpParent.HasChildren

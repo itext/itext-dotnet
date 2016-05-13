@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	/// <summary>
 	/// Algorithm for construction
@@ -305,7 +305,7 @@ namespace com.itextpdf.kernel.pdf
 		/// root
 		/// <seealso>PdfPages</seealso>
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">in case empty document</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">in case empty document</exception>
 		protected internal virtual PdfObject GenerateTree()
 		{
 			if (pageRefs.IsEmpty())

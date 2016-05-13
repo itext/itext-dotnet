@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class PdfEncodings
 	{
@@ -446,7 +446,7 @@ namespace com.itextpdf.io.font
 			}
 			try
 			{
-				return com.itextpdf.io.util.JavaUtil.GetStringForBytes(bytes, encoding);
+				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes, encoding);
 			}
 			catch (ArgumentException e)
 			{

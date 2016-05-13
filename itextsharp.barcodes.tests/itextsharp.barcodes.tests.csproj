@@ -40,10 +40,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="itextsharp\barcodes\Barcode128Test.cs" />
+    <Compile Include="itextsharp\barcodes\Barcode39Test.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeCodabarTest.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeDataMatrixTest.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeEANTest.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeInter25Test.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodePDF417Test.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodePostnetTest.cs" />
+    <Compile Include="itextsharp\barcodes\BarcodeQRCodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="itextsharp\barcodes\" />
+    <ProjectReference Include="..\itextsharp.barcodes\itextsharp.barcodes.csproj">
+      <Project>{dcae8241-e391-418d-ba36-c7c064d7c413}</Project>
+      <Name>itextsharp.barcodes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
+      <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
+      <Name>itextsharp.io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.kernel\itextsharp.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itextsharp.kernel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

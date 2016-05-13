@@ -43,16 +43,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf.canvas.parser;
-using com.itextpdf.kernel.pdf.canvas.parser.data;
+using iTextSharp.Kernel.Pdf.Canvas.Parser;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	/// <summary>
 	/// A callback interface that receives notifications from the
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
 	/// as various events occur (see
-	/// <see cref="com.itextpdf.kernel.pdf.canvas.parser.EventType"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType"/>
 	/// ).
 	/// </summary>
 	public interface IEventListener

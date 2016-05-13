@@ -43,15 +43,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.tagging
+namespace iTextSharp.Kernel.Pdf.Tagging
 {
 	/// <summary>
 	/// To be able to be wrapped with this
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObjectWrapper{T}"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
 	/// the
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
 	/// must be indirect.
 	/// </summary>
 	public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem
@@ -160,7 +161,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 		/// </remarks>
 		/// <param name="page">
 		/// 
-		/// <see cref="com.itextpdf.kernel.pdf.PdfPage"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
 		/// for which to create parent tree entry. Typically this page is flushed after this call.
 		/// </param>
 		public virtual void CreateParentTreeEntryForPage(PdfPage page)
@@ -180,7 +181,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 		{
 			IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences
 				(page);
-			return pageMcrs != null ? java.util.Collections.UnmodifiableCollection(pageMcrs.Values
+			return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values
 				) : null;
 		}
 
@@ -227,7 +228,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 		/// <param name="destDocument">document to copy structure to. Shall not be current document.
 		/// 	</param>
 		/// <param name="page2page">association between original page and copied page.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage
 			> page2page)
 		{
@@ -247,7 +248,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 		/// <param name="destDocument">document to copy structure to.</param>
 		/// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
 		/// <param name="page2page">association between original page and copied page.</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary
 			<PdfPage, PdfPage> page2page)
 		{

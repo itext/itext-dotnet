@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.crypto
+namespace iTextSharp.Kernel.Crypto
 {
 	public class AesDecryptor : IDecryptor
 	{

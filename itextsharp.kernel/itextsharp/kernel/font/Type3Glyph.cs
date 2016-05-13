@@ -1,5 +1,5 @@
 /*
-$Id: d6ff221809d30fc541d5bf200080a8bc23411bcb $
+$Id: 4d62b4d9d52a386e6d7335a8d84a5565613efd65 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,14 +43,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.image;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Image;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	/// <summary>The content where Type3 glyphs are written to.</summary>
 	public sealed class Type3Glyph : PdfCanvas
@@ -214,7 +214,7 @@ namespace com.itextpdf.kernel.font
 
 		private void FillBBFromBytes(byte[] bytes)
 		{
-			String str = com.itextpdf.io.util.JavaUtil.GetStringForBytes(bytes);
+			String str = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes);
 			int d0Pos = str.IndexOf(D_0_STR);
 			int d1Pos = str.IndexOf(D_1_STR);
 			if (d0Pos != -1)

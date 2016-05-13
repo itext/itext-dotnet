@@ -1,5 +1,5 @@
 /*
-$Id: faef259a55cd5f0350f302ccb5da86c17bd37f0d $
+$Id: e53738000a28a970a54133017dca89c0af346397 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>
 	/// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
@@ -111,7 +111,7 @@ namespace com.itextpdf.barcodes.qrcode
 				sizeInBits -= 8;
 			}
 			// Modify the last byte.
-			array[sizeInBits >> 3] |= unchecked((byte)(bit << (7 - numBitsInLastByte)));
+			array[sizeInBits >> 3] |= (byte)(bit << (7 - numBitsInLastByte));
 			++sizeInBits;
 		}
 
@@ -148,7 +148,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Append "bits".
-		public void AppendBitVector(com.itextpdf.barcodes.qrcode.BitVector bits)
+		public void AppendBitVector(iTextSharp.Barcodes.Qrcode.BitVector bits)
 		{
 			int size = bits.Size();
 			for (int i = 0; i < size; ++i)
@@ -158,7 +158,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Modify the bit vector by XOR'ing with "other"
-		public void Xor(com.itextpdf.barcodes.qrcode.BitVector other)
+		public void Xor(iTextSharp.Barcodes.Qrcode.BitVector other)
 		{
 			if (sizeInBits != other.Size())
 			{
@@ -215,7 +215,7 @@ namespace com.itextpdf.barcodes.qrcode
 				System.Array.Copy(array, 0, newArray, 0, array.Length);
 				array = newArray;
 			}
-			array[sizeInBits >> 3] = unchecked((byte)value);
+			array[sizeInBits >> 3] = (byte)value;
 			sizeInBits += 8;
 		}
 	}

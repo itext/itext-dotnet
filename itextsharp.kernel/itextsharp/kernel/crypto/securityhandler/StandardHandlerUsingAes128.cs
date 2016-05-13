@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	public class StandardHandlerUsingAes128 : StandardHandlerUsingStandard128
 	{

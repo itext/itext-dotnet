@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Globalization;
-using java.lang;
+using Java.Lang;
 
-namespace com.itextpdf.kernel.xmp
+namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>
 	/// The <code>XMPDateTime</code>-class represents a point in time up to a resolution of nano

@@ -44,9 +44,9 @@
 * nuclear facility.
 */
 using System;
-using com.itextpdf.io;
+using iTextSharp.IO;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>A class for performing LZW decoding.</summary>
 	public class TIFFLZWDecoder

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io
+namespace iTextSharp.IO
 {
 	public class UtilitiesTest
 	{
@@ -16,7 +13,5 @@ namespace com.itextpdf.io
 			byte[] test = ArrayUtil.ShortenArray(src, 5);
 			NUnit.Framework.Assert.AreEqual(dest, test);
 		}
-
-        
 	}
 }

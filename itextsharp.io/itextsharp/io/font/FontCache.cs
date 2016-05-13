@@ -46,11 +46,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class FontCache
 	{

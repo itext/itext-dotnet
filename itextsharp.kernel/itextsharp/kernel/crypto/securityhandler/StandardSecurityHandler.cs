@@ -42,11 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	public abstract class StandardSecurityHandler : SecurityHandler
 	{

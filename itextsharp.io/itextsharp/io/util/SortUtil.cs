@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
     public class SortUtil {
         /// <summary>
         /// A stable sort

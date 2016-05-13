@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.tagging;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace com.itextpdf.kernel.pdf.tagutils
+namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	public class AccessibilityProperties
 	{

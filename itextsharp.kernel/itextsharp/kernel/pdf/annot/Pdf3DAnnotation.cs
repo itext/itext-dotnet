@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class Pdf3DAnnotation : PdfAnnotation
 	{
@@ -67,10 +67,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return PdfName._3D;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation SetDefaultInitialView
-			(PdfObject initialView)
+		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(
+			PdfObject initialView)
 		{
-			return (com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView
+			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView
 				);
 		}
 
@@ -79,10 +79,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().Get(PdfName._3DV);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation SetActivationDictionary
+		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary
 			(PdfDictionary activationDictionary)
 		{
-			return (com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary
+			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary
 				);
 		}
 
@@ -91,10 +91,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsDictionary(PdfName._3DA);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation SetInteractive(bool 
-			interactive)
+		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive
+			)
 		{
-			return (com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean
+			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean
 				(interactive));
 		}
 
@@ -103,10 +103,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsBoolean(PdfName._3DI);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation SetViewBox(Rectangle
-			 viewBox)
+		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox
+			)
 		{
-			return (com.itextpdf.kernel.pdf.annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray
+			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray
 				(viewBox));
 		}
 

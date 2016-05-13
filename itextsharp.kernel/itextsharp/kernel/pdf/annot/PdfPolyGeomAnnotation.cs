@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfPolyGeomAnnotation : PdfMarkupAnnotation
 	{
@@ -68,17 +68,17 @@ namespace com.itextpdf.kernel.pdf.annot
 		{
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle
+		public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle
 			 rect, float[] vertices)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation(rect, Polygon, vertices
+			return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, Polygon, vertices
 				);
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation CreatePolyLine(
-			Rectangle rect, float[] vertices)
+		public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolyLine(Rectangle
+			 rect, float[] vertices)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices
+			return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices
 				);
 		}
 
@@ -92,18 +92,18 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsArray(PdfName.Vertices);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation SetVertices(PdfArray
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray
 			 vertices)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, 
-				vertices);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices
+				);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation SetVertices(float
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float
 			[] vertices)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, 
-				new PdfArray(vertices));
+			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new 
+				PdfArray(vertices));
 		}
 
 		public virtual PdfArray GetLineEndingStyles()
@@ -111,10 +111,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsArray(PdfName.LE);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation SetLineEndingStyles
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetLineEndingStyles
 			(PdfArray lineEndingStyles)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation)Put(PdfName.LE, lineEndingStyles
+			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.LE, lineEndingStyles
 				);
 		}
 
@@ -123,11 +123,11 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsDictionary(PdfName.Measure);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation SetMeasure(PdfDictionary
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetMeasure(PdfDictionary
 			 measure)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfPolyGeomAnnotation)Put(PdfName.Measure, 
-				measure);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Measure, measure
+				);
 		}
 
 		private void SetSubtype(PdfName subtype)

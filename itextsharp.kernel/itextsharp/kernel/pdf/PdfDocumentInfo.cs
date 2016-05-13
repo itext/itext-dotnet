@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
+using iTextSharp.IO.Font;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary>
 	{
@@ -72,35 +72,34 @@ namespace com.itextpdf.kernel.pdf
 		{
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetTitle(String title)
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetTitle(String title)
 		{
 			GetPdfObject().Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetAuthor(String author)
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author)
 		{
 			GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG
 				));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetSubject(String subject)
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject)
 		{
 			GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG
 				));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetKeywords(String keywords
-			)
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords)
 		{
 			GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG
 				));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo SetCreator(String creator)
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator)
 		{
 			GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG
 				));
@@ -137,13 +136,13 @@ namespace com.itextpdf.kernel.pdf
 			return GetStringValue(PdfName.Producer);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo AddCreationDate()
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddCreationDate()
 		{
 			this.GetPdfObject().Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfDocumentInfo AddModDate()
+		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddModDate()
 		{
 			this.GetPdfObject().Put(PdfName.ModDate, new PdfDate().GetPdfObject());
 			return this;

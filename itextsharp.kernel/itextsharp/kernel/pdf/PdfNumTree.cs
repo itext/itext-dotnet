@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNumTree
 	{

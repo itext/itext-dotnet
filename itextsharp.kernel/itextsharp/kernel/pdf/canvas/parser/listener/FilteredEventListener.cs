@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf.canvas.parser;
-using com.itextpdf.kernel.pdf.canvas.parser.data;
-using com.itextpdf.kernel.pdf.canvas.parser.filter;
+using iTextSharp.Kernel.Pdf.Canvas.Parser;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	/// <summary>An event listener which filters events on the fly before passing them on to the delegate.
 	/// 	</summary>
@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// <see cref="FilteredEventListener"/>
 		/// empty instance.
 		/// Use
-		/// <see cref="AttachEventListener{T}(IEventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.IEventFilter[])
+		/// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
 		/// 	"/>
 		/// to add an event listener along with its filters.
 		/// </summary>
@@ -77,7 +77,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// <see cref="FilteredEventListener"/>
 		/// instance with one delegate.
 		/// Use
-		/// <see cref="AttachEventListener{T}(IEventListener, com.itextpdf.kernel.pdf.canvas.parser.filter.IEventFilter[])
+		/// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
 		/// 	"/>
 		/// to add more
 		/// <see cref="IEventListener"/>

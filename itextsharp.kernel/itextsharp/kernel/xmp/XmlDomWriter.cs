@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using java.io;
-using org.w3c.dom;
+using Java.IO;
+using Org.W3c.Dom;
 
-namespace com.itextpdf.kernel.xmp
+namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>This class writes the DOM structure of the XML to the specified output.</summary>
 	public class XmlDomWriter
@@ -408,7 +408,7 @@ namespace com.itextpdf.kernel.xmp
 						 c <= 0x9F) || c == 0x2028) || isAttValue && (c == 0x09 || c == 0x0A))
 					{
 						fOut.Write("&#x");
-						fOut.Write(com.itextpdf.io.util.JavaUtil.IntegerToHexString(c).ToUpper());
+						fOut.Write(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper());
 						fOut.Write(";");
 					}
 					else

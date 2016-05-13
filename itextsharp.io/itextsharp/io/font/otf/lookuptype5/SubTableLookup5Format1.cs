@@ -1,5 +1,5 @@
 /*
-$Id: d5fb0a684a375ec1c7786e02e540546a449f4e76 $
+$Id: 5d937f44a301f3b0e83d3bd2be7a607cfcc130ac $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf.lookuptype5
+namespace iTextSharp.IO.Font.Otf.Lookuptype5
 {
 	/// <summary>Contextual Substitution Subtable: Simple context glyph substitution</summary>
 	public class SubTableLookup5Format1 : ContextualSubTable

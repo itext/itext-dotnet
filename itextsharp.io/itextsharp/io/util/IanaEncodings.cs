@@ -66,8 +66,7 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 
     /**
     * Translates a IANA encoding name to a Java encoding.

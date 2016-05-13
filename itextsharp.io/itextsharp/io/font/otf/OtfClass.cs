@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	public class OtfClass
 	{

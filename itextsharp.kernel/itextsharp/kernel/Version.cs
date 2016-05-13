@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.lang;
-using java.lang.reflect;
+using Java.Lang;
+using Java.Lang.Reflect;
 
-namespace com.itextpdf.kernel
+namespace iTextSharp.Kernel
 {
 	/// <summary>This class contains version information about iText.</summary>
 	/// <remarks>

@@ -45,10 +45,10 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.color
+namespace iTextSharp.IO.Color
 {
 	public class IccProfile
 	{
@@ -62,7 +62,7 @@ namespace com.itextpdf.io.color
 		{
 		}
 
-		public static com.itextpdf.io.color.IccProfile GetInstance(byte[] data, int numComponents
+		public static iTextSharp.IO.Color.IccProfile GetInstance(byte[] data, int numComponents
 			)
 		{
 			if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73
@@ -70,7 +70,7 @@ namespace com.itextpdf.io.color
 			{
 				throw new IOException(IOException.InvalidIccProfile);
 			}
-			com.itextpdf.io.color.IccProfile icc = new com.itextpdf.io.color.IccProfile();
+			iTextSharp.IO.Color.IccProfile icc = new iTextSharp.IO.Color.IccProfile();
 			icc.data = data;
 			int cs;
 			cs = GetIccNumberOfComponents(data);
@@ -85,7 +85,7 @@ namespace com.itextpdf.io.color
 			return icc;
 		}
 
-		public static com.itextpdf.io.color.IccProfile GetInstance(byte[] data)
+		public static iTextSharp.IO.Color.IccProfile GetInstance(byte[] data)
 		{
 			int cs;
 			cs = GetIccNumberOfComponents(data);
@@ -93,8 +93,8 @@ namespace com.itextpdf.io.color
 			return GetInstance(data, numComponents);
 		}
 
-		public static com.itextpdf.io.color.IccProfile GetInstance(RandomAccessFileOrArray
-			 file)
+		public static iTextSharp.IO.Color.IccProfile GetInstance(RandomAccessFileOrArray 
+			file)
 		{
 			try
 			{
@@ -139,7 +139,7 @@ namespace com.itextpdf.io.color
 			}
 		}
 
-		public static com.itextpdf.io.color.IccProfile GetInstance(Stream stream)
+		public static iTextSharp.IO.Color.IccProfile GetInstance(Stream stream)
 		{
 			RandomAccessFileOrArray raf;
 			try
@@ -154,7 +154,7 @@ namespace com.itextpdf.io.color
 			return GetInstance(raf);
 		}
 
-		public static com.itextpdf.io.color.IccProfile GetInstance(String filename)
+		public static iTextSharp.IO.Color.IccProfile GetInstance(String filename)
 		{
 			RandomAccessFileOrArray raf;
 			try
@@ -174,7 +174,7 @@ namespace com.itextpdf.io.color
 			String colorSpace;
 			try
 			{
-				colorSpace = com.itextpdf.io.util.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII"
+				colorSpace = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII"
 					);
 			}
 			catch (ArgumentException e)
@@ -189,7 +189,7 @@ namespace com.itextpdf.io.color
 			String deviceClass;
 			try
 			{
-				deviceClass = com.itextpdf.io.util.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII"
+				deviceClass = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII"
 					);
 			}
 			catch (ArgumentException e)

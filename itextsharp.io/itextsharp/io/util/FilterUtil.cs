@@ -46,8 +46,7 @@ using System;
 using System.IO;
 using System.util.zlib;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 	public sealed class FilterUtil
 	{
 		private FilterUtil()

@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
+using iTextSharp.Kernel.Color;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>A Pen object of the WMF format.</summary>
 	/// <remarks>A Pen object of the WMF format. Holds the color, style and width information of the pen.
@@ -69,7 +69,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		internal int penWidth = 1;
 
-		internal Color color = DeviceRgb.BLACK;
+		internal iTextSharp.Kernel.Color.Color color = DeviceRgb.BLACK;
 
 		/// <summary>Creates a MetaPen object.</summary>
 		public MetaPen()
@@ -105,7 +105,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>Get the color of the MetaPen.</summary>
 		/// <returns>color of the pen</returns>
-		public virtual Color GetColor()
+		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
 			return color;
 		}

@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.font;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.cmap
+namespace iTextSharp.IO.Font.Cmap
 {
 	/// <author>psoares</author>
 	public class CMapLocationResource : ICMapLocation

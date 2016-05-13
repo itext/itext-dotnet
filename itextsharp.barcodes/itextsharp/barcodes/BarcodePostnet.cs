@@ -1,5 +1,5 @@
 /*
-$Id: 10feebdd7a162bff3e6e57054630026e03776f11 $
+$Id: 7b6a06e8d5a5c06b932773de1bd2a0050f46d576 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,12 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class BarcodePostnet : Barcode1D
 	{
@@ -115,8 +114,8 @@ namespace com.itextpdf.barcodes
 			n = (width - x) / (bars.Length - 1);
 		}
 
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor
-			)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 barColor, iTextSharp.Kernel.Color.Color textColor)
 		{
 			if (barColor != null)
 			{

@@ -42,11 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.kernel.pdf.canvas.draw
+namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 {
 	/// <summary>
 	/// Implementation of
@@ -58,7 +57,7 @@ namespace com.itextpdf.kernel.pdf.canvas.draw
 	{
 		private float lineWidth = 1;
 
-		private Color color = Color.BLACK;
+		private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
 
 		/// <summary>Constructs an instance of solid line drawer</summary>
 		public SolidLine()
@@ -94,12 +93,12 @@ namespace com.itextpdf.kernel.pdf.canvas.draw
 			this.lineWidth = lineWidth;
 		}
 
-		public virtual Color GetColor()
+		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
 			return color;
 		}
 
-		public virtual void SetColor(Color color)
+		public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
 		{
 			this.color = color;
 		}

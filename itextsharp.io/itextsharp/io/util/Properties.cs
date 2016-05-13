@@ -49,8 +49,7 @@ using System.Collections.Generic;
  * address: sales@itextpdf.com
  */
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
     /// <summary>
     /// Summary description for Properties.
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace com.itextpdf.kernel.crypto {
+namespace iTextSharp.Kernel.Crypto {
     public class SystemUtility {
         public static long GetCurrentTimeMillis() {
             return DateTime.Now.Ticks + Environment.TickCount;

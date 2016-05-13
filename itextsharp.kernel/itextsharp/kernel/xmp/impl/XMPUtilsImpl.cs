@@ -30,12 +30,12 @@
 using System;
 using System.Collections;
 using System.Text;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl.xpath;
-using com.itextpdf.kernel.xmp.options;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>11.08.2006</since>
 	public class XMPUtilsImpl : XMPConst
@@ -58,7 +58,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		// EMPTY
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPUtils.CatenateArrayItems(com.itextpdf.kernel.xmp.XMPMeta, System.String, System.String, System.String, System.String, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.CatenateArrayItems(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, System.String, System.String, bool)
 		/// 	"/>
 		/// <param name="xmp">The XMP object containing the array to be catenated.</param>
 		/// <param name="schemaNS">
@@ -81,7 +81,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </param>
 		/// <param name="allowCommas">Option flag to control the catenation.</param>
 		/// <returns>Returns the string containing the catenated array items.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
 		public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
 			, String separator, String quotes, bool allowCommas)
@@ -144,7 +144,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>
 		/// see
-		/// <see cref="com.itextpdf.kernel.xmp.XMPUtils.SeparateArrayItems(com.itextpdf.kernel.xmp.XMPMeta, System.String, System.String, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions, bool)
+		/// <see cref="iTextSharp.Kernel.Xmp.XMPUtils.SeparateArrayItems(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, bool)
 		/// 	"/>
 		/// </summary>
 		/// <param name="xmp">The XMP object containing the array to be updated.</param>
@@ -160,7 +160,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="catedStr">The string to be separated into the array items.</param>
 		/// <param name="arrayOptions">Option flags to control the separation.</param>
 		/// <param name="preserveCommas">Flag if commas shall be preserved</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
 		public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
 			, String catedStr, PropertyOptions arrayOptions, bool preserveCommas)
@@ -333,7 +333,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="arrayOptions">the options for the array if newly created</param>
 		/// <param name="xmp">the xmp object</param>
 		/// <returns>Returns the array node.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards exceptions</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards exceptions</exception>
 		private static XMPNode SeparateFindCreateArray(String schemaNS, String arrayName, 
 			PropertyOptions arrayOptions, XMPMetaImpl xmp)
 		{
@@ -378,7 +378,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			return arrayNode;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPUtils.RemoveProperties(com.itextpdf.kernel.xmp.XMPMeta, System.String, System.String, bool, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.RemoveProperties(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, bool, bool)
 		/// 	"/>
 		/// <param name="xmp">The XMP object containing the properties to be removed.</param>
 		/// <param name="schemaNS">
@@ -394,7 +394,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Option flag to control the deletion: Include aliases in the
 		/// "named schema" case above.
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If metadata processing fails
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If metadata processing fails
 		/// 	</exception>
 		public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName
 			, bool doAllProperties, bool includeAliases)
@@ -484,7 +484,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPUtils.AppendProperties(com.itextpdf.kernel.xmp.XMPMeta, com.itextpdf.kernel.xmp.XMPMeta, bool, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.AppendProperties(iTextSharp.Kernel.Xmp.XMPMeta, iTextSharp.Kernel.Xmp.XMPMeta, bool, bool)
 		/// 	"/>
 		/// <param name="source">The source XMP object.</param>
 		/// <param name="destination">The destination XMP object.</param>
@@ -493,7 +493,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="replaceOldValues">Replace the values of existing properties.</param>
 		/// <param name="deleteEmptyValues">Delete destination values if source property is empty.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
 		public static void AppendProperties(XMPMeta source, XMPMeta destination, bool doAllProperties
 			, bool replaceOldValues, bool deleteEmptyValues)
@@ -562,7 +562,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			return !schemaNode.HasChildren();
 		}
 
-		/// <seealso cref="AppendProperties(com.itextpdf.kernel.xmp.XMPMeta, com.itextpdf.kernel.xmp.XMPMeta, bool, bool, bool)
+		/// <seealso cref="AppendProperties(iTextSharp.Kernel.Xmp.XMPMeta, iTextSharp.Kernel.Xmp.XMPMeta, bool, bool, bool)
 		/// 	"/>
 		/// <param name="destXMP">The destination XMP object.</param>
 		/// <param name="sourceNode">the source node</param>
@@ -572,7 +572,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// flag if properties with empty values should be deleted
 		/// in the destination object.
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void AppendSubtree(XMPMetaImpl destXMP, XMPNode sourceNode, XMPNode
 			 destParent, bool replaceOldValues, bool deleteEmptyValues)
 		{
@@ -721,7 +721,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="leftNode">an <code>XMPNode</code></param>
 		/// <param name="rightNode">an <code>XMPNode</code></param>
 		/// <returns>Returns true if the nodes are equal, false otherwise.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards exceptions to the calling method.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards exceptions to the calling method.
 		/// 	</exception>
 		private static bool ItemValuesMatch(XMPNode leftNode, XMPNode rightNode)
 		{
@@ -807,7 +807,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// allowed.
 		/// </remarks>
 		/// <param name="separator"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void CheckSeparator(String separator)
 		{
 			bool haveSemicolon = false;
@@ -845,7 +845,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="quotes">opened and closing quote in a string</param>
 		/// <param name="openQuote">the open quote</param>
 		/// <returns>Returns a corresponding closing quote.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static char CheckQuotes(String quotes, char openQuote)
 		{
 			char closeQuote;

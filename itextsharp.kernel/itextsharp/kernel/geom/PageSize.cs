@@ -42,40 +42,40 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	public class PageSize : Rectangle
 	{
 		private const long serialVersionUID = 485375591249386160L;
 
-		public static com.itextpdf.kernel.geom.PageSize A0 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A0 = new iTextSharp.Kernel.Geom.PageSize
 			(2384, 3370);
 
-		public static com.itextpdf.kernel.geom.PageSize A1 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A1 = new iTextSharp.Kernel.Geom.PageSize
 			(1684, 2384);
 
-		public static com.itextpdf.kernel.geom.PageSize A2 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A2 = new iTextSharp.Kernel.Geom.PageSize
 			(1190, 1684);
 
-		public static com.itextpdf.kernel.geom.PageSize A3 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A3 = new iTextSharp.Kernel.Geom.PageSize
 			(842, 1190);
 
-		public static com.itextpdf.kernel.geom.PageSize A4 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A4 = new iTextSharp.Kernel.Geom.PageSize
 			(595, 842);
 
-		public static com.itextpdf.kernel.geom.PageSize A5 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A5 = new iTextSharp.Kernel.Geom.PageSize
 			(420, 595);
 
-		public static com.itextpdf.kernel.geom.PageSize A6 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A6 = new iTextSharp.Kernel.Geom.PageSize
 			(298, 420);
 
-		public static com.itextpdf.kernel.geom.PageSize A7 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A7 = new iTextSharp.Kernel.Geom.PageSize
 			(210, 298);
 
-		public static com.itextpdf.kernel.geom.PageSize A8 = new com.itextpdf.kernel.geom.PageSize
+		public static iTextSharp.Kernel.Geom.PageSize A8 = new iTextSharp.Kernel.Geom.PageSize
 			(148, 210);
 
-		public static com.itextpdf.kernel.geom.PageSize Default = A4;
+		public static iTextSharp.Kernel.Geom.PageSize Default = A4;
 
 		public PageSize(float width, float height)
 			: base(0, 0, width, height)
@@ -88,14 +88,14 @@ namespace com.itextpdf.kernel.geom
 		}
 
 		/// <summary>Rotates PageSize clockwise.</summary>
-		public virtual com.itextpdf.kernel.geom.PageSize Rotate()
+		public virtual iTextSharp.Kernel.Geom.PageSize Rotate()
 		{
-			return new com.itextpdf.kernel.geom.PageSize(height, width);
+			return new iTextSharp.Kernel.Geom.PageSize(height, width);
 		}
 
 		public override Rectangle Clone()
 		{
-			return new com.itextpdf.kernel.geom.PageSize(this);
+			return new iTextSharp.Kernel.Geom.PageSize(this);
 		}
 	}
 }

@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.collection
+namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollectionSort : PdfObjectWrapper<PdfDictionary>
 	{
@@ -70,15 +70,15 @@ namespace com.itextpdf.kernel.pdf.collection
 		public PdfCollectionSort(String[] keys)
 			: this(new PdfDictionary())
 		{
-			GetPdfObject().Put(PdfName.S, new PdfArray(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			GetPdfObject().Put(PdfName.S, new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(keys), true));
 		}
 
 		/// <summary>Defines the sort order of the field (ascending or descending).</summary>
 		/// <param name="ascending">true is the default, use false for descending order</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionSort SetSortOrder(
-			bool ascending)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
+			 ascending)
 		{
 			PdfObject obj = GetPdfObject().Get(PdfName.S);
 			if (obj.IsName())
@@ -97,8 +97,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <param name="ascending">an array with every element corresponding with a name of a field.
 		/// 	</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionSort SetSortOrder(
-			bool[] ascending)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
+			[] ascending)
 		{
 			PdfObject obj = GetPdfObject().Get(PdfName.S);
 			if (obj.IsArray())

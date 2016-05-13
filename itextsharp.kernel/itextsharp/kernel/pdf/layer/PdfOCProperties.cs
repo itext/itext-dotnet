@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.layer
+namespace iTextSharp.Kernel.Pdf.Layer
 {
 	/// <summary>
 	/// This class represents /OCProperties entry if pdf catalog and manages
@@ -58,9 +58,9 @@ namespace com.itextpdf.kernel.pdf.layer
 	/// the layers of the pdf document.
 	/// <br /><br />
 	/// To be able to be wrapped with this
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObjectWrapper{T}"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
 	/// the
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
 	/// must be indirect.
 	/// </remarks>
 	public class PdfOCProperties : PdfObjectWrapper<PdfDictionary>
@@ -71,7 +71,7 @@ namespace com.itextpdf.kernel.pdf.layer
 
 		/// <summary>Creates a new PdfOCProperties instance.</summary>
 		/// <param name="document">the document the optional content belongs to</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfOCProperties(PdfDocument document)
 			: this(((PdfDictionary)new PdfDictionary().MakeIndirect(document)))
 		{
@@ -83,7 +83,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// </summary>
 		/// <param name="ocPropertiesDict">the dictionary of optional content properties, must have an indirect reference.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfOCProperties(PdfDictionary ocPropertiesDict)
 			: base(ocPropertiesDict)
 		{
@@ -298,7 +298,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		}
 
 		/// <summary>Populates the /AS entry in the /D dictionary.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		private void AddASEvent(PdfName @event, PdfName category)
 		{
 			PdfArray arr = new PdfArray();
@@ -335,7 +335,7 @@ namespace com.itextpdf.kernel.pdf.layer
 
 		/// <summary>Reads the layers from the document to be able to modify them in the future.
 		/// 	</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		private void ReadLayersFromDictionary()
 		{
 			PdfArray ocgs = GetPdfObject().GetAsArray(PdfName.OCGs);
@@ -390,7 +390,7 @@ namespace com.itextpdf.kernel.pdf.layer
 
 		/// <summary>Reads the /Order in the /D entry and initialized the parent-child hierarchy.
 		/// 	</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		private void ReadOrderFromDictionary(PdfLayer parent, PdfArray orderArray, IDictionary
 			<PdfIndirectReference, PdfLayer> layerMap)
 		{

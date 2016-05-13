@@ -44,12 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf.action;
-using com.itextpdf.kernel.pdf.navigation;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Pdf.Action;
+using iTextSharp.Kernel.Pdf.Navigation;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfOutline
 	{
@@ -57,7 +56,7 @@ namespace com.itextpdf.kernel.pdf
 
 		public static int FLAG_BOLD = 2;
 
-		private IList<com.itextpdf.kernel.pdf.PdfOutline> children = new List<com.itextpdf.kernel.pdf.PdfOutline
+		private IList<iTextSharp.Kernel.Pdf.PdfOutline> children = new List<iTextSharp.Kernel.Pdf.PdfOutline
 			>();
 
 		private String title;
@@ -66,7 +65,7 @@ namespace com.itextpdf.kernel.pdf
 
 		private PdfDestination destination;
 
-		private com.itextpdf.kernel.pdf.PdfOutline parent;
+		private iTextSharp.Kernel.Pdf.PdfOutline parent;
 
 		private PdfDocument pdfDoc;
 
@@ -77,7 +76,7 @@ namespace com.itextpdf.kernel.pdf
 			this.pdfDoc = pdfDocument;
 		}
 
-		public PdfOutline(String title, PdfDictionary content, com.itextpdf.kernel.pdf.PdfOutline
+		public PdfOutline(String title, PdfDictionary content, iTextSharp.Kernel.Pdf.PdfOutline
 			 parent)
 		{
 			this.title = title;
@@ -89,7 +88,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>This constructor creates root outline in the document.</summary>
 		/// <param name="doc"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal PdfOutline(PdfDocument doc)
 		{
 			content = new PdfDictionary();
@@ -110,7 +109,7 @@ namespace com.itextpdf.kernel.pdf
 			this.content.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
 		}
 
-		public virtual void SetColor(Color color)
+		public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
 		{
 			content.Put(PdfName.C, new PdfArray(color.GetColorValue()));
 		}
@@ -128,12 +127,12 @@ namespace com.itextpdf.kernel.pdf
 			return content;
 		}
 
-		public virtual IList<com.itextpdf.kernel.pdf.PdfOutline> GetAllChildren()
+		public virtual IList<iTextSharp.Kernel.Pdf.PdfOutline> GetAllChildren()
 		{
 			return children;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfOutline GetParent()
+		public virtual iTextSharp.Kernel.Pdf.PdfOutline GetParent()
 		{
 			return parent;
 		}
@@ -160,8 +159,8 @@ namespace com.itextpdf.kernel.pdf
 		/// </summary>
 		/// <param name="title">an outline title</param>
 		/// <returns>a created outline</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual com.itextpdf.kernel.pdf.PdfOutline AddOutline(String title)
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title)
 		{
 			return AddOutline(title, -1);
 		}
@@ -178,8 +177,8 @@ namespace com.itextpdf.kernel.pdf
 		/// If the position equals -1, then the outline will be put in the end of children list.
 		/// </param>
 		/// <returns>created outline</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual com.itextpdf.kernel.pdf.PdfOutline AddOutline(String title, int position
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title, int position
 			)
 		{
 			if (position == -1)
@@ -187,8 +186,8 @@ namespace com.itextpdf.kernel.pdf
 				position = children.Count;
 			}
 			PdfDictionary dictionary = new PdfDictionary();
-			com.itextpdf.kernel.pdf.PdfOutline outline = new com.itextpdf.kernel.pdf.PdfOutline
-				(title, dictionary, this);
+			iTextSharp.Kernel.Pdf.PdfOutline outline = new iTextSharp.Kernel.Pdf.PdfOutline(title
+				, dictionary, this);
 			dictionary.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
 			dictionary.Put(PdfName.Parent, content);
 			if (!children.IsEmpty())
@@ -245,7 +244,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>remove this outline from the document.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		internal virtual void RemoveOutline()
 		{
 			PdfName type = content.GetAsName(PdfName.Type);
@@ -254,8 +253,8 @@ namespace com.itextpdf.kernel.pdf
 				pdfDoc.GetCatalog().Remove(PdfName.Outlines);
 				return;
 			}
-			com.itextpdf.kernel.pdf.PdfOutline parent = this.parent;
-			IList<com.itextpdf.kernel.pdf.PdfOutline> children = parent.children;
+			iTextSharp.Kernel.Pdf.PdfOutline parent = this.parent;
+			IList<iTextSharp.Kernel.Pdf.PdfOutline> children = parent.children;
 			children.Remove(this);
 			PdfDictionary parentContent = parent.content;
 			if (!children.IsEmpty())
@@ -291,13 +290,13 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfOutline AddOutline(com.itextpdf.kernel.pdf.PdfOutline
+		public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(iTextSharp.Kernel.Pdf.PdfOutline
 			 outline)
 		{
-			com.itextpdf.kernel.pdf.PdfOutline newOutline = AddOutline(outline.GetTitle());
+			iTextSharp.Kernel.Pdf.PdfOutline newOutline = AddOutline(outline.GetTitle());
 			newOutline.AddDestination(outline.GetDestination());
-			IList<com.itextpdf.kernel.pdf.PdfOutline> children = outline.GetAllChildren();
-			foreach (com.itextpdf.kernel.pdf.PdfOutline child in children)
+			IList<iTextSharp.Kernel.Pdf.PdfOutline> children = outline.GetAllChildren();
+			foreach (iTextSharp.Kernel.Pdf.PdfOutline child in children)
 			{
 				newOutline.AddOutline(child);
 			}

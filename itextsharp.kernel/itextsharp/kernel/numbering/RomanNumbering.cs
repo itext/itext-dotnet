@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace com.itextpdf.kernel.numbering
+namespace iTextSharp.Kernel.Numbering
 {
 	/// <summary>This class can produce String combinations representing a roman number.</summary>
 	/// <remarks>

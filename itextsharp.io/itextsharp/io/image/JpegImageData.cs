@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public class JpegImageData : ImageData
 	{

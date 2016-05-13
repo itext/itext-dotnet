@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 	public class IdelOutputStream : Stream
 	{
 	    public override void Flush()

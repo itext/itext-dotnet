@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
     internal static class BarcodesExtensions {
         public static byte[] GetBytes(this String str, String encoding) {

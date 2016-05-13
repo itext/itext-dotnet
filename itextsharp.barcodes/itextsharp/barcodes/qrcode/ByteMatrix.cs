@@ -1,5 +1,5 @@
 /*
-$Id: 2d07be7cfe05d55a6f11f79de5f69f86eadbad59 $
+$Id: 6d7bf1af0da0111de70ed7cf1cea0bdf5df222ba $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>A class which wraps a 2D array of bytes.</summary>
 	/// <remarks>
@@ -101,7 +101,7 @@ namespace com.itextpdf.barcodes.qrcode
 
 		public void Set(int x, int y, int value)
 		{
-			bytes[y][x] = unchecked((byte)value);
+			bytes[y][x] = (byte)value;
 		}
 
 		public void Clear(byte value)

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	/// <summary>
 	/// Keeps all the values of a 3 by 3 matrix and allows you to
@@ -144,10 +144,10 @@ namespace com.itextpdf.kernel.geom
 		/// </summary>
 		/// <param name="by">The matrix to multiply by</param>
 		/// <returns>the resulting matrix</returns>
-		public virtual com.itextpdf.kernel.geom.Matrix Multiply(com.itextpdf.kernel.geom.Matrix
+		public virtual iTextSharp.Kernel.Geom.Matrix Multiply(iTextSharp.Kernel.Geom.Matrix
 			 by)
 		{
-			com.itextpdf.kernel.geom.Matrix rslt = new com.itextpdf.kernel.geom.Matrix();
+			iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
 			float[] a = vals;
 			float[] b = by.vals;
 			float[] c = rslt.vals;
@@ -166,10 +166,10 @@ namespace com.itextpdf.kernel.geom
 		/// <summary>Subtracts a matrix from this matrix and returns the results</summary>
 		/// <param name="arg">the matrix to subtract from this matrix</param>
 		/// <returns>a Matrix object</returns>
-		public virtual com.itextpdf.kernel.geom.Matrix Subtract(com.itextpdf.kernel.geom.Matrix
+		public virtual iTextSharp.Kernel.Geom.Matrix Subtract(iTextSharp.Kernel.Geom.Matrix
 			 arg)
 		{
-			com.itextpdf.kernel.geom.Matrix rslt = new com.itextpdf.kernel.geom.Matrix();
+			iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
 			float[] a = vals;
 			float[] b = arg.vals;
 			float[] c = rslt.vals;
@@ -203,11 +203,11 @@ namespace com.itextpdf.kernel.geom
 		/// <seealso cref="System.Object.Equals(System.Object)"/>
 		public override bool Equals(Object obj)
 		{
-			if (!(obj is com.itextpdf.kernel.geom.Matrix))
+			if (!(obj is iTextSharp.Kernel.Geom.Matrix))
 			{
 				return false;
 			}
-			return com.itextpdf.io.util.JavaUtil.ArraysEquals(vals, ((com.itextpdf.kernel.geom.Matrix
+			return iTextSharp.IO.Util.JavaUtil.ArraysEquals(vals, ((iTextSharp.Kernel.Geom.Matrix
 				)obj).vals);
 		}
 
@@ -220,7 +220,7 @@ namespace com.itextpdf.kernel.geom
 			int result = 1;
 			for (int i = 0; i < vals.Length; i++)
 			{
-				result = 31 * result + com.itextpdf.io.util.JavaUtil.FloatToIntBits(vals[i]);
+				result = 31 * result + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(vals[i]);
 			}
 			return result;
 		}

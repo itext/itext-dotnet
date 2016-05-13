@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using com.itextpdf.kernel.pdf.canvas.parser.filter;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	/// <summary>A text event listener which filters events on the fly before passing them on to the delegate.
 	/// 	</summary>

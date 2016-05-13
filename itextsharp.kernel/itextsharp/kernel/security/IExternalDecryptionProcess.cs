@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using org.bouncycastle.cms;
+using Org.Bouncycastle.Cms;
 
-namespace com.itextpdf.kernel.security
+namespace iTextSharp.Kernel.Security
 {
 	/// <summary>Interface to externalize the retrieval of the CMS recipient info.</summary>
 	public interface IExternalDecryptionProcess

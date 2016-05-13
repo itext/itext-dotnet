@@ -42,19 +42,19 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
+using iTextSharp.Kernel.Geom;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.data
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 {
 	public class ClippingPathInfo : IEventData
 	{
-		private com.itextpdf.kernel.geom.Path path;
+		private Path path;
 
 		private Matrix ctm;
 
 		/// <param name="path">The path to be rendered.</param>
 		/// <param name="ctm">The path to be rendered.</param>
-		public ClippingPathInfo(com.itextpdf.kernel.geom.Path path, Matrix ctm)
+		public ClippingPathInfo(Path path, Matrix ctm)
 		{
 			this.path = path;
 			this.ctm = ctm;
@@ -62,10 +62,10 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.data
 
 		/// <returns>
 		/// The
-		/// <see cref="com.itextpdf.kernel.geom.Path"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Path"/>
 		/// which represents current clipping path.
 		/// </returns>
-		public virtual com.itextpdf.kernel.geom.Path GetClippingPath()
+		public virtual Path GetClippingPath()
 		{
 			return path;
 		}

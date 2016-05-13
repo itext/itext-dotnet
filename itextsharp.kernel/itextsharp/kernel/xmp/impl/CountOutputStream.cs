@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>An <code>OutputStream</code> that counts the written bytes.</summary>
 	/// <since>08.11.2006</since>

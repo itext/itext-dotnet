@@ -28,10 +28,10 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using com.itextpdf.kernel.xmp.impl;
-using com.itextpdf.kernel.xmp.impl.xpath;
+using iTextSharp.Kernel.Xmp.Impl;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
 
-namespace com.itextpdf.kernel.xmp
+namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>Utility services for the metadata object.</summary>
 	/// <remarks>
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.xmp
 		/// &quot;i&quot; is the decimal representation of itemIndex.
 		/// </returns>
 		/// <exception cref="XMPException">Throws exeption if index zero is used.</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static String ComposeArrayItemPath(String arrayName, int itemIndex)
 		{
 			if (itemIndex > 0)
@@ -136,7 +136,7 @@ namespace com.itextpdf.kernel.xmp
 		/// schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
 		/// </returns>
 		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static String ComposeStructFieldPath(String fieldNS, String fieldName)
 		{
 			AssertFieldNS(fieldNS);
@@ -164,7 +164,7 @@ namespace com.itextpdf.kernel.xmp
 		/// schemaNS and &quot;qNS&quot; is the prefix for qualNS.
 		/// </returns>
 		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static String ComposeQualifierPath(String qualNS, String qualName)
 		{
 			AssertQualNS(qualNS);
@@ -246,7 +246,7 @@ namespace com.itextpdf.kernel.xmp
 		/// prefix for schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
 		/// </returns>
 		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static String ComposeFieldSelector(String arrayName, String fieldNS, String
 			 fieldName, String fieldValue)
 		{
@@ -262,7 +262,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <summary>ParameterAsserts that a qualifier namespace is set.</summary>
 		/// <param name="qualNS">a qualifier namespace</param>
 		/// <exception cref="XMPException">Qualifier schema is null or empty</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void AssertQualNS(String qualNS)
 		{
 			if (qualNS == null || qualNS.Length == 0)
@@ -274,7 +274,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <summary>ParameterAsserts that a qualifier name is set.</summary>
 		/// <param name="qualName">a qualifier name or path</param>
 		/// <exception cref="XMPException">Qualifier name is null or empty</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void AssertQualName(String qualName)
 		{
 			if (qualName == null || qualName.Length == 0)
@@ -286,7 +286,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <summary>ParameterAsserts that a struct field namespace is set.</summary>
 		/// <param name="fieldNS">a struct field namespace</param>
 		/// <exception cref="XMPException">Struct field schema is null or empty</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void AssertFieldNS(String fieldNS)
 		{
 			if (fieldNS == null || fieldNS.Length == 0)
@@ -298,7 +298,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <summary>ParameterAsserts that a struct field name is set.</summary>
 		/// <param name="fieldName">a struct field name or path</param>
 		/// <exception cref="XMPException">Struct field name is null or empty</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static void AssertFieldName(String fieldName)
 		{
 			if (fieldName == null || fieldName.Length == 0)

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	internal class DrawingImageFactory
 	{
@@ -12,9 +12,9 @@ namespace com.itextpdf.io.image
 		/// 	</param>
 		/// <returns>RawImage</returns>
 		/// <exception cref="System.IO.IOException"/>
-        public static ImageData GetImage(System.Drawing.Image image, Color color)
+        public static ImageData GetImage(System.Drawing.Image image, System.Drawing.Color color)
 		{
-			return com.itextpdf.io.image.DrawingImageFactory.GetImage(image, color, false);
+			return GetImage(image, color, false);
 		}
 
 	    /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
@@ -25,7 +25,7 @@ namespace com.itextpdf.io.image
 	    /// 	</param>
 	    /// <returns>RawImage</returns>
 	    /// <exception cref="System.IO.IOException"/>
-        public static ImageData GetImage(System.Drawing.Image image, Color color, bool forceBW)
+        public static ImageData GetImage(System.Drawing.Image image, System.Drawing.Color color, bool forceBW)
 	    {
 	        throw new NotImplementedException();
 	    }

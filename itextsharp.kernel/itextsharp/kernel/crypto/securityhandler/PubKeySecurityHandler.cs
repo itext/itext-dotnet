@@ -51,12 +51,12 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.security;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Security;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	/// <author>Aiken Sam (aikensam@ieee.org)</author>
 	public abstract class PubKeySecurityHandler : SecurityHandler

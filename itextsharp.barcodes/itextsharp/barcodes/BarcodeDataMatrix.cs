@@ -1,5 +1,5 @@
 /*
-$Id: 95f24cbccef425ef28fbbd959562bc8910bfff63 $
+$Id: 16c5ec730140746f10e080304f3385e67379ad4e $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,14 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.barcodes.dmcode;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.Barcodes.Dmcode;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class BarcodeDataMatrix : Barcode2D
 	{
@@ -158,13 +157,14 @@ namespace com.itextpdf.barcodes
 			return new Rectangle(0, 0, width + 2 * ws, height + 2 * ws);
 		}
 
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 foreground)
 		{
 			return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
 		}
 
-		public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document
-			)
+		public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+			, PdfDocument document)
 		{
 			return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
 		}
@@ -174,8 +174,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
 		/// <param name="moduleSide">the side (width and height) of the pixels.</param>
 		/// <returns>the XObject.</returns>
-		public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleSide
-			, PdfDocument document)
+		public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+			, float moduleSide, PdfDocument document)
 		{
 			PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
 			Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSide
@@ -184,8 +184,8 @@ namespace com.itextpdf.barcodes
 			return xObject;
 		}
 
-		public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleSide
-			)
+		public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 foreground, float moduleSide)
 		{
 			if (image == null)
 			{
@@ -514,7 +514,7 @@ namespace com.itextpdf.barcodes
 			{
 				return;
 			}
-			data[position++] = unchecked((byte)129);
+			data[position++] = (byte)129;
 			while (--count > 0)
 			{
 				int t = 129 + (position + 1) * 149 % 253 + 1;
@@ -522,7 +522,7 @@ namespace com.itextpdf.barcodes
 				{
 					t -= 254;
 				}
-				data[position++] = unchecked((byte)t);
+				data[position++] = (byte)t;
 			}
 		}
 
@@ -550,8 +550,7 @@ namespace com.itextpdf.barcodes
 				c = text[ptrIn++] & 0xff;
 				if (IsDigit(c) && ptrIn < textLength && IsDigit(text[ptrIn] & 0xff))
 				{
-					data[ptrOut++] = unchecked((byte)((c - (byte)('0')) * 10 + (text[ptrIn++] & 0xff)
-						 - (byte)('0') + 130));
+					data[ptrOut++] = (byte)((c - '0') * 10 + (text[ptrIn++] & 0xff) - '0' + 130);
 				}
 				else
 				{
@@ -561,12 +560,12 @@ namespace com.itextpdf.barcodes
 						{
 							return -1;
 						}
-						data[ptrOut++] = unchecked((byte)235);
-						data[ptrOut++] = unchecked((byte)(c - 128 + 1));
+						data[ptrOut++] = (byte)235;
+						data[ptrOut++] = (byte)(c - 128 + 1);
 					}
 					else
 					{
-						data[ptrOut++] = unchecked((byte)(c + 1));
+						data[ptrOut++] = (byte)(c + 1);
 					}
 				}
 			}
@@ -593,16 +592,16 @@ namespace com.itextpdf.barcodes
 			{
 				return -1;
 			}
-			data[dataOffset] = unchecked((byte)231);
+			data[dataOffset] = (byte)231;
 			if (textLength < 250)
 			{
-				data[dataOffset + 1] = unchecked((byte)textLength);
+				data[dataOffset + 1] = (byte)textLength;
 				k = 2;
 			}
 			else
 			{
-				data[dataOffset + 1] = unchecked((byte)(textLength / 250 + 249));
-				data[dataOffset + 2] = unchecked((byte)(textLength % 250));
+				data[dataOffset + 1] = (byte)(textLength / 250 + 249);
+				data[dataOffset + 2] = (byte)(textLength % 250);
 				k = 3;
 			}
 			System.Array.Copy(text, textOffset, data, k + dataOffset, textLength);
@@ -616,7 +615,7 @@ namespace com.itextpdf.barcodes
 				{
 					tv -= 256;
 				}
-				data[j] = unchecked((byte)tv);
+				data[j] = (byte)tv;
 			}
 			return k - dataOffset;
 		}
@@ -644,7 +643,7 @@ namespace com.itextpdf.barcodes
 				int i = X12.IndexOf((char)text[ptrIn + textOffset]);
 				if (i >= 0)
 				{
-					x[ptrIn] = unchecked((byte)i);
+					x[ptrIn] = (byte)i;
 					++count;
 				}
 				else
@@ -682,34 +681,34 @@ namespace com.itextpdf.barcodes
 				{
 					if (ptrIn == 0 || ptrIn > 0 && x[ptrIn - 1] > 40)
 					{
-						data[dataOffset + ptrOut++] = unchecked((byte)238);
+						data[dataOffset + ptrOut++] = (byte)238;
 					}
 					if (ptrOut + 2 > dataLength)
 					{
 						break;
 					}
 					n = 1600 * x[ptrIn] + 40 * x[ptrIn + 1] + x[ptrIn + 2] + 1;
-					data[dataOffset + ptrOut++] = unchecked((byte)(n / 256));
-					data[dataOffset + ptrOut++] = unchecked((byte)n);
+					data[dataOffset + ptrOut++] = (byte)(n / 256);
+					data[dataOffset + ptrOut++] = (byte)n;
 					ptrIn += 2;
 				}
 				else
 				{
 					if (ptrIn > 0 && ((sbyte)x[ptrIn - 1]) < 40)
 					{
-						data[dataOffset + ptrOut++] = unchecked((byte)254);
+						data[dataOffset + ptrOut++] = (byte)254;
 					}
 					ci = text[ptrIn + textOffset] & 0xff;
 					if (ci > 127)
 					{
-						data[dataOffset + ptrOut++] = unchecked((byte)235);
+						data[dataOffset + ptrOut++] = (byte)235;
 						ci -= 128;
 					}
 					if (ptrOut >= dataLength)
 					{
 						break;
 					}
-					data[dataOffset + ptrOut++] = unchecked((byte)(ci + 1));
+					data[dataOffset + ptrOut++] = (byte)(ci + 1);
 				}
 			}
 			c = 100;
@@ -723,7 +722,7 @@ namespace com.itextpdf.barcodes
 			}
 			if (((sbyte)c) < 40)
 			{
-				data[dataOffset + ptrOut++] = unchecked((byte)254);
+				data[dataOffset + ptrOut++] = (byte)254;
 			}
 			return ptrOut;
 		}
@@ -756,7 +755,7 @@ namespace com.itextpdf.barcodes
 						{
 							break;
 						}
-						data[dataOffset + ptrOut++] = unchecked((byte)240);
+						data[dataOffset + ptrOut++] = (byte)240;
 						ascii = false;
 					}
 					c &= 0x3f;
@@ -767,9 +766,9 @@ namespace com.itextpdf.barcodes
 						{
 							break;
 						}
-						data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 16));
-						data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 8));
-						data[dataOffset + ptrOut++] = unchecked((byte)edi);
+						data[dataOffset + ptrOut++] = (byte)(edi >> 16);
+						data[dataOffset + ptrOut++] = (byte)(edi >> 8);
+						data[dataOffset + ptrOut++] = (byte)edi;
 						edi = 0;
 						pedi = 18;
 					}
@@ -787,14 +786,14 @@ namespace com.itextpdf.barcodes
 						{
 							break;
 						}
-						data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 16));
+						data[dataOffset + ptrOut++] = (byte)(edi >> 16);
 						if (pedi <= 12)
 						{
-							data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 8));
+							data[dataOffset + ptrOut++] = (byte)(edi >> 8);
 						}
 						if (pedi <= 6)
 						{
-							data[dataOffset + ptrOut++] = unchecked((byte)edi);
+							data[dataOffset + ptrOut++] = (byte)edi;
 						}
 						ascii = true;
 						pedi = 18;
@@ -806,14 +805,14 @@ namespace com.itextpdf.barcodes
 						{
 							break;
 						}
-						data[dataOffset + ptrOut++] = unchecked((byte)235);
+						data[dataOffset + ptrOut++] = (byte)235;
 						c -= 128;
 					}
 					if (ptrOut >= dataLength)
 					{
 						break;
 					}
-					data[dataOffset + ptrOut++] = unchecked((byte)(c + 1));
+					data[dataOffset + ptrOut++] = (byte)(c + 1);
 				}
 			}
 			if (ptrIn != textLength)
@@ -834,21 +833,21 @@ namespace com.itextpdf.barcodes
 				//have to write up to 2 bytes and up to 2 symbols
 				if (pedi <= 12)
 				{
-					byte val = unchecked((byte)((edi >> 18) & 0x3F));
+					byte val = (byte)((edi >> 18) & 0x3F);
 					if ((val & 0x20) == 0)
 					{
 						val |= 0x40;
 					}
-					data[dataOffset + ptrOut++] = unchecked((byte)(val + 1));
+					data[dataOffset + ptrOut++] = (byte)(val + 1);
 				}
 				if (pedi <= 6)
 				{
-					byte val = unchecked((byte)((edi >> 12) & 0x3F));
+					byte val = (byte)((edi >> 12) & 0x3F);
 					if ((val & 0x20) == 0)
 					{
 						val |= 0x40;
 					}
-					data[dataOffset + ptrOut++] = unchecked((byte)(val + 1));
+					data[dataOffset + ptrOut++] = (byte)(val + 1);
 				}
 			}
 			else
@@ -860,14 +859,14 @@ namespace com.itextpdf.barcodes
 					{
 						return -1;
 					}
-					data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 16));
+					data[dataOffset + ptrOut++] = (byte)(edi >> 16);
 					if (pedi <= 12)
 					{
-						data[dataOffset + ptrOut++] = unchecked((byte)(edi >> 8));
+						data[dataOffset + ptrOut++] = (byte)(edi >> 8);
 					}
 					if (pedi <= 6)
 					{
-						data[dataOffset + ptrOut++] = unchecked((byte)edi);
+						data[dataOffset + ptrOut++] = (byte)edi;
 					}
 				}
 			}
@@ -896,11 +895,11 @@ namespace com.itextpdf.barcodes
 			ptrOut = 0;
 			if (c40)
 			{
-				data[dataOffset + ptrOut++] = unchecked((byte)230);
+				data[dataOffset + ptrOut++] = (byte)230;
 			}
 			else
 			{
-				data[dataOffset + ptrOut++] = unchecked((byte)239);
+				data[dataOffset + ptrOut++] = (byte)239;
 			}
 			shift2 = "!\"#$%&'()*+,-./:;<=>?@[\\]^_";
 			if (c40)
@@ -974,10 +973,10 @@ namespace com.itextpdf.barcodes
 			for (; i < encPtr; i += 3)
 			{
 				a = 1600 * enc[i] + 40 * enc[i + 1] + enc[i + 2] + 1;
-				data[dataOffset + ptrOut++] = unchecked((byte)(a / 256));
-				data[dataOffset + ptrOut++] = unchecked((byte)a);
+				data[dataOffset + ptrOut++] = (byte)(a / 256);
+				data[dataOffset + ptrOut++] = (byte)a;
 			}
-			data[ptrOut++] = unchecked((byte)254);
+			data[ptrOut++] = (byte)254;
 			i = AsciiEncodation(text, ptrIn, textLength - ptrIn, data, ptrOut, dataLength - ptrOut
 				);
 			if (i < 0)
@@ -989,7 +988,7 @@ namespace com.itextpdf.barcodes
 
 		private void SetBit(int x, int y, int xByte)
 		{
-			image[y * xByte + x / 8] |= unchecked((byte)(128 >> (x & 7)));
+			image[y * xByte + x / 8] |= (byte)(128 >> (x & 7));
 		}
 
 		private void Draw(byte[] data, int dataSize, DmParams dm)
@@ -1003,7 +1002,7 @@ namespace com.itextpdf.barcodes
 			int ys;
 			int z;
 			int xByte = (dm.width + ws * 2 + 7) / 8;
-			com.itextpdf.io.util.JavaUtil.Fill(image, unchecked((byte)0));
+			iTextSharp.IO.Util.JavaUtil.Fill(image, (byte)0);
 			//alignment patterns
 			//dotted horizontal line
 			for (i = ws; i < dm.height + ws; i += dm.heightSection)
@@ -1265,23 +1264,23 @@ namespace com.itextpdf.barcodes
 							return -1;
 						}
 						ptrIn += 6;
-						data[ptrOut++] = unchecked((byte)241);
+						data[ptrOut++] = (byte)241;
 						if (eci < 127)
 						{
-							data[ptrOut++] = unchecked((byte)(eci + 1));
+							data[ptrOut++] = (byte)(eci + 1);
 						}
 						else
 						{
 							if (eci < 16383)
 							{
-								data[ptrOut++] = unchecked((byte)((eci - 127) / 254 + 128));
-								data[ptrOut++] = unchecked((byte)((eci - 127) % 254 + 1));
+								data[ptrOut++] = (byte)((eci - 127) / 254 + 128);
+								data[ptrOut++] = (byte)((eci - 127) % 254 + 1);
 							}
 							else
 							{
-								data[ptrOut++] = unchecked((byte)((eci - 16383) / 64516 + 192));
-								data[ptrOut++] = unchecked((byte)((eci - 16383) / 254 % 254 + 1));
-								data[ptrOut++] = unchecked((byte)((eci - 16383) % 254 + 1));
+								data[ptrOut++] = (byte)((eci - 16383) / 64516 + 192);
+								data[ptrOut++] = (byte)((eci - 16383) / 254 % 254 + 1);
+								data[ptrOut++] = (byte)((eci - 16383) % 254 + 1);
 							}
 						}
 						break;
@@ -1315,10 +1314,10 @@ namespace com.itextpdf.barcodes
 							return -1;
 						}
 						ptrIn += 5;
-						data[ptrOut++] = unchecked((byte)233);
-						data[ptrOut++] = unchecked((byte)(fn - 1 << 4 | 17 - ft));
-						data[ptrOut++] = unchecked((byte)(fi / 254 + 1));
-						data[ptrOut++] = unchecked((byte)(fi % 254 + 1));
+						data[ptrOut++] = (byte)233;
+						data[ptrOut++] = (byte)(fn - 1 << 4 | 17 - ft);
+						data[ptrOut++] = (byte)(fi / 254 + 1);
+						data[ptrOut++] = (byte)(fi % 254 + 1);
 						break;
 					}
 
@@ -1328,7 +1327,7 @@ namespace com.itextpdf.barcodes
 						{
 							return -1;
 						}
-						data[ptrOut++] = unchecked((byte)234);
+						data[ptrOut++] = (byte)234;
 						break;
 					}
 
@@ -1347,8 +1346,8 @@ namespace com.itextpdf.barcodes
 						{
 							return -1;
 						}
-						data[ptrOut++] = unchecked((byte)234);
-						data[ptrOut++] = unchecked((byte)(c == (byte)('5') ? 236 : 237));
+						data[ptrOut++] = (byte)234;
+						data[ptrOut++] = (byte)(c == '5' ? 236 : 237);
 						break;
 					}
 
@@ -1359,7 +1358,7 @@ namespace com.itextpdf.barcodes
 						{
 							return -1;
 						}
-						data[ptrOut++] = unchecked((byte)232);
+						data[ptrOut++] = (byte)232;
 						break;
 					}
 				}

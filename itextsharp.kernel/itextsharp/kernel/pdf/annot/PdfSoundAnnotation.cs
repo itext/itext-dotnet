@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using java.io;
+using Java.IO;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfSoundAnnotation : PdfMarkupAnnotation
 	{

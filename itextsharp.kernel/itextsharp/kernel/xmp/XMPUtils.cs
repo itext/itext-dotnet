@@ -7,10 +7,10 @@
 // of the Adobe license agreement accompanying it.
 // =================================================================================================
 using System;
-using com.itextpdf.kernel.xmp.impl;
-using com.itextpdf.kernel.xmp.options;
+using iTextSharp.Kernel.Xmp.Impl;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp
+namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>Utility methods for XMP.</summary>
 	/// <remarks>
@@ -50,7 +50,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>Returns the string containing the catenated array items.</returns>
 		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
 			, String separator, String quotes, bool allowCommas)
 		{
@@ -74,7 +74,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <param name="preserveCommas">Flag if commas shall be preserved</param>
 		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
 			, String catedStr, PropertyOptions arrayOptions, bool preserveCommas)
 		{
@@ -123,7 +123,7 @@ namespace com.itextpdf.kernel.xmp
 		/// </param>
 		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName
 			, bool doAllProperties, bool includeAliases)
 		{
@@ -139,7 +139,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <param name="replaceOldValues">Replace the values of existing properties.</param>
 		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
 			, bool replaceOldValues)
 		{
@@ -220,7 +220,7 @@ namespace com.itextpdf.kernel.xmp
 		/// 	</param>
 		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
 			, bool replaceOldValues, bool deleteEmptyValues)
 		{
@@ -245,7 +245,7 @@ namespace com.itextpdf.kernel.xmp
 		/// </ul>
 		/// </returns>
 		/// <exception cref="XMPException">If an empty string is passed.</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static bool ConvertToBoolean(String value)
 		{
 			if (value == null || value.Length == 0)
@@ -287,7 +287,7 @@ namespace com.itextpdf.kernel.xmp
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static int ConvertToInteger(String rawValue)
 		{
 			try
@@ -316,7 +316,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>The string representation of the int.</returns>
 		public static String ConvertFromInteger(int value)
 		{
-			return com.itextpdf.GetStringValueOf(value);
+			return iTextSharp.GetStringValueOf(value);
 		}
 
 		/// <summary>Converts a string value to a <code>long</code>.</summary>
@@ -326,7 +326,7 @@ namespace com.itextpdf.kernel.xmp
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static long ConvertToLong(String rawValue)
 		{
 			try
@@ -355,7 +355,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>The string representation of the long.</returns>
 		public static String ConvertFromLong(long value)
 		{
-			return com.itextpdf.GetStringValueOf(value);
+			return iTextSharp.GetStringValueOf(value);
 		}
 
 		/// <summary>Converts a string value to a <code>double</code>.</summary>
@@ -365,7 +365,7 @@ namespace com.itextpdf.kernel.xmp
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static double ConvertToDouble(String rawValue)
 		{
 			try
@@ -390,7 +390,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>The string representation of the long.</returns>
 		public static String ConvertFromDouble(double value)
 		{
-			return com.itextpdf.GetStringValueOf(value);
+			return iTextSharp.GetStringValueOf(value);
 		}
 
 		/// <summary>Converts a string value to an <code>XMPDateTime</code>.</summary>
@@ -400,7 +400,7 @@ namespace com.itextpdf.kernel.xmp
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static XMPDateTime ConvertToDate(String rawValue)
 		{
 			if (rawValue == null || rawValue.Length == 0)
@@ -426,7 +426,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>Returns the base64 string.</returns>
 		public static String EncodeBase64(byte[] buffer)
 		{
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
 		}
 
 		/// <summary>Decode from Base64 encoded string to raw data.</summary>
@@ -434,7 +434,7 @@ namespace com.itextpdf.kernel.xmp
 		/// <returns>Returns a byte array containg the decoded string.</returns>
 		/// <exception cref="XMPException">Thrown if the given string is not property base64 encoded
 		/// 	</exception>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public static byte[] DecodeBase64(String base64String)
 		{
 			try

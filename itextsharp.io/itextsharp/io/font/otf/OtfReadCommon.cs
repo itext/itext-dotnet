@@ -1,5 +1,5 @@
 /*
-$Id: 0ba73e77c4476359d5386f5506f9900cba029c0f $
+$Id: 9471431066fb1e51f28e5af9be25823e9368d35b $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	public class OtfReadCommon
 	{

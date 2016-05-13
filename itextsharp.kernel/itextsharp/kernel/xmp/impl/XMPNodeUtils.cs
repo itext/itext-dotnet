@@ -30,11 +30,11 @@
 using System;
 using System.Collections;
 using System.Globalization;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl.xpath;
-using com.itextpdf.kernel.xmp.options;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Utilities for <code>XMPNode</code>.</summary>
 	/// <since>Aug 28, 2006</since>
@@ -70,7 +70,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
 		/// An exception is only thrown if an error occurred, not if a
 		/// node was not found.
 		/// </exception>
@@ -94,7 +94,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
 		/// An exception is only thrown if an error occurred, not if a
 		/// node was not found.
 		/// </exception>
@@ -138,7 +138,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="childName">the node name to find</param>
 		/// <param name="createNodes">flag, if new nodes shall be created.</param>
 		/// <returns>Returns the found or created node or <code>null</code>.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if</exception>
 		internal static XMPNode FindChildNode(XMPNode parent, String childName, bool createNodes
 			)
 		{
@@ -189,7 +189,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <code>createNodes == true</code>).
 		/// </param>
 		/// <returns>Returns the node if found or created or <code>null</code>.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
 		/// An exception is only thrown if an error occurred,
 		/// not if a node was not found.
 		/// </exception>
@@ -337,7 +337,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="options">the <code>PropertyOptions</code></param>
 		/// <param name="itemValue">the node value to set</param>
 		/// <returns>Returns the updated options.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not consistant.
 		/// 	</exception>
 		internal static PropertyOptions VerifySetOptions(PropertyOptions options, Object 
 			itemValue)
@@ -461,7 +461,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="nextStep">the xpath segment</param>
 		/// <param name="createNodes"></param>
 		/// <returns>returns the found or created XMPPath node</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
 		private static XMPNode FollowXPathStep(XMPNode parentNode, XMPPathSegment nextStep
 			, bool createNodes)
 		{
@@ -546,7 +546,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="createNodes">flag if nodes shall be created</param>
 		/// <returns>Returns the qualifier node if found or created, <code>null</code> otherwise.
 		/// 	</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
 		private static XMPNode FindQualifierNode(XMPNode parent, String qualName, bool createNodes
 			)
 		{
@@ -565,7 +565,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="segment">the segment containing the array index</param>
 		/// <param name="createNodes">flag if new nodes are allowed to be created.</param>
 		/// <returns>Returns the index or index = -1 if not found</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Throws Exceptions</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Throws Exceptions</exception>
 		private static int FindIndexedItem(XMPNode arrayNode, String segment, bool createNodes
 			)
 		{
@@ -606,7 +606,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="fieldName"/>
 		/// <param name="fieldValue"/>
 		/// <returns>Returns the index of the field if found, otherwise -1.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
 		private static int LookupFieldSelector(XMPNode arrayNode, String fieldName, String
 			 fieldValue)
 		{
@@ -654,15 +654,15 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// an x-default node is created if there has not been one.
 		/// </param>
 		/// <returns>Returns the index of th</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
 		private static int LookupQualSelector(XMPNode arrayNode, String qualName, String 
 			qualValue, int aliasForm)
 		{
 			if (XML_LANG.Equals(qualName))
 			{
 				qualValue = Utils.NormalizeLangValue(qualValue);
-				int index = com.itextpdf.kernel.xmp.impl.XMPNodeUtils.LookupLanguageItem(arrayNode
-					, qualValue);
+				int index = iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.LookupLanguageItem(arrayNode, 
+					qualValue);
 				if (index < 0 && (aliasForm & AliasOptions.PROP_ARRAY_ALT_TEXT) > 0)
 				{
 					XMPNode langNode = new XMPNode(ARRAY_ITEM_NAME, null);
@@ -768,7 +768,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="arrayNode">the language array</param>
 		/// <param name="itemLang">the language of the item</param>
 		/// <param name="itemValue">the content of the item</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if a duplicate property is added
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a duplicate property is added
 		/// 	</exception>
 		internal static void AppendLangItem(XMPNode arrayNode, String itemLang, String itemValue
 			)
@@ -805,7 +805,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Returns the kind of match as an Integer and the found node in an
 		/// array.
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		internal static Object[] ChooseLocalizedText(XMPNode arrayNode, String genericLang
 			, String specificLang)
 		{
@@ -819,7 +819,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			{
 				if (!arrayNode.HasChildren())
 				{
-					return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_NO_VALUES, null
+					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_NO_VALUES, null
 						 };
 				}
 			}
@@ -848,8 +848,8 @@ namespace com.itextpdf.kernel.xmp.impl
 				// Look for an exact match with the specific language.
 				if (specificLang.Equals(currLang))
 				{
-					return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_SPECIFIC_MATCH
-						, currItem };
+					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_SPECIFIC_MATCH, 
+						currItem };
 				}
 				else
 				{
@@ -874,27 +874,27 @@ namespace com.itextpdf.kernel.xmp.impl
 			// evaluate loop
 			if (foundGenericMatches == 1)
 			{
-				return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_SINGLE_GENERIC
-					, resultNode };
+				return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_SINGLE_GENERIC, 
+					resultNode };
 			}
 			else
 			{
 				if (foundGenericMatches > 1)
 				{
-					return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_MULTIPLE_GENERIC
+					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_MULTIPLE_GENERIC
 						, resultNode };
 				}
 				else
 				{
 					if (xDefault != null)
 					{
-						return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_XDEFAULT, xDefault
+						return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_XDEFAULT, xDefault
 							 };
 					}
 					else
 					{
 						// Everything failed, choose the first item.
-						return new Object[] { com.itextpdf.kernel.xmp.impl.XMPNodeUtils.CLT_FIRST_ITEM, arrayNode
+						return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_FIRST_ITEM, arrayNode
 							.GetChild(1) };
 					}
 				}
@@ -906,7 +906,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="arrayNode">an array node</param>
 		/// <param name="language">the requested language</param>
 		/// <returns>Returns the index if the language has been found, -1 otherwise.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		internal static int LookupLanguageItem(XMPNode arrayNode, String language)
 		{
 			if (!arrayNode.GetOptions().IsArray())

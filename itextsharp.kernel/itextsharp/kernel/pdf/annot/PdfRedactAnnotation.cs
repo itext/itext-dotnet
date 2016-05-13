@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfRedactAnnotation : PdfMarkupAnnotation
 	{
@@ -66,11 +66,11 @@ namespace com.itextpdf.kernel.pdf.annot
 			return PdfName.Redact;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation SetOverlayText(PdfString
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString
 			 text)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation)Put(PdfName.OverlayText
-				, text);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, 
+				text);
 		}
 
 		public virtual PdfString GetOverlayText()
@@ -78,10 +78,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsString(PdfName.OverlayText);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation SetRedactRolloverAppearance
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance
 			(PdfStream stream)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
 		}
 
 		public virtual PdfStream GetRedactRolloverAppearance()
@@ -89,10 +89,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsStream(PdfName.RO);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation SetRepeat(PdfBoolean
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean
 			 repeat)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat
+			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat
 				);
 		}
 

@@ -46,8 +46,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 	public sealed class FileUtil
 	{
 		private FileUtil()

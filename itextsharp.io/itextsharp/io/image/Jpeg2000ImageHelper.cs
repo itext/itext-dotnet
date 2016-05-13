@@ -45,10 +45,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	internal sealed class Jpeg2000ImageHelper
 	{

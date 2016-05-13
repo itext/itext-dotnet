@@ -45,14 +45,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Java.IO;
 using Org.BouncyCastle.Crypto;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using java.io;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfWriter : PdfOutputStream
 	{
@@ -115,13 +115,13 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		/// <exception cref="java.io.FileNotFoundException"/>
+		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename)
 			: this(new FileOutputStream(filename), new WriterProperties())
 		{
 		}
 
-		/// <exception cref="java.io.FileNotFoundException"/>
+		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename, WriterProperties properties)
 			: this(new FileOutputStream(filename), properties)
 		{
@@ -138,7 +138,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <remarks>
 		/// Gets default compression level for @see PdfStream.
 		/// For more details @see
-		/// <see cref="java.util.zip.Deflater"/>
+		/// <see cref="Java.Util.Zip.Deflater"/>
 		/// .
 		/// </remarks>
 		/// <returns>compression level.</returns>
@@ -151,11 +151,11 @@ namespace com.itextpdf.kernel.pdf
 		/// <remarks>
 		/// Sets default compression level for @see PdfStream.
 		/// For more details @see
-		/// <see cref="java.util.zip.Deflater"/>
+		/// <see cref="Java.Util.Zip.Deflater"/>
 		/// .
 		/// </remarks>
 		/// <param name="compressionLevel">compression level.</param>
-		public virtual com.itextpdf.kernel.pdf.PdfWriter SetCompressionLevel(int compressionLevel
+		public virtual iTextSharp.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel
 			)
 		{
 			this.properties.SetCompressionLevel(compressionLevel);
@@ -172,7 +172,7 @@ namespace com.itextpdf.kernel.pdf
 		/// This requires more memory, but reduces the file size
 		/// of the resulting PDF document.
 		/// </remarks>
-		public virtual com.itextpdf.kernel.pdf.PdfWriter SetSmartMode(bool smartMode)
+		public virtual iTextSharp.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode)
 		{
 			this.properties.smartMode = smartMode;
 			return this;
@@ -221,7 +221,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Gets the current object stream.</summary>
 		/// <returns>object stream.</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		internal virtual PdfObjectStream GetObjectStream()
 		{
 			if (!IsFullCompression())
@@ -250,7 +250,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="canBeInObjStm">indicates whether object can be placed into object stream.
 		/// 	</param>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm
 			)
 		{
@@ -359,7 +359,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Writes object to body of PDF document.</summary>
 		/// <param name="object">object to write.</param>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void WriteToBody(PdfObject @object)
 		{
 			if (crypto != null)
@@ -374,7 +374,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>Writes PDF header.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void WriteHeader()
 		{
 			WriteByte('%').WriteString(document.GetPdfVersion().ToString()).WriteString("\n%\u00e2\u00e3\u00cf\u00d3\n"
@@ -382,7 +382,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>Flushes all objects which have not been flushed yet.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void FlushWaitingObjects()
 		{
 			PdfXrefTable xref = document.GetXref();
@@ -415,7 +415,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Flushes all modified objects which have not been flushed yet.</summary>
 		/// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.
 		/// 	</remarks>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void FlushModifiedWaitingObjects()
 		{
 			PdfXrefTable xref = document.GetXref();
@@ -516,7 +516,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		private com.itextpdf.kernel.pdf.PdfWriter SetDebugMode()
+		private iTextSharp.Kernel.Pdf.PdfWriter SetDebugMode()
 		{
 			duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
 			return this;
@@ -748,7 +748,7 @@ namespace com.itextpdf.kernel.pdf
 
 			public override bool Equals(Object obj)
 			{
-				return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && com.itextpdf.io.util.JavaUtil.ArraysEquals
+				return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && iTextSharp.IO.Util.JavaUtil.ArraysEquals
 					(b, ((PdfWriter.ByteStore)obj).b);
 			}
 

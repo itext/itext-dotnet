@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.tagging;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace com.itextpdf.kernel.pdf.canvas
+namespace iTextSharp.Kernel.Pdf.Canvas
 {
 	/// <summary>This class represents a single tag on a single piece of marked content.</summary>
 	/// <remarks>
@@ -98,7 +98,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		/// <param name="mcr">
 		/// the
-		/// <see cref="com.itextpdf.kernel.pdf.tagging.PdfMcr">Marked Content Reference</see>
+		/// <see cref="iTextSharp.Kernel.Pdf.Tagging.PdfMcr">Marked Content Reference</see>
 		/// wrapper object
 		/// </param>
 		public CanvasTag(PdfMcr mcr)
@@ -147,7 +147,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// current
 		/// <see cref="CanvasTag"/>
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.CanvasTag SetProperties(PdfDictionary
+		public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary
 			 properties)
 		{
 			if (properties != null)
@@ -168,8 +168,8 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// current
 		/// <see cref="CanvasTag"/>
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.CanvasTag AddProperty(PdfName name, 
-			PdfObject value)
+		public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag AddProperty(PdfName name, PdfObject
+			 value)
 		{
 			EnsurePropertiesInit();
 			properties.Put(name, value);
@@ -186,7 +186,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// current
 		/// <see cref="CanvasTag"/>
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.CanvasTag RemoveProperty(PdfName name
+		public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag RemoveProperty(PdfName name
 			)
 		{
 			if (properties != null)

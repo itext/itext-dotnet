@@ -47,10 +47,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Org.BouncyCastle.Crypto;
-using org.bouncycastle.cms;
-using org.bouncycastle.cms.jcajce;
+using Org.Bouncycastle.Cms;
+using Org.Bouncycastle.Cms.Jcajce;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	/// <summary>
 	/// This class takes any PDF and returns exactly the same but
@@ -224,7 +224,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>Gets the content from a recipient.</summary>
-		/// <exception cref="org.bouncycastle.cms.CMSException"/>
+		/// <exception cref="Org.Bouncycastle.Cms.CMSException"/>
 		public static byte[] GetContent(RecipientInformation recipientInfo, ICipherParameters
 			 certificateKey, String certificateKeyProvider)
 		{

@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	/// <summary>
 	/// If you are using True Type fonts, you can declare the paths of the different ttf- and ttc-files
@@ -57,7 +57,7 @@ namespace com.itextpdf.io.font
 	/// </summary>
 	internal class FontRegisterProvider
 	{
-		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.FontRegisterProvider
+		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.FontRegisterProvider
 			));
 
 		/// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.

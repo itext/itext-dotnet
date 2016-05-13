@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.source;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.font.cmap
+namespace iTextSharp.IO.Font.Cmap
 {
 	/// <author>psoares</author>
 	public interface ICMapLocation

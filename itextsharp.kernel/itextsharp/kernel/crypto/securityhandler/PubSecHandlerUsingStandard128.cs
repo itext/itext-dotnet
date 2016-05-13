@@ -45,10 +45,10 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.security;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Security;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40
 	{

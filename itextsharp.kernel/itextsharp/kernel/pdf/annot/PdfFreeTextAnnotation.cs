@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfFreeTextAnnotation : PdfMarkupAnnotation
 	{
@@ -80,10 +80,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsString(PdfName.DS);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation SetDefaultStyleString
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString
 			(PdfString defaultStyleString)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString
+			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString
 				);
 		}
 
@@ -92,16 +92,16 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsArray(PdfName.CL);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation SetCalloutLine
-			(float[] calloutLine)
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(float
+			[] calloutLine)
 		{
 			return SetCalloutLine(new PdfArray(calloutLine));
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation SetCalloutLine
-			(PdfArray calloutLine)
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(PdfArray
+			 calloutLine)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine
+			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine
 				);
 		}
 
@@ -110,10 +110,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return GetPdfObject().GetAsName(PdfName.LE);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation SetLineEndingStyle
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle
 			(PdfName lineEndingStyle)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle
+			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle
 				);
 		}
 	}

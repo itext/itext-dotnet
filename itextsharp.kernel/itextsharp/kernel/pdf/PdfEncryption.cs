@@ -46,13 +46,13 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.crypto.securityhandler;
-using com.itextpdf.kernel.security;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Crypto.Securityhandler;
+using iTextSharp.Kernel.Security;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	/// <author>Paulo Soares</author>
 	/// <author>Kazuya Ujihara</author>
@@ -98,8 +98,7 @@ namespace com.itextpdf.kernel.pdf
 		/// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
 		/// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if the document is already open
-		/// 	</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">if the document is already open</exception>
 		public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, 
 			int encryptionType, byte[] documentId)
 			: base(new PdfDictionary())
@@ -164,8 +163,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="permissions">the user permissions for each of the certificates</param>
 		/// <param name="encryptionType">the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128 or ENCRYPTION_AES128.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if the document is already open
-		/// 	</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">if the document is already open</exception>
 		public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType
 			)
 			: base(new PdfDictionary())

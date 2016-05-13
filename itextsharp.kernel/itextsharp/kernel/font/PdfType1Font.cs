@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	public class PdfType1Font : PdfSimpleFont<Type1Font>
 	{

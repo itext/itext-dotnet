@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.kernel.pdf.canvas.parser.data
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 {
 	/// <summary>
 	/// Marker interface for the set of classes used to combine

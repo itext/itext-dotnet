@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
 	public sealed class StreamUtil
 	{
@@ -207,13 +207,13 @@ namespace com.itextpdf.io.util
 					{
 						if (((sbyte)b) < 8 && b >= 0)
 						{
-							buf.Append("\\00").Append(com.itextpdf.io.util.JavaUtil.IntegerToOctalString(b));
+							buf.Append("\\00").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
 						}
 						else
 						{
 							if (b >= 8 && ((sbyte)b) < 32)
 							{
-								buf.Append("\\0").Append(com.itextpdf.io.util.JavaUtil.IntegerToOctalString(b));
+								buf.Append("\\0").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
 							}
 							else
 							{

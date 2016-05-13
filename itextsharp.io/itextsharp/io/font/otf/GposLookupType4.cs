@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	/// <summary>
 	/// Lookup Type 4:

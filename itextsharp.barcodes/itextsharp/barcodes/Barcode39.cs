@@ -1,5 +1,5 @@
 /*
-$Id: db3f2de42e908715948314863f875ade815c58f2 $
+$Id: 74b8e3b4e9b38c4a09dce72ec06e2fd0700fa0f2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,15 +44,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class Barcode39 : Barcode1D
 	{
@@ -284,8 +283,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
 		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
 		/// <returns>the dimensions the barcode occupies</returns>
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor
-			)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 barColor, iTextSharp.Kernel.Color.Color textColor)
 		{
 			String fullCode = code;
 			float fontX = 0;

@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using java.io;
-using java.util.zip;
+using Java.IO;
+using Java.Util.Zip;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.filters
+namespace iTextSharp.Kernel.Pdf.Filters
 {
 	/// <summary>Handles FlateDecode filter.</summary>
 	public class FlateDecodeFilter : IFilterHandler

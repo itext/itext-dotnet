@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary><p>See ISO 18004:2006, 6.4.1, Tables 2 and 3.</summary>
 	/// <remarks>
@@ -54,33 +54,32 @@ namespace com.itextpdf.barcodes.qrcode
 	/// <author>Sean Owen</author>
 	internal sealed class Mode
 	{
-		public static readonly com.itextpdf.barcodes.qrcode.Mode TERMINATOR = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode TERMINATOR = new iTextSharp.Barcodes.Qrcode.Mode
 			(new int[] { 0, 0, 0 }, 0x00, "TERMINATOR");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode NUMERIC = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode NUMERIC = new iTextSharp.Barcodes.Qrcode.Mode
 			(new int[] { 10, 12, 14 }, 0x01, "NUMERIC");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode ALPHANUMERIC = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode ALPHANUMERIC = new iTextSharp.Barcodes.Qrcode.Mode
 			(new int[] { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode STRUCTURED_APPEND = new 
-			com.itextpdf.barcodes.qrcode.Mode(new int[] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND"
-			);
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iTextSharp.Barcodes.Qrcode.Mode
+			(new int[] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode BYTE = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode BYTE = new iTextSharp.Barcodes.Qrcode.Mode
 			(new int[] { 8, 16, 16 }, 0x04, "BYTE");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode ECI = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode ECI = new iTextSharp.Barcodes.Qrcode.Mode
 			(null, 0x07, "ECI");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode KANJI = new com.itextpdf.barcodes.qrcode.Mode
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode KANJI = new iTextSharp.Barcodes.Qrcode.Mode
 			(new int[] { 8, 10, 12 }, 0x08, "KANJI");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode FNC1_FIRST_POSITION = new 
-			com.itextpdf.barcodes.qrcode.Mode(null, 0x05, "FNC1_FIRST_POSITION");
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode FNC1_FIRST_POSITION = new 
+			iTextSharp.Barcodes.Qrcode.Mode(null, 0x05, "FNC1_FIRST_POSITION");
 
-		public static readonly com.itextpdf.barcodes.qrcode.Mode FNC1_SECOND_POSITION = new 
-			com.itextpdf.barcodes.qrcode.Mode(null, 0x09, "FNC1_SECOND_POSITION");
+		public static readonly iTextSharp.Barcodes.Qrcode.Mode FNC1_SECOND_POSITION = new 
+			iTextSharp.Barcodes.Qrcode.Mode(null, 0x09, "FNC1_SECOND_POSITION");
 
 		private readonly int[] characterCountBitsForVersions;
 
@@ -106,7 +105,7 @@ namespace com.itextpdf.barcodes.qrcode
 		/// </returns>
 		/// <exception cref="System.ArgumentException">if bits do not correspond to a known mode
 		/// 	</exception>
-		public static com.itextpdf.barcodes.qrcode.Mode ForBits(int bits)
+		public static iTextSharp.Barcodes.Qrcode.Mode ForBits(int bits)
 		{
 			switch (bits)
 			{

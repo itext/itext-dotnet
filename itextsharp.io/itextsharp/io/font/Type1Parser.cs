@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	internal class Type1Parser
 	{

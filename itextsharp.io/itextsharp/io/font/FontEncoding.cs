@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class FontEncoding
 	{
@@ -87,11 +87,10 @@ namespace com.itextpdf.io.font
 			fontSpecific = false;
 		}
 
-		public static com.itextpdf.io.font.FontEncoding CreateFontEncoding(String baseEncoding
+		public static iTextSharp.IO.Font.FontEncoding CreateFontEncoding(String baseEncoding
 			)
 		{
-			com.itextpdf.io.font.FontEncoding encoding = new com.itextpdf.io.font.FontEncoding
-				();
+			iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
 			encoding.baseEncoding = NormalizeEncoding(baseEncoding);
 			if (encoding.baseEncoding.StartsWith("#"))
 			{
@@ -104,10 +103,9 @@ namespace com.itextpdf.io.font
 			return encoding;
 		}
 
-		public static com.itextpdf.io.font.FontEncoding CreateEmptyFontEncoding()
+		public static iTextSharp.IO.Font.FontEncoding CreateEmptyFontEncoding()
 		{
-			com.itextpdf.io.font.FontEncoding encoding = new com.itextpdf.io.font.FontEncoding
-				();
+			iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
 			encoding.baseEncoding = null;
 			encoding.fontSpecific = false;
 			encoding.differences = new String[256];
@@ -120,10 +118,9 @@ namespace com.itextpdf.io.font
 
 		/// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)
 		/// 	</summary>
-		public static com.itextpdf.io.font.FontEncoding CreateFontSpecificEncoding()
+		public static iTextSharp.IO.Font.FontEncoding CreateFontSpecificEncoding()
 		{
-			com.itextpdf.io.font.FontEncoding encoding = new com.itextpdf.io.font.FontEncoding
-				();
+			iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
 			encoding.fontSpecific = true;
 			for (int ch = 0; ch < 256; ch++)
 			{

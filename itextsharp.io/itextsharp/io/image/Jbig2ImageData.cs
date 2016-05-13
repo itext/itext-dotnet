@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public class Jbig2ImageData : ImageData
 	{

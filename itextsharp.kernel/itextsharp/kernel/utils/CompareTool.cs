@@ -47,24 +47,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
-using java.io;
-using java.lang;
-using javax.xml.parsers;
-using javax.xml.transform;
-using javax.xml.transform.dom;
-using javax.xml.transform.stream;
-using org.w3c.dom;
-using org.xml.sax;
+using Java.IO;
+using Java.Lang;
+using Javax.Xml.Parsers;
+using Javax.Xml.Transform;
+using Javax.Xml.Transform.Dom;
+using Javax.Xml.Transform.Stream;
+using Org.W3c.Dom;
+using Org.Xml.Sax;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.utils
+namespace iTextSharp.Kernel.Utils
 {
 	public class CompareTool
 	{
@@ -127,15 +127,14 @@ namespace com.itextpdf.kernel.utils
 			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
-			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.Metadata));
 			CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
 				GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
 			return compareResult;
 		}
 
-		public virtual com.itextpdf.kernel.utils.CompareTool DisableCachedPagesComparison
-			()
+		public virtual iTextSharp.Kernel.Utils.CompareTool DisableCachedPagesComparison()
 		{
 			this.useCachedPagesForComparison = false;
 			return this;
@@ -145,21 +144,21 @@ namespace com.itextpdf.kernel.utils
 		/// 	</summary>
 		/// <param name="compareByContentMaxErrorCount">the errors count.</param>
 		/// <returns>Returns this.</returns>
-		public virtual com.itextpdf.kernel.utils.CompareTool SetCompareByContentErrorsLimit
+		public virtual iTextSharp.Kernel.Utils.CompareTool SetCompareByContentErrorsLimit
 			(int compareByContentMaxErrorCount)
 		{
 			this.compareByContentErrorsLimit = compareByContentMaxErrorCount;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.utils.CompareTool SetGenerateCompareByContentXmlReport
+		public virtual iTextSharp.Kernel.Utils.CompareTool SetGenerateCompareByContentXmlReport
 			(bool generateCompareByContentXmlReport)
 		{
 			this.generateCompareByContentXmlReport = generateCompareByContentXmlReport;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.utils.CompareTool EnableEncryptionCompare()
+		public virtual iTextSharp.Kernel.Utils.CompareTool EnableEncryptionCompare()
 		{
 			this.encryptionCompareEnabled = true;
 			return this;
@@ -336,16 +335,16 @@ namespace com.itextpdf.kernel.utils
 			return null;
 		}
 
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool CompareXmls(byte[] xml1, byte[] xml2)
 		{
 			return CompareXmls(new MemoryStream(xml1), new MemoryStream(xml2));
 		}
 
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool CompareXmls(String xmlFilePath1, String xmlFilePath2)
 		{
@@ -434,8 +433,8 @@ namespace com.itextpdf.kernel.utils
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		public virtual String CompareTagStructures(String outPdf, String cmpPdf)
 		{
 			System.Console.Out.Write("[itext] INFO  Comparing tag structures......");
@@ -555,7 +554,7 @@ namespace com.itextpdf.kernel.utils
 				{
 					continue;
 				}
-				System.Console.Out.Write("Comparing page " + com.itextpdf.io.util.JavaUtil.IntegerToString
+				System.Console.Out.Write("Comparing page " + iTextSharp.IO.Util.JavaUtil.IntegerToString
 					(i + 1) + " (" + imageFiles[i].GetAbsolutePath() + ")...");
 				FileStream is1 = new FileStream(imageFiles[i]);
 				FileStream is2 = new FileStream(cmpImageFiles[i]);
@@ -570,11 +569,11 @@ namespace com.itextpdf.kernel.utils
 					{
 						String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].GetAbsolutePath
 							()).Replace("<image2>", cmpImageFiles[i].GetAbsolutePath()).Replace("<difference>"
-							, outPath + differenceImagePrefix + com.itextpdf.io.util.JavaUtil.IntegerToString
-							(i + 1) + ".png");
+							, outPath + differenceImagePrefix + iTextSharp.IO.Util.JavaUtil.IntegerToString(
+							i + 1) + ".png");
 						if (RunProcessAndWait(compareExec, currCompareParams))
 						{
-							differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + com.itextpdf.io.util.JavaUtil.IntegerToString
+							differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + iTextSharp.IO.Util.JavaUtil.IntegerToString
 								(i + 1) + ".png for more details.";
 						}
 					}
@@ -809,7 +808,7 @@ namespace com.itextpdf.kernel.utils
 			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
-			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.Pages, PdfName.Metadata));
 			CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
 				GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
@@ -888,7 +887,7 @@ namespace com.itextpdf.kernel.utils
 				compareResult.AddError(trailerPath, "Expected not encrypted document.");
 				return;
 			}
-			ICollection<PdfName> ignoredEncryptEntries = new LinkedHashSet<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredEncryptEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.O, PdfName.U, PdfName.OE, PdfName.UE, PdfName.Perms));
 			CompareTool.ObjectPath objectPath = new CompareTool.ObjectPath(this, outEncrypt.GetIndirectReference
 				(), cmpEncrypt.GetIndirectReference());
@@ -911,7 +910,7 @@ namespace com.itextpdf.kernel.utils
 				{
 					return false;
 				}
-				if (!com.itextpdf.io.util.JavaUtil.ArraysEquals(buffer1, buffer2))
+				if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(buffer1, buffer2))
 				{
 					return false;
 				}
@@ -1227,7 +1226,7 @@ namespace com.itextpdf.kernel.utils
 			bool toDecode = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
 			byte[] outStreamBytes = outStream.GetBytes(toDecode);
 			byte[] cmpStreamBytes = cmpStream.GetBytes(toDecode);
-			if (com.itextpdf.io.util.JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes))
+			if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes))
 			{
 				return CompareDictionariesExtended(outStream, cmpStream, currentPath, compareResult
 					);
@@ -1286,13 +1285,13 @@ namespace com.itextpdf.kernel.utils
 				int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
 				int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR
 					);
-				String cmpByte = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
+				String cmpByte = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
 					[firstDifferenceOffset] });
-				String cmpByteNeighbours = com.itextpdf.io.util.StringUtil.ReplaceAll(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+				String cmpByteNeighbours = iTextSharp.IO.Util.StringUtil.ReplaceAll(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
 					(cmpStreamBytes, lCmp, rCmp - lCmp), "\\r|\\n", " ");
-				String outByte = com.itextpdf.io.util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes
+				String outByte = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes
 					[firstDifferenceOffset] });
-				String outBytesNeighbours = com.itextpdf.io.util.StringUtil.ReplaceAll(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+				String outBytesNeighbours = iTextSharp.IO.Util.StringUtil.ReplaceAll(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
 					(outStreamBytes, lOut, rOut - lOut), "\\r|\\n", " ");
 				errorMessage = String.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
 					, System.Convert.ToInt32(firstDifferenceOffset).ToString(), cmpByte, cmpByteNeighbours
@@ -1392,8 +1391,8 @@ namespace com.itextpdf.kernel.utils
 		private bool CompareStringsExtended(PdfString outString, PdfString cmpString, CompareTool.ObjectPath
 			 currentPath, CompareTool.CompareResult compareResult)
 		{
-			if (com.itextpdf.io.util.JavaUtil.ArraysEquals(ConvertPdfStringToBytes(cmpString)
-				, ConvertPdfStringToBytes(outString)))
+			if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(ConvertPdfStringToBytes(cmpString), 
+				ConvertPdfStringToBytes(outString)))
 			{
 				return true;
 			}
@@ -1468,8 +1467,8 @@ namespace com.itextpdf.kernel.utils
 			}
 		}
 
-		/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-		/// <exception cref="org.xml.sax.SAXException"/>
+		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.IO.IOException"/>
 		private bool CompareXmls(Stream xml1, Stream xml2)
 		{
@@ -1763,16 +1762,15 @@ namespace com.itextpdf.kernel.utils
 				return this.differences;
 			}
 
-			/// <exception cref="javax.xml.parsers.ParserConfigurationException"/>
-			/// <exception cref="javax.xml.transform.TransformerException"/>
+			/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+			/// <exception cref="Javax.Xml.Transform.TransformerException"/>
 			public virtual void WriteReportToXml(Stream stream)
 			{
 				Document xmlReport = DocumentBuilderFactory.NewInstance().NewDocumentBuilder().NewDocument
 					();
 				Element root = xmlReport.CreateElement("report");
 				Element errors = xmlReport.CreateElement("errors");
-				errors.SetAttribute("count", com.itextpdf.GetStringValueOf(this.differences.Count
-					));
+				errors.SetAttribute("count", iTextSharp.GetStringValueOf(this.differences.Count));
 				root.AppendChild(errors);
 				foreach (KeyValuePair<CompareTool.ObjectPath, String> entry in this.differences)
 				{
@@ -2066,7 +2064,7 @@ namespace com.itextpdf.kernel.utils
 
 				public override String ToString()
 				{
-					return "Array index: " + com.itextpdf.GetStringValueOf(this.index);
+					return "Array index: " + iTextSharp.GetStringValueOf(this.index);
 				}
 
 				public override int GetHashCode()
@@ -2083,7 +2081,7 @@ namespace com.itextpdf.kernel.utils
 				protected internal override Node ToXmlNode(Document document)
 				{
 					Node element = document.CreateElement("arrayIndex");
-					element.AppendChild(document.CreateTextNode(com.itextpdf.GetStringValueOf(this.index
+					element.AppendChild(document.CreateTextNode(iTextSharp.GetStringValueOf(this.index
 						)));
 					return element;
 				}
@@ -2114,7 +2112,7 @@ namespace com.itextpdf.kernel.utils
 
 				public override String ToString()
 				{
-					return "Offset: " + com.itextpdf.GetStringValueOf(this.offset);
+					return "Offset: " + iTextSharp.GetStringValueOf(this.offset);
 				}
 
 				public override int GetHashCode()
@@ -2131,7 +2129,7 @@ namespace com.itextpdf.kernel.utils
 				protected internal override Node ToXmlNode(Document document)
 				{
 					Node element = document.CreateElement("offset");
-					element.AppendChild(document.CreateTextNode(com.itextpdf.GetStringValueOf(this.offset
+					element.AppendChild(document.CreateTextNode(iTextSharp.GetStringValueOf(this.offset
 						)));
 					return element;
 				}

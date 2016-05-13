@@ -45,12 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	public abstract class PdfSimpleFont<T> : PdfFont
 		where T : FontProgram

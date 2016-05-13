@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.colorspace
+namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary>
 	{
@@ -57,7 +57,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 		{
 		}
 
-		public static com.itextpdf.kernel.pdf.colorspace.PdfPattern GetPatternInstance(PdfDictionary
+		public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary
 			 pdfObject)
 		{
 			PdfNumber type = pdfObject.GetAsNumber(PdfName.PatternType);

@@ -39,7 +39,7 @@ using System;
  * For more information, please contact iText Software Corp. at this address:
  * sales@itextpdf.com
  */
-namespace com.itextpdf.io.log
+namespace iTextSharp.IO.Log
 {
     /// <summary>
     /// LoggerFactory can be used to set a logger. The logger should be created by

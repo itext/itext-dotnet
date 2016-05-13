@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.collection
+namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollectionItem : PdfObjectWrapper<PdfDictionary>
 	{
@@ -64,8 +64,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <param name="key"/>
 		/// <param name="value"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionItem AddItem(String
-			 key, String value)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String 
+			key, String value)
 		{
 			PdfCollectionField field = schema.GetField(key);
 			GetPdfObject().Put(new PdfName(key), field.GetValue(value));
@@ -102,7 +102,7 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <param name="key"/>
 		/// <param name="prefix"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionItem SetPrefix(String
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String
 			 key, String prefix)
 		{
 			PdfName fieldName = new PdfName(key);

@@ -42,13 +42,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.extgstate;
+using iTextSharp.Kernel.Color;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Extgstate;
 
-namespace com.itextpdf.kernel.pdf.canvas
+namespace iTextSharp.Kernel.Pdf.Canvas
 {
 	/// <summary>This class is designed for internal usage.</summary>
 	/// <remarks>
@@ -66,9 +66,9 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// </remarks>
 		private Matrix ctm = new Matrix();
 
-		private Color strokeColor = DeviceGray.BLACK;
+		private iTextSharp.Kernel.Color.Color strokeColor = DeviceGray.BLACK;
 
-		private Color fillColor = DeviceGray.BLACK;
+		private iTextSharp.Kernel.Color.Color fillColor = DeviceGray.BLACK;
 
 		private float charSpacing = 0f;
 
@@ -104,7 +104,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 		/// An empty dash array (first element in the array) and zero phase (second element in the array)
 		/// can be used to restore the dash pattern to a solid line.
 		/// </remarks>
-		private PdfArray dashPattern = new PdfArray(com.itextpdf.io.util.JavaUtil.ArraysAsList
+		private PdfArray dashPattern = new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 			(new PdfArray(), new PdfNumber(0)));
 
 		private PdfName renderingIntent = PdfName.RelativeColorimetric;
@@ -154,7 +154,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 
 		/// <summary>Copy constructor.</summary>
 		/// <param name="source">the Graphics State to copy from</param>
-		protected internal CanvasGraphicsState(com.itextpdf.kernel.pdf.canvas.CanvasGraphicsState
+		protected internal CanvasGraphicsState(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState
 			 source)
 		{
 			// color
@@ -192,22 +192,22 @@ namespace com.itextpdf.kernel.pdf.canvas
 			ctm = newCtm.Multiply(ctm);
 		}
 
-		public virtual Color GetFillColor()
+		public virtual iTextSharp.Kernel.Color.Color GetFillColor()
 		{
 			return fillColor;
 		}
 
-		public virtual void SetFillColor(Color fillColor)
+		public virtual void SetFillColor(iTextSharp.Kernel.Color.Color fillColor)
 		{
 			this.fillColor = fillColor;
 		}
 
-		public virtual Color GetStrokeColor()
+		public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
 		{
 			return strokeColor;
 		}
 
-		public virtual void SetStrokeColor(Color strokeColor)
+		public virtual void SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor)
 		{
 			this.strokeColor = strokeColor;
 		}
@@ -608,7 +608,7 @@ namespace com.itextpdf.kernel.pdf.canvas
 			}
 		}
 
-		private void CopyFrom(com.itextpdf.kernel.pdf.canvas.CanvasGraphicsState source)
+		private void CopyFrom(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source)
 		{
 			this.ctm = source.ctm;
 			this.strokeColor = source.strokeColor;

@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	public class StandardHandlerUsingStandard40 : StandardSecurityHandler
 	{

@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.layer;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Layer;
 
-namespace com.itextpdf.kernel.pdf.xobject
+namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfXObject : PdfObjectWrapper<PdfStream>
 	{
@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 		{
 		}
 
-		public static com.itextpdf.kernel.pdf.xobject.PdfXObject MakeXObject(PdfStream stream
+		public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream
 			)
 		{
 			if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(

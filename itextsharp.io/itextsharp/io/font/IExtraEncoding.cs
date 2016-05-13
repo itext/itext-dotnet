@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	/// <summary>
 	/// Classes implementing this interface can create custom encodings or

@@ -45,7 +45,7 @@
 */
 using System;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>A class representing a field in a TIFF 6.0 Image File Directory.</summary>
 	/// <remarks>
@@ -60,7 +60,7 @@ namespace com.itextpdf.io.codec
 	/// be removed or changed in future releases of JAI.</b>
 	/// </remarks>
 	/// <seealso cref="TIFFDirectory"/>
-	public class TIFFField : Object, IComparable<com.itextpdf.io.codec.TIFFField>
+	public class TIFFField : Object, IComparable<iTextSharp.IO.Codec.TIFFField>
 	{
 		private const long serialVersionUID = 9088332901412823834L;
 
@@ -617,7 +617,7 @@ namespace com.itextpdf.io.codec
 		/// </remarks>
 		/// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.
 		/// 	</exception>
-		public virtual int CompareTo(com.itextpdf.io.codec.TIFFField o)
+		public virtual int CompareTo(iTextSharp.IO.Codec.TIFFField o)
 		{
 			if (o == null)
 			{

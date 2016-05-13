@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class ByteBuffer
 	{
@@ -88,7 +88,7 @@ namespace com.itextpdf.io.source
 			return -1;
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Append(byte b)
+		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte b)
 		{
 			int newCount = count + 1;
 			if (newCount > buffer.Length)
@@ -102,8 +102,7 @@ namespace com.itextpdf.io.source
 			return this;
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Append(byte[] b, int off, int len
-			)
+		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b, int off, int len)
 		{
 			if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off
 				 + len) < 0) || len == 0)
@@ -122,22 +121,22 @@ namespace com.itextpdf.io.source
 			return this;
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Append(byte[] b)
+		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b)
 		{
 			return Append(b, 0, b.Length);
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Append(int b)
+		public virtual iTextSharp.IO.Source.ByteBuffer Append(int b)
 		{
 			return Append((byte)b);
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Append(String str)
+		public virtual iTextSharp.IO.Source.ByteBuffer Append(String str)
 		{
 			return Append(ByteUtils.GetIsoBytes(str));
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer AppendHex(byte b)
+		public virtual iTextSharp.IO.Source.ByteBuffer AppendHex(byte b)
 		{
 			Append(bytes[(b >> 4) & 0x0f]);
 			return Append(bytes[b & 0x0f]);
@@ -173,7 +172,7 @@ namespace com.itextpdf.io.source
 			return buffer.Length;
 		}
 
-		public virtual com.itextpdf.io.source.ByteBuffer Reset()
+		public virtual iTextSharp.IO.Source.ByteBuffer Reset()
 		{
 			count = 0;
 			return this;
@@ -225,7 +224,7 @@ namespace com.itextpdf.io.source
 		/// <c>ByteBuffer</c>
 		/// .
 		/// </returns>
-		internal virtual com.itextpdf.io.source.ByteBuffer Prepend(byte b)
+		internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte b)
 		{
 			buffer[buffer.Length - count - 1] = b;
 			count++;
@@ -250,7 +249,7 @@ namespace com.itextpdf.io.source
 		/// <c>ByteBuffer</c>
 		/// .
 		/// </returns>
-		internal virtual com.itextpdf.io.source.ByteBuffer Prepend(byte[] b)
+		internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte[] b)
 		{
 			System.Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);
 			count += b.Length;

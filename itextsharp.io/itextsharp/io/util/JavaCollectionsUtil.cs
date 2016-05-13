@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using itextsharp.io.util.Collections;
 
-namespace com.itextpdf.io.util {
+namespace iTextSharp.IO.Util {
     public static class JavaCollectionsUtil {
         public static IList<T> EmptyList<T>() {
             return new EmptyList<T>();

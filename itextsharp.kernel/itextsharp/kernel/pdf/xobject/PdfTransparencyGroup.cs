@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.xobject
+namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfTransparencyGroup : PdfObjectWrapper<PdfDictionary>
 	{
@@ -95,7 +95,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 			GetPdfObject().Put(PdfName.CS, colorSpace);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.xobject.PdfTransparencyGroup Put(PdfName key
+		public virtual iTextSharp.Kernel.Pdf.Xobject.PdfTransparencyGroup Put(PdfName key
 			, PdfObject value)
 		{
 			GetPdfObject().Put(key, value);

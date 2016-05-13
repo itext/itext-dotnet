@@ -43,9 +43,9 @@ Copyright (c) 1998-2016 iText Group NV
 * address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf
+namespace iTextSharp.IO.Font.Otf
 {
 	public class Glyph
 	{
@@ -112,7 +112,7 @@ namespace com.itextpdf.io.font.otf
 			this.chars = chars != null ? chars : GetChars(unicode);
 		}
 
-		public Glyph(com.itextpdf.io.font.otf.Glyph glyph)
+		public Glyph(iTextSharp.IO.Font.Otf.Glyph glyph)
 		{
 			this.code = glyph.code;
 			this.width = glyph.width;
@@ -127,8 +127,8 @@ namespace com.itextpdf.io.font.otf
 			this.anchorDelta = glyph.anchorDelta;
 		}
 
-		public Glyph(com.itextpdf.io.font.otf.Glyph glyph, int xPlacement, int yPlacement
-			, int xAdvance, int yAdvance, int anchorDelta)
+		public Glyph(iTextSharp.IO.Font.Otf.Glyph glyph, int xPlacement, int yPlacement, 
+			int xAdvance, int yAdvance, int anchorDelta)
 			: this(glyph)
 		{
 			this.xPlacement = (short)xPlacement;
@@ -138,7 +138,7 @@ namespace com.itextpdf.io.font.otf
 			this.anchorDelta = (byte)anchorDelta;
 		}
 
-		public Glyph(com.itextpdf.io.font.otf.Glyph glyph, int unicode)
+		public Glyph(iTextSharp.IO.Font.Otf.Glyph glyph, int unicode)
 			: this(glyph.code, glyph.width, unicode, GetChars(unicode), glyph.IsMark())
 		{
 		}
@@ -253,7 +253,7 @@ namespace com.itextpdf.io.font.otf
 		{
 			int prime = 31;
 			int result = 1;
-			result = prime * result + ((chars == null) ? 0 : com.itextpdf.io.util.JavaUtil.ArraysHashCode
+			result = prime * result + ((chars == null) ? 0 : iTextSharp.IO.Util.JavaUtil.ArraysHashCode
 				(chars));
 			result = prime * result + code;
 			result = prime * result + width;
@@ -266,26 +266,26 @@ namespace com.itextpdf.io.font.otf
 			{
 				return true;
 			}
-			if (!(obj is com.itextpdf.io.font.otf.Glyph))
+			if (!(obj is iTextSharp.IO.Font.Otf.Glyph))
 			{
 				return false;
 			}
-			com.itextpdf.io.font.otf.Glyph other = (com.itextpdf.io.font.otf.Glyph)obj;
-			return com.itextpdf.io.util.JavaUtil.ArraysEquals(chars, other.chars) && code == 
-				other.code && width == other.width;
+			iTextSharp.IO.Font.Otf.Glyph other = (iTextSharp.IO.Font.Otf.Glyph)obj;
+			return iTextSharp.IO.Util.JavaUtil.ArraysEquals(chars, other.chars) && code == other
+				.code && width == other.width;
 		}
 
 		public override String ToString()
 		{
 			return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", code, chars != null
-				 ? com.itextpdf.io.util.JavaUtil.ArraysToString(chars) : "null", unicode, width);
+				 ? iTextSharp.IO.Util.JavaUtil.ArraysToString(chars) : "null", unicode, width);
 		}
 
 		private static int CodePoint(char[] a)
 		{
 			if (a != null)
 			{
-				if (a.Length == 1 && com.itextpdf.io.util.JavaUtil.IsValidCodePoint(a[0]))
+				if (a.Length == 1 && iTextSharp.IO.Util.JavaUtil.IsValidCodePoint(a[0]))
 				{
 					return a[0];
 				}
@@ -293,7 +293,7 @@ namespace com.itextpdf.io.font.otf
 				{
 					if (a.Length == 2 && char.IsHighSurrogate(a[0]) && char.IsLowSurrogate(a[1]))
 					{
-						return com.itextpdf.io.util.JavaUtil.ToCodePoint(a[0], a[1]);
+						return iTextSharp.IO.Util.JavaUtil.ToCodePoint(a[0], a[1]);
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*
-$Id: c4d3fa63397452fa0ee09a13f5cbebaa5b252eca $
+$Id: f8360a800dd31fdbdce23f3a9cb34dedeb2b37d9 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,18 +44,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.cmap
+namespace iTextSharp.IO.Font.Cmap
 {
 	/// <summary>This class represents a CMap file.</summary>
 	/// <author>Ben Litchfield (ben@benlitchfield.com)</author>
 	public class CMapToUnicode : AbstractCMap
 	{
-		public static com.itextpdf.io.font.cmap.CMapToUnicode EmptyCMapToUnicodeMap = new 
-			com.itextpdf.io.font.cmap.CMapToUnicode(true);
+		public static iTextSharp.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iTextSharp.IO.Font.Cmap.CMapToUnicode
+			(true);
 
 		private IDictionary<int, char[]> byteMappings;
 
@@ -70,9 +70,9 @@ namespace com.itextpdf.io.font.cmap
 			byteMappings = new Dictionary<int, char[]>();
 		}
 
-		public static com.itextpdf.io.font.cmap.CMapToUnicode GetIdentity()
+		public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity()
 		{
-			com.itextpdf.io.font.cmap.CMapToUnicode uni = new com.itextpdf.io.font.cmap.CMapToUnicode
+			iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode
 				();
 			for (int i = 0; i < 65537; i++)
 			{
@@ -193,7 +193,7 @@ namespace com.itextpdf.io.font.cmap
 					}
 					else
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.cmap.CMapToUnicode
+						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
 							));
 						logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
 					}

@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.layer
+namespace iTextSharp.Kernel.Pdf.Layer
 {
 	/// <summary>
 	/// Content typically belongs to a single optional content group,
@@ -60,9 +60,9 @@ namespace com.itextpdf.kernel.pdf.layer
 	/// represented by this class.
 	/// <br /><br />
 	/// To be able to be wrapped with this
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObjectWrapper{T}"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
 	/// the
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
 	/// must be indirect.
 	/// </remarks>
 	public class PdfLayerMembership : PdfObjectWrapper<PdfDictionary>, IPdfOCG
@@ -70,7 +70,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		private const long serialVersionUID = -597407628148657784L;
 
 		/// <summary>Creates a new, empty membership layer.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfLayerMembership(PdfDocument doc)
 			: base(new PdfDictionary())
 		{
@@ -82,7 +82,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// 	</summary>
 		/// <param name="membershipDictionary">the membership dictionary, must have an indirect reference.
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfLayerMembership(PdfDictionary membershipDictionary)
 			: base(membershipDictionary)
 		{
@@ -94,7 +94,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		}
 
 		/// <summary>Gets the collection of the layers this layer membership operates with.</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual ICollection<PdfLayer> GetLayers()
 		{
 			PdfObject layers = GetPdfObject().Get(PdfName.OCGs);
@@ -134,7 +134,7 @@ namespace com.itextpdf.kernel.pdf.layer
 
 		/// <summary>Adds a new layer to the current layer membership.</summary>
 		/// <param name="layer">the layer to be added</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual void AddLayer(PdfLayer layer)
 		{
 			PdfArray layers = GetPdfObject().GetAsArray(PdfName.OCGs);
@@ -177,7 +177,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// Gets the visibility policy for content belonging to this
 		/// optional content membership dictionary.
 		/// </summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfName GetVisibilityPolicy()
 		{
 			PdfName visibilityPolicy = GetPdfObject().GetAsName(PdfName.P);
@@ -210,7 +210,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// Gets the visibility expression for content belonging to this
 		/// optional content membership dictionary.
 		/// </summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfVisibilityExpression GetVisibilityExpression()
 		{
 			PdfArray ve = GetPdfObject().GetAsArray(PdfName.VE);

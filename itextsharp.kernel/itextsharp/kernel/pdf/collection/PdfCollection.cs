@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.collection
+namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollection : PdfObjectWrapper<PdfDictionary>
 	{
@@ -74,7 +74,7 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <summary>Sets the Collection schema dictionary.</summary>
 		/// <param name="schema">an overview of the collection fields</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollection SetSchema(PdfCollectionSchema
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema
 			 schema)
 		{
 			GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
@@ -93,8 +93,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree
 		/// 	</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollection SetInitialDocument
-			(String documentName)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(
+			String documentName)
 		{
 			GetPdfObject().Put(PdfName.D, new PdfString(documentName));
 			return this;
@@ -108,7 +108,7 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <summary>Sets the initial view.</summary>
 		/// <param name="viewType"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollection SetView(int viewType
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType
 			)
 		{
 			switch (viewType)
@@ -142,7 +142,7 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <summary>Sets the Collection sort dictionary.</summary>
 		/// <param name="sort"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollection SetSort(PdfCollectionSort
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort
 			 sort)
 		{
 			GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());

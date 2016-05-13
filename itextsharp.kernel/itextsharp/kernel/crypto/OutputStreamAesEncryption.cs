@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.crypto
+namespace iTextSharp.Kernel.Crypto
 {
 	public class OutputStreamAesEncryption : OutputStreamEncryption
 	{

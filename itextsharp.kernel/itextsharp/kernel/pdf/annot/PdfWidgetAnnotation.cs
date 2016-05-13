@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfWidgetAnnotation : PdfAnnotation
 	{
@@ -97,10 +97,10 @@ namespace com.itextpdf.kernel.pdf.annot
 			return PdfName.Widget;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfWidgetAnnotation SetParent(PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject
 			 parent)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent
+			return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent
 				);
 		}
 
@@ -127,10 +127,10 @@ namespace com.itextpdf.kernel.pdf.annot
 		/// </remarks>
 		/// <param name="mode">The new value for the annotation's highlighting mode.</param>
 		/// <returns>The widget annotation which this method was called on.</returns>
-		public virtual com.itextpdf.kernel.pdf.annot.PdfWidgetAnnotation SetHighlightMode
-			(PdfName mode)
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName
+			 mode)
 		{
-			return (com.itextpdf.kernel.pdf.annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
+			return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
 		}
 
 		/// <summary>Getter for the annotation's highlighting mode.</summary>

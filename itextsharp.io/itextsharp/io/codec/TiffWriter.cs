@@ -46,7 +46,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Exports images as TIFF.</summary>
 	public class TiffWriter

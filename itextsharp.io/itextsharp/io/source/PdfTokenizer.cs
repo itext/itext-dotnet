@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using com.itextpdf.io;
+using iTextSharp.IO;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class PdfTokenizer
 	{
@@ -212,8 +212,8 @@ namespace com.itextpdf.io.source
 
 		public virtual String GetStringValue()
 		{
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer()
-				, 0, outBuf.Size());
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 
+				0, outBuf.Size());
 		}
 
 		public virtual byte[] GetDecodedStringContent()
@@ -376,9 +376,9 @@ namespace com.itextpdf.io.source
 							{
 								System.Diagnostics.Debug.Assert(n2 != null);
 								type = PdfTokenizer.TokenType.Ref;
-								reference = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
-									(n1));
-								generation = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+								reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(
+									n1));
+								generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
 									(n2));
 								return;
 							}
@@ -388,9 +388,9 @@ namespace com.itextpdf.io.source
 								{
 									System.Diagnostics.Debug.Assert(n2 != null);
 									type = PdfTokenizer.TokenType.Obj;
-									reference = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
-										(n1));
-									generation = System.Convert.ToInt32(com.itextpdf.io.util.JavaUtil.GetStringForBytes
+									reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(
+										n1));
+									generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
 										(n2));
 									return;
 								}
@@ -1057,7 +1057,7 @@ namespace com.itextpdf.io.source
 		/// <summary>Check whether line starts with object declaration.</summary>
 		/// <param name="lineTokenizer">tokenizer, built by single line.</param>
 		/// <returns>object number and generation if check is successful, otherwise - null.</returns>
-		public static int[] CheckObjectStart(com.itextpdf.io.source.PdfTokenizer lineTokenizer
+		public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer
 			)
 		{
 			try
@@ -1079,8 +1079,8 @@ namespace com.itextpdf.io.source
 				{
 					return null;
 				}
-				if (!com.itextpdf.io.util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent
-					()))
+				if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent()
+					))
 				{
 					return null;
 				}

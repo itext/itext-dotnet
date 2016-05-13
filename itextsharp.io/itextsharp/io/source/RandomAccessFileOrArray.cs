@@ -46,7 +46,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class RandomAccessFileOrArray
 	{
@@ -78,9 +78,9 @@ namespace com.itextpdf.io.source
 		/// Closing this object will have adverse effect on the view.
 		/// </remarks>
 		/// <returns>the new view</returns>
-		public virtual com.itextpdf.io.source.RandomAccessFileOrArray CreateView()
+		public virtual iTextSharp.IO.Source.RandomAccessFileOrArray CreateView()
 		{
-			return new com.itextpdf.io.source.RandomAccessFileOrArray(new IndependentRandomAccessSource
+			return new iTextSharp.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource
 				(byteSource));
 		}
 
@@ -603,25 +603,25 @@ namespace com.itextpdf.io.source
 		/// <exception cref="System.IO.IOException"/>
 		public virtual float ReadFloat()
 		{
-			return com.itextpdf.io.util.JavaUtil.IntBitsToFloat(ReadInt());
+			return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public float ReadFloatLE()
 		{
-			return com.itextpdf.io.util.JavaUtil.IntBitsToFloat(ReadIntLE());
+			return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public virtual double ReadDouble()
 		{
-			return com.itextpdf.io.util.JavaUtil.LongBitsToDouble(ReadLong());
+			return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		public double ReadDoubleLE()
 		{
-			return com.itextpdf.io.util.JavaUtil.LongBitsToDouble(ReadLongLE());
+			return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -684,7 +684,7 @@ namespace com.itextpdf.io.source
 		{
 			byte[] buf = new byte[length];
 			ReadFully(buf);
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(buf, encoding);
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, encoding);
 		}
 	}
 }

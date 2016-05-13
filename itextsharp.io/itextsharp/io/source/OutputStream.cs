@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 
-namespace com.itextpdf.io.source
-{
+namespace iTextSharp.IO.Source {
 	public class OutputStream<T> : Stream
 		where T : Stream
 	{

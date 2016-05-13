@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class WriterProperties
 	{
@@ -87,8 +87,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetPdfVersion(PdfVersion 
-			version)
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version
+			)
 		{
 			this.pdfVersion = version;
 			return this;
@@ -109,7 +109,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties UseSmartMode()
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties UseSmartMode()
 		{
 			this.smartMode = true;
 			return this;
@@ -125,7 +125,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties AddXmpMetadata()
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties AddXmpMetadata()
 		{
 			this.addXmpMetadata = true;
 			return this;
@@ -143,7 +143,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetCompressionLevel(int compressionLevel
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel
 			)
 		{
 			this.compressionLevel = compressionLevel;
@@ -162,7 +162,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetFullCompressionMode(bool
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool
 			 fullCompressionMode)
 		{
 			this.isFullCompression = fullCompressionMode;
@@ -194,8 +194,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetStandardEncryption(byte
-			[] userPassword, byte[] ownerPassword, int permissions, int encryptionAlgorithm)
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[]
+			 userPassword, byte[] ownerPassword, int permissions, int encryptionAlgorithm)
 		{
 			encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions
 				, encryptionAlgorithm);
@@ -226,7 +226,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties SetPublicKeyEncryption(X509Certificate
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate
 			[] certs, int[] permissions, int encryptionAlgorithm)
 		{
 			encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm
@@ -245,7 +245,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>WriterProperties</c>
 		/// instance
 		/// </returns>
-		public virtual com.itextpdf.kernel.pdf.WriterProperties UseDebugMode()
+		public virtual iTextSharp.Kernel.Pdf.WriterProperties UseDebugMode()
 		{
 			this.debugMode = true;
 			return this;

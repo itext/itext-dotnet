@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
 	public sealed class ArrayUtil
 	{

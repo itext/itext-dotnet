@@ -45,14 +45,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf.filters;
-using java.io;
+using Java.IO;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf.Filters;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfReader
 	{
@@ -129,7 +129,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </param>
 		/// <param name="properties">properties of the created reader</param>
 		/// <exception cref="System.IO.IOException">on error</exception>
-		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">on error</exception>
 		public PdfReader(Stream @is, ReaderProperties properties)
 			: this(new RandomAccessSourceFactory().CreateSource(@is), properties)
 		{
@@ -143,7 +143,7 @@ namespace com.itextpdf.kernel.pdf
 		/// if user doesn't want to close stream, he should set closeStream=false;
 		/// </param>
 		/// <exception cref="System.IO.IOException">on error</exception>
-		/// <exception cref="com.itextpdf.kernel.PdfException">on error</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">on error</exception>
 		public PdfReader(Stream @is)
 			: this(@is, new ReaderProperties())
 		{
@@ -174,7 +174,7 @@ namespace com.itextpdf.kernel.pdf
 			tokens.Close();
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfReader SetUnethicalReading(bool unethicalReading
+		public virtual iTextSharp.Kernel.Pdf.PdfReader SetUnethicalReading(bool unethicalReading
 			)
 		{
 			this.unethicalReading = unethicalReading;
@@ -237,7 +237,7 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</param>
 		/// <returns>byte[]</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode)
 		{
 			byte[] b = ReadStreamBytesRaw(stream);
@@ -333,7 +333,7 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</param>
 		/// <returns>InputStream</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual Stream ReadStream(PdfStream stream, bool decode)
 		{
 			byte[] bytes = ReadStreamBytes(stream, decode);
@@ -345,7 +345,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="b">the bytes to decode</param>
 		/// <param name="streamDictionary">the dictionary that contains filter information</param>
 		/// <returns>the decoded bytes</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if there are any problems decoding the bytes
+		/// <exception cref="iTextSharp.Kernel.PdfException">if there are any problems decoding the bytes
 		/// 	</exception>
 		public static byte[] DecodeBytes(byte[] b, PdfDictionary streamDictionary)
 		{
@@ -360,7 +360,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="filterHandlers">the map used to look up a handler for each type of filter
 		/// 	</param>
 		/// <returns>the decoded bytes</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">if there are any problems decoding the bytes
+		/// <exception cref="iTextSharp.Kernel.PdfException">if there are any problems decoding the bytes
 		/// 	</exception>
 		public static byte[] DecodeBytes(byte[] b, PdfDictionary streamDictionary, IDictionary
 			<PdfName, IFilterHandler> filterHandlers)
@@ -544,8 +544,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 			catch (Exception ex)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfReader)
-					);
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 				logger.Error(LogMessageConstant.XREF_ERROR, ex);
 				RebuildXref();
 			}
@@ -752,8 +751,7 @@ namespace com.itextpdf.kernel.pdf
 						{
 							if (fixedXref)
 							{
-								Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfReader)
-									);
+								Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 								logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE + " {0} {1} R"
 									, tokens.GetObjNr(), tokens.GetGenNr()));
 								return new PdfNull();
@@ -1511,7 +1509,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>This method is invoked while deserialization</summary>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.lang.ClassNotFoundException"/>
+		/// <exception cref="Java.Lang.ClassNotFoundException"/>
 		private void ReadObject(ObjectInputStream @in)
 		{
 			@in.DefaultReadObject();

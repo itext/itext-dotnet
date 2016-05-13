@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
     public class DecimalFormatUtil
     {
         public static String FormatNumber(double d, String pattern)

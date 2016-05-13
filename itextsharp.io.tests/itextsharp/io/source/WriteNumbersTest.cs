@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class WriteNumbersTest
 	{
@@ -26,8 +26,8 @@ namespace com.itextpdf.io.source
 				}
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes();
-				String message = "Expects: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}
@@ -47,8 +47,8 @@ namespace com.itextpdf.io.source
 				}
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes();
-				String message = "Expects: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}
@@ -68,8 +68,8 @@ namespace com.itextpdf.io.source
 				d = Round(d, 0);
 				byte[] actuals = ByteUtils.GetIsoBytes(d);
 				byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes();
-				String message = "Expects: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(expecteds
-					) + ", actual: " + com.itextpdf.io.util.JavaUtil.GetStringForBytes(actuals) + " \\\\ "
+				String message = "Expects: " + JavaUtil.GetStringForBytes(expecteds
+					) + ", actual: " + JavaUtil.GetStringForBytes(actuals) + " \\\\ "
 					 + d;
 				NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
 			}

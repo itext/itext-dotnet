@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.lang;
+using Java.Lang;
 
-namespace com.itextpdf.kernel.log
+namespace iTextSharp.Kernel.Log
 {
 	/// <summary>Factory that creates a counter for every reader or writer class.</summary>
 	/// <remarks>
@@ -59,14 +59,14 @@ namespace com.itextpdf.kernel.log
 	public class CounterFactory
 	{
 		/// <summary>The singleton instance.</summary>
-		private static com.itextpdf.kernel.log.CounterFactory instance;
+		private static iTextSharp.Kernel.Log.CounterFactory instance;
 
 		/// <summary>The current counter implementation.</summary>
 		private Counter counter = new DefaultCounter();
 
 		static CounterFactory()
 		{
-			instance = new com.itextpdf.kernel.log.CounterFactory();
+			instance = new iTextSharp.Kernel.Log.CounterFactory();
 		}
 
 		/// <summary>The empty constructor.</summary>
@@ -75,7 +75,7 @@ namespace com.itextpdf.kernel.log
 		}
 
 		/// <summary>Returns the singleton instance of the factory.</summary>
-		public static com.itextpdf.kernel.log.CounterFactory GetInstance()
+		public static iTextSharp.Kernel.Log.CounterFactory GetInstance()
 		{
 			return instance;
 		}

@@ -19,9 +19,9 @@
 *  That's why we imported the code into iText.
 */
 using System;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	public class Point : ICloneable
 	{
@@ -46,7 +46,7 @@ namespace com.itextpdf.kernel.geom
 			SetLocation(x, y);
 		}
 
-		public Point(com.itextpdf.kernel.geom.Point p)
+		public Point(iTextSharp.Kernel.Geom.Point p)
 		{
 			SetLocation(p.x, p.y);
 		}
@@ -57,9 +57,9 @@ namespace com.itextpdf.kernel.geom
 			{
 				return true;
 			}
-			if (obj is com.itextpdf.kernel.geom.Point)
+			if (obj is iTextSharp.Kernel.Geom.Point)
 			{
-				com.itextpdf.kernel.geom.Point p = (com.itextpdf.kernel.geom.Point)obj;
+				iTextSharp.Kernel.Geom.Point p = (iTextSharp.Kernel.Geom.Point)obj;
 				return x == p.x && y == p.y;
 			}
 			return false;
@@ -81,12 +81,12 @@ namespace com.itextpdf.kernel.geom
 			return y;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Point GetLocation()
+		public virtual iTextSharp.Kernel.Geom.Point GetLocation()
 		{
-			return new com.itextpdf.kernel.geom.Point(x, y);
+			return new iTextSharp.Kernel.Geom.Point(x, y);
 		}
 
-		public virtual void SetLocation(com.itextpdf.kernel.geom.Point p)
+		public virtual void SetLocation(iTextSharp.Kernel.Geom.Point p)
 		{
 			SetLocation(p.x, p.y);
 		}
@@ -133,7 +133,7 @@ namespace com.itextpdf.kernel.geom
 			return DistanceSq(GetX(), GetY(), px, py);
 		}
 
-		public virtual double DistanceSq(com.itextpdf.kernel.geom.Point p)
+		public virtual double DistanceSq(iTextSharp.Kernel.Geom.Point p)
 		{
 			return DistanceSq(GetX(), GetY(), p.GetX(), p.GetY());
 		}
@@ -148,14 +148,14 @@ namespace com.itextpdf.kernel.geom
 			return Math.Sqrt(DistanceSq(px, py));
 		}
 
-		public virtual double Distance(com.itextpdf.kernel.geom.Point p)
+		public virtual double Distance(iTextSharp.Kernel.Geom.Point p)
 		{
 			return Math.Sqrt(DistanceSq(p));
 		}
 
 		public virtual Object Clone()
 		{
-			return new com.itextpdf.kernel.geom.Point(x, y);
+			return new iTextSharp.Kernel.Geom.Point(x, y);
 		}
 	}
 }

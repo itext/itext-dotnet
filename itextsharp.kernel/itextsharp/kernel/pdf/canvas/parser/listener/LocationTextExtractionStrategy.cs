@@ -45,12 +45,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.canvas.parser;
-using com.itextpdf.kernel.pdf.canvas.parser.data;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Canvas.Parser;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	public class LocationTextExtractionStrategy : ITextExtractionStrategy
 	{
@@ -108,7 +109,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 		/// </summary>
 		/// <param name="useActualText">true to use /ActualText, false otherwise</param>
 		/// <returns>this object</returns>
-		public virtual com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy
+		public virtual iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy
 			 SetUseActualText(bool useActualText)
 		{
 			this.useActualText = useActualText;
@@ -191,7 +192,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 				DumpState();
 			}
 			IList<LocationTextExtractionStrategy.TextChunk> textChunks = locationalResult;
-			textChunks.Sort();
+			JavaCollectionsUtil.Sort(textChunks);
 			StringBuilder sb = new StringBuilder();
 			LocationTextExtractionStrategy.TextChunk lastChunk = null;
 			foreach (LocationTextExtractionStrategy.TextChunk chunk in textChunks)
@@ -346,7 +347,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 			/// <summary>Compares based on orientation, perpendicular distance, then parallel distance
 			/// 	</summary>
-			/// <seealso cref="java.lang.Comparable{T}.CompareTo(System.Object)"/>
+			/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"/>
 			public virtual int CompareTo(LocationTextExtractionStrategy.TextChunk rhs)
 			{
 				return location.CompareTo(rhs.location);
@@ -533,14 +534,14 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 					return 0;
 				}
 				int result;
-				result = com.itextpdf.io.util.JavaUtil.IntegerCompare(OrientationMagnitude(), other
+				result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(OrientationMagnitude(), other
 					.OrientationMagnitude());
 				if (result != 0)
 				{
 					return result;
 				}
-				result = com.itextpdf.io.util.JavaUtil.IntegerCompare(DistPerpendicular(), other.
-					DistPerpendicular());
+				result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular
+					());
 				if (result != 0)
 				{
 					return result;

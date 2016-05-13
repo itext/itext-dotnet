@@ -42,10 +42,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfTextMarkupAnnotation : PdfMarkupAnnotation
 	{
@@ -73,31 +73,31 @@ namespace com.itextpdf.kernel.pdf.annot
 		{
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation CreateHighLight
+		public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateHighLight
 			(Rectangle rect, float[] quadPoints)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation(rect, MarkupHighlight
+			return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupHighlight
 				, quadPoints);
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation CreateUnderline
+		public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateUnderline
 			(Rectangle rect, float[] quadPoints)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation(rect, MarkupUnderline
+			return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupUnderline
 				, quadPoints);
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation CreateStrikeout
+		public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateStrikeout
 			(Rectangle rect, float[] quadPoints)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout
+			return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout
 				, quadPoints);
 		}
 
-		public static com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation CreateSquiggly
-			(Rectangle rect, float[] quadPoints)
+		public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateSquiggly(
+			Rectangle rect, float[] quadPoints)
 		{
-			return new com.itextpdf.kernel.pdf.annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly
+			return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly
 				, quadPoints);
 		}
 

@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.
 	/// 	</summary>
@@ -54,13 +54,13 @@ namespace com.itextpdf.barcodes.qrcode
 	{
 		private const int QUIET_ZONE_SIZE = 4;
 
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public ByteMatrix Encode(String contents, int width, int height)
 		{
 			return Encode(contents, width, height, null);
 		}
 
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType
 			, Object> hints)
 		{
@@ -114,7 +114,7 @@ namespace com.itextpdf.barcodes.qrcode
 			// 1. Write the white lines at the top
 			for (int y = 0; y < topPadding; y++)
 			{
-				SetRowColor(outputArray[y], unchecked((byte)255));
+				SetRowColor(outputArray[y], (byte)255);
 			}
 			// 2. Expand the QR image to the multiple
 			byte[][] inputArray = input.GetArray();
@@ -123,14 +123,13 @@ namespace com.itextpdf.barcodes.qrcode
 				// a. Write the white pixels at the left of each row
 				for (int x = 0; x < leftPadding; x++)
 				{
-					row[x] = unchecked((byte)255);
+					row[x] = (byte)255;
 				}
 				// b. Write the contents of this row of the barcode
 				int offset = leftPadding;
 				for (int x_1 = 0; x_1 < inputWidth; x_1++)
 				{
-					byte value = (inputArray[y_1][x_1] == 1) ? unchecked((byte)0) : unchecked((byte)255
-						);
+					byte value = (inputArray[y_1][x_1] == 1) ? (byte)0 : (byte)255;
 					for (int z = 0; z < multiple; z++)
 					{
 						row[offset + z] = value;
@@ -141,7 +140,7 @@ namespace com.itextpdf.barcodes.qrcode
 				offset = leftPadding + (inputWidth * multiple);
 				for (int x_2 = offset; x_2 < outputWidth; x_2++)
 				{
-					row[x_2] = unchecked((byte)255);
+					row[x_2] = (byte)255;
 				}
 				// d. Write the completed row multiple times
 				offset = topPadding + (y_1 * multiple);
@@ -154,7 +153,7 @@ namespace com.itextpdf.barcodes.qrcode
 			int offset_1 = topPadding + (inputHeight * multiple);
 			for (int y_2 = offset_1; y_2 < outputHeight; y_2++)
 			{
-				SetRowColor(outputArray[y_2], unchecked((byte)255));
+				SetRowColor(outputArray[y_2], (byte)255);
 			}
 			return output;
 		}

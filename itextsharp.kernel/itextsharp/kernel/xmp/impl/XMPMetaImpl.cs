@@ -30,16 +30,16 @@
 using System;
 using System.Collections;
 using System.Globalization;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl.xpath;
-using com.itextpdf.kernel.xmp.options;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// Implementation for
-	/// <see cref="com.itextpdf.kernel.xmp.XMPMeta"/>
+	/// <see cref="iTextSharp.Kernel.Xmp.XMPMeta"/>
 	/// .
 	/// </summary>
 	/// <since>17.02.2006</since>
@@ -85,9 +85,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			this.tree = tree;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.AppendArrayItem(System.String, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.AppendArrayItem(System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, PropertyOptions
 			 arrayOptions, String itemValue, PropertyOptions itemOptions)
 		{
@@ -144,17 +144,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			DoSetArrayItem(arrayNode, ARRAY_LAST_ITEM, itemValue, itemOptions, true);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.AppendArrayItem(System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.AppendArrayItem(System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, String itemValue
 			)
 		{
 			AppendArrayItem(schemaNS, arrayName, null, itemValue, null);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.CountArrayItems(System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.CountArrayItems(System.String, System.String)
 		/// 	"/>
 		public virtual int CountArrayItems(String schemaNS, String arrayName)
 		{
@@ -176,7 +176,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DeleteArrayItem(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteArrayItem(System.String, System.String, int)
 		/// 	"/>
 		public virtual void DeleteArrayItem(String schemaNS, String arrayName, int itemIndex
 			)
@@ -194,7 +194,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		// EMPTY, exceptions are ignored within delete
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DeleteProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteProperty(System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteProperty(String schemaNS, String propName)
 		{
@@ -215,7 +215,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		// EMPTY, exceptions are ignored within delete
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DeleteQualifier(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteQualifier(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteQualifier(String schemaNS, String propName, String qualNS
 			, String qualName)
@@ -235,7 +235,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		// EMPTY, exceptions within delete are ignored
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DeleteStructField(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteStructField(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteStructField(String schemaNS, String structName, String 
 			fieldNS, String fieldName)
@@ -255,7 +255,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		// EMPTY, exceptions within delete are ignored
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DoesPropertyExist(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesPropertyExist(System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesPropertyExist(String schemaNS, String propName)
 		{
@@ -273,7 +273,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DoesArrayItemExist(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesArrayItemExist(System.String, System.String, int)
 		/// 	"/>
 		public virtual bool DoesArrayItemExist(String schemaNS, String arrayName, int itemIndex
 			)
@@ -291,7 +291,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DoesStructFieldExist(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesStructFieldExist(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesStructFieldExist(String schemaNS, String structName, String
 			 fieldNS, String fieldName)
@@ -310,7 +310,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DoesQualifierExist(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesQualifierExist(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesQualifierExist(String schemaNS, String propName, String qualNS
 			, String qualName)
@@ -329,9 +329,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetArrayItem(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetArrayItem(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual XMPProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex
 			)
 		{
@@ -341,8 +341,8 @@ namespace com.itextpdf.kernel.xmp.impl
 			return GetProperty(schemaNS, itemPath);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetLocalizedText(String schemaNS, String altTextName, 
 			String genericLang, String specificLang)
@@ -402,9 +402,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			private readonly XMPNode itemNode;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue, PropertyOptions options)
 		{
@@ -588,9 +588,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue)
 		{
@@ -598,8 +598,8 @@ namespace com.itextpdf.kernel.xmp.impl
 				);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetProperty(String schemaNS, String propName)
 		{
@@ -627,13 +627,13 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <see cref="VALUE_BASE64"/>
 		/// .
 		/// </remarks>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		/// <param name="schemaNS">a schema namespace</param>
 		/// <param name="propName">a property name or path</param>
 		/// <param name="valueType">the type of the value, see VALUE_...</param>
 		/// <returns>Returns an <code>XMPProperty</code></returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Collects any exception that occurs.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Collects any exception that occurs.
 		/// 	</exception>
 		protected internal virtual XMPProperty GetProperty(String schemaNS, String propName
 			, int valueType)
@@ -692,7 +692,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		/// <summary>Returns a property, but the result value can be requested.</summary>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		/// <param name="schemaNS">a schema namespace</param>
 		/// <param name="propName">a property name or path</param>
@@ -701,7 +701,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Returns the node value as an object according to the
 		/// <code>valueType</code>.
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Collects any exception that occurs.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Collects any exception that occurs.
 		/// 	</exception>
 		protected internal virtual Object GetPropertyObject(String schemaNS, String propName
 			, int valueType)
@@ -725,16 +725,16 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyBoolean(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyBoolean(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual bool GetPropertyBoolean(String schemaNS, String propName)
 		{
 			return (bool)GetPropertyObject(schemaNS, propName, VALUE_BOOLEAN);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
 			, PropertyOptions options)
@@ -742,181 +742,181 @@ namespace com.itextpdf.kernel.xmp.impl
 			SetProperty(schemaNS, propName, propValue ? TRUESTR : FALSESTR, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue ? TRUESTR : FALSESTR, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyInteger(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyInteger(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual int GetPropertyInteger(String schemaNS, String propName)
 		{
 			return (int)GetPropertyObject(schemaNS, propName, VALUE_INTEGER);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyLong(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyLong(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual long GetPropertyLong(String schemaNS, String propName)
 		{
 			return (long)GetPropertyObject(schemaNS, propName, VALUE_LONG);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyLong(System.String, System.String, long, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyLong(System.String, System.String, long, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyLong(System.String, System.String, long)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyLong(System.String, System.String, long)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyDouble(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyDouble(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual Double GetPropertyDouble(String schemaNS, String propName)
 		{
 			return (Double)GetPropertyObject(schemaNS, propName, VALUE_DOUBLE);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyDate(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyDate(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual XMPDateTime GetPropertyDate(String schemaNS, String propName)
 		{
 			return (XMPDateTime)GetPropertyObject(schemaNS, propName, VALUE_DATE);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyDate(System.String, System.String, com.itextpdf.kernel.xmp.XMPDateTime, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XMPDateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
 			 propValue, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyDate(System.String, System.String, com.itextpdf.kernel.xmp.XMPDateTime)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XMPDateTime)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
 			 propValue)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyCalendar(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyCalendar(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual Calendar GetPropertyCalendar(String schemaNS, String propName)
 		{
 			return (Calendar)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar
 			 propValue, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar
 			 propValue)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyBase64(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyBase64(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual byte[] GetPropertyBase64(String schemaNS, String propName)
 		{
 			return (byte[])GetPropertyObject(schemaNS, propName, VALUE_BASE64);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPropertyString(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyString(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual String GetPropertyString(String schemaNS, String propName)
 		{
 			return (String)GetPropertyObject(schemaNS, propName, VALUE_STRING);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[], com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[], iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[])
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[])
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetQualifier(System.String, System.String, System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetQualifier(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetQualifier(String schemaNS, String propName, String 
 			qualNS, String qualName)
@@ -929,9 +929,9 @@ namespace com.itextpdf.kernel.xmp.impl
 			return GetProperty(schemaNS, qualPath);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetStructField(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetStructField(System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual XMPProperty GetStructField(String schemaNS, String structName, String
 			 fieldNS, String fieldName)
 		{
@@ -943,32 +943,32 @@ namespace com.itextpdf.kernel.xmp.impl
 			return GetProperty(schemaNS, fieldPath);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.Iterator()"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator()"/>
 		public virtual XMPIterator Iterator()
 		{
 			return Iterator(null, null, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.Iterator(com.itextpdf.kernel.xmp.options.IteratorOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator(iTextSharp.Kernel.Xmp.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual XMPIterator Iterator(IteratorOptions options)
 		{
 			return Iterator(null, null, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.Iterator(System.String, System.String, com.itextpdf.kernel.xmp.options.IteratorOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator(System.String, System.String, iTextSharp.Kernel.Xmp.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual XMPIterator Iterator(String schemaNS, String propName, IteratorOptions
 			 options)
 		{
 			return new XMPIteratorImpl(this, schemaNS, propName, options);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue, PropertyOptions options)
@@ -988,17 +988,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			SetArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue, PropertyOptions options)
@@ -1018,17 +1018,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			InsertArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetProperty(System.String, System.String, System.Object, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetProperty(System.String, System.String, System.Object, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
 			, PropertyOptions options)
@@ -1048,17 +1048,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetProperty(System.String, System.String, System.Object)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetProperty(System.String, System.String, System.Object)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
 			String qualName, String qualValue, PropertyOptions options)
@@ -1074,18 +1074,18 @@ namespace com.itextpdf.kernel.xmp.impl
 			SetProperty(schemaNS, qualPath, qualValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
 			String qualName, String qualValue)
 		{
 			SetQualifier(schemaNS, propName, qualNS, qualName, qualValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String, com.itextpdf.kernel.xmp.options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue, PropertyOptions options)
 		{
@@ -1096,28 +1096,28 @@ namespace com.itextpdf.kernel.xmp.impl
 			SetProperty(schemaNS, fieldPath, fieldValue, options);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue)
 		{
 			SetStructField(schemaNS, structName, fieldNS, fieldName, fieldValue, null);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetObjectName()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetObjectName()"/>
 		public virtual String GetObjectName()
 		{
 			return tree.GetName() != null ? tree.GetName() : "";
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.SetObjectName(System.String)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetObjectName(System.String)"/>
 		public virtual void SetObjectName(String name)
 		{
 			tree.SetName(name);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.GetPacketHeader()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPacketHeader()"/>
 		public virtual String GetPacketHeader()
 		{
 			return packetHeader;
@@ -1135,25 +1135,25 @@ namespace com.itextpdf.kernel.xmp.impl
 		public virtual Object Clone()
 		{
 			XMPNode clonedTree = (XMPNode)tree.Clone();
-			return new com.itextpdf.kernel.xmp.impl.XMPMetaImpl(clonedTree);
+			return new iTextSharp.Kernel.Xmp.Impl.XMPMetaImpl(clonedTree);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.DumpObject()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DumpObject()"/>
 		public virtual String DumpObject()
 		{
 			// renders tree recursively
 			return GetRoot().DumpNode(true);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.Sort()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Sort()"/>
 		public virtual void Sort()
 		{
 			this.tree.Sort();
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPMeta.Normalize(com.itextpdf.kernel.xmp.options.ParseOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Normalize(iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void Normalize(ParseOptions options)
 		{
 			if (options == null)
@@ -1184,7 +1184,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="itemValue">the item value</param>
 		/// <param name="itemOptions">the options for the new item</param>
 		/// <param name="insert">insert oder overwrite at index position?</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private void DoSetArrayItem(XMPNode arrayNode, int itemIndex, String itemValue, PropertyOptions
 			 itemOptions, bool insert)
 		{
@@ -1222,7 +1222,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="newOptions">options for the new node, must not be <code>null</code>.
 		/// 	</param>
 		/// <param name="deleteExisting">flag if the existing value is to be overwritten</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">thrown if options and value do not correspond
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thrown if options and value do not correspond
 		/// 	</exception>
 		internal virtual void SetNode(XMPNode node, Object value, PropertyOptions newOptions
 			, bool deleteExisting)
@@ -1255,7 +1255,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="valueType">an int indicating the value type</param>
 		/// <param name="propNode">the node containing the value</param>
 		/// <returns>Returns a literal value for the node.</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private Object EvaluateNodeValue(int valueType, XMPNode propNode)
 		{
 			Object value;

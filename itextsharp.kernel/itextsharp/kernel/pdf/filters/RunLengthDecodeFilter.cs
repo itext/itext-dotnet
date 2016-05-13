@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.filters
+namespace iTextSharp.Kernel.Pdf.Filters
 {
 	/// <summary>Handles RunLengthDecode filter.</summary>
 	public class RunLengthDecodeFilter : IFilterHandler

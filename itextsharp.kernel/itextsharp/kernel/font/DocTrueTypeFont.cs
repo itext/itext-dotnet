@@ -43,13 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	internal class DocTrueTypeFont : TrueTypeFont, IDocFontProgram
 	{
@@ -79,7 +79,7 @@ namespace com.itextpdf.kernel.font
 		internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, FontEncoding
 			 fontEncoding)
 		{
-			com.itextpdf.kernel.font.DocTrueTypeFont fontProgram = new com.itextpdf.kernel.font.DocTrueTypeFont
+			iTextSharp.Kernel.Font.DocTrueTypeFont fontProgram = new iTextSharp.Kernel.Font.DocTrueTypeFont
 				(fontDictionary);
 			FillFontDescriptor(fontProgram, fontDictionary.GetAsDictionary(PdfName.FontDescriptor
 				));
@@ -114,7 +114,7 @@ namespace com.itextpdf.kernel.font
 		internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, CMapToUnicode
 			 toUnicode)
 		{
-			com.itextpdf.kernel.font.DocTrueTypeFont fontProgram = new com.itextpdf.kernel.font.DocTrueTypeFont
+			iTextSharp.Kernel.Font.DocTrueTypeFont fontProgram = new iTextSharp.Kernel.Font.DocTrueTypeFont
 				(fontDictionary);
 			PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor
 				);
@@ -164,8 +164,8 @@ namespace com.itextpdf.kernel.font
 			return subtype;
 		}
 
-		internal static void FillFontDescriptor(com.itextpdf.kernel.font.DocTrueTypeFont 
-			font, PdfDictionary fontDesc)
+		internal static void FillFontDescriptor(iTextSharp.Kernel.Font.DocTrueTypeFont font
+			, PdfDictionary fontDesc)
 		{
 			if (fontDesc == null)
 			{

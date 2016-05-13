@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	public class GetBufferedRandomAccessSource : IRandomAccessSource
 	{

@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.layer
+namespace iTextSharp.Kernel.Pdf.Layer
 {
 	/// <summary>
 	/// An array specifying a visibility expression, used to compute visibility
@@ -58,7 +58,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// <summary>Constructs a new PdfVisibilityExpression instance by its raw PdfArray.</summary>
 		/// <param name="visibilityExpressionArray">the array representing the visibility expression
 		/// 	</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfVisibilityExpression(PdfArray visibilityExpressionArray)
 			: base(visibilityExpressionArray)
 		{
@@ -94,7 +94,7 @@ namespace com.itextpdf.kernel.pdf.layer
 		/// <summary>Adds a new opeand to the current visibility expression.</summary>
 		/// <param name="expression">the PdfVisibilityExpression instance operand to be added
 		/// 	</param>
-		public virtual void AddOperand(com.itextpdf.kernel.pdf.layer.PdfVisibilityExpression
+		public virtual void AddOperand(iTextSharp.Kernel.Pdf.Layer.PdfVisibilityExpression
 			 expression)
 		{
 			GetPdfObject().Add(expression.GetPdfObject());

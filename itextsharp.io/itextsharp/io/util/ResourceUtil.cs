@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
     public sealed class ResourceUtil
     {
         private static List<object> resourceSearch = new List<object>();

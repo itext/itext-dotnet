@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.color;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Color;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public abstract class ImageData
 	{
@@ -92,7 +92,7 @@ namespace com.itextpdf.io.image
 
 		protected internal bool mask = false;
 
-		protected internal com.itextpdf.io.image.ImageData imageMask;
+		protected internal iTextSharp.IO.Image.ImageData imageMask;
 
 		protected internal bool interpolation;
 
@@ -244,12 +244,12 @@ namespace com.itextpdf.io.image
 			return mask;
 		}
 
-		public virtual com.itextpdf.io.image.ImageData GetImageMask()
+		public virtual iTextSharp.IO.Image.ImageData GetImageMask()
 		{
 			return imageMask;
 		}
 
-		public virtual void SetImageMask(com.itextpdf.io.image.ImageData imageMask)
+		public virtual void SetImageMask(iTextSharp.IO.Image.ImageData imageMask)
 		{
 			if (this.mask)
 			{
@@ -366,7 +366,7 @@ namespace com.itextpdf.io.image
 		/// <returns>if the image can be inline</returns>
 		public virtual bool CanImageBeInline()
 		{
-			Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.image.ImageData));
+			Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
 			if (imageSize > 4096)
 			{
 				logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);

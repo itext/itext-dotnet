@@ -46,17 +46,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.image;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas.wmf;
-using com.itextpdf.kernel.pdf.filters;
-using java.awt.image;
-using javax.imageio;
+using Java.Awt.Image;
+using Javax.Imageio;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Image;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas.Wmf;
+using iTextSharp.Kernel.Pdf.Filters;
 
-namespace com.itextpdf.kernel.pdf.xobject
+namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfImageXObject : PdfXObject
 	{
@@ -87,7 +87,7 @@ namespace com.itextpdf.kernel.pdf.xobject
 		{
 		}
 
-		public PdfImageXObject(ImageData image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+		public PdfImageXObject(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
 			 imageMask)
 			: this(CreatePdfStream(CheckImageType(image), imageMask))
 		{
@@ -134,10 +134,10 @@ namespace com.itextpdf.kernel.pdf.xobject
 			}
 		}
 
-		public virtual com.itextpdf.kernel.pdf.xobject.PdfImageXObject CopyTo(PdfDocument
-			 document)
+		public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document
+			)
 		{
-			com.itextpdf.kernel.pdf.xobject.PdfImageXObject image = new com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+			iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject image = new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
 				(((PdfStream)GetPdfObject().CopyTo(document)));
 			image.width = width;
 			image.height = height;
@@ -186,14 +186,14 @@ namespace com.itextpdf.kernel.pdf.xobject
 			return bytes;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.xobject.PdfImageXObject Put(PdfName key, PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject
 			 value)
 		{
 			GetPdfObject().Put(key, value);
 			return this;
 		}
 
-		protected internal static PdfStream CreatePdfStream(ImageData image, com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+		protected internal static PdfStream CreatePdfStream(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
 			 imageMask)
 		{
 			PdfStream stream;
@@ -282,15 +282,15 @@ namespace com.itextpdf.kernel.pdf.xobject
 			{
 				if (mask.IsSoftMask())
 				{
-					stream.Put(PdfName.SMask, new com.itextpdf.kernel.pdf.xobject.PdfImageXObject(image
+					stream.Put(PdfName.SMask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image
 						.GetImageMask()).GetPdfObject());
 				}
 				else
 				{
 					if (mask.IsMask())
 					{
-						stream.Put(PdfName.Mask, new com.itextpdf.kernel.pdf.xobject.PdfImageXObject(image
-							.GetImageMask()).GetPdfObject());
+						stream.Put(PdfName.Mask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.
+							GetImageMask()).GetPdfObject());
 					}
 				}
 			}

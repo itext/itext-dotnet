@@ -45,16 +45,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io.font;
-using com.itextpdf.io.image;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Image;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>A class to process WMF files.</summary>
 	/// <remarks>
@@ -633,11 +632,11 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						String s;
 						try
 						{
-							s = com.itextpdf.io.util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+							s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
 						}
 						catch (ArgumentException)
 						{
-							s = com.itextpdf.io.util.JavaUtil.GetStringForBytes(text, 0, k);
+							s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
 						}
 						OutputText(x, y, flag, x1, y1, x2, y2, s);
 						break;
@@ -660,11 +659,11 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 						String s;
 						try
 						{
-							s = com.itextpdf.io.util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+							s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
 						}
 						catch (ArgumentException)
 						{
-							s = com.itextpdf.io.util.JavaUtil.GetStringForBytes(text, 0, k);
+							s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
 						}
 						count = count + 1 & 0xfffe;
 						@in.Skip(count - k);
@@ -706,7 +705,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 					case META_SETPIXEL:
 					{
-						Color color = @in.ReadColor();
+						iTextSharp.Kernel.Color.Color color = @in.ReadColor();
 						int y = @in.ReadShort();
 						int x = @in.ReadShort();
 						cb.SaveState();
@@ -830,7 +829,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 					ty = -ury;
 				}
 			}
-			Color textColor;
+			iTextSharp.Kernel.Color.Color textColor;
 			if (state.GetBackgroundMode() == MetaState.OPAQUE)
 			{
 				textColor = state.GetCurrentBackgroundColor();

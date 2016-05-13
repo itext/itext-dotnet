@@ -43,14 +43,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.colorspace
+namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject>
 	{
 		public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName
-			>(com.itextpdf.io.util.JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB
+			>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB
 			, PdfName.DeviceCMYK, PdfName.Pattern));
 
 		private const long serialVersionUID = 2553991039779429813L;
@@ -62,7 +62,7 @@ namespace com.itextpdf.kernel.pdf.colorspace
 
 		public abstract int GetNumberOfComponents();
 
-		public static com.itextpdf.kernel.pdf.colorspace.PdfColorSpace MakeColorSpace(PdfObject
+		public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject
 			 pdfObject)
 		{
 			if (pdfObject.IsIndirectReference())

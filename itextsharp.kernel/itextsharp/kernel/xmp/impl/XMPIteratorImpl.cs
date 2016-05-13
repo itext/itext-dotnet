@@ -29,12 +29,13 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl.xpath;
-using com.itextpdf.kernel.xmp.options;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>The <code>XMPIterator</code> implementation.</summary>
 	/// <remarks>
@@ -73,9 +74,9 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// 	</param>
 		/// <param name="options">
 		/// advanced iteration options, see
-		/// <see cref="com.itextpdf.kernel.xmp.options.IteratorOptions"/>
+		/// <see cref="iTextSharp.Kernel.Xmp.Options.IteratorOptions"/>
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the node defined by the paramters is not existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the node defined by the paramters is not existing.
 		/// 	</exception>
 		public XMPIteratorImpl(XMPMetaImpl xmp, String schemaNS, String propPath, IteratorOptions
 			 options)
@@ -139,17 +140,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			else
 			{
 				// create null iterator
-				nodeIterator = java.util.Collections.EmptyIterator();
+				nodeIterator = JavaCollectionsUtil.EmptyIterator();
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPIterator.SkipSubtree()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPIterator.SkipSubtree()"/>
 		public virtual void SkipSubtree()
 		{
 			this.skipSubtree = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPIterator.SkipSiblings()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPIterator.SkipSiblings()"/>
 		public virtual void SkipSiblings()
 		{
 			SkipSubtree();
@@ -228,7 +229,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			private int index = 0;
 
 			/// <summary>the iterator for each child</summary>
-			private IEnumerator subIterator = java.util.Collections.EmptyIterator();
+			private IEnumerator subIterator = JavaCollectionsUtil.EmptyIterator();
 
 			/// <summary>the cached <code>PropertyInfo</code> to return</summary>
 			private XMPPropertyInfo returnProperty = null;
@@ -329,7 +330,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				{
 					// setSkipSiblings(false);
 					this._enclosing.skipSiblings = false;
-					this.subIterator = java.util.Collections.EmptyIterator();
+					this.subIterator = JavaCollectionsUtil.EmptyIterator();
 				}
 				// create sub iterator for every child,
 				// if its the first child visited or the former child is finished
@@ -400,7 +401,7 @@ namespace com.itextpdf.kernel.xmp.impl
 					if (currNode.GetParent().GetOptions().IsArray())
 					{
 						separator = "";
-						segmentName = "[" + com.itextpdf.GetStringValueOf(currentIndex) + "]";
+						segmentName = "[" + iTextSharp.GetStringValueOf(currentIndex) + "]";
 					}
 					else
 					{
@@ -524,7 +525,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <summary>
 		/// This iterator is derived from the default <code>NodeIterator</code>,
 		/// and is only used for the option
-		/// <see cref="com.itextpdf.kernel.xmp.options.IteratorOptions.JUST_CHILDREN"/>
+		/// <see cref="iTextSharp.Kernel.Xmp.Options.IteratorOptions.JUST_CHILDREN"/>
 		/// .
 		/// </summary>
 		/// <since>02.10.2006</since>

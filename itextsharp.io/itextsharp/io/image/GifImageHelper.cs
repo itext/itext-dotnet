@@ -46,11 +46,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.font;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public sealed class GifImageHelper
 	{

@@ -1,5 +1,5 @@
 /*
-$Id: 8c8f894d2dea581283d214249ffb2b597452deeb $
+$Id: 46e4ef5fceeac258c199ddb9cf046ea0779d3a45 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,15 +43,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.pdf.xobject;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public abstract class Barcode1D
 	{
@@ -125,7 +124,7 @@ namespace com.itextpdf.barcodes
 		/// <summary>The alternate text to be used, if present.</summary>
 		protected internal String altText;
 
-		public Barcode1D(PdfDocument document)
+		protected internal Barcode1D(PdfDocument document)
 		{
 			this.document = document;
 		}
@@ -390,8 +389,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
 		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
 		/// <returns>the dimensions the barcode occupies</returns>
-		public abstract Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor
-			);
+		public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 barColor, iTextSharp.Kernel.Color.Color textColor);
 
 		/// <summary>Gets the amount of ink spreading.</summary>
 		/// <returns>the ink spreading</returns>
@@ -434,7 +433,7 @@ namespace com.itextpdf.barcodes
 		/// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.
 		/// 	</remarks>
 		/// <returns>the XObject</returns>
-		/// <seealso cref="CreateFormXObject(com.itextpdf.kernel.color.Color, com.itextpdf.kernel.color.Color, com.itextpdf.kernel.pdf.PdfDocument)
+		/// <seealso cref="CreateFormXObject(iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Pdf.PdfDocument)
 		/// 	"/>
 		public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
 		{
@@ -445,10 +444,10 @@ namespace com.itextpdf.barcodes
 		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
 		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
 		/// <returns>the XObject</returns>
-		/// <seealso cref="PlaceBarcode(com.itextpdf.kernel.pdf.canvas.PdfCanvas, com.itextpdf.kernel.color.Color, com.itextpdf.kernel.color.Color)
+		/// <seealso cref="PlaceBarcode(iTextSharp.Kernel.Pdf.Canvas.PdfCanvas, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color)
 		/// 	"/>
-		public virtual PdfFormXObject CreateFormXObject(Color barColor, Color textColor, 
-			PdfDocument document)
+		public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor
+			, iTextSharp.Kernel.Color.Color textColor, PdfDocument document)
 		{
 			PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
 			Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor

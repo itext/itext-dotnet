@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	public class Rectangle
 	{
@@ -73,7 +73,7 @@ namespace com.itextpdf.kernel.geom
 		{
 		}
 
-		public Rectangle(com.itextpdf.kernel.geom.Rectangle rect)
+		public Rectangle(iTextSharp.Kernel.Geom.Rectangle rect)
 			: this(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight())
 		{
 		}
@@ -82,20 +82,20 @@ namespace com.itextpdf.kernel.geom
 		/// 	</summary>
 		/// <param name="rectangles">list of input rectangles.</param>
 		/// <returns>common rectangle.</returns>
-		public static com.itextpdf.kernel.geom.Rectangle GetCommonRectangle(params com.itextpdf.kernel.geom.Rectangle
+		public static iTextSharp.Kernel.Geom.Rectangle GetCommonRectangle(params iTextSharp.Kernel.Geom.Rectangle
 			[] rectangles)
 		{
 			float ury = -float.MaxValue;
 			float llx = float.MaxValue;
 			float lly = float.MaxValue;
 			float urx = -float.MaxValue;
-			foreach (com.itextpdf.kernel.geom.Rectangle rectangle in rectangles)
+			foreach (iTextSharp.Kernel.Geom.Rectangle rectangle in rectangles)
 			{
 				if (rectangle == null)
 				{
 					continue;
 				}
-				com.itextpdf.kernel.geom.Rectangle rec = rectangle.Clone();
+				iTextSharp.Kernel.Geom.Rectangle rec = rectangle.Clone();
 				if (rec.GetY() < lly)
 				{
 					lly = rec.GetY();
@@ -113,10 +113,10 @@ namespace com.itextpdf.kernel.geom
 					urx = rec.GetX() + rec.GetWidth();
 				}
 			}
-			return new com.itextpdf.kernel.geom.Rectangle(llx, lly, urx - llx, ury - lly);
+			return new iTextSharp.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle SetBbox(float llx, float lly, float
+		public virtual iTextSharp.Kernel.Geom.Rectangle SetBbox(float llx, float lly, float
 			 urx, float ury)
 		{
 			// If llx is greater than urx, swap them (normalize)
@@ -145,7 +145,7 @@ namespace com.itextpdf.kernel.geom
 			return x;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle SetX(float x)
+		public virtual iTextSharp.Kernel.Geom.Rectangle SetX(float x)
 		{
 			this.x = x;
 			return this;
@@ -156,7 +156,7 @@ namespace com.itextpdf.kernel.geom
 			return y;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle SetY(float y)
+		public virtual iTextSharp.Kernel.Geom.Rectangle SetY(float y)
 		{
 			this.y = y;
 			return this;
@@ -167,7 +167,7 @@ namespace com.itextpdf.kernel.geom
 			return width;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle SetWidth(float width)
+		public virtual iTextSharp.Kernel.Geom.Rectangle SetWidth(float width)
 		{
 			this.width = width;
 			return this;
@@ -178,19 +178,19 @@ namespace com.itextpdf.kernel.geom
 			return height;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle SetHeight(float height)
+		public virtual iTextSharp.Kernel.Geom.Rectangle SetHeight(float height)
 		{
 			this.height = height;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle IncreaseHeight(float extra)
+		public virtual iTextSharp.Kernel.Geom.Rectangle IncreaseHeight(float extra)
 		{
 			this.height += extra;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle DecreaseHeight(float extra)
+		public virtual iTextSharp.Kernel.Geom.Rectangle DecreaseHeight(float extra)
 		{
 			this.height -= extra;
 			return this;
@@ -236,25 +236,25 @@ namespace com.itextpdf.kernel.geom
 			return y;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle MoveDown(float move)
+		public virtual iTextSharp.Kernel.Geom.Rectangle MoveDown(float move)
 		{
 			y -= move;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle MoveUp(float move)
+		public virtual iTextSharp.Kernel.Geom.Rectangle MoveUp(float move)
 		{
 			y += move;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle MoveRight(float move)
+		public virtual iTextSharp.Kernel.Geom.Rectangle MoveRight(float move)
 		{
 			x += move;
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle MoveLeft(float move)
+		public virtual iTextSharp.Kernel.Geom.Rectangle MoveLeft(float move)
 		{
 			x -= move;
 			return this;
@@ -262,7 +262,7 @@ namespace com.itextpdf.kernel.geom
 
 		public virtual T ApplyMargins<T>(float topIndent, float rightIndent, float bottomIndent
 			, float leftIndent, bool reverse)
-			where T : com.itextpdf.kernel.geom.Rectangle
+			where T : iTextSharp.Kernel.Geom.Rectangle
 		{
 			x += leftIndent * (reverse ? -1 : 1);
 			width -= (leftIndent + rightIndent) * (reverse ? -1 : 1);
@@ -287,17 +287,17 @@ namespace com.itextpdf.kernel.geom
 			return "Rectangle: " + GetWidth() + 'x' + GetHeight();
 		}
 
-		public virtual com.itextpdf.kernel.geom.Rectangle Clone()
+		public virtual iTextSharp.Kernel.Geom.Rectangle Clone()
 		{
-			return new com.itextpdf.kernel.geom.Rectangle(x, y, width, height);
+			return new iTextSharp.Kernel.Geom.Rectangle(x, y, width, height);
 		}
 
-		public virtual bool EqualsWithEpsilon(com.itextpdf.kernel.geom.Rectangle that)
+		public virtual bool EqualsWithEpsilon(iTextSharp.Kernel.Geom.Rectangle that)
 		{
 			return EqualsWithEpsilon(that, EPS);
 		}
 
-		public virtual bool EqualsWithEpsilon(com.itextpdf.kernel.geom.Rectangle that, float
+		public virtual bool EqualsWithEpsilon(iTextSharp.Kernel.Geom.Rectangle that, float
 			 eps)
 		{
 			float dx = Math.Abs(x - that.x);

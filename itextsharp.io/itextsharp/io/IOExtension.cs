@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace com.itextpdf.io
-{
+namespace iTextSharp.IO {
     internal static class IOExtensions
     {
         public static String JSubstring(this String str, int beginIndex, int endIndex)

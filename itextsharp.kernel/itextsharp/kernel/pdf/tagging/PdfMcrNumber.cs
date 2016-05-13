@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.tagging
+namespace iTextSharp.Kernel.Pdf.Tagging
 {
 	public class PdfMcrNumber : PdfMcr
 	{

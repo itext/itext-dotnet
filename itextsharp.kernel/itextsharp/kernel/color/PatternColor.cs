@@ -43,15 +43,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.color
+namespace iTextSharp.Kernel.Color
 {
-	public class PatternColor : Color
+	public class PatternColor : iTextSharp.Kernel.Color.Color
 	{
 		private PdfPattern pattern;
 
-		private Color underlyingColor;
+		private iTextSharp.Kernel.Color.Color underlyingColor;
 
 		public PatternColor(PdfPattern coloredPattern)
 			: base(new PdfSpecialCs.Pattern(), null)
@@ -60,7 +60,8 @@ namespace com.itextpdf.kernel.color
 			this.pattern = coloredPattern;
 		}
 
-		public PatternColor(PdfPattern.Tiling uncoloredPattern, Color color)
+		public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color
+			 color)
 			: this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue())
 		{
 		}
@@ -74,7 +75,8 @@ namespace com.itextpdf.kernel.color
 				throw new ArgumentException("underlyingCS");
 			}
 			this.pattern = uncoloredPattern;
-			this.underlyingColor = Color.MakeColor(underlyingCS, colorValue);
+			this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(underlyingCS, colorValue
+				);
 		}
 
 		public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern
@@ -82,8 +84,8 @@ namespace com.itextpdf.kernel.color
 			: base(uncoloredTilingCS, colorValue)
 		{
 			this.pattern = uncoloredPattern;
-			this.underlyingColor = Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(
-				), colorValue);
+			this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.
+				GetUnderlyingColorSpace(), colorValue);
 		}
 
 		public virtual PdfPattern GetPattern()
@@ -102,7 +104,7 @@ namespace com.itextpdf.kernel.color
 			{
 				return false;
 			}
-			com.itextpdf.kernel.color.PatternColor color = (com.itextpdf.kernel.color.PatternColor
+			iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor
 				)o;
 			return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor
 				.Equals(color.underlyingColor) : color.underlyingColor == null);

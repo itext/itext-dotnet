@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary><p>Represents a 2D matrix of bits.</summary>
 	/// <remarks>

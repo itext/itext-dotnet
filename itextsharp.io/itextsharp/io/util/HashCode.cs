@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
 	/// <summary>
 	/// This class is a convenience method to sequentially calculate hash code of the
@@ -126,7 +126,7 @@ namespace com.itextpdf.io.util
 		/// <returns>combined hashCode</returns>
 		public static int Combine(int hashCode, float value)
 		{
-			int v = com.itextpdf.io.util.JavaUtil.FloatToIntBits(value);
+			int v = iTextSharp.IO.Util.JavaUtil.FloatToIntBits(value);
 			return Combine(hashCode, v);
 		}
 
@@ -136,7 +136,7 @@ namespace com.itextpdf.io.util
 		/// <returns>combined hashCode</returns>
 		public static int Combine(int hashCode, double value)
 		{
-			long v = com.itextpdf.io.util.JavaUtil.DoubleToLongBits(value);
+			long v = iTextSharp.IO.Util.JavaUtil.DoubleToLongBits(value);
 			return Combine(hashCode, v);
 		}
 

@@ -28,18 +28,18 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using com.itextpdf.kernel.xmp;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.kernel.xmp.options
+namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>
 	/// Options for
-	/// <see cref="com.itextpdf.kernel.xmp.XMPMetaFactory.SerializeToBuffer(com.itextpdf.kernel.xmp.XMPMeta, SerializeOptions)
+	/// <see cref="iTextSharp.Kernel.Xmp.XMPMetaFactory.SerializeToBuffer(iTextSharp.Kernel.Xmp.XMPMeta, SerializeOptions)
 	/// 	"/>
 	/// .
 	/// </summary>
 	/// <since>24.01.2006</since>
-	public sealed class SerializeOptions : Options
+	public sealed class SerializeOptions : iTextSharp.Kernel.Xmp.Options.Options
 	{
 		/// <summary>Omit the XML packet wrapper.</summary>
 		public const int OMIT_PACKET_WRAPPER = 0x0010;
@@ -144,7 +144,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <summary>Constructor using inital options</summary>
 		/// <param name="options">the inital options</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if options are not consistant.
 		/// 	</exception>
 		public SerializeOptions(int options)
 			: base(options)
@@ -162,8 +162,8 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetOmitPacketWrapper(bool
-			 value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetOmitPacketWrapper(bool value
+			)
 		{
 			SetOption(OMIT_PACKET_WRAPPER, value);
 			return this;
@@ -177,8 +177,8 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetOmitXmpMetaElement(bool
-			 value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetOmitXmpMetaElement(bool 
+			value)
 		{
 			SetOption(OMIT_XMPMETA_ELEMENT, value);
 			return this;
@@ -192,7 +192,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetReadOnlyPacket(bool value
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetReadOnlyPacket(bool value
 			)
 		{
 			SetOption(READONLY_PACKET, value);
@@ -207,8 +207,8 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetUseCompactFormat(bool 
-			value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetUseCompactFormat(bool value
+			)
 		{
 			SetOption(USE_COMPACT_FORMAT, value);
 			return this;
@@ -222,8 +222,8 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetUseCanonicalFormat(bool
-			 value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetUseCanonicalFormat(bool 
+			value)
 		{
 			SetOption(USE_CANONICAL_FORMAT, value);
 			return this;
@@ -237,7 +237,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetIncludeThumbnailPad(bool
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetIncludeThumbnailPad(bool
 			 value)
 		{
 			SetOption(INCLUDE_THUMBNAIL_PAD, value);
@@ -252,8 +252,8 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetExactPacketLength(bool
-			 value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetExactPacketLength(bool value
+			)
 		{
 			SetOption(EXACT_PACKET_LENGTH, value);
 			return this;
@@ -267,7 +267,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetSort(bool value)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetSort(bool value)
 		{
 			SetOption(SORT, value);
 			return this;
@@ -281,7 +281,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetEncodeUTF16BE(bool value
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetEncodeUTF16BE(bool value
 			)
 		{
 			// clear unicode bits
@@ -298,7 +298,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetEncodeUTF16LE(bool value
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetEncodeUTF16LE(bool value
 			)
 		{
 			// clear unicode bits
@@ -315,7 +315,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="baseIndent">The baseIndent to set.</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetBaseIndent(int baseIndent
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetBaseIndent(int baseIndent
 			)
 		{
 			this.baseIndent = baseIndent;
@@ -330,7 +330,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="indent">The indent to set.</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetIndent(String indent)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetIndent(String indent)
 		{
 			this.indent = indent;
 			return this;
@@ -344,8 +344,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="newline">The newline to set.</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetNewline(String newline
-			)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetNewline(String newline)
 		{
 			this.newline = newline;
 			return this;
@@ -359,7 +358,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="padding">The padding to set.</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.SerializeOptions SetPadding(int padding)
+		public iTextSharp.Kernel.Xmp.Options.SerializeOptions SetPadding(int padding)
 		{
 			this.padding = padding;
 			return this;
@@ -396,14 +395,14 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <returns>Returns clone of this SerializeOptions-object with the same options set.
 		/// 	</returns>
-		/// <exception cref="java.lang.CloneNotSupportedException">Cannot happen in this place.
+		/// <exception cref="Java.Lang.CloneNotSupportedException">Cannot happen in this place.
 		/// 	</exception>
 		public Object Clone()
 		{
-			com.itextpdf.kernel.xmp.options.SerializeOptions clone;
+			iTextSharp.Kernel.Xmp.Options.SerializeOptions clone;
 			try
 			{
-				clone = new com.itextpdf.kernel.xmp.options.SerializeOptions(GetOptions());
+				clone = new iTextSharp.Kernel.Xmp.Options.SerializeOptions(GetOptions());
 				clone.SetBaseIndent(baseIndent);
 				clone.SetIndent(indent);
 				clone.SetNewline(newline);

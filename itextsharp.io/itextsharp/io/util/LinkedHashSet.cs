@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace com.itextpdf.io.util {
+namespace iTextSharp.IO.Util {
     public class LinkedHashSet<TKey> : ISet<TKey> {
         private readonly IDictionary<TKey, LinkedListNode<TKey>> _map = new Dictionary<TKey, LinkedListNode<TKey>>();
         private readonly LinkedList<TKey> _list = new LinkedList<TKey>();

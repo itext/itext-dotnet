@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.font.cmap
+namespace iTextSharp.IO.Font.Cmap
 {
 	public class CMapParser
 	{

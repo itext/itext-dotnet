@@ -43,19 +43,19 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.color
+namespace iTextSharp.Kernel.Color
 {
-	public class DeviceGray : Color
+	public class DeviceGray : iTextSharp.Kernel.Color.Color
 	{
-		public static readonly com.itextpdf.kernel.color.DeviceGray WHITE = new com.itextpdf.kernel.color.DeviceGray
+		public static readonly iTextSharp.Kernel.Color.DeviceGray WHITE = new iTextSharp.Kernel.Color.DeviceGray
 			(1f);
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray GRAY = new com.itextpdf.kernel.color.DeviceGray
+		public static readonly iTextSharp.Kernel.Color.DeviceGray GRAY = new iTextSharp.Kernel.Color.DeviceGray
 			(.5f);
 
-		public static readonly com.itextpdf.kernel.color.DeviceGray BLACK = new com.itextpdf.kernel.color.DeviceGray
+		public static readonly iTextSharp.Kernel.Color.DeviceGray BLACK = new iTextSharp.Kernel.Color.DeviceGray
 			();
 
 		public DeviceGray(float value)
@@ -68,24 +68,24 @@ namespace com.itextpdf.kernel.color
 		{
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeLighter(com.itextpdf.kernel.color.DeviceGray
+		public static iTextSharp.Kernel.Color.DeviceGray MakeLighter(iTextSharp.Kernel.Color.DeviceGray
 			 grayColor)
 		{
 			float v = grayColor.GetColorValue()[0];
 			if (v == 0f)
 			{
-				return new com.itextpdf.kernel.color.DeviceGray(0.3f);
+				return new iTextSharp.Kernel.Color.DeviceGray(0.3f);
 			}
 			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
 		}
 
-		public static com.itextpdf.kernel.color.DeviceGray MakeDarker(com.itextpdf.kernel.color.DeviceGray
+		public static iTextSharp.Kernel.Color.DeviceGray MakeDarker(iTextSharp.Kernel.Color.DeviceGray
 			 grayColor)
 		{
 			float v = grayColor.GetColorValue()[0];
 			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new com.itextpdf.kernel.color.DeviceGray(v * multiplier);
+			return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
 		}
 	}
 }

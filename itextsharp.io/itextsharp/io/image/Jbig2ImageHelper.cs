@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	internal class Jbig2ImageHelper
 	{

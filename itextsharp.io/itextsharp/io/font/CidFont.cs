@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class CidFont : FontProgram
 	{

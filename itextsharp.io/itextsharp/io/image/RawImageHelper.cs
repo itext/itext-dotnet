@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.codec;
+using iTextSharp.IO;
+using iTextSharp.IO.Codec;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public sealed class RawImageHelper
 	{
@@ -148,7 +148,7 @@ namespace com.itextpdf.io.image
 		/// <param name="components">1,3 or 4 for GrayScale, RGB and CMYK</param>
 		/// <param name="bpc">bits per component. Must be 1,2,4 or 8</param>
 		/// <param name="data">the image data</param>
-		/// <exception cref="com.itextpdf.io.IOException">on error</exception>
+		/// <exception cref="iTextSharp.IO.IOException">on error</exception>
 		protected internal static void UpdateRawImageParameters(RawImageData image, int width
 			, int height, int components, int bpc, byte[] data)
 		{

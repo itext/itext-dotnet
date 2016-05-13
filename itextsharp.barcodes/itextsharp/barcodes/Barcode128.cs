@@ -1,5 +1,5 @@
 /*
-$Id: 2f8f05e07519d0a1f9d3f4ff23be77af452e9b87 $
+$Id: 9baccae1098e2b775ce313932095f36e294cc4be $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,15 +45,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class Barcode128 : Barcode1D
 	{
@@ -175,9 +174,9 @@ namespace com.itextpdf.barcodes
 				textAlignment = ALIGN_CENTER;
 				codeType = CODE128;
 			}
-			catch (Exception e)
+			catch (System.IO.IOException e)
 			{
-				throw new Exception(e);
+				throw new Exception("Cannot create font", e);
 			}
 		}
 
@@ -648,8 +647,8 @@ namespace com.itextpdf.barcodes
 		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
 		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
 		/// <returns>the dimensions the barcode occupies</returns>
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor
-			)
+		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+			 barColor, iTextSharp.Kernel.Color.Color textColor)
 		{
 			String fullCode;
 			if (codeType == CODE128_RAW)
@@ -790,7 +789,7 @@ namespace com.itextpdf.barcodes
 		/// <param name="code">the code to generate</param>
 		public override void SetCode(String code)
 		{
-			if (GetCodeType() == com.itextpdf.barcodes.Barcode128.CODE128_UCC && code.StartsWith
+			if (GetCodeType() == iTextSharp.Barcodes.Barcode128.CODE128_UCC && code.StartsWith
 				("("))
 			{
 				int idx = 0;

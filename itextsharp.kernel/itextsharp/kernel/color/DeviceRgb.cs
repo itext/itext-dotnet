@@ -43,11 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.color
+namespace iTextSharp.Kernel.Color
 {
-	public class DeviceRgb : Color
+	public class DeviceRgb : iTextSharp.Kernel.Color.Color
 	{
 		public DeviceRgb(int r, int g, int b)
 			: this(r / 255f, g / 255f, b / 255f)
@@ -64,7 +64,7 @@ namespace com.itextpdf.kernel.color
 		{
 		}
 
-		public static com.itextpdf.kernel.color.DeviceRgb MakeLighter(com.itextpdf.kernel.color.DeviceRgb
+		public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb
 			 rgbColor)
 		{
 			float r = rgbColor.GetColorValue()[0];
@@ -73,16 +73,16 @@ namespace com.itextpdf.kernel.color
 			float v = Math.Max(r, Math.Max(g, b));
 			if (v == 0f)
 			{
-				return new com.itextpdf.kernel.color.DeviceRgb(0x54, 0x54, 0x54);
+				return new iTextSharp.Kernel.Color.DeviceRgb(0x54, 0x54, 0x54);
 			}
 			float multiplier = Math.Min(1f, v + 0.33f) / v;
 			r = multiplier * r;
 			g = multiplier * g;
 			b = multiplier * b;
-			return new com.itextpdf.kernel.color.DeviceRgb(r, g, b);
+			return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
 		}
 
-		public static com.itextpdf.kernel.color.DeviceRgb MakeDarker(com.itextpdf.kernel.color.DeviceRgb
+		public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb
 			 rgbColor)
 		{
 			float r = rgbColor.GetColorValue()[0];
@@ -93,7 +93,7 @@ namespace com.itextpdf.kernel.color
 			r = multiplier * r;
 			g = multiplier * g;
 			b = multiplier * b;
-			return new com.itextpdf.kernel.color.DeviceRgb(r, g, b);
+			return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
 		}
 	}
 }

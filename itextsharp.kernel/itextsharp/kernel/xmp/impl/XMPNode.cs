@@ -30,11 +30,12 @@
 using System;
 using System.Collections;
 using System.Text;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
-using java.lang;
+using Java.Lang;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// A node in the internally XMP tree, which can be a schema node, a property node, an array node,
@@ -61,7 +62,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		private String value;
 
 		/// <summary>link to the parent node</summary>
-		private com.itextpdf.kernel.xmp.impl.XMPNode parent;
+		private iTextSharp.Kernel.Xmp.Impl.XMPNode parent;
 
 		/// <summary>list of child nodes, lazy initialized</summary>
 		private IList children = null;
@@ -115,22 +116,22 @@ namespace com.itextpdf.kernel.xmp.impl
 		}
 
 		/// <returns>Returns the parent node.</returns>
-		public virtual com.itextpdf.kernel.xmp.impl.XMPNode GetParent()
+		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetParent()
 		{
 			return parent;
 		}
 
 		/// <param name="index">an index [1..size]</param>
 		/// <returns>Returns the child with the requested index.</returns>
-		public virtual com.itextpdf.kernel.xmp.impl.XMPNode GetChild(int index)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetChild(int index)
 		{
-			return (com.itextpdf.kernel.xmp.impl.XMPNode)GetChildren()[index - 1];
+			return (iTextSharp.Kernel.Xmp.Impl.XMPNode)GetChildren()[index - 1];
 		}
 
 		/// <summary>Adds a node as child to this node.</summary>
 		/// <param name="node">an XMPNode</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
-		public virtual void AddChild(com.itextpdf.kernel.xmp.impl.XMPNode node)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
+		public virtual void AddChild(iTextSharp.Kernel.Xmp.Impl.XMPNode node)
 		{
 			// check for duplicate properties
 			AssertChildNotExisting(node.GetName());
@@ -145,9 +146,8 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// An index of size + 1 appends a node.
 		/// </param>
 		/// <param name="node">an XMPNode</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
-		public virtual void AddChild(int index, com.itextpdf.kernel.xmp.impl.XMPNode node
-			)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
+		public virtual void AddChild(int index, iTextSharp.Kernel.Xmp.Impl.XMPNode node)
 		{
 			AssertChildNotExisting(node.GetName());
 			node.SetParent(this);
@@ -160,8 +160,8 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <em>Note:</em> The node children are indexed from [1..size]!
 		/// </param>
 		/// <param name="node">the replacement XMPNode</param>
-		public virtual void ReplaceChild(int index, com.itextpdf.kernel.xmp.impl.XMPNode 
-			node)
+		public virtual void ReplaceChild(int index, iTextSharp.Kernel.Xmp.Impl.XMPNode node
+			)
 		{
 			node.SetParent(this);
 			GetChildren()[index - 1] = node;
@@ -181,7 +181,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// If its a schema node and doesn't have any children anymore, its deleted.
 		/// </remarks>
 		/// <param name="node">the child node to delete.</param>
-		public virtual void RemoveChild(com.itextpdf.kernel.xmp.impl.XMPNode node)
+		public virtual void RemoveChild(iTextSharp.Kernel.Xmp.Impl.XMPNode node)
 		{
 			GetChildren().Remove(node);
 			CleanupChildren();
@@ -215,16 +215,16 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="expr">child node name to look for</param>
 		/// <returns>Returns an <code>XMPNode</code> if node has been found, <code>null</code> otherwise.
 		/// 	</returns>
-		public virtual com.itextpdf.kernel.xmp.impl.XMPNode FindChildByName(String expr)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode FindChildByName(String expr)
 		{
 			return Find(GetChildren(), expr);
 		}
 
 		/// <param name="index">an index [1..size]</param>
 		/// <returns>Returns the qualifier with the requested index.</returns>
-		public virtual com.itextpdf.kernel.xmp.impl.XMPNode GetQualifier(int index)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetQualifier(int index)
 		{
-			return (com.itextpdf.kernel.xmp.impl.XMPNode)GetQualifier()[index - 1];
+			return (iTextSharp.Kernel.Xmp.Impl.XMPNode)GetQualifier()[index - 1];
 		}
 
 		/// <returns>Returns the number of qualifier without neccessarily creating a list.</returns>
@@ -235,8 +235,8 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Appends a qualifier to the qualifier list and sets respective options.</summary>
 		/// <param name="qualNode">a qualifier node.</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"></exception>
-		public virtual void AddQualifier(com.itextpdf.kernel.xmp.impl.XMPNode qualNode)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
+		public virtual void AddQualifier(iTextSharp.Kernel.Xmp.Impl.XMPNode qualNode)
 		{
 			AssertQualifierNotExisting(qualNode.GetName());
 			qualNode.SetParent(this);
@@ -267,8 +267,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Removes one qualifier node and fixes the options.</summary>
 		/// <param name="qualNode">qualifier to remove</param>
-		public virtual void RemoveQualifier(com.itextpdf.kernel.xmp.impl.XMPNode qualNode
-			)
+		public virtual void RemoveQualifier(iTextSharp.Kernel.Xmp.Impl.XMPNode qualNode)
 		{
 			PropertyOptions opts = GetOptions();
 			if (qualNode.IsLanguageNode())
@@ -308,7 +307,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Returns a qualifier <code>XMPNode</code> if node has been found,
 		/// <code>null</code> otherwise.
 		/// </returns>
-		public virtual com.itextpdf.kernel.xmp.impl.XMPNode FindQualifierByName(String expr
+		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode FindQualifierByName(String expr
 			)
 		{
 			return Find(qualifier, expr);
@@ -332,7 +331,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 			else
 			{
-				return java.util.Collections.EmptyIterator();
+				return JavaCollectionsUtil.EmptyIterator();
 			}
 		}
 
@@ -355,7 +354,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 			else
 			{
-				return java.util.Collections.EmptyIterator();
+				return JavaCollectionsUtil.EmptyIterator();
 			}
 		}
 
@@ -402,7 +401,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				// cannot happen
 				newOptions = new PropertyOptions();
 			}
-			com.itextpdf.kernel.xmp.impl.XMPNode newNode = new com.itextpdf.kernel.xmp.impl.XMPNode
+			iTextSharp.Kernel.Xmp.Impl.XMPNode newNode = new iTextSharp.Kernel.Xmp.Impl.XMPNode
 				(name, value, newOptions);
 			CloneSubtree(newNode);
 			return newNode;
@@ -413,22 +412,21 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// qualifier )into and add it to the destination node.
 		/// </summary>
 		/// <param name="destination">the node to add the cloned subtree</param>
-		public virtual void CloneSubtree(com.itextpdf.kernel.xmp.impl.XMPNode destination
-			)
+		public virtual void CloneSubtree(iTextSharp.Kernel.Xmp.Impl.XMPNode destination)
 		{
 			try
 			{
 				for (IEnumerator it = IterateChildren(); it.MoveNext(); )
 				{
-					com.itextpdf.kernel.xmp.impl.XMPNode child = (com.itextpdf.kernel.xmp.impl.XMPNode
-						)it.Current;
-					destination.AddChild((com.itextpdf.kernel.xmp.impl.XMPNode)child.Clone());
+					iTextSharp.Kernel.Xmp.Impl.XMPNode child = (iTextSharp.Kernel.Xmp.Impl.XMPNode)it
+						.Current;
+					destination.AddChild((iTextSharp.Kernel.Xmp.Impl.XMPNode)child.Clone());
 				}
 				for (IEnumerator it_1 = IterateQualifier(); it_1.MoveNext(); )
 				{
-					com.itextpdf.kernel.xmp.impl.XMPNode qualifier = (com.itextpdf.kernel.xmp.impl.XMPNode
+					iTextSharp.Kernel.Xmp.Impl.XMPNode qualifier = (iTextSharp.Kernel.Xmp.Impl.XMPNode
 						)it_1.Current;
-					destination.AddQualifier((com.itextpdf.kernel.xmp.impl.XMPNode)qualifier.Clone());
+					destination.AddQualifier((iTextSharp.Kernel.Xmp.Impl.XMPNode)qualifier.Clone());
 				}
 			}
 			catch (XMPException)
@@ -449,17 +447,17 @@ namespace com.itextpdf.kernel.xmp.impl
 			return result.ToString();
 		}
 
-		/// <seealso cref="java.lang.Comparable{T}.CompareTo(System.Object)"></seealso>
+		/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"></seealso>
 		public virtual int CompareTo(Object xmpNode)
 		{
 			if (GetOptions().IsSchemaNode())
 			{
-				return string.CompareOrdinal(this.value, ((com.itextpdf.kernel.xmp.impl.XMPNode)xmpNode
+				return string.CompareOrdinal(this.value, ((iTextSharp.Kernel.Xmp.Impl.XMPNode)xmpNode
 					).GetValue());
 			}
 			else
 			{
-				return string.CompareOrdinal(this.name, ((com.itextpdf.kernel.xmp.impl.XMPNode)xmpNode
+				return string.CompareOrdinal(this.name, ((iTextSharp.Kernel.Xmp.Impl.XMPNode)xmpNode
 					).GetName());
 			}
 		}
@@ -576,8 +574,8 @@ namespace com.itextpdf.kernel.xmp.impl
 			// sort qualifier
 			if (HasQualifier())
 			{
-				com.itextpdf.kernel.xmp.impl.XMPNode[] quals = (com.itextpdf.kernel.xmp.impl.XMPNode
-					[])GetQualifier().ToArray(new com.itextpdf.kernel.xmp.impl.XMPNode[GetQualifierLength
+				iTextSharp.Kernel.Xmp.Impl.XMPNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XMPNode[]
+					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetQualifierLength
 					()]);
 				int sortFrom = 0;
 				while (quals.Length > sortFrom && (XMPConst.XML_LANG.Equals(quals[sortFrom].GetName
@@ -600,11 +598,11 @@ namespace com.itextpdf.kernel.xmp.impl
 			{
 				if (!GetOptions().IsArray())
 				{
-					children.Sort();
+					JavaCollectionsUtil.Sort(children);
 				}
 				for (IEnumerator it = IterateChildren(); it.MoveNext(); )
 				{
-					((com.itextpdf.kernel.xmp.impl.XMPNode)it.Current).Sort();
+					((iTextSharp.Kernel.Xmp.Impl.XMPNode)it.Current).Sort();
 				}
 			}
 		}
@@ -680,8 +678,8 @@ namespace com.itextpdf.kernel.xmp.impl
 			// render qualifier
 			if (recursive && HasQualifier())
 			{
-				com.itextpdf.kernel.xmp.impl.XMPNode[] quals = (com.itextpdf.kernel.xmp.impl.XMPNode
-					[])GetQualifier().ToArray(new com.itextpdf.kernel.xmp.impl.XMPNode[GetQualifierLength
+				iTextSharp.Kernel.Xmp.Impl.XMPNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XMPNode[]
+					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetQualifierLength
 					()]);
 				int i_1 = 0;
 				while (quals.Length > i_1 && (XMPConst.XML_LANG.Equals(quals[i_1].GetName()) || "rdf:type"
@@ -692,15 +690,15 @@ namespace com.itextpdf.kernel.xmp.impl
 				System.Array.Sort(quals, i_1, quals.Length);
 				for (i_1 = 0; i_1 < quals.Length; i_1++)
 				{
-					com.itextpdf.kernel.xmp.impl.XMPNode qualifier = quals[i_1];
+					iTextSharp.Kernel.Xmp.Impl.XMPNode qualifier = quals[i_1];
 					qualifier.DumpNode(result, recursive, indent + 2, i_1 + 1);
 				}
 			}
 			// render children
 			if (recursive && HasChildren())
 			{
-				com.itextpdf.kernel.xmp.impl.XMPNode[] children = (com.itextpdf.kernel.xmp.impl.XMPNode
-					[])GetChildren().ToArray(new com.itextpdf.kernel.xmp.impl.XMPNode[GetChildrenLength
+				iTextSharp.Kernel.Xmp.Impl.XMPNode[] children = (iTextSharp.Kernel.Xmp.Impl.XMPNode
+					[])GetChildren().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetChildrenLength
 					()]);
 				if (!GetOptions().IsArray())
 				{
@@ -708,7 +706,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				}
 				for (int i_1 = 0; i_1 < children.Length; i_1++)
 				{
-					com.itextpdf.kernel.xmp.impl.XMPNode child = children[i_1];
+					iTextSharp.Kernel.Xmp.Impl.XMPNode child = children[i_1];
 					child.DumpNode(result, recursive, indent + 1, i_1 + 1);
 				}
 			}
@@ -743,7 +741,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <returns>Returns a read-only copy of child nodes list.</returns>
 		public virtual IList GetUnmodifiableChildren()
 		{
-			return java.util.Collections.UnmodifiableList(new ArrayList(GetChildren()));
+			return JavaCollectionsUtil.UnmodifiableList(new ArrayList(GetChildren()));
 		}
 
 		/// <returns>Returns list of qualifier that is lazy initialized.</returns>
@@ -761,7 +759,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// and <code>addQualifier()</code>.
 		/// </summary>
 		/// <param name="parent">Sets the parent node.</param>
-		protected internal virtual void SetParent(com.itextpdf.kernel.xmp.impl.XMPNode parent
+		protected internal virtual void SetParent(iTextSharp.Kernel.Xmp.Impl.XMPNode parent
 			)
 		{
 			this.parent = parent;
@@ -771,14 +769,14 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="list">the list to search in</param>
 		/// <param name="expr">the search expression</param>
 		/// <returns>Returns the found node or <code>nulls</code>.</returns>
-		private com.itextpdf.kernel.xmp.impl.XMPNode Find(IList list, String expr)
+		private iTextSharp.Kernel.Xmp.Impl.XMPNode Find(IList list, String expr)
 		{
 			if (list != null)
 			{
 				for (IEnumerator it = list.GetEnumerator(); it.MoveNext(); )
 				{
-					com.itextpdf.kernel.xmp.impl.XMPNode child = (com.itextpdf.kernel.xmp.impl.XMPNode
-						)it.Current;
+					iTextSharp.Kernel.Xmp.Impl.XMPNode child = (iTextSharp.Kernel.Xmp.Impl.XMPNode)it
+						.Current;
 					if (child.GetName().Equals(expr))
 					{
 						return child;
@@ -791,7 +789,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <summary>Checks that a node name is not existing on the same level, except for array items.
 		/// 	</summary>
 		/// <param name="childName">the node name to check</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if a node with the same name is existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a node with the same name is existing.
 		/// 	</exception>
 		private void AssertChildNotExisting(String childName)
 		{
@@ -805,7 +803,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Checks that a qualifier name is not existing on the same level.</summary>
 		/// <param name="qualifierName">the new qualifier name</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if a node with the same name is existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a node with the same name is existing.
 		/// 	</exception>
 		private void AssertQualifierNotExisting(String qualifierName)
 		{

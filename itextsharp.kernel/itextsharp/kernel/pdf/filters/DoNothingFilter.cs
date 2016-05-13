@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.filters
+namespace iTextSharp.Kernel.Pdf.Filters
 {
 	/// <summary>A filter that doesn't modify the stream at all</summary>
 	public class DoNothingFilter : IFilterHandler

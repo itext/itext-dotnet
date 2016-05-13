@@ -45,26 +45,26 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.events;
-using com.itextpdf.kernel.font;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.log;
-using com.itextpdf.kernel.numbering;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.filespec;
-using com.itextpdf.kernel.pdf.navigation;
-using com.itextpdf.kernel.pdf.tagging;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Events;
+using iTextSharp.Kernel.Font;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Log;
+using iTextSharp.Kernel.Numbering;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Filespec;
+using iTextSharp.Kernel.Pdf.Navigation;
+using iTextSharp.Kernel.Pdf.Tagging;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfDocument : IEventDispatcher
 	{
@@ -212,14 +212,14 @@ namespace com.itextpdf.kernel.pdf
 				.properties.IsPublicKeyEncryptionUsed();
 			if (properties.appendMode && writerHasEncryption)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
-					));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+					);
 				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
 			}
 			if (properties.preserveEncryption && writerHasEncryption)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
-					));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+					);
 				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
 			}
 			Open(writer.properties.pdfVersion);
@@ -232,14 +232,14 @@ namespace com.itextpdf.kernel.pdf
 			this.xmpMetadata = xmpMetadata;
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions
 			)
 		{
 			SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual void SetXmpMetadata(XMPMeta xmpMeta)
 		{
 			SerializeOptions serializeOptions = new SerializeOptions();
@@ -367,7 +367,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Creates and inserts new page to the document.</summary>
 		/// <param name="index">position to addPage page to</param>
 		/// <returns>inserted page</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">
+		/// <exception cref="iTextSharp.Kernel.PdfException">
 		/// in case
 		/// <c>page</c>
 		/// is flushed
@@ -381,7 +381,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="index">position to addPage page to</param>
 		/// <param name="pageSize">page size of the new page</param>
 		/// <returns>inserted page</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">
+		/// <exception cref="iTextSharp.Kernel.PdfException">
 		/// in case
 		/// <c>page</c>
 		/// is flushed
@@ -400,7 +400,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Adds page to the end of document.</summary>
 		/// <param name="page">page to add.</param>
 		/// <returns>added page.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">
+		/// <exception cref="iTextSharp.Kernel.PdfException">
 		/// in case
 		/// <paramref name="page"/>
 		/// is flushed
@@ -417,7 +417,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="index">position to addPage page to</param>
 		/// <param name="page">page to addPage</param>
 		/// <returns>inserted page</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">
+		/// <exception cref="iTextSharp.Kernel.PdfException">
 		/// in case
 		/// <paramref name="page"/>
 		/// is flushed
@@ -903,8 +903,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="toDocument">a document to copy pages to.</param>
 		/// <param name="insertBeforePage">a position where to insert copied pages.</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage)
 		{
 			return CopyPagesTo(pageFrom, pageTo, toDocument, insertBeforePage, null);
@@ -923,8 +923,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="insertBeforePage">a position where to insert copied pages.</param>
 		/// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage, IPdfPageExtraCopier copier)
 		{
 			IList<int> pages = new List<int>();
@@ -946,8 +946,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="pageTo"/>
 		/// <param name="toDocument"/>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument)
 		{
 			return CopyPagesTo(pageFrom, pageTo, toDocument, null);
@@ -965,8 +965,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="toDocument"/>
 		/// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, IPdfPageExtraCopier copier)
 		{
 			return CopyPagesTo(pageFrom, pageTo, toDocument, toDocument.GetNumberOfPages() + 
@@ -985,8 +985,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="toDocument">a document to copy pages to.</param>
 		/// <param name="insertBeforePage">a position where to insert copied pages.</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, insertBeforePage, null);
@@ -1005,13 +1005,13 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="insertBeforePage">a position where to insert copied pages.</param>
 		/// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage, IPdfPageExtraCopier copier)
 		{
 			if (pagesToCopy.IsEmpty())
 			{
-				return java.util.Collections.EmptyList();
+				return JavaCollectionsUtil.EmptyList();
 			}
 			CheckClosingStatus();
 			IList<PdfPage> copiedPages = new List<PdfPage>();
@@ -1098,8 +1098,8 @@ namespace com.itextpdf.kernel.pdf
 		/// 	</param>
 		/// <param name="toDocument">a document to copy pages to.</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, null);
@@ -1117,8 +1117,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="toDocument">a document to copy pages to.</param>
 		/// <param name="copier">a copier which bears a special copy logic</param>
 		/// <returns>list of copied pages</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, IPdfPageExtraCopier copier)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier
@@ -1178,7 +1178,7 @@ namespace com.itextpdf.kernel.pdf
 		/// An object destination refers to. Must be an array or a dictionary with key /D and array.
 		/// See PdfSpec 12.3.2.3 for more info.
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual void AddNamedDestination(String key, PdfObject value)
 		{
 			CheckClosingStatus();
@@ -1246,7 +1246,7 @@ namespace com.itextpdf.kernel.pdf
 				, description, fileDisplay, mimeType, fileParameter, afRelationshipValue, true));
 		}
 
-		/// <exception cref="java.io.FileNotFoundException"/>
+		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public virtual void AddFileAttachment(String description, String file, String fileDisplay
 			, PdfName mimeType, PdfName afRelationshipValue)
 		{
@@ -1441,7 +1441,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <see langword="null"/>
 		/// otherwise
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void Open(PdfVersion newPdfVersion)
 		{
 			try
@@ -1623,13 +1623,13 @@ namespace com.itextpdf.kernel.pdf
 			}
 			catch (XMPException e)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfDocument
-					));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+					);
 				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
 			}
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		protected internal virtual XMPMeta UpdateDefaultXmpMetadata()
 		{
 			XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
@@ -1790,7 +1790,7 @@ namespace com.itextpdf.kernel.pdf
 		}
 
 		/// <summary>checks whether a method is invoked at the closed document</summary>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void CheckClosingStatus()
 		{
 			if (closed)
@@ -1801,7 +1801,7 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal virtual Counter GetCounter()
 		{
-			return CounterFactory.GetCounter(typeof(com.itextpdf.kernel.pdf.PdfDocument));
+			return CounterFactory.GetCounter(typeof(iTextSharp.Kernel.Pdf.PdfDocument));
 		}
 
 		/// <summary>This method removes all annotation entries from form fields associated with a given page.
@@ -1823,8 +1823,8 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		private void CopyLinkAnnotations(com.itextpdf.kernel.pdf.PdfDocument toDocument, 
-			IDictionary<PdfPage, PdfPage> page2page)
+		private void CopyLinkAnnotations(iTextSharp.Kernel.Pdf.PdfDocument toDocument, IDictionary
+			<PdfPage, PdfPage> page2page)
 		{
 			IList<PdfName> excludedKeys = new List<PdfName>();
 			excludedKeys.Add(PdfName.Dest);
@@ -1856,7 +1856,7 @@ namespace com.itextpdf.kernel.pdf
 						{
 							if (PdfName.GoTo.Equals(action.Get(PdfName.S)))
 							{
-								copiedAction = action.CopyTo(toDocument, com.itextpdf.io.util.JavaUtil.ArraysAsList
+								copiedAction = action.CopyTo(toDocument, iTextSharp.IO.Util.JavaUtil.ArraysAsList
 									(PdfName.D), false);
 								PdfDestination goToDest = GetCatalog().CopyDestination(action.Get(PdfName.D), page2page
 									, toDocument);
@@ -1897,8 +1897,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>This method copies all given outlines</summary>
 		/// <param name="outlines">outlines to be copied</param>
 		/// <param name="toDocument">document where outlines should be copied</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
-		private void CopyOutlines(ICollection<PdfOutline> outlines, com.itextpdf.kernel.pdf.PdfDocument
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		private void CopyOutlines(ICollection<PdfOutline> outlines, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, IDictionary<PdfPage, PdfPage> page2page)
 		{
 			ICollection<PdfOutline> outlinesToCopy = new HashSet<PdfOutline>();
@@ -1937,9 +1937,9 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="outlinesToCopy">- Set of outlines to be copied</param>
 		/// <param name="newParent">- new parent outline</param>
 		/// <param name="oldParent">- old parent outline</param>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		private void CloneOutlines(ICollection<PdfOutline> outlinesToCopy, PdfOutline newParent
-			, PdfOutline oldParent, IDictionary<PdfPage, PdfPage> page2page, com.itextpdf.kernel.pdf.PdfDocument
+			, PdfOutline oldParent, IDictionary<PdfPage, PdfPage> page2page, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument)
 		{
 			if (null == oldParent)
@@ -2027,7 +2027,7 @@ namespace com.itextpdf.kernel.pdf
 			names.Put(treeType, treeRoot);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String
 			 propName)
 		{

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.kernel.geom
+namespace iTextSharp.Kernel.Geom
 {
 	public class AffineTransform
 	{
@@ -102,7 +102,7 @@ namespace com.itextpdf.kernel.geom
 			m10 = m01 = m02 = m12 = 0;
 		}
 
-		public AffineTransform(com.itextpdf.kernel.geom.AffineTransform t)
+		public AffineTransform(iTextSharp.Kernel.Geom.AffineTransform t)
 		{
 			this.type = t.type;
 			this.m00 = t.m00;
@@ -318,7 +318,7 @@ namespace com.itextpdf.kernel.geom
 			this.m12 = m12;
 		}
 
-		public virtual void SetTransform(com.itextpdf.kernel.geom.AffineTransform t)
+		public virtual void SetTransform(iTextSharp.Kernel.Geom.AffineTransform t)
 		{
 			type = t.type;
 			SetTransform(t.m00, t.m10, t.m01, t.m11, t.m02, t.m12);
@@ -410,46 +410,46 @@ namespace com.itextpdf.kernel.geom
 			type = TYPE_UNKNOWN;
 		}
 
-		public static com.itextpdf.kernel.geom.AffineTransform GetTranslateInstance(double
-			 mx, double my)
+		public static iTextSharp.Kernel.Geom.AffineTransform GetTranslateInstance(double 
+			mx, double my)
 		{
-			com.itextpdf.kernel.geom.AffineTransform t = new com.itextpdf.kernel.geom.AffineTransform
+			iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform
 				();
 			t.SetToTranslation(mx, my);
 			return t;
 		}
 
-		public static com.itextpdf.kernel.geom.AffineTransform GetScaleInstance(double scx
-			, double scY)
+		public static iTextSharp.Kernel.Geom.AffineTransform GetScaleInstance(double scx, 
+			double scY)
 		{
-			com.itextpdf.kernel.geom.AffineTransform t = new com.itextpdf.kernel.geom.AffineTransform
+			iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform
 				();
 			t.SetToScale(scx, scY);
 			return t;
 		}
 
-		public static com.itextpdf.kernel.geom.AffineTransform GetShearInstance(double shx
-			, double shy)
+		public static iTextSharp.Kernel.Geom.AffineTransform GetShearInstance(double shx, 
+			double shy)
 		{
-			com.itextpdf.kernel.geom.AffineTransform m = new com.itextpdf.kernel.geom.AffineTransform
+			iTextSharp.Kernel.Geom.AffineTransform m = new iTextSharp.Kernel.Geom.AffineTransform
 				();
 			m.SetToShear(shx, shy);
 			return m;
 		}
 
-		public static com.itextpdf.kernel.geom.AffineTransform GetRotateInstance(double angle
+		public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle
 			)
 		{
-			com.itextpdf.kernel.geom.AffineTransform t = new com.itextpdf.kernel.geom.AffineTransform
+			iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform
 				();
 			t.SetToRotation(angle);
 			return t;
 		}
 
-		public static com.itextpdf.kernel.geom.AffineTransform GetRotateInstance(double angle
+		public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle
 			, double x, double y)
 		{
-			com.itextpdf.kernel.geom.AffineTransform t = new com.itextpdf.kernel.geom.AffineTransform
+			iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform
 				();
 			t.SetToRotation(angle, x, y);
 			return t;
@@ -457,29 +457,28 @@ namespace com.itextpdf.kernel.geom
 
 		public virtual void Translate(double mx, double my)
 		{
-			Concatenate(com.itextpdf.kernel.geom.AffineTransform.GetTranslateInstance(mx, my)
-				);
+			Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetTranslateInstance(mx, my));
 		}
 
 		public virtual void Scale(double scx, double scy)
 		{
-			Concatenate(com.itextpdf.kernel.geom.AffineTransform.GetScaleInstance(scx, scy));
+			Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetScaleInstance(scx, scy));
 		}
 
 		public virtual void Shear(double shx, double shy)
 		{
-			Concatenate(com.itextpdf.kernel.geom.AffineTransform.GetShearInstance(shx, shy));
+			Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetShearInstance(shx, shy));
 		}
 
 		public virtual void Rotate(double angle)
 		{
-			Concatenate(com.itextpdf.kernel.geom.AffineTransform.GetRotateInstance(angle));
+			Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetRotateInstance(angle));
 		}
 
 		public virtual void Rotate(double angle, double px, double py)
 		{
-			Concatenate(com.itextpdf.kernel.geom.AffineTransform.GetRotateInstance(angle, px, 
-				py));
+			Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetRotateInstance(angle, px, py
+				));
 		}
 
 		/// <summary>Multiply matrix of two AffineTransform objects</summary>
@@ -487,13 +486,13 @@ namespace com.itextpdf.kernel.geom
 		/// <param name="t2">- the AffineTransform object is a multiplier</param>
 		/// <returns>an AffineTransform object that is a result of t1 multiplied by matrix t2.
 		/// 	</returns>
-		internal virtual com.itextpdf.kernel.geom.AffineTransform Multiply(com.itextpdf.kernel.geom.AffineTransform
-			 t1, com.itextpdf.kernel.geom.AffineTransform t2)
+		internal virtual iTextSharp.Kernel.Geom.AffineTransform Multiply(iTextSharp.Kernel.Geom.AffineTransform
+			 t1, iTextSharp.Kernel.Geom.AffineTransform t2)
 		{
-			return new com.itextpdf.kernel.geom.AffineTransform(t1.m00 * t2.m00 + t1.m10 * t2
-				.m01, t1.m00 * t2.m10 + t1.m10 * t2.m11, t1.m01 * t2.m00 + t1.m11 * t2.m01, t1.m01
-				 * t2.m10 + t1.m11 * t2.m11, t1.m02 * t2.m00 + t1.m12 * t2.m01 + t2.m02, t1.m02 
-				* t2.m10 + t1.m12 * t2.m11 + t2.m12);
+			return new iTextSharp.Kernel.Geom.AffineTransform(t1.m00 * t2.m00 + t1.m10 * t2.m01
+				, t1.m00 * t2.m10 + t1.m10 * t2.m11, t1.m01 * t2.m00 + t1.m11 * t2.m01, t1.m01 *
+				 t2.m10 + t1.m11 * t2.m11, t1.m02 * t2.m00 + t1.m12 * t2.m01 + t2.m02, t1.m02 * 
+				t2.m10 + t1.m12 * t2.m11 + t2.m12);
 		}
 
 		// m00
@@ -502,18 +501,18 @@ namespace com.itextpdf.kernel.geom
 		// m11
 		// m02
 		// m12
-		public virtual void Concatenate(com.itextpdf.kernel.geom.AffineTransform t)
+		public virtual void Concatenate(iTextSharp.Kernel.Geom.AffineTransform t)
 		{
 			SetTransform(Multiply(t, this));
 		}
 
-		public virtual void PreConcatenate(com.itextpdf.kernel.geom.AffineTransform t)
+		public virtual void PreConcatenate(iTextSharp.Kernel.Geom.AffineTransform t)
 		{
 			SetTransform(Multiply(this, t));
 		}
 
-		/// <exception cref="com.itextpdf.kernel.geom.NoninvertibleTransformException"/>
-		public virtual com.itextpdf.kernel.geom.AffineTransform CreateInverse()
+		/// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
+		public virtual iTextSharp.Kernel.Geom.AffineTransform CreateInverse()
 		{
 			double det = GetDeterminant();
 			if (Math.Abs(det) < ZERO)
@@ -523,8 +522,8 @@ namespace com.itextpdf.kernel.geom
 					);
 			}
 			//$NON-NLS-1$
-			return new com.itextpdf.kernel.geom.AffineTransform(m11 / det, -m10 / det, -m01 /
-				 det, m00 / det, (m01 * m12 - m11 * m02) / det, (m10 * m02 - m00 * m12) / det);
+			return new iTextSharp.Kernel.Geom.AffineTransform(m11 / det, -m10 / det, -m01 / det
+				, m00 / det, (m01 * m12 - m11 * m02) / det, (m10 * m02 - m00 * m12) / det);
 		}
 
 		// m00
@@ -653,7 +652,7 @@ namespace com.itextpdf.kernel.geom
 			}
 		}
 
-		/// <exception cref="com.itextpdf.kernel.geom.NoninvertibleTransformException"/>
+		/// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
 		public virtual Point InverseTransform(Point src, Point dst)
 		{
 			double det = GetDeterminant();
@@ -674,7 +673,7 @@ namespace com.itextpdf.kernel.geom
 			return dst;
 		}
 
-		/// <exception cref="com.itextpdf.kernel.geom.NoninvertibleTransformException"/>
+		/// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
 		public virtual void InverseTransform(double[] src, int srcOff, double[] dst, int 
 			dstOff, int length)
 		{
@@ -695,7 +694,7 @@ namespace com.itextpdf.kernel.geom
 			}
 		}
 
-		/// <exception cref="com.itextpdf.kernel.geom.NoninvertibleTransformException"/>
+		/// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
 		public virtual void InverseTransform(float[] src, int srcOff, float[] dst, int dstOff
 			, int length)
 		{
@@ -716,10 +715,10 @@ namespace com.itextpdf.kernel.geom
 			}
 		}
 
-		/// <exception cref="java.lang.CloneNotSupportedException"/>
-		public virtual com.itextpdf.kernel.geom.AffineTransform Clone()
+		/// <exception cref="Java.Lang.CloneNotSupportedException"/>
+		public virtual iTextSharp.Kernel.Geom.AffineTransform Clone()
 		{
-			return new com.itextpdf.kernel.geom.AffineTransform(this);
+			return new iTextSharp.Kernel.Geom.AffineTransform(this);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
-$Id: ede9ae155301be6eefdd21b3dceef37e62b41abe $
+$Id: 4a5e8c542a3a835595ebdd1037c20ed1f8d64920 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font.otf.lookuptype6
+namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
 	/// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution
 	/// 	</summary>

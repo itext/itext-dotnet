@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
 	/// <summary>
 	/// <p>A hash map that uses primitive ints for the key rather than objects.</p>
@@ -140,7 +140,7 @@ namespace com.itextpdf.io.util
 			threshold = (int)(initialCapacity * loadFactor);
 		}
 
-		public IntHashtable(com.itextpdf.io.util.IntHashtable o)
+		public IntHashtable(iTextSharp.IO.Util.IntHashtable o)
 			: this(o.table.Length, o.loadFactor)
 		{
 		}
@@ -419,7 +419,7 @@ namespace com.itextpdf.io.util
 				return value;
 			}
 
-			/// <exception cref="java.lang.CloneNotSupportedException"/>
+			/// <exception cref="Java.Lang.CloneNotSupportedException"/>
 			protected internal virtual Object Clone()
 			{
 				return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next
@@ -477,7 +477,7 @@ namespace com.itextpdf.io.util
 			return entry.key;
 		}
 
-		/// <exception cref="java.lang.CloneNotSupportedException"/>
+		/// <exception cref="Java.Lang.CloneNotSupportedException"/>
 		public virtual Object Clone()
 		{
 			IntHashtable t = new IntHashtable(this);

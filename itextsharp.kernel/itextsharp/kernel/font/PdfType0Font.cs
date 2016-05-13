@@ -46,16 +46,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	public class PdfType0Font : PdfFont
 	{
@@ -150,7 +150,7 @@ namespace com.itextpdf.kernel.font
 					if (toUnicodeCMap == null)
 					{
 						toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-						Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.font.PdfType0Font
+						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfType0Font
 							));
 						logger.Error(String.Format(LogMessageConstant.UNKNOWN_CMAP, uniMap));
 					}
@@ -778,7 +778,7 @@ namespace com.itextpdf.kernel.font
 		//TODO optimize memory ussage
 		private static String ToHex4(char ch)
 		{
-			String s = "0000" + com.itextpdf.io.util.JavaUtil.IntegerToHexString(ch);
+			String s = "0000" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(ch);
 			return s.Substring(s.Length - 4);
 		}
 
@@ -884,7 +884,7 @@ namespace com.itextpdf.kernel.font
 			{
 				int m1 = o1[0];
 				int m2 = o2[0];
-				return com.itextpdf.io.util.JavaUtil.IntegerCompare(m1, m2);
+				return iTextSharp.IO.Util.JavaUtil.IntegerCompare(m1, m2);
 			}
 		}
 	}

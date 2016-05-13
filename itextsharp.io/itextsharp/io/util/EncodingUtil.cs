@@ -1,8 +1,7 @@
 using System;
 using System.Text;
 
-namespace com.itextpdf.io.util
-{
+namespace iTextSharp.IO.Util {
 	public sealed class EncodingUtil
 	{
 		private EncodingUtil()

@@ -5,10 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf.colorspace;
 
-namespace com.itextpdf.kernel {
+namespace iTextSharp.Kernel {
     internal static class KernelExtensions {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);

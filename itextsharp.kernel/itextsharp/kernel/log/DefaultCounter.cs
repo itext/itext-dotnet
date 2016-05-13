@@ -42,11 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.io.codec;
-using com.itextpdf.kernel;
-using java.lang;
+using Java.Lang;
+using iTextSharp.IO.Codec;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.log
+namespace iTextSharp.Kernel.Log
 {
 	/// <summary>Default implementation of the Counter interface that essentially doesn't do anything.
 	/// 	</summary>
@@ -100,7 +100,7 @@ namespace com.itextpdf.kernel.log
 					{
 						repeat_level = repeat[2];
 					}
-					System.Console.Out.WriteLine(com.itextpdf.io.util.JavaUtil.GetStringForBytes(message
+					System.Console.Out.WriteLine(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(message
 						));
 				}
 				count = 0;

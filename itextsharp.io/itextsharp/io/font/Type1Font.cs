@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class Type1Font : FontProgram
 	{
@@ -77,12 +77,12 @@ namespace com.itextpdf.io.font
 		private int[] fontStreamLengths;
 
 		/// <exception cref="System.IO.IOException"/>
-		protected internal static com.itextpdf.io.font.Type1Font CreateStandardFont(String
-			 name)
+		protected internal static iTextSharp.IO.Font.Type1Font CreateStandardFont(String 
+			name)
 		{
 			if (FontConstants.BUILTIN_FONTS_14.Contains(name))
 			{
-				return new com.itextpdf.io.font.Type1Font(name, null, null, null);
+				return new iTextSharp.IO.Font.Type1Font(name, null, null, null);
 			}
 			else
 			{
@@ -223,13 +223,13 @@ namespace com.itextpdf.io.font
 				{
 					if (raf.Read() != 0x80)
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.Type1Font));
+						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 						logger.Error(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
 						return null;
 					}
 					if (raf.Read() != PFB_TYPES[k])
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.Type1Font));
+						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 						logger.Error("incorrect.segment.type.in.pfb.file");
 						return null;
 					}
@@ -243,7 +243,7 @@ namespace com.itextpdf.io.font
 						int got = raf.Read(fontStreamBytes, bytePtr, size);
 						if (got < 0)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.Type1Font));
+							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 							logger.Error("premature.end.in.pfb.file");
 							return null;
 						}
@@ -255,7 +255,7 @@ namespace com.itextpdf.io.font
 			}
 			catch (Exception)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.Type1Font));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 				logger.Error("type1.font.file.exception");
 				return null;
 			}

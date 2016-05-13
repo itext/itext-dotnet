@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.collection
+namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollectionField : PdfObjectWrapper<PdfDictionary>
 	{
@@ -199,8 +199,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// 	</remarks>
 		/// <param name="order">a number indicating the order of the field</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionField SetOrder(int
-			 order)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order
+			)
 		{
 			GetPdfObject().Put(PdfName.O, new PdfNumber(order));
 			return this;
@@ -214,8 +214,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <summary>Sets the initial visibility of the field.</summary>
 		/// <param name="visible"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionField SetVisibility
-			(bool visible)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(
+			bool visible)
 		{
 			GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
 			return this;
@@ -229,8 +229,8 @@ namespace com.itextpdf.kernel.pdf.collection
 		/// <summary>Indication if the field value should be editable in the viewer.</summary>
 		/// <param name="editable"/>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.collection.PdfCollectionField SetEditable(
-			bool editable)
+		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool
+			 editable)
 		{
 			GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
 			return this;

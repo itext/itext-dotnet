@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfOutputIntent : PdfObjectWrapper<PdfDictionary>
 	{

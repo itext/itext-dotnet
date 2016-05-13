@@ -1,4 +1,4 @@
-namespace com.itextpdf.io.util
+namespace iTextSharp.IO.Util
 {
 	public class GenericArray<T>
 	{

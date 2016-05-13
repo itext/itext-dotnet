@@ -39,7 +39,7 @@ using System;
  * For more information, please contact iText Software Corp. at this address:
  * sales@itextpdf.com
  */
-namespace com.itextpdf.io.log
+namespace iTextSharp.IO.Log
 {
     public interface Logger {
 

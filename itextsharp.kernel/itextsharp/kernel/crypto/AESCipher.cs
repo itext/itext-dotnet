@@ -49,7 +49,7 @@ using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
 
-namespace com.itextpdf.kernel.crypto
+namespace iTextSharp.Kernel.Crypto
 {
 	/// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
 	/// <author>Paulo Soares</author>

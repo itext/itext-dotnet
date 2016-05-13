@@ -1,12 +1,11 @@
 using System;
+using Java.IO;
 using NUnit.Framework;
-using com.itextpdf.kernel.color;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.canvas;
-using com.itextpdf.kernel.utils;
-using java.io;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Canvas;
+using iTextSharp.Kernel.Utils;
 
-namespace com.itextpdf.barcodes
+namespace iTextSharp.Barcodes
 {
 	public class BarcodeDataMatrixTest
 	{
@@ -14,7 +13,7 @@ namespace com.itextpdf.barcodes
 
 		public const String destinationFolder = "./target/test/com/itextpdf/barcodes/BarcodeDataMatrix/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.BeforeClass]
 		public static void BeforeClass()
 		{
 			File dir = new File(destinationFolder);
@@ -26,7 +25,7 @@ namespace com.itextpdf.barcodes
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void Barcode01Test()
@@ -39,14 +38,14 @@ namespace com.itextpdf.barcodes
 			BarcodeDataMatrix barcode = new BarcodeDataMatrix();
 			barcode.SetCode("AAAAAAAAAA;BBBBAAAA3;00028;BBBAA05;AAAA;AAAAAA;1234567;AQWXSZ;JEAN;;;;7894561;AQWXSZ;GEO;;;;1;1;1;1;0;0;1;0;1;0;0;0;1;0;1;0;0;0;0;0;0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1"
 				);
-			barcode.PlaceBarcode(canvas, Color.GREEN, 5);
+			barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 5);
 			document.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void Barcode02Test()
@@ -57,7 +56,7 @@ namespace com.itextpdf.barcodes
 			PdfPage page1 = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page1);
 			BarcodeDataMatrix barcode2 = new BarcodeDataMatrix("дима", "UTF-8");
-			barcode2.PlaceBarcode(canvas, Color.GREEN, 10);
+			barcode2.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 10);
 			document.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));

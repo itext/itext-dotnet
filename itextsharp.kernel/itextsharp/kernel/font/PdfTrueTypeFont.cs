@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	/// <summary>Note.</summary>
 	/// <remarks>Note. For TrueType FontNames.getStyle() is the same to Subfamily(). So, we shouldn't add style to /BaseFont.
@@ -204,7 +204,7 @@ namespace com.itextpdf.kernel.font
 						}
 						catch (PdfException e)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.font.PdfTrueTypeFont
+							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
 								));
 							logger.Error(e.Message);
 							fontStream = null;
@@ -247,7 +247,7 @@ namespace com.itextpdf.kernel.font
 						}
 						catch (PdfException e)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.font.PdfTrueTypeFont
+							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
 								));
 							logger.Error(e.Message);
 							fontStream = null;

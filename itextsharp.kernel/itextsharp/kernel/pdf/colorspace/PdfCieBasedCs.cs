@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io.color;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Color;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.colorspace
+namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfCieBasedCs : PdfColorSpace
 	{

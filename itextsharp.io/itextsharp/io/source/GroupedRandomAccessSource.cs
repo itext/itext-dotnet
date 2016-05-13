@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	/// <summary>
 	/// A RandomAccessSource that is based on a set of underlying sources,

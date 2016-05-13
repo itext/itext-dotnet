@@ -42,11 +42,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.pdf.canvas
+namespace iTextSharp.Kernel.Pdf.Canvas
 {
 	/// <summary>A PdfCanvas instance with an inherent tiling pattern.</summary>
 	public class PdfPatternCanvas : PdfCanvas

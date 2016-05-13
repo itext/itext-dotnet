@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.colorspace;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace com.itextpdf.kernel.pdf.function
+namespace iTextSharp.Kernel.Pdf.Function
 {
 	public class PdfFunction : PdfObjectWrapper<PdfObject>
 	{

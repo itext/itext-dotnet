@@ -29,11 +29,11 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace com.itextpdf.kernel.xmp.options
+namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>Options for XMPSchemaRegistryImpl#registerAlias.</summary>
 	/// <since>20.02.2006</since>
-	public sealed class AliasOptions : Options
+	public sealed class AliasOptions : iTextSharp.Kernel.Xmp.Options.Options
 	{
 		/// <summary>This is a direct mapping.</summary>
 		/// <remarks>This is a direct mapping. The actual data type does not matter.</remarks>
@@ -61,7 +61,7 @@ namespace com.itextpdf.kernel.xmp.options
 		}
 
 		/// <param name="options">the options to init with</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If options are not consistant
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If options are not consistant
 		/// 	</exception>
 		public AliasOptions(int options)
 			: base(options)
@@ -83,7 +83,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.AliasOptions SetArray(bool value)
+		public iTextSharp.Kernel.Xmp.Options.AliasOptions SetArray(bool value)
 		{
 			SetOption(PROP_ARRAY, value);
 			return this;
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.AliasOptions SetArrayOrdered(bool value)
+		public iTextSharp.Kernel.Xmp.Options.AliasOptions SetArrayOrdered(bool value)
 		{
 			SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED, value);
 			return this;
@@ -111,7 +111,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.AliasOptions SetArrayAlternate(bool value)
+		public iTextSharp.Kernel.Xmp.Options.AliasOptions SetArrayAlternate(bool value)
 		{
 			SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED | PROP_ARRAY_ALTERNATE, value);
 			return this;
@@ -125,7 +125,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns the instance to call more set-methods.</returns>
-		public com.itextpdf.kernel.xmp.options.AliasOptions SetArrayAltText(bool value)
+		public iTextSharp.Kernel.Xmp.Options.AliasOptions SetArrayAltText(bool value)
 		{
 			SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED | PROP_ARRAY_ALTERNATE | PROP_ARRAY_ALT_TEXT
 				, value);
@@ -137,7 +137,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// <see cref="PropertyOptions"/>
 		/// s object
 		/// </returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not consistant.
 		/// 	</exception>
 		public PropertyOptions ToPropertyOptions()
 		{

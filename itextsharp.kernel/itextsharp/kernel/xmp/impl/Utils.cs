@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Text;
-using com.itextpdf.kernel.xmp;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Utility functions for the XMPToolkit implementation.</summary>
 	/// <since>06.06.2006</since>
@@ -494,7 +494,7 @@ namespace com.itextpdf.kernel.xmp.impl
 						// write control chars escaped,
 						// if there are others than tab, LF and CR the xml will become invalid.
 						buffer.Append("&#x");
-						buffer.Append(com.itextpdf.io.util.JavaUtil.IntegerToHexString(c).ToUpper());
+						buffer.Append(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper());
 						buffer.Append(';');
 					}
 				}
@@ -512,7 +512,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			{
 				if (IsControlChar(buffer[i]))
 				{
-					com.itextpdf.SetCharAt(buffer, i, ' ');
+					iTextSharp.SetCharAt(buffer, i, ' ');
 				}
 			}
 			return buffer.ToString();

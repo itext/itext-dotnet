@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
-using com.itextpdf.io;
+using iTextSharp.IO;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	public class Jpeg2000Test
 	{

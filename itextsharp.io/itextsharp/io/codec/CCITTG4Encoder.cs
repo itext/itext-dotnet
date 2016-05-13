@@ -42,9 +42,9 @@ Copyright (c) 1998-2016 iText Group NV
 * For more information, please contact iText Software Corp. at this
 * address: sales@itextpdf.com
 */
-using com.itextpdf.io.source;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.codec
+namespace iTextSharp.IO.Codec
 {
 	/// <summary>Encodes data in the CCITT G4 FAX format.</summary>
 	public class CCITTG4Encoder
@@ -101,8 +101,8 @@ namespace com.itextpdf.io.codec
 		/// <returns>the encoded image</returns>
 		public static byte[] Compress(byte[] data, int width, int height)
 		{
-			com.itextpdf.io.codec.CCITTG4Encoder g4 = new com.itextpdf.io.codec.CCITTG4Encoder
-				(width);
+			iTextSharp.IO.Codec.CCITTG4Encoder g4 = new iTextSharp.IO.Codec.CCITTG4Encoder(width
+				);
 			g4.Fax4Encode(data, 0, g4.rowbytes * height);
 			return g4.Close();
 		}

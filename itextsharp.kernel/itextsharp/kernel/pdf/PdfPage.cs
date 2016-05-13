@@ -45,20 +45,20 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.events;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.action;
-using com.itextpdf.kernel.pdf.annot;
-using com.itextpdf.kernel.pdf.tagging;
-using com.itextpdf.kernel.pdf.tagutils;
-using com.itextpdf.kernel.pdf.xobject;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Events;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Action;
+using iTextSharp.Kernel.Pdf.Annot;
+using iTextSharp.Kernel.Pdf.Tagging;
+using iTextSharp.Kernel.Pdf.Tagutils;
+using iTextSharp.Kernel.Pdf.Xobject;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfPage : PdfObjectWrapper<PdfDictionary>
 	{
@@ -72,7 +72,7 @@ namespace com.itextpdf.kernel.pdf
 
 		internal PdfPages parentPages;
 
-		private IList<PdfName> excludedKeys = new List<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+		private IList<PdfName> excludedKeys = new List<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 			(PdfName.Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
 
 		/// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )
@@ -164,7 +164,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetRotation(int degAngle)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetRotation(int degAngle)
 		{
 			GetPdfObject().Put(PdfName.Rotate, new PdfNumber(degAngle));
 			return this;
@@ -272,7 +272,7 @@ namespace com.itextpdf.kernel.pdf
 			return this.resources;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetResources(PdfResources pdfResources
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetResources(PdfResources pdfResources
 			)
 		{
 			GetPdfObject().Put(PdfName.Resources, pdfResources.GetPdfObject());
@@ -292,7 +292,7 @@ namespace com.itextpdf.kernel.pdf
 			GetPdfObject().Put(PdfName.Metadata, xmp);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions
 			)
@@ -300,7 +300,7 @@ namespace com.itextpdf.kernel.pdf
 			SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void SetXmpMetadata(XMPMeta xmpMeta)
 		{
@@ -309,7 +309,7 @@ namespace com.itextpdf.kernel.pdf
 			SetXmpMetadata(xmpMeta, serializeOptions);
 		}
 
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public virtual PdfStream GetXmpMetadata()
 		{
 			return GetPdfObject().GetAsStream(PdfName.Metadata);
@@ -323,7 +323,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		/// <param name="toDocument">a document to copy page to.</param>
 		/// <returns>copied page.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfPage CopyTo(PdfDocument toDocument)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument)
 		{
 			return CopyTo(toDocument, null);
 		}
@@ -337,11 +337,11 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="toDocument">a document to copy page to.</param>
 		/// <param name="copier">a copier which bears a specific copy logic. May be NULL</param>
 		/// <returns>copied page.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier
+		public virtual iTextSharp.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier
 			 copier)
 		{
 			PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
-			com.itextpdf.kernel.pdf.PdfPage page = new com.itextpdf.kernel.pdf.PdfPage(dictionary
+			iTextSharp.Kernel.Pdf.PdfPage page = new iTextSharp.Kernel.Pdf.PdfPage(dictionary
 				);
 			CopyInheritedProperties(page, toDocument);
 			foreach (PdfAnnotation annot in GetAnnotations())
@@ -370,7 +370,7 @@ namespace com.itextpdf.kernel.pdf
 				if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().GetCatalog
 					().GetPdfObject().ContainsKey(PdfName.AcroForm))
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfPage));
+					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 					logger.Warn(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
 					toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
 				}
@@ -385,7 +385,7 @@ namespace com.itextpdf.kernel.pdf
 		public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument)
 		{
 			PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
-			IList<PdfName> excludedKeys = new List<PdfName>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			IList<PdfName> excludedKeys = new List<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.MediaBox, PdfName.CropBox, PdfName.Contents));
 			excludedKeys.AddAll(this.excludedKeys);
 			PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
@@ -493,7 +493,7 @@ namespace com.itextpdf.kernel.pdf
 			return mediaBox.ToRectangle();
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetMediaBox(Rectangle rectangle)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetMediaBox(Rectangle rectangle)
 		{
 			GetPdfObject().Put(PdfName.MediaBox, new PdfArray(rectangle));
 			return this;
@@ -514,18 +514,18 @@ namespace com.itextpdf.kernel.pdf
 			return cropBox.ToRectangle();
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetCropBox(Rectangle rectangle)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetCropBox(Rectangle rectangle)
 		{
 			GetPdfObject().Put(PdfName.CropBox, new PdfArray(rectangle));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetArtBox(Rectangle rectangle)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetArtBox(Rectangle rectangle)
 		{
 			if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null)
 			{
 				GetPdfObject().Remove(PdfName.TrimBox);
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfPage));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 				logger.Warn(LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE
 					);
 			}
@@ -538,12 +538,12 @@ namespace com.itextpdf.kernel.pdf
 			return GetPdfObject().GetAsRectangle(PdfName.ArtBox);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetTrimBox(Rectangle rectangle)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle)
 		{
 			if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null)
 			{
 				GetPdfObject().Remove(PdfName.ArtBox);
-				Logger logger = LoggerFactory.GetLogger(typeof(com.itextpdf.kernel.pdf.PdfPage));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 				logger.Warn(LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE
 					);
 			}
@@ -558,7 +558,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Get decoded bytes for the whole page content.</summary>
 		/// <returns>byte array.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">in case any @see IOException.</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">in case any @see IOException.</exception>
 		public virtual byte[] GetContentBytes()
 		{
 			try
@@ -580,7 +580,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>Gets decoded bytes of a certain stream of a page content.</summary>
 		/// <param name="index">index of stream inside Content.</param>
 		/// <returns>byte array.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException">in case any @see IOException.</exception>
+		/// <exception cref="iTextSharp.Kernel.PdfException">in case any @see IOException.</exception>
 		public virtual byte[] GetStreamBytes(int index)
 		{
 			return GetContentStream(index).GetBytes();
@@ -588,7 +588,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Calculates and returns next available MCID reference.</summary>
 		/// <returns>calculated MCID reference.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual int GetNextMcid()
 		{
 			if (!GetDocument().IsTagged())
@@ -620,7 +620,7 @@ namespace com.itextpdf.kernel.pdf
 			return structParents;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetAdditionalAction(PdfName key, PdfAction
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetAdditionalAction(PdfName key, PdfAction
 			 action)
 		{
 			PdfAction.SetAdditionalAction(this, key, action);
@@ -654,20 +654,20 @@ namespace com.itextpdf.kernel.pdf
 			return false;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage AddAnnotation(PdfAnnotation annotation
+		public virtual iTextSharp.Kernel.Pdf.PdfPage AddAnnotation(PdfAnnotation annotation
 			)
 		{
 			return AddAnnotation(-1, annotation, true);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage AddAnnotation(int index, PdfAnnotation
+		public virtual iTextSharp.Kernel.Pdf.PdfPage AddAnnotation(int index, PdfAnnotation
 			 annotation, bool tagAnnotation)
 		{
 			if (GetDocument().IsTagged() && tagAnnotation)
 			{
 				TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer
 					();
-				com.itextpdf.kernel.pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
+				iTextSharp.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
 				// TODO what about if current tagging stream is set
 				tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
 				if (prevPage != null)
@@ -699,7 +699,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		/// <param name="annotation">an annotation to be removed.</param>
 		/// <returns>this PdfPage instance.</returns>
-		public virtual com.itextpdf.kernel.pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation
+		public virtual iTextSharp.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation
 			)
 		{
 			PdfArray annots = GetAnnots(false);
@@ -748,7 +748,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <summary>This method gets outlines of a current page</summary>
 		/// <param name="updateOutlines"/>
 		/// <returns>return all outlines of a current page</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual IList<PdfOutline> GetOutlines(bool updateOutlines)
 		{
 			GetDocument().GetOutlines(updateOutlines);
@@ -777,7 +777,7 @@ namespace com.itextpdf.kernel.pdf
 		/// </remarks>
 		/// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
 		/// 	</param>
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetIgnorePageRotationForContent(bool
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetIgnorePageRotationForContent(bool
 			 ignorePageRotationForContent)
 		{
 			this.ignorePageRotationForContent = ignorePageRotationForContent;
@@ -792,7 +792,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL
 		/// 	</param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants
 			 numberingStyle, String labelPrefix)
 		{
 			return SetPageLabel(numberingStyle, labelPrefix, 1);
@@ -810,7 +810,7 @@ namespace com.itextpdf.kernel.pdf
 		/// equal 1.
 		/// </param>
 		/// <returns/>
-		public virtual com.itextpdf.kernel.pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants
+		public virtual iTextSharp.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants
 			 numberingStyle, String labelPrefix, int firstPage)
 		{
 			if (firstPage < 1)
@@ -872,7 +872,7 @@ namespace com.itextpdf.kernel.pdf
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfPage Put(PdfName key, PdfObject value)
+		public virtual iTextSharp.Kernel.Pdf.PdfPage Put(PdfName key, PdfObject value)
 		{
 			GetPdfObject().Put(key, value);
 			return this;
@@ -1022,8 +1022,8 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		private void CopyInheritedProperties(com.itextpdf.kernel.pdf.PdfPage copyPdfPage, 
-			PdfDocument pdfDocument)
+		private void CopyInheritedProperties(iTextSharp.Kernel.Pdf.PdfPage copyPdfPage, PdfDocument
+			 pdfDocument)
 		{
 			if (copyPdfPage.GetPdfObject().Get(PdfName.Resources) == null)
 			{

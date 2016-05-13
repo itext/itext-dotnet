@@ -45,12 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.color;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Color;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.image
+namespace iTextSharp.IO.Image
 {
 	internal class JpegImageHelper
 	{
@@ -158,7 +158,7 @@ namespace com.itextpdf.io.image
 
 		/// <summary>This method checks if the image is a valid JPEG and processes some parameters.
 		/// 	</summary>
-		/// <exception cref="com.itextpdf.io.IOException"/>
+		/// <exception cref="iTextSharp.IO.IOException"/>
 		/// <exception cref="System.IO.IOException"/>
 		private static void ProcessParameters(Stream jpegStream, String errorID, ImageData
 			 image)
@@ -239,7 +239,7 @@ namespace com.itextpdf.io.image
 						}
 						if (byteappe.Length >= 12)
 						{
-							String appe = com.itextpdf.io.util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1"
+							String appe = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1"
 								);
 							if (appe.Equals("Adobe"))
 							{
@@ -258,7 +258,7 @@ namespace com.itextpdf.io.image
 						}
 						if (byteapp2.Length >= 14)
 						{
-							String app2 = com.itextpdf.io.util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1"
+							String app2 = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1"
 								);
 							if (app2.Equals("ICC_PROFILE"))
 							{
@@ -401,7 +401,7 @@ namespace com.itextpdf.io.image
 						if (markertype == UNSUPPORTED_MARKER)
 						{
 							throw new IOException(IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID
-								, com.itextpdf.io.util.JavaUtil.IntegerToString(marker));
+								, iTextSharp.IO.Util.JavaUtil.IntegerToString(marker));
 						}
 						else
 						{

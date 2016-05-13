@@ -28,16 +28,16 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using com.itextpdf.kernel.xmp;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.kernel.xmp.options
+namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>
 	/// The property flags are used when properties are fetched from the <code>XMPMeta</code>-object
 	/// and provide more detailed information about the property.
 	/// </summary>
 	/// <since>03.07.2006</since>
-	public sealed class PropertyOptions : Options
+	public sealed class PropertyOptions : iTextSharp.Kernel.Xmp.Options.Options
 	{
 		public const int NO_OPTIONS = 0x00000000;
 
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <summary>Intialization constructor</summary>
 		/// <param name="options">the initialization options</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the options are not valid
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not valid
 		/// 	</exception>
 		public PropertyOptions(int options)
 			: base(options)
@@ -97,7 +97,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetURI(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetURI(bool value)
 		{
 			SetOption(URI, value);
 			return this;
@@ -115,8 +115,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetHasQualifiers(bool value
-			)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetHasQualifiers(bool value)
 		{
 			SetOption(HAS_QUALIFIERS, value);
 			return this;
@@ -135,7 +134,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetQualifier(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetQualifier(bool value)
 		{
 			SetOption(QUALIFIER, value);
 			return this;
@@ -149,7 +148,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetHasLanguage(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetHasLanguage(bool value)
 		{
 			SetOption(HAS_LANGUAGE, value);
 			return this;
@@ -163,7 +162,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetHasType(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetHasType(bool value)
 		{
 			SetOption(HAS_TYPE, value);
 			return this;
@@ -177,7 +176,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetStruct(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetStruct(bool value)
 		{
 			SetOption(STRUCT, value);
 			return this;
@@ -194,7 +193,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetArray(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetArray(bool value)
 		{
 			SetOption(ARRAY, value);
 			return this;
@@ -211,8 +210,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetArrayOrdered(bool value
-			)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetArrayOrdered(bool value)
 		{
 			SetOption(ARRAY_ORDERED, value);
 			return this;
@@ -229,7 +227,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetArrayAlternate(bool value
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetArrayAlternate(bool value
 			)
 		{
 			SetOption(ARRAY_ALTERNATE, value);
@@ -248,8 +246,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the value to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetArrayAltText(bool value
-			)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetArrayAltText(bool value)
 		{
 			SetOption(ARRAY_ALT_TEXT, value);
 			return this;
@@ -263,7 +260,7 @@ namespace com.itextpdf.kernel.xmp.options
 
 		/// <param name="value">the option DELETE_EXISTING to set</param>
 		/// <returns>Returns this to enable cascaded options.</returns>
-		public com.itextpdf.kernel.xmp.options.PropertyOptions SetSchemaNode(bool value)
+		public iTextSharp.Kernel.Xmp.Options.PropertyOptions SetSchemaNode(bool value)
 		{
 			SetOption(SCHEMA_NODE, value);
 			return this;
@@ -287,7 +284,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// <summary>Compares two options set for array compatibility.</summary>
 		/// <param name="options">other options</param>
 		/// <returns>Returns true if the array options of the sets are equal.</returns>
-		public bool EqualArrayTypes(com.itextpdf.kernel.xmp.options.PropertyOptions options
+		public bool EqualArrayTypes(iTextSharp.Kernel.Xmp.Options.PropertyOptions options
 			)
 		{
 			return IsArray() == options.IsArray() && IsArrayOrdered() == options.IsArrayOrdered
@@ -301,9 +298,9 @@ namespace com.itextpdf.kernel.xmp.options
 		/// If the other options set is null, this objects stays the same.
 		/// </remarks>
 		/// <param name="options">other options</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If illegal options are provided
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If illegal options are provided
 		/// 	</exception>
-		public void MergeWith(com.itextpdf.kernel.xmp.options.PropertyOptions options)
+		public void MergeWith(iTextSharp.Kernel.Xmp.Options.PropertyOptions options)
 		{
 			if (options != null)
 			{
@@ -397,7 +394,7 @@ namespace com.itextpdf.kernel.xmp.options
 		/// and URI cannot be a struct.
 		/// </summary>
 		/// <param name="options">the bitmask to check.</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the options are not consistent.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are not consistent.
 		/// 	</exception>
 		protected internal override void AssertConsistency(int options)
 		{

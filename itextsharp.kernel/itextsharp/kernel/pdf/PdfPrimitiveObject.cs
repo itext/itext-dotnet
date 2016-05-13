@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	public abstract class PdfPrimitiveObject : PdfObject
 	{
@@ -123,7 +123,7 @@ namespace com.itextpdf.kernel.pdf
 			)
 		{
 			base.CopyContent(from, document);
-			com.itextpdf.kernel.pdf.PdfPrimitiveObject @object = (com.itextpdf.kernel.pdf.PdfPrimitiveObject
+			iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject
 				)from;
 			if (@object.content != null)
 			{
@@ -131,7 +131,7 @@ namespace com.itextpdf.kernel.pdf
 			}
 		}
 
-		protected internal virtual int CompareContent(com.itextpdf.kernel.pdf.PdfPrimitiveObject
+		protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject
 			 o)
 		{
 			for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++)
@@ -145,7 +145,7 @@ namespace com.itextpdf.kernel.pdf
 					return -1;
 				}
 			}
-			return com.itextpdf.io.util.JavaUtil.IntegerCompare(content.Length, o.content.Length
+			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length
 				);
 		}
 	}

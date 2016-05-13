@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.color;
+using iTextSharp.Kernel.Color;
 
-namespace com.itextpdf.kernel.pdf.canvas.wmf
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
 	/// <summary>
 	/// A Brush bject that holds information about the style, the hatch and the color of
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		internal int hatch;
 
-		internal Color color = DeviceRgb.WHITE;
+		internal iTextSharp.Kernel.Color.Color color = DeviceRgb.WHITE;
 
 		/// <summary>Creates a MetaBrush object.</summary>
 		public MetaBrush()
@@ -112,7 +112,7 @@ namespace com.itextpdf.kernel.pdf.canvas.wmf
 
 		/// <summary>Get the color of the MetaBrush.</summary>
 		/// <returns>color of the brush</returns>
-		public virtual Color GetColor()
+		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
 			return color;
 		}

@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.lang;
+using Java.Lang;
 
-namespace com.itextpdf.kernel.log
+namespace iTextSharp.Kernel.Log
 {
 	/// <summary>
 	/// A
@@ -78,7 +78,7 @@ namespace com.itextpdf.kernel.log
 
 		public virtual Counter GetCounter(Class cls)
 		{
-			return new com.itextpdf.kernel.log.SystemOutCounter(cls);
+			return new iTextSharp.Kernel.Log.SystemOutCounter(cls);
 		}
 
 		public virtual void OnDocumentRead(long size)

@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// A utility class to perform base64 encoding and decoding as specified
@@ -191,7 +191,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <returns>the base64-encoded string.</returns>
 		public static String Encode(String src)
 		{
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(Encode(src.GetBytes()));
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Encode(src.GetBytes()));
 		}
 
 		/// <summary>Decode the given byte[].</summary>
@@ -258,7 +258,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <returns>the decoded string.</returns>
 		public static String Decode(String src)
 		{
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(Decode(src.GetBytes()));
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Decode(src.GetBytes()));
 		}
 	}
 }

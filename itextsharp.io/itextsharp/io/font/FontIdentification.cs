@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class FontIdentification
 	{
@@ -99,7 +99,7 @@ namespace com.itextpdf.io.font
 
 		protected internal virtual void SetPanose(byte[] panose)
 		{
-			this.panose = com.itextpdf.io.util.JavaUtil.GetStringForBytes(panose);
+			this.panose = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(panose);
 		}
 
 		protected internal virtual void SetPanose(String panose)

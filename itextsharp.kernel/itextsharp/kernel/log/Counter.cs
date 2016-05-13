@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.lang;
+using Java.Lang;
 
-namespace com.itextpdf.kernel.log
+namespace iTextSharp.Kernel.Log
 {
 	/// <summary>
 	/// Interface that can be implemented if you want to count the number of documents

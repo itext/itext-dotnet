@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas.parser;
-using com.itextpdf.kernel.pdf.canvas.parser.data;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas.Parser;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	/// <summary>This class allows you to find the rectangle which contains all the text in the given content stream.
 	/// 	</summary>
@@ -83,8 +83,8 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 		public virtual ICollection<EventType> GetSupportedEvents()
 		{
-			return new LinkedHashSet<EventType>(java.util.Collections.SingletonList(EventType
-				.RENDER_TEXT));
+			return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
+				));
 		}
 
 		/// <summary>

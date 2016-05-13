@@ -1,5 +1,5 @@
 /*
-$Id: 9570a5b04ef5fd10b6d13862741d63e08808fc84 $
+$Id: ce072d14d1392c615e76161eb0cf14fe1fdb58a2 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Clipper
 {
 	/// <summary>
 	/// This class contains variety of methods allowing to convert iText
@@ -62,17 +62,17 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 	/// <li>
 	/// <see cref="PolyTree"/>
 	/// to
-	/// <see cref="com.itextpdf.kernel.geom.Path"/>
+	/// <see cref="iTextSharp.Kernel.Geom.Path"/>
 	/// </li>
 	/// <li>
-	/// <see cref="com.itextpdf.kernel.geom.Point"/>
+	/// <see cref="iTextSharp.Kernel.Geom.Point"/>
 	/// to
 	/// <see cref="IntPoint"/>
 	/// </li>
 	/// <li>
 	/// <see cref="IntPoint"/>
 	/// to
-	/// <see cref="com.itextpdf.kernel.geom.Point"/>
+	/// <see cref="iTextSharp.Kernel.Geom.Point"/>
 	/// </li>
 	/// </ul>
 	/// </p>
@@ -95,12 +95,12 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// Converts Clipper library
 		/// <see cref="PolyTree"/>
 		/// abstraction into iText
-		/// <see cref="com.itextpdf.kernel.geom.Path"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Path"/>
 		/// object.
 		/// </summary>
-		public static com.itextpdf.kernel.geom.Path ConvertToPath(PolyTree result)
+		public static Path ConvertToPath(PolyTree result)
 		{
-			com.itextpdf.kernel.geom.Path path = new com.itextpdf.kernel.geom.Path();
+			Path path = new Path();
 			PolyNode node = result.GetFirst();
 			while (node != null)
 			{
@@ -124,7 +124,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// </param>
 		/// <param name="path">
 		/// The
-		/// <see cref="com.itextpdf.kernel.geom.Path"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Path"/>
 		/// object to be added to the
 		/// <see cref="Clipper"/>
 		/// .
@@ -134,8 +134,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// <see cref="PolyType"/>
 		/// .
 		/// </param>
-		public static void AddPath(Clipper clipper, com.itextpdf.kernel.geom.Path path, PolyType
-			 polyType)
+		public static void AddPath(Clipper clipper, Path path, PolyType polyType)
 		{
 			foreach (Subpath subpath in path.GetSubpaths())
 			{
@@ -150,7 +149,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		/// <summary>
 		/// Adds all iText
-		/// <see cref="com.itextpdf.kernel.geom.Subpath"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
 		/// s of the iText
 		/// <see cref="List<IntPoint>"/>
 		/// to the
@@ -162,11 +161,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// 
 		/// <see cref="System.Collections.IList{E}"/>
 		/// consisting of all degenerate iText
-		/// <see cref="com.itextpdf.kernel.geom.Subpath"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
 		/// s of the path.
 		/// </returns>
-		public static IList<Subpath> AddPath(ClipperOffset offset, com.itextpdf.kernel.geom.Path
-			 path, JoinType joinType, EndType endType)
+		public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType
+			, EndType endType)
 		{
 			IList<Subpath> degenerateSubpaths = new List<Subpath>();
 			foreach (Subpath subpath in path.GetSubpaths())
@@ -199,7 +198,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// Converts list of
 		/// <see cref="IntPoint"/>
 		/// objects into list of
-		/// <see cref="com.itextpdf.kernel.geom.Point"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Point"/>
 		/// objects.
 		/// </summary>
 		public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points)
@@ -215,7 +214,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 
 		/// <summary>
 		/// Converts list of
-		/// <see cref="com.itextpdf.kernel.geom.Point"/>
+		/// <see cref="iTextSharp.Kernel.Geom.Point"/>
 		/// objects into list of
 		/// <see cref="IntPoint"/>
 		/// objects.
@@ -237,7 +236,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// </summary>
 		/// <param name="lineJoinStyle">
 		/// iText line join style constant. See
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
 		/// </param>
 		/// <returns>Clipper line join style constant.</returns>
 		public static JoinType GetJoinType(int lineJoinStyle)
@@ -263,7 +262,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// </summary>
 		/// <param name="lineCapStyle">
 		/// iText line cap style constant. See
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
 		/// </param>
 		/// <returns>Clipper line cap (end type) style constant.</returns>
 		public static EndType GetEndType(int lineCapStyle)
@@ -289,11 +288,11 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		/// </summary>
 		/// <param name="fillingRule">
 		/// Either
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
 		/// 	"/>
 		/// or
-		/// <see cref="com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.FillingRule.EVEN_ODD
-		/// 	"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
+		/// 	>
 		/// .
 		/// </param>
 		/// <returns>Clipper fill type constant.</returns>
@@ -307,8 +306,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 			return fillType;
 		}
 
-		public static void AddContour(com.itextpdf.kernel.geom.Path path, IList<IntPoint>
-			 contour, bool close)
+		public static void AddContour(Path path, IList<IntPoint> contour, bool close)
 		{
 			IList<Point> floatContour = ConvertToFloatPoints(contour);
 			IEnumerator<Point> iter = floatContour.GetEnumerator();
@@ -328,7 +326,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.clipper
 		public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType
 			 polyType)
 		{
-			clipper.AddPath(ConvertToLongPoints(new List<Point>(com.itextpdf.io.util.JavaUtil.ArraysAsList
+			clipper.AddPath(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(rectVertices))), polyType, true);
 		}
 	}

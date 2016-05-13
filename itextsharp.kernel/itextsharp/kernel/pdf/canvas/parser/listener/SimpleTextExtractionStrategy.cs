@@ -45,12 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf.canvas.parser;
-using com.itextpdf.kernel.pdf.canvas.parser.data;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf.Canvas.Parser;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace com.itextpdf.kernel.pdf.canvas.parser.listener
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
 	public class SimpleTextExtractionStrategy : ITextExtractionStrategy
 	{
@@ -119,7 +119,7 @@ namespace com.itextpdf.kernel.pdf.canvas.parser.listener
 
 		public virtual ICollection<EventType> GetSupportedEvents()
 		{
-			return java.util.Collections.UnmodifiableSet(new LinkedHashSet<EventType>(java.util.Collections
+			return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil
 				.SingletonList(EventType.RENDER_TEXT)));
 		}
 

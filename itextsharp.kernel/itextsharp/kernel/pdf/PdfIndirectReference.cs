@@ -45,9 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfIndirectReference : PdfObject, IComparable<com.itextpdf.kernel.pdf.PdfIndirectReference
+	public class PdfIndirectReference : PdfObject, IComparable<iTextSharp.Kernel.Pdf.PdfIndirectReference
 		>
 	{
 		private const long serialVersionUID = -8293603068792908601L;
@@ -145,10 +145,10 @@ namespace com.itextpdf.kernel.pdf
 				PdfObject currentRefersTo = GetRefersTo(false);
 				for (int i = 0; i < LENGTH_OF_INDIRECTS_CHAIN; i++)
 				{
-					if (currentRefersTo is com.itextpdf.kernel.pdf.PdfIndirectReference)
+					if (currentRefersTo is iTextSharp.Kernel.Pdf.PdfIndirectReference)
 					{
-						currentRefersTo = ((com.itextpdf.kernel.pdf.PdfIndirectReference)currentRefersTo)
-							.GetRefersTo(false);
+						currentRefersTo = ((iTextSharp.Kernel.Pdf.PdfIndirectReference)currentRefersTo).GetRefersTo
+							(false);
 					}
 					else
 					{
@@ -195,7 +195,7 @@ namespace com.itextpdf.kernel.pdf
 			{
 				return false;
 			}
-			com.itextpdf.kernel.pdf.PdfIndirectReference that = (com.itextpdf.kernel.pdf.PdfIndirectReference
+			iTextSharp.Kernel.Pdf.PdfIndirectReference that = (iTextSharp.Kernel.Pdf.PdfIndirectReference
 				)o;
 			return objNr == that.objNr && genNr == that.genNr;
 		}
@@ -207,7 +207,7 @@ namespace com.itextpdf.kernel.pdf
 			return result;
 		}
 
-		public virtual int CompareTo(com.itextpdf.kernel.pdf.PdfIndirectReference o)
+		public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfIndirectReference o)
 		{
 			if (objNr == o.objNr)
 			{
@@ -327,7 +327,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <param name="state">special flag of current object</param>
 		protected internal override PdfObject SetState(short state)
 		{
-			return (com.itextpdf.kernel.pdf.PdfIndirectReference)base.SetState(state);
+			return (iTextSharp.Kernel.Pdf.PdfIndirectReference)base.SetState(state);
 		}
 
 		internal virtual void SetObjStreamNumber(int objectStreamNumber)

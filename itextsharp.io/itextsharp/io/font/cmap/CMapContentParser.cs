@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.font;
-using com.itextpdf.io.source;
+using iTextSharp.IO;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Source;
 
-namespace com.itextpdf.io.font.cmap
+namespace iTextSharp.IO.Font.Cmap
 {
 	public class CMapContentParser
 	{
@@ -297,7 +297,7 @@ namespace com.itextpdf.io.font.cmap
 
 		private static String ToHex4(int n)
 		{
-			String s = "0000" + com.itextpdf.io.util.JavaUtil.IntegerToHexString(n);
+			String s = "0000" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(n);
 			return s.Substring(s.Length - 4);
 		}
 

@@ -1,5 +1,5 @@
 /*
-$Id: ca3813fc7afc6952a51f819ece9b93b39d85e085 $
+$Id: f6bc3db7b2b51d0990d8c7045161d6ab67318324 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.barcodes.dmcode
+namespace iTextSharp.Barcodes.Dmcode
 {
 	public sealed class ReedSolomon
 	{
@@ -241,8 +241,8 @@ namespace com.itextpdf.barcodes.dmcode
 				k = (ncout[0] ^ wd[i]) & 0xff;
 				for (j = 0; j < nc; j++)
 				{
-					ncout[j] = unchecked((byte)(ncout[j + 1] ^ (k == 0 ? 0 : unchecked((byte)alog[(log
-						[k] + log[c[nc - j - 1]]) % 255]))));
+					ncout[j] = (byte)(ncout[j + 1] ^ (k == 0 ? 0 : (byte)alog[(log[k] + log[c[nc - j 
+						- 1]]) % 255]));
 				}
 			}
 		}

@@ -44,8 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.kernel
+namespace iTextSharp.Kernel
 {
 	public class PdfException : Exception
 	{
@@ -485,8 +486,8 @@ namespace com.itextpdf.kernel
 			}
 		}
 
-		public virtual com.itextpdf.kernel.PdfException SetMessageParams(params Object[] 
-			messageParams)
+		public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams
+			)
 		{
 			this.messageParams = new List<Object>();
 			this.messageParams.AddAll(messageParams);

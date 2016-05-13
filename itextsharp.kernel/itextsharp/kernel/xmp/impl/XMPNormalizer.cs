@@ -30,12 +30,12 @@
 using System;
 using System.Collections;
 using System.Globalization;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.impl.xpath;
-using com.itextpdf.kernel.xmp.options;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>Aug 18, 2006</since>
 	public class XMPNormalizer
@@ -58,7 +58,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="xmp">the raw metadata object</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the normalized metadata object</returns>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Collects all severe processing errors.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Collects all severe processing errors.
 		/// 	</exception>
 		internal static XMPMeta Process(XMPMetaImpl xmp, ParseOptions options)
 		{
@@ -85,7 +85,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// property is updated by an old app that uses <em>rdf:about</em>.
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if tweaking fails.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if tweaking fails.</exception>
 		private static void TweakOldXMP(XMPNode tree)
 		{
 			if (tree.GetName() != null && tree.GetName().Length >= Utils.UUID_LENGTH)
@@ -120,7 +120,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Visit all schemas to do general fixes and handle special cases.</summary>
 		/// <param name="xmp">the metadata object implementation</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the normalisation fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the normalisation fails.
 		/// 	</exception>
 		private static void TouchUpDataModel(XMPMetaImpl xmp)
 		{
@@ -191,7 +191,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <code>alt-text</code> item if the language was <code>x-default</code>.
 		/// </remarks>
 		/// <param name="dcSchema">the DC schema node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if normalization fails
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if normalization fails
 		/// 	</exception>
 		private static void NormalizeDCArrays(XMPNode dcSchema)
 		{
@@ -243,7 +243,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// non-empty items by adding the "xml:lang" with value "x-repair".
 		/// </remarks>
 		/// <param name="arrayNode">the property node of the array to repair.</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards unexpected exceptions.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards unexpected exceptions.
 		/// 	</exception>
 		private static void RepairAltText(XMPNode arrayNode)
 		{
@@ -292,7 +292,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
 		/// <param name="options">th parsing options</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards XMP errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards XMP errors</exception>
 		private static void MoveExplicitAliases(XMPNode tree, ParseOptions options)
 		{
 			if (!tree.GetHasAliases())
@@ -410,7 +410,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// 	</param>
 		/// <param name="childNode">the node to be moved</param>
 		/// <param name="baseArray">the base array for the array item</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards XMP errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards XMP errors</exception>
 		private static void TransplantArrayItemAlias(IEnumerator propertyIt, XMPNode childNode
 			, XMPNode baseArray)
 		{
@@ -431,7 +431,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Fixes the GPS Timestamp in EXIF.</summary>
 		/// <param name="exifSchema">the EXIF schema node</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Thrown if the date conversion fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the date conversion fails.
 		/// 	</exception>
 		private static void FixGPSTimeStamp(XMPNode exifSchema)
 		{
@@ -501,7 +501,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <param name="aliasNode">the alias node</param>
 		/// <param name="baseNode">the base node of the alias</param>
 		/// <param name="outerCall">marks the outer call of the recursion</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards XMP errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards XMP errors</exception>
 		private static void CompareAliasedSubtrees(XMPNode aliasNode, XMPNode baseNode, bool
 			 outerCall)
 		{

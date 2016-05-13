@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using com.itextpdf.io.font;
+using iTextSharp.IO.Font;
 
-namespace com.itextpdf.io
+namespace iTextSharp.IO
 {
 	public class AdobeGlyphListTest
 	{

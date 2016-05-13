@@ -1,5 +1,5 @@
 /*
-$Id: 64a33a6182527f4f4faac821a6fd6c560cf095fb $
+$Id: e1c6ff9671df22208a3e901956ab052be7bcf119 $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -45,14 +45,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	internal class FontUtil
 	{
@@ -75,8 +75,7 @@ namespace com.itextpdf.kernel.font
 				{
 					Logger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
 					logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
-					//                cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
-					cMapToUnicode = new CMapToUnicode();
+					cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
 				}
 			}
 			else
@@ -125,7 +124,7 @@ namespace com.itextpdf.kernel.font
 			StringBuilder s = new StringBuilder("");
 			for (int k = 0; k < 7; ++k)
 			{
-				s.Append((char)(com.itextpdf.io.util.JavaUtil.Random() * 26 + 'A'));
+				s.Append((char)(iTextSharp.IO.Util.JavaUtil.Random() * 26 + 'A'));
 			}
 			return s.ToString();
 		}

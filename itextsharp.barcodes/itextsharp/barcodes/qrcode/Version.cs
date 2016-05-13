@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>See ISO 18004:2006 Annex D</summary>
 	/// <author>Sean Owen</author>
@@ -61,7 +61,7 @@ namespace com.itextpdf.barcodes.qrcode
 			0x1B08E, 0x1CC1A, 0x1D33F, 0x1ED75, 0x1F250, 0x209D5, 0x216F0, 0x228BA, 0x2379F, 
 			0x24B0B, 0x2542E, 0x26A64, 0x27541, 0x28C69 };
 
-		private static readonly com.itextpdf.barcodes.qrcode.Version[] VERSIONS = BuildVersions
+		private static readonly iTextSharp.Barcodes.Qrcode.Version[] VERSIONS = BuildVersions
 			();
 
 		private readonly int versionNumber;
@@ -123,7 +123,7 @@ namespace com.itextpdf.barcodes.qrcode
 		/// <see cref="Version"/>
 		/// for a QR Code of that dimension
 		/// </returns>
-		public static com.itextpdf.barcodes.qrcode.Version GetProvisionalVersionForDimension
+		public static iTextSharp.Barcodes.Qrcode.Version GetProvisionalVersionForDimension
 			(int dimension)
 		{
 			if (dimension % 4 != 1)
@@ -140,7 +140,7 @@ namespace com.itextpdf.barcodes.qrcode
 			}
 		}
 
-		public static com.itextpdf.barcodes.qrcode.Version GetVersionForNumber(int versionNumber
+		public static iTextSharp.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber
 			)
 		{
 			if (versionNumber < 1 || versionNumber > 40)
@@ -150,8 +150,8 @@ namespace com.itextpdf.barcodes.qrcode
 			return VERSIONS[versionNumber - 1];
 		}
 
-		internal static com.itextpdf.barcodes.qrcode.Version DecodeVersionInformation(int
-			 versionBits)
+		internal static iTextSharp.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits
+			)
 		{
 			int bestDifference = int.MaxValue;
 			int bestVersion = 0;
@@ -307,7 +307,7 @@ namespace com.itextpdf.barcodes.qrcode
 
 		public override String ToString()
 		{
-			return com.itextpdf.io.util.JavaUtil.IntegerToString(versionNumber);
+			return iTextSharp.IO.Util.JavaUtil.IntegerToString(versionNumber);
 		}
 
 		/// <summary>See ISO 18004:2006 6.5.1 Table 9</summary>

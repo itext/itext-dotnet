@@ -45,7 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace com.itextpdf.kernel.events
+namespace iTextSharp.Kernel.Events
 {
 	/// <summary>
 	/// IEventDispatcher implementation that forwards Events to registered

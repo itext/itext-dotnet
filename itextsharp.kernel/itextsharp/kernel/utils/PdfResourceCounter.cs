@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.utils
+namespace iTextSharp.Kernel.Utils
 {
 	/// <summary>
 	/// This class can be used to count the number of bytes needed when copying

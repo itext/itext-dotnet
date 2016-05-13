@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.action
+namespace iTextSharp.Kernel.Pdf.Action
 {
 	/// <summary>USed in Set OCG State actions.</summary>
 	public class PdfActionOcgState

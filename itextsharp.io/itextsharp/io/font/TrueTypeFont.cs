@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io;
-using com.itextpdf.io.font.otf;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Font.Otf;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class TrueTypeFont : FontProgram
 	{
@@ -377,8 +377,7 @@ namespace com.itextpdf.io.font
 				int index = cmap[charCode][0];
 				if (index >= glyphWidths.Length)
 				{
-					Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.io.font.TrueTypeFont)
-						);
+					Logger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
 					LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
 						().GetFontName(), index));
 					continue;

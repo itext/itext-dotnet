@@ -44,17 +44,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.kernel.pdf.tagging
+namespace iTextSharp.Kernel.Pdf.Tagging
 {
 	/// <summary>
 	/// To be able to be wrapped with this
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObjectWrapper{T}"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
 	/// the
-	/// <see cref="com.itextpdf.kernel.pdf.PdfObject"/>
+	/// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
 	/// must be indirect.
 	/// </summary>
 	public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem
@@ -216,7 +216,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 		/// The attributes dictionary will be stored inside element.
 		/// </param>
 		/// <returns>attributes dictionary.</returns>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfObject GetAttributes(bool createNewIfNull)
 		{
 			PdfObject attributes = GetPdfObject().Get(PdfName.A);
@@ -283,13 +283,13 @@ namespace com.itextpdf.kernel.pdf.tagging
 			GetPdfObject().Put(PdfName.S, role);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.tagging.PdfStructElem AddKid(com.itextpdf.kernel.pdf.tagging.PdfStructElem
+		public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem AddKid(iTextSharp.Kernel.Pdf.Tagging.PdfStructElem
 			 kid)
 		{
 			return AddKid(-1, kid);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.tagging.PdfStructElem AddKid(int index, com.itextpdf.kernel.pdf.tagging.PdfStructElem
+		public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem AddKid(int index, iTextSharp.Kernel.Pdf.Tagging.PdfStructElem
 			 kid)
 		{
 			if (GetType() == InlineLevel || GetType() == Illustration)
@@ -353,9 +353,9 @@ namespace com.itextpdf.kernel.pdf.tagging
 			}
 			else
 			{
-				if (kid is com.itextpdf.kernel.pdf.tagging.PdfStructElem)
+				if (kid is iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)
 				{
-					return RemoveKidObject(((com.itextpdf.kernel.pdf.tagging.PdfStructElem)kid).GetPdfObject
+					return RemoveKidObject(((iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)kid).GetPdfObject
 						());
 				}
 			}
@@ -373,7 +373,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 			}
 			if (IsStructElem(parent))
 			{
-				return new com.itextpdf.kernel.pdf.tagging.PdfStructElem(parent);
+				return new iTextSharp.Kernel.Pdf.Tagging.PdfStructElem(parent);
 			}
 			else
 			{
@@ -462,7 +462,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 			}
 		}
 
-		public virtual com.itextpdf.kernel.pdf.tagging.PdfStructElem Put(PdfName key, PdfObject
+		public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject
 			 value)
 		{
 			GetPdfObject().Put(key, value);
@@ -564,7 +564,7 @@ namespace com.itextpdf.kernel.pdf.tagging
 					PdfDictionary d = (PdfDictionary)obj;
 					if (IsStructElem(d))
 					{
-						elem = new com.itextpdf.kernel.pdf.tagging.PdfStructElem(d);
+						elem = new iTextSharp.Kernel.Pdf.Tagging.PdfStructElem(d);
 					}
 					else
 					{

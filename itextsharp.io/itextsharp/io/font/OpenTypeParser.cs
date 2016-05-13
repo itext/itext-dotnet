@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using com.itextpdf.io;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
+using iTextSharp.IO;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	internal class OpenTypeParser
 	{
@@ -660,7 +660,7 @@ namespace com.itextpdf.io.font
 		/// <seealso>HeaderTable</seealso>
 		/// .
 		/// </param>
-		/// <exception cref="com.itextpdf.io.IOException">the font is invalid.</exception>
+		/// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
 		/// <exception cref="System.IO.IOException">the font file could not be read.</exception>
 		protected internal virtual int[][] ReadBbox(int unitsPerEm)
 		{
@@ -751,7 +751,7 @@ namespace com.itextpdf.io.font
 		}
 
 		/// <summary>Extracts the names of the font in all the languages available.</summary>
-		/// <exception cref="com.itextpdf.io.IOException">on error</exception>
+		/// <exception cref="iTextSharp.IO.IOException">on error</exception>
 		/// <exception cref="System.IO.IOException">on error</exception>
 		private void ReadNameTable()
 		{
@@ -802,15 +802,15 @@ namespace com.itextpdf.io.font
 				{
 					name = ReadStandardString(length);
 				}
-				names.Add(new String[] { com.itextpdf.io.util.JavaUtil.IntegerToString(platformID
-					), com.itextpdf.io.util.JavaUtil.IntegerToString(platformEncodingID), com.itextpdf.io.util.JavaUtil.IntegerToString
+				names.Add(new String[] { iTextSharp.IO.Util.JavaUtil.IntegerToString(platformID), 
+					iTextSharp.IO.Util.JavaUtil.IntegerToString(platformEncodingID), iTextSharp.IO.Util.JavaUtil.IntegerToString
 					(languageID), name });
 				raf.Seek(pos);
 			}
 		}
 
 		/// <summary>Read horizontal header, table 'hhea'.</summary>
-		/// <exception cref="com.itextpdf.io.IOException">the font is invalid.</exception>
+		/// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
 		/// <exception cref="System.IO.IOException">the font file could not be read.</exception>
 		private void ReadHheaTable()
 		{
@@ -844,7 +844,7 @@ namespace com.itextpdf.io.font
 		}
 
 		/// <summary>Read font header, table 'head'.</summary>
-		/// <exception cref="com.itextpdf.io.IOException">the font is invalid.</exception>
+		/// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
 		/// <exception cref="System.IO.IOException">the font file could not be read.</exception>
 		private void ReadHeadTable()
 		{
@@ -883,7 +883,7 @@ namespace com.itextpdf.io.font
 		/// <seealso>HeaderTable</seealso>
 		/// .
 		/// </remarks>
-		/// <exception cref="com.itextpdf.io.IOException">the font is invalid.</exception>
+		/// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
 		/// <exception cref="System.IO.IOException">the font file could not be read.</exception>
 		private void ReadOs_2Table()
 		{

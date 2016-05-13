@@ -1,5 +1,5 @@
 /*
-$Id: 3694186bd4790010b56c5f2b4be971413db305f8 $
+$Id: db362f854f60fbffaa7bcfac85ef0552383a8cff $
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using java.text;
+using Java.Text;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	internal class PdfXrefTable
 	{
@@ -176,7 +176,7 @@ namespace com.itextpdf.kernel.pdf
 
 		/// <summary>Writes cross reference table and trailer to PDF.</summary>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="com.itextpdf.kernel.PdfException"/>
+		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject
 			 fileId, PdfObject crypto)
 		{
@@ -290,7 +290,7 @@ namespace com.itextpdf.kernel.pdf
 					xrefStream.Put(PdfName.Prev, lastXref);
 				}
 				xrefStream.Put(PdfName.Index, index);
-				com.itextpdf.kernel.pdf.PdfXrefTable xref = document.GetXref();
+				iTextSharp.Kernel.Pdf.PdfXrefTable xref = document.GetXref();
 				for (int k = 0; k < sections.Count; k += 2)
 				{
 					first = sections[k];
@@ -332,7 +332,7 @@ namespace com.itextpdf.kernel.pdf
 			else
 			{
 				writer.WriteString("xref\n");
-				com.itextpdf.kernel.pdf.PdfXrefTable xref = document.GetXref();
+				iTextSharp.Kernel.Pdf.PdfXrefTable xref = document.GetXref();
 				for (int k = 0; k < sections.Count; k += 2)
 				{
 					first = sections[k];

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <summary>This class implements an array of unsigned bytes.</summary>
 	/// <author>dswitkin@google.com (Daniel Switkin)</author>
@@ -89,7 +89,7 @@ namespace com.itextpdf.barcodes.qrcode
 
 		public void Set(int index, int value)
 		{
-			bytes[index] = unchecked((byte)value);
+			bytes[index] = (byte)value;
 		}
 
 		public int Size()
@@ -109,7 +109,7 @@ namespace com.itextpdf.barcodes.qrcode
 				int newSize = Math.Max(INITIAL_SIZE, size << 1);
 				Reserve(newSize);
 			}
-			bytes[size] = unchecked((byte)value);
+			bytes[size] = (byte)value;
 			size++;
 		}
 

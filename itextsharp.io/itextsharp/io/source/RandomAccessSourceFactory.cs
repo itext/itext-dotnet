@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Net;
-using com.itextpdf.io.util;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.io.source
+namespace iTextSharp.IO.Source
 {
 	/// <summary>
 	/// Factory to create
@@ -39,7 +39,7 @@ namespace com.itextpdf.io.source
 		/// 	</summary>
 		/// <param name="forceRead">true if the full content will be read, false otherwise</param>
 		/// <returns>this object (this allows chaining of method calls)</returns>
-		public com.itextpdf.io.source.RandomAccessSourceFactory SetForceRead(bool forceRead
+		public RandomAccessSourceFactory SetForceRead(bool forceRead
 			)
 		{
 			this.forceRead = forceRead;
@@ -57,14 +57,14 @@ namespace com.itextpdf.io.source
 		/// should be used as the primary data access mechanism
 		/// </param>
 		/// <returns>this object (this allows chaining of method calls)</returns>
-		public com.itextpdf.io.source.RandomAccessSourceFactory SetUsePlainRandomAccess(bool
+		public RandomAccessSourceFactory SetUsePlainRandomAccess(bool
 			 usePlainRandomAccess)
 		{
 			this.usePlainRandomAccess = usePlainRandomAccess;
 			return this;
 		}
 
-		public com.itextpdf.io.source.RandomAccessSourceFactory SetExclusivelyLockFile(bool
+		public RandomAccessSourceFactory SetExclusivelyLockFile(bool
 			 exclusivelyLockFile)
 		{
 			this.exclusivelyLockFile = exclusivelyLockFile;

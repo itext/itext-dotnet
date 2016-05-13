@@ -30,11 +30,12 @@
 using System;
 using System.Collections;
 using System.Text.RegularExpressions;
-using com.itextpdf.kernel.xmp;
-using com.itextpdf.kernel.xmp.options;
-using com.itextpdf.kernel.xmp.properties;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.Xmp.Properties;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>The schema registry handles the namespaces, aliases and global options for the XMP Toolkit.
 	/// 	</summary>
@@ -59,7 +60,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		private IDictionary aliasMap = new Hashtable();
 
 		/// <summary>The pattern that must not be contained in simple properties</summary>
-		private Regex p = com.itextpdf.io.util.StringUtil.RegexCompile("[/*?\\[\\]]");
+		private Regex p = iTextSharp.IO.Util.StringUtil.RegexCompile("[/*?\\[\\]]");
 
 		/// <summary>
 		/// Performs the initialisation of the registry with the default namespaces, aliases and global
@@ -80,9 +81,9 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		// ---------------------------------------------------------------------------------------------
 		// Namespace Functions
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.RegisterNamespace(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.RegisterNamespace(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		public String RegisterNamespace(String namespaceURI, String suggestedPrefix)
 		{
 			lock (this)
@@ -126,7 +127,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.DeleteNamespace(System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.DeleteNamespace(System.String)
 		/// 	"/>
 		public void DeleteNamespace(String namespaceURI)
 		{
@@ -141,7 +142,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.GetNamespacePrefix(System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.GetNamespacePrefix(System.String)
 		/// 	"/>
 		public String GetNamespacePrefix(String namespaceURI)
 		{
@@ -151,7 +152,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.GetNamespaceURI(System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.GetNamespaceURI(System.String)
 		/// 	"/>
 		public String GetNamespaceURI(String namespacePrefix)
 		{
@@ -165,23 +166,21 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.GetNamespaces()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.GetNamespaces()"/>
 		public IDictionary GetNamespaces()
 		{
 			lock (this)
 			{
-				return java.util.Collections.UnmodifiableMap(new SortedList(namespaceToPrefixMap)
-					);
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(namespaceToPrefixMap));
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.GetPrefixes()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.GetPrefixes()"/>
 		public IDictionary GetPrefixes()
 		{
 			lock (this)
 			{
-				return java.util.Collections.UnmodifiableMap(new SortedList(prefixToNamespaceMap)
-					);
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(prefixToNamespaceMap));
 			}
 		}
 
@@ -194,7 +193,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Specification and some other Adobe private namespaces.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">Forwards processing exceptions
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards processing exceptions
 		/// 	</exception>
 		private void RegisterStandardNamespaces()
 		{
@@ -263,7 +262,7 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		// ---------------------------------------------------------------------------------------------
 		// Alias Functions
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.ResolveAlias(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.ResolveAlias(System.String, System.String)
 		/// 	"/>
 		public XMPAliasInfo ResolveAlias(String aliasNS, String aliasProp)
 		{
@@ -278,8 +277,8 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.FindAlias(System.String)
-		/// 	"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.FindAlias(System.String)"/
+		/// 	>
 		public XMPAliasInfo FindAlias(String qname)
 		{
 			lock (this)
@@ -288,7 +287,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.FindAliases(System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.FindAliases(System.String)
 		/// 	"/>
 		public XMPAliasInfo[] FindAliases(String aliasNS)
 		{
@@ -349,10 +348,10 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// <code>XMP_NoOptions</code>, the default value, for all
 		/// direct aliases regardless of whether the actual data type is
 		/// an array or not (see
-		/// <see cref="com.itextpdf.kernel.xmp.options.AliasOptions"/>
+		/// <see cref="iTextSharp.Kernel.Xmp.Options.AliasOptions"/>
 		/// ).
 		/// </param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">for inconsistant aliases.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">for inconsistant aliases.</exception>
 		internal void RegisterAlias(String aliasNS, String aliasProp, String actualNS, String
 			 actualProp, AliasOptions aliasForm)
 		{
@@ -365,7 +364,7 @@ namespace com.itextpdf.kernel.xmp.impl
 				// Fix the alias options
 				AliasOptions aliasOpts = aliasForm != null ? new AliasOptions(XMPNodeUtils.VerifySetOptions
 					(aliasForm.ToPropertyOptions(), null).GetOptions()) : new AliasOptions();
-				if (com.itextpdf.io.util.StringUtil.Match(p, aliasProp).Find() || com.itextpdf.io.util.StringUtil.Match
+				if (iTextSharp.IO.Util.StringUtil.Match(p, aliasProp).Find() || iTextSharp.IO.Util.StringUtil.Match
 					(p, actualProp).Find())
 				{
 					throw new XMPException("Alias and actual property names must be simple", XMPError
@@ -416,25 +415,25 @@ namespace com.itextpdf.kernel.xmp.impl
 				this.aliasOpts = aliasOpts;
 			}
 
-			/// <seealso cref="com.itextpdf.kernel.xmp.properties.XMPAliasInfo.GetNamespace()"/>
+			/// <seealso cref="iTextSharp.Kernel.Xmp.Properties.XMPAliasInfo.GetNamespace()"/>
 			public String GetNamespace()
 			{
 				return actualNS;
 			}
 
-			/// <seealso cref="com.itextpdf.kernel.xmp.properties.XMPAliasInfo.GetPrefix()"/>
+			/// <seealso cref="iTextSharp.Kernel.Xmp.Properties.XMPAliasInfo.GetPrefix()"/>
 			public String GetPrefix()
 			{
 				return actualPrefix;
 			}
 
-			/// <seealso cref="com.itextpdf.kernel.xmp.properties.XMPAliasInfo.GetPropName()"/>
+			/// <seealso cref="iTextSharp.Kernel.Xmp.Properties.XMPAliasInfo.GetPropName()"/>
 			public String GetPropName()
 			{
 				return actualProp;
 			}
 
-			/// <seealso cref="com.itextpdf.kernel.xmp.properties.XMPAliasInfo.GetAliasForm()"/>
+			/// <seealso cref="iTextSharp.Kernel.Xmp.Properties.XMPAliasInfo.GetAliasForm()"/>
 			public AliasOptions GetAliasForm()
 			{
 				return aliasOpts;
@@ -455,12 +454,12 @@ namespace com.itextpdf.kernel.xmp.impl
 			private readonly AliasOptions aliasOpts;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPSchemaRegistry.GetAliases()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPSchemaRegistry.GetAliases()"/>
 		public IDictionary GetAliases()
 		{
 			lock (this)
 			{
-				return java.util.Collections.UnmodifiableMap(new SortedList(aliasMap));
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(aliasMap));
 			}
 		}
 
@@ -469,7 +468,7 @@ namespace com.itextpdf.kernel.xmp.impl
 		/// Register the standard aliases.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the registrations of at least one alias fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the registrations of at least one alias fails.
 		/// 	</exception>
 		private void RegisterStandardAliases()
 		{

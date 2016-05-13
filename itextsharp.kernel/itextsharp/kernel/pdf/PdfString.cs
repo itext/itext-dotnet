@@ -44,12 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using com.itextpdf.io.font;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using java.nio.charset;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 
-namespace com.itextpdf.kernel.pdf
+namespace iTextSharp.Kernel.Pdf
 {
 	/// <summary>
 	/// A
@@ -146,7 +145,7 @@ namespace com.itextpdf.kernel.pdf
 			return hexWriting;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.PdfString SetHexWriting(bool hexWriting)
+		public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting)
 		{
 			if (value == null)
 			{
@@ -236,7 +235,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>object itself.</returns>
 		public override PdfObject MakeIndirect(PdfDocument document)
 		{
-			return (com.itextpdf.kernel.pdf.PdfString)base.MakeIndirect(document);
+			return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document);
 		}
 
 		/// <summary>Marks object to be saved as indirect.</summary>
@@ -245,7 +244,7 @@ namespace com.itextpdf.kernel.pdf
 		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
 			 reference)
 		{
-			return (com.itextpdf.kernel.pdf.PdfString)base.MakeIndirect(document, reference);
+			return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -257,7 +256,7 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document)
 		{
-			return (com.itextpdf.kernel.pdf.PdfString)base.CopyTo(document, true);
+			return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, true);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -274,14 +273,14 @@ namespace com.itextpdf.kernel.pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
 		{
-			return (com.itextpdf.kernel.pdf.PdfString)base.CopyTo(document, allowDuplicating);
+			return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
 		}
 
 		public override String ToString()
 		{
 			if (value == null)
 			{
-				return new String(content, Charset.ForName(defaultCharset));
+				return new String(content, Java.Nio.Charset.Charset.ForName(defaultCharset));
 			}
 			else
 			{
@@ -307,8 +306,8 @@ namespace com.itextpdf.kernel.pdf
 		/// <c>PdfString</c>
 		/// .
 		/// </summary>
-		protected internal virtual com.itextpdf.kernel.pdf.PdfString Decrypt(PdfEncryption
-			 decrypt)
+		protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption 
+			decrypt)
 		{
 			if (decrypt != null)
 			{
@@ -317,8 +316,8 @@ namespace com.itextpdf.kernel.pdf
 				byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
 				content = null;
 				decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-				value = new String(decrypt.DecryptByteArray(decodedContent), Charset.ForName(defaultCharset
-					));
+				value = new String(decrypt.DecryptByteArray(decodedContent), Java.Nio.Charset.Charset
+					.ForName(defaultCharset));
 			}
 			return this;
 		}
@@ -376,14 +375,14 @@ namespace com.itextpdf.kernel.pdf
 
 		protected internal override PdfObject NewInstance()
 		{
-			return new com.itextpdf.kernel.pdf.PdfString();
+			return new iTextSharp.Kernel.Pdf.PdfString();
 		}
 
 		protected internal override void CopyContent(PdfObject from, PdfDocument document
 			)
 		{
 			base.CopyContent(from, document);
-			com.itextpdf.kernel.pdf.PdfString @string = (com.itextpdf.kernel.pdf.PdfString)from;
+			iTextSharp.Kernel.Pdf.PdfString @string = (iTextSharp.Kernel.Pdf.PdfString)from;
 			value = @string.value;
 			hexWriting = @string.hexWriting;
 		}

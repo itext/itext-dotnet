@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace com.itextpdf.barcodes.qrcode
+namespace iTextSharp.Barcodes.Qrcode
 {
 	/// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
 	/// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
@@ -154,12 +154,12 @@ namespace com.itextpdf.barcodes.qrcode
 		// with the ByteMatrix initialized all to zero.
 		public static void ClearMatrix(ByteMatrix matrix)
 		{
-			matrix.Clear(unchecked((byte)-1));
+			matrix.Clear((byte)-1);
 		}
 
 		// Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
 		// success, store the result in "matrix" and return true.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void BuildMatrix(BitVector dataBits, ErrorCorrectionLevel ecLevel, 
 			int version, int maskPattern, ByteMatrix matrix)
 		{
@@ -179,7 +179,7 @@ namespace com.itextpdf.barcodes.qrcode
 		// - Timing patterns
 		// - Dark dot at the left bottom corner
 		// - Position adjustment patterns, if need be
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void EmbedBasicPatterns(int version, ByteMatrix matrix)
 		{
 			// Let's get started with embedding big squares at corners.
@@ -193,7 +193,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Embed type information. On success, modify the matrix.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void EmbedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix
 			 matrix)
 		{
@@ -227,7 +227,7 @@ namespace com.itextpdf.barcodes.qrcode
 
 		// Embed version information if need be. On success, modify the matrix and return true.
 		// See 8.10 of JISX0510:2004 (p.47) for how to embed version information.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix)
 		{
 			if (version < 7)
@@ -258,7 +258,7 @@ namespace com.itextpdf.barcodes.qrcode
 		// Embed "dataBits" using "getMaskPattern". On success, modify the matrix and return true.
 		// For debugging purposes, it skips masking process if "getMaskPattern" is -1.
 		// See 8.7 of JISX0510:2004 (p.38) for how to embed data bits.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix 
 			matrix)
 		{
@@ -381,7 +381,7 @@ namespace com.itextpdf.barcodes.qrcode
 		// Make bit vector of type information. On success, store the result in "bits" and return true.
 		// Encode error correction level and mask pattern. See 8.9 of
 		// JISX0510:2004 (p.45) for details.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern
 			, BitVector bits)
 		{
@@ -405,7 +405,7 @@ namespace com.itextpdf.barcodes.qrcode
 
 		// Make bit vector of version information. On success, store the result in "bits" and return true.
 		// See 8.10 of JISX0510:2004 (p.45) for details.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		public static void MakeVersionInfoBits(int version, BitVector bits)
 		{
 			bits.AppendBits(version, 6);
@@ -433,7 +433,7 @@ namespace com.itextpdf.barcodes.qrcode
 		// Empty.
 		// Light (white).
 		// Dark (black).
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedTimingPatterns(ByteMatrix matrix)
 		{
 			// -8 is for skipping position detection patterns (size 7), and two horizontal/vertical
@@ -463,7 +463,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedDarkDotAtLeftBottomCorner(ByteMatrix matrix)
 		{
 			if (matrix.Get(8, matrix.GetHeight() - 8) == 0)
@@ -473,7 +473,7 @@ namespace com.itextpdf.barcodes.qrcode
 			matrix.Set(8, matrix.GetHeight() - 8, 1);
 		}
 
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedHorizontalSeparationPattern(int xStart, int yStart, ByteMatrix
 			 matrix)
 		{
@@ -493,7 +493,7 @@ namespace com.itextpdf.barcodes.qrcode
 			}
 		}
 
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedVerticalSeparationPattern(int xStart, int yStart, ByteMatrix
 			 matrix)
 		{
@@ -516,7 +516,7 @@ namespace com.itextpdf.barcodes.qrcode
 		// Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
 		// almost identical, since we cannot write a function that takes 2D arrays in different sizes in
 		// C/C++. We should live with the fact.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix
 			 matrix)
 		{
@@ -539,7 +539,7 @@ namespace com.itextpdf.barcodes.qrcode
 			}
 		}
 
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedPositionDetectionPattern(int xStart, int yStart, ByteMatrix
 			 matrix)
 		{
@@ -563,7 +563,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Embed position detection patterns and surrounding vertical/horizontal separators.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void EmbedPositionDetectionPatternsAndSeparators(ByteMatrix matrix
 			)
 		{
@@ -595,7 +595,7 @@ namespace com.itextpdf.barcodes.qrcode
 		}
 
 		// Embed position adjustment patterns if need be.
-		/// <exception cref="com.itextpdf.barcodes.qrcode.WriterException"/>
+		/// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
 		private static void MaybeEmbedPositionAdjustmentPatterns(int version, ByteMatrix 
 			matrix)
 		{

@@ -45,12 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.crypto;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.crypto.securityhandler
+namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
 	public class StandardHandlerUsingAes256 : StandardSecurityHandler
 	{

@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.pdf.annot
+namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfFixedPrint : PdfObjectWrapper<PdfDictionary>
 	{
@@ -61,29 +61,29 @@ namespace com.itextpdf.kernel.pdf.annot
 			pdfObject.Put(PdfName.Type, PdfName.FixedPrint);
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFixedPrint SetMatrix(PdfArray matrix
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(PdfArray matrix
 			)
 		{
 			GetPdfObject().Put(PdfName.Matrix, matrix);
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFixedPrint SetMatrix(float[] matrix
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(float[] matrix
 			)
 		{
 			GetPdfObject().Put(PdfName.Matrix, new PdfArray(matrix));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFixedPrint SetHorizontalTranslation
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetHorizontalTranslation
 			(float horizontal)
 		{
 			GetPdfObject().Put(PdfName.H, new PdfNumber(horizontal));
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.pdf.annot.PdfFixedPrint SetVerticalTranslation
-			(float vertical)
+		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetVerticalTranslation(float
+			 vertical)
 		{
 			GetPdfObject().Put(PdfName.V, new PdfNumber(vertical));
 			return this;

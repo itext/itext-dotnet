@@ -1,7 +1,6 @@
 using NUnit.Framework;
-using com.itextpdf.io;
 
-namespace com.itextpdf.io.font
+namespace iTextSharp.IO.Font
 {
 	public class FontProgramTest
 	{

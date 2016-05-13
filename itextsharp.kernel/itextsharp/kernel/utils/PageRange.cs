@@ -46,7 +46,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace com.itextpdf.kernel.utils
+namespace iTextSharp.Kernel.Utils
 {
 	public class PageRange
 	{
@@ -63,27 +63,27 @@ namespace com.itextpdf.kernel.utils
 		/// <param name="pageRange">the page range.</param>
 		public PageRange(String pageRange)
 		{
-			pageRange = com.itextpdf.io.util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
-			Regex sequencePattern = com.itextpdf.io.util.StringUtil.RegexCompile("(\\d+)-(\\d+)"
+			pageRange = iTextSharp.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
+			Regex sequencePattern = iTextSharp.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)"
 				);
-			Regex singlePagePattern = com.itextpdf.io.util.StringUtil.RegexCompile("(\\d+)");
+			Regex singlePagePattern = iTextSharp.IO.Util.StringUtil.RegexCompile("(\\d+)");
 			foreach (String pageRangePart in pageRange.Split(","))
 			{
 				Match matcher;
-				if ((matcher = com.itextpdf.io.util.StringUtil.Match(sequencePattern, pageRangePart
+				if ((matcher = iTextSharp.IO.Util.StringUtil.Match(sequencePattern, pageRangePart
 					)).Success)
 				{
-					sequenceStarts.Add(System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+					sequenceStarts.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
 						, 1)));
-					sequenceEnds.Add(System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+					sequenceEnds.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
 						, 2)));
 				}
 				else
 				{
-					if ((matcher = com.itextpdf.io.util.StringUtil.Match(singlePagePattern, pageRangePart
+					if ((matcher = iTextSharp.IO.Util.StringUtil.Match(singlePagePattern, pageRangePart
 						)).Success)
 					{
-						int pageNumber = System.Convert.ToInt32(com.itextpdf.io.util.StringUtil.Group(matcher
+						int pageNumber = System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
 							, 1));
 						sequenceStarts.Add(pageNumber);
 						sequenceEnds.Add(pageNumber);
@@ -92,7 +92,7 @@ namespace com.itextpdf.kernel.utils
 			}
 		}
 
-		public virtual com.itextpdf.kernel.utils.PageRange AddPageSequence(int startPageNumber
+		public virtual iTextSharp.Kernel.Utils.PageRange AddPageSequence(int startPageNumber
 			, int endPageNumber)
 		{
 			sequenceStarts.Add(startPageNumber);
@@ -100,7 +100,7 @@ namespace com.itextpdf.kernel.utils
 			return this;
 		}
 
-		public virtual com.itextpdf.kernel.utils.PageRange AddSinglePage(int pageNumber)
+		public virtual iTextSharp.Kernel.Utils.PageRange AddSinglePage(int pageNumber)
 		{
 			sequenceStarts.Add(pageNumber);
 			sequenceEnds.Add(pageNumber);
@@ -135,12 +135,11 @@ namespace com.itextpdf.kernel.utils
 
 		public override bool Equals(Object obj)
 		{
-			if (!(obj is com.itextpdf.kernel.utils.PageRange))
+			if (!(obj is iTextSharp.Kernel.Utils.PageRange))
 			{
 				return false;
 			}
-			com.itextpdf.kernel.utils.PageRange other = (com.itextpdf.kernel.utils.PageRange)
-				obj;
+			iTextSharp.Kernel.Utils.PageRange other = (iTextSharp.Kernel.Utils.PageRange)obj;
 			return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds
 				);
 		}

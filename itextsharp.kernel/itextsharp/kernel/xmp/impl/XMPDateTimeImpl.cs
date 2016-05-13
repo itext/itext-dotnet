@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Globalization;
-using com.itextpdf.kernel.xmp;
+using iTextSharp.Kernel.Xmp;
 
-namespace com.itextpdf.kernel.xmp.impl
+namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>The implementation of <code>XMPDateTime</code>.</summary>
 	/// <remarks>
@@ -128,33 +128,33 @@ namespace com.itextpdf.kernel.xmp.impl
 
 		/// <summary>Creates an <code>XMPDateTime</code>-instance from an ISO 8601 string.</summary>
 		/// <param name="strValue">an ISO 8601 string</param>
-		/// <exception cref="com.itextpdf.kernel.xmp.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
 		/// 	</exception>
 		public XMPDateTimeImpl(String strValue)
 		{
 			ISO8601Converter.Parse(strValue, this);
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetYear()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetYear()"/>
 		public virtual int GetYear()
 		{
 			return year;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetYear(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetYear(int)"/>
 		public virtual void SetYear(int year)
 		{
 			this.year = Math.Min(Math.Abs(year), 9999);
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetMonth()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetMonth()"/>
 		public virtual int GetMonth()
 		{
 			return month;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetMonth(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetMonth(int)"/>
 		public virtual void SetMonth(int month)
 		{
 			if (month < 1)
@@ -175,13 +175,13 @@ namespace com.itextpdf.kernel.xmp.impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetDay()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetDay()"/>
 		public virtual int GetDay()
 		{
 			return day;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetDay(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetDay(int)"/>
 		public virtual void SetDay(int day)
 		{
 			if (day < 1)
@@ -202,59 +202,59 @@ namespace com.itextpdf.kernel.xmp.impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetHour()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetHour()"/>
 		public virtual int GetHour()
 		{
 			return hour;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetHour(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetHour(int)"/>
 		public virtual void SetHour(int hour)
 		{
 			this.hour = Math.Min(Math.Abs(hour), 23);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetMinute()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetMinute()"/>
 		public virtual int GetMinute()
 		{
 			return minute;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetMinute(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetMinute(int)"/>
 		public virtual void SetMinute(int minute)
 		{
 			this.minute = Math.Min(Math.Abs(minute), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetSecond()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetSecond()"/>
 		public virtual int GetSecond()
 		{
 			return second;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetSecond(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetSecond(int)"/>
 		public virtual void SetSecond(int second)
 		{
 			this.second = Math.Min(Math.Abs(second), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetNanoSecond()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetNanoSecond()"/>
 		public virtual int GetNanoSecond()
 		{
 			return nanoSeconds;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetNanoSecond(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetNanoSecond(int)"/>
 		public virtual void SetNanoSecond(int nanoSecond)
 		{
 			this.nanoSeconds = nanoSecond;
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="java.lang.Comparable{T}.CompareTo(System.Object)"/>
+		/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"/>
 		public virtual int CompareTo(Object dt)
 		{
 			long d = GetCalendar().GetTimeInMillis() - ((XMPDateTime)dt).GetCalendar().GetTimeInMillis
@@ -271,14 +271,14 @@ namespace com.itextpdf.kernel.xmp.impl
 			}
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetTimeZone()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetTimeZone()"/>
 		public virtual TimeZone GetTimeZone()
 		{
 			return timeZone;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.SetTimeZone(java.util.TimeZone)
-		/// 	"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
+		/// 	/>
 		public virtual void SetTimeZone(TimeZone timeZone)
 		{
 			this.timeZone = timeZone;
@@ -286,25 +286,25 @@ namespace com.itextpdf.kernel.xmp.impl
 			this.hasTimeZone = true;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.HasDate()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasDate()"/>
 		public virtual bool HasDate()
 		{
 			return this.hasDate;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.HasTime()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasTime()"/>
 		public virtual bool HasTime()
 		{
 			return this.hasTime;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.HasTimeZone()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasTimeZone()"/>
 		public virtual bool HasTimeZone()
 		{
 			return this.hasTimeZone;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetCalendar()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetCalendar()"/>
 		public virtual Calendar GetCalendar()
 		{
 			GregorianCalendar calendar = (GregorianCalendar)Calendar.GetInstance(Locale.US);
@@ -323,7 +323,7 @@ namespace com.itextpdf.kernel.xmp.impl
 			return calendar;
 		}
 
-		/// <seealso cref="com.itextpdf.kernel.xmp.XMPDateTime.GetISO8601String()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetISO8601String()"/>
 		public virtual String GetISO8601String()
 		{
 			return ISO8601Converter.Render(this);

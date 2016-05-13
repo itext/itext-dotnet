@@ -43,12 +43,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.io.font.cmap;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Font.Cmap;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.kernel.font
+namespace iTextSharp.Kernel.Font
 {
 	/// <summary>This class allow to parse document font's encoding.</summary>
 	internal class DocFontEncoding : FontEncoding
@@ -72,7 +72,7 @@ namespace com.itextpdf.kernel.font
 				{
 					if (encoding.IsDictionary())
 					{
-						com.itextpdf.kernel.font.DocFontEncoding fontEncoding = new com.itextpdf.kernel.font.DocFontEncoding
+						iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
 							();
 						fontEncoding.differences = new String[256];
 						if (fillBaseEncoding)
@@ -88,7 +88,7 @@ namespace com.itextpdf.kernel.font
 			}
 			if (toUnicode != null)
 			{
-				com.itextpdf.kernel.font.DocFontEncoding fontEncoding = new com.itextpdf.kernel.font.DocFontEncoding
+				iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
 					();
 				fontEncoding.differences = new String[256];
 				FillDifferences(fontEncoding, toUnicode);
@@ -106,7 +106,7 @@ namespace com.itextpdf.kernel.font
 			return CreateDocFontEncoding(encoding, toUnicode, true);
 		}
 
-		private static void FillBaseEncoding(com.itextpdf.kernel.font.DocFontEncoding fontEncoding
+		private static void FillBaseEncoding(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
 			, PdfName baseEncodingName)
 		{
 			if (baseEncodingName != null)
@@ -145,7 +145,7 @@ namespace com.itextpdf.kernel.font
 			}
 		}
 
-		private static void FillDifferences(com.itextpdf.kernel.font.DocFontEncoding fontEncoding
+		private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
 			, PdfArray diffs, CMapToUnicode toUnicode)
 		{
 			IntHashtable byte2uni = toUnicode != null ? toUnicode.CreateDirectMapping() : new 
@@ -188,7 +188,7 @@ namespace com.itextpdf.kernel.font
 			}
 		}
 
-		private static void FillDifferences(com.itextpdf.kernel.font.DocFontEncoding fontEncoding
+		private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
 			, CMapToUnicode toUnicode)
 		{
 			IntHashtable byte2uni = toUnicode.CreateDirectMapping();
