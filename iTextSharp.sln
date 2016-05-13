@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.barcodes", "itextsharp.barcodes\itextsharp.barcodes.csproj", "{DCAE8241-E391-418D-BA36-C7C064D7C413}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "forms", "forms\forms.csproj", "{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.forms", "itextsharp.forms\itextsharp.forms.csproj", "{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.layout", "itextsharp.layout\itextsharp.layout.csproj", "{42173642-DB52-44D3-9883-3E34C65C53BC}"
 EndProject
