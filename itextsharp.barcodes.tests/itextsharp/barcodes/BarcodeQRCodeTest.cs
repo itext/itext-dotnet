@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Barcodes.Qrcode;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
+using iTextSharp.Test;
 
 namespace iTextSharp.Barcodes
 {
-	public class BarcodeQRCodeTest
+	public class BarcodeQRCodeTest : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/barcodes/";
 
@@ -18,18 +18,13 @@ namespace iTextSharp.Barcodes
 		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
-			File dir = new File(destinationFolder);
-			dir.Mkdirs();
-			foreach (File file in dir.ListFiles())
-			{
-				file.Delete();
-			}
+			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode01Test()
 		{
 			String filename = "barcodeQRCode01.pdf";
@@ -51,7 +46,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode02Test()
 		{
 			String filename = "barcodeQRCode02.pdf";

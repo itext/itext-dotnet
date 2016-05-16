@@ -1,14 +1,14 @@
 using System;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
+using iTextSharp.Test;
 
 namespace iTextSharp.Barcodes
 {
-	public class Barcode39Test
+	public class Barcode39Test : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/barcodes/";
 
@@ -17,13 +17,13 @@ namespace iTextSharp.Barcodes
 		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
-			new File(destinationFolder).Mkdirs();
+			CreateDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode01Test()
 		{
 			String filename = "barcode39_01.pdf";
@@ -44,7 +44,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode02Test()
 		{
 			String filename = "barcode39_02.pdf";
