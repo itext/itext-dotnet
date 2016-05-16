@@ -1,5 +1,5 @@
 /*
-$Id: bf045581647353f3ecdd0b1633b13e5a0a526df9 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Crypto
 		/// <param name="b">the data.</param>
 		/// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
 		/// <seealso cref="System.IO.Stream.Write(byte[], int, int)"/>
-		public override void Write(byte[] b)
+		public virtual void Write(byte[] b)
 		{
 			Write(b, 0, b.Length);
 		}
@@ -156,13 +156,13 @@ namespace iTextSharp.Kernel.Crypto
 		/// may be thrown if the
 		/// output stream has been closed.
 		/// </exception>
-		public override void Write(int b)
+		public virtual void Write(int b)
 		{
 			sb[0] = (byte)b;
 			Write(sb, 0, 1);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Writes
 		/// <paramref name="len"/>
 		/// bytes from the specified byte array
@@ -222,6 +222,39 @@ namespace iTextSharp.Kernel.Crypto
 		/// </exception>
 		public abstract override void Write(byte[] b, int off, int len);
 
-		public abstract void Finish();
-	}
+	    public abstract void Finish();
+
+        public override long Seek(long offset, SeekOrigin origin) {
+            return @out.Seek(offset, origin);
+        }
+
+        public override void SetLength(long value) {
+            @out.SetLength(value);
+        }
+
+        public override int Read(byte[] buffer, int offset, int count) {
+            return @out.Read(buffer, offset, count);
+        }
+
+        public override bool CanRead {
+            get { return @out.CanRead; }
+        }
+
+        public override bool CanSeek {
+            get { return @out.CanSeek; }
+        }
+
+        public override bool CanWrite {
+            get { return @out.CanWrite; }
+        }
+
+        public override long Length {
+            get { return @out.Length; }
+        }
+
+        public override long Position {
+            get { return @out.Position; }
+            set { @out.Position = value; }
+        }
+    }
 }
