@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel
 				{
 					try
 					{
-						Type klass = iTextSharp.GetType("com.itextpdf.licensekey.LicenseKey");
+						Type klass = System.Type.GetType("com.itextpdf.licensekey.LicenseKey");
 						MethodInfo m = klass.GetMethod("getLicenseeInfo");
 						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass));
 						if (info[3] != null && info[3].Trim().Length > 0)

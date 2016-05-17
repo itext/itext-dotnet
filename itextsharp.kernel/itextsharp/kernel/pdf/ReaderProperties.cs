@@ -42,10 +42,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel.Security;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -58,10 +56,6 @@ namespace iTextSharp.Kernel.Pdf
 		protected internal ICipherParameters certificateKey;
 
 		protected internal X509Certificate certificate;
-
-		protected internal String certificateKeyProvider;
-
-		protected internal IExternalDecryptionProcess externalDecryptionProcess;
 
 		//added by ujihara for decryption
 		//added by Aiken Sam for certificate decryption
@@ -89,8 +83,6 @@ namespace iTextSharp.Kernel.Pdf
 			ClearEncryptionParams();
 			this.certificate = certificate;
 			this.certificateKey = certificateKey;
-			this.certificateKeyProvider = certificateKeyProvider;
-			this.externalDecryptionProcess = externalDecryptionProcess;
 			return this;
 		}
 
@@ -101,7 +93,6 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			ClearEncryptionParams();
 			this.certificate = certificate;
-			this.externalDecryptionProcess = externalDecryptionProcess;
 			return this;
 		}
 
@@ -110,8 +101,6 @@ namespace iTextSharp.Kernel.Pdf
 			this.password = null;
 			this.certificate = null;
 			this.certificateKey = null;
-			this.certificateKeyProvider = null;
-			this.externalDecryptionProcess = null;
 		}
 	}
 }
