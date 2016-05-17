@@ -1,5 +1,5 @@
 /*
-$Id: 4fcfc548406ac8bd3f90957652bab29bfaca1dd6 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV

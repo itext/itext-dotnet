@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -81,12 +82,8 @@ namespace iTextSharp.Kernel {
             return r;
         }
 
-        public static void AddAll<T>(this ICollection<T> c, ICollection<T> collectionToAdd)
-        {
-            foreach (T o in collectionToAdd)
-            {
-                c.Add(o);
-            }
+        public static Stream OpenStream(this Uri uri) {
+            return WebRequest.Create(uri).GetResponse().GetResponseStream();
         }
     }
 }
