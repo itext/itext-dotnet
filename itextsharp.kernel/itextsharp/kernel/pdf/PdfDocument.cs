@@ -212,13 +212,13 @@ namespace iTextSharp.Kernel.Pdf
 				.properties.IsPublicKeyEncryptionUsed();
 			if (properties.appendMode && writerHasEncryption)
 			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
 					);
 				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
 			}
 			if (properties.preserveEncryption && writerHasEncryption)
 			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
 					);
 				logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
 			}
@@ -1623,7 +1623,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			catch (XMPException e)
 			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument)
 					);
 				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
 			}

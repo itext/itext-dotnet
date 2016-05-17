@@ -30,7 +30,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using Java.IO;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
 
@@ -86,7 +85,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private CountOutputStream outputStream;
 
 		/// <summary>this writer is used to do the actual serialization</summary>
-		private OutputStreamWriter writer;
+		private StreamWriter writer;
 
 		/// <summary>the stored serialization options</summary>
 		private SerializeOptions options;
@@ -116,11 +115,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			try
 			{
 				outputStream = new CountOutputStream(@out);
-				writer = new OutputStreamWriter(outputStream, options.GetEncoding());
+				writer = new StreamWriter(outputStream, options.GetEncoding());
 				this.xmp = (XMPMetaImpl)xmp;
 				this.options = options;
 				this.padding = options.GetPadding();
-				writer = new OutputStreamWriter(outputStream, options.GetEncoding());
+				writer = new StreamWriter(outputStream, options.GetEncoding());
 				CheckOptionsConsistence();
 				// serializes the whole packet, but don't write the tail yet 
 				// and flush to make sure that the written bytes are calculated correctly

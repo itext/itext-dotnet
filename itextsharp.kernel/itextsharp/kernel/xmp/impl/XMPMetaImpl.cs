@@ -350,8 +350,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(altTextName);
 			ParameterAsserts.AssertSpecificLang(specificLang);
-			genericLang = genericLang != null ? Utils.NormalizeLangValue(genericLang) : null;
-			specificLang = Utils.NormalizeLangValue(specificLang);
+			genericLang = genericLang != null ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
+				(genericLang) : null;
+			specificLang = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(specificLang);
 			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, altTextName);
 			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode == null)
@@ -411,8 +412,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(altTextName);
 			ParameterAsserts.AssertSpecificLang(specificLang);
-			genericLang = genericLang != null ? Utils.NormalizeLangValue(genericLang) : null;
-			specificLang = Utils.NormalizeLangValue(specificLang);
+			genericLang = genericLang != null ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
+				(genericLang) : null;
+			specificLang = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(specificLang);
 			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, altTextName);
 			// Find the array node and set the options if it was just created.
 			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, true, new PropertyOptions

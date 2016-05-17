@@ -29,7 +29,6 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Globalization;
-using Java.Lang;
 
 namespace iTextSharp.Kernel.Xmp
 {
@@ -56,7 +55,7 @@ namespace iTextSharp.Kernel.Xmp
 	/// without a time has zeros for all the time fields. A time without a date has zeros for all date
 	/// fields (year, month, and day).
 	/// </remarks>
-	public interface XMPDateTime : Comparable
+	public interface XMPDateTime : IComparable
 	{
 		/// <returns>Returns the year, can be negative.</returns>
 		int GetYear();

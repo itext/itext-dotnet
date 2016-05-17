@@ -1147,8 +1147,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			bool isLang = XML_LANG.Equals(name);
 			XMPNode newQual = null;
 			// normalize value of language qualifiers
-			newQual = new XMPNode(name, isLang ? Utils.NormalizeLangValue(value) : value, null
-				);
+			newQual = new XMPNode(name, isLang ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
+				(value) : value, null);
 			xmpParent.AddQualifier(newQual);
 			return newQual;
 		}

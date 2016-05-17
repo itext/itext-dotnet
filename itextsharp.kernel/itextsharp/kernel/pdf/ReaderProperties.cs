@@ -84,8 +84,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
 		/// 	</summary>
 		public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
-			, ICipherParameters certificateKey, String certificateKeyProvider, IExternalDecryptionProcess
-			 externalDecryptionProcess)
+			, ICipherParameters certificateKey)
 		{
 			ClearEncryptionParams();
 			this.certificate = certificate;
@@ -98,7 +97,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
 		/// 	</summary>
 		public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
-			, IExternalDecryptionProcess externalDecryptionProcess)
+			)
 		{
 			ClearEncryptionParams();
 			this.certificate = certificate;

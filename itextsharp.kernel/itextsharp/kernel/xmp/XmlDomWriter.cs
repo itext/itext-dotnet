@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.IO;
 using Org.W3c.Dom;
 
 namespace iTextSharp.Kernel.Xmp
@@ -96,19 +95,12 @@ namespace iTextSharp.Kernel.Xmp
 			{
 				encoding = "UTF8";
 			}
-			TextWriter writer = new OutputStreamWriter(stream, encoding);
-			fOut = new StreamWriter(writer);
+			fOut = new StreamWriter(stream, System.Text.Encoding.GetEncoding(encoding));
 		}
 
 		// setOutput(OutputStream,String)
-		/// <summary>Sets the output writer.</summary>
-		public virtual void SetOutput(TextWriter writer)
-		{
-			fOut = writer is StreamWriter ? (StreamWriter)writer : new StreamWriter(writer);
-		}
-
-		// setOutput(java.io.Writer)
 		/// <summary>Writes the specified node, recursively.</summary>
+		/// <exception cref="System.IO.IOException"/>
 		public virtual void Write(Node node)
 		{
 			// is there anything to do?
@@ -169,11 +161,11 @@ namespace iTextSharp.Kernel.Xmp
 					String internalSubset = doctype.GetInternalSubset();
 					if (internalSubset != null)
 					{
-						fOut.WriteLine(" [");
+						fOut.Write(" [" + Environment.NewLine);
 						fOut.Write(internalSubset);
 						fOut.Write(']');
 					}
-					fOut.WriteLine('>');
+					fOut.Write('>' + Environment.NewLine);
 					break;
 				}
 
@@ -324,6 +316,7 @@ namespace iTextSharp.Kernel.Xmp
 		// Protected methods
 		//
 		/// <summary>Normalizes and prints the given string.</summary>
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void NormalizeAndPrint(String s, bool isAttValue)
 		{
 			int len = (s != null) ? s.Length : 0;
@@ -336,6 +329,7 @@ namespace iTextSharp.Kernel.Xmp
 
 		// normalizeAndPrint(String,boolean)
 		/// <summary>Normalizes and print the given character.</summary>
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void NormalizeAndPrint(char c, bool isAttValue)
 		{
 			switch (c)

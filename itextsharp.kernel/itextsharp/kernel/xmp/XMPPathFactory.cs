@@ -203,7 +203,8 @@ namespace iTextSharp.Kernel.Xmp
 		/// </returns>
 		public static String ComposeLangSelector(String arrayName, String langName)
 		{
-			return arrayName + "[?xml:lang=\"" + Utils.NormalizeLangValue(langName) + "\"]";
+			return arrayName + "[?xml:lang=\"" + iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
+				(langName) + "\"]";
 		}
 
 		/// <summary>Compose the path expression to select an alternate item by a field's value.

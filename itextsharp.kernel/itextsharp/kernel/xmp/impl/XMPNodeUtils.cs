@@ -324,7 +324,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else
 			{
-				node.SetValue(Utils.NormalizeLangValue(strValue));
+				node.SetValue(iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(strValue));
 			}
 		}
 
@@ -660,7 +660,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			if (XML_LANG.Equals(qualName))
 			{
-				qualValue = Utils.NormalizeLangValue(qualValue);
+				qualValue = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(qualValue);
 				int index = iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.LookupLanguageItem(arrayNode, 
 					qualValue);
 				if (index < 0 && (aliasForm & AliasOptions.PROP_ARRAY_ALT_TEXT) > 0)

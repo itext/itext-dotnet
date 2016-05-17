@@ -347,7 +347,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 
 			/// <summary>Compares based on orientation, perpendicular distance, then parallel distance
 			/// 	</summary>
-			/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"/>
+			/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
 			public virtual int CompareTo(LocationTextExtractionStrategy.TextChunk rhs)
 			{
 				return location.CompareTo(rhs.location);

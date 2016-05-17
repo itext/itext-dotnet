@@ -287,7 +287,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage pdfPage = GetPage(pageNum);
 			if (pdfPage.IsFlushed())
 			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(PdfPage));
+				Logger logger = LoggerFactory.GetLogger(typeof(PdfPage));
 				logger.Warn(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
 			}
 			if (InternalRemovePage(--pageNum))

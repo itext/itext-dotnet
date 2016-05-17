@@ -30,7 +30,6 @@
 using System;
 using System.Collections;
 using System.Text;
-using Java.Lang;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
@@ -51,7 +50,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// 4. hasLanguage, hasType should be automatically maintained by XMPNode
 	/// </remarks>
 	/// <since>21.02.2006</since>
-	internal class XMPNode : Comparable
+	internal class XMPNode : IComparable
 	{
 		/// <summary>name of the node, contains different information depending of the node kind
 		/// 	</summary>
@@ -447,7 +446,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			return result.ToString();
 		}
 
-		/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"></seealso>
+		/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"></seealso>
 		public virtual int CompareTo(Object xmpNode)
 		{
 			if (GetOptions().IsSchemaNode())

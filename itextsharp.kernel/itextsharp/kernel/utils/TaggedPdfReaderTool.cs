@@ -46,7 +46,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Java.IO;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
@@ -83,11 +82,10 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void ConvertToXml(Stream os, String charset)
 		{
-			OutputStreamWriter outs = new OutputStreamWriter(os, charset);
-			@out = new StreamWriter(outs);
+			@out = new StreamWriter(os, System.Text.Encoding.GetEncoding(charset));
 			if (rootTag != null)
 			{
-				@out.WriteLine("<" + rootTag + ">");
+				@out.Write("<" + rootTag + ">" + Environment.NewLine);
 			}
 			// get the StructTreeRoot from the document
 			PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
@@ -112,6 +110,7 @@ namespace iTextSharp.Kernel.Utils
 			return this;
 		}
 
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void InspectKids(IList<IPdfStructElem> kids)
 		{
 			if (kids == null)
@@ -124,6 +123,7 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void InspectKid(IPdfStructElem kid)
 		{
 			if (kid is PdfStructElem)
@@ -135,19 +135,19 @@ namespace iTextSharp.Kernel.Utils
 				@out.Write("<");
 				@out.Write(tag);
 				InspectAttributes(structElemKid);
-				@out.WriteLine(">");
+				@out.Write(">" + Environment.NewLine);
 				PdfString alt = (structElemKid).GetAlt();
 				if (alt != null)
 				{
 					@out.Write("<alt><![CDATA[");
 					@out.Write(iTextSharp.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""
 						));
-					@out.WriteLine("]]></alt>");
+					@out.Write("]]></alt>" + Environment.NewLine);
 				}
 				InspectKids(structElemKid.GetKids());
 				@out.Write("</");
 				@out.Write(tag);
-				@out.WriteLine(">");
+				@out.Write(">" + Environment.NewLine);
 			}
 			else
 			{
@@ -162,6 +162,7 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void InspectAttributes(PdfStructElem kid)
 		{
 			PdfObject attrObj = kid.GetAttributes(false);
@@ -180,7 +181,7 @@ namespace iTextSharp.Kernel.Utils
 				{
 					@out.Write(' ');
 					String attrName = entry.Key.GetValue();
-					@out.Write(char.ToLowerCase(attrName[0]) + attrName.Substring(1));
+					@out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
 					@out.Write("=\"");
 					@out.Write(entry.Value.ToString());
 					@out.Write("\"");
@@ -188,6 +189,7 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
+		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ParseTag(PdfMcr kid)
 		{
 			int mcid = kid.GetMcid();

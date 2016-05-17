@@ -280,7 +280,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (value == null)
 			{
-				return new String(content, Java.Nio.Charset.Charset.ForName(defaultCharset));
+				return new String(content, System.Text.Encoding.GetEncoding(defaultCharset));
 			}
 			else
 			{
@@ -316,8 +316,8 @@ namespace iTextSharp.Kernel.Pdf
 				byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
 				content = null;
 				decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-				value = new String(decrypt.DecryptByteArray(decodedContent), Java.Nio.Charset.Charset
-					.ForName(defaultCharset));
+				value = new String(decrypt.DecryptByteArray(decodedContent), System.Text.Encoding.GetEncoding
+					(defaultCharset));
 			}
 			return this;
 		}

@@ -254,7 +254,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="Java.Lang.Comparable{T}.CompareTo(System.Object)"/>
+		/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
 		public virtual int CompareTo(Object dt)
 		{
 			long d = GetCalendar().GetTimeInMillis() - ((XMPDateTime)dt).GetCalendar().GetTimeInMillis

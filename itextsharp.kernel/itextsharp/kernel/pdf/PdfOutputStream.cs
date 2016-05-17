@@ -190,7 +190,7 @@ namespace iTextSharp.Kernel.Pdf
 				PdfObject value = entry.Value;
 				if (value == null)
 				{
-					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream
+					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream
 						));
 					logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
 						, entry.Key));

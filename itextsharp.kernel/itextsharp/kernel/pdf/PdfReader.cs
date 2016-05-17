@@ -544,7 +544,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			catch (Exception ex)
 			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
+				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 				logger.Error(LogMessageConstant.XREF_ERROR, ex);
 				RebuildXref();
 			}
@@ -567,7 +567,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (PdfName.Adobe_PubSec.Equals(filter))
 			{
 				decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate
-					, properties.certificateKeyProvider, properties.externalDecryptionProcess);
+					);
 			}
 			else
 			{
@@ -751,7 +751,7 @@ namespace iTextSharp.Kernel.Pdf
 						{
 							if (fixedXref)
 							{
-								ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
+								Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 								logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE + " {0} {1} R"
 									, tokens.GetObjNr(), tokens.GetGenNr()));
 								return new PdfNull();

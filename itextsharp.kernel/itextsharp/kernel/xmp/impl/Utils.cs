@@ -110,11 +110,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// convert second subtag to uppercase, all other to lowercase
 						if (subTag != 2)
 						{
-							buffer.Append(char.ToLowerCase(value[i]));
+							buffer.Append(char.ToLower(value[i]));
 						}
 						else
 						{
-							buffer.Append(char.ToUpperCase(value[i]));
+							buffer.Append(char.ToUpper(value[i]));
 						}
 						break;
 					}
