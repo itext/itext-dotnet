@@ -54,8 +54,6 @@ namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfAction : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -3945353673249710860L;
-
 		/// <summary>a possible submitvalue</summary>
 		public const int SUBMIT_EXCLUDE = 1;
 

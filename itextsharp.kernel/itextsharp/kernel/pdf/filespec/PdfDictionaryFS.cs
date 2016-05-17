@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Filespec
 {
 	public class PdfDictionaryFS : PdfFileSpec
 	{
-		private const long serialVersionUID = 2837850901058331442L;
-
 		public PdfDictionaryFS(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

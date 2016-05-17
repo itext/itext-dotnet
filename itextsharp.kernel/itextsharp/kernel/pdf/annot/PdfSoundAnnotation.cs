@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfSoundAnnotation : PdfMarkupAnnotation
 	{
-		private const long serialVersionUID = -2319779211858842136L;
-
 		public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
 			: base(rect)
 		{

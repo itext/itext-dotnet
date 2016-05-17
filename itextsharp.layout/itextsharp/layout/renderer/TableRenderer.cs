@@ -474,6 +474,8 @@ namespace iTextSharp.Layout.Renderer
 				if (split)
 				{
 					iTextSharp.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
+					int[] rowspans = new int[currentRow.Length];
+					bool[] columnsWithCellToBeSplitted = new bool[currentRow.Length];
 					for (int col_1 = 0; col_1 < currentRow.Length; col_1++)
 					{
 						if (splits[col_1] != null)
@@ -486,6 +488,10 @@ namespace iTextSharp.Layout.Renderer
 							else
 							{
 								cellSplit = currentRow[col_1];
+							}
+							if (null != cellSplit)
+							{
+								rowspans[col_1] = ((Cell)cellSplit.GetModelElement()).GetRowspan();
 							}
 							if (splits[col_1].GetStatus() != LayoutResult.NOTHING && (hasContent || cellWithBigRowspanAdded
 								))
@@ -511,14 +517,54 @@ namespace iTextSharp.Layout.Renderer
 						{
 							if (hasContent && currentRow[col_1] != null)
 							{
+								columnsWithCellToBeSplitted[col_1] = true;
+							}
+						}
+					}
+					int minRowspan = int.MaxValue;
+					for (int col_2 = 0; col_2 < rowspans.Length; col_2++)
+					{
+						if (0 != rowspans[col_2])
+						{
+							minRowspan = Math.Min(minRowspan, rowspans[col_2]);
+						}
+					}
+					for (int col_3 = 0; col_3 < columnsWithCellToBeSplitted.Length; col_3++)
+					{
+						if (columnsWithCellToBeSplitted[col_3])
+						{
+							if (1 == minRowspan)
+							{
 								// Here we use the same cell, but create a new renderer which doesn't have any children,
 								// therefore it won't have any content.
-								Cell overflowCell = ((Cell)currentRow[col_1].GetModelElement());
-								currentRow[col_1].isLastRendererForModelElement = false;
-								childRenderers.Add(currentRow[col_1]);
-								currentRow[col_1] = null;
-								rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)overflowCell.GetRenderer
+								Cell overflowCell = ((Cell)currentRow[col_3].GetModelElement());
+								currentRow[col_3].isLastRendererForModelElement = false;
+								childRenderers.Add(currentRow[col_3]);
+								currentRow[col_3] = null;
+								rows[targetOverflowRowIndex[col_3]][col_3] = (CellRenderer)overflowCell.GetRenderer
 									().SetParent(this);
+							}
+							else
+							{
+								childRenderers.Add(currentRow[col_3]);
+								// shift all cells in the column up
+								int i = row;
+								for (; i < row + minRowspan && i + 1 < rows.Count && rows[i + 1][col_3] != null; 
+									i++)
+								{
+									rows[i][col_3] = rows[i + 1][col_3];
+									rows[i + 1][col_3] = null;
+								}
+								// the number of cells behind is less then minRowspan-1
+								// so we should process the last cell in the columnt as in the case 1 == minRowspan
+								if (i != row + minRowspan - 1 && null != rows[i][col_3])
+								{
+									Cell overflowCell = ((Cell)rows[i][col_3].GetModelElement());
+									rows[i][col_3].isLastRendererForModelElement = false;
+									rows[i][col_3] = null;
+									rows[targetOverflowRowIndex[col_3]][col_3] = (CellRenderer)overflowCell.GetRenderer
+										().SetParent(this);
+								}
 							}
 						}
 					}

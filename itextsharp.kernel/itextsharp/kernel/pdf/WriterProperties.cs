@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class WriterProperties
 	{
-		private const long serialVersionUID = -8692165914703604764L;
-
 		protected internal int compressionLevel;
 
 		/// <summary>Indicates if to use full compression (using object streams).</summary>

@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	internal class PdfObjectStream : PdfStream
 	{
-		private const long serialVersionUID = -3513488307665597642L;
-
 		/// <summary>Max number of objects in object stream.</summary>
 		public const int MAX_OBJ_STREAM_SIZE = 200;
 

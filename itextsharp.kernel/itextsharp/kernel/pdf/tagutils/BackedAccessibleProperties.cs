@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	internal class BackedAccessibleProperties : AccessibilityProperties
 	{
-		private const long serialVersionUID = 4080083623525383278L;
-
 		private PdfStructElem backingElem;
 
 		internal BackedAccessibleProperties(PdfStructElem backingElem)

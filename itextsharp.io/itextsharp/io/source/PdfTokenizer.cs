@@ -50,8 +50,6 @@ namespace iTextSharp.IO.Source
 {
 	public class PdfTokenizer
 	{
-		private const long serialVersionUID = -2949864233416670521L;
-
 		public enum TokenType
 		{
 			Number,

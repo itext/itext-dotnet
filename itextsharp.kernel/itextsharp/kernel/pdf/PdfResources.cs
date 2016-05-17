@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfResources : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 7160318458835945391L;
-
 		private const String F = "F";
 
 		private const String Im = "Im";
@@ -483,8 +481,6 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		internal class ResourceNameGenerator
 		{
-			private const long serialVersionUID = 1729961083476558303L;
-
 			private PdfName resourceType;
 
 			private int counter;

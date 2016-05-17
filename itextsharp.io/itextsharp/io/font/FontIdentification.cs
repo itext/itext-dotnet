@@ -48,8 +48,6 @@ namespace iTextSharp.IO.Font
 {
 	public class FontIdentification
 	{
-		private const long serialVersionUID = -6017656004487895604L;
-
 		private String ttfVersion;
 
 		private String ttfUniqueId;

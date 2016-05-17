@@ -54,8 +54,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfCatalog : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -1354567597112193418L;
-
 		private readonly PdfPagesTree pageTree;
 
 		protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new Dictionary<PdfName

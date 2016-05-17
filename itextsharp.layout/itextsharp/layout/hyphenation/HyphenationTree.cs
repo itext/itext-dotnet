@@ -37,8 +37,6 @@ namespace iTextSharp.Layout.Hyphenation
 	/// </remarks>
 	public class HyphenationTree : TernaryTree, IPatternConsumer
 	{
-		private const long serialVersionUID = -7842107987915665573L;
-
 		/// <summary>value space: stores the interletter values</summary>
 		protected internal ByteVector vspace;
 

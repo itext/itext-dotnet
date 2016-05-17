@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	internal class DummyAccessibleElement : IAccessibleElement
 	{
-		private const long serialVersionUID = 194933602110962224L;
-
 		private PdfName role;
 
 		private AccessibilityProperties properties;

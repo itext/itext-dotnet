@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfBorderArray : PdfObjectWrapper<PdfArray>
 	{
-		private const long serialVersionUID = -4058970009483489460L;
-
 		public PdfBorderArray(float hRadius, float vRadius, float width)
 			: this(hRadius, vRadius, width, null)
 		{

@@ -63,16 +63,6 @@ namespace iTextSharp.Layout.Hyphenation
 	/// </remarks>
 	public class TernaryTree
 	{
-		/// <summary>We use 4 arrays to represent a node.</summary>
-		/// <remarks>
-		/// We use 4 arrays to represent a node. I guess I should have created
-		/// a proper node class, but somehow Knuth's pascal code made me forget
-		/// we now have a portable language with virtual memory management and
-		/// automatic garbage collection! And now is kind of late, furthermore,
-		/// if it ain't broken, don't fix it.
-		/// </remarks>
-		private const long serialVersionUID = 3175412271203716160L;
-
 		/// <summary>
 		/// Pointer to low branch and to rest of the key when it is
 		/// stored directly in this node, we don't have unions in java!

@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class EncryptionConstants
 	{
-		private const long serialVersionUID = 6234590207803219761L;
-
 		/// <summary>Type of encryption.</summary>
 		public const int STANDARD_ENCRYPTION_40 = 0;
 

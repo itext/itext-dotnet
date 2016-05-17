@@ -498,7 +498,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 							arc2 += 360;
 						}
 						IList<double[]> ar = PdfCanvas.BezierArc(l, b, r, t, arc1, arc2);
-						if (ar.IsEmpty())
+						if (ar.Count == 0)
 						{
 							break;
 						}
@@ -539,7 +539,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 							arc2 += 360;
 						}
 						IList<double[]> ar = PdfCanvas.BezierArc(l, b, r, t, arc1, arc2);
-						if (ar.IsEmpty())
+						if (ar.Count == 0)
 						{
 							break;
 						}

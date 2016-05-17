@@ -25,8 +25,6 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class Point : ICloneable
 	{
-		private const long serialVersionUID = -5276940640259749850L;
-
 		public double x;
 
 		public double y;

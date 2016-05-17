@@ -54,8 +54,6 @@ namespace iTextSharp.Kernel.Events
 	/// </summary>
 	public class EventDispatcher : IEventDispatcher
 	{
-		private const long serialVersionUID = -6701670578690210618L;
-
 		protected internal IDictionary<String, IList<IEventHandler>> eventHandlers = new 
 			Dictionary<String, IList<IEventHandler>>();
 

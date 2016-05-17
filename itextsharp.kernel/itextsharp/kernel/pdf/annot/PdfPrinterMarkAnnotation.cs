@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfPrinterMarkAnnotation : PdfAnnotation
 	{
-		private const long serialVersionUID = -7709626622860134020L;
-
 		public PdfPrinterMarkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
 			: base(rect)
 		{

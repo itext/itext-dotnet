@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfLiteral : PdfPrimitiveObject
 	{
-		private const long serialVersionUID = -770215611509192403L;
-
 		private long position;
 
 		public PdfLiteral(byte[] content)

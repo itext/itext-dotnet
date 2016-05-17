@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfPopupAnnotation : PdfAnnotation
 	{
-		private const long serialVersionUID = -8892617787951569855L;
-
 		protected internal PdfAnnotation parent;
 
 		public PdfPopupAnnotation(Rectangle rect)

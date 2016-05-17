@@ -68,8 +68,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfDocument : IEventDispatcher
 	{
-		private const long serialVersionUID = -7041578979319799646L;
-
 		/// <summary>Currently active page.</summary>
 		protected internal PdfPage currentPage = null;
 
@@ -836,15 +834,15 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				structTreeRoot = new PdfStructTreeRoot(this);
 				catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_804
+				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_790
 					(this)));
 				structParentIndex = 0;
 			}
 		}
 
-		private sealed class _Dictionary_804 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_790 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_804()
+			public _Dictionary_790()
 			{
 				{
 					this[PdfName.Marked] = PdfBoolean.TRUE;
@@ -1246,7 +1244,7 @@ namespace iTextSharp.Kernel.Pdf
 				, description, fileDisplay, mimeType, fileParameter, afRelationshipValue, true));
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.IOException"/>
 		public virtual void AddFileAttachment(String description, String file, String fileDisplay
 			, PdfName mimeType, PdfName afRelationshipValue)
 		{

@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class EncryptionProperties
 	{
-		private const long serialVersionUID = 3926570647944137843L;
-
 		protected internal int encryptionAlgorithm;
 
 		/// <summary>StandardEncryption properties</summary>

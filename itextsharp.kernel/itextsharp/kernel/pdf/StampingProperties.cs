@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class StampingProperties
 	{
-		private const long serialVersionUID = 6108082513101777457L;
-
 		protected internal bool appendMode;
 
 		protected internal bool preserveEncryption;

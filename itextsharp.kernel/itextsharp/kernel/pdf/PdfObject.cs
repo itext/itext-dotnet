@@ -51,8 +51,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public abstract class PdfObject
 	{
-		private const long serialVersionUID = -3852543867469424720L;
-
 		public const byte ARRAY = 1;
 
 		public const byte BOOLEAN = 2;

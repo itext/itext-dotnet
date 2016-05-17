@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	internal class PdfXrefTable
 	{
-		private const long serialVersionUID = 4171655392492002944L;
-
 		private const int INITIAL_CAPACITY = 32;
 
 		private const int MAX_GENERATION = 65535;

@@ -57,8 +57,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// </summary>
 	internal class PdfPagesTree
 	{
-		private const long serialVersionUID = 4189501363348296036L;
-
 		private readonly int leafSize = 10;
 
 		private IList<PdfDictionary> pageRefs;

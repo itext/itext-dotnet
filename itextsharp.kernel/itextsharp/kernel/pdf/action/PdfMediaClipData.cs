@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -7030377585169961523L;
-
 		private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
 
 		public PdfMediaClipData(PdfDictionary pdfObject)

@@ -66,8 +66,6 @@ namespace iTextSharp.IO.Image
 
 		public class ColorSpecBox : List<int>
 		{
-			private const long serialVersionUID = -6008490897027025733L;
-
 			private byte[] colorProfile;
 
 			public virtual int GetMeth()

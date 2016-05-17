@@ -23,8 +23,6 @@ namespace iTextSharp.Layout.Hyphenation
 	/// </summary>
 	public class CharVector
 	{
-		private const long serialVersionUID = 4263472982169004048L;
-
 		/// <summary>Capacity increment size</summary>
 		private const int DEFAULT_BLOCK_SIZE = 2048;
 

@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 {
 	public class PdfNamedDestination : PdfDestination
 	{
-		private const long serialVersionUID = 5285810255133676086L;
-
 		public PdfNamedDestination(String name)
 			: this(new PdfName(name))
 		{

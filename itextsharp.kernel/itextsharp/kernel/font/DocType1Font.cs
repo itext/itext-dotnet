@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Font
 {
 	internal class DocType1Font : Type1Font, IDocFontProgram
 	{
-		private const long serialVersionUID = 6260280563455951912L;
-
 		private PdfStream fontFile;
 
 		private PdfName fontFileName;

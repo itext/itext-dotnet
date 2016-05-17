@@ -51,8 +51,6 @@ namespace iTextSharp.IO.Source
 		private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55
 			, 56, 57, 97, 98, 99, 100, 101, 102 };
 
-		private const long serialVersionUID = -4380712536267312975L;
-
 		protected internal int count;
 
 		private byte[] buffer;

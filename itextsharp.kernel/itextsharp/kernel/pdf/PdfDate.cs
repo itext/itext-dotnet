@@ -67,8 +67,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <seealso cref="System.Globalization.GregorianCalendar"/>
 	public class PdfDate : PdfObjectWrapper<PdfString>
 	{
-		private const long serialVersionUID = -7424858548790000216L;
-
 		private static readonly int[] DATE_SPACE = new int[] { Calendar.YEAR, 4, 0, Calendar
 			.MONTH, 2, -1, Calendar.DAY_OF_MONTH, 2, 0, Calendar.HOUR_OF_DAY, 2, 0, Calendar
 			.MINUTE, 2, 0, Calendar.SECOND, 2, 0 };

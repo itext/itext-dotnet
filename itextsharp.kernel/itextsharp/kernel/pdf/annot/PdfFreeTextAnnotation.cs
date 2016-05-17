@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfFreeTextAnnotation : PdfMarkupAnnotation
 	{
-		private const long serialVersionUID = -7835504102518915220L;
-
 		/// <summary>Text justification options.</summary>
 		public const int LEFT_JUSTIFIED = 0;
 

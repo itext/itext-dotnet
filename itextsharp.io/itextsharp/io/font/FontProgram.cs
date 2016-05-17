@@ -52,8 +52,6 @@ namespace iTextSharp.IO.Font
 {
 	public abstract class FontProgram
 	{
-		private const long serialVersionUID = -3488910249070253659L;
-
 		public const int DEFAULT_WIDTH = 1000;
 
 		public const int UNITS_NORMALIZATION = 1000;

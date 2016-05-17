@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfBoolean : PdfPrimitiveObject
 	{
-		private const long serialVersionUID = -1363839858135046832L;
-
 		public static readonly iTextSharp.Kernel.Pdf.PdfBoolean TRUE = new iTextSharp.Kernel.Pdf.PdfBoolean
 			(true, true);
 

@@ -64,8 +64,6 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 	/// </summary>
 	public class TagStructureContext
 	{
-		private const long serialVersionUID = -7870069015800895036L;
-
 		private sealed class _HashSet_82 : HashSet<PdfName>
 		{
 			public _HashSet_82()

@@ -51,8 +51,6 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfFormXObject : PdfXObject
 	{
-		private const long serialVersionUID = 467500482711722178L;
-
 		private PdfResources resources = null;
 
 		public PdfFormXObject(Rectangle bBox)

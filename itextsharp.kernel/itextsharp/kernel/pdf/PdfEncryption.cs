@@ -57,8 +57,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <author>Kazuya Ujihara</author>
 	public class PdfEncryption : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -6864863940808467156L;
-
 		private const int STANDARD_ENCRYPTION_40 = 2;
 
 		private const int STANDARD_ENCRYPTION_128 = 3;

@@ -56,8 +56,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfWriter : PdfOutputStream
 	{
-		private const long serialVersionUID = -6875544505477707103L;
-
 		private static readonly byte[] obj = ByteUtils.GetIsoBytes(" obj\n");
 
 		private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");

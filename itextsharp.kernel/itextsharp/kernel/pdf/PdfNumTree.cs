@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNumTree
 	{
-		private const long serialVersionUID = 2636796232945164670L;
-
 		private const int NODE_SIZE = 40;
 
 		private PdfCatalog catalog;

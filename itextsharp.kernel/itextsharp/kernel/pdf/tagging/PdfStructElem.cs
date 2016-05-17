@@ -59,8 +59,6 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 	/// </summary>
 	public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem
 	{
-		private const long serialVersionUID = 7204356181229674005L;
-
 		public static int Unknown = 0;
 
 		public static int Grouping = 1;

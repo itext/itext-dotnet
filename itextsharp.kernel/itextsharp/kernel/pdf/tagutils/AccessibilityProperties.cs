@@ -51,8 +51,6 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 {
 	public class AccessibilityProperties
 	{
-		private const long serialVersionUID = 3139055327755008473L;
-
 		protected internal String language;
 
 		protected internal String actualText;

@@ -66,8 +66,6 @@ namespace iTextSharp.Kernel.Pdf.Layer
 	/// </remarks>
 	public class PdfLayer : PdfObjectWrapper<PdfDictionary>, IPdfOCG
 	{
-		private const long serialVersionUID = -5367953708241595665L;
-
 		/// <summary>Used for titling group of objects but not actually grouping them.</summary>
 		protected internal String title;
 

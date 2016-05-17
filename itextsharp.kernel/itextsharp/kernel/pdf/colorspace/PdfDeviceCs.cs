@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfDeviceCs : PdfColorSpace
 	{
-		private const long serialVersionUID = 6884911248656287064L;
-
 		protected internal override bool IsWrappedObjectMustBeIndirect()
 		{
 			return false;
@@ -62,8 +60,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Gray : PdfDeviceCs
 		{
-			private const long serialVersionUID = 2722906212276665191L;
-
 			public Gray()
 				: base(PdfName.DeviceGray)
 			{
@@ -77,8 +73,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Rgb : PdfDeviceCs
 		{
-			private const long serialVersionUID = -1605044540582561428L;
-
 			public Rgb()
 				: base(PdfName.DeviceRGB)
 			{
@@ -92,8 +86,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Cmyk : PdfDeviceCs
 		{
-			private const long serialVersionUID = 2615036909699704719L;
-
 			public Cmyk()
 				: base(PdfName.DeviceCMYK)
 			{

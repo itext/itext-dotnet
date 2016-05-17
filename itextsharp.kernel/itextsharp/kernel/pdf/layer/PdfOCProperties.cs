@@ -65,8 +65,6 @@ namespace iTextSharp.Kernel.Pdf.Layer
 	/// </remarks>
 	public class PdfOCProperties : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 1137977454824741350L;
-
 		private IList<PdfLayer> layers = new List<PdfLayer>();
 
 		/// <summary>Creates a new PdfOCProperties instance.</summary>

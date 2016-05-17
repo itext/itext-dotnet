@@ -49,8 +49,6 @@ namespace iTextSharp.IO.Font.Otf
 	/// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
 	public class FontReadingException : System.IO.IOException
 	{
-		private const long serialVersionUID = 1L;
-
 		public FontReadingException(String message)
 			: base(message)
 		{

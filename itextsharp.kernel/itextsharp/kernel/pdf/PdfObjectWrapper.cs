@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 	public abstract class PdfObjectWrapper<T>
 		where T : PdfObject
 	{
-		private const long serialVersionUID = 3516473712028588356L;
-
 		private T pdfObject = null;
 
 		protected internal PdfObjectWrapper(T pdfObject)

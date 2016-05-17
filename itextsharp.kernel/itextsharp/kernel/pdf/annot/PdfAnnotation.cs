@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -6555705164241587799L;
-
 		/// <summary>Annotation flags.</summary>
 		public const int INVISIBLE = 1;
 

@@ -48,8 +48,6 @@ namespace iTextSharp.IO.Source
 {
 	public class GetBufferedRandomAccessSource : IRandomAccessSource
 	{
-		private const long serialVersionUID = -8922625738755763494L;
-
 		private readonly IRandomAccessSource source;
 
 		private readonly byte[] getBuffer;

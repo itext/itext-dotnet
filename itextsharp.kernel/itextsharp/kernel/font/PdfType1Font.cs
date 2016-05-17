@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Font
 {
 	public class PdfType1Font : PdfSimpleFont<Type1Font>
 	{
-		private const long serialVersionUID = 7009919945291639441L;
-
 		internal PdfType1Font(Type1Font type1Font, String encoding, bool embedded)
 			: base()
 		{

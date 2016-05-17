@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfTrapNetworkAnnotation : PdfAnnotation
 	{
-		private const long serialVersionUID = 5118904991630303608L;
-
 		public PdfTrapNetworkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
 			: base(rect)
 		{

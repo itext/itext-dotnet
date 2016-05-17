@@ -65,8 +65,6 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
 		/// </summary>
 		public class InlineImageParseException : PdfException
 		{
-			private const long serialVersionUID = 233760879000268548L;
-
 			public InlineImageParseException(String message)
 				: base(message)
 			{

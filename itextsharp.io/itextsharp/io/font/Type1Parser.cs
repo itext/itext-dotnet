@@ -53,8 +53,6 @@ namespace iTextSharp.IO.Font
 {
 	internal class Type1Parser
 	{
-		private const long serialVersionUID = -8484541242371901414L;
-
 		private const String AFM_HEADER = "StartFontMetrics";
 
 		private String afmPath;

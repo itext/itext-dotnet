@@ -105,7 +105,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 		/// can be used to restore the dash pattern to a solid line.
 		/// </remarks>
 		private PdfArray dashPattern = new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-			(new PdfArray(), new PdfNumber(0)));
+			(new PdfObject[] { new PdfArray(), new PdfNumber(0) }));
 
 		private PdfName renderingIntent = PdfName.RelativeColorimetric;
 

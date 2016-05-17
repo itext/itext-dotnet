@@ -17,8 +17,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return IVGenerator.GetIV(seedLength);
         }
 
-        internal static byte[] FetchEnvelopedData(ICipherParameters certificateKey, X509Certificate certificate, String certificateKeyProvider,
-                                     IExternalDecryptionProcess externalDecryptionProcess, PdfArray recipients) {
+        internal static byte[] FetchEnvelopedData(ICipherParameters certificateKey, X509Certificate certificate, PdfArray recipients) {
             bool foundRecipient = false;
             byte[] envelopedData = null;
             for (int i = 0; i < recipients.Size(); i++) {

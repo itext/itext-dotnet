@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfSpecialCs : PdfColorSpace
 	{
-		private const long serialVersionUID = -2725455900398492836L;
-
 		protected internal PdfSpecialCs(PdfArray pdfObject)
 			: base(pdfObject)
 		{
@@ -66,8 +64,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Indexed : PdfSpecialCs
 		{
-			private const long serialVersionUID = -1155418938167317916L;
-
 			public Indexed(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -102,8 +98,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Separation : PdfSpecialCs
 		{
-			private const long serialVersionUID = 4259327393838350842L;
-
 			public Separation(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -155,8 +149,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class DeviceN : PdfSpecialCs
 		{
-			private const long serialVersionUID = 4051693146595260270L;
-
 			protected internal int numOfComponents = 0;
 
 			public DeviceN(PdfArray pdfObject)
@@ -211,8 +203,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class NChannel : PdfSpecialCs.DeviceN
 		{
-			private const long serialVersionUID = 5352964946869757972L;
-
 			public NChannel(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -247,8 +237,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Pattern : PdfColorSpace
 		{
-			private const long serialVersionUID = 8057478102447278706L;
-
 			protected internal override bool IsWrappedObjectMustBeIndirect()
 			{
 				return false;
@@ -272,8 +260,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class UncoloredTilingPattern : PdfSpecialCs.Pattern
 		{
-			private const long serialVersionUID = -9030226298201261021L;
-
 			protected internal override bool IsWrappedObjectMustBeIndirect()
 			{
 				return true;

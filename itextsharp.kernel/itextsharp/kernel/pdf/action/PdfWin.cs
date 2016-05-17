@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfWin : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -3057526285278565800L;
-
 		public PdfWin(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

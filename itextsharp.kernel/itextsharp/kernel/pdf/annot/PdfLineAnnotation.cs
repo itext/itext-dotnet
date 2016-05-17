@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfLineAnnotation : PdfMarkupAnnotation
 	{
-		private const long serialVersionUID = -6047928061827404283L;
-
 		public PdfLineAnnotation(Rectangle rect, float[] line)
 			: base(rect)
 		{

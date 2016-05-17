@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iTextSharp.IO.Font;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Collection;
 
@@ -52,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf.Filespec
 {
 	public class PdfFileSpec : PdfObjectWrapper<PdfObject>
 	{
-		private const long serialVersionUID = 126861971006090239L;
-
 		protected internal PdfFileSpec(PdfObject pdfObject)
 			: base(pdfObject)
 		{
@@ -95,12 +94,12 @@ namespace iTextSharp.Kernel.Pdf.Filespec
 				, isUnicodeFileName);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.IOException"/>
 		public static iTextSharp.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument
 			 doc, String filePath, String description, String fileDisplay, PdfName mimeType, 
 			PdfName afRelationshipValue, bool isUnicodeFileName)
 		{
-			PdfStream stream = new PdfStream(doc, new FileStream(filePath));
+			PdfStream stream = new PdfStream(doc, UrlUtil.ToURL(filePath).OpenStream());
 			return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue
 				, isUnicodeFileName);
 		}

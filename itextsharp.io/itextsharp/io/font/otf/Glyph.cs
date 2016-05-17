@@ -49,8 +49,6 @@ namespace iTextSharp.IO.Font.Otf
 {
 	public class Glyph
 	{
-		private const long serialVersionUID = 1627806639423114471L;
-
 		private readonly int code;
 
 		private readonly int width;

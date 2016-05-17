@@ -64,8 +64,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// </remarks>
 	public class PdfTextArray : PdfArray
 	{
-		private const long serialVersionUID = 2555632135770071680L;
-
 		private float lastNumber = float.NaN;
 
 		private StringBuilder lastString;

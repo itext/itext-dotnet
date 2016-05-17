@@ -53,9 +53,6 @@ namespace iTextSharp.Barcodes.Qrcode
 	/// <author>dswitkin@google.com (Daniel Switkin)</author>
 	public sealed class WriterException : Exception
 	{
-		/// <summary>A serial version UID.</summary>
-		private const long serialVersionUID = -7600391573888999764L;
-
 		/// <summary>Creates a WriterException.</summary>
 		public WriterException()
 			: base()

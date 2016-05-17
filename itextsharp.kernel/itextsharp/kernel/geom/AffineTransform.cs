@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class AffineTransform
 	{
-		private const long serialVersionUID = 1330973210523860834L;
-
 		public const int TYPE_IDENTITY = 0;
 
 		public const int TYPE_TRANSLATION = 1;

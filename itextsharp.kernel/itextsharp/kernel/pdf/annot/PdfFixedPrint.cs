@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfFixedPrint : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 4253232541458560135L;
-
 		public PdfFixedPrint()
 			: this(new PdfDictionary())
 		{

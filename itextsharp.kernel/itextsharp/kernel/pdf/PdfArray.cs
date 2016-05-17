@@ -58,8 +58,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// </remarks>
 	public class PdfArray : PdfObject, IEnumerable<PdfObject>
 	{
-		private const long serialVersionUID = 1617495612878046869L;
-
 		protected internal IList<PdfObject> list;
 
 		/// <summary>Create a new, empty PdfArray.</summary>

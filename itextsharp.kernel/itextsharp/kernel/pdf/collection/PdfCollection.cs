@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollection : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 5184499156015360355L;
-
 		/// <summary>A type of initial view</summary>
 		public const int DETAILS = 0;
 

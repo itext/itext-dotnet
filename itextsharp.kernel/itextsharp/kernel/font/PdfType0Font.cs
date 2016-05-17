@@ -59,8 +59,6 @@ namespace iTextSharp.Kernel.Font
 {
 	public class PdfType0Font : PdfFont
 	{
-		private const long serialVersionUID = -8033620300884193397L;
-
 		private static readonly byte[] rotbits = new byte[] { (byte)0x80, (byte)0x40, (byte
 			)0x20, (byte)0x10, (byte)0x08, (byte)0x04, (byte)0x02, (byte)0x01 };
 

@@ -46,8 +46,6 @@ namespace iTextSharp.IO.Font
 {
 	public class FontMetrics
 	{
-		private const long serialVersionUID = -7113134666493365588L;
-
 		protected internal float normalizationCoef = 1f;
 
 		private int unitsPerEm = 1000;

@@ -54,8 +54,6 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 	/// </summary>
 	internal class ParentTreeHandler
 	{
-		private const long serialVersionUID = 1593883864288316473L;
-
 		private PdfStructTreeRoot structTreeRoot;
 
 		/// <summary>Represents parentTree in structTreeRoot.</summary>

@@ -49,8 +49,6 @@ namespace iTextSharp.IO.Font
 {
 	public class FontEncoding
 	{
-		private const long serialVersionUID = -684967385759439083L;
-
 		private static readonly byte[] emptyBytes = new byte[0];
 
 		public const String FONT_SPECIFIC = "FontSpecific";

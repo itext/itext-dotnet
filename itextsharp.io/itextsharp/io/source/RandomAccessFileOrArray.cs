@@ -50,8 +50,6 @@ namespace iTextSharp.IO.Source
 {
 	public class RandomAccessFileOrArray
 	{
-		private const long serialVersionUID = -169314546265954851L;
-
 		/// <summary>When true the file access is not done through a memory mapped file.</summary>
 		/// <remarks>
 		/// When true the file access is not done through a memory mapped file. Use it if the file

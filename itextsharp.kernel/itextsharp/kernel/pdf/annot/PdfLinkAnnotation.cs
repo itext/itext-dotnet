@@ -51,8 +51,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfLinkAnnotation : PdfAnnotation
 	{
-		private const long serialVersionUID = 5795613340575331536L;
-
 		/// <summary>Highlight modes.</summary>
 		public static readonly PdfName None = PdfName.N;
 

@@ -60,8 +60,6 @@ namespace iTextSharp.Kernel.Color
 	/// </remarks>
 	public class WebColors : Dictionary<String, int[]>
 	{
-		private const long serialVersionUID = 3542523100813372896L;
-
 		/// <summary>HashMap containing all the names and corresponding color values.</summary>
 		public static readonly WebColors NAMES = new WebColors();
 

@@ -67,8 +67,6 @@ namespace iTextSharp.Kernel.Pdf.Layer
 	/// </remarks>
 	public class PdfLayerMembership : PdfObjectWrapper<PdfDictionary>, IPdfOCG
 	{
-		private const long serialVersionUID = -597407628148657784L;
-
 		/// <summary>Creates a new, empty membership layer.</summary>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public PdfLayerMembership(PdfDocument doc)

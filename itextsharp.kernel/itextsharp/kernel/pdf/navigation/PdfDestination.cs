@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 {
 	public abstract class PdfDestination : PdfObjectWrapper<PdfObject>
 	{
-		private const long serialVersionUID = 8102903000978704308L;
-
 		protected internal PdfDestination(PdfObject pdfObject)
 			: base(pdfObject)
 		{

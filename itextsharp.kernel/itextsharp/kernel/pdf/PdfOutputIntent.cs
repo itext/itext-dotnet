@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfOutputIntent : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -3814334679568337730L;
-
 		/// <summary>Creates output intent dictionary.</summary>
 		/// <remarks>
 		/// Creates output intent dictionary. Null values are allowed to

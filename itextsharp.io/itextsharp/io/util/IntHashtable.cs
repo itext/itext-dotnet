@@ -64,8 +64,6 @@ namespace iTextSharp.IO.Util
 	/// <author>Paulo Soares (added extra methods)</author>
 	public class IntHashtable : ICloneable
 	{
-		private const long serialVersionUID = 7354463962269093965L;
-
 		/// <summary>The hash table data.</summary>
 		[System.NonSerialized]
 		private IntHashtable.Entry[] table;

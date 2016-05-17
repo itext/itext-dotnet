@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfAnnotationAppearance : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 6989855812604521083L;
-
 		public PdfAnnotationAppearance(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

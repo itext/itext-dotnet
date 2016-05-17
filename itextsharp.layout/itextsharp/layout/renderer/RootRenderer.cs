@@ -143,7 +143,16 @@ namespace iTextSharp.Layout.Renderer
 									continue;
 								}
 								storedArea = currentArea;
-								UpdateCurrentArea(result);
+								if (nextStoredArea != null)
+								{
+									currentArea = nextStoredArea;
+									currentPageNumber = nextStoredArea.GetPageNumber();
+									nextStoredArea = null;
+								}
+								else
+								{
+									UpdateCurrentArea(result);
+								}
 							}
 						}
 					}

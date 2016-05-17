@@ -49,8 +49,6 @@ namespace iTextSharp.IO.Font
 {
 	public class FontNames
 	{
-		private const long serialVersionUID = 1005168842463622025L;
-
 		protected internal const int BOLD_FLAG = 1;
 
 		protected internal const int ITALIC_FLAG = 2;

@@ -73,8 +73,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// </summary>
 	public class PdfString : PdfPrimitiveObject
 	{
-		private const long serialVersionUID = 390789504287887010L;
-
 		private static String defaultCharset = "UTF-8";
 
 		protected internal String value;

@@ -66,8 +66,6 @@ namespace iTextSharp.Kernel.Font
 	/// </remarks>
 	public class PdfType3Font : PdfSimpleFont<Type3FontProgram>
 	{
-		private const long serialVersionUID = 4940119184993066859L;
-
 		private double[] fontMatrix = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
 		/// <summary>Creates a Type3 font.</summary>

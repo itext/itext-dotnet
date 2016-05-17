@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Function
 {
 	public class PdfFunction : PdfObjectWrapper<PdfObject>
 	{
-		private const long serialVersionUID = -4689848231547125520L;
-
 		public PdfFunction(PdfObject pdfObject)
 			: base(pdfObject)
 		{
@@ -86,8 +84,6 @@ namespace iTextSharp.Kernel.Pdf.Function
 
 		public class Type0 : PdfFunction
 		{
-			private const long serialVersionUID = 72188160295017639L;
-
 			public Type0(PdfStream pdfObject)
 				: base(pdfObject)
 			{
@@ -141,8 +137,6 @@ namespace iTextSharp.Kernel.Pdf.Function
 
 		public class Type2 : PdfFunction
 		{
-			private const long serialVersionUID = -4680660755798263091L;
-
 			public Type2(PdfDictionary pdfObject)
 				: base(pdfObject)
 			{
@@ -184,8 +178,6 @@ namespace iTextSharp.Kernel.Pdf.Function
 
 		public class Type3 : PdfFunction
 		{
-			private const long serialVersionUID = 3257795209767645155L;
-
 			public Type3(PdfDictionary pdfObject)
 				: base(pdfObject)
 			{
@@ -229,8 +221,6 @@ namespace iTextSharp.Kernel.Pdf.Function
 
 		public class Type4 : PdfFunction
 		{
-			private const long serialVersionUID = -5415624427845744618L;
-
 			public Type4(PdfStream pdfObject)
 				: base(pdfObject)
 			{

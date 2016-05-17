@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 {
 	public class PdfExtGState : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 5205219918362853395L;
-
 		/// <summary>Blend mode constants</summary>
 		public static PdfName BM_NORMAL = PdfName.Normal;
 

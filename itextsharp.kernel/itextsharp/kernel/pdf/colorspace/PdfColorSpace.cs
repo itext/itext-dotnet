@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB
 			, PdfName.DeviceCMYK, PdfName.Pattern));
 
-		private const long serialVersionUID = 2553991039779429813L;
-
 		protected internal PdfColorSpace(PdfObject pdfObject)
 			: base(pdfObject)
 		{

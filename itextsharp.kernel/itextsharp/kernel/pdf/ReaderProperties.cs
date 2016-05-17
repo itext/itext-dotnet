@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class ReaderProperties
 	{
-		private const long serialVersionUID = 5569118801793215916L;
-
 		protected internal byte[] password;
 
 		protected internal ICipherParameters certificateKey;

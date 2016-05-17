@@ -53,8 +53,6 @@ namespace iTextSharp.IO.Font
 {
 	public class TrueTypeFont : FontProgram
 	{
-		private const long serialVersionUID = -2232044646577669268L;
-
 		private OpenTypeParser fontParser;
 
 		protected internal int[][] bBoxes;

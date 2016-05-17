@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf.Layer
 	/// </summary>
 	public class PdfVisibilityExpression : PdfObjectWrapper<PdfArray>
 	{
-		private const long serialVersionUID = 4152369893262322542L;
-
 		/// <summary>Constructs a new PdfVisibilityExpression instance by its raw PdfArray.</summary>
 		/// <param name="visibilityExpressionArray">the array representing the visibility expression
 		/// 	</param>

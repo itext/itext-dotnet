@@ -54,8 +54,6 @@ namespace iTextSharp.IO.Font
 {
 	public class Type1Font : FontProgram
 	{
-		private const long serialVersionUID = -1078208220942939920L;
-
 		private Type1Parser fontParser;
 
 		private String characterSet;

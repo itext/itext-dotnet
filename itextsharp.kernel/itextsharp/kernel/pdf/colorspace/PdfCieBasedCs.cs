@@ -52,8 +52,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfCieBasedCs : PdfColorSpace
 	{
-		private const long serialVersionUID = 7803780450619297557L;
-
 		protected internal override bool IsWrappedObjectMustBeIndirect()
 		{
 			return true;
@@ -66,8 +64,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class CalGray : PdfCieBasedCs
 		{
-			private const long serialVersionUID = -3974274460820215173L;
-
 			public CalGray(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -117,8 +113,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class CalRgb : PdfCieBasedCs
 		{
-			private const long serialVersionUID = -2926074370411556426L;
-
 			public CalRgb(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -173,8 +167,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Lab : PdfCieBasedCs
 		{
-			private const long serialVersionUID = 7067722970343880433L;
-
 			public Lab(PdfArray pdfObject)
 				: base(pdfObject)
 			{
@@ -224,8 +216,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class IccBased : PdfCieBasedCs
 		{
-			private const long serialVersionUID = 3265273715107224067L;
-
 			public IccBased(PdfArray pdfObject)
 				: base(pdfObject)
 			{

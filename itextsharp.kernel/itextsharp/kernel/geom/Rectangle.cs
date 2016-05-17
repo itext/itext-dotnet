@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class Rectangle
 	{
-		private const long serialVersionUID = 8025677415569233446L;
-
 		private static float EPS = 1e-4f;
 
 		protected internal float x;

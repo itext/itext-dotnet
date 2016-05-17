@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -21957940280527123L;
-
 		public PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument)
 			: base(pdfObject == null ? new PdfDictionary() : pdfObject)
 		{

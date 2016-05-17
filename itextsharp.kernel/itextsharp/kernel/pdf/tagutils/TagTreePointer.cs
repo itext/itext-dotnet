@@ -66,8 +66,6 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 	/// </summary>
 	public class TagTreePointer
 	{
-		private const long serialVersionUID = 3774218733446157411L;
-
 		private TagStructureContext tagStructureContext;
 
 		private PdfStructElem currentStructElem;

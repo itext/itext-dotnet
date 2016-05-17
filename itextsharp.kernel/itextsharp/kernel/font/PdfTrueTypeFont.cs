@@ -58,8 +58,6 @@ namespace iTextSharp.Kernel.Font
 	/// 	</remarks>
 	public class PdfTrueTypeFont : PdfSimpleFont<TrueTypeFont>
 	{
-		private const long serialVersionUID = -8152778382960290571L;
-
 		internal PdfTrueTypeFont(TrueTypeFont ttf, String encoding, bool embedded)
 			: base()
 		{

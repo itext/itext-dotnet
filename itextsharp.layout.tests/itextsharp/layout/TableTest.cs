@@ -816,16 +816,16 @@ namespace iTextSharp.Layout
 					)).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new 
 					Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3)));
 			}
-			doc.SetRenderer(new _DocumentRenderer_867(pdfDoc, doc));
+			doc.SetRenderer(new _DocumentRenderer_862(pdfDoc, doc));
 			doc.Add(table);
 			doc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
 				, destinationFolder, testName + "_diff"));
 		}
 
-		private sealed class _DocumentRenderer_867 : DocumentRenderer
+		private sealed class _DocumentRenderer_862 : DocumentRenderer
 		{
-			public _DocumentRenderer_867(PdfDocument pdfDoc, Document baseArg1)
+			public _DocumentRenderer_862(PdfDocument pdfDoc, Document baseArg1)
 				: base(baseArg1)
 			{
 				this.pdfDoc = pdfDoc;
@@ -918,6 +918,38 @@ namespace iTextSharp.Layout
 			t.AddCell(new Cell().SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 
 				1)).SetPaddings(3, 3, 3, 3).Add(table));
 			doc.Add(t);
+			doc.Close();
+			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
+				, destinationFolder, testName + "_diff"));
+		}
+
+		/// <exception cref="System.IO.IOException"/>
+		/// <exception cref="System.Exception"/>
+		[NUnit.Framework.Test]
+		public virtual void SplitTableOnLowPage()
+		{
+			String testName = "splitTableOnLowPage.pdf";
+			String outFileName = destinationFolder + testName;
+			String cmpFileName = sourceFolder + "cmp_" + testName;
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+			Document doc = new Document(pdfDoc, new PageSize(300, 120));
+			doc.Add(new Paragraph("Table with setKeepTogether(true):"));
+			Table table = new Table(2);
+			table.SetKeepTogether(true);
+			table.SetMarginTop(10);
+			Cell cell = new Cell(3, 1);
+			cell.Add("G");
+			cell.Add("R");
+			cell.Add("P");
+			table.AddCell(cell);
+			table.AddCell("row 1");
+			table.AddCell("row 2");
+			table.AddCell("row 3");
+			doc.Add(table);
+			doc.Add(new AreaBreak());
+			doc.Add(new Paragraph("Table with setKeepTogether(false):"));
+			table.SetKeepTogether(false);
+			doc.Add(table);
 			doc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
 				, destinationFolder, testName + "_diff"));

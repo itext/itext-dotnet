@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Font
 {
 	public class Type3FontProgram : FontProgram
 	{
-		private const long serialVersionUID = 1027076515537536993L;
-
 		private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph
 			>();
 

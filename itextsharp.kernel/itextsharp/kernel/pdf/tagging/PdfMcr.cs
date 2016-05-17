@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 	/// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
 	public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem
 	{
-		private const long serialVersionUID = -6453225665665080940L;
-
 		protected internal PdfStructElem parent;
 
 		protected internal PdfMcr(PdfObject pdfObject, PdfStructElem parent)

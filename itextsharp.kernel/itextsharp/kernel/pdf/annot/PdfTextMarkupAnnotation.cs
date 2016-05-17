@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfTextMarkupAnnotation : PdfMarkupAnnotation
 	{
-		private const long serialVersionUID = 2189266742204503217L;
-
 		/// <summary>Subtypes</summary>
 		public static readonly PdfName MarkupHighlight = PdfName.Highlight;
 

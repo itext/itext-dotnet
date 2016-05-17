@@ -55,8 +55,6 @@ namespace iTextSharp.Kernel.Font
 	public abstract class PdfSimpleFont<T> : PdfFont
 		where T : FontProgram
 	{
-		private const long serialVersionUID = -4942318223894676176L;
-
 		protected internal FontEncoding fontEncoding;
 
 		/// <summary>Forces the output of the width array.</summary>

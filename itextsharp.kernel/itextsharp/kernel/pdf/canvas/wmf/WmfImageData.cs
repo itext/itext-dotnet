@@ -99,19 +99,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 			return true;
 		}
 
-		private static byte[] ReadImageType<T>(T source)
+		private static byte[] ReadImageType(Uri source)
 		{
 			Stream @is = null;
 			try
 			{
-				if (source is Uri)
-				{
-					@is = ((Uri)source).OpenStream();
-				}
-				else
-				{
-					@is = new MemoryStream((byte[])source);
-				}
+				@is = source.OpenStream();
 				byte[] bytes = new byte[8];
 				@is.Read(bytes);
 				return bytes;

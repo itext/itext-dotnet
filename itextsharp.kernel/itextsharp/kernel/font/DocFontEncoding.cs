@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Font
 	/// <summary>This class allow to parse document font's encoding.</summary>
 	internal class DocFontEncoding : FontEncoding
 	{
-		private const long serialVersionUID = -4248206280861742148L;
-
 		protected internal DocFontEncoding()
 		{
 		}

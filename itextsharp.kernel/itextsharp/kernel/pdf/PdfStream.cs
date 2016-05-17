@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <summary>Representation of a stream as described in the PDF Specification.</summary>
 	public class PdfStream : PdfDictionary
 	{
-		private const long serialVersionUID = -8259929152054328141L;
-
 		protected internal int compressionLevel;
 
 		private PdfOutputStream outputStream;

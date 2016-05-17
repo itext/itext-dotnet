@@ -54,8 +54,6 @@ namespace iTextSharp.Kernel.Pdf
 	public class PdfName : PdfPrimitiveObject, IComparable<iTextSharp.Kernel.Pdf.PdfName
 		>
 	{
-		private const long serialVersionUID = 7493154668111961953L;
-
 		private static readonly byte[] space = ByteUtils.GetIsoBytes("#20");
 
 		private static readonly byte[] percent = ByteUtils.GetIsoBytes("#25");

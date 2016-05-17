@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -6771280634868639993L;
-
 		protected internal PdfPattern(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
@@ -93,8 +91,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Tiling : PdfPattern
 		{
-			private const long serialVersionUID = 1450379837955897673L;
-
 			private PdfResources resources = null;
 
 			public class PaintType
@@ -236,13 +232,13 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			{
 				if (this.resources == null)
 				{
-					PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
-					if (resources == null)
+					PdfDictionary resourcesDict = GetPdfObject().GetAsDictionary(PdfName.Resources);
+					if (resourcesDict == null)
 					{
-						resources = new PdfDictionary();
-						GetPdfObject().Put(PdfName.Resources, resources);
+						resourcesDict = new PdfDictionary();
+						GetPdfObject().Put(PdfName.Resources, resourcesDict);
 					}
-					this.resources = new PdfResources(resources);
+					this.resources = new PdfResources(resourcesDict);
 				}
 				return resources;
 			}
@@ -256,8 +252,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Shading : PdfPattern
 		{
-			private const long serialVersionUID = -4289411438737403786L;
-
 			public Shading(PdfDictionary pdfObject)
 				: base(pdfObject)
 			{

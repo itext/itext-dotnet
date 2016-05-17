@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNumber : PdfPrimitiveObject
 	{
-		private const long serialVersionUID = -250799718574024246L;
-
 		private double value;
 
 		private bool isDouble;

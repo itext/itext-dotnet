@@ -77,8 +77,6 @@ namespace iTextSharp.IO.Codec
 	/// <seealso cref="TIFFField"/>
 	public class TIFFDirectory
 	{
-		private const long serialVersionUID = -168636766193675380L;
-
 		/// <summary>A boolean storing the endianness of the stream.</summary>
 		internal bool isBigEndian;
 

@@ -56,8 +56,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfReader
 	{
-		private const long serialVersionUID = -3584187443691964939L;
-
 		private const String endstream1 = "endstream";
 
 		private const String endstream2 = "\nendstream";

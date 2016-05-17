@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <summary>Representation of the null object in the PDF specification.</summary>
 	public class PdfNull : PdfPrimitiveObject
 	{
-		private const long serialVersionUID = 7789114018630038033L;
-
 		public static readonly iTextSharp.Kernel.Pdf.PdfNull PDF_NULL = new iTextSharp.Kernel.Pdf.PdfNull
 			(true);
 

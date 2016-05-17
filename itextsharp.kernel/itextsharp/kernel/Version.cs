@@ -68,14 +68,14 @@ namespace iTextSharp.Kernel
 		/// iText is a registered trademark by iText Group NV.
 		/// Please don't change this constant.
 		/// </remarks>
-		private String iText = "iText\u00ae";
+		private static String iText = "iText\u00ae";
 
 		/// <summary>This String contains the version number of this iText release.</summary>
 		/// <remarks>
 		/// This String contains the version number of this iText release.
 		/// For debugging purposes, we request you NOT to change this constant.
 		/// </remarks>
-		private String release = "7.0.1-SNAPSHOT";
+		private static String release = "7.0.1-SNAPSHOT";
 
 		/// <summary>This String contains the iText version as shown in the producer line.</summary>
 		/// <remarks>
@@ -106,7 +106,7 @@ namespace iTextSharp.Kernel
 					{
 						Type klass = System.Type.GetType("com.itextpdf.licensekey.LicenseKey");
 						MethodInfo m = klass.GetMethod("getLicenseeInfo");
-						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass));
+						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
 						if (info[3] != null && info[3].Trim().Length > 0)
 						{
 							version.key = info[3];

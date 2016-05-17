@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	internal class PdfPages : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 404629033132277362L;
-
 		private int from;
 
 		private PdfNumber count;

@@ -53,9 +53,6 @@ namespace iTextSharp.Barcodes.Qrcode
 	/// <author>Sean Owen</author>
 	internal sealed class ReedSolomonException : Exception
 	{
-		/// <summary>Serial version UID.</summary>
-		private const long serialVersionUID = 2168232776886684292L;
-
 		/// <summary>Creates a ReedSolomonException with a message.</summary>
 		/// <param name="message">the message of the exception</param>
 		public ReedSolomonException(String message)

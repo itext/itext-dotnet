@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollectionField : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 4766153544105870238L;
-
 		/// <summary>A possible type of collection field.</summary>
 		public const int TEXT = 0;
 

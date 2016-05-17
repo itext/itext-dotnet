@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class PageSize : Rectangle
 	{
-		private const long serialVersionUID = 485375591249386160L;
-
 		public static iTextSharp.Kernel.Geom.PageSize A0 = new iTextSharp.Kernel.Geom.PageSize
 			(2384, 3370);
 

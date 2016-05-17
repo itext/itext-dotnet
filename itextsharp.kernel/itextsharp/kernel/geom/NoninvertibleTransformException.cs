@@ -24,8 +24,6 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class NoninvertibleTransformException : Exception
 	{
-		private const long serialVersionUID = 6137225240503990466L;
-
 		public NoninvertibleTransformException(String s)
 			: base(s)
 		{

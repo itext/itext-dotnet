@@ -61,8 +61,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// </remarks>
 	public class PdfDictionary : PdfObject
 	{
-		private const long serialVersionUID = -1122075818690871644L;
-
 		private IDictionary<PdfName, PdfObject> map = new SortedDictionary<PdfName, PdfObject
 			>();
 

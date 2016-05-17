@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 	public class PdfIndirectReference : PdfObject, IComparable<iTextSharp.Kernel.Pdf.PdfIndirectReference
 		>
 	{
-		private const long serialVersionUID = -8293603068792908601L;
-
 		private const int LENGTH_OF_INDIRECTS_CHAIN = 31;
 
 		/// <summary>Object number.</summary>

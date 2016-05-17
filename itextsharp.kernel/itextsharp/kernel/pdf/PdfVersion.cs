@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <summary>Enum listing all official PDF versions.</summary>
 	public class PdfVersion : IComparable<iTextSharp.Kernel.Pdf.PdfVersion>
 	{
-		private const long serialVersionUID = 6168855906667968169L;
-
 		private static readonly IList<iTextSharp.Kernel.Pdf.PdfVersion> values = new List
 			<iTextSharp.Kernel.Pdf.PdfVersion>();
 

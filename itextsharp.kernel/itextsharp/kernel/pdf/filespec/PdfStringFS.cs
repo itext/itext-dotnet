@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Filespec
 {
 	public class PdfStringFS : PdfFileSpec
 	{
-		private const long serialVersionUID = 3440302276954369264L;
-
 		public PdfStringFS(String @string)
 			: base(new PdfString(@string))
 		{

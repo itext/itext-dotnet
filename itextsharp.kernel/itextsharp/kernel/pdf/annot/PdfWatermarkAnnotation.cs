@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfWatermarkAnnotation : PdfAnnotation
 	{
-		private const long serialVersionUID = -4490286782196827176L;
-
 		public PdfWatermarkAnnotation(Rectangle rect)
 			: base(rect)
 		{

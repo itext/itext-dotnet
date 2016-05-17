@@ -53,8 +53,6 @@ namespace iTextSharp.IO.Font
 {
 	public class CidFont : FontProgram
 	{
-		private const long serialVersionUID = 5444988003799502179L;
-
 		private int pdfFontFlags;
 
 		private ICollection<String> compatibleCmaps;

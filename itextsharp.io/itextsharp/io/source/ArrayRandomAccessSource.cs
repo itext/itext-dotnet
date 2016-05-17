@@ -49,8 +49,6 @@ namespace iTextSharp.IO.Source
 	/// <summary>A RandomAccessSource that is based on an underlying byte array</summary>
 	internal class ArrayRandomAccessSource : IRandomAccessSource
 	{
-		private const long serialVersionUID = 8497059230517630513L;
-
 		private byte[] array;
 
 		public ArrayRandomAccessSource(byte[] array)

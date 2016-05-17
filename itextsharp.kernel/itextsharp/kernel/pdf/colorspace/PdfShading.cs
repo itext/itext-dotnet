@@ -51,8 +51,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
 	public abstract class PdfShading : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 4781809723744243508L;
-
 		private class ShadingType
 		{
 			public const int FUNCTION_BASED = 1;
@@ -199,8 +197,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class FunctionBased : PdfShading
 		{
-			private const long serialVersionUID = -4459197498902558052L;
-
 			public FunctionBased(PdfDictionary pdfObject)
 				: base(pdfObject)
 			{
@@ -264,8 +260,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Axial : PdfShading
 		{
-			private const long serialVersionUID = 5504688740677023792L;
-
 			public Axial(PdfDictionary pdfDictionary)
 				: base(pdfDictionary)
 			{
@@ -356,8 +350,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class Radial : PdfShading
 		{
-			private const long serialVersionUID = -5012819396006804845L;
-
 			public Radial(PdfDictionary pdfDictionary)
 				: base(pdfDictionary)
 			{
@@ -445,8 +437,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class FreeFormGouraudShadedTriangleMesh : PdfShading
 		{
-			private const long serialVersionUID = -2690557760051875972L;
-
 			public FreeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
 				: base(pdfStream)
 			{
@@ -521,8 +511,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class LatticeFormGouraudShadedTriangleMesh : PdfShading
 		{
-			private const long serialVersionUID = -8776232978423888214L;
-
 			public LatticeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
 				: base(pdfStream)
 			{
@@ -597,8 +585,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class CoonsPatchMesh : PdfShading
 		{
-			private const long serialVersionUID = 7296891352801419708L;
-
 			public CoonsPatchMesh(PdfStream pdfStream)
 				: base(pdfStream)
 			{
@@ -673,8 +659,6 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public class TensorProductPatchMesh : PdfShading
 		{
-			private const long serialVersionUID = -2750695839303504742L;
-
 			public TensorProductPatchMesh(PdfStream pdfStream)
 				: base(pdfStream)
 			{

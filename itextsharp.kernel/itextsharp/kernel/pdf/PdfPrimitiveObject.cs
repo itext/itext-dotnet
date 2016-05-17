@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public abstract class PdfPrimitiveObject : PdfObject
 	{
-		private const long serialVersionUID = -1788064882121987538L;
-
 		protected internal byte[] content = null;
 
 		protected internal bool directOnly;

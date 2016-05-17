@@ -22,8 +22,6 @@ namespace iTextSharp.Layout.Hyphenation
 	/// <summary>Represents a hyphen.</summary>
 	public class Hyphen
 	{
-		private const long serialVersionUID = 8989909741110279085L;
-
 		/// <summary>pre break string</summary>
 		public String preBreak;
 

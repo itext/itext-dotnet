@@ -62,8 +62,6 @@ namespace iTextSharp.IO.Codec
 	/// <seealso cref="TIFFDirectory"/>
 	public class TIFFField : Object, IComparable<iTextSharp.IO.Codec.TIFFField>
 	{
-		private const long serialVersionUID = 9088332901412823834L;
-
 		/// <summary>Flag for 8 bit unsigned integers.</summary>
 		public const int TIFF_BYTE = 1;
 

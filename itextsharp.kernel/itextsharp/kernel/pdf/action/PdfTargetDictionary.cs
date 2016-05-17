@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfTargetDictionary : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -5814265943827690509L;
-
 		public PdfTargetDictionary(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

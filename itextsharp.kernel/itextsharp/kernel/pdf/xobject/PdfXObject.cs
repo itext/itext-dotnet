@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfXObject : PdfObjectWrapper<PdfStream>
 	{
-		private const long serialVersionUID = -480702872582809954L;
-
 		public PdfXObject()
 			: this(new PdfStream())
 		{

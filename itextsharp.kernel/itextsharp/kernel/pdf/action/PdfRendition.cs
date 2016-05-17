@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Action
 {
 	public class PdfRendition : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -726500192326824100L;
-
 		public PdfRendition(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

@@ -49,8 +49,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 {
 	public class PdfPolyGeomAnnotation : PdfMarkupAnnotation
 	{
-		private const long serialVersionUID = -9038993253308315792L;
-
 		/// <summary>Subtypes</summary>
 		public static readonly PdfName Polygon = PdfName.Polygon;
 

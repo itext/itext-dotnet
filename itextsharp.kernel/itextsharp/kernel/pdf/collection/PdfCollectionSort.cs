@@ -50,8 +50,6 @@ namespace iTextSharp.Kernel.Pdf.Collection
 {
 	public class PdfCollectionSort : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -3871923275239410475L;
-
 		public PdfCollectionSort(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{

@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 {
 	public class PdfTransparencyGroup : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = 753843601750097627L;
-
 		public PdfTransparencyGroup()
 			: base(new PdfDictionary())
 		{

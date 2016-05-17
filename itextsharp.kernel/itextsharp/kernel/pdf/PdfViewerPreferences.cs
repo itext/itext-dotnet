@@ -46,8 +46,6 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -6885879361985241602L;
-
 		public enum PdfViewerPreferencesConstants
 		{
 			USE_NONE,

@@ -70,7 +70,7 @@ namespace iTextSharp.Layout.Renderer
 			bool moduleFound = false;
 			try
 			{
-				iTextSharp.GetType("com.itextpdf.typography.shaping.Shaper");
+				System.Type.GetType("com.itextpdf.typography.shaping.Shaper");
 				moduleFound = true;
 			}
 			catch (TypeLoadException)
@@ -256,7 +256,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			try
 			{
-				MethodInfo method = iTextSharp.GetType(className).GetMethod(methodName, parameterTypes
+				MethodInfo method = System.Type.GetType(className).GetMethod(methodName, parameterTypes
 					);
 				return method.Invoke(target, args);
 			}
@@ -285,7 +285,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			try
 			{
-				ConstructorInfo constructor = iTextSharp.GetType(className).GetConstructor(parameterTypes
+				ConstructorInfo constructor = System.Type.GetType(className).GetConstructor(parameterTypes
 					);
 				return constructor.NewInstance(args);
 			}

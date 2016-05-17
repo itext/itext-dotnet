@@ -48,8 +48,6 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 {
 	public class PdfMcrDictionary : PdfMcr
 	{
-		private const long serialVersionUID = 3562443854685749324L;
-
 		public PdfMcrDictionary(PdfDictionary pdfObject, PdfStructElem parent)
 			: base(pdfObject, parent)
 		{

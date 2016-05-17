@@ -53,8 +53,6 @@ namespace iTextSharp.Kernel.Font
 {
 	internal class DocTrueTypeFont : TrueTypeFont, IDocFontProgram
 	{
-		private const long serialVersionUID = 4611535787920619829L;
-
 		private PdfStream fontFile;
 
 		private PdfName fontFileName;

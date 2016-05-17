@@ -55,8 +55,6 @@ namespace iTextSharp.Kernel.Font
 {
 	public abstract class PdfFont : PdfObjectWrapper<PdfDictionary>
 	{
-		private const long serialVersionUID = -7661159455613720321L;
-
 		protected internal FontProgram fontProgram;
 
 		protected internal static readonly byte[] emptyBytes = new byte[0];
