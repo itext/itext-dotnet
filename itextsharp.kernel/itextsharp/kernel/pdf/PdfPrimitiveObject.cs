@@ -98,7 +98,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			else
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
 				logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
 			}
 			return this;
@@ -113,7 +113,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			else
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
 				logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
 			}
 			return this;

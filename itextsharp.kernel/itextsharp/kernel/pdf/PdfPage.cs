@@ -370,7 +370,7 @@ namespace iTextSharp.Kernel.Pdf
 				if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().GetCatalog
 					().GetPdfObject().ContainsKey(PdfName.AcroForm))
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
+					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 					logger.Warn(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
 					toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
 				}
@@ -525,7 +525,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null)
 			{
 				GetPdfObject().Remove(PdfName.TrimBox);
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 				logger.Warn(LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE
 					);
 			}
@@ -543,7 +543,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null)
 			{
 				GetPdfObject().Remove(PdfName.ArtBox);
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfPage));
 				logger.Warn(LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE
 					);
 			}

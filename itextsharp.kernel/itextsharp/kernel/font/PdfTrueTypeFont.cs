@@ -204,7 +204,7 @@ namespace iTextSharp.Kernel.Font
 						}
 						catch (PdfException e)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
+							ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
 								));
 							logger.Error(e.Message);
 							fontStream = null;
@@ -247,7 +247,7 @@ namespace iTextSharp.Kernel.Font
 						}
 						catch (PdfException e)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
+							ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
 								));
 							logger.Error(e.Message);
 							fontStream = null;

@@ -332,7 +332,7 @@ namespace iTextSharp.Kernel.Pdf
 			// In case ForbidRelease flag is set, release will not be performed.
 			if (CheckState(FORBID_RELEASE))
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
 				logger.Warn(LogMessageConstant.FORBID_RELEASE_IS_SET);
 			}
 			else

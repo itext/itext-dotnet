@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Font
 				}
 				catch (Exception)
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
+					ILogger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
 					logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
 					cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
 				}
