@@ -57,7 +57,7 @@ namespace iTextSharp.IO.Font
 	/// </summary>
 	internal class FontRegisterProvider
 	{
-		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.FontRegisterProvider
+		private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.FontRegisterProvider
 			));
 
 		/// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.

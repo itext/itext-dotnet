@@ -126,7 +126,7 @@ namespace iTextSharp.Layout.Element
 				}
 				else
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(Table));
+					ILogger logger = LoggerFactory.GetLogger(typeof(Table));
 					logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
 				}
 			}

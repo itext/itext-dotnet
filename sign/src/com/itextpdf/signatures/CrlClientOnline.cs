@@ -1,5 +1,5 @@
 /*
-$Id: b03c7beafc245b966f618ec73cf976c034d011be $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -59,7 +59,7 @@ namespace com.itextpdf.signatures
 	/// <author>Paulo Soares</author>
 	public class CrlClientOnline : ICrlClient
 	{
-		/// <summary>The Logger instance.</summary>
+		/// <summary>The ILogger instance.</summary>
 		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.CrlClientOnline
 			));
 

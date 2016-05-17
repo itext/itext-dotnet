@@ -546,7 +546,7 @@ namespace iTextSharp.IO.Codec
 			}
 			catch (System.IO.IOException e)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));
+				ILogger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));
 				logger.Debug(e.Message);
 			}
 			if (os.Length <= 0)

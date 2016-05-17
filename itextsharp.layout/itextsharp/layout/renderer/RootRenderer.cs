@@ -121,7 +121,7 @@ namespace iTextSharp.Layout.Renderer
 									{
 										result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
 											.KEEP_TOGETHER, false);
-										Logger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+										ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
 										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
 											));
 										if (storedArea != null)
@@ -136,7 +136,7 @@ namespace iTextSharp.Layout.Renderer
 									{
 										result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
 											, true);
-										Logger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+										ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
 										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
 									}
 									renderer = result.GetOverflowRenderer();

@@ -377,7 +377,7 @@ namespace iTextSharp.IO.Font
 				int index = cmap[charCode][0];
 				if (index >= glyphWidths.Length)
 				{
-					Logger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
+					ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
 					LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
 						().GetFontName(), index));
 					continue;

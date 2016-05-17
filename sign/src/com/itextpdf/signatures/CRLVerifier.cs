@@ -1,5 +1,5 @@
 /*
-$Id: 7dde3e484ead4c4baaf655e62921d84c773e9cf0 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -56,7 +56,7 @@ namespace com.itextpdf.signatures
 	/// </summary>
 	public class CRLVerifier : RootStoreVerifier
 	{
-		/// <summary>The Logger instance</summary>
+		/// <summary>The ILogger instance</summary>
 		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
 			com.itextpdf.signatures.CRLVerifier));
 

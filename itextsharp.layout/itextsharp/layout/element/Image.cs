@@ -394,7 +394,7 @@ namespace iTextSharp.Layout.Element
 				(Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) || (bool
 				)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT))))
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Image));
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Image));
 				logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
 			}
 			SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE, autoScale);

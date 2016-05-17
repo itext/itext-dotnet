@@ -1,5 +1,5 @@
 /*
-$Id: 3d7b177ca00036a9e48b778384c010fd32de593b $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -58,7 +58,7 @@ namespace com.itextpdf.signatures
 	/// <summary>Verifies the signatures in an LTV document.</summary>
 	public class LtvVerifier : RootStoreVerifier
 	{
-		/// <summary>The Logger instance</summary>
+		/// <summary>The ILogger instance</summary>
 		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
 			com.itextpdf.signatures.LtvVerifier));
 

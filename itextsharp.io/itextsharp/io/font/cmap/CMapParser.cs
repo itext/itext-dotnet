@@ -188,7 +188,7 @@ namespace iTextSharp.IO.Font.Cmap
 			}
 			catch (Exception)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(CMapParser));
+				ILogger logger = LoggerFactory.GetLogger(typeof(CMapParser));
 				logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
 			}
 			finally

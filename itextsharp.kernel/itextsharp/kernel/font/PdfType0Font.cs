@@ -150,7 +150,7 @@ namespace iTextSharp.Kernel.Font
 					if (toUnicodeCMap == null)
 					{
 						toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfType0Font
+						ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfType0Font
 							));
 						logger.Error(String.Format(LogMessageConstant.UNKNOWN_CMAP, uniMap));
 					}

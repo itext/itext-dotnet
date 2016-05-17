@@ -317,7 +317,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (CheckTypeOfPdfDictionary(@object, PdfName.Catalog))
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(PdfReader));
+				ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
 				logger.Warn(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
 				@object = PdfNull.PDF_NULL;
 			}

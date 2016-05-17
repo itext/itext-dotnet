@@ -223,13 +223,13 @@ namespace iTextSharp.IO.Font
 				{
 					if (raf.Read() != 0x80)
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
+						ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 						logger.Error(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
 						return null;
 					}
 					if (raf.Read() != PFB_TYPES[k])
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
+						ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 						logger.Error("incorrect.segment.type.in.pfb.file");
 						return null;
 					}
@@ -243,7 +243,7 @@ namespace iTextSharp.IO.Font
 						int got = raf.Read(fontStreamBytes, bytePtr, size);
 						if (got < 0)
 						{
-							Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
+							ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 							logger.Error("premature.end.in.pfb.file");
 							return null;
 						}
@@ -255,7 +255,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (Exception)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Type1Font));
 				logger.Error("type1.font.file.exception");
 				return null;
 			}

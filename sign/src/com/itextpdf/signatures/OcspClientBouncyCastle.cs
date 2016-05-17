@@ -1,5 +1,5 @@
 /*
-$Id: fb5b40ff65cb9026e4927e509212112f19ad0512 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -69,7 +69,7 @@ namespace com.itextpdf.signatures
 	/// <author>Paulo Soarees</author>
 	public class OcspClientBouncyCastle : IOcspClient
 	{
-		/// <summary>The Logger instance.</summary>
+		/// <summary>The ILogger instance.</summary>
 		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.OcspClientBouncyCastle
 			));
 

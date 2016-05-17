@@ -1,5 +1,5 @@
 /*
-$Id: b73f6ebc6c703a92d2c3b561f9f304d32adef91c $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -63,7 +63,7 @@ namespace com.itextpdf.signatures
 	/// </summary>
 	public class OCSPVerifier : RootStoreVerifier
 	{
-		/// <summary>The Logger instance</summary>
+		/// <summary>The ILogger instance</summary>
 		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
 			com.itextpdf.signatures.OCSPVerifier));
 

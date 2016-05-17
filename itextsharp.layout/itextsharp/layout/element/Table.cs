@@ -610,7 +610,7 @@ namespace iTextSharp.Layout.Element
 				}
 				else
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Table));
+					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Table));
 					logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
 				}
 			}

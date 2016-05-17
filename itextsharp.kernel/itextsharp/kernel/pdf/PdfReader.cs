@@ -544,7 +544,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			catch (Exception ex)
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 				logger.Error(LogMessageConstant.XREF_ERROR, ex);
 				RebuildXref();
 			}
@@ -751,7 +751,7 @@ namespace iTextSharp.Kernel.Pdf
 						{
 							if (fixedXref)
 							{
-								Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
+								ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfReader));
 								logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE + " {0} {1} R"
 									, tokens.GetObjNr(), tokens.GetGenNr()));
 								return new PdfNull();

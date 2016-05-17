@@ -1,6 +1,6 @@
 using System;
 /*
- * $Id: Logger.java 4863 2011-05-12 07:01:55Z redlab_b $
+ * $Id$
  *
  * This file is part of the iText (R) project. Copyright (c) 1998-2016 iText Group NV
  * BVBA Authors: Balder Van Camp, Emiel Ackermann, et al.
@@ -41,11 +41,11 @@ using System;
  */
 namespace iTextSharp.IO.Log
 {
-    public interface Logger {
+    public interface ILogger {
 
-        Logger GetLogger(Type klass);
+        ILogger GetLogger(Type klass);
 
-        Logger GetLogger(String name);
+        ILogger GetLogger(String name);
 
         void Warn(String message);
 

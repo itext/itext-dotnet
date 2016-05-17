@@ -193,7 +193,7 @@ namespace iTextSharp.IO.Font.Cmap
 					}
 					else
 					{
-						Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
+						ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
 							));
 						logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
 					}

@@ -103,7 +103,7 @@ namespace iTextSharp.IO.Image
 
 		public override bool CanImageBeInline()
 		{
-			Logger logger = LoggerFactory.GetLogger(typeof(ImageData));
+			ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
 			logger.Warn(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
 			return false;
 		}

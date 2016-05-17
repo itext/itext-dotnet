@@ -391,7 +391,7 @@ namespace iTextSharp.Layout.Renderer
 				Rectangle backgroundArea = ApplyMargins(bBox, false);
 				if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0)
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
+					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
 						));
 					logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
 						, "background"));
@@ -452,7 +452,7 @@ namespace iTextSharp.Layout.Renderer
 				Rectangle bBox = GetBorderAreaBBox();
 				if (bBox.GetWidth() <= 0 || bBox.GetHeight() <= 0)
 				{
-					Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
+					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
 						));
 					logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
 						, "border"));

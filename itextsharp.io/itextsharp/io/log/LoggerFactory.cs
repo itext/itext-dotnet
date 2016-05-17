@@ -1,6 +1,6 @@
 using System;
 /*
- * $Id: LoggerFactory.java 4863 2011-05-12 07:01:55Z redlab_b $
+ * $Id$
  *
  * This file is part of the iText (R) project. Copyright (c) 1998-2016 iText Group NV
  * BVBA Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -56,11 +56,11 @@ namespace iTextSharp.IO.Log
 
         private static LoggerFactory myself;
 
-        public static Logger GetLogger(Type klass) {
+        public static ILogger GetLogger(Type klass) {
             return myself.logger.GetLogger(klass);
         }
 
-        public static Logger GetLogger(String name) {
+        public static ILogger GetLogger(String name) {
             return myself.logger.GetLogger(name);
         }
 
@@ -68,16 +68,16 @@ namespace iTextSharp.IO.Log
             return myself;
         }
 
-        private Logger logger = new NoOpLogger();
+        private ILogger logger = new NoOpLogger();
 
         private LoggerFactory() {
         }
 
-        public virtual void SetLogger(Logger logger) {
+        public virtual void SetLogger(ILogger logger) {
             this.logger = logger;
         }
 
-        public virtual Logger Logger() {
+        public virtual ILogger Logger() {
             return logger;
         }
     }

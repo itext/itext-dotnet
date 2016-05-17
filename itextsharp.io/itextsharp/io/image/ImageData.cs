@@ -366,7 +366,7 @@ namespace iTextSharp.IO.Image
 		/// <returns>if the image can be inline</returns>
 		public virtual bool CanImageBeInline()
 		{
-			Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
+			ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
 			if (imageSize > 4096)
 			{
 				logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);

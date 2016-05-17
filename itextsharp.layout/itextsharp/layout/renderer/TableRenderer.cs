@@ -131,7 +131,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			else
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.TableRenderer
+				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.TableRenderer
 					));
 				logger.Error("Only BlockRenderer with Cell layout element could be added");
 			}

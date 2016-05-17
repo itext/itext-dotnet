@@ -34,7 +34,7 @@ namespace iTextSharp.Layout.Hyphenation
 		private const String HYPHENATION_DEFAULT_RESOURCE = "com/itextpdf/hyph/";
 
 		/// <summary>Logging instance.</summary>
-		private static Logger log = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Hyphenation.Hyphenator
+		private static ILogger log = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Hyphenation.Hyphenator
 			));
 
 		private static HyphenationTreeCache hTreeCache;

@@ -136,7 +136,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (IsFlushed() || GetIndirectReference() == null)
 			{
-				//            Logger logger = LoggerFactory.getLogger(PdfObject.class);
+				//            ILogger logger = LoggerFactory.getLogger(PdfObject.class);
 				//            if (isFlushed()) {
 				//                logger.warn("Meaningless call, the object has already flushed");
 				//            } else {
@@ -332,7 +332,7 @@ namespace iTextSharp.Kernel.Pdf
 			// In case ForbidRelease flag is set, release will not be performed.
 			if (CheckState(FORBID_RELEASE))
 			{
-				Logger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
 				logger.Warn(LogMessageConstant.FORBID_RELEASE_IS_SET);
 			}
 			else

@@ -1,6 +1,6 @@
 using System;
 /*
- * $Id: NoOpLogger.java 4863 2011-05-12 07:01:55Z redlab_b $
+ * $Id$
  *
  * This file is part of the iText (R) project. Copyright (c) 1998-2016 iText Group NV
  * BVBA Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -49,17 +49,17 @@ namespace iTextSharp.IO.Log
     /// <see cref="IsWarnEnabled"/>.
     /// </summary>
     /// <author>redlab_b</author>
-    public sealed class NoOpLogger : Logger {
+    public sealed class NoOpLogger : ILogger {
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#getLogger(java.lang.Class)
+         * @see com.itextpdf.text.log.ILogger#getLogger(java.lang.Class)
          */
-        public Logger GetLogger(Type name) {
+        public ILogger GetLogger(Type name) {
             return this;
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#warn(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#warn(java.lang.String)
          */
         public void Warn(String message) {
         }
@@ -70,7 +70,7 @@ namespace iTextSharp.IO.Log
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#trace(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#trace(java.lang.String)
          */
         public void Trace(String message) {
         }
@@ -81,7 +81,7 @@ namespace iTextSharp.IO.Log
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#debug(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#debug(java.lang.String)
          */
         public void Debug(String message) {
         }
@@ -92,7 +92,7 @@ namespace iTextSharp.IO.Log
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#info(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#info(java.lang.String)
          */
         public void Info(String message) {
         }
@@ -103,7 +103,7 @@ namespace iTextSharp.IO.Log
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#error(java.lang.String, java.lang.Exception)
+         * @see com.itextpdf.text.log.ILogger#error(java.lang.String, java.lang.Exception)
          */
         public void Error(String message, Exception e) {
         }
@@ -114,15 +114,15 @@ namespace iTextSharp.IO.Log
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#error(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#error(java.lang.String)
          */
         public void Error(String message) {
         }
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.Logger#getLogger(java.lang.String)
+         * @see com.itextpdf.text.log.ILogger#getLogger(java.lang.String)
          */
-        public Logger GetLogger(String name) {
+        public ILogger GetLogger(String name) {
             return this;
         }
     }

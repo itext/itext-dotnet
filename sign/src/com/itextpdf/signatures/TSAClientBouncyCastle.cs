@@ -1,5 +1,5 @@
 /*
-$Id: 054f3b28f46e961849de135febf3ae863987b8b0 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -70,7 +70,7 @@ namespace com.itextpdf.signatures
 	/// </remarks>
 	public class TSAClientBouncyCastle : ITSAClient
 	{
-		/// <summary>The Logger instance.</summary>
+		/// <summary>The ILogger instance.</summary>
 		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.TSAClientBouncyCastle
 			));
 

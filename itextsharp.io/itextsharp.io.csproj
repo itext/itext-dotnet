@@ -147,7 +147,7 @@
     <Compile Include="itextsharp\io\IOException.cs" />
     <Compile Include="itextsharp\io\IOExtension.cs" />
     <Compile Include="itextsharp\io\LogMessageConstant.cs" />
-    <Compile Include="itextsharp\io\log\Logger.cs" />
+    <Compile Include="itextsharp\io\log\ILogger.cs" />
     <Compile Include="itextsharp\io\log\LoggerFactory.cs" />
     <Compile Include="itextsharp\io\log\NoOpLogger.cs" />
     <Compile Include="itextsharp\io\source\ArrayRandomAccessSource.cs" />

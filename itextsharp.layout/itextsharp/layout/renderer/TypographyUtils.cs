@@ -56,7 +56,7 @@ namespace iTextSharp.Layout.Renderer
 {
 	internal class TypographyUtils
 	{
-		private static readonly Logger logger = LoggerFactory.GetLogger(typeof(TypographyUtils
+		private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils
 			));
 
 		private const String TYPOGRAPHY_PACKAGE = "com.itextpdf.typography.";
