@@ -54,7 +54,6 @@ using Org.BouncyCastle.X509;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Security;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
@@ -100,9 +99,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 		}
 
 		protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary
-			, ICipherParameters certificateKey, X509Certificate certificate, String certificateKeyProvider
-			, IExternalDecryptionProcess externalDecryptionProcess, bool encryptMetadata, String
-			 digestAlgorithm)
+			, ICipherParameters certificateKey, X509Certificate certificate, bool encryptMetadata
+			, String digestAlgorithm)
 		{
 			PdfArray recipients = encryptionDictionary.GetAsArray(PdfName.Recipients);
 			if (recipients == null)
@@ -111,7 +109,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 					.DefaultCryptFilter).GetAsArray(PdfName.Recipients);
 			}
 			byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate
-				, certificateKeyProvider, externalDecryptionProcess, recipients);
+				, recipients);
 			byte[] encryptionKey;
 			IDigest md;
 			try
@@ -184,13 +182,12 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 		}
 
 		protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary
-			, ICipherParameters certificateKey, X509Certificate certificate, String certificateKeyProvider
-			, IExternalDecryptionProcess externalDecryptionProcess, bool encryptMetadata)
+			, ICipherParameters certificateKey, X509Certificate certificate, bool encryptMetadata
+			)
 		{
 			String digestAlgorithm = GetDigestAlgorithm();
 			byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters
-				)certificateKey, certificate, certificateKeyProvider, externalDecryptionProcess, 
-				encryptMetadata, digestAlgorithm);
+				)certificateKey, certificate, encryptMetadata, digestAlgorithm);
 			int keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
 			int keyLength = keyLen != null ? keyLen : 40;
 			InitKey(encryptionKey, keyLength);

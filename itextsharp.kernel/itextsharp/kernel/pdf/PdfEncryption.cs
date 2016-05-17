@@ -50,7 +50,6 @@ using iTextSharp.IO.Source;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Crypto.Securityhandler;
-using iTextSharp.Kernel.Security;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -249,8 +248,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		public PdfEncryption(PdfDictionary pdfDict, ICipherParameters certificateKey, X509Certificate
-			 certificate, String certificateKeyProvider, IExternalDecryptionProcess externalDecryptionProcess
-			)
+			 certificate)
 			: base(pdfDict)
 		{
 			SetForbidRelease();
@@ -260,32 +258,28 @@ namespace iTextSharp.Kernel.Pdf
 				case STANDARD_ENCRYPTION_40:
 				{
 					securityHandler = new PubSecHandlerUsingStandard40(this.GetPdfObject(), certificateKey
-						, certificate, certificateKeyProvider, externalDecryptionProcess, encryptMetadata
-						);
+						, certificate, encryptMetadata);
 					break;
 				}
 
 				case STANDARD_ENCRYPTION_128:
 				{
 					securityHandler = new PubSecHandlerUsingStandard128(this.GetPdfObject(), certificateKey
-						, certificate, certificateKeyProvider, externalDecryptionProcess, encryptMetadata
-						);
+						, certificate, encryptMetadata);
 					break;
 				}
 
 				case AES_128:
 				{
 					securityHandler = new PubSecHandlerUsingAes128(this.GetPdfObject(), certificateKey
-						, certificate, certificateKeyProvider, externalDecryptionProcess, encryptMetadata
-						);
+						, certificate, encryptMetadata);
 					break;
 				}
 
 				case AES_256:
 				{
 					securityHandler = new PubSecHandlerUsingAes256(this.GetPdfObject(), certificateKey
-						, certificate, certificateKeyProvider, externalDecryptionProcess, encryptMetadata
-						);
+						, certificate, encryptMetadata);
 					break;
 				}
 			}

@@ -46,7 +46,6 @@ using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Security;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
@@ -60,10 +59,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 		}
 
 		public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, ICipherParameters
-			 certificateKey, X509Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
-			 externalDecryptionProcess, bool encryptMetadata)
-			: base(encryptionDictionary, certificateKey, certificate, certificateKeyProvider, 
-				externalDecryptionProcess, encryptMetadata)
+			 certificateKey, X509Certificate certificate, bool encryptMetadata)
+			: base(encryptionDictionary, certificateKey, certificate, encryptMetadata)
 		{
 		}
 

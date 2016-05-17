@@ -48,7 +48,6 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Security;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
@@ -62,11 +61,10 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 		}
 
 		public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, ICipherParameters
-			 certificateKey, X509Certificate certificate, String certificateKeyProvider, IExternalDecryptionProcess
-			 externalDecryptionProcess, bool encryptMetadata)
+			 certificateKey, X509Certificate certificate, bool encryptMetadata)
 		{
-			InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, certificateKeyProvider
-				, externalDecryptionProcess, encryptMetadata);
+			InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata
+				);
 		}
 
 		public override OutputStreamEncryption GetEncryptionStream(Stream os)

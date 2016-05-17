@@ -46,9 +46,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Org.BouncyCastle.Crypto;
-using Org.Bouncycastle.Cms;
-using Org.Bouncycastle.Cms.Jcajce;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -221,16 +218,6 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants
 				.ALLOW_DEGRADED_PRINTING;
-		}
-
-		/// <summary>Gets the content from a recipient.</summary>
-		/// <exception cref="Org.Bouncycastle.Cms.CMSException"/>
-		public static byte[] GetContent(RecipientInformation recipientInfo, ICipherParameters
-			 certificateKey, String certificateKeyProvider)
-		{
-			Recipient jceKeyTransRecipient = new JceKeyTransEnvelopedRecipient(certificateKey
-				).SetProvider(certificateKeyProvider);
-			return recipientInfo.GetContent(jceKeyTransRecipient);
 		}
 	}
 }
