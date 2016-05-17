@@ -57,6 +57,10 @@
       <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
       <Name>itextsharp.layout</Name>
     </ProjectReference>
+    <ProjectReference Include="..\itextsharp.pdftest\itextsharp.pdftest.csproj">
+      <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
+      <Name>itextsharp.pdftest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
