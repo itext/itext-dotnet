@@ -19,6 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.barcodes.tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.pdftest", "itextsharp.pdftest\itextsharp.pdftest.csproj", "{F9880DC4-F015-4413-AF86-66D0E9512774}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.forms.tests", "itextsharp.forms.tests\itextsharp.forms.tests.csproj", "{6FE2F714-6B3E-4B20-8C70-28BFCE084ED2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.kernel.tests", "itextsharp.kernel.tests\itextsharp.kernel.tests.csproj", "{02E54061-EB72-409D-B2C0-307CE66B57E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.layout.tests", "itextsharp.layout.tests\itextsharp.layout.tests.csproj", "{9AD347A8-EA5B-462B-810C-998F04471BB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +67,18 @@ Global
 		{F9880DC4-F015-4413-AF86-66D0E9512774}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9880DC4-F015-4413-AF86-66D0E9512774}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9880DC4-F015-4413-AF86-66D0E9512774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FE2F714-6B3E-4B20-8C70-28BFCE084ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FE2F714-6B3E-4B20-8C70-28BFCE084ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FE2F714-6B3E-4B20-8C70-28BFCE084ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FE2F714-6B3E-4B20-8C70-28BFCE084ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E54061-EB72-409D-B2C0-307CE66B57E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E54061-EB72-409D-B2C0-307CE66B57E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E54061-EB72-409D-B2C0-307CE66B57E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E54061-EB72-409D-B2C0-307CE66B57E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD347A8-EA5B-462B-810C-998F04471BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD347A8-EA5B-462B-810C-998F04471BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD347A8-EA5B-462B-810C-998F04471BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD347A8-EA5B-462B-810C-998F04471BB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
