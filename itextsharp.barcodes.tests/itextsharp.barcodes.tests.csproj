@@ -58,6 +58,10 @@
       <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
       <Name>itextsharp.kernel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\itextsharp.pdftest\itextsharp.pdftest.csproj">
+      <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
+      <Name>itextsharp.pdftest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

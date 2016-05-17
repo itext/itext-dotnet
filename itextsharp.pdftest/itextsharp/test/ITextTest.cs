@@ -3,7 +3,7 @@ using System.IO;
 
 namespace iTextSharp.Test {
     public abstract class ITextTest {
-        //protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
+        //protected readonly ILogger LOGGER = LoggerFactory.GetLogger(gett);
 
         public static void CreateDestinationFolder(String path) {
             Directory.CreateDirectory(path);
