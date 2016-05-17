@@ -46,12 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\test\attributes\LogMessage.cs" />
-    <Compile Include="itextsharp\test\ExtendedITextTest.cs" />
-    <Compile Include="itextsharp\test\ITextMemoryAppender.cs" />
-    <Compile Include="itextsharp\test\ITextTest.cs" />
-    <Compile Include="itextsharp\test\Log4NetLogger.cs" />
-    <Compile Include="itextsharp\test\LogListener.cs" />
+    <Compile Include="itextsharp\test\**" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

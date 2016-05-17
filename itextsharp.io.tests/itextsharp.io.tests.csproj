@@ -42,17 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\io\JavaUtilTest.cs" />
+    <Compile Include="itextsharp\io\**" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="itextsharp\io\AdobeGlyphListTest.cs" />
-    <Compile Include="itextsharp\io\font\FontProgramTest.cs" />
-    <Compile Include="itextsharp\io\image\BmpTest.cs" />
-    <Compile Include="itextsharp\io\image\Jpeg2000Test.cs" />
-    <Compile Include="itextsharp\io\image\JpegTest.cs" />
-    <Compile Include="itextsharp\io\image\TiffTest.cs" />
-    <Compile Include="itextsharp\io\source\WriteNumbersTest.cs" />
-    <Compile Include="itextsharp\io\source\WriteStringsTest.cs" />
-    <Compile Include="itextsharp\io\UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">

@@ -39,20 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\forms\fields\PdfButtonFormField.cs" />
-    <Compile Include="itextsharp\forms\fields\PdfChoiceFormField.cs" />
-    <Compile Include="itextsharp\forms\fields\PdfFormField.cs" />
-    <Compile Include="itextsharp\forms\fields\PdfSignatureFormField.cs" />
-    <Compile Include="itextsharp\forms\fields\PdfTextFormField.cs" />
-    <Compile Include="itextsharp\forms\FormsExtensions.cs" />
-    <Compile Include="itextsharp\forms\PdfAcroForm.cs" />
-    <Compile Include="itextsharp\forms\PdfPageFormCopier.cs" />
-    <Compile Include="itextsharp\forms\PdfSigFieldLockDictionary.cs" />
-    <Compile Include="itextsharp\forms\xfa\AcroFieldsSearch.cs" />
-    <Compile Include="itextsharp\forms\xfa\InverseStore.cs" />
-    <Compile Include="itextsharp\forms\xfa\XfaForm.cs" />
-    <Compile Include="itextsharp\forms\xfa\Xml2Som.cs" />
-    <Compile Include="itextsharp\forms\xfa\Xml2SomDatasets.cs" />
+    <Compile Include="itextsharp\forms\**" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

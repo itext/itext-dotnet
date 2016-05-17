@@ -40,44 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="itextsharp\barcodes\Barcode128.cs" />
-    <Compile Include="itextsharp\barcodes\Barcode1D.cs" />
-    <Compile Include="itextsharp\barcodes\Barcode2D.cs" />
-    <Compile Include="itextsharp\barcodes\Barcode39.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeCodabar.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeDataMatrix.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeEAN.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeEANSUPP.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeInter25.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodePDF417.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodePostnet.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeQRCode.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodesExtensions.cs" />
-    <Compile Include="itextsharp\barcodes\dmcode\DmParams.cs" />
-    <Compile Include="itextsharp\barcodes\dmcode\Placement.cs" />
-    <Compile Include="itextsharp\barcodes\dmcode\ReedSolomon.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\BitArray.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\BitMatrix.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\BitVector.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\BlockPair.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\ByteArray.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\ByteMatrix.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\CharacterSetECI.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\EncodeHintType.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\Encoder.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\ErrorCorrectionLevel.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\FormatInformation.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\GF256.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\GF256Poly.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\MaskUtil.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\MatrixUtil.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\Mode.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\QRCode.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\QRCodeWriter.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\ReedSolomonEncoder.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\ReedSolomonException.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\Version.cs" />
-    <Compile Include="itextsharp\barcodes\qrcode\WriterException.cs" />
+    <Compile Include="itextsharp\barcodes\**" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">

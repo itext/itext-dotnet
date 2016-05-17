@@ -42,15 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\barcodes\Barcode128Test.cs" />
-    <Compile Include="itextsharp\barcodes\Barcode39Test.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeCodabarTest.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeDataMatrixTest.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeEANTest.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeInter25Test.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodePDF417Test.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodePostnetTest.cs" />
-    <Compile Include="itextsharp\barcodes\BarcodeQRCodeTest.cs" />
+    <Compile Include="itextsharp\barcodes\**" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
