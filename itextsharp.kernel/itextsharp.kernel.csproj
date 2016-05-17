@@ -34,9 +34,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\kernel\**" />
+    <Compile Include="itextsharp\kernel\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="srcbc\**" />
+    <Compile Include="srcbc\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
