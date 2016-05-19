@@ -3,13 +3,13 @@
 namespace iTextSharp.Test.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class LogMessage : Attribute
+    public class LogMessageAttribute : Attribute
     {
         private string messageTemplate;
         public int Count;
         public bool Ignore;
 
-        public LogMessage(string messageTemplate)
+        public LogMessageAttribute(string messageTemplate)
         {
             this.messageTemplate = messageTemplate;
             this.Count = 1;
