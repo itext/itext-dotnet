@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
@@ -14,6 +16,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void ContentStreamProcessorTest()
 		{
 			PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "yaxiststar.pdf"

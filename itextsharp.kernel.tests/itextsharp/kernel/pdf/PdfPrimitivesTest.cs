@@ -71,7 +71,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesFloatNumberTest()
 		{
 			String filename = "primitivesFloatNumberTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -90,7 +91,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesIntNumberTest()
 		{
 			String filename = "primitivesIntNumberTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -109,7 +111,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesNameTest()
 		{
 			String filename = "primitivesNameTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -128,7 +131,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesStringTest()
 		{
 			String filename = "primitivesStringTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -147,7 +151,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesBooleanTest()
 		{
 			String filename = "primitivesBooleanTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -164,7 +169,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesFloatNumberIndirectTest()
 		{
 			String filename = "primitivesFloatNumberIndirectTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -182,7 +188,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesIntNumberIndirectTest()
 		{
 			String filename = "primitivesIntNumberIndirectTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -199,7 +206,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesStringIndirectTest()
 		{
 			String filename = "primitivesStringIndirectTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -216,7 +224,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesNameIndirectTest()
 		{
 			String filename = "primitivesNameIndirectTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)
@@ -233,7 +242,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesBooleanIndirectTest()
 		{
 			String filename = "primitivesBooleanIndirectTest.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < PageCount; i++)

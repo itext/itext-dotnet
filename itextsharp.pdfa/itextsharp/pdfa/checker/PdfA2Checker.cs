@@ -135,7 +135,7 @@ namespace iTextSharp.Pdfa.Checker
 		}
 
 		public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary
-			 currentColorSpaces, bool fill)
+			 currentColorSpaces, bool? fill)
 		{
 			if (color is PatternColor)
 			{
@@ -169,7 +169,7 @@ namespace iTextSharp.Pdfa.Checker
 		}
 
 		public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces
-			, bool checkAlternate, bool fill)
+			, bool checkAlternate, bool? fill)
 		{
 			if (fill != null)
 			{
@@ -316,7 +316,7 @@ namespace iTextSharp.Pdfa.Checker
 			if (extGState.GetHalftone() is PdfDictionary)
 			{
 				PdfDictionary halftoneDict = (PdfDictionary)extGState.GetHalftone();
-				int halftoneType = halftoneDict.GetAsInt(PdfName.HalftoneType);
+				int? halftoneType = halftoneDict.GetAsInt(PdfName.HalftoneType);
 				if (halftoneType != 1 && halftoneType != 5)
 				{
 					throw new PdfAConformanceException(PdfAConformanceException.AllHalftonesShallHaveHalftonetype1Or5
@@ -1119,8 +1119,8 @@ namespace iTextSharp.Pdfa.Checker
 			}
 		}
 
-		private bool CheckDefaultCS(PdfDictionary currentColorSpaces, bool fill, PdfName 
-			defaultCsName, int numOfComponents)
+		private bool CheckDefaultCS(PdfDictionary currentColorSpaces, bool? fill, PdfName
+			 defaultCsName, int numOfComponents)
 		{
 			if (currentColorSpaces == null)
 			{

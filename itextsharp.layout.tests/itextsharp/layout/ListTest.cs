@@ -32,7 +32,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "nestedListTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_nestedListTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List romanList2 = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft
 				(25).Add("One").Add("Two").Add("Three");
@@ -55,7 +55,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listNumberingTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_listNumberingTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			IList<List> lists = new List<List>();
 			lists.Add(new List(ListNumberingType.DECIMAL));
@@ -89,7 +89,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "divInListItemTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_divInListItemTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			ListItem item = new ListItem();
 			item.Add(new Div().Add(new Paragraph("text")));
@@ -107,7 +107,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listOverflowTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_listOverflowTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph("Test String");
 			List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string"
@@ -130,7 +130,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listOverflowTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_listOverflowTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph("Test String");
 			List list = new List(ListNumberingType.DECIMAL).Add("first string");
@@ -155,7 +155,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listOverflowTest03.pdf";
 			String cmpFileName = sourceFolder + "cmp_listOverflowTest03.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph("Test String");
 			List list = new List(ListNumberingType.DECIMAL).SetItemStartIndex(10).Add("first string"
@@ -178,7 +178,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_listEmptyItemTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.GREEK_LOWER);
 			list.Add(new ListItem()).Add(new ListItem()).Add(new ListItem()).Add("123").Add((
@@ -197,7 +197,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "imageInListTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageInListTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.GREEK_LOWER);
 			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
@@ -221,7 +221,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_listItemAlignmentTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.DECIMAL).SetListSymbolAlignment(ListSymbolAlignment
 				.LEFT);

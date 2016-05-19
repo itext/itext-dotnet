@@ -2,10 +2,12 @@ using System;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Forms
 {
@@ -24,6 +26,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
 		public virtual void CopyFieldsTest01()
 		{
 			String srcFilename1 = sourceFolder + "appearances1.pdf";
@@ -85,6 +88,8 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
+		[NUnit.Framework.Timeout(60000)]
+		[NUnit.Framework.Test]
 		public virtual void LargeFilePerformanceTest()
 		{
 			String srcFilename1 = sourceFolder + "frontpage.pdf";
@@ -109,6 +114,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
 		public virtual void CopyFieldsTest04()
 		{
 			String srcFilename = sourceFolder + "srcFile1.pdf";

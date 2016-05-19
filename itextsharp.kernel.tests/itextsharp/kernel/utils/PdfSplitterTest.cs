@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Utils
 {
@@ -24,11 +26,13 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
+			)]
 		public virtual void SplitDocumentTest01()
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
+			IList<int?> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
 			IList<PdfDocument> splitDocuments = new _PdfSplitter_45(inputPdfDoc).SplitByPageNumbers
 				(pageNumbers);
 			foreach (PdfDocument doc in splitDocuments)
@@ -58,7 +62,7 @@ namespace iTextSharp.Kernel.Utils
 				try
 				{
 					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument1_"
-						 + (this.partNumber++).ToString() + ".pdf"));
+						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
 				{
@@ -70,6 +74,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
+			)]
 		public virtual void SplitDocumentTest02()
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
@@ -99,7 +105,7 @@ namespace iTextSharp.Kernel.Utils
 				try
 				{
 					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument2_"
-						 + (this.partNumber++).ToString() + ".pdf"));
+						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
 				{
@@ -134,6 +140,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
+			)]
 		public virtual void SplitDocumentTest03()
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
@@ -171,7 +179,7 @@ namespace iTextSharp.Kernel.Utils
 				try
 				{
 					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument3_"
-						 + (this.partNumber++).ToString() + ".pdf"));
+						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
 				{
@@ -183,6 +191,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
+			)]
 		public virtual void SplitDocumentByOutlineTest()
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
@@ -234,7 +244,7 @@ namespace iTextSharp.Kernel.Utils
 				try
 				{
 					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitBySize_part"
-						 + (this.partNumber++).ToString() + ".pdf"));
+						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
 				{

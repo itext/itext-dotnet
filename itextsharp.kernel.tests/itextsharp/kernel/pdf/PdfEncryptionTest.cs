@@ -136,9 +136,9 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String outFileName = destinationFolder + filename;
 			int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFileName), new WriterProperties
-				().SetStandardEncryption(USER, OWNER, permissions, encryptionType).AddXmpMetadata
-				());
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFileName, FileMode.Create
+				), new WriterProperties().SetStandardEncryption(USER, OWNER, permissions, encryptionType
+				).AddXmpMetadata());
 			writer.SetCompressionLevel(compression);
 			PdfDocument document = new PdfDocument(writer);
 			document.GetDocumentInfo().SetAuthor(author).SetCreator(creator);

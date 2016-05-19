@@ -1,12 +1,14 @@
 using System;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Layout
 {
@@ -29,7 +31,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherParagraphTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 29; i++)
@@ -48,11 +50,12 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void KeepTogetherParagraphTest02()
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest02.pdf";
 			String outFile = destinationFolder + "keepTogetherParagraphTest02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 28; i++)
@@ -79,7 +82,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherListTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 28; i++)
@@ -102,7 +105,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherDivTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			Paragraph p = new Paragraph("Test String");
@@ -124,11 +127,12 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void KeepTogetherDivTest02()
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest02.pdf";
 			String outFile = destinationFolder + "keepTogetherDivTest02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle

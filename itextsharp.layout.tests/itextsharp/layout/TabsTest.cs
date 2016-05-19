@@ -52,17 +52,17 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "defaultTabTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			Paragraph p = new Paragraph();
-			AddTabbedTextToParagraph(p, text0, new float[0], null, null, null);
+			AddTabbedTextToParagraph(p, text0, new float?[0], null, null, null);
 			doc.Add(p);
 			float left = doc.GetLeftMargin();
 			float right = doc.GetRightMargin();
 			float pageWidth = doc.GetPdfDocument().GetDefaultPageSize().GetWidth();
-			float[] defaultStopPositions = new float[] { 0f, 50f, 100f, 150f, 200f, 250f, 300f
+			float?[] defaultStopPositions = new float?[] { 0f, 50f, 100f, 150f, 200f, 250f, 300f
 				, 350f, 400f, 450f, 500f, pageWidth - left - right };
 			DrawTabStopsPositions(iTextSharp.IO.Util.JavaUtil.ArraysAsList(defaultStopPositions
 				), doc, 1, 0, 120);
@@ -82,8 +82,8 @@ namespace iTextSharp.Layout
 			Document doc = InitDocument(outFileName);
 			float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
 			//left alignments
-			float[] positions1 = new float[] { tabInterval * 2, tabInterval * 4, tabInterval 
-				* 5 };
+			float?[] positions1 = new float?[] { tabInterval * 2, tabInterval * 4, tabInterval
+				 * 5 };
 			TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.LEFT, TabAlignment
 				.LEFT, TabAlignment.LEFT };
 			ILineDrawer[] leaders1 = new ILineDrawer[] { null, null, null };
@@ -94,8 +94,8 @@ namespace iTextSharp.Layout
 			doc.Add(p);
 			doc.Add(new Paragraph("\n"));
 			//right alignments
-			float[] positions2 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval 
-				* 6 };
+			float?[] positions2 = new float?[] { tabInterval * 3, tabInterval * 4, tabInterval
+				 * 6 };
 			TabAlignment[] alignments2 = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment
 				.RIGHT, TabAlignment.RIGHT };
 			ILineDrawer[] leaders2 = new ILineDrawer[] { null, null, null };
@@ -106,8 +106,8 @@ namespace iTextSharp.Layout
 			doc.Add(p);
 			doc.Add(new Paragraph("\n"));
 			//center alignments
-			float[] positions3 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval 
-				* 6 };
+			float?[] positions3 = new float?[] { tabInterval * 3, tabInterval * 4, tabInterval
+				 * 6 };
 			TabAlignment[] alignments3 = new TabAlignment[] { TabAlignment.CENTER, TabAlignment
 				.CENTER, TabAlignment.CENTER };
 			ILineDrawer[] leaders3 = new ILineDrawer[] { null, null, null };
@@ -137,8 +137,8 @@ namespace iTextSharp.Layout
 			String cmpFileName = sourceFolder + "cmp_" + fileName;
 			Document doc = InitDocument(outFileName);
 			float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
-			float[] positions1 = new float[] { tabInterval * 2, tabInterval * 3, tabInterval 
-				* 4, tabInterval * 5, tabInterval * 6 };
+			float?[] positions1 = new float?[] { tabInterval * 2, tabInterval * 3, tabInterval
+				 * 4, tabInterval * 5, tabInterval * 6 };
 			TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.ANCHOR, TabAlignment
 				.CENTER, TabAlignment.ANCHOR, TabAlignment.RIGHT, TabAlignment.ANCHOR };
 			ILineDrawer[] leaders1 = new ILineDrawer[] { new DottedLine(), null, new DashedLine
@@ -165,8 +165,8 @@ namespace iTextSharp.Layout
 			String cmpFileName = sourceFolder + "cmp_" + fileName;
 			Document doc = InitDocument(outFileName);
 			float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
-			float[] positions = new float[] { tabInterval * 2, tabInterval * 4, tabInterval *
-				 6 };
+			float?[] positions = new float?[] { tabInterval * 2, tabInterval * 4, tabInterval
+				 * 6 };
 			TabAlignment[] alignments = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment
 				.CENTER, TabAlignment.CENTER };
 			//        Drawable[] leaders = {null, null, null};
@@ -203,7 +203,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_outOfPageBoundsTest.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -255,14 +255,14 @@ namespace iTextSharp.Layout
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		private Document InitDocument(String outFileName)
 		{
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());
 			return new Document(pdfDoc);
 		}
 
-		private void DrawTabStopsPositions(IList<float> positions, Document doc, int pageNum
+		private void DrawTabStopsPositions(IList<float?> positions, Document doc, int pageNum
 			, int yStart, int dy)
 		{
 			PdfCanvas canvas = new PdfCanvas(doc.GetPdfDocument().GetPage(pageNum));
@@ -272,7 +272,7 @@ namespace iTextSharp.Layout
 			canvas.SetLineDash(4, 2);
 			canvas.SetLineWidth(0.5f);
 			canvas.SetLineDash(4, 2);
-			foreach (float f in positions)
+			foreach (float? f in positions)
 			{
 				canvas.MoveTo(left + f, h);
 				canvas.LineTo(left + f, h - dy);
@@ -282,7 +282,7 @@ namespace iTextSharp.Layout
 			canvas.Release();
 		}
 
-		private void AddTabbedTextToParagraph(Paragraph p, String text, float[] positions
+		private void AddTabbedTextToParagraph(Paragraph p, String text, float?[] positions
 			, TabAlignment[] alignments, ILineDrawer[] tabLeadings, char[] tabAnchorCharacters
 			)
 		{

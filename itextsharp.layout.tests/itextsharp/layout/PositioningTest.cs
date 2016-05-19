@@ -33,7 +33,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "relativePositioningTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth
 				(300).SetPaddings(20, 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,"
@@ -53,7 +53,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "relativePositioningTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth
 				(180).SetPaddings(20, 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,"
@@ -74,7 +74,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 
 				50).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLUE).SetHeight(100);
@@ -93,7 +93,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.GetPdfDocument().AddNewPage();
 			new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(iTextSharp.Kernel.Color.Color
@@ -114,7 +114,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			pdfDocument.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
@@ -192,7 +192,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String watermarkText = "WATERMARK";
 			Paragraph watermark = new Paragraph(watermarkText);

@@ -31,7 +31,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "textOverflowTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_textOverflowTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			StringBuilder text = new StringBuilder();
 			for (int i = 0; i < 1000; i++)
@@ -54,7 +54,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "textOverflowTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_textOverflowTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			iTextSharp.Layout.Element.Text overflowText = new iTextSharp.Layout.Element.Text(
 				"This is a long-long and large text which will not overflow").SetFontSize(19).SetFontColor
@@ -75,7 +75,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "textOverflowTest03.pdf";
 			String cmpFileName = sourceFolder + "cmp_textOverflowTest03.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			iTextSharp.Layout.Element.Text overflowText = new iTextSharp.Layout.Element.Text(
 				"This is a long-long and large text which will overflow").SetFontSize(25).SetFontColor
@@ -96,7 +96,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "textOverflowTest04.pdf";
 			String cmpFileName = sourceFolder + "cmp_textOverflowTest04.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph("ThisIsALongTextWithNoSpacesSoSplittingShouldBeForcedInThisCase"
 				).SetFontSize(20));

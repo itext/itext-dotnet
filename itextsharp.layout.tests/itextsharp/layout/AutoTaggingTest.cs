@@ -37,7 +37,7 @@ namespace iTextSharp.Layout
 		public virtual void TextInParagraphTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "textInParagraphTest01.pdf")));
+				 + "textInParagraphTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Paragraph p = CreateParagraph1();
@@ -58,7 +58,7 @@ namespace iTextSharp.Layout
 		public virtual void ImageTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "imageTest01.pdf")));
+				 + "imageTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			iTextSharp.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder
@@ -76,7 +76,7 @@ namespace iTextSharp.Layout
 		public virtual void DivTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "divTest01.pdf")));
+				 + "divTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Div div = new Div();
@@ -101,7 +101,7 @@ namespace iTextSharp.Layout
 		public virtual void TableTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest01.pdf")));
+				 + "tableTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Table table = new Table(3);
@@ -132,7 +132,7 @@ namespace iTextSharp.Layout
 		public virtual void TableTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest02.pdf")));
+				 + "tableTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Table table = new Table(3);
@@ -154,7 +154,7 @@ namespace iTextSharp.Layout
 		public virtual void TableTest03()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest03.pdf")));
+				 + "tableTest03.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Table table = new Table(3);
@@ -184,7 +184,7 @@ namespace iTextSharp.Layout
 		public virtual void TableTest04()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest04.pdf")));
+				 + "tableTest04.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			Table table = new Table(5, true);
@@ -218,7 +218,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "tableTest05.pdf";
 			String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest05.pdf")));
+				 + "tableTest05.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			Table table = new Table(5, true);
@@ -251,7 +251,7 @@ namespace iTextSharp.Layout
 		public virtual void TableTest06()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "tableTest06.pdf")));
+				 + "tableTest06.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -287,7 +287,7 @@ namespace iTextSharp.Layout
 		public virtual void ListTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "listTest01.pdf")));
+				 + "listTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			List list = new List();
@@ -307,7 +307,7 @@ namespace iTextSharp.Layout
 		public virtual void ArtifactTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "artifactTest01.pdf")));
+				 + "artifactTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			String watermarkText = "WATERMARK";
@@ -331,7 +331,7 @@ namespace iTextSharp.Layout
 		public virtual void ArtifactTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "artifactTest02.pdf")));
+				 + "artifactTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph("Hello world"));
@@ -362,7 +362,7 @@ namespace iTextSharp.Layout
 		public virtual void FlushingTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "flushingTest01.pdf")));
+				 + "flushingTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
 			Paragraph p = CreateParagraph1();
@@ -396,7 +396,7 @@ namespace iTextSharp.Layout
 		public virtual void FlushingTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "flushingTest02.pdf")));
+				 + "flushingTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			Table table = new Table(5, true);
@@ -438,7 +438,7 @@ namespace iTextSharp.Layout
 		public virtual void FlushingTest03()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "flushingTest03.pdf")));
+				 + "flushingTest03.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
 			Table table = new Table(5, true);

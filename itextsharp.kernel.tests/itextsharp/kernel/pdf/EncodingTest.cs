@@ -142,6 +142,8 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
+		[Ignore("Should we update built-in font's descriptor in case not standard font encoding?"
+			)]
 		public virtual void SymbolDefaultFontTest()
 		{
 			String fileName = "symbolDefaultFontTest.pdf";

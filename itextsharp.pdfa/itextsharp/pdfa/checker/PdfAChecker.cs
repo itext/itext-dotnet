@@ -120,7 +120,7 @@ namespace iTextSharp.Pdfa.Checker
 
 		public virtual void CheckPdfObject(PdfObject obj)
 		{
-			switch (obj.GetType())
+			switch (obj.GetObjectType())
 			{
 				case PdfObject.NUMBER:
 				{
@@ -172,10 +172,10 @@ namespace iTextSharp.Pdfa.Checker
 			);
 
 		public abstract void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary
-			 currentColorSpaces, bool fill);
+			 currentColorSpaces, bool? fill);
 
 		public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces
-			, bool checkAlternate, bool fill);
+			, bool checkAlternate, bool? fill);
 
 		public abstract void CheckRenderingIntent(PdfName intent);
 

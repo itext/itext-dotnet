@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.Kernel;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -30,7 +32,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = "simplePagesTest.pdf";
 			int pageCount = 111;
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = 0; i < pageCount; i++)
@@ -71,7 +74,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = "reversePagesTest.pdf";
 			int pageCount = 111;
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i = pageCount; i > 0; i--)
@@ -104,7 +108,8 @@ namespace iTextSharp.Kernel.Pdf
 				indexes[index] = indexes[i_1];
 				indexes[i_1] = a;
 			}
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage[] pages = new PdfPage[pageCount];
@@ -151,7 +156,8 @@ namespace iTextSharp.Kernel.Pdf
 				indexes[index] = indexes[i_1];
 				indexes[i_1] = a;
 			}
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			for (int i_2 = 0; i_2 < indexes.Length; i_2++)
@@ -182,6 +188,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
 		public virtual void InsertFlushedPageTest()
 		{
 			PdfWriter writer = new PdfWriter(new MemoryStream());
@@ -207,6 +214,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
 		public virtual void AddFlushedPageTest()
 		{
 			PdfWriter writer = new PdfWriter(new MemoryStream());
@@ -232,11 +240,13 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
 		public virtual void RemoveFlushedPage()
 		{
 			String filename = "removeFlushedPage.pdf";
 			int pageCount = 10;
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfPage removedPage = pdfDoc.AddNewPage();

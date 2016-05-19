@@ -12,6 +12,7 @@ using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -46,7 +47,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithKozmin.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin.pdf";
 			String title = "Type 0 test";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -76,7 +77,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithStSongUni.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithStSongUni.pdf";
 			String title = "Type0 test";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants
 				.NO_COMPRESSION));
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -104,7 +105,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithStSong.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithStSong.pdf";
 			String title = "Type0 test";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants
 				.NO_COMPRESSION));
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -132,7 +133,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithTrueTypeAsType0.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0.pdf";
 			String title = "Type0 test";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -157,7 +158,7 @@ namespace iTextSharp.Kernel.Pdf
 			//                .restoreState()
 			//                .release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
 			type0Font = PdfFontFactory.CreateFont(ttf, "Identity-H");
 			NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "PdfType0Font expected");
 			NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected"
@@ -183,7 +184,7 @@ namespace iTextSharp.Kernel.Pdf
 			// A A A A E E E ~ é
 			//writing type3 font characters
 			String title = "Type3 font iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -238,7 +239,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithHelvetica.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithHelvetica.pdf";
 			String title = "Type3 test";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -265,7 +266,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithHelveticaOblique.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaOblique.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -292,7 +293,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithHelveticaBoldOblique.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaBoldOblique.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -319,7 +320,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithCourierBold.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithCourierBold.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -346,7 +347,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithCMR10Afm.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -360,9 +361,9 @@ namespace iTextSharp.Kernel.Pdf
 				(pdfType1Font, 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState
 				().Rectangle(100, 500, 100, 100).Fill();
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				));
+				, FileMode.Open));
 			byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-				));
+				, FileMode.Open));
 			pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
 				pfb), FontEncoding.FONT_SPECIFIC, true);
 			NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected"
@@ -383,7 +384,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithCMR10Pfm.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Pfm.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -411,7 +412,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithTrueTypeFont1.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -426,7 +427,7 @@ namespace iTextSharp.Kernel.Pdf
 				, 72).ShowText("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 
 				100).Fill().Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
 			pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
 			NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
 				);
@@ -448,7 +449,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithTrueTypeOtfFont.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFont.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -465,7 +466,7 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
 			pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
 			NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
 				);
@@ -489,7 +490,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithType0OtfFont.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithType0OtfFont.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -505,7 +506,7 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
 			pdfFont = PdfFontFactory.CreateFont(ttf, "Identity-H");
 			NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font, "PdfTrueTypeFont expected"
 				);
@@ -531,7 +532,8 @@ namespace iTextSharp.Kernel.Pdf
 			String cmpOutputFileName = sourceFolder + "cmp_type3Font_update.pdf";
 			String title = "Type3 font iText 6 Document";
 			PdfReader reader = new PdfReader(inputFileName);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outputFileName));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(outputFileName, FileMode.Create
+				));
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -565,7 +567,8 @@ namespace iTextSharp.Kernel.Pdf
 			String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
 			String title = "Type3 font iText 6 Document";
 			PdfReader reader = new PdfReader(inputFileName);
-			PdfWriter pdfWriter = new PdfWriter(new FileOutputStream(outputFileName));
+			PdfWriter pdfWriter = new PdfWriter(new FileOutputStream(outputFileName, FileMode
+				.Create));
 			pdfWriter.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument inputPdfDoc = new PdfDocument(reader);
 			PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
@@ -604,7 +607,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
 			PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -634,7 +637,7 @@ namespace iTextSharp.Kernel.Pdf
 			String title = "testNewTrueTypeFont1BasedExistingFont";
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -666,7 +669,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
 			PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -694,7 +697,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithTrueTypeFont1_updated.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1_updated.pdf";
 			PdfReader reader1 = new PdfReader(inputFileName1);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(reader1, writer);
@@ -722,7 +725,7 @@ namespace iTextSharp.Kernel.Pdf
 			String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin_update.pdf";
 			String title = "Type0 font iText 6 Document";
 			PdfReader reader = new PdfReader(inputFileName1);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -753,7 +756,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
 			PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(6);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -784,7 +787,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
 			PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(6);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -813,7 +816,7 @@ namespace iTextSharp.Kernel.Pdf
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0_update.pdf";
 			String title = "Type0 font iText 6 Document";
 			PdfReader reader = new PdfReader(inputFileName1);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -844,7 +847,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(inputFileName1);
 			PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
 			PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -872,8 +875,8 @@ namespace iTextSharp.Kernel.Pdf
 			String filename = destinationFolder + "DocumentWithCMR10Afm_updated.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm_updated.pdf";
 			PdfReader reader = new PdfReader(inputFileName1);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename)).SetCompressionLevel
-				(CompressionConstants.NO_COMPRESSION);
+			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create))
+				.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			PdfDictionary pdfDictionary = (PdfDictionary)pdfDoc.GetPdfObject(4);
 			PdfFont pdfType1Font = PdfFontFactory.CreateFont(pdfDictionary);
@@ -898,10 +901,10 @@ namespace iTextSharp.Kernel.Pdf
 			try
 			{
 				byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-					));
+					, FileMode.Open));
 				FontProgramFactory.CreateType1Font(null, pfb);
 			}
-			catch (IOException e)
+			catch (iTextSharp.IO.IOException e)
 			{
 				message = e.Message;
 			}
@@ -918,7 +921,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfb", null);
 			}
-			catch (IOException e)
+			catch (iTextSharp.IO.IOException e)
 			{
 				message = e.Message;
 			}
@@ -929,10 +932,11 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
 		public virtual void CreateWrongPfb()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				));
+				, FileMode.Open));
 			PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
 				afm), null);
 			byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes
@@ -947,7 +951,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect1()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				));
+				, FileMode.Open));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected"
 				);
 		}
@@ -958,9 +962,9 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect2()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				));
+				, FileMode.Open));
 			byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-				));
+				, FileMode.Open));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateType1Font(afm, pfb) is Type1Font
 				, "Type1 font expected");
 		}
@@ -971,7 +975,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect3()
 		{
 			byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf"
-				));
+				, FileMode.Open));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, 
 				"TrueType (OTF) font expected");
 		}
@@ -982,7 +986,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect4()
 		{
 			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-				));
+				, FileMode.Open));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
 				"TrueType (TTF) expected");
 		}
@@ -993,7 +997,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect5()
 		{
 			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-				));
+				, FileMode.Open));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
 				"TrueType (TTF) expected");
 		}
@@ -1001,12 +1005,13 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
 		public virtual void TestWriteTTC()
 		{
 			String filename = destinationFolder + "DocumentWithTTC.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -1022,7 +1027,7 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font));
+			byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
 			pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true
 				, false);
 			pdfTrueTypeFont.SetSubset(true);
@@ -1060,11 +1065,12 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[Ignore("Invalid subset")]
 		public virtual void NotoSansCJKjpTest()
 		{
 			String filename = destinationFolder + "NotoSansCJKjpTest.pdf";
 			String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
 			PdfDocument doc = new PdfDocument(writer);
 			PdfPage page = doc.AddNewPage();
 			// Identity-H must be embedded
@@ -1098,6 +1104,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.REGISTERING_DIRECTORY)]
 		public virtual void TestFontDirectoryRegister()
 		{
 			PdfFontFactory.RegisterDirectory(sourceFolder);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
@@ -25,7 +24,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateEmptyDocument()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "emptyDocument.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle
@@ -39,7 +38,7 @@ namespace iTextSharp.Kernel.Pdf
 			NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
 			String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.CreationDate
 				).GetValue();
-			Calendar cl = PdfDate.Decode(date);
+			DateTime cl = PdfDate.Decode(date);
 			long diff = new GregorianCalendar().GetTimeInMillis() - cl.GetTimeInMillis();
 			String message = "Unexpected creation date. Different from now is " + (float)diff
 				 / 1000 + "s";
@@ -52,7 +51,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void UseObjectForMultipleTimes1()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -72,7 +71,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void UseObjectForMultipleTimes2()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -93,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void UseObjectForMultipleTimes3()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes3.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -114,7 +113,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void UseObjectForMultipleTimes4()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes4.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -159,7 +158,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject1()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject1_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -175,7 +174,7 @@ namespace iTextSharp.Kernel.Pdf
 			aDirect.Add(new PdfString("string"));
 			catalog1.Put(new PdfName("aDirect"), aDirect);
 			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject1_2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -238,7 +237,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject2()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject2_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -259,7 +258,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			aDirect = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(aDirectName);
 			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject2_2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -327,7 +326,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			{
 				FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject3_1.pdf"
-					);
+					, FileMode.Create);
 				PdfWriter writer1 = new PdfWriter(fos1);
 				PdfDocument pdfDoc1 = new PdfDocument(writer1);
 				PdfPage page1 = pdfDoc1.AddNewPage();
@@ -348,7 +347,7 @@ namespace iTextSharp.Kernel.Pdf
 					));
 				arr1 = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(arr1Name);
 				FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject3_2.pdf"
-					);
+					, FileMode.Create);
 				PdfWriter writer2 = new PdfWriter(fos2);
 				PdfDocument pdfDoc2 = new PdfDocument(writer2);
 				PdfPage page2 = pdfDoc2.AddNewPage();
@@ -379,7 +378,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject4()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject4_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -394,7 +393,7 @@ namespace iTextSharp.Kernel.Pdf
 			stream1 = (PdfStream)pdfDoc1R.GetCatalog().GetPdfObject().Get(new PdfName("stream"
 				));
 			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject4_2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -432,7 +431,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject5()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject5_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -444,7 +443,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1 = pdfDoc1R.GetPage(1);
 			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject5_2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = page1.CopyTo(pdfDoc2);
@@ -474,7 +473,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject6()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "copyObject6_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -487,7 +486,7 @@ namespace iTextSharp.Kernel.Pdf
 			helloWorld = (PdfDictionary)pdfDoc.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorld"
 				));
 			PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "copyObject6_2.pdf")));
+				 + "copyObject6_2.pdf", FileMode.Create)));
 			PdfPage page1 = pdfDoc1.AddNewPage();
 			page1.GetPdfObject().Put(new PdfName("HelloWorldCopy1"), ((PdfDictionary)helloWorld
 				.CopyTo(pdfDoc1)));
@@ -521,15 +520,16 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>Attempts to copy from the document that is being written.</summary>
 		/// <exception cref="System.IO.IOException"/>
+		[NUnit.Framework.Test]
 		public virtual void CopyObject7()
 		{
 			String exceptionMessage = null;
 			PdfDocument pdfDoc1;
 			PdfDocument pdfDoc2;
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject6_1.pdf"
-				);
+				, FileMode.Create);
 			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyObject6_2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			pdfDoc1 = new PdfDocument(writer1);
@@ -563,12 +563,13 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>Attempts to copy to copy with null document</summary>
 		/// <exception cref="System.IO.IOException"/>
+		[NUnit.Framework.Test]
 		public virtual void CopyObject8()
 		{
 			String exceptionMessage = null;
 			PdfDocument pdfDoc1;
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject6_1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			pdfDoc1 = new PdfDocument(writer1);
 			try
@@ -594,10 +595,12 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
+		[NUnit.Framework.ExpectedException(typeof(System.IO.IOException))]
+		[NUnit.Framework.Test]
 		public virtual void CloseStream1()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "closeStream1.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.AddNewPage();
@@ -610,7 +613,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CloseStream2()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "closeStream2.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCloseStream(false);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -624,7 +627,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void DirectInIndirectChain()
 		{
 			String filename = destinationFolder + "directInIndirectChain.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename));
+			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfArray level1 = new PdfArray();
 			level1.Add(((PdfNumber)new PdfNumber(1).MakeIndirect(pdfDoc)));
@@ -657,7 +660,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreatePdfStreamByInputStream()
 		{
 			String filename = destinationFolder + "createPdfStreamByInputStream.pdf";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			document.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6")

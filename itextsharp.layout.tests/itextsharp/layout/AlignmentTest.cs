@@ -33,7 +33,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAlignmentTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
 			for (int i = 0; i < 21; i++)
@@ -55,7 +55,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAlignmentTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
 			paragraph.Add(new Text("Hello World!")).Add(new Text(" ")).Add(new Text("Hello People! "
@@ -74,7 +74,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAlignmentTest03.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest03.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
 			for (int i = 0; i < 21; i++)
@@ -97,7 +97,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAlignmentTest04.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest04.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
 			for (int i = 0; i < 21; i++)
@@ -119,7 +119,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAlignmentForcedNewlinesTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
 			paragraph.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
@@ -142,7 +142,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "justifyAllTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_justifyAllTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED_ALL
 				);
@@ -166,7 +166,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "blockAlignmentTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_blockAlignmentTest01.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.GREEK_LOWER);
 			for (int i = 0; i < 10; i++)
@@ -194,7 +194,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "blockAlignmentTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_blockAlignmentTest02.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Div div = new Div();
 			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new File
@@ -219,7 +219,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageAlignmentTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageAlignmentTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);

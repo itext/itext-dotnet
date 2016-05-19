@@ -1,60 +1,64 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using NUnit.Framework.Rules;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
+using iTextSharp.Test;
 
 namespace iTextSharp.Pdfa
 {
-	public class PdfA1AcroFormCheckTest
+	public class PdfA1AcroFormCheckTest : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
 
 		public const String cmpFolder = sourceFolder + "cmp/PdfA1AcroFormCheckTest/";
 
-		public const String destinationFolder = "./target/test/PdfA1AcroFormCheckTest/";
+		public const String destinationFolder = "test/itextsharp/pdfa/PdfA1AcroFormCheckTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
-			new File(destinationFolder).Mkdirs();
+			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		[Rule]
-		public ExpectedException thrown = ExpectedException.None();
+		public ExpectedException junitExpectedException = ExpectedException.None();
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck01()
 		{
-			thrown.Expect(typeof(PdfAConformanceException));
-			thrown.ExpectMessage(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse
-				);
-			PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm");
-			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
-				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-			doc.AddNewPage();
-			PdfDictionary acroForm = new PdfDictionary();
-			acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(true));
-			doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
-			doc.Close();
+			Assert.That(() => 
+			{
+				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
+					.Open);
+				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
+					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+				doc.AddNewPage();
+				PdfDictionary acroForm = new PdfDictionary();
+				acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(true));
+				doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
+				doc.Close();
+			}
+			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse));
+;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck02()
 		{
 			String outPdf = destinationFolder + "pdfA1b_acroFormCheck02.pdf";
 			String cmpPdf = cmpFolder + "cmp_pdfA1b_acroFormCheck02.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
-			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm");
+			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
+				.Open);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			doc.AddNewPage();
@@ -68,13 +72,14 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck03()
 		{
 			String outPdf = destinationFolder + "pdfA1b_acroFormCheck03.pdf";
 			String cmpPdf = cmpFolder + "cmp_pdfA1b_acroFormCheck03.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
-			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm");
+			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
+				.Open);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			doc.AddNewPage();

@@ -1,12 +1,14 @@
 using System;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Layout
 {
@@ -29,7 +31,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -54,7 +56,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -79,7 +81,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest03.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest03.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -105,7 +107,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest04.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest04.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -131,7 +133,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest05.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest05.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -157,7 +159,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "imageTest06.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest06.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -179,11 +181,12 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void ImageTest07()
 		{
 			String outFileName = destinationFolder + "imageTest07.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest07.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -200,11 +203,12 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void ImageTest08()
 		{
 			String outFileName = destinationFolder + "imageTest08.pdf";
 			String cmpFileName = sourceFolder + "cmp_imageTest08.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName);
+			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -229,7 +233,7 @@ namespace iTextSharp.Layout
 			String outFileName = destinationFolder + "flushOnDrawTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_flushOnDrawTest.pdf";
 			int rowCount = 60;
-			FileOutputStream fos = new FileOutputStream(outFileName);
+			FileOutputStream fos = new FileOutputStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document document = new Document(pdfDoc);

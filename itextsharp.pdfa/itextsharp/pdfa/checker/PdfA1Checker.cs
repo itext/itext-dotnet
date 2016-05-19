@@ -132,13 +132,13 @@ namespace iTextSharp.Pdfa.Checker
 		}
 
 		public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary
-			 currentColorSpaces, bool fill)
+			 currentColorSpaces, bool? fill)
 		{
 			CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
 		}
 
 		public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces
-			, bool checkAlternate, bool fill)
+			, bool checkAlternate, bool? fill)
 		{
 			if (colorSpace is PdfSpecialCs.Separation)
 			{
@@ -242,7 +242,7 @@ namespace iTextSharp.Pdfa.Checker
 				throw new PdfAConformanceException(PdfAConformanceException.BlendModeShallHhaveValueNormalOrCompatible
 					);
 			}
-			float ca = extGState.GetStrokeOpacity();
+			float? ca = extGState.GetStrokeOpacity();
 			if (ca != null && ca != 1)
 			{
 				throw new PdfAConformanceException(PdfAConformanceException.TransparencyIsNotAllowedCAShallBeEqualTo1
@@ -449,7 +449,7 @@ namespace iTextSharp.Pdfa.Checker
 
 		protected internal override void CheckPdfString(PdfString @string)
 		{
-			if (@string.GetValue().GetBytes().Length > GetMaxStringLength())
+			if (@string.GetValueBytes().Length > GetMaxStringLength())
 			{
 				throw new PdfAConformanceException(PdfAConformanceException.PdfStringIsTooLong);
 			}

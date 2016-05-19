@@ -209,7 +209,7 @@ namespace iTextSharp.Layout
 			outFileName = destinationFolder + fileName;
 			cmpFileName = sourceFolder + cmpPrefix + fileName;
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				)));
+				, FileMode.Create)));
 			return new Document(pdfDocument);
 		}
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Utils
 {
@@ -29,10 +31,10 @@ namespace iTextSharp.Kernel.Utils
 			String filename1 = sourceFolder + "helveticaTest.pdf";
 			String filename2 = sourceFolder + "timesRomanTest.pdf";
 			String resultFile = destinationFolder + "mergedResult01.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename));
-			PdfReader reader1 = new PdfReader(new FileStream(filename1));
-			PdfReader reader2 = new PdfReader(new FileStream(filename2));
-			FileOutputStream fos1 = new FileOutputStream(resultFile);
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open));
+			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -61,10 +63,10 @@ namespace iTextSharp.Kernel.Utils
 			String filename1 = sourceFolder + "doc2.pdf";
 			String filename2 = sourceFolder + "doc3.pdf";
 			String resultFile = destinationFolder + "mergedResult02.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename));
-			PdfReader reader1 = new PdfReader(new FileStream(filename1));
-			PdfReader reader2 = new PdfReader(new FileStream(filename2));
-			FileOutputStream fos1 = new FileOutputStream(resultFile);
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open));
+			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -86,14 +88,15 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest03()
 		{
 			String filename = sourceFolder + "pdf_open_parameters.pdf";
 			String filename1 = sourceFolder + "iphone_user_guide.pdf";
 			String resultFile = destinationFolder + "mergedResult03.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename));
-			PdfReader reader1 = new PdfReader(new FileStream(filename1));
-			FileOutputStream fos1 = new FileOutputStream(resultFile);
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -121,26 +124,27 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest04()
 		{
 			String filename = sourceFolder + "pdf_open_parameters.pdf";
 			String filename1 = sourceFolder + "iphone_user_guide.pdf";
 			String resultFile = destinationFolder + "mergedResult04.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename));
-			PdfReader reader1 = new PdfReader(new FileStream(filename1));
-			FileOutputStream fos1 = new FileOutputStream(resultFile);
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
 			PdfDocument pdfDoc3 = new PdfDocument(writer1);
 			pdfDoc3.SetTagged();
 			PdfMerger merger = new PdfMerger(pdfDoc3).SetCloseSourceDocuments(true);
-			IList<int> pages = new List<int>();
+			IList<int?> pages = new List<int?>();
 			pages.Add(3);
 			pages.Add(2);
 			pages.Add(1);
 			merger.Merge(pdfDoc, pages);
-			IList<int> pages1 = new List<int>();
+			IList<int?> pages1 = new List<int?>();
 			pages1.Add(5);
 			pages1.Add(9);
 			pages1.Add(4);

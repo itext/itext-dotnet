@@ -62,6 +62,8 @@ namespace iTextSharp.Barcodes
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
 		}
 
+		[NUnit.Framework.ExpectedException(typeof(ArgumentException))]
+		[NUnit.Framework.Test]
 		public virtual void Barcode03Test()
 		{
 			PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());

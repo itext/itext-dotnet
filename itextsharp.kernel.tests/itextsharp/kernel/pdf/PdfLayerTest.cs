@@ -30,8 +30,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TestInStamperMode1()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 
-				"input_layered.pdf")), new PdfWriter(new FileOutputStream(destinationFolder + "output_copy_layered.pdf"
-				)));
+				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileOutputStream(destinationFolder
+				 + "output_copy_layered.pdf", FileMode.Create)));
 			pdfDoc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + "output_copy_layered.pdf", sourceFolder + "input_layered.pdf", destinationFolder
@@ -44,8 +44,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TestInStamperMode2()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 
-				"input_layered.pdf")), new PdfWriter(new FileOutputStream(destinationFolder + "output_layered.pdf"
-				)));
+				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileOutputStream(destinationFolder
+				 + "output_layered.pdf", FileMode.Create)));
 			PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
 			PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
 			canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(

@@ -27,7 +27,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void EgsTest1()
 		{
 			String destinationDocument = destinationFolder + "egsTest1.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationDocument);
+			FileOutputStream fos = new FileOutputStream(destinationDocument, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			//Create page and canvas

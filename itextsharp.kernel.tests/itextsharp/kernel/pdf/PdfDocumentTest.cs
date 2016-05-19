@@ -44,9 +44,9 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddOutlinesWithNamedDestinations01()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-				));
+				, FileMode.Open));
 			String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			PdfArray array1 = new PdfArray();
@@ -109,7 +109,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = "removeUnusedObjectsInWriter.pdf";
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				));
+				, FileMode.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -134,7 +134,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filenameIn = "docWithUnusedObjects_1.pdf";
 			String filenameOut = "removeUnusedObjectsInStamping.pdf";
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				));
+				, FileMode.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -145,7 +145,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDocument.Close();
 			PdfReader reader = new PdfReader(destinationFolder + filenameIn);
 			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileOutputStream(destinationFolder
-				 + filenameOut)));
+				 + filenameOut, FileMode.Create)));
 			NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
 			//on closing, all unused objects shall not be written to resultant document
 			doc.Close();
@@ -162,7 +162,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = "addUnusedObjectsInWriter.pdf";
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				));
+				, FileMode.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -187,7 +187,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filenameIn = "docWithUnusedObjects_2.pdf";
 			String filenameOut = "addUnusedObjectsInStamping.pdf";
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				));
+				, FileMode.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -198,7 +198,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDocument.Close();
 			PdfReader reader = new PdfReader(destinationFolder + filenameIn);
 			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileOutputStream(destinationFolder
-				 + filenameOut)));
+				 + filenameOut, FileMode.Create)));
 			NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
 			doc.SetFlushUnusedObjects(true);
 			doc.Close();
@@ -215,7 +215,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filenameIn = "docWithUnusedObjects_3.pdf";
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				));
+				, FileMode.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -293,8 +293,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void ReadEncryptedDocumentWithFullCompression()
 		{
-			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf"), new 
-				ReaderProperties().SetPassword("123".GetBytes()));
+			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode
+				.Open), new ReaderProperties().SetPassword("123".GetBytes()));
 			PdfDocument pdfDocument = new PdfDocument(reader);
 			PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
 				.AcroForm);

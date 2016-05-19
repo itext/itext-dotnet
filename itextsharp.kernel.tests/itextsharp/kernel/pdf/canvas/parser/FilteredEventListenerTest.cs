@@ -18,7 +18,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		public virtual void Test()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder
-				 + "test.pdf")));
+				 + "test.pdf", FileMode.Open)));
 			String[] expectedText = new String[] { "PostScript Compatibility", "Because the PostScript language does not support the transparent imaging \n"
 				 + "model, PDF 1.4 consumer applications must have some means for converting the \n"
 				 + "appearance of a document that uses transparency to a purely opaque description \n"
@@ -56,7 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		public virtual void MultipleFiltersForOneRegionTest()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder
-				 + "test.pdf")));
+				 + "test.pdf", FileMode.Open)));
 			Rectangle[] regions = new Rectangle[] { new Rectangle(0, 0, 500, 650), new Rectangle
 				(0, 0, 400, 400), new Rectangle(200, 200, 300, 400), new Rectangle(100, 100, 350
 				, 300) };

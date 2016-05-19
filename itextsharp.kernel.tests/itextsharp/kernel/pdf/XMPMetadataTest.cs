@@ -27,7 +27,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateEmptyDocumentWithXmp()
 		{
 			String filename = "emptyDocumentWithXmp.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
+			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().AddXmpMetadata());
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle

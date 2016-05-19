@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
@@ -27,7 +26,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping1_1.pdf";
 			String filename2 = destinationFolder + "stamping1_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
@@ -37,15 +36,15 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document"
 				);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -67,7 +66,7 @@ namespace iTextSharp.Kernel.Pdf
 				(bytes));
 			String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate
 				).GetValue();
-			Calendar cl = PdfDate.Decode(date);
+			DateTime cl = PdfDate.Decode(date);
 			long diff = new GregorianCalendar().GetTimeInMillis() - cl.GetTimeInMillis();
 			String message = "Unexpected creation date. Different from now is " + (float)diff
 				 / 1000 + "s";
@@ -81,7 +80,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping2_1.pdf";
 			String filename2 = destinationFolder + "stamping2_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -89,9 +88,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -99,7 +98,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -127,7 +126,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping3_1.pdf";
 			String filename2 = destinationFolder + "stamping3_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -136,9 +135,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
@@ -147,7 +146,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -175,7 +174,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping4_1.pdf";
 			String filename2 = destinationFolder + "stamping4_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -184,9 +183,9 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			pdfDoc1.Close();
 			int pageCount = 15;
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			for (int i = 2; i <= pageCount; i++)
@@ -197,7 +196,7 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -227,7 +226,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping5_1.pdf";
 			String filename2 = destinationFolder + "stamping5_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -236,9 +235,9 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			pdfDoc1.Close();
 			int pageCount = 15;
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
@@ -250,7 +249,7 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -280,7 +279,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping6_1.pdf";
 			String filename2 = destinationFolder + "stamping6_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -289,9 +288,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -299,7 +298,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -327,7 +326,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stamping7_1.pdf";
 			String filename2 = destinationFolder + "stamping7_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -335,9 +334,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
@@ -346,7 +345,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -375,7 +374,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping8_1.pdf";
 			String filename2 = destinationFolder + "stamping8_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -387,12 +386,12 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(true));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -423,7 +422,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping9_1.pdf";
 			String filename2 = destinationFolder + "stamping9_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(false));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -435,12 +434,12 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(true));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -471,7 +470,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping10_1.pdf";
 			String filename2 = destinationFolder + "stamping10_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -483,12 +482,12 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(false));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -519,7 +518,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping11_1.pdf";
 			String filename2 = destinationFolder + "stamping11_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(false));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -531,12 +530,12 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(false));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -567,7 +566,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping12_1.pdf";
 			String filename2 = destinationFolder + "stamping12_2.pdf";
 			int pageCount = 1010;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			for (int i = 1; i <= pageCount; i++)
@@ -578,8 +577,9 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			int newPageCount = 10;
 			for (int i_1 = pageCount; i_1 > newPageCount; i_1--)
@@ -587,7 +587,7 @@ namespace iTextSharp.Kernel.Pdf
 				NUnit.Framework.Assert.IsNotNull("Remove page " + i_1, pdfDoc2.RemovePage(i_1));
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_2 = 1; i_2 <= pdfDoc3.GetNumberOfPages(); i_2++)
 			{
@@ -622,7 +622,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stamping13_1.pdf";
 			String filename2 = destinationFolder + "stamping13_2.pdf";
 			int pageCount = 1010;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			for (int i = 1; i <= pageCount; i++)
@@ -633,8 +633,9 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			for (int i_1 = pageCount; i_1 > 1; i_1--)
 			{
@@ -649,7 +650,7 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_3 = 1; i_3 <= pdfDoc3.GetNumberOfPages(); i_3++)
 			{
@@ -683,15 +684,16 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = sourceFolder + "20000PagesDocument.pdf";
 			String filename2 = destinationFolder + "stamping14.pdf";
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--)
 			{
 				NUnit.Framework.Assert.IsNotNull("Remove page " + i, pdfDoc2.RemovePage(i));
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 1; i_1 <= pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -790,7 +792,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingXmp1_1.pdf";
 			String filename2 = destinationFolder + "stampingXmp1_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -802,13 +804,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(false).AddXmpMetadata());
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(false).AddXmpMetadata());
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -842,7 +844,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingXmp2_1.pdf";
 			String filename2 = destinationFolder + "stampingXmp2_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(false));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -854,13 +856,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(true).AddXmpMetadata());
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(true).AddXmpMetadata());
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -892,7 +894,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stampingAppend1_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend1_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
@@ -902,9 +904,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
@@ -912,7 +914,7 @@ namespace iTextSharp.Kernel.Pdf
 				);
 			pdfDoc2.GetDocumentInfo().SetModified();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -934,7 +936,7 @@ namespace iTextSharp.Kernel.Pdf
 				(bytes));
 			String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate
 				).GetValue();
-			Calendar cl = PdfDate.Decode(date);
+			DateTime cl = PdfDate.Decode(date);
 			long diff = new GregorianCalendar().GetTimeInMillis() - cl.GetTimeInMillis();
 			String message = "Unexpected creation date. Different from now is " + (float)diff
 				 / 1000 + "s";
@@ -948,7 +950,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stampingAppend2_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend2_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -956,9 +958,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
@@ -968,7 +970,7 @@ namespace iTextSharp.Kernel.Pdf
 			page2.SetModified();
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -996,7 +998,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stampingAppend3_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend3_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -1005,9 +1007,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page1.Flush();
 			pdfDoc1.Close();
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
@@ -1016,7 +1018,7 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -1044,7 +1046,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stampingAppend4_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend4_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -1053,9 +1055,9 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			pdfDoc1.Close();
 			int pageCount = 15;
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
@@ -1067,7 +1069,7 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1097,7 +1099,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = destinationFolder + "stampingAppend5_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend5_2.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -1106,9 +1108,9 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			pdfDoc1.Close();
 			int pageCount = 15;
-			FileStream fis2 = new FileStream(filename1);
+			FileStream fis2 = new FileStream(filename1, FileMode.Open);
 			PdfReader reader2 = new PdfReader(fis2);
-			FileOutputStream fos2 = new FileOutputStream(filename2);
+			FileOutputStream fos2 = new FileOutputStream(filename2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
@@ -1121,7 +1123,7 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1152,7 +1154,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingAppend8_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend8_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -1164,12 +1166,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1200,7 +1203,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingAppend9_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend9_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(false));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -1212,13 +1215,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(true));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1249,7 +1252,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingAppend10_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend10_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -1261,13 +1264,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(false));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1298,7 +1301,7 @@ namespace iTextSharp.Kernel.Pdf
 			String filename1 = destinationFolder + "stampingAppend11_1.pdf";
 			String filename2 = destinationFolder + "stampingAppend11_2.pdf";
 			int pageCount = 10;
-			FileOutputStream fos1 = new FileOutputStream(filename1);
+			FileOutputStream fos1 = new FileOutputStream(filename1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
 				(false));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -1310,13 +1313,13 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2), new WriterProperties
-				().SetFullCompressionMode(false));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open));
+			PdfWriter writer2 = new PdfWriter(new FileOutputStream(filename2, FileMode.Create
+				), new WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1347,7 +1350,7 @@ namespace iTextSharp.Kernel.Pdf
 			// By default the version of the output file should be the same as the original one
 			String @in = sourceFolder + "hello.pdf";
 			String @out = destinationFolder + "hello_stamped01.pdf";
-			FileStream fis = new FileStream(@in);
+			FileStream fis = new FileStream(@in, FileMode.Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(@out));
 			NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_1_4, pdfDoc.GetPdfVersion());
@@ -1364,7 +1367,7 @@ namespace iTextSharp.Kernel.Pdf
 			// There is a possibility to override version in stamping mode
 			String @in = sourceFolder + "hello.pdf";
 			String @out = destinationFolder + "hello_stamped02.pdf";
-			FileStream fis = new FileStream(@in);
+			FileStream fis = new FileStream(@in, FileMode.Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(@out, new WriterProperties
 				().SetPdfVersion(PdfVersion.PDF_2_0)));
@@ -1382,7 +1385,7 @@ namespace iTextSharp.Kernel.Pdf
 			// There is a possibility to override version in stamping mode
 			String @in = sourceFolder + "hello.pdf";
 			String @out = destinationFolder + "stampingAppendVersionTest01.pdf";
-			FileStream fis = new FileStream(@in);
+			FileStream fis = new FileStream(@in, FileMode.Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfWriter writer = new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion
 				.PDF_2_0));
@@ -1400,9 +1403,9 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StampingTestWithTaggedStructure()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename));
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "stampingDocWithTaggedStructure.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			pdfDoc.Close();
@@ -1438,7 +1441,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		internal static void VerifyPdfPagesCount(PdfObject root)
 		{
-			if (root.GetType() == PdfObject.INDIRECT_REFERENCE)
+			if (root.GetObjectType() == PdfObject.INDIRECT_REFERENCE)
 			{
 				root = ((PdfIndirectReference)root).GetRefersTo();
 			}
@@ -1453,7 +1456,7 @@ namespace iTextSharp.Kernel.Pdf
 				NUnit.Framework.Assert.IsTrue(count.IntValue() > 0, "PdfPages with zero count");
 			}
 			PdfObject kids = pages.Get(PdfName.Kids);
-			if (kids.GetType() == PdfObject.ARRAY)
+			if (kids.GetObjectType() == PdfObject.ARRAY)
 			{
 				foreach (PdfObject kid in (PdfArray)kids)
 				{

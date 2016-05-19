@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Java.IO;
 using NUnit.Framework;
+using iTextSharp.IO;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Geom;
@@ -11,6 +12,7 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Tagging;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
+using iTextSharp.Test.Attributes;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -31,7 +33,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructElemTest01()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest01.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -83,7 +85,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructElemTest02()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest02.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -120,7 +122,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructElemTest03()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest03.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -167,7 +169,7 @@ namespace iTextSharp.Kernel.Pdf
 			page2.Flush();
 			document.Close();
 			PdfReader reader = new PdfReader(new FileStream(destinationFolder + "structElemTest03.pdf"
-				));
+				, FileMode.Open));
 			document = new PdfDocument(reader);
 			NUnit.Framework.Assert.AreEqual(2, document.GetNextStructParentIndex());
 			PdfPage page = document.GetPage(1);
@@ -211,7 +213,7 @@ namespace iTextSharp.Kernel.Pdf
 			byte[] bytes = baos.ToArray();
 			PdfReader reader = new PdfReader(new MemoryStream(bytes));
 			writer = new PdfWriter(new FileOutputStream(destinationFolder + "structElemTest04.pdf"
-				));
+				, FileMode.Create));
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			document = new PdfDocument(reader, writer);
 			page = document.GetPage(1);
@@ -244,7 +246,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructElemTest05()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest05.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -291,7 +293,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructElemTest06()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest06.pdf"
-				);
+				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -320,13 +322,15 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest01()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf");
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
+				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest01.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
 			destination.InitializeOutlines();
@@ -338,7 +342,7 @@ namespace iTextSharp.Kernel.Pdf
 				);
 		}
 
-		private sealed class _List_334 : List<int>
+		private sealed class _List_334 : List<int?>
 		{
 			public _List_334()
 			{
@@ -353,13 +357,15 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest02()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf");
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
+				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest02.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
 			destination.InitializeOutlines();
@@ -373,13 +379,15 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest03()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf");
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
+				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest03.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.InitializeOutlines();
 			source.CopyPagesTo(6, source.GetNumberOfPages(), destination);
@@ -394,13 +402,15 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest04()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf");
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
+				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest04.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
 			destination.InitializeOutlines();
@@ -419,16 +429,16 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest05()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-				));
+				, FileMode.Open));
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest05.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.CopyPagesTo(1, 1, document, 2);
 			PdfReader reader2 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document2 = new PdfDocument(reader2);
 			document2.CopyPagesTo(1, 3, document, 4);
 			document.Close();
@@ -440,13 +450,15 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
+		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest06()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf");
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
+				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest06.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
 			destination.InitializeOutlines();
@@ -462,9 +474,9 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest07()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				));
+				, FileMode.Open));
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest07.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = new PdfDocument(writer);
 			document.SetTagged();
 			PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document
@@ -499,12 +511,12 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest08()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				));
+				, FileMode.Open));
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest08.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 1, document, 2);
@@ -519,12 +531,12 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest09()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				));
+				, FileMode.Open));
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest09.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 1, document, 2);
@@ -540,17 +552,17 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest10()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "88th_Academy_Awards.pdf"
-				));
+				, FileMode.Open));
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest10.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 3, document, 2);
 			PdfReader reader2 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				));
+				, FileMode.Open));
 			PdfDocument document2 = new PdfDocument(reader2);
 			document2.InitializeOutlines();
 			document2.CopyPagesTo(1, 1, document, 4);

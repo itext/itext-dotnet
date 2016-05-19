@@ -31,7 +31,7 @@ namespace iTextSharp.Layout
 			String fileName = "xmp_metadata.pdf";
 			// step 1
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
-				 + "xmp_metadata.pdf")));
+				 + "xmp_metadata.pdf", FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			// step 2
 			ByteArrayOutputStream os = new ByteArrayOutputStream();

@@ -48,7 +48,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 			ITextExtractionStrategy start = new SimpleTextExtractionStrategy();
 			sb.Append(PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), start
 				));
-			String result = sb.Substring(0, sb.IndexOf("\n"));
+			String result = sb.JSubstring(0, sb.IndexOf("\n"));
 			String origText = "\u76f4\u8fd1\u306e\u0053\uff06\u0050\u0035\u0030\u0030" + "\u914d\u5f53\u8cb4\u65cf\u6307\u6570\u306e\u30d1\u30d5"
 				 + "\u30a9\u30fc\u30de\u30f3\u30b9\u306f\u0053\uff06\u0050" + "\u0035\u0030\u0030\u6307\u6570\u3092\u4e0a\u56de\u308b";
 			NUnit.Framework.Assert.AreEqual(origText, result);
