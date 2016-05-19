@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Interface to sign a document.</summary>
 	/// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
@@ -57,15 +57,15 @@ namespace com.itextpdf.signatures
 		/// <param name="data">the data to sign</param>
 		/// <returns>a container with the signature and other objects, like CRL and OCSP. The container will generally be a PKCS7 one.
 		/// 	</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		byte[] Sign(Stream data);
 
 		/// <summary>Modifies the signature dictionary to suit the container.</summary>
 		/// <remarks>
 		/// Modifies the signature dictionary to suit the container. At least the keys
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName.Filter"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName.Filter"/>
 		/// and
-		/// <see cref="com.itextpdf.kernel.pdf.PdfName.SubFilter"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfName.SubFilter"/>
 		/// will have to be set.
 		/// </remarks>
 		/// <param name="signDic">the signature dictionary</param>

@@ -45,9 +45,9 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.Collections.Generic;
 using System.IO;
-using java.security;
+using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Class that contains a map with the different message digest algorithms.</summary>
 	public class DigestAlgorithms
@@ -141,10 +141,9 @@ namespace com.itextpdf.signatures
 		/// <param name="digestOid">oid of the digest algorithm</param>
 		/// <param name="provider">the provider you want to use to create the hash</param>
 		/// <returns>MessageDigest object</returns>
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
-		/// <exception cref="java.security.NoSuchProviderException"/>
-		public static MessageDigest GetMessageDigestFromOid(String digestOid, String provider
-			)
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchProviderException"/>
+		public static IDigest GetMessageDigestFromOid(String digestOid, String provider)
 		{
 			return GetMessageDigest(GetDigest(digestOid), provider);
 		}
@@ -153,20 +152,20 @@ namespace com.itextpdf.signatures
 		/// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
 		/// <param name="provider">the provider you want to use to create the hash</param>
 		/// <returns>a MessageDigest object</returns>
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
-		/// <exception cref="java.security.NoSuchProviderException"/>
-		public static MessageDigest GetMessageDigest(String hashAlgorithm, String provider
-			)
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchProviderException"/>
+		public static IDigest GetMessageDigest(String hashAlgorithm, String provider)
 		{
 			if (provider == null || provider.StartsWith("SunPKCS11") || provider.StartsWith("SunMSCAPI"
 				))
 			{
-				return MessageDigest.GetInstance(DigestAlgorithms.NormalizeDigestName(hashAlgorithm
-					));
+				return Org.BouncyCastle.Security.DigestUtilities.GetDigest(DigestAlgorithms.NormalizeDigestName
+					(hashAlgorithm));
 			}
 			else
 			{
-				return MessageDigest.GetInstance(hashAlgorithm, provider);
+				return Org.BouncyCastle.Security.DigestUtilities.GetDigest(hashAlgorithm, provider
+					);
 			}
 		}
 
@@ -175,11 +174,11 @@ namespace com.itextpdf.signatures
 		/// <param name="hashAlgorithm">the algorithm used to create the hash</param>
 		/// <param name="provider">the provider used to create the hash</param>
 		/// <returns>the hash</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public static byte[] Digest(Stream data, String hashAlgorithm, String provider)
 		{
-			MessageDigest messageDigest = GetMessageDigest(hashAlgorithm, provider);
+			IDigest messageDigest = GetMessageDigest(hashAlgorithm, provider);
 			return Digest(data, messageDigest);
 		}
 
@@ -187,9 +186,9 @@ namespace com.itextpdf.signatures
 		/// <param name="data">data to be digested</param>
 		/// <param name="messageDigest">algorithm to be used</param>
 		/// <returns>digest of the data</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public static byte[] Digest(Stream data, MessageDigest messageDigest)
+		public static byte[] Digest(Stream data, IDigest messageDigest)
 		{
 			byte[] buf = new byte[8192];
 			int n;

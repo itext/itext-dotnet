@@ -44,15 +44,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.@operator.jcajce;
-using org.bouncycastle.cert.ocsp;
-using org.bouncycastle.cms.jcajce;
-using org.bouncycastle.tsp;
+using Java.Security;
+using Java.Security.Cert;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Cert.Ocsp;
+using Org.Bouncycastle.Cms.Jcajce;
+using Org.Bouncycastle.Operator.Jcajce;
+using Org.Bouncycastle.Tsp;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>This class consists of some methods that allow you to verify certificates.
 	/// 	</summary>
@@ -67,7 +67,7 @@ namespace com.itextpdf.signatures
 		/// if no error
 		/// </returns>
 		public static String VerifyCertificate(X509Certificate cert, ICollection<CRL> crls
-			, Calendar calendar)
+			, DateTime calendar)
 		{
 			if (calendar == null)
 			{
@@ -129,8 +129,8 @@ namespace com.itextpdf.signatures
 		/// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
 		/// failed certificate and <CODE>error</CODE> is the error message
 		/// </returns>
-		public static IList<VerificationException> VerifyCertificates(Certificate[] certs
-			, KeyStore keystore, ICollection<CRL> crls, Calendar calendar)
+		public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
+			, KeyStore keystore, ICollection<CRL> crls, DateTime calendar)
 		{
 			IList<VerificationException> result = new List<VerificationException>();
 			if (calendar == null)
@@ -204,7 +204,7 @@ namespace com.itextpdf.signatures
 			}
 			if (result.Count == 0)
 			{
-				result.Add(new VerificationException((Certificate)null, "Invalid state. Possible circular certificate chain"
+				result.Add(new VerificationException((X509Certificate)null, "Invalid state. Possible circular certificate chain"
 					));
 			}
 			return result;
@@ -219,8 +219,8 @@ namespace com.itextpdf.signatures
 		/// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
 		/// failed certificate and <CODE>error</CODE> is the error message
 		/// </returns>
-		public static IList<VerificationException> VerifyCertificates(Certificate[] certs
-			, KeyStore keystore, Calendar calendar)
+		public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
+			, KeyStore keystore, DateTime calendar)
 		{
 			return VerifyCertificates(certs, keystore, null, calendar);
 		}

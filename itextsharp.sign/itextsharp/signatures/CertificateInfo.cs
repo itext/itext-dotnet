@@ -46,10 +46,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using java.security.cert;
-using org.bouncycastle.asn1;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Class containing static methods that allow you to get information from
@@ -163,10 +164,10 @@ namespace com.itextpdf.signatures
 			/// <param name="seq">an ASN1 Sequence</param>
 			public X500Name(ASN1Sequence seq)
 			{
-				IEnumerator<ASN1Set> e = seq.GetObjects();
+				IEnumerator<Asn1Set> e = seq.GetObjects();
 				while (e.MoveNext())
 				{
-					ASN1Set set = e.Current;
+					Asn1Set set = e.Current;
 					for (int i = 0; i < set.Size(); i++)
 					{
 						ASN1Sequence s = (ASN1Sequence)set.GetObjectAt(i);
@@ -342,7 +343,7 @@ namespace com.itextpdf.signatures
 			try
 			{
 				return new CertificateInfo.X500Name((ASN1Sequence)CertificateInfo.GetIssuer(cert.
-					GetTBSCertificate()));
+					GetTbsCertificate()));
 			}
 			catch (Exception e)
 			{
@@ -353,14 +354,14 @@ namespace com.itextpdf.signatures
 		/// <summary>Get the "issuer" from the TBSCertificate bytes that are passed in.</summary>
 		/// <param name="enc">a TBSCertificate in a byte array</param>
 		/// <returns>an ASN1Primitive</returns>
-		public static ASN1Primitive GetIssuer(byte[] enc)
+		public static Asn1Object GetIssuer(byte[] enc)
 		{
 			try
 			{
-				ASN1InputStream @in = new ASN1InputStream(new MemoryStream(enc));
+				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
 				ASN1Sequence seq = (ASN1Sequence)@in.ReadObject();
-				return (ASN1Primitive)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 3 : 
-					2);
+				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 3 : 2
+					);
 			}
 			catch (System.IO.IOException e)
 			{
@@ -379,7 +380,7 @@ namespace com.itextpdf.signatures
 				if (cert != null)
 				{
 					return new CertificateInfo.X500Name((ASN1Sequence)CertificateInfo.GetSubject(cert
-						.GetTBSCertificate()));
+						.GetTbsCertificate()));
 				}
 			}
 			catch (Exception e)
@@ -392,14 +393,14 @@ namespace com.itextpdf.signatures
 		/// <summary>Get the "subject" from the TBSCertificate bytes that are passed in.</summary>
 		/// <param name="enc">A TBSCertificate in a byte array</param>
 		/// <returns>a ASN1Primitive</returns>
-		public static ASN1Primitive GetSubject(byte[] enc)
+		public static Asn1Object GetSubject(byte[] enc)
 		{
 			try
 			{
-				ASN1InputStream @in = new ASN1InputStream(new MemoryStream(enc));
+				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
 				ASN1Sequence seq = (ASN1Sequence)@in.ReadObject();
-				return (ASN1Primitive)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 5 : 
-					4);
+				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 5 : 4
+					);
 			}
 			catch (System.IO.IOException e)
 			{

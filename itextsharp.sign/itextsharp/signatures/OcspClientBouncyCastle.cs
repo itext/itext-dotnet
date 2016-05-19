@@ -44,33 +44,32 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io;
-using com.itextpdf.io.log;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using java.io;
-using java.math;
-using java.net;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.@operator.jcajce;
-using org.bouncycastle.asn1;
-using org.bouncycastle.asn1.ocsp;
-using org.bouncycastle.asn1.x509;
-using org.bouncycastle.cert.jcajce;
-using org.bouncycastle.cert.ocsp;
-using org.bouncycastle.jce.provider;
-using org.bouncycastle.ocsp;
+using Java.IO;
+using Java.Math;
+using Java.Net;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1.Ocsp;
+using Org.Bouncycastle.Asn1.X509;
+using Org.Bouncycastle.Cert.Jcajce;
+using Org.Bouncycastle.Cert.Ocsp;
+using Org.Bouncycastle.Jce.Provider;
+using Org.Bouncycastle.Ocsp;
+using Org.Bouncycastle.Operator.Jcajce;
+using iTextSharp.IO;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>OcspClient implementation using BouncyCastle.</summary>
 	/// <author>Paulo Soarees</author>
 	public class OcspClientBouncyCastle : IOcspClient
 	{
-		/// <summary>The ILogger instance.</summary>
-		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.OcspClientBouncyCastle
+		/// <summary>The Logger instance.</summary>
+		private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.OcspClientBouncyCastle
 			));
 
 		private readonly OCSPVerifier verifier;
@@ -176,15 +175,15 @@ namespace com.itextpdf.signatures
 		/// <param name="issuerCert">certificate of the issues</param>
 		/// <param name="serialNumber">serial number</param>
 		/// <returns>an OCSP request</returns>
-		/// <exception cref="org.bouncycastle.cert.ocsp.OCSPException"/>
+		/// <exception cref="Org.Bouncycastle.Cert.Ocsp.OCSPException"/>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="org.bouncycastle.@operator.OperatorException"/>
-		/// <exception cref="java.security.cert.CertificateEncodingException"/>
+		/// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
+		/// <exception cref="Java.Security.Cert.CertificateEncodingException"/>
 		private static OCSPReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger
 			 serialNumber)
 		{
 			//Add provider BC
-			Security.AddProvider(new BouncyCastleProvider());
+			Java.Security.Security.AddProvider(new BouncyCastleProvider());
 			// Generate the id for the certificate we are looking for
 			CertificateID id = new CertificateID(new JcaDigestCalculatorProviderBuilder().Build
 				().Get(CertificateID.HASH_SHA1), new JcaX509CertificateHolder(issuerCert), serialNumber
@@ -193,16 +192,16 @@ namespace com.itextpdf.signatures
 			OCSPReqBuilder gen = new OCSPReqBuilder();
 			gen.AddRequest(id);
 			Extension ext = new Extension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, false, new 
-				DEROctetString(new DEROctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded
+				DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded
 				()));
 			gen.SetRequestExtensions(new Extensions(new Extension[] { ext }));
 			return gen.Build();
 		}
 
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		/// <exception cref="org.bouncycastle.cert.ocsp.OCSPException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		/// <exception cref="Org.Bouncycastle.Cert.Ocsp.OCSPException"/>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="org.bouncycastle.@operator.OperatorException"/>
+		/// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
 		private OCSPResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert
 			, String url)
 		{

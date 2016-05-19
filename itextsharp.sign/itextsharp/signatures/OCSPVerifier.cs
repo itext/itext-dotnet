@@ -44,18 +44,20 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.log;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.@operator;
-using org.bouncycastle.@operator.bc;
-using org.bouncycastle.@operator.jcajce;
-using org.bouncycastle.asn1.ocsp;
-using org.bouncycastle.cert;
-using org.bouncycastle.cert.jcajce;
-using org.bouncycastle.cert.ocsp;
+using Java.Security;
+using Java.Security.Cert;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1.Ocsp;
+using Org.Bouncycastle.Cert;
+using Org.Bouncycastle.Cert.Jcajce;
+using Org.Bouncycastle.Cert.Ocsp;
+using Org.Bouncycastle.Operator;
+using Org.Bouncycastle.Operator.BC;
+using Org.Bouncycastle.Operator.Jcajce;
+using iTextSharp.IO.Log;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Class that allows you to verify a certificate against
@@ -63,9 +65,9 @@ namespace com.itextpdf.signatures
 	/// </summary>
 	public class OCSPVerifier : RootStoreVerifier
 	{
-		/// <summary>The ILogger instance</summary>
-		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
-			com.itextpdf.signatures.OCSPVerifier));
+		/// <summary>The Logger instance</summary>
+		protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
+			iTextSharp.Signatures.OCSPVerifier));
 
 		protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
 
@@ -93,9 +95,9 @@ namespace com.itextpdf.signatures
 		/// a list of <code>VerificationOK</code> objects.
 		/// The list will be empty if the certificate couldn't be verified.
 		/// </returns>
-		/// <seealso cref="RootStoreVerifier.Verify(java.security.cert.X509Certificate, java.security.cert.X509Certificate, System.DateTime)
+		/// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
 		/// 	"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
@@ -127,8 +129,8 @@ namespace com.itextpdf.signatures
 			LOGGER.Info("Valid OCSPs found: " + validOCSPsFound);
 			if (validOCSPsFound > 0)
 			{
-				result.Add(new VerificationOK(signCert, this.GetClass(), "Valid OCSPs Found: " + 
-					validOCSPsFound + (online ? " (online)" : "")));
+				result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound
+					 + (online ? " (online)" : "")));
 			}
 			if (verifier != null)
 			{
@@ -148,7 +150,7 @@ namespace com.itextpdf.signatures
 		/// <see langword="true"/>
 		/// , in case successful check, otherwise false.
 		/// </returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool Verify(BasicOCSPResp ocspResp, X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
@@ -217,7 +219,7 @@ namespace com.itextpdf.signatures
 		/// </summary>
 		/// <param name="ocspResp">the OCSP response</param>
 		/// <param name="issuerCert">the issuer certificate</param>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void IsValidResponse(BasicOCSPResp ocspResp, X509Certificate issuerCert
 			)
@@ -377,7 +379,7 @@ namespace com.itextpdf.signatures
 		/// <param name="ocspResp">the OCSP response</param>
 		/// <param name="responderCert">the responder certificate</param>
 		/// <returns>true if the OCSP response verifies against the responder certificate</returns>
-		public virtual bool IsSignatureValid(BasicOCSPResp ocspResp, Certificate responderCert
+		public virtual bool IsSignatureValid(BasicOCSPResp ocspResp, X509Certificate responderCert
 			)
 		{
 			try

@@ -44,21 +44,21 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using com.itextpdf.forms;
-using com.itextpdf.forms.fields;
-using com.itextpdf.io.source;
-using com.itextpdf.io.util;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.geom;
-using com.itextpdf.kernel.pdf;
-using com.itextpdf.kernel.pdf.annot;
-using java.io;
-using java.security;
-using java.security.cert;
+using Java.IO;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
+using iTextSharp.Forms;
+using iTextSharp.Forms.Fields;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Geom;
+using iTextSharp.Kernel.Pdf;
+using iTextSharp.Kernel.Pdf.Annot;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Takes care of the cryptographic options and appearances that form a signature.
 	/// 	</summary>
@@ -133,7 +133,7 @@ namespace com.itextpdf.signatures
 		protected internal PdfSignatureAppearance appearance;
 
 		/// <summary>Holds value of property signDate.</summary>
-		protected internal Calendar signDate;
+		protected internal DateTime signDate;
 
 		/// <summary>Boolean to check if this PdfSigner instance has been closed already or not.
 		/// 	</summary>
@@ -190,7 +190,7 @@ namespace com.itextpdf.signatures
 				{
 					tempFile = File.CreateTempFile("pdf", null, tempFile);
 				}
-				Stream os = new FileOutputStream(tempFile);
+				Stream os = new FileOutputStream(tempFile, FileMode.Create);
 				this.tempFile = tempFile;
 				document = new PdfDocument(reader, new PdfWriter(os), properties);
 			}
@@ -204,14 +204,14 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Gets the signature date.</summary>
 		/// <returns>Calendar set to the signature date</returns>
-		public virtual Calendar GetSignDate()
+		public virtual DateTime GetSignDate()
 		{
 			return signDate;
 		}
 
 		/// <summary>Sets the signature date.</summary>
 		/// <param name="signDate">the signature date</param>
-		public virtual void SetSignDate(Calendar signDate)
+		public virtual void SetSignDate(DateTime signDate)
 		{
 			this.signDate = signDate;
 			this.appearance.SetSignDate(signDate);
@@ -426,9 +426,9 @@ namespace com.itextpdf.signatures
 		/// 	</param>
 		/// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature
-			 externalSignature, Certificate[] chain, ICollection<ICrlClient> crlList, IOcspClient
+			 externalSignature, X509Certificate[] chain, ICollection<ICrlClient> crlList, IOcspClient
 			 ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard sigtype
 			)
 		{
@@ -476,12 +476,12 @@ namespace com.itextpdf.signatures
 			dic.SetDate(new PdfDate(GetSignDate()));
 			// time-stamp will over-rule this
 			cryptoDictionary = dic;
-			IDictionary<PdfName, int> exc = new Dictionary<PdfName, int>();
+			IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
 			exc[PdfName.Contents] = estimatedSize * 2 + 2;
 			PreClose(exc);
 			String hashAlgorithm = externalSignature.GetHashAlgorithm();
-			PdfPKCS7 sgn = new PdfPKCS7((PrivateKey)null, chain, hashAlgorithm, null, externalDigest
-				, false);
+			PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, null, 
+				externalDigest, false);
 			Stream data = GetRangeStream();
 			byte[] hash = DigestAlgorithms.Digest(data, externalDigest.GetMessageDigest(hashAlgorithm
 				));
@@ -519,7 +519,7 @@ namespace com.itextpdf.signatures
 		/// <param name="externalSignatureContainer">the interface providing the actual signing
 		/// 	</param>
 		/// <param name="estimatedSize">the reserved size for the signature</param>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer
 			, int estimatedSize)
@@ -538,7 +538,7 @@ namespace com.itextpdf.signatures
 			// time-stamp will over-rule this
 			externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
 			cryptoDictionary = dic;
-			IDictionary<PdfName, int> exc = new Dictionary<PdfName, int>();
+			IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
 			exc[PdfName.Contents] = estimatedSize * 2 + 2;
 			PreClose(exc);
 			Stream data = GetRangeStream();
@@ -568,7 +568,7 @@ namespace com.itextpdf.signatures
 		/// automatically
 		/// </param>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual void Timestamp(ITSAClient tsa, String signatureName)
 		{
 			if (closed)
@@ -581,11 +581,11 @@ namespace com.itextpdf.signatures
 			PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, PdfName.ETSI_RFC3161);
 			dic.Put(PdfName.Type, PdfName.DocTimeStamp);
 			cryptoDictionary = dic;
-			IDictionary<PdfName, int> exc = new Dictionary<PdfName, int>();
+			IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
 			exc[PdfName.Contents] = contentEstimated * 2 + 2;
 			PreClose(exc);
 			Stream data = GetRangeStream();
-			MessageDigest messageDigest = tsa.GetMessageDigest();
+			IDigest messageDigest = tsa.GetMessageDigest();
 			byte[] buf = new byte[4096];
 			int n;
 			while ((n = data.Read(buf)) > 0)
@@ -623,7 +623,7 @@ namespace com.itextpdf.signatures
 		/// method ExternalSignatureContainer.sign is used
 		/// </param>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public static void SignDeferred(PdfDocument document, String fieldName, Stream outs
 			, IExternalSignatureContainer externalSignatureContainer)
 		{
@@ -670,7 +670,7 @@ namespace com.itextpdf.signatures
 			int remain = (spaceAvailable - signedContent.Length) * 2;
 			for (int k = 0; k < remain; ++k)
 			{
-				bb.Append(unchecked((byte)48));
+				bb.Append((byte)48);
 			}
 			byte[] bbArr = bb.ToByteArray();
 			outs.Write(bbArr);
@@ -682,7 +682,7 @@ namespace com.itextpdf.signatures
 		/// 	</param>
 		/// <param name="crlList">a list of CrlClient implementations</param>
 		/// <returns>a collection of CRL bytes that can be embedded in a PDF</returns>
-		protected internal virtual ICollection<byte[]> ProcessCrl(Certificate cert, ICollection
+		protected internal virtual ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection
 			<ICrlClient> crlList)
 		{
 			if (crlList == null)
@@ -740,7 +740,7 @@ namespace com.itextpdf.signatures
 		/// calculation. The key is a PdfName and the value an Integer. At least the /Contents must be present
 		/// </param>
 		/// <exception cref="System.IO.IOException">on error</exception>
-		protected internal virtual void PreClose(IDictionary<PdfName, int> exclusionSizes
+		protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes
 			)
 		{
 			if (preClosed)
@@ -819,7 +819,7 @@ namespace com.itextpdf.signatures
 			PdfLiteral lit = new PdfLiteral(80);
 			exclusionLocations[PdfName.ByteRange] = lit;
 			cryptoDictionary.Put(PdfName.ByteRange, lit);
-			foreach (KeyValuePair<PdfName, int> entry in exclusionSizes)
+			foreach (KeyValuePair<PdfName, int?> entry in exclusionSizes)
 			{
 				PdfName key = entry.Key;
 				lit = new PdfLiteral(entry.Value);
@@ -849,7 +849,7 @@ namespace com.itextpdf.signatures
 			document.Close();
 			range = new long[exclusionLocations.Count * 2];
 			long byteRangePosition = exclusionLocations[PdfName.ByteRange].GetPosition();
-			exclusionLocations.Remove(PdfName.ByteRange);
+			exclusionLocations.JRemove(PdfName.ByteRange);
 			int idx = 1;
 			foreach (PdfLiteral lit1 in exclusionLocations.Values)
 			{
@@ -924,7 +924,7 @@ namespace com.itextpdf.signatures
 		/// ,
 		/// <see cref="GetRangeStream()"/>
 		/// and
-		/// <see cref="Close(com.itextpdf.kernel.pdf.PdfDictionary)"/>
+		/// <see cref="Close(iTextSharp.Kernel.Pdf.PdfDictionary)"/>
 		/// .
 		/// </remarks>
 		/// <returns>

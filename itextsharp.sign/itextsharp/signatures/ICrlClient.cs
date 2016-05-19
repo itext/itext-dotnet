@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Interface that needs to be implemented if you want to embed

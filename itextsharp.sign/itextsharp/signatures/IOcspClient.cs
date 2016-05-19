@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
 	public interface IOcspClient

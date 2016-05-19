@@ -44,29 +44,32 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using java.math;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.@operator;
-using org.bouncycastle.@operator.jcajce;
-using org.bouncycastle.asn1;
-using org.bouncycastle.asn1.cms;
-using org.bouncycastle.asn1.ess;
-using org.bouncycastle.asn1.ocsp;
-using org.bouncycastle.asn1.pkcs;
-using org.bouncycastle.asn1.tsp;
-using org.bouncycastle.asn1.x509;
-using org.bouncycastle.cert.jcajce;
-using org.bouncycastle.cert.ocsp;
-using org.bouncycastle.jce;
-using org.bouncycastle.jce.provider;
-using org.bouncycastle.tsp;
+using Java.Math;
+using Java.Security;
+using Java.Security.Cert;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1;
+using Org.Bouncycastle.Asn1.Cms;
+using Org.Bouncycastle.Asn1.Ess;
+using Org.Bouncycastle.Asn1.Ocsp;
+using Org.Bouncycastle.Asn1.Pkcs;
+using Org.Bouncycastle.Asn1.Tsp;
+using Org.Bouncycastle.Cert.Jcajce;
+using Org.Bouncycastle.Cert.Ocsp;
+using Org.Bouncycastle.Jce;
+using Org.Bouncycastle.Jce.Provider;
+using Org.Bouncycastle.Operator;
+using Org.Bouncycastle.Operator.Jcajce;
+using Org.Bouncycastle.Tsp;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// This class does all the processing related to signing
@@ -83,10 +86,10 @@ namespace com.itextpdf.signatures
 		/// <param name="provider">the provider or <code>null</code> for the default provider
 		/// 	</param>
 		/// <param name="hasRSAdata"><CODE>true</CODE> if the sub-filter is adbe.pkcs7.sha1</param>
-		/// <exception cref="java.security.InvalidKeyException">on error</exception>
-		/// <exception cref="java.security.NoSuchProviderException">on error</exception>
-		/// <exception cref="java.security.NoSuchAlgorithmException">on error</exception>
-		public PdfPKCS7(PrivateKey privKey, Certificate[] certChain, String hashAlgorithm
+		/// <exception cref="Java.Security.InvalidKeyException">on error</exception>
+		/// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
+		/// <exception cref="Java.Security.NoSuchAlgorithmException">on error</exception>
+		public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm
 			, String provider, IExternalDigest interfaceDigest, bool hasRSAdata)
 		{
 			// Constructors for creating new signatures
@@ -101,8 +104,8 @@ namespace com.itextpdf.signatures
 			}
 			// Copy the certificates
 			signCert = (X509Certificate)certChain[0];
-			certs = new List<Certificate>();
-			foreach (Certificate element in certChain)
+			certs = new List<X509Certificate>();
+			foreach (X509Certificate element in certChain)
 			{
 				certs.Add(element);
 			}
@@ -161,7 +164,7 @@ namespace com.itextpdf.signatures
 				signCerts = certs;
 				signCert = (X509Certificate)certs.GetEnumerator().Current;
 				crls = new List<CRL>();
-				ASN1InputStream @in = new ASN1InputStream(new MemoryStream(contentsKey));
+				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(contentsKey));
 				digest = ((ASN1OctetString)@in.ReadObject()).GetOctets();
 				if (provider == null)
 				{
@@ -195,11 +198,11 @@ namespace com.itextpdf.signatures
 			try
 			{
 				this.provider = provider;
-				ASN1InputStream din = new ASN1InputStream(new MemoryStream(contentsKey));
+				Asn1InputStream din = new Asn1InputStream(new MemoryStream(contentsKey));
 				//
 				// Basic checks to make sure it's a PKCS#7 SignedData Object
 				//
-				ASN1Primitive pkcs;
+				Asn1Object pkcs;
 				try
 				{
 					pkcs = din.ReadObject();
@@ -227,10 +230,10 @@ namespace com.itextpdf.signatures
 				//     (the certificates and crls are taken out by other means)
 				//     last - signerInfos
 				// the version
-				version = ((ASN1Integer)content.GetObjectAt(0)).GetValue();
+				version = ((ASN1Integer)content.GetObjectAt(0)).Value;
 				// the digestAlgorithms
 				digestalgos = new HashSet<String>();
-				IEnumerator<ASN1Sequence> e_1 = ((ASN1Set)content.GetObjectAt(1)).GetObjects();
+				IEnumerator<ASN1Sequence> e_1 = ((Asn1Set)content.GetObjectAt(1)).GetObjects();
 				while (e_1.MoveNext())
 				{
 					ASN1Sequence s = e_1.Current;
@@ -291,7 +294,7 @@ namespace com.itextpdf.signatures
 				}
 				*/
 				// the signerInfos
-				ASN1Set signerInfos = (ASN1Set)content.GetObjectAt(next);
+				Asn1Set signerInfos = (Asn1Set)content.GetObjectAt(next);
 				if (signerInfos.Size() != 1)
 				{
 					throw new ArgumentException(PdfException.ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime
@@ -304,13 +307,12 @@ namespace com.itextpdf.signatures
 				//     2 - the digest algorithm
 				//     3 or 4 - digestEncryptionAlgorithm
 				//     4 or 5 - encryptedDigest
-				signerversion = ((ASN1Integer)signerInfo.GetObjectAt(0)).GetValue();
+				signerversion = ((ASN1Integer)signerInfo.GetObjectAt(0)).Value;
 				// Get the signing certificate
 				ASN1Sequence issuerAndSerialNumber = (ASN1Sequence)signerInfo.GetObjectAt(1);
-				X509Principal issuer = new X509Principal(issuerAndSerialNumber.GetObjectAt(0).ToASN1Primitive
+				X509Principal issuer = new X509Principal(issuerAndSerialNumber.GetObjectAt(0).ToAsn1Object
 					().GetEncoded());
-				BigInteger serialNumber = ((ASN1Integer)issuerAndSerialNumber.GetObjectAt(1)).GetValue
-					();
+				BigInteger serialNumber = ((ASN1Integer)issuerAndSerialNumber.GetObjectAt(1)).Value;
 				foreach (Object element in certs)
 				{
 					X509Certificate cert = (X509Certificate)element;
@@ -334,7 +336,7 @@ namespace com.itextpdf.signatures
 				if (signerInfo.GetObjectAt(next) is ASN1TaggedObject)
 				{
 					ASN1TaggedObject tagsig = (ASN1TaggedObject)signerInfo.GetObjectAt(next);
-					ASN1Set sseq = ASN1Set.GetInstance(tagsig, false);
+					Asn1Set sseq = Asn1Set.GetInstance(tagsig, false);
 					sigAttr = sseq.GetEncoded();
 					// maybe not necessary, but we use the following line as fallback:
 					sigAttrDer = sseq.GetEncoded(ASN1Encoding.DER);
@@ -344,14 +346,14 @@ namespace com.itextpdf.signatures
 						String idSeq2 = ((ASN1ObjectIdentifier)seq2.GetObjectAt(0)).GetId();
 						if (idSeq2.Equals(SecurityIDs.ID_MESSAGE_DIGEST))
 						{
-							ASN1Set set = (ASN1Set)seq2.GetObjectAt(1);
+							Asn1Set set = (Asn1Set)seq2.GetObjectAt(1);
 							digestAttr = ((ASN1OctetString)set.GetObjectAt(0)).GetOctets();
 						}
 						else
 						{
 							if (idSeq2.Equals(SecurityIDs.ID_ADBE_REVOCATION))
 							{
-								ASN1Set setout = (ASN1Set)seq2.GetObjectAt(1);
+								Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 								ASN1Sequence seqout = (ASN1Sequence)setout.GetObjectAt(0);
 								for (int j = 0; j < seqout.Size(); ++j)
 								{
@@ -372,16 +374,16 @@ namespace com.itextpdf.signatures
 							{
 								if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V1))
 								{
-									ASN1Set setout = (ASN1Set)seq2.GetObjectAt(1);
+									Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 									ASN1Sequence seqout = (ASN1Sequence)setout.GetObjectAt(0);
 									SigningCertificate sv2 = SigningCertificate.GetInstance(seqout);
 									ESSCertID[] cerv2m = sv2.GetCerts();
 									ESSCertID cerv2 = cerv2m[0];
 									byte[] enc2 = signCert.GetEncoded();
-									MessageDigest m2 = new BouncyCastleDigest().GetMessageDigest("SHA-1");
+									IDigest m2 = new BouncyCastleDigest().GetMessageDigest("SHA-1");
 									byte[] signCertHash = m2.Digest(enc2);
 									byte[] hs2 = cerv2.GetCertHash();
-									if (!com.itextpdf.io.util.JavaUtil.ArraysEquals(signCertHash, hs2))
+									if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2))
 									{
 										throw new ArgumentException("Signing certificate doesn't match the ESS information."
 											);
@@ -392,18 +394,18 @@ namespace com.itextpdf.signatures
 								{
 									if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2))
 									{
-										ASN1Set setout = (ASN1Set)seq2.GetObjectAt(1);
+										Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 										ASN1Sequence seqout = (ASN1Sequence)setout.GetObjectAt(0);
 										SigningCertificateV2 sv2 = SigningCertificateV2.GetInstance(seqout);
 										ESSCertIDv2[] cerv2m = sv2.GetCerts();
 										ESSCertIDv2 cerv2 = cerv2m[0];
 										AlgorithmIdentifier ai2 = cerv2.GetHashAlgorithm();
 										byte[] enc2 = signCert.GetEncoded();
-										MessageDigest m2 = new BouncyCastleDigest().GetMessageDigest(DigestAlgorithms.GetDigest
+										IDigest m2 = new BouncyCastleDigest().GetMessageDigest(DigestAlgorithms.GetDigest
 											(ai2.GetAlgorithm().GetId()));
 										byte[] signCertHash = m2.Digest(enc2);
 										byte[] hs2 = cerv2.GetCertHash();
-										if (!com.itextpdf.io.util.JavaUtil.ArraysEquals(signCertHash, hs2))
+										if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2))
 										{
 											throw new ArgumentException("Signing certificate doesn't match the ESS information."
 												);
@@ -431,12 +433,12 @@ namespace com.itextpdf.signatures
 				if (next < signerInfo.Size() && signerInfo.GetObjectAt(next) is ASN1TaggedObject)
 				{
 					ASN1TaggedObject taggedObject = (ASN1TaggedObject)signerInfo.GetObjectAt(next);
-					ASN1Set unat = ASN1Set.GetInstance(taggedObject, false);
+					Asn1Set unat = Asn1Set.GetInstance(taggedObject, false);
 					AttributeTable attble = new AttributeTable(unat);
 					Attribute ts = attble.Get(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken);
 					if (ts != null && ts.GetAttrValues().Size() > 0)
 					{
-						ASN1Set attributeValues = ts.GetAttrValues();
+						Asn1Set attributeValues = ts.GetAttrValues();
 						ASN1Sequence tokenSequence = ASN1Sequence.GetInstance(attributeValues.GetObjectAt
 							(0));
 						ContentInfo contentInfo = new ContentInfo(tokenSequence);
@@ -488,7 +490,7 @@ namespace com.itextpdf.signatures
 		private String location;
 
 		/// <summary>Holds value of property signDate.</summary>
-		private Calendar signDate;
+		private DateTime signDate;
 
 		// Encryption provider
 		// Signature info
@@ -536,9 +538,9 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Getter for property signDate.</summary>
 		/// <returns>Value of property signDate.</returns>
-		public virtual Calendar GetSignDate()
+		public virtual DateTime GetSignDate()
 		{
-			Calendar dt = GetTimeStampDate();
+			DateTime dt = GetTimeStampDate();
 			if (dt == null)
 			{
 				return this.signDate;
@@ -551,7 +553,7 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Setter for property signDate.</summary>
 		/// <param name="signDate">New value of property signDate.</param>
-		public virtual void SetSignDate(Calendar signDate)
+		public virtual void SetSignDate(DateTime signDate)
 		{
 			this.signDate = signDate;
 		}
@@ -582,7 +584,7 @@ namespace com.itextpdf.signatures
 		private String digestAlgorithmOid;
 
 		/// <summary>The object that will create the digest</summary>
-		private MessageDigest messageDigest;
+		private IDigest messageDigest;
 
 		/// <summary>The digest algorithms</summary>
 		private ICollection<String> digestalgos;
@@ -694,10 +696,10 @@ namespace com.itextpdf.signatures
 
 		// The signature is created internally
 		// Signing functionality.
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
-		/// <exception cref="java.security.NoSuchProviderException"/>
-		/// <exception cref="java.security.InvalidKeyException"/>
-		private Signature InitSignature(PrivateKey key)
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchProviderException"/>
+		/// <exception cref="Java.Security.InvalidKeyException"/>
+		private Signature InitSignature(ICipherParameters key)
 		{
 			Signature signature;
 			if (provider == null)
@@ -712,9 +714,9 @@ namespace com.itextpdf.signatures
 			return signature;
 		}
 
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
-		/// <exception cref="java.security.NoSuchProviderException"/>
-		/// <exception cref="java.security.InvalidKeyException"/>
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchProviderException"/>
+		/// <exception cref="Java.Security.InvalidKeyException"/>
 		private Signature InitSignature(PublicKey key)
 		{
 			String digestAlgorithm = GetDigestAlgorithm();
@@ -743,7 +745,7 @@ namespace com.itextpdf.signatures
 		/// <param name="buf">the data buffer</param>
 		/// <param name="off">the offset in the data buffer</param>
 		/// <param name="len">the data length</param>
-		/// <exception cref="java.security.SignatureException">on error</exception>
+		/// <exception cref="Java.Security.SignatureException">on error</exception>
 		public virtual void Update(byte[] buf, int off, int len)
 		{
 			if (RSAdata != null || digestAttr != null || isTsp)
@@ -773,7 +775,7 @@ namespace com.itextpdf.signatures
 				}
 				MemoryStream bOut = new MemoryStream();
 				ASN1OutputStream dout = new ASN1OutputStream(bOut);
-				dout.WriteObject(new DEROctetString(digest));
+				dout.WriteObject(new DerOctetString(digest));
 				dout.Close();
 				return bOut.ToArray();
 			}
@@ -859,7 +861,7 @@ namespace com.itextpdf.signatures
 				v.Add(new ASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA));
 				if (RSAdata != null)
 				{
-					v.Add(new DERTaggedObject(0, new DEROctetString(RSAdata)));
+					v.Add(new DERTaggedObject(0, new DerOctetString(RSAdata)));
 				}
 				DERSequence contentinfo = new DERSequence(v);
 				// Get all the certificates
@@ -867,11 +869,11 @@ namespace com.itextpdf.signatures
 				v = new ASN1EncodableVector();
 				foreach (Object element_1 in certs)
 				{
-					ASN1InputStream tempstream = new ASN1InputStream(new MemoryStream(((X509Certificate
+					Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate
 						)element_1).GetEncoded()));
 					v.Add(tempstream.ReadObject());
 				}
-				DERSet dercertificates = new DERSet(v);
+				DerSet dercertificates = new DerSet(v);
 				// Create signerinfo structure.
 				//
 				ASN1EncodableVector signerinfo = new ASN1EncodableVector();
@@ -879,7 +881,7 @@ namespace com.itextpdf.signatures
 				//
 				signerinfo.Add(new ASN1Integer(signerversion));
 				v = new ASN1EncodableVector();
-				v.Add(CertificateInfo.GetIssuer(signCert.GetTBSCertificate()));
+				v.Add(CertificateInfo.GetIssuer(signCert.GetTbsCertificate()));
 				v.Add(new ASN1Integer(signCert.GetSerialNumber()));
 				signerinfo.Add(new DERSequence(v));
 				// Add the digestAlgorithm
@@ -899,7 +901,7 @@ namespace com.itextpdf.signatures
 				v.Add(new DERNull());
 				signerinfo.Add(new DERSequence(v));
 				// Add the digest
-				signerinfo.Add(new DEROctetString(digest));
+				signerinfo.Add(new DerOctetString(digest));
 				// When requested, go get and add the timestamp. May throw an exception.
 				// Added by Martin Brunecky, 07/12/2007 folowing Aiken Sam, 2006-11-15
 				// Sam found Adobe expects time-stamped SHA1-1 of the encrypted digest
@@ -912,18 +914,18 @@ namespace com.itextpdf.signatures
 						ASN1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
 						if (unauthAttributes != null)
 						{
-							signerinfo.Add(new DERTaggedObject(false, 1, new DERSet(unauthAttributes)));
+							signerinfo.Add(new DERTaggedObject(false, 1, new DerSet(unauthAttributes)));
 						}
 					}
 				}
 				// Finally build the body out of all the components above
 				ASN1EncodableVector body = new ASN1EncodableVector();
 				body.Add(new ASN1Integer(version));
-				body.Add(new DERSet(digestAlgorithms));
+				body.Add(new DerSet(digestAlgorithms));
 				body.Add(contentinfo);
 				body.Add(new DERTaggedObject(false, 0, dercertificates));
 				// Only allow one signerInfo
-				body.Add(new DERSet(new DERSequence(signerinfo)));
+				body.Add(new DerSet(new DERSequence(signerinfo)));
 				// Now we have the body, wrap it in it's PKCS7Signed shell
 				// and return it
 				//
@@ -964,14 +966,14 @@ namespace com.itextpdf.signatures
 			// @todo: move this together with the rest of the defintions
 			String ID_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
 			// RFC 3161 id-aa-timeStampToken
-			ASN1InputStream tempstream = new ASN1InputStream(new MemoryStream(timeStampToken)
+			Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(timeStampToken)
 				);
 			ASN1EncodableVector unauthAttributes = new ASN1EncodableVector();
 			ASN1EncodableVector v = new ASN1EncodableVector();
 			v.Add(new ASN1ObjectIdentifier(ID_TIME_STAMP_TOKEN));
 			// id-aa-timeStampToken
 			ASN1Sequence seq = (ASN1Sequence)tempstream.ReadObject();
-			v.Add(new DERSet(seq));
+			v.Add(new DerSet(seq));
 			unauthAttributes.Add(new DERSequence(v));
 			return unauthAttributes;
 		}
@@ -1031,7 +1033,7 @@ namespace com.itextpdf.signatures
 		/// <param name="secondDigest">the content digest</param>
 		/// <returns>the byte array representation of the authenticatedAttributes ready to be signed
 		/// 	</returns>
-		private DERSet GetAuthenticatedAttributeSet(byte[] secondDigest, byte[] ocsp, ICollection
+		private DerSet GetAuthenticatedAttributeSet(byte[] secondDigest, byte[] ocsp, ICollection
 			<byte[]> crlBytes, PdfSigner.CryptoStandard sigtype)
 		{
 			try
@@ -1039,11 +1041,11 @@ namespace com.itextpdf.signatures
 				ASN1EncodableVector attribute = new ASN1EncodableVector();
 				ASN1EncodableVector v = new ASN1EncodableVector();
 				v.Add(new ASN1ObjectIdentifier(SecurityIDs.ID_CONTENT_TYPE));
-				v.Add(new DERSet(new ASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA)));
+				v.Add(new DerSet(new ASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA)));
 				attribute.Add(new DERSequence(v));
 				v = new ASN1EncodableVector();
 				v.Add(new ASN1ObjectIdentifier(SecurityIDs.ID_MESSAGE_DIGEST));
-				v.Add(new DERSet(new DEROctetString(secondDigest)));
+				v.Add(new DerSet(new DerOctetString(secondDigest)));
 				attribute.Add(new DERSequence(v));
 				bool haveCrl = false;
 				if (crlBytes != null)
@@ -1071,14 +1073,14 @@ namespace com.itextpdf.signatures
 							{
 								continue;
 							}
-							ASN1InputStream t = new ASN1InputStream(new MemoryStream(bCrl));
+							Asn1InputStream t = new Asn1InputStream(new MemoryStream(bCrl));
 							v2.Add(t.ReadObject());
 						}
 						revocationV.Add(new DERTaggedObject(true, 0, new DERSequence(v2)));
 					}
 					if (ocsp != null)
 					{
-						DEROctetString doctet = new DEROctetString(ocsp);
+						DerOctetString doctet = new DerOctetString(ocsp);
 						ASN1EncodableVector vo1 = new ASN1EncodableVector();
 						ASN1EncodableVector v2 = new ASN1EncodableVector();
 						v2.Add(OCSPObjectIdentifiers.id_pkix_ocsp_basic);
@@ -1090,7 +1092,7 @@ namespace com.itextpdf.signatures
 						vo1.Add(new DERSequence(v3));
 						revocationV.Add(new DERTaggedObject(true, 1, new DERSequence(vo1)));
 					}
-					v.Add(new DERSet(new DERSequence(revocationV)));
+					v.Add(new DerSet(new DERSequence(revocationV)));
 					attribute.Add(new DERSequence(v));
 				}
 				if (sigtype == PdfSigner.CryptoStandard.CADES)
@@ -1101,13 +1103,13 @@ namespace com.itextpdf.signatures
 					AlgorithmIdentifier algoId = new AlgorithmIdentifier(new ASN1ObjectIdentifier(digestAlgorithmOid
 						), null);
 					aaV2.Add(algoId);
-					MessageDigest md = interfaceDigest.GetMessageDigest(GetHashAlgorithm());
+					IDigest md = interfaceDigest.GetMessageDigest(GetHashAlgorithm());
 					byte[] dig = md.Digest(signCert.GetEncoded());
-					aaV2.Add(new DEROctetString(dig));
-					v.Add(new DERSet(new DERSequence(new DERSequence(new DERSequence(aaV2)))));
+					aaV2.Add(new DerOctetString(dig));
+					v.Add(new DerSet(new DERSequence(new DERSequence(new DERSequence(aaV2)))));
 					attribute.Add(new DERSequence(v));
 				}
-				return new DERSet(attribute);
+				return new DerSet(attribute);
 			}
 			catch (Exception e)
 			{
@@ -1122,7 +1124,7 @@ namespace com.itextpdf.signatures
 		private byte[] sigAttrDer;
 
 		/// <summary>encrypted digest</summary>
-		private MessageDigest encContDigest;
+		private IDigest encContDigest;
 
 		/// <summary>Indicates if a signature has already been verified</summary>
 		private bool verified;
@@ -1136,10 +1138,10 @@ namespace com.itextpdf.signatures
 		// Stefan Santesson
 		// verification
 		/// <summary>Verify the digest.</summary>
-		/// <exception cref="java.security.SignatureException">on error</exception>
+		/// <exception cref="Java.Security.SignatureException">on error</exception>
 		/// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise
 		/// 	</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual bool Verify()
 		{
 			if (verified)
@@ -1152,7 +1154,7 @@ namespace com.itextpdf.signatures
 				MessageImprint imprint = info.ToASN1Structure().GetMessageImprint();
 				byte[] md = messageDigest.Digest();
 				byte[] imphashed = imprint.GetHashedMessage();
-				verifyResult = com.itextpdf.io.util.JavaUtil.ArraysEquals(md, imphashed);
+				verifyResult = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
 			}
 			else
 			{
@@ -1164,13 +1166,12 @@ namespace com.itextpdf.signatures
 					bool encContDigestCompare = false;
 					if (RSAdata != null)
 					{
-						verifyRSAdata = com.itextpdf.io.util.JavaUtil.ArraysEquals(msgDigestBytes, RSAdata
-							);
+						verifyRSAdata = iTextSharp.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, RSAdata);
 						encContDigest.Update(RSAdata);
-						encContDigestCompare = com.itextpdf.io.util.JavaUtil.ArraysEquals(encContDigest.Digest
+						encContDigestCompare = iTextSharp.IO.Util.JavaUtil.ArraysEquals(encContDigest.Digest
 							(), digestAttr);
 					}
-					bool absentEncContDigestCompare = com.itextpdf.io.util.JavaUtil.ArraysEquals(msgDigestBytes
+					bool absentEncContDigestCompare = iTextSharp.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes
 						, digestAttr);
 					bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
 					bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
@@ -1189,7 +1190,7 @@ namespace com.itextpdf.signatures
 			return verifyResult;
 		}
 
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		private bool VerifySigAttributes(byte[] attr)
 		{
 			Signature signature = InitSignature(signCert.GetPublicKey());
@@ -1199,7 +1200,7 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Checks if the timestamp refers to this document.</summary>
 		/// <returns>true if it checks false otherwise</returns>
-		/// <exception cref="java.security.GeneralSecurityException">on error</exception>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">on error</exception>
 		public virtual bool VerifyTimestampImprint()
 		{
 			if (timeStampToken == null)
@@ -1212,15 +1213,15 @@ namespace com.itextpdf.signatures
 			byte[] md = new BouncyCastleDigest().GetMessageDigest(DigestAlgorithms.GetDigest(
 				algOID)).Digest(digest);
 			byte[] imphashed = imprint.GetHashedMessage();
-			bool res = com.itextpdf.io.util.JavaUtil.ArraysEquals(md, imphashed);
+			bool res = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
 			return res;
 		}
 
 		/// <summary>All the X.509 certificates in no particular order.</summary>
-		private ICollection<Certificate> certs;
+		private ICollection<X509Certificate> certs;
 
 		/// <summary>All the X.509 certificates used for the main signature.</summary>
-		private ICollection<Certificate> signCerts;
+		private ICollection<X509Certificate> signCerts;
 
 		/// <summary>The X.509 certificate that is used to sign the digest.</summary>
 		private X509Certificate signCert;
@@ -1233,7 +1234,7 @@ namespace com.itextpdf.signatures
 		/// Other certificates, from OCSP for example, will also be included.
 		/// </remarks>
 		/// <returns>the X.509 certificates associated with this PKCS#7 object</returns>
-		public virtual Certificate[] GetCertificates()
+		public virtual X509Certificate[] GetCertificates()
 		{
 			return certs.ToArray(new X509Certificate[certs.Count]);
 		}
@@ -1246,7 +1247,7 @@ namespace com.itextpdf.signatures
 		/// the signing certificate first.
 		/// </remarks>
 		/// <returns>the X.509 certificates associated with this PKCS#7 object</returns>
-		public virtual Certificate[] GetSignCertificateChain()
+		public virtual X509Certificate[] GetSignCertificateChain()
 		{
 			return signCerts.ToArray(new X509Certificate[signCerts.Count]);
 		}
@@ -1265,9 +1266,9 @@ namespace com.itextpdf.signatures
 		/// </summary>
 		private void SignCertificateChain()
 		{
-			IList<Certificate> cc = new List<Certificate>();
+			IList<X509Certificate> cc = new List<X509Certificate>();
 			cc.Add(signCert);
-			IList<Certificate> oc = new List<Certificate>(certs);
+			IList<X509Certificate> oc = new List<X509Certificate>(certs);
 			for (int k = 0; k < oc.Count; ++k)
 			{
 				if (signCert.Equals(oc[k]))
@@ -1328,8 +1329,8 @@ namespace com.itextpdf.signatures
 				crls = new List<CRL>();
 				for (int k = 0; k < seq.Size(); ++k)
 				{
-					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToASN1Primitive().GetEncoded
-						(ASN1Encoding.DER));
+					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToAsn1Object().GetEncoded(ASN1Encoding
+						.DER));
 					CertificateFactory cf = CertificateFactory.GetInstance("X.509");
 					X509CRL crl = (X509CRL)cf.GenerateCRL(ar);
 					crls.Add(crl);
@@ -1427,7 +1428,7 @@ namespace com.itextpdf.signatures
 				}
 			}
 			ASN1OctetString os = (ASN1OctetString)seq.GetObjectAt(1);
-			ASN1InputStream inp = new ASN1InputStream(os.GetOctets());
+			Asn1InputStream inp = new Asn1InputStream(os.GetOctets());
 			BasicOCSPResponse resp = BasicOCSPResponse.GetInstance(inp.ReadObject());
 			basicResp = new BasicOCSPResp(resp);
 		}
@@ -1458,13 +1459,13 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Gets the timestamp date</summary>
 		/// <returns>a date</returns>
-		public virtual Calendar GetTimeStampDate()
+		public virtual DateTime GetTimeStampDate()
 		{
 			if (timeStampToken == null)
 			{
 				return null;
 			}
-			Calendar cal = new GregorianCalendar();
+			DateTime cal = new GregorianCalendar();
 			DateTime date = timeStampToken.GetTimeStampInfo().GetGenTime();
 			cal.SetTime(date);
 			return cal;

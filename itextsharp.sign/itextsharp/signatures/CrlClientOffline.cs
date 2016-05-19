@@ -44,10 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.kernel;
-using java.security.cert;
+using Java.Security.Cert;
+using Org.BouncyCastle.X509;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// An implementation of the CrlClient that handles offline
@@ -87,7 +88,7 @@ namespace com.itextpdf.signatures
 		}
 
 		/// <summary>Returns the CRL bytes (the parameters are ignored).</summary>
-		/// <seealso cref="ICrlClient.GetEncoded(java.security.cert.X509Certificate, System.String)
+		/// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)
 		/// 	"/>
 		public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url
 			)

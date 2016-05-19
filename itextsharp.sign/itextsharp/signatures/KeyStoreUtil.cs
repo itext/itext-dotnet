@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.kernel;
-using java.io;
-using java.security;
+using Java.IO;
+using Java.Security;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Utility class with some KeyStore related methods.</summary>
 	public class KeyStoreUtil
@@ -60,13 +60,14 @@ namespace com.itextpdf.signatures
 		/// <returns>a <CODE>KeyStore</CODE></returns>
 		public static KeyStore LoadCacertsKeyStore(String provider)
 		{
-			File file = new File(com.itextpdf.GetProperty("java.home"), "lib");
+			File file = new File(System.Environment.GetEnvironmentVariable("java.home"), "lib"
+				);
 			file = new File(file, "security");
 			file = new File(file, "cacerts");
 			FileStream fin = null;
 			try
 			{
-				fin = new FileStream(file);
+				fin = new FileStream(file, FileMode.Open);
 				KeyStore k;
 				if (provider == null)
 				{

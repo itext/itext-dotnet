@@ -46,14 +46,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.forms;
-using com.itextpdf.forms.fields;
-using com.itextpdf.io.font;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Forms;
+using iTextSharp.Forms.Fields;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Utility class that provides several convenience methods concerning digital signatures.
 	/// 	</summary>
@@ -269,7 +270,7 @@ namespace com.itextpdf.signatures
 					- 2).IntValue();
 				sorter.Add(new Object[] { entry.Key, new int[] { length, 0 } });
 			}
-			sorter.Sort(new SignatureUtil.SorterComparator());
+			JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
 			if (sorter.Count > 0)
 			{
 				try
@@ -405,7 +406,7 @@ namespace com.itextpdf.signatures
 
 		/// <summary>
 		/// Converts a
-		/// <see cref="com.itextpdf.kernel.pdf.PdfArray"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
 		/// to an array of longs
 		/// </summary>
 		/// <param name="pdfArray">PdfArray to be converted</param>

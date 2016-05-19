@@ -45,24 +45,25 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.forms;
-using com.itextpdf.io.font;
-using com.itextpdf.io.log;
-using com.itextpdf.io.source;
-using com.itextpdf.kernel;
-using com.itextpdf.kernel.pdf;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.asn1;
-using org.bouncycastle.asn1.ocsp;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1;
+using Org.Bouncycastle.Asn1.Ocsp;
+using iTextSharp.Forms;
+using iTextSharp.IO.Font;
+using iTextSharp.IO.Log;
+using iTextSharp.IO.Source;
+using iTextSharp.Kernel;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Add verification according to PAdES-LTV (part 4).</summary>
 	/// <author>Paulo Soares</author>
 	public class LtvVerification
 	{
-		private Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.LtvVerification
+		private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerification
 			));
 
 		private PdfDocument document;
@@ -110,7 +111,7 @@ namespace com.itextpdf.signatures
 		/// </remarks>
 		/// <param name="document">
 		/// The
-		/// <see cref="com.itextpdf.kernel.pdf.PdfDocument"/>
+		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
 		/// to apply the validation to.
 		/// </param>
 		public LtvVerification(PdfDocument document)
@@ -128,7 +129,7 @@ namespace com.itextpdf.signatures
 		/// <param name="level">the validation options to include</param>
 		/// <param name="certInclude">certificate inclusion options</param>
 		/// <returns>true if a validation was generated, false otherwise</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient
 			 crl, LtvVerification.CertificateOption certOption, LtvVerification.Level level, 
@@ -140,7 +141,7 @@ namespace com.itextpdf.signatures
 			}
 			PdfPKCS7 pk = sgnUtil.VerifySignature(signatureName);
 			LOGGER.Info("Adding verification for " + signatureName);
-			Certificate[] xc = pk.GetCertificates();
+			X509Certificate[] xc = pk.GetCertificates();
 			X509Certificate cert;
 			X509Certificate signingCert = pk.GetSigningCertificate();
 			LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
@@ -175,7 +176,7 @@ namespace com.itextpdf.signatures
 							bool dup = false;
 							foreach (byte[] b in vd.crls)
 							{
-								if (com.itextpdf.io.util.JavaUtil.ArraysEquals(b, cim))
+								if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(b, cim))
 								{
 									dup = true;
 									break;
@@ -206,7 +207,7 @@ namespace com.itextpdf.signatures
 		/// <param name="cert">the certificate for which we search the parent</param>
 		/// <param name="certs">an array with certificates that contains the parent</param>
 		/// <returns>the parent certificate</returns>
-		private X509Certificate GetParent(X509Certificate cert, Certificate[] certs)
+		private X509Certificate GetParent(X509Certificate cert, X509Certificate[] certs)
 		{
 			X509Certificate parent;
 			for (int i = 0; i < certs.Length; i++)
@@ -236,7 +237,7 @@ namespace com.itextpdf.signatures
 		/// <param name="certs">collection of certificates</param>
 		/// <returns>boolean</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps
 			, ICollection<byte[]> crls, ICollection<byte[]> certs)
 		{
@@ -273,7 +274,7 @@ namespace com.itextpdf.signatures
 		/// <exception cref="System.IO.IOException"/>
 		private static byte[] BuildOCSPResponse(byte[] BasicOCSPResponse)
 		{
-			DEROctetString doctet = new DEROctetString(BasicOCSPResponse);
+			DerOctetString doctet = new DerOctetString(BasicOCSPResponse);
 			ASN1EncodableVector v2 = new ASN1EncodableVector();
 			v2.Add(OCSPObjectIdentifiers.id_pkix_ocsp_basic);
 			v2.Add(doctet);
@@ -285,7 +286,7 @@ namespace com.itextpdf.signatures
 			return seq.GetEncoded();
 		}
 
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
 		/// <exception cref="System.IO.IOException"/>
 		private PdfName GetSignatureHashKey(String signatureName)
 		{
@@ -295,18 +296,18 @@ namespace com.itextpdf.signatures
 			byte[] bt = null;
 			if (PdfName.ETSI_RFC3161.Equals(dic.GetAsName(PdfName.SubFilter)))
 			{
-				ASN1InputStream din = new ASN1InputStream(new MemoryStream(bc));
-				ASN1Primitive pkcs = din.ReadObject();
+				Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
+				Asn1Object pkcs = din.ReadObject();
 				bc = pkcs.GetEncoded();
 			}
 			bt = HashBytesSha1(bc);
 			return new PdfName(ConvertToHex(bt));
 		}
 
-		/// <exception cref="java.security.NoSuchAlgorithmException"/>
+		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
 		private static byte[] HashBytesSha1(byte[] b)
 		{
-			MessageDigest sh = MessageDigest.GetInstance("SHA1");
+			IDigest sh = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA1");
 			return sh.Digest(b);
 		}
 

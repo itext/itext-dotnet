@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Superclass for a series of certificate verifiers that will typically
@@ -61,14 +61,14 @@ namespace com.itextpdf.signatures
 	public class CertificateVerifier
 	{
 		/// <summary>The previous CertificateVerifier in the chain of verifiers.</summary>
-		protected internal com.itextpdf.signatures.CertificateVerifier verifier;
+		protected internal iTextSharp.Signatures.CertificateVerifier verifier;
 
 		/// <summary>Indicates if going online to verify a certificate is allowed.</summary>
 		protected internal bool onlineCheckingAllowed = true;
 
 		/// <summary>Creates the final CertificateVerifier in a chain of verifiers.</summary>
 		/// <param name="verifier">the previous verifier in the chain</param>
-		public CertificateVerifier(com.itextpdf.signatures.CertificateVerifier verifier)
+		public CertificateVerifier(iTextSharp.Signatures.CertificateVerifier verifier)
 		{
 			this.verifier = verifier;
 		}
@@ -91,7 +91,7 @@ namespace com.itextpdf.signatures
 		/// a list of <code>VerificationOK</code> objects.
 		/// The list will be empty if the certificate couldn't be verified.
 		/// </returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)

@@ -44,17 +44,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using com.itextpdf.io.codec;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel;
-using java.math;
-using java.net;
-using java.security;
-using org.bouncycastle.asn1;
-using org.bouncycastle.asn1.cmp;
-using org.bouncycastle.tsp;
+using Java.Math;
+using Java.Net;
+using Org.BouncyCastle.Crypto;
+using Org.Bouncycastle.Asn1;
+using Org.Bouncycastle.Asn1.Cmp;
+using Org.Bouncycastle.Tsp;
+using iTextSharp.IO.Codec;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Time Stamp Authority Client interface implementation using Bouncy Castle
@@ -70,8 +70,8 @@ namespace com.itextpdf.signatures
 	/// </remarks>
 	public class TSAClientBouncyCastle : ITSAClient
 	{
-		/// <summary>The ILogger instance.</summary>
-		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.TSAClientBouncyCastle
+		/// <summary>The Logger instance.</summary>
+		private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.TSAClientBouncyCastle
 			));
 
 		/// <summary>URL of the Time Stamp Authority</summary>
@@ -158,8 +158,8 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Gets the MessageDigest to digest the data imprint</summary>
 		/// <returns>the digest algorithm name</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		public virtual MessageDigest GetMessageDigest()
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		public virtual IDigest GetMessageDigest()
 		{
 			return new BouncyCastleDigest().GetMessageDigest(digestAlgorithm);
 		}
@@ -172,7 +172,7 @@ namespace com.itextpdf.signatures
 		/// <param name="imprint">data imprint to be time-stamped</param>
 		/// <returns>encoded, TSA signed data of the timeStampToken</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="org.bouncycastle.tsp.TSPException"/>
+		/// <exception cref="Org.Bouncycastle.Tsp.TSPException"/>
 		public virtual byte[] GetTimeStampToken(byte[] imprint)
 		{
 			byte[] respBytes = null;
@@ -180,7 +180,7 @@ namespace com.itextpdf.signatures
 			TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
 			tsqGenerator.SetCertReq(true);
 			// tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-			BigInteger nonce = BigInteger.ValueOf(com.itextpdf.CurrentTimeMillis());
+			BigInteger nonce = BigInteger.ValueOf(iTextSharp.CurrentTimeMillis());
 			TimeStampRequest request = tsqGenerator.Generate(new ASN1ObjectIdentifier(DigestAlgorithms
 				.GetAllowedDigest(digestAlgorithm)), imprint, nonce);
 			byte[] requestBytes = request.GetEncoded();
@@ -196,7 +196,7 @@ namespace com.itextpdf.signatures
 			{
 				// @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
 				throw new PdfException(PdfException.InvalidTsa1ResponseCode2).SetMessageParams(tsaURL
-					, com.itextpdf.GetStringValueOf(value));
+					, value.ToString());
 			}
 			// @todo: validate the time stap certificate chain (if we want
 			//        assure we do not sign using an invalid timestamp).
@@ -265,8 +265,8 @@ namespace com.itextpdf.signatures
 			String encoding = tsaConnection.GetContentEncoding();
 			if (encoding != null && encoding.ToLower().Equals("base64".ToLower()))
 			{
-				respBytes = Base64.Decode(com.itextpdf.io.util.JavaUtil.GetStringForBytes(respBytes
-					));
+				respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
+					(respBytes));
 			}
 			return respBytes;
 		}

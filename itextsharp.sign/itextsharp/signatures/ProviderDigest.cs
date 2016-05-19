@@ -43,13 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.security;
+using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// This class will return the
-	/// <see cref="java.security.MessageDigest"/>
+	/// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
 	/// associated with
 	/// a certain hashing algorithm returned by the specified provider.
 	/// </summary>
@@ -66,8 +66,8 @@ namespace com.itextpdf.signatures
 			this.provider = provider;
 		}
 
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		public virtual MessageDigest GetMessageDigest(String hashAlgorithm)
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		public virtual IDigest GetMessageDigest(String hashAlgorithm)
 		{
 			return DigestAlgorithms.GetMessageDigest(hashAlgorithm, provider);
 		}

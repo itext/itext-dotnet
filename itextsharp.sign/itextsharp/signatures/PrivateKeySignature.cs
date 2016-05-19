@@ -43,23 +43,24 @@ Copyright (c) 1998-2016 iText Group NV
 * address: sales@itextpdf.com
 */
 using System;
-using java.security;
+using Java.Security;
+using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Implementation of the
 	/// <see cref="IExternalSignature"/>
 	/// interface that
 	/// can be used when you have a
-	/// <see cref="java.security.PrivateKey"/>
+	/// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
 	/// object.
 	/// </summary>
 	/// <author>Paulo Soares</author>
 	public class PrivateKeySignature : IExternalSignature
 	{
 		/// <summary>The private key object.</summary>
-		private PrivateKey pk;
+		private ICipherParameters pk;
 
 		/// <summary>The hash algorithm.</summary>
 		private String hashAlgorithm;
@@ -77,12 +78,13 @@ namespace com.itextpdf.signatures
 		/// </summary>
 		/// <param name="pk">
 		/// A
-		/// <see cref="java.security.PrivateKey"/>
+		/// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
 		/// object.
 		/// </param>
 		/// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
 		/// <param name="provider">A security provider (e.g. "BC").</param>
-		public PrivateKeySignature(PrivateKey pk, String hashAlgorithm, String provider)
+		public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm, String provider
+			)
 		{
 			this.pk = pk;
 			this.provider = provider;
@@ -108,7 +110,7 @@ namespace com.itextpdf.signatures
 		}
 
 		/// <summary><inheritDoc/></summary>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual byte[] Sign(byte[] message)
 		{
 			String signMode = hashAlgorithm + "with" + encryptionAlgorithm;

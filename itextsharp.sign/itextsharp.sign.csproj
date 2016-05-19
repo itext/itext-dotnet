@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="itextsharp\signatures\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\itextsharp\signatures\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itextsharp.forms\itextsharp.forms.csproj">

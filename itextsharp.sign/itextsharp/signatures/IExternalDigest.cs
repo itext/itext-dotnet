@@ -43,13 +43,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.security;
+using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// ExternalDigest allows the use of implementations of
-	/// <see cref="java.security.MessageDigest"/>
+	/// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
 	/// other than
 	/// <see cref="BouncyCastleDigest"/>
 	/// .
@@ -60,7 +60,7 @@ namespace com.itextpdf.signatures
 		/// 	</summary>
 		/// <param name="hashAlgorithm">String value representing the hashing algorithm</param>
 		/// <returns>MessageDigest</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		MessageDigest GetMessageDigest(String hashAlgorithm);
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		IDigest GetMessageDigest(String hashAlgorithm);
 	}
 }

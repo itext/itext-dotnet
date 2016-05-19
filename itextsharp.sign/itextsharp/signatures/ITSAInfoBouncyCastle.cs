@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using org.bouncycastle.tsp;
+using Org.Bouncycastle.Tsp;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Interface you can implement and pass to TSAClientBouncyCastle in case

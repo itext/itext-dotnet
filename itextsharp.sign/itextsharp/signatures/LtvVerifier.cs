@@ -44,23 +44,23 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using com.itextpdf.forms;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel.pdf;
-using java.security;
-using java.security.cert;
-using org.bouncycastle.cert.ocsp;
+using Java.Security.Cert;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Cert.Ocsp;
+using iTextSharp.Forms;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Verifies the signatures in an LTV document.</summary>
 	public class LtvVerifier : RootStoreVerifier
 	{
-		/// <summary>The ILogger instance</summary>
-		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
-			com.itextpdf.signatures.LtvVerifier));
+		/// <summary>The Logger instance</summary>
+		protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
+			iTextSharp.Signatures.LtvVerifier));
 
 		/// <summary>Option to specify level of verification; signing certificate only or the entire chain.
 		/// 	</summary>
@@ -96,7 +96,7 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Creates a VerificationData object for a PdfReader</summary>
 		/// <param name="document">The document we want to verify.</param>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public LtvVerifier(PdfDocument document)
 			: base(null)
 		{
@@ -139,7 +139,7 @@ namespace com.itextpdf.signatures
 		/// and throws an exception if the document was altered
 		/// </summary>
 		/// <returns>a PdfPKCS7 object</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		protected internal virtual PdfPKCS7 CoversWholeDocument()
 		{
 			PdfPKCS7 pkcs7 = sgnUtil.VerifySignature(signatureName);
@@ -149,7 +149,7 @@ namespace com.itextpdf.signatures
 			}
 			else
 			{
-				throw new VerificationException((Certificate)null, "Signature doesn't cover whole document."
+				throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document."
 					);
 			}
 			if (pkcs7.Verify())
@@ -159,7 +159,7 @@ namespace com.itextpdf.signatures
 			}
 			else
 			{
-				throw new VerificationException((Certificate)null, "The document was altered after the final signature was applied."
+				throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
 					);
 			}
 		}
@@ -167,7 +167,7 @@ namespace com.itextpdf.signatures
 		/// <summary>Verifies all the document-level timestamps and all the signatures in the document.
 		/// 	</summary>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual IList<VerificationOK> Verify(IList<VerificationOK> result)
 		{
 			if (result == null)
@@ -182,14 +182,14 @@ namespace com.itextpdf.signatures
 		}
 
 		/// <summary>Verifies a document level timestamp.</summary>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual IList<VerificationOK> VerifySignature()
 		{
 			LOGGER.Info("Verifying signature.");
 			IList<VerificationOK> result = new List<VerificationOK>();
 			// Get the certificate chain
-			Certificate[] chain = pkcs7.GetSignCertificateChain();
+			X509Certificate[] chain = pkcs7.GetSignCertificateChain();
 			VerifyChain(chain);
 			// how many certificates in the chain do we need to check?
 			int total = 1;
@@ -220,7 +220,7 @@ namespace com.itextpdf.signatures
 						signCert.Verify(signCert.GetPublicKey());
 						if (latestRevision && chain.Length > 1)
 						{
-							list.Add(new VerificationOK(signCert, this.GetClass(), "Root certificate in final revision"
+							list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"
 								));
 						}
 						if (list.Count == 0 && verifyRootCertificate)
@@ -231,7 +231,7 @@ namespace com.itextpdf.signatures
 						{
 							if (chain.Length > 1)
 							{
-								list.Add(new VerificationOK(signCert, this.GetClass(), "Root certificate passed without checking"
+								list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate passed without checking"
 									));
 							}
 						}
@@ -255,8 +255,8 @@ namespace com.itextpdf.signatures
 		/// do they chain up correctly?
 		/// </summary>
 		/// <param name="chain">the certificate chain</param>
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		public virtual void VerifyChain(Certificate[] chain)
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		public virtual void VerifyChain(X509Certificate[] chain)
 		{
 			// Loop over the certificates in the chain
 			for (int i = 0; i < chain.Length; i++)
@@ -280,9 +280,9 @@ namespace com.itextpdf.signatures
 		/// a list of <code>VerificationOK</code> objects.
 		/// The list will be empty if the certificate couldn't be verified.
 		/// </returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		/// <seealso cref="RootStoreVerifier.Verify(java.security.cert.X509Certificate, java.security.cert.X509Certificate, System.DateTime)
+		/// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
 		/// 	"/>
 		public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
@@ -305,13 +305,13 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Switches to the previous revision.</summary>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual void SwitchToPreviousRevision()
 		{
 			LOGGER.Info("Switching to previous revision.");
 			latestRevision = false;
 			dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
-			Calendar cal = pkcs7.GetTimeStampDate();
+			DateTime cal = pkcs7.GetTimeStampDate();
 			if (cal == null)
 			{
 				cal = pkcs7.GetSignDate();
@@ -339,7 +339,7 @@ namespace com.itextpdf.signatures
 
 		/// <summary>Gets a list of X509CRL objects from a Document Security Store.</summary>
 		/// <returns>a list of CRLs</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual IList<X509CRL> GetCRLsFromDSS()
 		{
@@ -366,7 +366,7 @@ namespace com.itextpdf.signatures
 		/// <summary>Gets OCSP responses from the Document Security Store.</summary>
 		/// <returns>a list of BasicOCSPResp objects</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual IList<BasicOCSPResp> GetOCSPResponsesFromDSS()
 		{
 			IList<BasicOCSPResp> ocsps = new List<BasicOCSPResp>();

@@ -44,11 +44,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using java.security.cert;
-using org.bouncycastle.asn1;
-using org.bouncycastle.asn1.x509;
+using Java.Security.Cert;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.X509;
+using Org.Bouncycastle.Asn1;
+using Org.Bouncycastle.Asn1.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// This class contains a series of static methods that
@@ -60,8 +62,8 @@ namespace com.itextpdf.signatures
 		/// <summary>Gets a CRL from a certificate</summary>
 		/// <param name="certificate"/>
 		/// <returns>the CRL or null if there's no CRL available</returns>
-		/// <exception cref="java.security.cert.CertificateException"/>
-		/// <exception cref="java.security.cert.CRLException"/>
+		/// <exception cref="Java.Security.Cert.CertificateException"/>
+		/// <exception cref="Java.Security.Cert.CRLException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public static CRL GetCRL(X509Certificate certificate)
 		{
@@ -71,18 +73,18 @@ namespace com.itextpdf.signatures
 		/// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
 		/// <param name="certificate">the Certificate</param>
 		/// <returns>the String where you can check if the certificate was revoked</returns>
-		/// <exception cref="java.security.cert.CertificateParsingException"/>
+		/// <exception cref="Java.Security.Cert.CertificateParsingException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public static String GetCRLURL(X509Certificate certificate)
 		{
-			ASN1Primitive obj;
+			Asn1Object obj;
 			try
 			{
 				obj = GetExtensionValue(certificate, Extension.cRLDistributionPoints.GetId());
 			}
 			catch (System.IO.IOException)
 			{
-				obj = (ASN1Primitive)null;
+				obj = (Asn1Object)null;
 			}
 			if (obj == null)
 			{
@@ -105,7 +107,7 @@ namespace com.itextpdf.signatures
 					{
 						continue;
 					}
-					DERIA5String derStr = DERIA5String.GetInstance((ASN1TaggedObject)name.ToASN1Primitive
+					DERIA5String derStr = DERIA5String.GetInstance((ASN1TaggedObject)name.ToAsn1Object
 						(), false);
 					return derStr.GetString();
 				}
@@ -117,8 +119,8 @@ namespace com.itextpdf.signatures
 		/// <param name="url">the URL where to get the CRL</param>
 		/// <returns>a CRL object</returns>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="java.security.cert.CertificateException"/>
-		/// <exception cref="java.security.cert.CRLException"/>
+		/// <exception cref="Java.Security.Cert.CertificateException"/>
+		/// <exception cref="Java.Security.Cert.CRLException"/>
 		public static CRL GetCRL(String url)
 		{
 			if (url == null)
@@ -137,7 +139,7 @@ namespace com.itextpdf.signatures
 		/// <exception cref="System.IO.IOException"/>
 		public static String GetOCSPURL(X509Certificate certificate)
 		{
-			ASN1Primitive obj;
+			Asn1Object obj;
 			try
 			{
 				obj = GetExtensionValue(certificate, Extension.authorityInfoAccess.GetId());
@@ -160,7 +162,7 @@ namespace com.itextpdf.signatures
 							ASN1ObjectIdentifier id = (ASN1ObjectIdentifier)AccessDescription.GetObjectAt(0);
 							if (SecurityIDs.ID_OCSP.Equals(id.GetId()))
 							{
-								ASN1Primitive description = (ASN1Primitive)AccessDescription.GetObjectAt(1);
+								Asn1Object description = (Asn1Object)AccessDescription.GetObjectAt(1);
 								String AccessLocation = GetStringFromGeneralName(description);
 								if (AccessLocation == null)
 								{
@@ -194,14 +196,14 @@ namespace com.itextpdf.signatures
 			{
 				return null;
 			}
-			ASN1Primitive asn1obj;
+			Asn1Object asn1obj;
 			try
 			{
-				asn1obj = ASN1Primitive.FromByteArray(der);
-				DEROctetString octets = (DEROctetString)asn1obj;
-				asn1obj = ASN1Primitive.FromByteArray(octets.GetOctets());
+				asn1obj = Asn1Object.FromByteArray(der);
+				DerOctetString octets = (DerOctetString)asn1obj;
+				asn1obj = Asn1Object.FromByteArray(octets.GetOctets());
 				ASN1Sequence asn1seq = ASN1Sequence.GetInstance(asn1obj);
-				return GetStringFromGeneralName(asn1seq.GetObjectAt(1).ToASN1Primitive());
+				return GetStringFromGeneralName(asn1seq.GetObjectAt(1).ToAsn1Object());
 			}
 			catch (System.IO.IOException)
 			{
@@ -214,17 +216,17 @@ namespace com.itextpdf.signatures
 		/// <param name="oid">the Object Identifier value for the extension.</param>
 		/// <returns>the extension value as an ASN1Primitive object</returns>
 		/// <exception cref="System.IO.IOException"/>
-		private static ASN1Primitive GetExtensionValue(X509Certificate certificate, String
-			 oid)
+		private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid
+			)
 		{
 			byte[] bytes = certificate.GetExtensionValue(oid);
 			if (bytes == null)
 			{
 				return null;
 			}
-			ASN1InputStream aIn = new ASN1InputStream(new MemoryStream(bytes));
+			Asn1InputStream aIn = new Asn1InputStream(new MemoryStream(bytes));
 			ASN1OctetString octs = (ASN1OctetString)aIn.ReadObject();
-			aIn = new ASN1InputStream(new MemoryStream(octs.GetOctets()));
+			aIn = new Asn1InputStream(new MemoryStream(octs.GetOctets()));
 			return aIn.ReadObject();
 		}
 
@@ -232,11 +234,11 @@ namespace com.itextpdf.signatures
 		/// <param name="names">the ASN1Primitive</param>
 		/// <returns>a human-readable String</returns>
 		/// <exception cref="System.IO.IOException"/>
-		private static String GetStringFromGeneralName(ASN1Primitive names)
+		private static String GetStringFromGeneralName(Asn1Object names)
 		{
 			ASN1TaggedObject taggedObject = (ASN1TaggedObject)names;
-			return com.itextpdf.io.util.JavaUtil.GetStringForBytes(ASN1OctetString.GetInstance
-				(taggedObject, false).GetOctets(), "ISO-8859-1");
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ASN1OctetString.GetInstance(
+				taggedObject, false).GetOctets(), "ISO-8859-1");
 		}
 	}
 }

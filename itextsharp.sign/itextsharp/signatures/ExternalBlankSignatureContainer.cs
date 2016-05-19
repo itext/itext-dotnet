@@ -43,9 +43,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Produces a blank (or empty) signature.</summary>
 	/// <remarks>
@@ -81,7 +81,7 @@ namespace com.itextpdf.signatures
 			sigDic.Put(PdfName.SubFilter, subFilter);
 		}
 
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual byte[] Sign(Stream data)
 		{
 			return new byte[0];

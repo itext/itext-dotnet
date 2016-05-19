@@ -44,10 +44,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using java.security;
-using java.security.cert;
+using Java.Security;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Verifies a certificate against a <code>KeyStore</code>
@@ -80,7 +81,7 @@ namespace com.itextpdf.signatures
 		/// a list of <code>VerificationOK</code> objects.
 		/// The list will be empty if the certificate couldn't be verified.
 		/// </returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
@@ -105,7 +106,7 @@ namespace com.itextpdf.signatures
 						}
 						X509Certificate anchor = (X509Certificate)rootStore.GetCertificate(alias);
 						signCert.Verify(anchor.GetPublicKey());
-						result.Add(new VerificationOK(signCert, this.GetClass(), "Certificate verified against root store."
+						result.Add(new VerificationOK(signCert, this.GetType(), "Certificate verified against root store."
 							));
 						result.AddAll(base.Verify(signCert, issuerCert, signDate));
 						return result;

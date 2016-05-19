@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Interface that needs to be implemented to do the actual signing.</summary>
 	/// <remarks>
@@ -69,7 +69,7 @@ namespace com.itextpdf.signatures
 		/// </summary>
 		/// <param name="message">The message you want to be hashed and signed.</param>
 		/// <returns>A signed message digest.</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		byte[] Sign(byte[] message);
 	}
 }

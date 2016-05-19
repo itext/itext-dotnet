@@ -44,10 +44,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using java.lang;
-using java.security.cert;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Class that informs you that the verification of a Certificate
@@ -60,7 +59,7 @@ namespace com.itextpdf.signatures
 		protected internal X509Certificate certificate;
 
 		/// <summary>The CertificateVerifier that was used for verifying.</summary>
-		protected internal Class verifierClass;
+		protected internal Type verifierClass;
 
 		/// <summary>The reason why the certificate verified successfully.</summary>
 		protected internal String message;
@@ -69,7 +68,7 @@ namespace com.itextpdf.signatures
 		/// <param name="certificate">the certificate that was successfully verified</param>
 		/// <param name="verifierClass">the class that was used for verification</param>
 		/// <param name="message">the reason why the certificate could be verified</param>
-		public VerificationOK(X509Certificate certificate, Class verifierClass, String message
+		public VerificationOK(X509Certificate certificate, Type verifierClass, String message
 			)
 		{
 			this.certificate = certificate;
@@ -87,7 +86,7 @@ namespace com.itextpdf.signatures
 				sb.Append(certificate.GetSubjectDN().GetName());
 				sb.Append(" verified with ");
 			}
-			sb.Append(verifierClass.GetName());
+			sb.Append(verifierClass.FullName);
 			sb.Append(": ");
 			sb.Append(message);
 			return sb.ToString();

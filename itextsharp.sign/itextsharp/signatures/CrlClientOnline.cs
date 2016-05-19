@@ -45,12 +45,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using com.itextpdf.io.log;
-using com.itextpdf.kernel;
-using java.net;
-using java.security.cert;
+using Java.Net;
+using Java.Security.Cert;
+using Org.BouncyCastle.X509;
+using iTextSharp.IO.Log;
+using iTextSharp.Kernel;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// An implementation of the CrlClient that fetches the CRL bytes
@@ -59,8 +60,8 @@ namespace com.itextpdf.signatures
 	/// <author>Paulo Soares</author>
 	public class CrlClientOnline : ICrlClient
 	{
-		/// <summary>The ILogger instance.</summary>
-		private static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(com.itextpdf.signatures.CrlClientOnline
+		/// <summary>The Logger instance.</summary>
+		private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CrlClientOnline
 			));
 
 		/// <summary>The URLs of the CRLs.</summary>
@@ -93,7 +94,7 @@ namespace com.itextpdf.signatures
 		}
 
 		/// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
-		public CrlClientOnline(Certificate[] chain)
+		public CrlClientOnline(X509Certificate[] chain)
 		{
 			for (int i = 0; i < chain.Length; i++)
 			{
@@ -145,7 +146,7 @@ namespace com.itextpdf.signatures
 		/// URL with the path to the local file to this method. An other option is to use
 		/// the CrlClientOffline class.
 		/// </remarks>
-		/// <seealso cref="ICrlClient.GetEncoded(java.security.cert.X509Certificate, System.String)
+		/// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)
 		/// 	"/>
 		public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url
 			)

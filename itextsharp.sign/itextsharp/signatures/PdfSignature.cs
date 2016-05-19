@@ -43,10 +43,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using com.itextpdf.io.font;
-using com.itextpdf.kernel.pdf;
+using iTextSharp.IO.Font;
+using iTextSharp.Kernel.Pdf;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Represents the signature dictionary.</summary>
 	/// <author>Paulo Soares</author>
@@ -149,7 +149,7 @@ namespace com.itextpdf.signatures
 			Put(PdfName.ContactInfo, new PdfString(contactInfo, PdfEncodings.UNICODE_BIG));
 		}
 
-		public virtual com.itextpdf.signatures.PdfSignature Put(PdfName key, PdfObject value
+		public virtual iTextSharp.Signatures.PdfSignature Put(PdfName key, PdfObject value
 			)
 		{
 			GetPdfObject().Put(key, value);

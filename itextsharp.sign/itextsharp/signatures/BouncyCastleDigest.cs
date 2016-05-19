@@ -43,10 +43,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.security;
-using org.bouncycastle.jcajce.provider.digest;
+using Java.Security;
+using Org.BouncyCastle.Crypto;
+using Org.Bouncycastle.Jcajce.Provider.Digest;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Implementation for digests accessed directly from the BouncyCastle library bypassing
@@ -54,8 +55,8 @@ namespace com.itextpdf.signatures
 	/// </summary>
 	public class BouncyCastleDigest : IExternalDigest
 	{
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		public virtual MessageDigest GetMessageDigest(String hashAlgorithm)
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		public virtual IDigest GetMessageDigest(String hashAlgorithm)
 		{
 			String oid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
 			switch (oid)

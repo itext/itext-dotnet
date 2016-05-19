@@ -42,9 +42,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using java.security;
+using Org.BouncyCastle.Crypto;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>Time Stamp Authority client (caller) interface.</summary>
 	/// <remarks>
@@ -72,16 +72,16 @@ namespace com.itextpdf.signatures
 
 		/// <summary>
 		/// Returns the
-		/// <see cref="java.security.MessageDigest"/>
+		/// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
 		/// to digest the data imprint
 		/// </summary>
 		/// <returns>
 		/// The
-		/// <see cref="java.security.MessageDigest"/>
+		/// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
 		/// object.
 		/// </returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
-		MessageDigest GetMessageDigest();
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+		IDigest GetMessageDigest();
 
 		/// <summary>Returns RFC 3161 timeStampToken.</summary>
 		/// <remarks>

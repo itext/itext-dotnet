@@ -44,11 +44,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using com.itextpdf.io.log;
-using java.security;
-using java.security.cert;
+using Java.Security.Cert;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
+using iTextSharp.IO.Log;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>
 	/// Class that allows you to verify a certificate against
@@ -56,9 +57,9 @@ namespace com.itextpdf.signatures
 	/// </summary>
 	public class CRLVerifier : RootStoreVerifier
 	{
-		/// <summary>The ILogger instance</summary>
-		protected internal static readonly Logger LOGGER = LoggerFactory.GetLogger(typeof(
-			com.itextpdf.signatures.CRLVerifier));
+		/// <summary>The Logger instance</summary>
+		protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
+			iTextSharp.Signatures.CRLVerifier));
 
 		/// <summary>The list of CRLs to check for revocation date.</summary>
 		internal IList<X509CRL> crls;
@@ -86,7 +87,7 @@ namespace com.itextpdf.signatures
 		/// </returns>
 		/// <seealso cref="com.itextpdf.text.pdf.security.RootStoreVerifier#verify(java.security.cert.X509Certificate,java.security.cert.X509Certificate,java.util.Date)
 		/// 	"/>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
@@ -118,7 +119,7 @@ namespace com.itextpdf.signatures
 			LOGGER.Info("Valid CRLs found: " + validCrlsFound);
 			if (validCrlsFound > 0)
 			{
-				result.Add(new VerificationOK(signCert, this.GetClass(), "Valid CRLs found: " + validCrlsFound
+				result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound
 					 + (online ? " (online)" : "")));
 			}
 			if (verifier != null)
@@ -135,7 +136,7 @@ namespace com.itextpdf.signatures
 		/// <param name="issuerCert">its issuer</param>
 		/// <param name="signDate">the sign date</param>
 		/// <returns>true if the verification succeeded</returns>
-		/// <exception cref="java.security.GeneralSecurityException"/>
+		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual bool Verify(X509CRL crl, X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
 		{

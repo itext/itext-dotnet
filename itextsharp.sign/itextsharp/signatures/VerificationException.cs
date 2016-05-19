@@ -43,19 +43,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using java.security;
-using java.security.cert;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
 	/// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
 	public class VerificationException : GeneralSecurityException
 	{
-		/// <summary>A Serial Version UID</summary>
-		private const long serialVersionUID = 2978604513926438256L;
-
 		/// <summary>Creates a VerificationException</summary>
-		public VerificationException(Certificate cert, String message)
+		public VerificationException(X509Certificate cert, String message)
 			: base(String.Format("Certificate {0} failed: {1}", cert == null ? "Unknown" : ((
 				X509Certificate)cert).GetSubjectDN().GetName(), message))
 		{
