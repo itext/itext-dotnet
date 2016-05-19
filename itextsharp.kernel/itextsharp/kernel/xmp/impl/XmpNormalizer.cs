@@ -29,6 +29,8 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Impl.Xpath;
 using iTextSharp.Kernel.Xmp.Options;
@@ -246,40 +248,40 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// 	</exception>
 		private static void RepairAltText(XMPNode arrayNode)
 		{
-			if (arrayNode == null || !arrayNode.GetOptions().IsArray())
-			{
+			if (arrayNode == null || !arrayNode.GetOptions().IsArray()) {
 				// Already OK or not even an array.
 				return;
 			}
+
 			// fix options
-			arrayNode.GetOptions().SetArrayOrdered(true).SetArrayAlternate(true).SetArrayAltText
-				(true);
-			for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
-			{
-				XMPNode currChild = (XMPNode)it.Current;
-				if (currChild.GetOptions().IsCompositeProperty())
-				{
+			arrayNode.GetOptions().SetArrayOrdered(true);
+			arrayNode.GetOptions().SetArrayAlternate(true);
+			arrayNode.GetOptions().SetArrayAltText(true);
+			ArrayList currChildsToRemove = new ArrayList();
+			IEnumerator it = arrayNode.IterateChildren();
+			while (it.MoveNext()) {
+				XmpNode currChild = (XmpNode) it.Current;
+				if (currChild == null)
+					continue;
+				if (currChild.GetOptions().IsCompositeProperty()) {
 					// Delete non-simple children.
-					it.Remove();
+					currChildsToRemove.Add(currChild);
 				}
-				else
-				{
-					if (!currChild.GetOptions().GetHasLanguage())
-					{
-						String childValue = currChild.GetValue();
-						if (childValue == null || childValue.Length == 0)
-						{
-							// Delete empty valued children that have no xml:lang.
-							it.Remove();
-						}
-						else
-						{
-							// Add an xml:lang qualifier with the value "x-repair".
-							XMPNode repairLang = new XMPNode(XMPConst.XML_LANG, "x-repair", null);
-							currChild.AddQualifier(repairLang);
-						}
+				else if (!currChild.GetOptions().GetHasLanguage()) {
+					string childValue = currChild.GetValue();
+					if (String.IsNullOrEmpty(childValue)) {
+						// Delete empty valued children that have no xml:lang.
+						currChildsToRemove.Add(currChild);
+					}
+					else {
+						// Add an xml:lang qualifier with the value "x-repair".
+						XmpNode repairLang = new XmpNode(XMPConst.XML_LANG, "x-repair", null);
+						currChild.AddQualifier(repairLang);
 					}
 				}
+			}
+			foreach (object o in currChildsToRemove) {
+				arrayNode.GetChildren().Remove(o);
 			}
 		}
 
@@ -294,112 +296,100 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards XMP errors</exception>
 		private static void MoveExplicitAliases(XMPNode tree, ParseOptions options)
 		{
-			if (!tree.GetHasAliases())
-			{
+			if (!tree.GetHasAliases()) {
 				return;
 			}
 			tree.SetHasAliases(false);
+
 			bool strictAliasing = options.GetStrictAliasing();
-			for (IEnumerator schemaIt = tree.GetUnmodifiableChildren().GetEnumerator(); schemaIt
-				.MoveNext(); )
-			{
-				XMPNode currSchema = (XMPNode)schemaIt.Current;
-				if (!currSchema.GetHasAliases())
-				{
+			IEnumerator schemaIt = tree.GetUnmodifiableChildren().GetEnumerator();
+			while (schemaIt.MoveNext()) {
+				XMPNode currSchema = (XMPNode) schemaIt.Current;
+				if (currSchema == null)
+					continue;
+				if (!currSchema.GetHasAliases()) {
 					continue;
 				}
-				for (IEnumerator propertyIt = currSchema.IterateChildren(); propertyIt.MoveNext()
-					; )
-				{
-					XMPNode currProp = (XMPNode)propertyIt.Current;
-					if (!currProp.IsAlias())
-					{
+
+				List<XmpNode> currPropsToRemove = new List<XmpNode>();
+				IEnumerator propertyIt = currSchema.IterateChildren();
+				while (propertyIt.MoveNext()) {
+					XMPNode currProp = (XMPNode) propertyIt.Current;
+					if (currProp == null)
+						continue;
+
+					if (!currProp.IsAlias()) {
 						continue;
 					}
+
 					currProp.SetAlias(false);
+
 					// Find the base path, look for the base schema and root node.
-					XMPAliasInfo info = XMPMetaFactory.GetSchemaRegistry().FindAlias(currProp.GetName
-						());
-					if (info != null)
-					{
+					XMPAliasInfo info = XMPMetaFactory.GetSchemaRegistry().FindAlias(currProp.GetName());
+					if (info != null) {
 						// find or create schema
-						XMPNode baseSchema = XMPNodeUtils.FindSchemaNode(tree, info.GetNamespace(), null, 
-							true);
+						XMPNode baseSchema = XMPNodeUtils.FindSchemaNode(tree, info.GetNamespace(), null, true);
 						baseSchema.SetImplicit(false);
-						XMPNode baseNode = XMPNodeUtils.FindChildNode(baseSchema, info.GetPrefix() + info
-							.GetPropName(), false);
-						if (baseNode == null)
-						{
-							if (info.GetAliasForm().IsSimple())
-							{
+
+						XMPNode baseNode = XMPNodeUtils.FindChildNode(baseSchema, info.GetPrefix() + info.GetPropName(), false);
+						if (baseNode == null) {
+							if (info.GetAliasForm().IsSimple()) {
 								// A top-to-top alias, transplant the property.
 								// change the alias property name to the base name
-								String qname = info.GetPrefix() + info.GetPropName();
+								string qname = info.GetPrefix() + info.GetPropName();
 								currProp.SetName(qname);
 								baseSchema.AddChild(currProp);
-								// remove the alias property
-								propertyIt.Remove();
 							}
-							else
-							{
+							else {
 								// An alias to an array item, 
 								// create the array and transplant the property.
-								baseNode = new XMPNode(info.GetPrefix() + info.GetPropName(), info.GetAliasForm()
-									.ToPropertyOptions());
+								baseNode = new XMPNode(info.GetPrefix() + info.GetPropName(),
+									info.GetAliasForm().ToPropertyOptions());
 								baseSchema.AddChild(baseNode);
-								TransplantArrayItemAlias(propertyIt, currProp, baseNode);
+								TransplantArrayItemAlias(currProp, baseNode);
 							}
+							currPropsToRemove.Add(currProp);
 						}
-						else
-						{
-							if (info.GetAliasForm().IsSimple())
-							{
-								// The base node does exist and this is a top-to-top alias.
-								// Check for conflicts if strict aliasing is on. 
-								// Remove and delete the alias subtree.
-								if (strictAliasing)
-								{
-									CompareAliasedSubtrees(currProp, baseNode, true);
-								}
-								propertyIt.Remove();
+						else if (info.GetAliasForm().IsSimple()) {
+							// The base node does exist and this is a top-to-top alias.
+							// Check for conflicts if strict aliasing is on. 
+							// Remove and delete the alias subtree.
+							if (strictAliasing) {
+								CompareAliasedSubtrees(currProp, baseNode, true);
 							}
-							else
-							{
-								// This is an alias to an array item and the array exists.
-								// Look for the aliased item.
-								// Then transplant or check & delete as appropriate.
-								XMPNode itemNode = null;
-								if (info.GetAliasForm().IsArrayAltText())
-								{
-									int xdIndex = XMPNodeUtils.LookupLanguageItem(baseNode, XMPConst.X_DEFAULT);
-									if (xdIndex != -1)
-									{
-										itemNode = baseNode.GetChild(xdIndex);
-									}
-								}
-								else
-								{
-									if (baseNode.HasChildren())
-									{
-										itemNode = baseNode.GetChild(1);
-									}
-								}
-								if (itemNode == null)
-								{
-									TransplantArrayItemAlias(propertyIt, currProp, baseNode);
-								}
-								else
-								{
-									if (strictAliasing)
-									{
-										CompareAliasedSubtrees(currProp, itemNode, true);
-									}
-									propertyIt.Remove();
+							currPropsToRemove.Add(currProp);
+						}
+						else {
+							// This is an alias to an array item and the array exists.
+							// Look for the aliased item.
+							// Then transplant or check & delete as appropriate.
+
+							XMPNode itemNode = null;
+							if (info.GetAliasForm().IsArrayAltText()) {
+								int xdIndex = XMPNodeUtils.LookupLanguageItem(baseNode, XMPConst.X_DEFAULT);
+								if (xdIndex != -1) {
+									itemNode = baseNode.GetChild(xdIndex);
 								}
 							}
+							else if (baseNode.HasChildren()) {
+								itemNode = baseNode.GetChild(1);
+							}
+
+							if (itemNode == null) {
+								TransplantArrayItemAlias(currProp, baseNode);
+							}
+							else {
+								if (strictAliasing) {
+									CompareAliasedSubtrees(currProp, itemNode, true);
+								}
+							}
+							currPropsToRemove.Add(currProp);
 						}
 					}
 				}
+				foreach (XMPNode o in currPropsToRemove)
+					currSchema.RemoveChild(o);
+				currPropsToRemove.Clear();
 				currSchema.SetHasAliases(false);
 			}
 		}
@@ -413,17 +403,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static void TransplantArrayItemAlias(IEnumerator propertyIt, XMPNode childNode
 			, XMPNode baseArray)
 		{
-			if (baseArray.GetOptions().IsArrayAltText())
-			{
-				if (childNode.GetOptions().GetHasLanguage())
-				{
-					throw new XMPException("Alias to x-default already has a language qualifier", XMPError
-						.BADXMP);
+			if (baseArray.GetOptions().IsArrayAltText()) {
+				if (childNode.GetOptions().GetsHasLanguage()) {
+					throw new XMPException("Alias to x-default already has a language qualifier",
+						XMPError.BADXMP);
 				}
-				XMPNode langQual = new XMPNode(XMPConst.XML_LANG, XMPConst.X_DEFAULT, null);
+				XmpNode langQual = new XmpNode(XMPConst.XML_LANG, XMPConst.X_DEFAULT, null);
 				childNode.AddQualifier(langQual);
 			}
-			propertyIt.Remove();
 			childNode.SetName(XMPConst.ARRAY_ITEM_NAME);
 			baseArray.AddChild(childNode);
 		}
@@ -436,41 +423,29 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			// Note: if dates are not found the convert-methods throws an exceptions,
 			// 		 and this methods returns.
-			XMPNode gpsDateTime = XMPNodeUtils.FindChildNode(exifSchema, "exif:GPSTimeStamp", 
-				false);
-			if (gpsDateTime == null)
-			{
+			XmpNode gpsDateTime = XMPNodeUtils.FindChildNode(exifSchema, "exif:GPSTimeStamp", false);
+			if (gpsDateTime == null) {
 				return;
 			}
-			try
-			{
-				XMPDateTime binGPSStamp;
-				XMPDateTime binOtherDate;
-				binGPSStamp = XMPUtils.ConvertToDate(gpsDateTime.GetValue());
-				if (binGPSStamp.GetYear() != 0 || binGPSStamp.GetMonth() != 0 || binGPSStamp.GetDay
-					() != 0)
-				{
+
+			try {
+				XMPDateTime binGpsStamp = XMPUtils.ConvertToDate(gpsDateTime.GetValue());
+				if (binGpsStamp.GetYear() != 0 || binGpsStamp.GetMonth() != 0 || binGpsStamp.GetDay() != 0) {
 					return;
 				}
-				XMPNode otherDate = XMPNodeUtils.FindChildNode(exifSchema, "exif:DateTimeOriginal"
-					, false);
-				if (otherDate == null)
-				{
-					otherDate = XMPNodeUtils.FindChildNode(exifSchema, "exif:DateTimeDigitized", false
-						);
-				}
-				binOtherDate = XMPUtils.ConvertToDate(otherDate.GetValue());
-				DateTime cal = binGPSStamp.GetCalendar();
-				cal.Set(DateTime.YEAR, binOtherDate.GetYear());
-				cal.Set(DateTime.MONTH, binOtherDate.GetMonth());
-				cal.Set(DateTime.DAY_OF_MONTH, binOtherDate.GetDay());
-				binGPSStamp = new XMPDateTimeImpl(cal);
-				gpsDateTime.SetValue(XMPUtils.ConvertFromDate(binGPSStamp));
+
+				XmpNode otherDate = XMPNodeUtils.FindChildNode(exifSchema, "exif:DateTimeOriginal", false);
+				otherDate = otherDate ?? XMPNodeUtils.FindChildNode(exifSchema, "exif:DateTimeDigitized", false);
+
+				XMPDateTime binOtherDate = XMPUtils.ConvertToDate(otherDate.GetValue());
+				XMPCalendar cal = binGpsStamp.GetCalendar();
+				DateTime dt = new DateTime(binOtherDate.GetYear(), binOtherDate.GetMonth(), binOtherDate.GetDay(),
+					cal.GetDateTime().Hour, cal.GetDateTime().Minute, cal.GetDateTime().Second, cal.GetDateTime().Millisecond);
+				cal.SetDateTime(dt);
+				binGpsStamp = new XMPDateTimeImpl(cal);
+				gpsDateTime.SetValue(XMPUtils.ConvertFromDate(binGpsStamp));
 			}
-			catch (XMPException)
-			{
-				// Don't let a missing or bad date stop other things.
-				return;
+			catch (XMPException) {
 			}
 		}
 
@@ -481,13 +456,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			// Delete empty schema nodes. Do this last, other cleanup can make empty
 			// schema.
-			for (IEnumerator it = tree.IterateChildren(); it.MoveNext(); )
-			{
-				XMPNode schema = (XMPNode)it.Current;
-				if (!schema.HasChildren())
-				{
-					it.Remove();
+			List<XMPNode> schemasToRemove = new List<XMPNode>();
+			foreach (XmpNode schema in tree.GetChildren()) {
+				if (!schema.HasChildren()) {
+					schemasToRemove.Add(schema);
 				}
+			}
+			foreach (XmpNode xmpNode in schemasToRemove) {
+				tree.GetChildren().Remove(xmpNode);
 			}
 		}
 
@@ -504,29 +480,29 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static void CompareAliasedSubtrees(XMPNode aliasNode, XMPNode baseNode, bool
 			 outerCall)
 		{
-			if (!aliasNode.GetValue().Equals(baseNode.GetValue()) || aliasNode.GetChildrenLength
-				() != baseNode.GetChildrenLength())
-			{
+			if (!aliasNode.GetValue().Equals(baseNode.GetValue())
+				|| aliasNode.GetChildrenLength() != baseNode.GetChildrenLength()) {
 				throw new XMPException("Mismatch between alias and base nodes", XMPError.BADXMP);
 			}
-			if (!outerCall && (!aliasNode.GetName().Equals(baseNode.GetName()) || !aliasNode.
-				GetOptions().Equals(baseNode.GetOptions()) || aliasNode.GetQualifierLength() != 
-				baseNode.GetQualifierLength()))
-			{
+
+			if (!outerCall &&
+				(!aliasNode.GetName().Equals(baseNode.GetName()) || !aliasNode.GetOptions().Equals(baseNode.GetOptions()) ||
+					aliasNode.GetQualifierLength() != baseNode.GetQualifierLength())) {
 				throw new XMPException("Mismatch between alias and base nodes", XMPError.BADXMP);
 			}
-			for (IEnumerator an = aliasNode.IterateChildren(); an.MoveNext() && bn.MoveNext()
-				; )
-			{
-				XMPNode aliasChild = (XMPNode)an.Current;
-				XMPNode baseChild = (XMPNode)bn.Current;
+
+			for (IEnumerator an = aliasNode.IterateChildren(), bn = baseNode.IterateChildren();
+				an.MoveNext() && bn.MoveNext();) {
+				XmpNode aliasChild = (XmpNode) an.Current;
+				XmpNode baseChild = (XmpNode) bn.Current;
 				CompareAliasedSubtrees(aliasChild, baseChild, false);
 			}
-			for (IEnumerator an_1 = aliasNode.IterateQualifier(); an_1.MoveNext() && bn.MoveNext
-				(); )
-			{
-				XMPNode aliasQual = (XMPNode)an_1.Current;
-				XMPNode baseQual = (XMPNode)bn.Current;
+
+
+			for (IEnumerator an = aliasNode.IterateQualifier(), bn = baseNode.IterateQualifier();
+				an.MoveNext() && bn.MoveNext();) {
+				XmpNode aliasQual = (XmpNode) an.Current;
+				XmpNode baseQual = (XmpNode) bn.Current;
 				CompareAliasedSubtrees(aliasQual, baseQual, false);
 			}
 		}
