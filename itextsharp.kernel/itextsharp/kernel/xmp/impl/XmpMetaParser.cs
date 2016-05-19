@@ -205,7 +205,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						try
 						{
 							String encoding = buffer.GetEncoding();
-							Reader fixReader = new FixASCIIControlsReader(new InputStreamReader(buffer.GetByteStream
+							TextReader fixReader = new FixASCIIControlsReader(new InputStreamReader(buffer.GetByteStream
 								(), encoding));
 							return ParseInputSource(new InputSource(fixReader));
 						}

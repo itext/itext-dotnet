@@ -50,7 +50,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// 4. hasLanguage, hasType should be automatically maintained by XMPNode
 	/// </remarks>
 	/// <since>21.02.2006</since>
-	internal class XMPNode : IComparable
+	public class XMPNode : IComparable
 	{
 		/// <summary>name of the node, contains different information depending of the node kind
 		/// 	</summary>
@@ -193,7 +193,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </summary>
 		protected internal virtual void CleanupChildren()
 		{
-			if (children.IsEmpty())
+			if (children.Count == 0)
 			{
 				children = null;
 			}
@@ -283,7 +283,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				}
 			}
 			GetQualifier().Remove(qualNode);
-			if (qualifier.IsEmpty())
+			if (qualifier.Count == 0)
 			{
 				opts.SetHasQualifiers(false);
 				qualifier = null;
@@ -728,7 +728,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// that its initialized.
 		/// </summary>
 		/// <returns>Returns list of children that is lazy initialized.</returns>
-		private IList GetChildren()
+		protected internal virtual IList GetChildren()
 		{
 			if (children == null)
 			{

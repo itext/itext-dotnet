@@ -223,8 +223,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag
 			(IAccessibleElement element)
 		{
-			PdfStructElem structElem = connectedModelToStruct[element];
-			connectedModelToStruct.JRemove(element);
+			PdfStructElem structElem = connectedModelToStruct.JRemove(element);
 			RemoveStructToModelConnection(structElem);
 			return this;
 		}
@@ -530,9 +529,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		/// <returns>parent of the flushed tag</returns>
 		internal virtual IPdfStructElem FlushTag(PdfStructElem tagStruct)
 		{
-			IAccessibleElement modelElement = connectedStructToModel[tagStruct.GetPdfObject()
-				];
-			connectedStructToModel.JRemove(tagStruct.GetPdfObject());
+			IAccessibleElement modelElement = connectedStructToModel.JRemove(tagStruct.GetPdfObject
+				());
 			if (modelElement != null)
 			{
 				connectedModelToStruct.JRemove(modelElement);
@@ -546,8 +544,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		{
 			if (structElem != null)
 			{
-				IAccessibleElement element = connectedStructToModel[structElem.GetPdfObject()];
-				connectedStructToModel.JRemove(structElem.GetPdfObject());
+				IAccessibleElement element = connectedStructToModel.JRemove(structElem.GetPdfObject
+					());
 				structElem.SetRole(element.GetRole());
 				if (element.GetAccessibilityProperties() != null)
 				{

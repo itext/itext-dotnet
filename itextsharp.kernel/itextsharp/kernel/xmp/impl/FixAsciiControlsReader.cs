@@ -27,7 +27,8 @@
 //        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
-using Java.IO;
+using System.IO;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
@@ -58,14 +59,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private int digits = 0;
 
 		/// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-		/// <seealso cref="Java.IO.PushbackReader.PushbackReader(Java.IO.Reader, int)"/>
-		/// <param name="in">a Reader</param>
-		public FixASCIIControlsReader(Reader @in)
-			: base(@in, BUFFER_SIZE)
+		/// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)
+		/// 	"/>
+		/// <param name="input">a Reader</param>
+		public FixASCIIControlsReader(TextReader input)
+			: base(input, BUFFER_SIZE)
 		{
 		}
 
-		/// <seealso cref="Java.IO.Reader.Read(char[], int, int)"/>
+		/// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
 		/// <exception cref="System.IO.IOException"/>
 		public override int Read(char[] cbuf, int off, int len)
 		{

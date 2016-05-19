@@ -36,16 +36,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	public sealed class CountOutputStream : Stream
 	{
 		/// <summary>the decorated output stream</summary>
-		private readonly Stream @out;
+		private readonly Stream output;
 
 		/// <summary>the byte counter</summary>
 		private int bytesWritten = 0;
 
 		/// <summary>Constructor with providing the output stream to decorate.</summary>
-		/// <param name="out">an <code>OutputStream</code></param>
-		internal CountOutputStream(Stream @out)
+		/// <param name="output">an <code>OutputStream</code></param>
+		internal CountOutputStream(Stream output)
 		{
-			this.@out = @out;
+			this.output = output;
 		}
 
 		/// <summary>Counts the written bytes.</summary>
@@ -53,7 +53,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="System.IO.IOException"/>
 		public override void Write(byte[] buf, int off, int len)
 		{
-			@out.Write(buf, off, len);
+			output.Write(buf, off, len);
 			bytesWritten += len;
 		}
 
@@ -62,7 +62,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="System.IO.IOException"/>
 		public override void Write(byte[] buf)
 		{
-			@out.Write(buf);
+			output.Write(buf);
 			bytesWritten += buf.Length;
 		}
 
@@ -71,7 +71,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="System.IO.IOException"/>
 		public override void Write(int b)
 		{
-			@out.Write(b);
+			output.Write(b);
 			bytesWritten++;
 		}
 

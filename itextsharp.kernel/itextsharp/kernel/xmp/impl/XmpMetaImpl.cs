@@ -42,7 +42,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// .
 	/// </summary>
 	/// <since>17.02.2006</since>
-	public class XMPMetaImpl : XMPMeta, XMPConst
+	public class XMPMetaImpl : XMPConst, XMPMeta
 	{
 		/// <summary>Property values are Strings by default</summary>
 		private const int VALUE_STRING = 0;
