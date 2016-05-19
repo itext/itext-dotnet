@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Filespec;
 using iTextSharp.Test;
@@ -12,12 +11,9 @@ namespace iTextSharp.Pdfa
 	{
 		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest01()
 		{
 			Assert.That(() => 
@@ -48,7 +44,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest02()
 		{
 			Assert.That(() => 
@@ -74,7 +70,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest03()
 		{
 			Assert.That(() => 

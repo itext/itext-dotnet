@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -27,12 +26,9 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorCheckTest1()
 		{
 			Assert.That(() => 
@@ -70,7 +66,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorCheckTest2()
 		{
 			Assert.That(() => 
@@ -100,7 +96,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorCheckTest3()
 		{
 			Assert.That(() => 
@@ -126,7 +122,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorCheckTest4()
 		{
 			String outPdf = destinationFolder + "pdfA1b_colorCheckTest4.pdf";
@@ -154,7 +150,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EgsCheckTest1()
 		{
 			Assert.That(() => 
@@ -179,7 +175,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EgsCheckTest2()
 		{
 			String outPdf = destinationFolder + "pdfA1b_egsCheckTest2.pdf";
@@ -201,7 +197,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EgsCheckTest3()
 		{
 			Assert.That(() => 
@@ -225,7 +221,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EgsCheckTest4()
 		{
 			Assert.That(() => 
@@ -249,7 +245,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TransparencyCheckTest1()
 		{
 			Assert.That(() => 
@@ -280,7 +276,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TransparencyCheckTest2()
 		{
 			Assert.That(() => 
@@ -305,7 +301,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TransparencyCheckTest3()
 		{
 			String outPdf = destinationFolder + "pdfA1b_transparencyCheckTest3.pdf";

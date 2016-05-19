@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
@@ -24,13 +23,10 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest01()
 		{
 			String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest01.pdf";
@@ -49,7 +45,7 @@ namespace iTextSharp.Pdfa
 			canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
 				("Hello World!").EndText().RestoreState();
 			MemoryStream txt = new MemoryStream();
-			TextWriter @out = new TextWriter(txt);
+			StreamWriter @out = new StreamWriter(txt);
 			@out.Write("<foo><foo2>Hello world</foo2></foo>");
 			@out.Close();
 			pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", PdfName.ApplicationXml
@@ -61,7 +57,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest02()
 		{
 			String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest02.pdf";
@@ -80,7 +76,7 @@ namespace iTextSharp.Pdfa
 			canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
 				("Hello World!").EndText().RestoreState();
 			MemoryStream txt = new MemoryStream();
-			TextWriter @out = new TextWriter(txt);
+			StreamWriter @out = new StreamWriter(txt);
 			@out.Write("<foo><foo2>Hello world</foo2></foo>");
 			@out.Close();
 			pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, PdfName
@@ -92,7 +88,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest03()
 		{
 			String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest03.pdf";
@@ -120,7 +116,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FileSpecCheckTest04()
 		{
 			String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest04.pdf";
@@ -139,7 +135,7 @@ namespace iTextSharp.Pdfa
 			canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
 				("Hello World!").EndText().RestoreState();
 			MemoryStream txt = new MemoryStream();
-			TextWriter @out = new TextWriter(txt);
+			StreamWriter @out = new StreamWriter(txt);
 			@out.Write("<foo><foo2>Hello world</foo2></foo>");
 			@out.Close();
 			pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, null

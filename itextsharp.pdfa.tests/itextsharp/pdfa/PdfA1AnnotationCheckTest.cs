@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -25,12 +24,9 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest01()
 		{
 			Assert.That(() => 
@@ -52,7 +48,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest02()
 		{
 			Assert.That(() => 
@@ -76,7 +72,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest03()
 		{
 			Assert.That(() => 
@@ -99,7 +95,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest04()
 		{
 			Assert.That(() => 
@@ -123,7 +119,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest05()
 		{
 			Assert.That(() => 
@@ -149,7 +145,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest06()
 		{
 			Assert.That(() => 
@@ -174,7 +170,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest07()
 		{
 			String outPdf = destinationFolder + "pdfA1b_annotationCheckTest07.pdf";
@@ -196,7 +192,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest08()
 		{
 			Assert.That(() => 
@@ -222,7 +218,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnnotationCheckTest09()
 		{
 			String outPdf = destinationFolder + "pdfA1a_annotationCheckTest09.pdf";

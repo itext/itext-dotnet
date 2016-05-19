@@ -26,7 +26,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest01()
 		{
 			String outPdf = destinationFolder + "pdfA1b_flushingTest01.pdf";
@@ -53,7 +53,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest02()
 		{
 			String outPdf = destinationFolder + "pdfA2b_flushingTest02.pdf";
@@ -81,7 +81,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest03()
 		{
 			String outPdf = destinationFolder + "pdfA3b_flushingTest03.pdf";
@@ -109,7 +109,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AddUnusedStreamObjectsTest()
 		{
 			String outPdf = destinationFolder + "pdfA1b_docWithUnusedObjects_3.pdf";

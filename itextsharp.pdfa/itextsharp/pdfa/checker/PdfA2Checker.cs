@@ -173,7 +173,7 @@ namespace iTextSharp.Pdfa.Checker
 		{
 			if (fill != null)
 			{
-				if (fill)
+				if ((bool)fill)
 				{
 					currentFillCsIsIccBasedCMYK = false;
 				}
@@ -270,7 +270,7 @@ namespace iTextSharp.Pdfa.Checker
 				byte[] iccBytes = ((PdfArray)colorSpace.GetPdfObject()).GetAsStream(1).GetBytes();
 				if (ICC_COLOR_SPACE_CMYK.Equals(IccProfile.GetIccColorSpaceName(iccBytes)))
 				{
-					if (fill)
+					if ((bool)fill)
 					{
 						currentFillCsIsIccBasedCMYK = true;
 					}

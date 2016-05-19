@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
@@ -12,12 +11,9 @@ namespace iTextSharp.Pdfa
 	{
 		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CatalogCheck01()
 		{
 			Assert.That(() => 

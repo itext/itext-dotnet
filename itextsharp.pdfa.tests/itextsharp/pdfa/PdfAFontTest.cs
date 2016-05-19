@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf;
@@ -23,13 +22,10 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(outputDir);
 		}
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA1_01()
 		{
 			String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_01.pdf";
@@ -51,7 +47,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA1_02()
 		{
 			Assert.That(() => 
@@ -76,7 +72,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA1_03()
 		{
 			String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_03.pdf";
@@ -99,7 +95,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA1_04()
 		{
 			Assert.That(() => 
@@ -123,7 +119,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA1_05()
 		{
 			String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_05.pdf";
@@ -147,7 +143,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA2_01()
 		{
 			String outPdf = outputDir + "pdfA2b_fontCheckPdfA2_01.pdf";
@@ -171,7 +167,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontCheckPdfA3_01()
 		{
 			String outPdf = outputDir + "pdfA3b_fontCheckPdfA3_01.pdf";
@@ -195,7 +191,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CidFontCheckTest1()
 		{
 			String outPdf = outputDir + "pdfA2b_cidFontCheckTest1.pdf";
@@ -219,7 +215,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CidFontCheckTest2()
 		{
 			String outPdf = outputDir + "pdfA2b_cidFontCheckTest2.pdf";
@@ -243,7 +239,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CidFontCheckTest3()
 		{
 			String outPdf = outputDir + "pdfA2b_cidFontCheckTest3.pdf";

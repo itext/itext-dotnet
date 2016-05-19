@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
@@ -23,13 +22,10 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
-		[Rule]
-		public ExpectedException junitExpectedException = ExpectedException.None();
-
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		[NUnit.Framework.ExpectedException(typeof(PdfAConformanceException))]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AcroFormCheck01()
 		{
 			PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -47,7 +43,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AcroFormCheck02()
 		{
 			String outPdf = destinationFolder + "pdfA2b_acroFormCheck02.pdf";
@@ -68,7 +64,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AcroFormCheck03()
 		{
 			String outPdf = destinationFolder + "pdfA2b_acroFormCheck03.pdf";
@@ -87,7 +83,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AcroFormCheck04()
 		{
 			Assert.That(() => 
