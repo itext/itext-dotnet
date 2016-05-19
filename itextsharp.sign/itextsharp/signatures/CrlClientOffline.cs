@@ -75,7 +75,7 @@ namespace iTextSharp.Signatures
 		/// have a local cache of the Certificate Revocation List.
 		/// </summary>
 		/// <param name="crl">a CRL object</param>
-		public CrlClientOffline(CRL crl)
+		public CrlClientOffline(X509Crl crl)
 		{
 			try
 			{

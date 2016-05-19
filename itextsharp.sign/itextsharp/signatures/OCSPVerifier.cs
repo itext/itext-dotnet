@@ -323,17 +323,17 @@ namespace iTextSharp.Signatures
 			// validating ocsp signers certificate
 			// Check if responders certificate has id-pkix-ocsp-nocheck extension,
 			// in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
-			if (responderCert.GetExtensionValue(OCSPObjectIdentifiers.id_pkix_ocsp_nocheck.GetId
-				()) == null)
+			if (responderCert.GetExtensionValue(OCSPObjectIdentifiers.id_pkix_ocsp_nocheck.Id
+				) == null)
 			{
-				CRL crl;
+				X509Crl crl;
 				try
 				{
 					crl = CertificateUtil.GetCRL(responderCert);
 				}
 				catch (Exception)
 				{
-					crl = (CRL)null;
+					crl = (X509Crl)null;
 				}
 				if (crl != null && crl is X509CRL)
 				{

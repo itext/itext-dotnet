@@ -46,8 +46,9 @@ using System;
 using System.IO;
 using Java.Math;
 using Java.Net;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
-using Org.Bouncycastle.Asn1;
+using Org.BouncyCastle.Security;
 using Org.Bouncycastle.Asn1.Cmp;
 using Org.Bouncycastle.Tsp;
 using iTextSharp.IO.Codec;
@@ -161,7 +162,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual IDigest GetMessageDigest()
 		{
-			return new BouncyCastleDigest().GetMessageDigest(digestAlgorithm);
+			return new DigestUtilities().GetDigest(digestAlgorithm);
 		}
 
 		/// <summary>Get RFC 3161 timeStampToken.</summary>
@@ -181,7 +182,7 @@ namespace iTextSharp.Signatures
 			tsqGenerator.SetCertReq(true);
 			// tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
 			BigInteger nonce = BigInteger.ValueOf(iTextSharp.CurrentTimeMillis());
-			TimeStampRequest request = tsqGenerator.Generate(new ASN1ObjectIdentifier(DigestAlgorithms
+			TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms
 				.GetAllowedDigest(digestAlgorithm)), imprint, nonce);
 			byte[] requestBytes = request.GetEncoded();
 			// Call the communications layer

@@ -48,6 +48,7 @@ using Java.IO;
 using Java.Math;
 using Java.Net;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Asn1.Ocsp;
 using Org.Bouncycastle.Asn1.X509;
@@ -191,10 +192,10 @@ namespace iTextSharp.Signatures
 			// basic request generation with nonce
 			OCSPReqBuilder gen = new OCSPReqBuilder();
 			gen.AddRequest(id);
-			Extension ext = new Extension(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, false, new 
-				DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId()).GetEncoded
-				()));
-			gen.SetRequestExtensions(new Extensions(new Extension[] { ext }));
+			X509Extensions ext = new X509Extensions(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, 
+				false, new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId
+				()).GetEncoded()));
+			gen.SetRequestExtensions(new Extensions(new X509Extensions[] { ext }));
 			return gen.Build();
 		}
 

@@ -66,8 +66,8 @@ namespace iTextSharp.Signatures
 		/// a <CODE>String</CODE> with the error description or <CODE>null</CODE>
 		/// if no error
 		/// </returns>
-		public static String VerifyCertificate(X509Certificate cert, ICollection<CRL> crls
-			, DateTime calendar)
+		public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl>
+			 crls, DateTime calendar)
 		{
 			if (calendar == null)
 			{
@@ -108,7 +108,7 @@ namespace iTextSharp.Signatures
 			}
 			if (crls != null)
 			{
-				foreach (CRL crl in crls)
+				foreach (X509Crl crl in crls)
 				{
 					if (crl.IsRevoked(cert))
 					{
@@ -130,7 +130,7 @@ namespace iTextSharp.Signatures
 		/// failed certificate and <CODE>error</CODE> is the error message
 		/// </returns>
 		public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
-			, KeyStore keystore, ICollection<CRL> crls, DateTime calendar)
+			, KeyStore keystore, ICollection<X509Crl> crls, DateTime calendar)
 		{
 			IList<VerificationException> result = new List<VerificationException>();
 			if (calendar == null)

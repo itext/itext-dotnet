@@ -48,7 +48,7 @@ using System.IO;
 using System.Text;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1;
+using iTextSharp.Kernel;
 
 namespace iTextSharp.Signatures
 {
@@ -62,55 +62,53 @@ namespace iTextSharp.Signatures
 		public class X500Name
 		{
 			/// <summary>Country code - StringType(SIZE(2)).</summary>
-			public static readonly ASN1ObjectIdentifier C = new ASN1ObjectIdentifier("2.5.4.6"
-				);
+			public static readonly DerObjectIdentifier C = new DerObjectIdentifier("2.5.4.6");
 
 			/// <summary>Organization - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier O = new ASN1ObjectIdentifier("2.5.4.10"
+			public static readonly DerObjectIdentifier O = new DerObjectIdentifier("2.5.4.10"
 				);
 
 			/// <summary>Organizational unit name - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier OU = new ASN1ObjectIdentifier("2.5.4.11"
+			public static readonly DerObjectIdentifier OU = new DerObjectIdentifier("2.5.4.11"
 				);
 
 			/// <summary>Title.</summary>
-			public static readonly ASN1ObjectIdentifier T = new ASN1ObjectIdentifier("2.5.4.12"
+			public static readonly DerObjectIdentifier T = new DerObjectIdentifier("2.5.4.12"
 				);
 
 			/// <summary>Common name - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier CN = new ASN1ObjectIdentifier("2.5.4.3"
+			public static readonly DerObjectIdentifier CN = new DerObjectIdentifier("2.5.4.3"
 				);
 
 			/// <summary>Device serial number name - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier SN = new ASN1ObjectIdentifier("2.5.4.5"
+			public static readonly DerObjectIdentifier SN = new DerObjectIdentifier("2.5.4.5"
 				);
 
 			/// <summary>Locality name - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier L = new ASN1ObjectIdentifier("2.5.4.7"
-				);
+			public static readonly DerObjectIdentifier L = new DerObjectIdentifier("2.5.4.7");
 
 			/// <summary>State, or province name - StringType(SIZE(1..64)).</summary>
-			public static readonly ASN1ObjectIdentifier ST = new ASN1ObjectIdentifier("2.5.4.8"
+			public static readonly DerObjectIdentifier ST = new DerObjectIdentifier("2.5.4.8"
 				);
 
 			/// <summary>Naming attribute of type X520name.</summary>
-			public static readonly ASN1ObjectIdentifier SURNAME = new ASN1ObjectIdentifier("2.5.4.4"
+			public static readonly DerObjectIdentifier SURNAME = new DerObjectIdentifier("2.5.4.4"
 				);
 
 			/// <summary>Naming attribute of type X520name.</summary>
-			public static readonly ASN1ObjectIdentifier GIVENNAME = new ASN1ObjectIdentifier(
-				"2.5.4.42");
-
-			/// <summary>Naming attribute of type X520name.</summary>
-			public static readonly ASN1ObjectIdentifier INITIALS = new ASN1ObjectIdentifier("2.5.4.43"
+			public static readonly DerObjectIdentifier GIVENNAME = new DerObjectIdentifier("2.5.4.42"
 				);
 
 			/// <summary>Naming attribute of type X520name.</summary>
-			public static readonly ASN1ObjectIdentifier GENERATION = new ASN1ObjectIdentifier
-				("2.5.4.44");
+			public static readonly DerObjectIdentifier INITIALS = new DerObjectIdentifier("2.5.4.43"
+				);
 
 			/// <summary>Naming attribute of type X520name.</summary>
-			public static readonly ASN1ObjectIdentifier UNIQUE_IDENTIFIER = new ASN1ObjectIdentifier
+			public static readonly DerObjectIdentifier GENERATION = new DerObjectIdentifier("2.5.4.44"
+				);
+
+			/// <summary>Naming attribute of type X520name.</summary>
+			public static readonly DerObjectIdentifier UNIQUE_IDENTIFIER = new DerObjectIdentifier
 				("2.5.4.45");
 
 			/// <summary>Email address (RSA PKCS#9 extension) - IA5String.</summary>
@@ -118,23 +116,23 @@ namespace iTextSharp.Signatures
 			/// Email address (RSA PKCS#9 extension) - IA5String.
 			/// <p>Note: if you're trying to be ultra orthodox, don't use this! It shouldn't be in here.</p>
 			/// </remarks>
-			public static readonly ASN1ObjectIdentifier EmailAddress = new ASN1ObjectIdentifier
+			public static readonly DerObjectIdentifier EmailAddress = new DerObjectIdentifier
 				("1.2.840.113549.1.9.1");
 
 			/// <summary>Email address in Verisign certificates.</summary>
-			public static readonly ASN1ObjectIdentifier E = EmailAddress;
+			public static readonly DerObjectIdentifier E = EmailAddress;
 
 			/// <summary>Object identifier.</summary>
-			public static readonly ASN1ObjectIdentifier DC = new ASN1ObjectIdentifier("0.9.2342.19200300.100.1.25"
+			public static readonly DerObjectIdentifier DC = new DerObjectIdentifier("0.9.2342.19200300.100.1.25"
 				);
 
 			/// <summary>LDAP User id.</summary>
-			public static readonly ASN1ObjectIdentifier UID = new ASN1ObjectIdentifier("0.9.2342.19200300.100.1.1"
+			public static readonly DerObjectIdentifier UID = new DerObjectIdentifier("0.9.2342.19200300.100.1.1"
 				);
 
 			/// <summary>A Map with default symbols.</summary>
-			public static readonly IDictionary<ASN1ObjectIdentifier, String> DefaultSymbols = 
-				new Dictionary<ASN1ObjectIdentifier, String>();
+			public static readonly IDictionary<DerObjectIdentifier, String> DefaultSymbols = 
+				new Dictionary<DerObjectIdentifier, String>();
 
 			static X500Name()
 			{
@@ -162,16 +160,16 @@ namespace iTextSharp.Signatures
 
 			/// <summary>Constructs an X509 name.</summary>
 			/// <param name="seq">an ASN1 Sequence</param>
-			public X500Name(ASN1Sequence seq)
+			public X500Name(Asn1Sequence seq)
 			{
-				IEnumerator<Asn1Set> e = seq.GetObjects();
+				IEnumerator<Asn1Set> e = (IEnumerator<Asn1Set>)seq.GetObjects();
 				while (e.MoveNext())
 				{
 					Asn1Set set = e.Current;
-					for (int i = 0; i < set.Size(); i++)
+					for (int i = 0; i < set.Count; i++)
 					{
-						ASN1Sequence s = (ASN1Sequence)set.GetObjectAt(i);
-						String id = DefaultSymbols[s.GetObjectAt(0)];
+						Asn1Sequence s = (Asn1Sequence)set.GetObjectAt(i);
+						String id = DefaultSymbols[(DerObjectIdentifier)s.GetObjectAt(0)];
 						if (id == null)
 						{
 							continue;
@@ -182,7 +180,7 @@ namespace iTextSharp.Signatures
 							vs = new List<String>();
 							values[id] = vs;
 						}
-						vs.Add(((ASN1String)s.GetObjectAt(1)).GetString());
+						vs.Add(((DerStringBase)s.GetObjectAt(1)).GetString());
 					}
 				}
 			}
@@ -342,12 +340,12 @@ namespace iTextSharp.Signatures
 		{
 			try
 			{
-				return new CertificateInfo.X500Name((ASN1Sequence)CertificateInfo.GetIssuer(cert.
+				return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetIssuer(cert.
 					GetTbsCertificate()));
 			}
 			catch (Exception e)
 			{
-				throw new Exception(e);
+				throw new PdfException(e);
 			}
 		}
 
@@ -359,13 +357,13 @@ namespace iTextSharp.Signatures
 			try
 			{
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
-				ASN1Sequence seq = (ASN1Sequence)@in.ReadObject();
-				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 3 : 2
+				Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
+				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is Asn1TaggedObject ? 3 : 2
 					);
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new Exception(e);
+				throw new PdfException(e);
 			}
 		}
 
@@ -379,13 +377,13 @@ namespace iTextSharp.Signatures
 			{
 				if (cert != null)
 				{
-					return new CertificateInfo.X500Name((ASN1Sequence)CertificateInfo.GetSubject(cert
+					return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetSubject(cert
 						.GetTbsCertificate()));
 				}
 			}
 			catch (Exception e)
 			{
-				throw new Exception(e);
+				throw new PdfException(e);
 			}
 			return null;
 		}
@@ -398,13 +396,13 @@ namespace iTextSharp.Signatures
 			try
 			{
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
-				ASN1Sequence seq = (ASN1Sequence)@in.ReadObject();
-				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is ASN1TaggedObject ? 5 : 4
+				Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
+				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is Asn1TaggedObject ? 5 : 4
 					);
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new Exception(e);
+				throw new PdfException(e);
 			}
 		}
 	}

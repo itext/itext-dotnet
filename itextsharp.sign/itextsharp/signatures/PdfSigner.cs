@@ -483,7 +483,7 @@ namespace iTextSharp.Signatures
 			PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, null, 
 				externalDigest, false);
 			Stream data = GetRangeStream();
-			byte[] hash = DigestAlgorithms.Digest(data, externalDigest.GetMessageDigest(hashAlgorithm
+			byte[] hash = DigestAlgorithms.Digest(data, externalDigest.GetDigest(hashAlgorithm
 				));
 			byte[] ocsp = null;
 			if (chain.Length >= 2 && ocspClient != null)

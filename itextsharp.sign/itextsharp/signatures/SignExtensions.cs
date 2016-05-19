@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace com.itextpdf.signatures
+namespace iTextSharp.Signatures
 {
     internal static class SignExtensions {
 

@@ -45,10 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Java.Security.Cert;
+using Org.BouncyCastle;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Asn1;
-using Org.Bouncycastle.Asn1.X509;
 
 namespace iTextSharp.Signatures
 {
@@ -65,7 +66,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Java.Security.Cert.CertificateException"/>
 		/// <exception cref="Java.Security.Cert.CRLException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public static CRL GetCRL(X509Certificate certificate)
+		public static X509Crl GetCRL(X509Certificate certificate)
 		{
 			return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
 		}
@@ -80,7 +81,7 @@ namespace iTextSharp.Signatures
 			Asn1Object obj;
 			try
 			{
-				obj = GetExtensionValue(certificate, Extension.cRLDistributionPoints.GetId());
+				obj = GetExtensionValue(certificate, X509Extensions.CrlDistributionPoints.Id);
 			}
 			catch (System.IO.IOException)
 			{
@@ -90,24 +91,24 @@ namespace iTextSharp.Signatures
 			{
 				return null;
 			}
-			CRLDistPoint dist = CRLDistPoint.GetInstance(obj);
+			CrlDistPoint dist = CrlDistPoint.GetInstance(obj);
 			DistributionPoint[] dists = dist.GetDistributionPoints();
 			foreach (DistributionPoint p in dists)
 			{
-				DistributionPointName distributionPointName = p.GetDistributionPoint();
-				if (DistributionPointName.FULL_NAME != distributionPointName.GetType())
+				DistributionPointName distributionPointName = p.DistributionPointName;
+				if (DistributionPointName.FullName != distributionPointName.PointType)
 				{
 					continue;
 				}
-				GeneralNames generalNames = (GeneralNames)distributionPointName.GetName();
+				GeneralNames generalNames = (GeneralNames)distributionPointName.Name;
 				GeneralName[] names = generalNames.GetNames();
 				foreach (GeneralName name in names)
 				{
-					if (name.GetTagNo() != GeneralName.uniformResourceIdentifier)
+					if (name.TagNo != GeneralName.UniformResourceIdentifier)
 					{
 						continue;
 					}
-					DERIA5String derStr = DERIA5String.GetInstance((ASN1TaggedObject)name.ToAsn1Object
+					DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object
 						(), false);
 					return derStr.GetString();
 				}
@@ -121,7 +122,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Java.Security.Cert.CertificateException"/>
 		/// <exception cref="Java.Security.Cert.CRLException"/>
-		public static CRL GetCRL(String url)
+		public static X509Crl GetCRL(String url)
 		{
 			if (url == null)
 			{
@@ -129,7 +130,7 @@ namespace iTextSharp.Signatures
 			}
 			Stream @is = new Uri(url).OpenStream();
 			CertificateFactory cf = CertificateFactory.GetInstance("X.509");
-			return (CRL)cf.GenerateCRL(@is);
+			return (X509Crl)cf.GenerateCRL(@is);
 		}
 
 		// Online Certificate Status Protocol
@@ -142,25 +143,25 @@ namespace iTextSharp.Signatures
 			Asn1Object obj;
 			try
 			{
-				obj = GetExtensionValue(certificate, Extension.authorityInfoAccess.GetId());
+				obj = GetExtensionValue(certificate, X509Extensions.authorityInfoAccess.Id);
 				if (obj == null)
 				{
 					return null;
 				}
-				ASN1Sequence AccessDescriptions = (ASN1Sequence)obj;
+				Asn1Sequence AccessDescriptions = (Asn1Sequence)obj;
 				for (int i = 0; i < AccessDescriptions.Size(); i++)
 				{
-					ASN1Sequence AccessDescription = (ASN1Sequence)AccessDescriptions.GetObjectAt(i);
+					Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions.GetObjectAt(i);
 					if (AccessDescription.Size() != 2)
 					{
 						continue;
 					}
 					else
 					{
-						if (AccessDescription.GetObjectAt(0) is ASN1ObjectIdentifier)
+						if (AccessDescription.GetObjectAt(0) is DerObjectIdentifier)
 						{
-							ASN1ObjectIdentifier id = (ASN1ObjectIdentifier)AccessDescription.GetObjectAt(0);
-							if (SecurityIDs.ID_OCSP.Equals(id.GetId()))
+							DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription.GetObjectAt(0);
+							if (SecurityIDs.ID_OCSP.Equals(id.Id))
 							{
 								Asn1Object description = (Asn1Object)AccessDescription.GetObjectAt(1);
 								String AccessLocation = GetStringFromGeneralName(description);
@@ -202,7 +203,7 @@ namespace iTextSharp.Signatures
 				asn1obj = Asn1Object.FromByteArray(der);
 				DerOctetString octets = (DerOctetString)asn1obj;
 				asn1obj = Asn1Object.FromByteArray(octets.GetOctets());
-				ASN1Sequence asn1seq = ASN1Sequence.GetInstance(asn1obj);
+				Asn1Sequence asn1seq = Asn1Sequence.GetInstance(asn1obj);
 				return GetStringFromGeneralName(asn1seq.GetObjectAt(1).ToAsn1Object());
 			}
 			catch (System.IO.IOException)
@@ -236,7 +237,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="System.IO.IOException"/>
 		private static String GetStringFromGeneralName(Asn1Object names)
 		{
-			ASN1TaggedObject taggedObject = (ASN1TaggedObject)names;
+			Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
 			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ASN1OctetString.GetInstance(
 				taggedObject, false).GetOctets(), "ISO-8859-1");
 		}
