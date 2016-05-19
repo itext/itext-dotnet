@@ -87,7 +87,7 @@ namespace iTextSharp.Layout.Renderer
 
 		private float[] columnWidths = null;
 
-		private IList<float> heights = new List<float>();
+		private IList<float?> heights = new List<float?>();
 
 		private TableRenderer()
 		{
@@ -158,7 +158,7 @@ namespace iTextSharp.Layout.Renderer
 				layoutBox.SetX(relativeX + x);
 			}
 			Table tableModel = (Table)GetModelElement();
-			float tableWidth = RetrieveWidth(layoutBox.GetWidth());
+			float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
 			if (tableWidth == null || tableWidth == 0)
 			{
 				tableWidth = layoutBox.GetWidth();
@@ -1077,10 +1077,10 @@ namespace iTextSharp.Layout.Renderer
 		/// <summary>This method checks if we can completely fit the rows in the given area, staring from the startRow.
 		/// 	</summary>
 		private bool CanFitRowsInGivenArea(LayoutArea layoutArea, int startRow, float[] columnWidths
-			, IList<float> heights)
+			, IList<float?> heights)
 		{
 			layoutArea = layoutArea.Clone();
-			heights = new List<float>(heights);
+			heights = new List<float?>(heights);
 			for (int row = startRow; row < rows.Count; row++)
 			{
 				CellRenderer[] rowCells = rows[row];

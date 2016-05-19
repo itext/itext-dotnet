@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
@@ -99,7 +98,8 @@ namespace iTextSharp.IO.Font
 					resource = ResourceUtil.GetResourceStream(resourcePath);
 					if (resource == null)
 					{
-						throw new IOException("1.not.found.as.resource").SetMessageParams(resourcePath);
+						throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath
+							);
 					}
 					MemoryStream stream = new MemoryStream();
 					int read;
@@ -145,8 +145,8 @@ namespace iTextSharp.IO.Font
 						}
 						else
 						{
-							throw new IOException(IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams(afmPath
-								);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile
+								).SetMessageParams(afmPath);
 						}
 					}
 				}
@@ -169,7 +169,7 @@ namespace iTextSharp.IO.Font
 							}
 							catch (Exception)
 							{
-								throw new IOException("invalid.afm.or.pfm.font.file");
+								throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
 							}
 							finally
 							{
@@ -180,7 +180,7 @@ namespace iTextSharp.IO.Font
 					}
 					else
 					{
-						throw new IOException("invalid.afm.or.pfm.font.file");
+						throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
 					}
 				}
 			}

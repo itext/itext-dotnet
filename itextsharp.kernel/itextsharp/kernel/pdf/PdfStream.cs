@@ -229,7 +229,7 @@ namespace iTextSharp.Kernel.Pdf
 			this.compressionLevel = compressionLevel;
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return STREAM;
 		}

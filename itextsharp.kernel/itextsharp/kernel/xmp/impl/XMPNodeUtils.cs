@@ -29,7 +29,6 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Impl.Xpath;
 using iTextSharp.Kernel.Xmp.Options;
@@ -385,15 +384,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else
 			{
-				if (value is bool)
+				if (value is bool?)
 				{
-					strValue = XMPUtils.ConvertFromBoolean(((bool)value));
+					strValue = XMPUtils.ConvertFromBoolean(((bool?)value));
 				}
 				else
 				{
-					if (value is int)
+					if (value is int?)
 					{
-						strValue = XMPUtils.ConvertFromInteger(((int)value));
+						strValue = XMPUtils.ConvertFromInteger(((int?)value));
 					}
 					else
 					{
@@ -403,9 +402,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						}
 						else
 						{
-							if (value is Double)
+							if (value is double?)
 							{
-								strValue = XMPUtils.ConvertFromDouble(((Double)value));
+								strValue = XMPUtils.ConvertFromDouble(((double?)value));
 							}
 							else
 							{

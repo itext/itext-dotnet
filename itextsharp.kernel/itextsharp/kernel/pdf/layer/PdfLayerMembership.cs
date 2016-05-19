@@ -98,7 +98,10 @@ namespace iTextSharp.Kernel.Pdf.Layer
 			PdfObject layers = GetPdfObject().Get(PdfName.OCGs);
 			if (layers is PdfDictionary)
 			{
-				return new _List_105(this, layers);
+				IList<PdfLayer> list = new List<PdfLayer>();
+				list.Add(new PdfLayer(((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument
+					()))));
+				return list;
 			}
 			else
 			{
@@ -114,20 +117,6 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				}
 			}
 			return null;
-		}
-
-		private sealed class _List_105 : List<PdfLayer>
-		{
-			public _List_105(PdfObject layers)
-			{
-				this.layers = layers;
-				{
-					this.Add(new PdfLayer(((PdfDictionary)((PdfDictionary)layers).MakeIndirect(this._enclosing
-						.GetDocument()))));
-				}
-			}
-
-			private readonly PdfObject layers;
 		}
 
 		/// <summary>Adds a new layer to the current layer membership.</summary>

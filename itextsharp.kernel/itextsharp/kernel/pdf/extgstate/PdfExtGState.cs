@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 		{
 		}
 
-		public virtual float GetLineWidth()
+		public virtual float? GetLineWidth()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.LW);
 		}
@@ -103,7 +103,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.LW, new PdfNumber(lineWidth));
 		}
 
-		public virtual int GetLineCapStyle()
+		public virtual int? GetLineCapStyle()
 		{
 			return GetPdfObject().GetAsInt(PdfName.LC);
 		}
@@ -114,7 +114,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.LC, new PdfNumber(lineCapStyle));
 		}
 
-		public virtual int GetLineJoinStyle()
+		public virtual int? GetLineJoinStyle()
 		{
 			return GetPdfObject().GetAsInt(PdfName.LJ);
 		}
@@ -125,7 +125,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.LJ, new PdfNumber(lineJoinStyle));
 		}
 
-		public virtual float GetMiterLimit()
+		public virtual float? GetMiterLimit()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.ML);
 		}
@@ -158,7 +158,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.RI, renderingIntent);
 		}
 
-		public virtual int GetOverprintMode()
+		public virtual int? GetOverprintMode()
 		{
 			return GetPdfObject().GetAsInt(PdfName.OPM);
 		}
@@ -169,7 +169,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.OPM, new PdfNumber(overprintMode));
 		}
 
-		public virtual bool GetFillOverprintFlag()
+		public virtual bool? GetFillOverprintFlag()
 		{
 			return GetPdfObject().GetAsBool(PdfName.op);
 		}
@@ -180,7 +180,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
 		}
 
-		public virtual bool GetStrokeOverprintFlag()
+		public virtual bool? GetStrokeOverprintFlag()
 		{
 			return GetPdfObject().GetAsBool(PdfName.OP);
 		}
@@ -289,7 +289,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.HTP, htp);
 		}
 
-		public virtual float GetFlatnessTolerance()
+		public virtual float? GetFlatnessTolerance()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.FT);
 		}
@@ -300,7 +300,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.FT, new PdfNumber(flatnessTolerance));
 		}
 
-		public virtual float GetSmothnessTolerance()
+		public virtual float? GetSmothnessTolerance()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.SM);
 		}
@@ -311,7 +311,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.SM, new PdfNumber(smoothnessTolerance));
 		}
 
-		public virtual bool GetAutomaticStrokeAdjustmentFlag()
+		public virtual bool? GetAutomaticStrokeAdjustmentFlag()
 		{
 			return GetPdfObject().GetAsBool(PdfName.SA);
 		}
@@ -344,7 +344,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.SMask, sMask);
 		}
 
-		public virtual float GetStrokeOpacity()
+		public virtual float? GetStrokeOpacity()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.CA);
 		}
@@ -355,7 +355,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.CA, new PdfNumber(strokingAlphaConstant));
 		}
 
-		public virtual float GetFillOpacity()
+		public virtual float? GetFillOpacity()
 		{
 			return GetPdfObject().GetAsFloat(PdfName.ca);
 		}
@@ -366,7 +366,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.ca, new PdfNumber(fillingAlphaConstant));
 		}
 
-		public virtual bool GetAlphaSourceFlag()
+		public virtual bool? GetAlphaSourceFlag()
 		{
 			return GetPdfObject().GetAsBool(PdfName.AIS);
 		}
@@ -377,7 +377,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
 			return Put(PdfName.AIS, new PdfBoolean(alphaSourceFlag));
 		}
 
-		public virtual bool GetTextKnockoutFlag()
+		public virtual bool? GetTextKnockoutFlag()
 		{
 			return GetPdfObject().GetAsBool(PdfName.TK);
 		}

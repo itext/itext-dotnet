@@ -89,7 +89,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI)
 			{
-				IList<int> unicodeIdsLst = new List<int>();
+				IList<int?> unicodeIdsLst = new List<int?>();
 				foreach (IRenderer child in childRenderers)
 				{
 					if (child is TextRenderer)
@@ -452,7 +452,7 @@ namespace iTextSharp.Layout.Renderer
 			return new LineRenderer();
 		}
 
-		protected internal override float GetFirstYLineRecursively()
+		protected internal override float? GetFirstYLineRecursively()
 		{
 			return GetYLine();
 		}
@@ -637,9 +637,9 @@ namespace iTextSharp.Layout.Renderer
 
 		private TabStop GetNextTabStop(float curWidth)
 		{
-			NavigableMap<float, TabStop> tabStops = GetProperty(iTextSharp.Layout.Property.Property
+			NavigableMap<float?, TabStop> tabStops = GetProperty(iTextSharp.Layout.Property.Property
 				.TAB_STOPS);
-			KeyValuePair<float, TabStop> nextTabStopEntry = null;
+			KeyValuePair<float?, TabStop> nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
 			{
@@ -744,9 +744,9 @@ namespace iTextSharp.Layout.Renderer
 		private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth
 			)
 		{
-			float tabDefault = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT
+			float? tabDefault = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT
 				);
-			float tabWidth = tabDefault - curWidth % tabDefault;
+			float? tabWidth = tabDefault - curWidth % tabDefault;
 			if (curWidth + tabWidth > lineWidth)
 			{
 				tabWidth = lineWidth - curWidth;

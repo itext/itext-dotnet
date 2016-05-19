@@ -57,17 +57,17 @@ namespace iTextSharp.IO.Font.Cmap
 		public static iTextSharp.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iTextSharp.IO.Font.Cmap.CMapToUnicode
 			(true);
 
-		private IDictionary<int, char[]> byteMappings;
+		private IDictionary<int?, char[]> byteMappings;
 
 		private CMapToUnicode(bool emptyCMap)
 		{
-			byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
+			byteMappings = JavaCollectionsUtil.EmptyMap<int?, char[]>();
 		}
 
 		/// <summary>Creates a new instance of CMap.</summary>
 		public CMapToUnicode()
 		{
-			byteMappings = new Dictionary<int, char[]>();
+			byteMappings = new Dictionary<int?, char[]>();
 		}
 
 		public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity()
@@ -96,7 +96,7 @@ namespace iTextSharp.IO.Font.Cmap
 		public virtual char[] Lookup(byte[] code, int offset, int length)
 		{
 			char[] result = null;
-			int key;
+			int? key;
 			if (length == 1)
 			{
 				key = code[offset] & 0xff;
@@ -126,7 +126,7 @@ namespace iTextSharp.IO.Font.Cmap
 			return byteMappings[code];
 		}
 
-		public virtual ICollection<int> GetCodes()
+		public virtual ICollection<int?> GetCodes()
 		{
 			return byteMappings.Keys;
 		}
@@ -134,21 +134,21 @@ namespace iTextSharp.IO.Font.Cmap
 		public virtual IntHashtable CreateDirectMapping()
 		{
 			IntHashtable result = new IntHashtable();
-			foreach (KeyValuePair<int, char[]> entry in byteMappings)
+			foreach (KeyValuePair<int?, char[]> entry in byteMappings)
 			{
 				if (entry.Value.Length <= 2)
 				{
-					result.Put(entry.Key, ConvertToInt(entry.Value));
+					result.Put((int)entry.Key, ConvertToInt(entry.Value));
 				}
 			}
 			return result;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public virtual IDictionary<int, int> CreateReverseMapping()
+		public virtual IDictionary<int?, int?> CreateReverseMapping()
 		{
-			IDictionary<int, int> result = new Dictionary<int, int>();
-			foreach (KeyValuePair<int, char[]> entry in byteMappings)
+			IDictionary<int?, int?> result = new Dictionary<int?, int?>();
+			foreach (KeyValuePair<int?, char[]> entry in byteMappings)
 			{
 				if (entry.Value.Length <= 2)
 				{

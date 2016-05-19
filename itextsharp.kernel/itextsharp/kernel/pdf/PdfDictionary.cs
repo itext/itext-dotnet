@@ -119,7 +119,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>true if there are no key-value pairs in this PdfDictionary</returns>
 		public virtual bool IsEmpty()
 		{
-			return map.IsEmpty();
+			return map.Count == 0;
 		}
 
 		/// <summary>Returns true if this PdfDictionary contains the specified key.</summary>
@@ -135,7 +135,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>true if value is present in the PdfDictionary</returns>
 		public virtual bool ContainsValue(PdfObject value)
 		{
-			return map.ContainsValue(value);
+			return map.Values.Contains(value);
 		}
 
 		/// <summary>Returns the value associated to this key.</summary>
@@ -154,7 +154,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfArray GetAsArray(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.ARRAY)
+			if (direct != null && direct.GetObjectType() == PdfObject.ARRAY)
 			{
 				return (PdfArray)direct;
 			}
@@ -169,7 +169,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual iTextSharp.Kernel.Pdf.PdfDictionary GetAsDictionary(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.DICTIONARY)
+			if (direct != null && direct.GetObjectType() == PdfObject.DICTIONARY)
 			{
 				return (iTextSharp.Kernel.Pdf.PdfDictionary)direct;
 			}
@@ -184,7 +184,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfStream GetAsStream(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.STREAM)
+			if (direct != null && direct.GetObjectType() == PdfObject.STREAM)
 			{
 				return (PdfStream)direct;
 			}
@@ -199,7 +199,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfNumber GetAsNumber(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.NUMBER)
+			if (direct != null && direct.GetObjectType() == PdfObject.NUMBER)
 			{
 				return (PdfNumber)direct;
 			}
@@ -214,7 +214,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfName GetAsName(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.NAME)
+			if (direct != null && direct.GetObjectType() == PdfObject.NAME)
 			{
 				return (PdfName)direct;
 			}
@@ -229,7 +229,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfString GetAsString(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.STRING)
+			if (direct != null && direct.GetObjectType() == PdfObject.STRING)
 			{
 				return (PdfString)direct;
 			}
@@ -244,7 +244,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfBoolean GetAsBoolean(PdfName key)
 		{
 			PdfObject direct = Get(key, true);
-			if (direct != null && direct.GetType() == PdfObject.BOOLEAN)
+			if (direct != null && direct.GetObjectType() == PdfObject.BOOLEAN)
 			{
 				return (PdfBoolean)direct;
 			}
@@ -270,10 +270,15 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <param name="key">the key of which the associated value needs to be returned</param>
 		/// <returns>Float associated with this key</returns>
-		public virtual float GetAsFloat(PdfName key)
+		public virtual float? GetAsFloat(PdfName key)
 		{
 			PdfNumber number = GetAsNumber(key);
-			return number == null ? null : number.FloatValue();
+			float? floatNumber = null;
+			if (number != null)
+			{
+				floatNumber = number.FloatValue();
+			}
+			return floatNumber;
 		}
 
 		/// <summary>Returns the value associated to this key as an Integer.</summary>
@@ -281,10 +286,15 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <param name="key">the key of which the associated value needs to be returned</param>
 		/// <returns>Integer associated with this key</returns>
-		public virtual int GetAsInt(PdfName key)
+		public virtual int? GetAsInt(PdfName key)
 		{
 			PdfNumber number = GetAsNumber(key);
-			return number == null ? null : number.IntValue();
+			int? intNumber = null;
+			if (number != null)
+			{
+				intNumber = number.IntValue();
+			}
+			return intNumber;
 		}
 
 		/// <summary>Returns the value associated to this key as a Boolean.</summary>
@@ -292,10 +302,15 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <param name="key">the key of which the associated value needs to be returned</param>
 		/// <returns>Boolean associated with this key</returns>
-		public virtual bool GetAsBool(PdfName key)
+		public virtual bool? GetAsBool(PdfName key)
 		{
 			PdfBoolean b = GetAsBoolean(key);
-			return b == null ? null : b.GetValue();
+			bool? booleanValue = null;
+			if (b != null)
+			{
+				booleanValue = b.GetValue();
+			}
+			return booleanValue;
 		}
 
 		/// <summary>Inserts the value into this PdfDictionary and associates it with the specified key.
@@ -318,7 +333,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>the removed value associated with the specified key</returns>
 		public virtual PdfObject Remove(PdfName key)
 		{
-			return map.Remove(key);
+			return map.JRemove(key);
 		}
 
 		/// <summary>Inserts all the key-value pairs into this PdfDictionary.</summary>
@@ -355,7 +370,7 @@ namespace iTextSharp.Kernel.Pdf
 			return map;
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return DICTIONARY;
 		}
@@ -398,7 +413,7 @@ namespace iTextSharp.Kernel.Pdf
 				PdfObject obj = map[key];
 				if (obj != null)
 				{
-					excluded[key] = map.Remove(key);
+					excluded[key] = map.JRemove(key);
 				}
 			}
 			iTextSharp.Kernel.Pdf.PdfDictionary dictionary = (iTextSharp.Kernel.Pdf.PdfDictionary
@@ -478,7 +493,7 @@ namespace iTextSharp.Kernel.Pdf
 				PdfObject obj = map[key];
 				if (obj != null)
 				{
-					excluded[key] = map.Remove(key);
+					excluded[key] = map.JRemove(key);
 				}
 			}
 			iTextSharp.Kernel.Pdf.PdfDictionary dictionary = ((iTextSharp.Kernel.Pdf.PdfDictionary
@@ -498,7 +513,7 @@ namespace iTextSharp.Kernel.Pdf
 			else
 			{
 				PdfObject obj = map[key];
-				if (obj != null && obj.GetType() == INDIRECT_REFERENCE)
+				if (obj != null && obj.GetObjectType() == INDIRECT_REFERENCE)
 				{
 					return ((PdfIndirectReference)obj).GetRefersTo(true);
 				}

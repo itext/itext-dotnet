@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Source;
 
@@ -104,7 +103,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (Exception e)
 			{
-				throw new IOException(IOException.TiffImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffImageException, 
+					e);
 			}
 		}
 

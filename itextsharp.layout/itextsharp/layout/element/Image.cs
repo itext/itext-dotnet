@@ -260,9 +260,9 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the current left margin width of the element.</summary>
 		/// <returns>the left margin width, as a <code>float</code></returns>
-		public virtual float GetMarginLeft()
+		public virtual float? GetMarginLeft()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT));
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT));
 		}
 
 		/// <summary>Sets the left margin width of the element.</summary>
@@ -276,9 +276,9 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the current right margin width of the element.</summary>
 		/// <returns>the right margin width, as a <code>float</code></returns>
-		public virtual float GetMarginRight()
+		public virtual float? GetMarginRight()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT));
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT));
 		}
 
 		/// <summary>Sets the right margin width of the element.</summary>
@@ -292,9 +292,9 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the current top margin width of the element.</summary>
 		/// <returns>the top margin width, as a <code>float</code></returns>
-		public virtual float GetMarginTop()
+		public virtual float? GetMarginTop()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP));
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP));
 		}
 
 		/// <summary>Sets the top margin width of the element.</summary>
@@ -308,9 +308,9 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the current bottom margin width of the element.</summary>
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
-		public virtual float GetMarginBottom()
+		public virtual float? GetMarginBottom()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM));
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM));
 		}
 
 		/// <summary>Sets the bottom margin width of the element.</summary>
@@ -390,9 +390,10 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScale(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && HasProperty
-				(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool)(
-				(Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) || (bool
-				)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT))))
+				(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool?)
+				((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) || (
+				bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
+				))))
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Image));
 				logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
@@ -408,7 +409,7 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScaleHeight(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && autoScale
-				 && (bool)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
+				 && (bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
 				)))
 			{
 				SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
@@ -429,7 +430,7 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScaleWidth(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale
-				 && (bool)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
+				 && (bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
 				)))
 			{
 				SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
@@ -511,7 +512,7 @@ namespace iTextSharp.Layout.Element
 		public virtual float GetImageScaledWidth()
 		{
 			return null == ((Object)GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				)) ? xObject.GetWidth() : xObject.GetWidth() * (float)((Object)GetProperty(iTextSharp.Layout.Property.Property
+				)) ? xObject.GetWidth() : xObject.GetWidth() * (float?)((Object)GetProperty(iTextSharp.Layout.Property.Property
 				.HORIZONTAL_SCALING));
 		}
 
@@ -520,7 +521,7 @@ namespace iTextSharp.Layout.Element
 		public virtual float GetImageScaledHeight()
 		{
 			return null == ((Object)GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
-				)) ? xObject.GetHeight() : xObject.GetHeight() * (float)((Object)GetProperty(iTextSharp.Layout.Property.Property
+				)) ? xObject.GetHeight() : xObject.GetHeight() * (float?)((Object)GetProperty(iTextSharp.Layout.Property.Property
 				.VERTICAL_SCALING));
 		}
 

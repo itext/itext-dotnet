@@ -59,7 +59,7 @@ namespace iTextSharp.Kernel.Font
 
 		protected internal static readonly byte[] emptyBytes = new byte[0];
 
-		protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph
+		protected internal IDictionary<int?, Glyph> notdefGlyphs = new Dictionary<int?, Glyph
 			>();
 
 		/// <summary>false, if the font comes from PdfDocument.</summary>

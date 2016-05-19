@@ -51,10 +51,10 @@ namespace iTextSharp.IO.Font
 {
 	public class AdobeGlyphList
 	{
-		private static IDictionary<int, String> unicode2names = new Dictionary<int, String
+		private static IDictionary<int?, String> unicode2names = new Dictionary<int?, String
 			>();
 
-		private static IDictionary<String, int> names2unicode = new Dictionary<String, int
+		private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?
 			>();
 
 		static AdobeGlyphList()
@@ -110,7 +110,7 @@ namespace iTextSharp.IO.Font
 					{
 						continue;
 					}
-					int num = System.Convert.ToInt32(hex, 16);
+					int? num = System.Convert.ToInt32(hex, 16);
 					unicode2names[num] = name;
 					names2unicode[name] = num;
 				}
@@ -135,12 +135,12 @@ namespace iTextSharp.IO.Font
 		}
 
 		// empty on purpose
-		public static int NameToUnicode(String name)
+		public static int? NameToUnicode(String name)
 		{
 			int v = -1;
 			if (names2unicode.ContainsKey(name))
 			{
-				v = names2unicode[name];
+				v = (int)names2unicode[name];
 			}
 			if (v == -1 && name.Length == 7 && name.ToLower().StartsWith("uni"))
 			{

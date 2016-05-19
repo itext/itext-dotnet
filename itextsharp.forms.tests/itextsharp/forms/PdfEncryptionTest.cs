@@ -15,7 +15,7 @@ namespace iTextSharp.Forms
 		public virtual void EncryptedDocumentWithFormFields()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "encryptedDocumentWithFormFields.pdf"
-				), new ReaderProperties().SetPassword("12345".GetBytes()));
+				, FileMode.Open), new ReaderProperties().SetPassword("12345".GetBytes()));
 			PdfDocument pdfDocument = new PdfDocument(reader);
 			PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
 			acroForm.GetField("name").GetPdfObject();

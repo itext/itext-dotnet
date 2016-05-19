@@ -168,5 +168,11 @@ namespace iTextSharp.IO.Util
         public static int IntegerCompare(int a, int b) {
             return a.CompareTo(b);
         }
+
+        public static T[] ArraysCopyOf<T>(T[] original, int newLength) {
+            T[] copy = new T[newLength];
+            System.Array.Copy(original, 0, copy, 0, Math.Min(original.Length, newLength));
+            return copy;
+        }
     }
 }

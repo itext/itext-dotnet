@@ -69,7 +69,7 @@ namespace iTextSharp.Kernel.Pdf
 			: base(content)
 		{
 			this.isDouble = true;
-			this.value = Double.NaN;
+			this.value = double.NaN;
 		}
 
 		private PdfNumber()
@@ -77,7 +77,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return NUMBER;
 		}
@@ -233,7 +233,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			catch (FormatException)
 			{
-				value = Double.NaN;
+				value = double.NaN;
 			}
 			isDouble = true;
 		}

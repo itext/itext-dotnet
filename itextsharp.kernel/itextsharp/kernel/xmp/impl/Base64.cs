@@ -43,13 +43,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	public class Base64
 	{
 		/// <summary>marker for invalid bytes</summary>
-		private const byte INVALID = -1;
+		private const byte INVALID = (byte)0xff;
 
 		/// <summary>marker for accepted whitespace bytes</summary>
-		private const byte WHITESPACE = -2;
+		private const byte WHITESPACE = (byte)0xfe;
 
 		/// <summary>marker for an equal symbol</summary>
-		private const byte EQUAL = -3;
+		private const byte EQUAL = (byte)0xfd;
 
 		private static byte[] base64 = new byte[] { (byte)'A', (byte)'B', (byte)'C', (byte
 			)'D', (byte)'E', (byte)'F', (byte)'G', (byte)'H', (byte)'I', (byte)'J', (byte)'K'

@@ -398,7 +398,7 @@ namespace iTextSharp.Layout.Hyphenation
 
 		private IList<char[]> SplitOnNonCharacters(char[] word)
 		{
-			IList<int> breakPoints = GetNonLetterBreaks(word);
+			IList<int?> breakPoints = GetNonLetterBreaks(word);
 			if (breakPoints.Count == 0)
 			{
 				return JavaCollectionsUtil.EmptyList();
@@ -419,10 +419,10 @@ namespace iTextSharp.Layout.Hyphenation
 			return words;
 		}
 
-		private IList<int> GetNonLetterBreaks(char[] word)
+		private IList<int?> GetNonLetterBreaks(char[] word)
 		{
 			char[] c = new char[2];
-			IList<int> breakPoints = new List<int>();
+			IList<int?> breakPoints = new List<int?>();
 			bool foundLetter = false;
 			for (int i = 0; i < word.Length; i++)
 			{

@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Font
@@ -159,7 +158,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (Exception e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -171,7 +170,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -194,7 +193,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -206,7 +205,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -218,7 +217,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -230,7 +229,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -497,7 +496,7 @@ namespace iTextSharp.IO.Font
 				}
 				catch (System.IO.IOException e)
 				{
-					throw new IOException(IOException.IoException, e);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 				}
 			}
 			//System.err.println("finished range emit");
@@ -1318,7 +1317,7 @@ namespace iTextSharp.IO.Font
 					if (key == "FullName")
 					{
 						//System.err.println("getting fullname sid = "+((Integer)args[0]).intValue());
-						fonts[j_1].fullName = GetString((char)((int)args[0]));
+						fonts[j_1].fullName = GetString((char)((int?)args[0]));
 					}
 					else
 					{
@@ -1331,14 +1330,14 @@ namespace iTextSharp.IO.Font
 						{
 							if (key == "Private")
 							{
-								fonts[j_1].privateLength = ((int)args[0]);
-								fonts[j_1].privateOffset = ((int)args[1]);
+								fonts[j_1].privateLength = (int)((int?)args[0]);
+								fonts[j_1].privateOffset = (int)((int?)args[1]);
 							}
 							else
 							{
 								if (key == "charset")
 								{
-									fonts[j_1].charsetOffset = ((int)args[0]);
+									fonts[j_1].charsetOffset = (int)((int?)args[0]);
 								}
 								else
 								{
@@ -1351,7 +1350,7 @@ namespace iTextSharp.IO.Font
 									//                }
 									if (key == "CharStrings")
 									{
-										fonts[j_1].charstringsOffset = ((int)args[0]);
+										fonts[j_1].charstringsOffset = (int)((int?)args[0]);
 										//System.err.println("charstrings "+fonts[j].charstringsOffset);
 										// Added by Oren & Ygal
 										int p = GetPosition();
@@ -1362,19 +1361,19 @@ namespace iTextSharp.IO.Font
 									{
 										if (key == "FDArray")
 										{
-											fonts[j_1].fdarrayOffset = ((int)args[0]);
+											fonts[j_1].fdarrayOffset = (int)((int?)args[0]);
 										}
 										else
 										{
 											if (key == "FDSelect")
 											{
-												fonts[j_1].fdselectOffset = ((int)args[0]);
+												fonts[j_1].fdselectOffset = (int)((int?)args[0]);
 											}
 											else
 											{
 												if (key == "CharstringType")
 												{
-													fonts[j_1].CharstringType = ((int)args[0]);
+													fonts[j_1].CharstringType = (int)((int?)args[0]);
 												}
 											}
 										}
@@ -1396,7 +1395,7 @@ namespace iTextSharp.IO.Font
 						{
 							//Add the private offset to the lsubrs since the offset is
 							// relative to the beginning of the PrivateDict
-							fonts[j_1].privateSubrs = ((int)args[0]) + fonts[j_1].privateOffset;
+							fonts[j_1].privateSubrs = (int)((int?)args[0]) + fonts[j_1].privateOffset;
 						}
 					}
 				}
@@ -1415,8 +1414,8 @@ namespace iTextSharp.IO.Font
 							GetDictItem();
 							if (key == "Private")
 							{
-								fonts[j_1].fdprivateLengths[k] = ((int)args[0]);
-								fonts[j_1].fdprivateOffsets[k] = ((int)args[1]);
+								fonts[j_1].fdprivateLengths[k] = (int)((int?)args[0]);
+								fonts[j_1].fdprivateOffsets[k] = (int)((int?)args[1]);
 							}
 						}
 					}

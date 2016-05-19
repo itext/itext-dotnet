@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		private int count = 0;
 
-		private readonly SortedSet<int> freeReferences;
+		private readonly SortedSet<int?> freeReferences;
 
 		public PdfXrefTable()
 			: this(INITIAL_CAPACITY)
@@ -84,7 +84,7 @@ namespace iTextSharp.Kernel.Pdf
 				capacity = INITIAL_CAPACITY;
 			}
 			xref = new PdfIndirectReference[capacity];
-			freeReferences = new SortedSet<int>();
+			freeReferences = new SortedSet<int?>();
 			Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState
 				(PdfObject.FREE)));
 		}
@@ -182,16 +182,16 @@ namespace iTextSharp.Kernel.Pdf
 			if (document.IsAppendMode())
 			{
 				// Increment generation number for all freed references.
-				foreach (int objNr in freeReferences)
+				foreach (int? objNr in freeReferences)
 				{
-					xref[objNr].genNr++;
+					xref[(int)objNr].genNr++;
 				}
 			}
 			else
 			{
-				foreach (int objNr in freeReferences)
+				foreach (int? objNr in freeReferences)
 				{
-					xref[objNr] = null;
+					xref[(int)objNr] = null;
 				}
 			}
 			freeReferences.Clear();
@@ -209,7 +209,7 @@ namespace iTextSharp.Kernel.Pdf
 					break;
 				}
 			}
-			IList<int> sections = new List<int>();
+			IList<int?> sections = new List<int?>();
 			int first = 0;
 			int len = 1;
 			if (document.IsAppendMode())
@@ -278,9 +278,9 @@ namespace iTextSharp.Kernel.Pdf
 				xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
 				xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
 				PdfArray index = new PdfArray();
-				foreach (int section in sections)
+				foreach (int? section in sections)
 				{
-					index.Add(new PdfNumber(section));
+					index.Add(new PdfNumber((int)section));
 				}
 				if (document.properties.appendMode)
 				{
@@ -288,14 +288,14 @@ namespace iTextSharp.Kernel.Pdf
 					xrefStream.Put(PdfName.Prev, lastXref);
 				}
 				xrefStream.Put(PdfName.Index, index);
-				iTextSharp.Kernel.Pdf.PdfXrefTable xref = document.GetXref();
+				iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
 				for (int k = 0; k < sections.Count; k += 2)
 				{
-					first = sections[k];
-					len = sections[k + 1];
+					first = (int)sections[k];
+					len = (int)sections[k + 1];
 					for (int i_2 = first; i_2 < first + len; i_2++)
 					{
-						PdfIndirectReference reference = xref.Get(i_2);
+						PdfIndirectReference reference = xrefTable.Get(i_2);
 						if (reference == null)
 						{
 							continue;
@@ -330,15 +330,15 @@ namespace iTextSharp.Kernel.Pdf
 			else
 			{
 				writer.WriteString("xref\n");
-				iTextSharp.Kernel.Pdf.PdfXrefTable xref = document.GetXref();
+				iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
 				for (int k = 0; k < sections.Count; k += 2)
 				{
-					first = sections[k];
-					len = sections[k + 1];
+					first = (int)sections[k];
+					len = (int)sections[k + 1];
 					writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
 					for (int i_2 = first; i_2 < first + len; i_2++)
 					{
-						PdfIndirectReference reference = xref.Get(i_2);
+						PdfIndirectReference reference = xrefTable.Get(i_2);
 						writer.WriteString(objectOffsetFormatter.Format(reference.GetOffset())).WriteSpace
 							().WriteString(objectGenerationFormatter.Format(reference.GetGenNumber())).WriteSpace
 							();

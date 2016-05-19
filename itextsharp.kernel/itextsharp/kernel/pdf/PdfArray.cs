@@ -193,7 +193,7 @@ namespace iTextSharp.Kernel.Pdf
 			list = new List<PdfObject>(strings.Count);
 			foreach (String s in strings)
 			{
-				list.Add(asNames ? new PdfName(s) : new PdfString(s));
+				list.Add(asNames ? (PdfObject)new PdfName(s) : new PdfString(s));
 			}
 		}
 
@@ -204,7 +204,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		public virtual bool IsEmpty()
 		{
-			return list.IsEmpty();
+			return list.Count == 0;
 		}
 
 		public virtual bool Contains(PdfObject o)
@@ -321,7 +321,7 @@ namespace iTextSharp.Kernel.Pdf
 			return list.SubList(fromIndex, toIndex);
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return ARRAY;
 		}
@@ -396,7 +396,7 @@ namespace iTextSharp.Kernel.Pdf
 			else
 			{
 				PdfObject obj = list[index];
-				if (obj.GetType() == INDIRECT_REFERENCE)
+				if (obj.GetObjectType() == INDIRECT_REFERENCE)
 				{
 					return ((PdfIndirectReference)obj).GetRefersTo(true);
 				}
@@ -415,7 +415,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual iTextSharp.Kernel.Pdf.PdfArray GetAsArray(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.ARRAY)
+			if (direct != null && direct.GetObjectType() == PdfObject.ARRAY)
 			{
 				return (iTextSharp.Kernel.Pdf.PdfArray)direct;
 			}
@@ -430,7 +430,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfDictionary GetAsDictionary(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.DICTIONARY)
+			if (direct != null && direct.GetObjectType() == PdfObject.DICTIONARY)
 			{
 				return (PdfDictionary)direct;
 			}
@@ -445,7 +445,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfStream GetAsStream(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.STREAM)
+			if (direct != null && direct.GetObjectType() == PdfObject.STREAM)
 			{
 				return (PdfStream)direct;
 			}
@@ -460,7 +460,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfNumber GetAsNumber(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.NUMBER)
+			if (direct != null && direct.GetObjectType() == PdfObject.NUMBER)
 			{
 				return (PdfNumber)direct;
 			}
@@ -475,7 +475,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfName GetAsName(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.NAME)
+			if (direct != null && direct.GetObjectType() == PdfObject.NAME)
 			{
 				return (PdfName)direct;
 			}
@@ -490,7 +490,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfString GetAsString(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.STRING)
+			if (direct != null && direct.GetObjectType() == PdfObject.STRING)
 			{
 				return (PdfString)direct;
 			}
@@ -505,7 +505,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfBoolean GetAsBoolean(int index)
 		{
 			PdfObject direct = Get(index, true);
-			if (direct != null && direct.GetType() == PdfObject.BOOLEAN)
+			if (direct != null && direct.GetObjectType() == PdfObject.BOOLEAN)
 			{
 				return (PdfBoolean)direct;
 			}

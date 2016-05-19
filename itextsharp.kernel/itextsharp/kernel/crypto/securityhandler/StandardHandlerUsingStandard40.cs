@@ -262,7 +262,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 
 		private int GetKeyLength(PdfDictionary encryptionDict)
 		{
-			int keyLength = encryptionDict.GetAsInt(PdfName.Length);
+			int? keyLength = encryptionDict.GetAsInt(PdfName.Length);
 			return keyLength != null ? keyLength : 40;
 		}
 	}

@@ -253,11 +253,13 @@ namespace iTextSharp.IO.Image
 		{
 			if (this.mask)
 			{
-				throw new IOException(IOException.ImageMaskCannotContainAnotherImageMask);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask
+					);
 			}
 			if (!imageMask.mask)
 			{
-				throw new IOException(IOException.ImageMaskIsNotAMaskDidYouDoMakeMask);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask
+					);
 			}
 			this.imageMask = imageMask;
 		}
@@ -271,7 +273,8 @@ namespace iTextSharp.IO.Image
 		{
 			if (!CanBeMask())
 			{
-				throw new IOException(IOException.ImageCanNotBeAnImageMask);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask
+					);
 			}
 			mask = true;
 		}

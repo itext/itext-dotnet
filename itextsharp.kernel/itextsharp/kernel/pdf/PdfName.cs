@@ -2247,8 +2247,7 @@ namespace iTextSharp.Kernel.Pdf
 			//  '}'
 			//  '/'
 			//  '#'
-			FieldInfo[] fields = iTextSharp.GetDeclaredFields(typeof(iTextSharp.Kernel.Pdf.PdfName
-				));
+			FieldInfo[] fields = typeof(iTextSharp.Kernel.Pdf.PdfName).GetFields();
 			staticNames = new Dictionary<String, iTextSharp.Kernel.Pdf.PdfName>(fields.Length
 				);
 			int flags = Modifier.STATIC | Modifier.PUBLIC | Modifier.FINAL;
@@ -2299,7 +2298,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return PdfObject.NAME;
 		}

@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
 
 namespace iTextSharp.IO.Font.Cmap
 {
@@ -130,7 +129,7 @@ namespace iTextSharp.IO.Font.Cmap
 				char c = plane[one];
 				if (c != 0 && (c & 0x8000) == 0)
 				{
-					throw new IOException("inconsistent.mapping");
+					throw new iTextSharp.IO.IOException("inconsistent.mapping");
 				}
 				if (c == 0)
 				{
@@ -145,7 +144,7 @@ namespace iTextSharp.IO.Font.Cmap
 			char c_1 = plane_1[one_1];
 			if ((c_1 & 0x8000) != 0)
 			{
-				throw new IOException("inconsistent.mapping");
+				throw new iTextSharp.IO.IOException("inconsistent.mapping");
 			}
 			plane_1[one_1] = cid;
 		}

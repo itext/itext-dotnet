@@ -57,7 +57,7 @@ namespace iTextSharp.Layout
 	{
 		/// <summary>Gets the current left margin width of the element.</summary>
 		/// <returns>the left margin width, as a <code>float</code></returns>
-		public virtual float GetMarginLeft()
+		public virtual float? GetMarginLeft()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
 		}
@@ -73,7 +73,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current right margin width of the element.</summary>
 		/// <returns>the right margin width, as a <code>float</code></returns>
-		public virtual float GetMarginRight()
+		public virtual float? GetMarginRight()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT);
 		}
@@ -89,7 +89,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current top margin width of the element.</summary>
 		/// <returns>the top margin width, as a <code>float</code></returns>
-		public virtual float GetMarginTop()
+		public virtual float? GetMarginTop()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP);
 		}
@@ -105,7 +105,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current bottom margin width of the element.</summary>
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
-		public virtual float GetMarginBottom()
+		public virtual float? GetMarginBottom()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
 		}
@@ -145,7 +145,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current left padding width of the element.</summary>
 		/// <returns>the left padding width, as a <code>float</code></returns>
-		public virtual float GetPaddingLeft()
+		public virtual float? GetPaddingLeft()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_LEFT);
 		}
@@ -161,7 +161,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current right padding width of the element.</summary>
 		/// <returns>the right padding width, as a <code>float</code></returns>
-		public virtual float GetPaddingRight()
+		public virtual float? GetPaddingRight()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_RIGHT);
 		}
@@ -177,7 +177,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current top padding width of the element.</summary>
 		/// <returns>the top padding width, as a <code>float</code></returns>
-		public virtual float GetPaddingTop()
+		public virtual float? GetPaddingTop()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_TOP);
 		}
@@ -193,7 +193,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the current bottom padding width of the element.</summary>
 		/// <returns>the bottom padding width, as a <code>float</code></returns>
-		public virtual float GetPaddingBottom()
+		public virtual float? GetPaddingBottom()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.PADDING_BOTTOM);
 		}
@@ -270,7 +270,7 @@ namespace iTextSharp.Layout
 		/// <see cref="iTextSharp.Layout.Property.Property.KEEP_TOGETHER"/>
 		/// property
 		/// </returns>
-		public virtual bool IsKeepTogether()
+		public virtual bool? IsKeepTogether()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER);
 		}

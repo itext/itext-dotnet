@@ -252,9 +252,9 @@ namespace iTextSharp.Layout.Element
 		/// symbols.
 		/// </summary>
 		/// <returns>the indent offset as a <code>float</code>.</returns>
-		public virtual float GetSymbolIndent()
+		public virtual float? GetSymbolIndent()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT
 				));
 		}
 

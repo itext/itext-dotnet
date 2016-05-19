@@ -46,7 +46,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.IO;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Util;
 
@@ -174,7 +173,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.GifImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, 
+					e);
 			}
 		}
 
@@ -187,8 +187,8 @@ namespace iTextSharp.IO.Image
 			ReadContents(gif, lastFrameNumber);
 			if (gif.currentFrame <= lastFrameNumber)
 			{
-				throw new IOException(IOException.CannotFind1Frame).SetMessageParams(lastFrameNumber
-					);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotFind1Frame).SetMessageParams
+					(lastFrameNumber);
 			}
 		}
 
@@ -203,7 +203,8 @@ namespace iTextSharp.IO.Image
 			}
 			if (!id.ToString().StartsWith("GIF8"))
 			{
-				throw new IOException(IOException.GifSignatureNotFound);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifSignatureNotFound
+					);
 			}
 			ReadLSD(gif);
 			if (gif.gctFlag)
@@ -421,7 +422,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (Exception e)
 			{
-				throw new IOException(IOException.GifImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, 
+					e);
 			}
 		}
 

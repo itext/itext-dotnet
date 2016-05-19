@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.IO;
-using Java.Util.Zip;
+using System.util.zlib;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
@@ -79,7 +78,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
 		public static byte[] FlateDecode(byte[] @in, bool strict)
 		{
 			MemoryStream stream = new MemoryStream(@in);
-			InflaterInputStream zip = new InflaterInputStream(stream);
+			ZInflaterInputStream zip = new ZInflaterInputStream(stream);
 			MemoryStream @out = new MemoryStream();
 			byte[] b = new byte[strict ? 4092 : 1];
 			try
@@ -108,13 +107,13 @@ namespace iTextSharp.Kernel.Pdf.Filters
 		/// <returns>a byte array</returns>
 		public static byte[] DecodePredictor(byte[] @in, PdfObject decodeParams)
 		{
-			if (decodeParams == null || decodeParams.GetType() != PdfObject.DICTIONARY)
+			if (decodeParams == null || decodeParams.GetObjectType() != PdfObject.DICTIONARY)
 			{
 				return @in;
 			}
 			PdfDictionary dic = (PdfDictionary)decodeParams;
 			PdfObject obj = dic.Get(PdfName.Predictor);
-			if (obj == null || obj.GetType() != PdfObject.NUMBER)
+			if (obj == null || obj.GetObjectType() != PdfObject.NUMBER)
 			{
 				return @in;
 			}
@@ -125,23 +124,23 @@ namespace iTextSharp.Kernel.Pdf.Filters
 			}
 			int width = 1;
 			obj = dic.Get(PdfName.Columns);
-			if (obj != null && obj.GetType() == PdfObject.NUMBER)
+			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
 			{
 				width = ((PdfNumber)obj).IntValue();
 			}
 			int colors = 1;
 			obj = dic.Get(PdfName.Colors);
-			if (obj != null && obj.GetType() == PdfObject.NUMBER)
+			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
 			{
 				colors = ((PdfNumber)obj).IntValue();
 			}
 			int bpc = 8;
 			obj = dic.Get(PdfName.BitsPerComponent);
-			if (obj != null && obj.GetType() == PdfObject.NUMBER)
+			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
 			{
 				bpc = ((PdfNumber)obj).IntValue();
 			}
-			DataInputStream dataStream = new DataInputStream(new MemoryStream(@in));
+			BinaryReader dataStream = new BinaryReader(new MemoryStream(@in));
 			MemoryStream fout = new MemoryStream(@in.Length);
 			int bytesPerPixel = colors * bpc / 8;
 			int bytesPerRow = (colors * width * bpc + 7) / 8;
@@ -215,11 +214,12 @@ namespace iTextSharp.Kernel.Pdf.Filters
 						//PNG_FILTER_AVERAGE
 						for (int i_2 = 0; i_2 < bytesPerPixel; i_2++)
 						{
-							curr[i_2] += prior[i_2] / 2;
+							curr[i_2] += (byte)(prior[i_2] / 2);
 						}
 						for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++)
 						{
-							curr[i_3] += ((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 2;
+							curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 
+								2);
 						}
 						break;
 					}

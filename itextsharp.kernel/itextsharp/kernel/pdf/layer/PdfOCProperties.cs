@@ -167,12 +167,13 @@ namespace iTextSharp.Kernel.Pdf.Layer
 			}
 			GetPdfObject().Put(PdfName.D, d);
 			IList<PdfLayer> docOrder = new List<PdfLayer>(layers);
-			for (IEnumerator<PdfLayer> it = docOrder.GetEnumerator(); it.MoveNext(); )
+			for (int i = 0; i < docOrder.Count; i++)
 			{
-				PdfLayer layer_1 = it.Current;
+				PdfLayer layer_1 = docOrder[i];
 				if (layer_1.GetParent() != null)
 				{
-					it.Remove();
+					docOrder.Remove(layer_1);
+					i--;
 				}
 			}
 			PdfArray order = new PdfArray();
@@ -359,7 +360,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				{
 					foreach (PdfObject offLayer in off)
 					{
-						layerMap[offLayer].on = false;
+						layerMap[(PdfIndirectReference)offLayer].on = false;
 					}
 				}
 				PdfArray locked = d.GetAsArray(PdfName.Locked);
@@ -367,7 +368,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				{
 					foreach (PdfObject lockedLayer in locked)
 					{
-						layerMap[lockedLayer].locked = true;
+						layerMap[(PdfIndirectReference)lockedLayer].locked = true;
 					}
 				}
 				PdfArray orderArray = d.GetAsArray(PdfName.Order);
@@ -395,7 +396,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 			for (int i = 0; i < orderArray.Size(); i++)
 			{
 				PdfObject item = orderArray.Get(i);
-				if (item.GetType() == PdfObject.DICTIONARY)
+				if (item.GetObjectType() == PdfObject.DICTIONARY)
 				{
 					PdfLayer layer = layerMap[item.GetIndirectReference()];
 					if (layer != null)
@@ -406,7 +407,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
 						{
 							parent.AddChild(layer);
 						}
-						if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetType() == PdfObject.ARRAY)
+						if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject
+							.ARRAY)
 						{
 							ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap);
 							i++;
@@ -415,7 +417,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				}
 				else
 				{
-					if (item.GetType() == PdfObject.ARRAY)
+					if (item.GetObjectType() == PdfObject.ARRAY)
 					{
 						PdfArray subArray = (PdfArray)item;
 						if (subArray.IsEmpty())
@@ -423,7 +425,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 							continue;
 						}
 						PdfObject firstObj = subArray.Get(0);
-						if (firstObj.GetType() == PdfObject.STRING)
+						if (firstObj.GetObjectType() == PdfObject.STRING)
 						{
 							PdfLayer titleLayer = PdfLayer.CreateTitleSilent(((PdfString)firstObj).ToUnicodeString
 								(), GetDocument());

@@ -108,13 +108,13 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 		{
 			if (this.resources == null)
 			{
-				PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
-				if (resources == null)
+				PdfDictionary resourcesDict = GetPdfObject().GetAsDictionary(PdfName.Resources);
+				if (resourcesDict == null)
 				{
-					resources = new PdfDictionary();
-					GetPdfObject().Put(PdfName.Resources, resources);
+					resourcesDict = new PdfDictionary();
+					GetPdfObject().Put(PdfName.Resources, resourcesDict);
 				}
-				this.resources = new PdfResources(resources);
+				this.resources = new PdfResources(resourcesDict);
 			}
 			return resources;
 		}

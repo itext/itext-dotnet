@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
@@ -108,9 +107,9 @@ namespace iTextSharp.IO.Font
 
 		protected internal int[] locaTable;
 
-		protected internal ICollection<int> glyphsUsed;
+		protected internal ICollection<int?> glyphsUsed;
 
-		protected internal IList<int> glyphsInList;
+		protected internal IList<int?> glyphsInList;
 
 		protected internal int tableGlyphOffset;
 
@@ -141,7 +140,7 @@ namespace iTextSharp.IO.Font
 		/// if the table cmap is to be included in the generated font
 		/// </param>
 		internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection
-			<int> glyphsUsed, int directoryOffset, bool includeCmap, bool includeExtras)
+			<int?> glyphsUsed, int directoryOffset, bool includeCmap, bool includeExtras)
 		{
 			this.fileName = fileName;
 			this.rf = rf;
@@ -149,7 +148,7 @@ namespace iTextSharp.IO.Font
 			this.includeCmap = includeCmap;
 			this.includeExtras = includeExtras;
 			this.directoryOffset = directoryOffset;
-			glyphsInList = new List<int>(glyphsUsed);
+			glyphsInList = new List<int?>(glyphsUsed);
 		}
 
 		/// <summary>Does the actual work of subsetting the font.</summary>
@@ -305,7 +304,8 @@ namespace iTextSharp.IO.Font
 			int id = rf.ReadInt();
 			if (id != 0x00010000)
 			{
-				throw new IOException("1.is.not.a.true.type.file").SetMessageParams(fileName);
+				throw new iTextSharp.IO.IOException("1.is.not.a.true.type.file").SetMessageParams
+					(fileName);
 			}
 			int num_tables = rf.ReadUnsignedShort();
 			rf.SkipBytes(6);
@@ -326,16 +326,16 @@ namespace iTextSharp.IO.Font
 			int[] tableLocation = tableDirectory["head"];
 			if (tableLocation == null)
 			{
-				throw new IOException("table.1.does.not.exist.in.2", "head").SetMessageParams(fileName
-					);
+				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams
+					(fileName);
 			}
 			rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
 			locaShortTable = rf.ReadUnsignedShort() == 0;
 			tableLocation = tableDirectory["loca"];
 			if (tableLocation == null)
 			{
-				throw new IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams(fileName
-					);
+				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams
+					(fileName);
 			}
 			rf.Seek(tableLocation[TABLE_OFFSET]);
 			if (locaShortTable)
@@ -365,7 +365,7 @@ namespace iTextSharp.IO.Font
 			int[] activeGlyphs = new int[glyphsInList.Count];
 			for (int k = 0; k < activeGlyphs.Length; ++k)
 			{
-				activeGlyphs[k] = glyphsInList[k];
+				activeGlyphs[k] = (int)glyphsInList[k];
 			}
 			System.Array.Sort(activeGlyphs);
 			int glyfSize = 0;
@@ -429,10 +429,10 @@ namespace iTextSharp.IO.Font
 			int[] tableLocation = tableDirectory["glyf"];
 			if (tableLocation == null)
 			{
-				throw new IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName
-					);
+				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams
+					("glyf", fileName);
 			}
-			int glyph0 = 0;
+			int? glyph0 = 0;
 			if (!glyphsUsed.Contains(glyph0))
 			{
 				glyphsUsed.Add(glyph0);
@@ -442,7 +442,7 @@ namespace iTextSharp.IO.Font
 			// Do not replace with foreach. ConcurrentModificationException will arise.
 			for (int k = 0; k < glyphsInList.Count; ++k)
 			{
-				int glyph = glyphsInList[k];
+				int glyph = (int)glyphsInList[k];
 				CheckGlyphComposite(glyph);
 			}
 		}
@@ -466,7 +466,7 @@ namespace iTextSharp.IO.Font
 			for (; ; )
 			{
 				int flags = rf.ReadUnsignedShort();
-				int cGlyph = rf.ReadUnsignedShort();
+				int? cGlyph = rf.ReadUnsignedShort();
 				if (!glyphsUsed.Contains(cGlyph))
 				{
 					glyphsUsed.Add(cGlyph);
@@ -526,7 +526,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (Exception e)
 			{
-				throw new IOException("TrueType font", e);
+				throw new iTextSharp.IO.IOException("TrueType font", e);
 			}
 		}
 

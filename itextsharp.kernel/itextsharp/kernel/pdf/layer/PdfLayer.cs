@@ -286,7 +286,12 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				{
 					if (intents.Count > 1)
 					{
-						GetPdfObject().Put(PdfName.Intent, new PdfArray(intents));
+						PdfArray array = new PdfArray();
+						foreach (PdfName intent in intents)
+						{
+							array.Add(intent);
+						}
+						GetPdfObject().Put(PdfName.Intent, array);
 					}
 				}
 			}

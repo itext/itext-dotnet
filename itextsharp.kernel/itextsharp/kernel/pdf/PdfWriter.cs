@@ -63,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf
 		private Dictionary<PdfWriter.ByteStore, PdfIndirectReference> streamMap = new Dictionary
 			<PdfWriter.ByteStore, PdfIndirectReference>();
 
-		private readonly Dictionary<int, int> serialized = new Dictionary<int, int>();
+		private readonly Dictionary<int?, int?> serialized = new Dictionary<int?, int?>();
 
 		private PdfOutputStream duplicateStream = null;
 
@@ -76,8 +76,8 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		internal PdfObjectStream objectStream = null;
 
-		protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary
-			<int, PdfIndirectReference>();
+		protected internal IDictionary<int?, PdfIndirectReference> copiedObjects = new Dictionary
+			<int?, PdfIndirectReference>();
 
 		protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -115,13 +115,13 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename)
-			: this(new FileOutputStream(filename), new WriterProperties())
+			: this(new FileOutputStream(filename, FileMode.Create), new WriterProperties())
 		{
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename, WriterProperties properties)
-			: this(new FileOutputStream(filename), properties)
+			: this(new FileOutputStream(filename, FileMode.Create), properties)
 		{
 		}
 
@@ -129,7 +129,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>true if to use full compression, false otherwise.</returns>
 		public virtual bool IsFullCompression()
 		{
-			return properties.isFullCompression != null ? properties.isFullCompression : false;
+			return properties.isFullCompression;
 		}
 
 		/// <summary>Gets default compression level for @see PdfStream.</summary>
@@ -265,7 +265,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			((PdfIndirectReference)indirectReference.SetState(PdfObject.FLUSHED)).ClearState(
 				PdfObject.MUST_BE_FLUSHED);
-			switch (pdfObject.GetType())
+			switch (pdfObject.GetObjectType())
 			{
 				case PdfObject.BOOLEAN:
 				case PdfObject.NAME:
@@ -489,7 +489,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				else
 				{
-					if (pdfObject.GetType() == PdfObject.INDIRECT_REFERENCE)
+					if (pdfObject.GetObjectType() == PdfObject.INDIRECT_REFERENCE)
 					{
 						if (!pdfObject.CheckState(PdfObject.FLUSHED))
 						{
@@ -498,13 +498,13 @@ namespace iTextSharp.Kernel.Pdf
 					}
 					else
 					{
-						if (pdfObject.GetType() == PdfObject.ARRAY)
+						if (pdfObject.GetObjectType() == PdfObject.ARRAY)
 						{
 							MarkArrayContentToFlush((PdfArray)pdfObject);
 						}
 						else
 						{
-							if (pdfObject.GetType() == PdfObject.DICTIONARY)
+							if (pdfObject.GetObjectType() == PdfObject.DICTIONARY)
 							{
 								MarkDictionaryContentToFlush((PdfDictionary)pdfObject);
 							}
@@ -579,7 +579,7 @@ namespace iTextSharp.Kernel.Pdf
 			private IDigest md5;
 
 			private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, Dictionary
-				<int, int> serialized)
+				<int?, int?> serialized)
 			{
 				if (level <= 0)
 				{
@@ -595,7 +595,7 @@ namespace iTextSharp.Kernel.Pdf
 				if (obj.IsIndirectReference())
 				{
 					@ref = (PdfIndirectReference)obj;
-					int key = GetCopyObjectKey(obj);
+					int? key = GetCopyObjectKey(obj);
 					if (serialized.ContainsKey(key))
 					{
 						bb.Append(serialized[key]);
@@ -651,7 +651,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				if (savedBb != null)
 				{
-					int key = GetCopyObjectKey(@ref);
+					int? key = GetCopyObjectKey(@ref);
 					if (!serialized.ContainsKey(key))
 					{
 						serialized[key] = CalculateHash(bb.GetBuffer());
@@ -661,7 +661,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 
 			private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, Dictionary
-				<int, int> serialized)
+				<int?, int?> serialized)
 			{
 				bb.Append("$D");
 				if (level <= 0)
@@ -684,7 +684,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 
 			private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, Dictionary
-				<int, int> serialized)
+				<int?, int?> serialized)
 			{
 				bb.Append("$A");
 				if (level <= 0)
@@ -697,7 +697,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 			}
 
-			internal ByteStore(PdfStream str, Dictionary<int, int> serialized)
+			internal ByteStore(PdfStream str, Dictionary<int?, int?> serialized)
 			{
 				try
 				{
@@ -715,7 +715,7 @@ namespace iTextSharp.Kernel.Pdf
 				md5 = null;
 			}
 
-			internal ByteStore(PdfDictionary dict, Dictionary<int, int> serialized)
+			internal ByteStore(PdfDictionary dict, Dictionary<int?, int?> serialized)
 			{
 				try
 				{

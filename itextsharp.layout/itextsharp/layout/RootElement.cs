@@ -154,12 +154,12 @@ namespace iTextSharp.Layout
 
 					case iTextSharp.Layout.Property.Property.TEXT_RISE:
 					{
-						return (T1)float.ValueOf(0);
+						return (T1)float?.ValueOf(0);
 					}
 
 					case iTextSharp.Layout.Property.Property.SPACING_RATIO:
 					{
-						return (T1)float.ValueOf(0.75f);
+						return (T1)float?.ValueOf(0.75f);
 					}
 
 					default:
@@ -176,7 +176,7 @@ namespace iTextSharp.Layout
 
 		public override void DeleteOwnProperty(int property)
 		{
-			properties.Remove(property);
+			properties.JRemove(property);
 		}
 
 		public override void SetProperty(int property, Object value)

@@ -101,7 +101,7 @@ namespace iTextSharp.Kernel.Events
 			handlers.Remove(handler);
 			if (handlers.Count == 0)
 			{
-				eventHandlers.Remove(type);
+				eventHandlers.JRemove(type);
 			}
 		}
 

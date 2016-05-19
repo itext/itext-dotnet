@@ -84,7 +84,7 @@ namespace iTextSharp.Layout.Renderer
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
-			float blockWidth = RetrieveWidth(parentBBox.GetWidth());
+			float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
 			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned))
 			{
 				parentBBox.SetWidth(blockWidth);
@@ -294,7 +294,7 @@ namespace iTextSharp.Layout.Renderer
 				occupiedArea.GetBBox().MoveDown(moveDown);
 				occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
 			}
-			float blockHeight = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
+			float? blockHeight = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
 				);
 			ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
 			if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
@@ -335,7 +335,7 @@ namespace iTextSharp.Layout.Renderer
 			if ((property == iTextSharp.Layout.Property.Property.MARGIN_TOP || property == iTextSharp.Layout.Property.Property
 				.MARGIN_BOTTOM) && parent is CellRenderer)
 			{
-				return (T1)float.ValueOf(0);
+				return (T1)float?.ValueOf(0);
 			}
 			return base.GetDefaultProperty(property);
 		}
@@ -417,7 +417,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		protected internal override float GetFirstYLineRecursively()
+		protected internal override float? GetFirstYLineRecursively()
 		{
 			if (lines == null || lines.Count == 0)
 			{

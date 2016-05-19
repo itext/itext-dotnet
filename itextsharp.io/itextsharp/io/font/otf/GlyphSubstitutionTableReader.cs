@@ -65,7 +65,7 @@ namespace iTextSharp.IO.Font.Otf
 	{
 		/// <exception cref="System.IO.IOException"/>
 		public GlyphSubstitutionTableReader(RandomAccessFileOrArray rf, int gsubTableLocation
-			, OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm
+			, OpenTypeGdefTableReader gdef, IDictionary<int?, Glyph> indexGlyphMap, int unitsPerEm
 			)
 			: base(rf, gsubTableLocation, gdef, indexGlyphMap, unitsPerEm)
 		{

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
@@ -61,7 +60,8 @@ namespace iTextSharp.IO.Font.Cmap
 			Stream inp = ResourceUtil.GetResourceStream(fullName);
 			if (inp == null)
 			{
-				throw new IOException("the.cmap.1.was.not.found").SetMessageParams(fullName);
+				throw new iTextSharp.IO.IOException("the.cmap.1.was.not.found").SetMessageParams(
+					fullName);
 			}
 			return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
 				().CreateSource(inp)));

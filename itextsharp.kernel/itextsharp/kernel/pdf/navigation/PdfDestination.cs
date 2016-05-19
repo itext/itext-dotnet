@@ -64,19 +64,19 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject
 			 pdfObject)
 		{
-			if (pdfObject.GetType() == PdfObject.STRING)
+			if (pdfObject.GetObjectType() == PdfObject.STRING)
 			{
 				return new PdfStringDestination((PdfString)pdfObject);
 			}
 			else
 			{
-				if (pdfObject.GetType() == PdfObject.NAME)
+				if (pdfObject.GetObjectType() == PdfObject.NAME)
 				{
 					return new PdfNamedDestination((PdfName)pdfObject);
 				}
 				else
 				{
-					if (pdfObject.GetType() == PdfObject.ARRAY)
+					if (pdfObject.GetObjectType() == PdfObject.ARRAY)
 					{
 						return new PdfExplicitDestination((PdfArray)pdfObject);
 					}

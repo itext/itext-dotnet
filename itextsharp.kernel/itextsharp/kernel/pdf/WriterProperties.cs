@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf
 			smartMode = false;
 			debugMode = false;
 			compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
-			isFullCompression = null;
+			isFullCompression = true;
 			encryptionProperties = new EncryptionProperties();
 		}
 

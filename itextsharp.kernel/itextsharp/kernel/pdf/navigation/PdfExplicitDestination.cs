@@ -87,15 +87,15 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFit(PdfPage
 			 page)
 		{
-			return Create(page, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float
-				.NaN);
+			return Create(page, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFit(int
 			 pageNum)
 		{
-			return Create(pageNum, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float
-				.NaN);
+			return Create(pageNum, PdfName.Fit, float.NaN, float.NaN, float.NaN, float.NaN, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitH(
@@ -108,8 +108,8 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitH(
 			int pageNum, float top)
 		{
-			return Create(pageNum, PdfName.FitH, float.NaN, float.NaN, float.NaN, top, float.
-				NaN);
+			return Create(pageNum, PdfName.FitH, float.NaN, float.NaN, float.NaN, top, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitV(
@@ -122,8 +122,8 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitV(
 			int pageNum, float left)
 		{
-			return Create(pageNum, PdfName.FitV, left, float.NaN, float.NaN, float.NaN, float
-				.NaN);
+			return Create(pageNum, PdfName.FitV, left, float.NaN, float.NaN, float.NaN, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitR(
@@ -141,8 +141,8 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitB(
 			PdfPage page)
 		{
-			return Create(page, PdfName.FitB, float.NaN, float.NaN, float.NaN, float.NaN, float
-				.NaN);
+			return Create(page, PdfName.FitB, float.NaN, float.NaN, float.NaN, float.NaN, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitB(
@@ -162,8 +162,8 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBH
 			(int pageNum, float top)
 		{
-			return Create(pageNum, PdfName.FitBH, float.NaN, float.NaN, float.NaN, top, float
-				.NaN);
+			return Create(pageNum, PdfName.FitBH, float.NaN, float.NaN, float.NaN, top, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV
@@ -176,8 +176,8 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV
 			(int pageNum, float left)
 		{
-			return Create(pageNum, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float
-				.NaN);
+			return Create(pageNum, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float.NaN
+				);
 		}
 
 		public static iTextSharp.Kernel.Pdf.Navigation.PdfExplicitDestination Create(PdfPage

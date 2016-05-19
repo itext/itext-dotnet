@@ -190,7 +190,7 @@ namespace iTextSharp.Kernel.Pdf
 				, dictionary, this);
 			dictionary.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
 			dictionary.Put(PdfName.Parent, content);
-			if (!children.IsEmpty())
+			if (children.Count > 0)
 			{
 				if (position != 0)
 				{
@@ -215,7 +215,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (children.Count > 0)
 			{
-				int count = this.content.GetAsInt(PdfName.Count);
+				int count = (int)this.content.GetAsInt(PdfName.Count);
 				if (count > 0)
 				{
 					content.Put(PdfName.Count, new PdfNumber(count++));
@@ -257,7 +257,7 @@ namespace iTextSharp.Kernel.Pdf
 			IList<iTextSharp.Kernel.Pdf.PdfOutline> children = parent.children;
 			children.Remove(this);
 			PdfDictionary parentContent = parent.content;
-			if (!children.IsEmpty())
+			if (children.Count > 0)
 			{
 				parentContent.Put(PdfName.First, children[0].content);
 				parentContent.Put(PdfName.Last, children[children.Count - 1].content);

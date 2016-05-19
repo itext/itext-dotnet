@@ -187,34 +187,34 @@ namespace iTextSharp.Layout.Renderer
 		private static void ApplyBlockLevelLayoutAttributes(PdfName role, AbstractRenderer
 			 renderer, PdfDictionary attributes, PdfDocument doc)
 		{
-			float[] margins = new float[] { renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			float?[] margins = new float?[] { renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 				.MARGIN_TOP), renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM
 				), renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_LEFT), 
 				renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_RIGHT) };
 			int[] marginsOrder = new int[] { 0, 1, 2, 3 };
 			//TODO set depending on writing direction
-			float spaceBefore = margins[marginsOrder[0]];
+			float? spaceBefore = margins[marginsOrder[0]];
 			if (spaceBefore != null && spaceBefore != 0)
 			{
 				attributes.Put(PdfName.SpaceBefore, new PdfNumber(spaceBefore));
 			}
-			float spaceAfter = margins[marginsOrder[1]];
+			float? spaceAfter = margins[marginsOrder[1]];
 			if (spaceAfter != null && spaceAfter != 0)
 			{
 				attributes.Put(PdfName.SpaceAfter, new PdfNumber(spaceAfter));
 			}
-			float startIndent = margins[marginsOrder[2]];
+			float? startIndent = margins[marginsOrder[2]];
 			if (startIndent != null && startIndent != 0)
 			{
 				attributes.Put(PdfName.StartIndent, new PdfNumber(startIndent));
 			}
-			float endIndent = margins[marginsOrder[3]];
+			float? endIndent = margins[marginsOrder[3]];
 			if (endIndent != null && endIndent != 0)
 			{
 				attributes.Put(PdfName.EndIndent, new PdfNumber(endIndent));
 			}
-			float firstLineIndent = renderer.GetProperty(iTextSharp.Layout.Property.Property.
-				FIRST_LINE_INDENT);
+			float? firstLineIndent = renderer.GetProperty(iTextSharp.Layout.Property.Property
+				.FIRST_LINE_INDENT);
 			if (firstLineIndent != null && firstLineIndent != 0)
 			{
 				attributes.Put(PdfName.TextIndent, new PdfNumber(firstLineIndent));
@@ -244,7 +244,7 @@ namespace iTextSharp.Layout.Renderer
 				{
 					attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
 				}
-				float height = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
+				float? height = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
 					);
 				if (height != null)
 				{
@@ -273,8 +273,8 @@ namespace iTextSharp.Layout.Renderer
 		private static void ApplyInlineLevelLayoutAttributes(AbstractRenderer renderer, PdfDictionary
 			 attributes)
 		{
-			float textRise = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-				TEXT_RISE);
+			float? textRise = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.TEXT_RISE);
 			if (textRise != null && textRise != 0)
 			{
 				attributes.Put(PdfName.BaselineShift, new PdfNumber(textRise));
@@ -283,8 +283,8 @@ namespace iTextSharp.Layout.Renderer
 				);
 			if (underlines != null)
 			{
-				float fontSize = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-					FONT_SIZE);
+				float? fontSize = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+					.FONT_SIZE);
 				Underline underline = null;
 				if (underlines is IList && !((IList)underlines).IsEmpty() && ((IList)underlines)[
 					0] is Underline)
@@ -328,7 +328,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				attributes.Put(PdfName.Width, new PdfNumber(bbox.GetWidth()));
 			}
-			float height = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
+			float? height = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
 				);
 			if (height != null)
 			{

@@ -51,14 +51,14 @@ namespace iTextSharp.IO.Font.Otf
 	/// <author>psoares</author>
 	public class GsubLookupType1 : OpenTableLookup
 	{
-		private IDictionary<int, int> substMap;
+		private IDictionary<int?, int?> substMap;
 
 		/// <exception cref="System.IO.IOException"/>
 		public GsubLookupType1(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
 			subTableLocations)
 			: base(openReader, lookupFlag, subTableLocations)
 		{
-			substMap = new Dictionary<int, int>();
+			substMap = new Dictionary<int?, int?>();
 			ReadSubTables();
 		}
 
@@ -72,10 +72,10 @@ namespace iTextSharp.IO.Font.Otf
 			bool changed = false;
 			if (!openReader.IsSkip(g.GetCode(), lookupFlag))
 			{
-				int substCode = substMap[g.GetCode()];
+				int? substCode = substMap[g.GetCode()];
 				if (substCode != null)
 				{
-					line.SubstituteOneToOne(openReader, substCode);
+					line.SubstituteOneToOne(openReader, (int)substCode);
 					changed = true;
 				}
 			}
@@ -92,7 +92,7 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				int coverage = openReader.rf.ReadUnsignedShort();
 				int deltaGlyphID = openReader.rf.ReadShort();
-				IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
+				IList<int?> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
 					);
 				foreach (int coverageGlyphId in coverageGlyphIds)
 				{
@@ -111,7 +111,7 @@ namespace iTextSharp.IO.Font.Otf
 					{
 						substitute[k] = openReader.rf.ReadUnsignedShort();
 					}
-					IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
+					IList<int?> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
 						);
 					for (int k_1 = 0; k_1 < glyphCount; ++k_1)
 					{

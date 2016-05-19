@@ -286,7 +286,7 @@ namespace iTextSharp.IO.Font
 					String order = tok.NextToken();
 					String name = tok.NextToken();
 					char uni = (char)System.Convert.ToInt32(tok.NextToken(), 16);
-					int uniName = AdobeGlyphList.NameToUnicode(name);
+					int? uniName = AdobeGlyphList.NameToUnicode(name);
 					int orderK;
 					if (order.StartsWith("'"))
 					{
@@ -300,7 +300,7 @@ namespace iTextSharp.IO.Font
 					unicodeToCode.Put(uni, orderK);
 					codeToUnicode[orderK] = (int)uni;
 					differences[orderK] = name;
-					unicodeDifferences.Put(uni, uniName != null ? uniName : -1);
+					unicodeDifferences.Put(uni, uniName != null ? (int)uniName : -1);
 				}
 			}
 			else

@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 
 namespace iTextSharp.Kernel.Xmp.Impl
@@ -77,7 +76,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 		/// <summary>Creates an <code>XMPDateTime</code>-instance from a calendar.</summary>
 		/// <param name="calendar">a <code>Calendar</code></param>
-		public XMPDateTimeImpl(Calendar calendar)
+		public XMPDateTimeImpl(DateTime calendar)
 		{
 			// EMPTY
 			// extract the date and timezone from the calendar provided
@@ -85,19 +84,19 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			TimeZone zone = calendar.GetTimeZone();
 			// put that date into a calendar the pretty much represents ISO8601
 			// I use US because it is close to the "locale" for the ISO8601 spec
-			GregorianCalendar intCalendar = (GregorianCalendar)Calendar.GetInstance(Locale.US
+			GregorianCalendar intCalendar = (GregorianCalendar)DateTime.GetInstance(Locale.US
 				);
 			intCalendar.SetGregorianChange(new DateTime(long.MinValue));
 			intCalendar.SetTimeZone(zone);
 			intCalendar.SetTime(date);
-			this.year = intCalendar.Get(Calendar.YEAR);
-			this.month = intCalendar.Get(Calendar.MONTH) + 1;
+			this.year = intCalendar.Get(DateTime.YEAR);
+			this.month = intCalendar.Get(DateTime.MONTH) + 1;
 			// cal is from 0..12
-			this.day = intCalendar.Get(Calendar.DAY_OF_MONTH);
-			this.hour = intCalendar.Get(Calendar.HOUR_OF_DAY);
-			this.minute = intCalendar.Get(Calendar.MINUTE);
-			this.second = intCalendar.Get(Calendar.SECOND);
-			this.nanoSeconds = intCalendar.Get(Calendar.MILLISECOND) * 1000000;
+			this.day = intCalendar.Get(DateTime.DAY_OF_MONTH);
+			this.hour = intCalendar.Get(DateTime.HOUR_OF_DAY);
+			this.minute = intCalendar.Get(DateTime.MINUTE);
+			this.second = intCalendar.Get(DateTime.SECOND);
+			this.nanoSeconds = intCalendar.Get(DateTime.MILLISECOND) * 1000000;
 			this.timeZone = intCalendar.GetTimeZone();
 			// object contains all date components
 			hasDate = hasTime = hasTimeZone = true;
@@ -113,14 +112,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			GregorianCalendar calendar = new GregorianCalendar(timeZone);
 			calendar.SetTime(date);
-			this.year = calendar.Get(Calendar.YEAR);
-			this.month = calendar.Get(Calendar.MONTH) + 1;
+			this.year = calendar.Get(DateTime.YEAR);
+			this.month = calendar.Get(DateTime.MONTH) + 1;
 			// cal is from 0..12
-			this.day = calendar.Get(Calendar.DAY_OF_MONTH);
-			this.hour = calendar.Get(Calendar.HOUR_OF_DAY);
-			this.minute = calendar.Get(Calendar.MINUTE);
-			this.second = calendar.Get(Calendar.SECOND);
-			this.nanoSeconds = calendar.Get(Calendar.MILLISECOND) * 1000000;
+			this.day = calendar.Get(DateTime.DAY_OF_MONTH);
+			this.hour = calendar.Get(DateTime.HOUR_OF_DAY);
+			this.minute = calendar.Get(DateTime.MINUTE);
+			this.second = calendar.Get(DateTime.SECOND);
+			this.nanoSeconds = calendar.Get(DateTime.MILLISECOND) * 1000000;
 			this.timeZone = timeZone;
 			// object contains all date components
 			hasDate = hasTime = hasTimeZone = true;
@@ -305,21 +304,21 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetCalendar()"/>
-		public virtual Calendar GetCalendar()
+		public virtual DateTime GetCalendar()
 		{
-			GregorianCalendar calendar = (GregorianCalendar)Calendar.GetInstance(Locale.US);
+			GregorianCalendar calendar = (GregorianCalendar)DateTime.GetInstance(Locale.US);
 			calendar.SetGregorianChange(new DateTime(long.MinValue));
 			if (hasTimeZone)
 			{
 				calendar.SetTimeZone(timeZone);
 			}
-			calendar.Set(Calendar.YEAR, year);
-			calendar.Set(Calendar.MONTH, month - 1);
-			calendar.Set(Calendar.DAY_OF_MONTH, day);
-			calendar.Set(Calendar.HOUR_OF_DAY, hour);
-			calendar.Set(Calendar.MINUTE, minute);
-			calendar.Set(Calendar.SECOND, second);
-			calendar.Set(Calendar.MILLISECOND, nanoSeconds / 1000000);
+			calendar.Set(DateTime.YEAR, year);
+			calendar.Set(DateTime.MONTH, month - 1);
+			calendar.Set(DateTime.DAY_OF_MONTH, day);
+			calendar.Set(DateTime.HOUR_OF_DAY, hour);
+			calendar.Set(DateTime.MINUTE, minute);
+			calendar.Set(DateTime.SECOND, second);
+			calendar.Set(DateTime.MILLISECOND, nanoSeconds / 1000000);
 			return calendar;
 		}
 

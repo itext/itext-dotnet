@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Utils
 	public class PdfResourceCounter
 	{
 		/// <summary>A map of the resources that are already taken into account</summary>
-		private IDictionary<int, PdfObject> resources;
+		private IDictionary<int?, PdfObject> resources;
 
 		/// <summary>
 		/// Creates a PdfResourceCounter instance to be used to count the resources
@@ -65,7 +65,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <param name="obj">the object we want to examine</param>
 		public PdfResourceCounter(PdfObject obj)
 		{
-			resources = new Dictionary<int, PdfObject>();
+			resources = new Dictionary<int?, PdfObject>();
 			Process(obj);
 		}
 
@@ -99,7 +99,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <param name="obj">the object to examine</param>
 		protected internal void LoopOver(PdfObject obj)
 		{
-			switch (obj.GetType())
+			switch (obj.GetObjectType())
 			{
 				case PdfObject.ARRAY:
 				{
@@ -130,7 +130,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <summary>Returns a map with the resources.</summary>
 		/// <returns>the resources</returns>
-		public virtual IDictionary<int, PdfObject> GetResources()
+		public virtual IDictionary<int?, PdfObject> GetResources()
 		{
 			return resources;
 		}
@@ -148,7 +148,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <param name="res">The resources that can be excluded when counting the bytes.</param>
 		/// <returns>The number of bytes needed for an object.</returns>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual long GetLength(IDictionary<int, PdfObject> res)
+		public virtual long GetLength(IDictionary<int?, PdfObject> res)
 		{
 			long length = 0;
 			foreach (int @ref in resources.Keys)

@@ -46,7 +46,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.IO;
 using iTextSharp.IO.Color;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
@@ -209,7 +208,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.PngImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, 
+					e);
 			}
 			finally
 			{
@@ -369,7 +369,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (Exception e)
 			{
-				throw new IOException(IOException.PngImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, 
+					e);
 			}
 		}
 
@@ -891,7 +892,7 @@ namespace iTextSharp.IO.Image
 					default:
 					{
 						// Error -- uknown filter type
-						throw new IOException(IOException.PngFilterUnknown);
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngFilterUnknown);
 					}
 				}
 				ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

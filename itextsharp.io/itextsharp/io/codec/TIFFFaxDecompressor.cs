@@ -44,7 +44,6 @@
 * nuclear facility.
 */
 using System;
-using iTextSharp.IO;
 
 namespace iTextSharp.IO.Codec
 {
@@ -574,8 +573,8 @@ namespace iTextSharp.IO.Codec
 						}
 						else
 						{
-							throw new IOException(IOException.UnknownCompressionType1).SetMessageParams(compression
-								);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.UnknownCompressionType1
+								).SetMessageParams(compression);
 						}
 					}
 				}

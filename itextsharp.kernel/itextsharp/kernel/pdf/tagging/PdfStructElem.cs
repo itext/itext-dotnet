@@ -555,7 +555,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				obj = ((PdfIndirectReference)obj).GetRefersTo();
 			}
 			IPdfStructElem elem = null;
-			switch (obj.GetType())
+			switch (obj.GetObjectType())
 			{
 				case PdfObject.DICTIONARY:
 				{

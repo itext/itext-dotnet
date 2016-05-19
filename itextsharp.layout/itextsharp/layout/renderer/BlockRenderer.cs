@@ -71,7 +71,7 @@ namespace iTextSharp.Layout.Renderer
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
 			}
-			float blockHeight = RetrieveHeight();
+			float? blockHeight = RetrieveHeight();
 			if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight
 				())
 			{
@@ -88,7 +88,7 @@ namespace iTextSharp.Layout.Renderer
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
-			float blockWidth = RetrieveWidth(parentBBox.GetWidth());
+			float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
 			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned))
 			{
 				parentBBox.SetWidth(blockWidth);
@@ -346,7 +346,7 @@ namespace iTextSharp.Layout.Renderer
 		public override Rectangle GetOccupiedAreaBBox()
 		{
 			Rectangle bBox = occupiedArea.GetBBox().Clone();
-			float rotationAngle = GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? rotationAngle = GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			if (rotationAngle != null)
 			{
@@ -392,9 +392,9 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyRotationLayout(Rectangle layoutBox)
 		{
-			float rotationPointX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+			float? rotationPointX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
 				);
-			float rotationPointY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+			float? rotationPointY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
 				);
 			if (rotationPointX == null || rotationPointY == null)
 			{
@@ -446,7 +446,7 @@ namespace iTextSharp.Layout.Renderer
 				dy = (float)shift.GetY();
 				dx = (float)shift.GetX();
 			}
-			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			AffineTransform transform = new AffineTransform();
 			transform.Rotate(angle);
@@ -499,7 +499,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas)
 		{
-			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			if (angle != null)
 			{
@@ -517,7 +517,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void EndRotationIfApplied(PdfCanvas canvas)
 		{
-			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			if (angle != null)
 			{

@@ -52,7 +52,7 @@ namespace iTextSharp.IO.Font
 
 		private String ttfUniqueId;
 
-		private int type1Xuid;
+		private int? type1Xuid;
 
 		private String panose;
 
@@ -70,7 +70,7 @@ namespace iTextSharp.IO.Font
 			return ttfUniqueId;
 		}
 
-		public virtual int GetType1Xuid()
+		public virtual int? GetType1Xuid()
 		{
 			return type1Xuid;
 		}
@@ -90,7 +90,7 @@ namespace iTextSharp.IO.Font
 			this.ttfUniqueId = ttfUniqueId;
 		}
 
-		protected internal virtual void SetType1Xuid(int type1Xuid)
+		protected internal virtual void SetType1Xuid(int? type1Xuid)
 		{
 			this.type1Xuid = type1Xuid;
 		}

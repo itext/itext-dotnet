@@ -92,7 +92,7 @@ namespace iTextSharp.Layout.Renderer
 					maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox
 						().GetWidth());
 				}
-				float symbolIndent = modelElement.GetProperty(iTextSharp.Layout.Property.Property
+				float? symbolIndent = modelElement.GetProperty(iTextSharp.Layout.Property.Property
 					.LIST_SYMBOL_INDENT);
 				listItemNum = 0;
 				foreach (IRenderer childRenderer in childRenderers)
@@ -122,7 +122,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
 			splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
-				, bool.ValueOf(true));
+				, bool?.ValueOf(true));
 			return splitRenderer;
 		}
 
@@ -131,7 +131,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
 			overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
-				, bool.ValueOf(true));
+				, bool?.ValueOf(true));
 			return overflowRenderer;
 		}
 

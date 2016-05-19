@@ -236,7 +236,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		private String GetOptionName(int option)
 		{
 			IDictionary optionsNames = ProcureOptionNames();
-			int key = option;
+			int? key = option;
 			String result = (String)optionsNames[key];
 			if (result == null)
 			{

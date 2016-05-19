@@ -134,7 +134,7 @@ namespace iTextSharp.IO.Font
 			return fontParser.IsCff();
 		}
 
-		public virtual IDictionary<int, int[]> GetActiveCmap()
+		public virtual IDictionary<int?, int[]> GetActiveCmap()
 		{
 			OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
 			if (cmaps.cmapExt != null)
@@ -188,7 +188,7 @@ namespace iTextSharp.IO.Font
 			catch (System.IO.IOException e)
 			{
 				fontStreamBytes = null;
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 			return fontStreamBytes;
 		}
@@ -232,7 +232,7 @@ namespace iTextSharp.IO.Font
 			return gposTable;
 		}
 
-		public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset)
+		public virtual byte[] GetSubset(ICollection<int?> glyphs, bool subset)
 		{
 			try
 			{
@@ -240,7 +240,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 		}
 
@@ -365,12 +365,12 @@ namespace iTextSharp.IO.Font
 				fontIdentification.SetTtfVersion(ttfUniqueId[0][3]);
 			}
 			fontIdentification.SetPanose(os_2.panose);
-			IDictionary<int, int[]> cmap = GetActiveCmap();
+			IDictionary<int?, int[]> cmap = GetActiveCmap();
 			int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
-			unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
-			codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
+			unicodeToGlyph = new LinkedDictionary<int?, Glyph>(cmap.Count);
+			codeToGlyph = new LinkedDictionary<int?, Glyph>(glyphWidths.Length);
 			avgWidth = 0;
-			foreach (int charCode in cmap.Keys)
+			foreach (int? charCode in cmap.Keys)
 			{
 				int index = cmap[charCode][0];
 				if (index >= glyphWidths.Length)
@@ -380,8 +380,8 @@ namespace iTextSharp.IO.Font
 						().GetFontName(), index));
 					continue;
 				}
-				Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes
-					[index] : null);
+				Glyph glyph = new Glyph(index, glyphWidths[index], (int)charCode, bBoxes != null ? 
+					bBoxes[index] : null);
 				unicodeToGlyph[charCode] = glyph;
 				codeToGlyph[index] = glyph;
 				avgWidth += glyph.GetWidth();

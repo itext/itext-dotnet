@@ -250,7 +250,7 @@ namespace iTextSharp.Kernel.Pdf.Function
 
 		public static PdfFunction MakeFunction(PdfDictionary pdfObject)
 		{
-			switch (pdfObject.GetType())
+			switch (pdfObject.GetObjectType())
 			{
 				case 0:
 				{

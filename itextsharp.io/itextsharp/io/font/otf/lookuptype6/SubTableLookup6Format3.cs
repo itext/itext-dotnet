@@ -77,16 +77,16 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
 		public class SubstRuleFormat3 : ContextualSubstRule
 		{
-			internal IList<ICollection<int>> backtrackCoverages;
+			internal IList<ICollection<int?>> backtrackCoverages;
 
-			internal IList<ICollection<int>> inputCoverages;
+			internal IList<ICollection<int?>> inputCoverages;
 
-			internal IList<ICollection<int>> lookaheadCoverages;
+			internal IList<ICollection<int?>> lookaheadCoverages;
 
 			internal SubstLookupRecord[] substLookupRecords;
 
-			public SubstRuleFormat3(IList<ICollection<int>> backtrackCoverages, IList<ICollection
-				<int>> inputCoverages, IList<ICollection<int>> lookaheadCoverages, SubstLookupRecord
+			public SubstRuleFormat3(IList<ICollection<int?>> backtrackCoverages, IList<ICollection
+				<int?>> inputCoverages, IList<ICollection<int?>> lookaheadCoverages, SubstLookupRecord
 				[] substLookupRecords)
 			{
 				this.backtrackCoverages = backtrackCoverages;

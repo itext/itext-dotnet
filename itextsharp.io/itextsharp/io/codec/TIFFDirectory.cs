@@ -46,7 +46,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Codec
@@ -87,7 +86,7 @@ namespace iTextSharp.IO.Codec
 		internal TIFFField[] fields;
 
 		/// <summary>A Hashtable indexing the fields by tag number.</summary>
-		internal IDictionary<int, int> fieldIndex = new Dictionary<int, int>();
+		internal IDictionary<int?, int?> fieldIndex = new Dictionary<int?, int?>();
 
 		/// <summary>The offset of this IFD.</summary>
 		internal long IFDOffset = 8;
@@ -125,13 +124,15 @@ namespace iTextSharp.IO.Codec
 			int endian = stream.ReadUnsignedShort();
 			if (!IsValidEndianTag(endian))
 			{
-				throw new IOException(IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
+					);
 			}
 			isBigEndian = endian == 0x4d4d;
 			int magic = ReadUnsignedShort(stream);
 			if (magic != 42)
 			{
-				throw new IOException(IOException.BadMagicNumberShouldBe42);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42
+					);
 			}
 			// Get the initial ifd offset as an unsigned int (using a long)
 			ifd_offset = ReadUnsignedInt(stream);
@@ -139,7 +140,8 @@ namespace iTextSharp.IO.Codec
 			{
 				if (ifd_offset == 0L)
 				{
-					throw new IOException(IOException.DirectoryNumberTooLarge);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.DirectoryNumberTooLarge
+						);
 				}
 				stream.Seek(ifd_offset);
 				int entries = ReadUnsignedShort(stream);
@@ -175,7 +177,8 @@ namespace iTextSharp.IO.Codec
 			int endian = stream.ReadUnsignedShort();
 			if (!IsValidEndianTag(endian))
 			{
-				throw new IOException(IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
+					);
 			}
 			isBigEndian = endian == 0x4d4d;
 			// Seek to the first IFD.
@@ -429,7 +432,7 @@ namespace iTextSharp.IO.Codec
 			int i = -1;
 			if (fieldIndex.ContainsKey(tag))
 			{
-				i = fieldIndex[tag];
+				i = (int)fieldIndex[tag];
 			}
 			if (i == -1)
 			{
@@ -454,11 +457,11 @@ namespace iTextSharp.IO.Codec
 		public virtual int[] GetTags()
 		{
 			int[] tags = new int[fieldIndex.Count];
-			IEnumerator<int> e = fieldIndex.Keys.GetEnumerator();
+			IEnumerator<int?> e = fieldIndex.Keys.GetEnumerator();
 			int i = 0;
 			while (e.MoveNext())
 			{
-				tags[i++] = e.Current;
+				tags[i++] = (int)e.Current;
 			}
 			return tags;
 		}
@@ -484,8 +487,8 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual byte GetFieldAsByte(int tag, int index)
 		{
-			int i = fieldIndex[tag];
-			byte[] b = fields[i].GetAsBytes();
+			int? i = fieldIndex[tag];
+			byte[] b = fields[(int)i].GetAsBytes();
 			return b[index];
 		}
 
@@ -516,8 +519,8 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual long GetFieldAsLong(int tag, int index)
 		{
-			int i = fieldIndex[tag];
-			return fields[i].GetAsLong(index);
+			int? i = fieldIndex[tag];
+			return fields[(int)i].GetAsLong(index);
 		}
 
 		/// <summary>
@@ -547,8 +550,8 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual float GetFieldAsFloat(int tag, int index)
 		{
-			int i = fieldIndex[tag];
-			return fields[i].GetAsFloat(index);
+			int? i = fieldIndex[tag];
+			return fields[(int)i].GetAsFloat(index);
 		}
 
 		/// <summary>Returns the value of index 0 of a given tag as a float.</summary>
@@ -574,8 +577,8 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual double GetFieldAsDouble(int tag, int index)
 		{
-			int i = fieldIndex[tag];
-			return fields[i].GetAsDouble(index);
+			int? i = fieldIndex[tag];
+			return fields[(int)i].GetAsDouble(index);
 		}
 
 		/// <summary>Returns the value of index 0 of a given tag as a double.</summary>
@@ -723,13 +726,15 @@ namespace iTextSharp.IO.Codec
 			int endian = stream.ReadUnsignedShort();
 			if (!IsValidEndianTag(endian))
 			{
-				throw new IOException(IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
+					);
 			}
 			bool isBigEndian = endian == 0x4d4d;
 			int magic = ReadUnsignedShort(stream, isBigEndian);
 			if (magic != 42)
 			{
-				throw new IOException(IOException.BadMagicNumberShouldBe42);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42
+					);
 			}
 			stream.Seek(4L);
 			long offset = ReadUnsignedInt(stream, isBigEndian);

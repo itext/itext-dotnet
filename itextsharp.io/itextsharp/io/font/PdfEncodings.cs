@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font
@@ -313,7 +312,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.PdfEncodings, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
 			}
 		}
 
@@ -380,7 +379,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.PdfEncodings, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
 			}
 		}
 
@@ -450,7 +449,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (ArgumentException e)
 			{
-				throw new IOException(IOException.PdfEncodings, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
 			}
 		}
 

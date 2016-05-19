@@ -66,7 +66,7 @@ namespace iTextSharp.Layout
 	public abstract class ElementPropertyContainer<T> : IPropertyContainer
 		where T : IPropertyContainer
 	{
-		protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
+		protected internal IDictionary<int?, Object> properties = new Dictionary<int?, Object
 			>();
 
 		public virtual void SetProperty(int property, Object value)
@@ -86,7 +86,7 @@ namespace iTextSharp.Layout
 
 		public virtual void DeleteOwnProperty(int property)
 		{
-			properties.Remove(property);
+			properties.JRemove(property);
 		}
 
 		public virtual T1 GetProperty<T1>(int property)
@@ -112,7 +112,7 @@ namespace iTextSharp.Layout
 				case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
 				case iTextSharp.Layout.Property.Property.PADDING_LEFT:
 				{
-					return (T1)float.ValueOf(0);
+					return (T1)float?.ValueOf(0);
 				}
 
 				default:
@@ -169,7 +169,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Gets the height property of the Element.</summary>
 		/// <returns>the height of the element, as a floating point value.</returns>
-		public virtual float GetHeight()
+		public virtual float? GetHeight()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
@@ -538,7 +538,7 @@ namespace iTextSharp.Layout
 		/// <returns>the current text rendering mode</returns>
 		/// <seealso cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"
 		/// 	/>
-		public virtual int GetTextRenderingMode()
+		public virtual int? GetTextRenderingMode()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE);
 		}
@@ -589,7 +589,7 @@ namespace iTextSharp.Layout
 		/// The stroke width is the width of the outlines or edges of a shape.
 		/// </remarks>
 		/// <returns>the current stroke width</returns>
-		public virtual float GetStrokeWidth()
+		public virtual float? GetStrokeWidth()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
 		}

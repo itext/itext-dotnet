@@ -132,7 +132,7 @@ namespace iTextSharp.IO.Font.Otf
 						{
 							if (glyphs[i].HasValidUnicode())
 							{
-								str.Append(TextUtil.ConvertFromUtf32(glyphs[i].GetUnicode()));
+								str.Append(TextUtil.ConvertFromUtf32((int)glyphs[i].GetUnicode()));
 							}
 						}
 					}
@@ -230,7 +230,7 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				if (currentGlyph.HasValidUnicode())
 				{
-					chars.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
+					chars.Append(TextUtil.ConvertFromUtf32((int)currentGlyph.GetUnicode()));
 				}
 			}
 			for (int j = 0; j < rightPartLen; ++j)
@@ -245,7 +245,7 @@ namespace iTextSharp.IO.Font.Otf
 				{
 					if (currentGlyph.HasValidUnicode())
 					{
-						chars.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
+						chars.Append(TextUtil.ConvertFromUtf32((int)currentGlyph.GetUnicode()));
 					}
 				}
 				RemoveGlyph(gidx.idx--);
@@ -271,13 +271,13 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				if (newGlyph.HasValidUnicode())
 				{
-					newGlyph.SetChars(TextUtil.ConvertFromUtf32(newGlyph.GetUnicode()));
+					newGlyph.SetChars(TextUtil.ConvertFromUtf32((int)newGlyph.GetUnicode()));
 				}
 				else
 				{
 					if (oldGlyph.HasValidUnicode())
 					{
-						newGlyph.SetChars(TextUtil.ConvertFromUtf32(oldGlyph.GetUnicode()));
+						newGlyph.SetChars(TextUtil.ConvertFromUtf32((int)oldGlyph.GetUnicode()));
 					}
 				}
 			}

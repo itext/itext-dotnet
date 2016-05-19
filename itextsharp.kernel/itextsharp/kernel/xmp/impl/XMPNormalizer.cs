@@ -29,7 +29,6 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Impl.Xpath;
 using iTextSharp.Kernel.Xmp.Options;
@@ -461,10 +460,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						);
 				}
 				binOtherDate = XMPUtils.ConvertToDate(otherDate.GetValue());
-				Calendar cal = binGPSStamp.GetCalendar();
-				cal.Set(Calendar.YEAR, binOtherDate.GetYear());
-				cal.Set(Calendar.MONTH, binOtherDate.GetMonth());
-				cal.Set(Calendar.DAY_OF_MONTH, binOtherDate.GetDay());
+				DateTime cal = binGPSStamp.GetCalendar();
+				cal.Set(DateTime.YEAR, binOtherDate.GetYear());
+				cal.Set(DateTime.MONTH, binOtherDate.GetMonth());
+				cal.Set(DateTime.DAY_OF_MONTH, binOtherDate.GetDay());
 				binGPSStamp = new XMPDateTimeImpl(cal);
 				gpsDateTime.SetValue(XMPUtils.ConvertFromDate(binGPSStamp));
 			}

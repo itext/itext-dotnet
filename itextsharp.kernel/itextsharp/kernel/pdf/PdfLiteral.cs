@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return LITERAL;
 		}

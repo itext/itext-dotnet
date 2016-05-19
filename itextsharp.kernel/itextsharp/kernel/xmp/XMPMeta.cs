@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp.Options;
 using iTextSharp.Kernel.Xmp.Properties;
 
@@ -830,7 +829,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// especially conversion errors.
 		/// </exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		bool GetPropertyBoolean(String schemaNS, String propName);
+		bool? GetPropertyBoolean(String schemaNS, String propName);
 
 		/// <summary>Convenience method to retrieve the literal value of a property.</summary>
 		/// <param name="schemaNS">
@@ -850,7 +849,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// especially conversion errors.
 		/// </exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		int GetPropertyInteger(String schemaNS, String propName);
+		int? GetPropertyInteger(String schemaNS, String propName);
 
 		/// <summary>Convenience method to retrieve the literal value of a property.</summary>
 		/// <param name="schemaNS">
@@ -890,7 +889,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// especially conversion errors.
 		/// </exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		Double GetPropertyDouble(String schemaNS, String propName);
+		double? GetPropertyDouble(String schemaNS, String propName);
 
 		/// <summary>Convenience method to retrieve the literal value of a property.</summary>
 		/// <param name="schemaNS">
@@ -930,7 +929,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// especially conversion errors.
 		/// </exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		Calendar GetPropertyCalendar(String schemaNS, String propName);
+		DateTime GetPropertyCalendar(String schemaNS, String propName);
 
 		/// <summary>Convenience method to retrieve the literal value of a property.</summary>
 		/// <param name="schemaNS">
@@ -1125,17 +1124,17 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="options">options of the property to set (optional).</param>
 		/// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		void SetPropertyCalendar(String schemaNS, String propName, Calendar propValue, PropertyOptions
+		void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue, PropertyOptions
 			 options);
 
-		/// <seealso cref="SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="SetPropertyCalendar(System.String, System.String, System.DateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		/// <param name="schemaNS">The namespace URI for the property</param>
 		/// <param name="propName">The name of the property</param>
 		/// <param name="propValue">the property value as <code>Calendar</code></param>
 		/// <exception cref="XMPException">Wraps all exceptions</exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		void SetPropertyCalendar(String schemaNS, String propName, Calendar propValue);
+		void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue);
 
 		/// <summary>
 		/// Convenience method to set a property from a binary <code>byte[]</code>-array,

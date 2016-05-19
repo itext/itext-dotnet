@@ -72,25 +72,25 @@ namespace iTextSharp.IO.Font.Otf
 
 		/// <exception cref="System.IO.IOException"/>
 		public static void ReadCoverages(RandomAccessFileOrArray rf, int[] locations, IList
-			<ICollection<int>> coverage)
+			<ICollection<int?>> coverage)
 		{
 			foreach (int location in locations)
 			{
-				coverage.Add(new HashSet<int>(ReadCoverageFormat(rf, location)));
+				coverage.Add(new HashSet<int?>(ReadCoverageFormat(rf, location)));
 			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public static IList<int> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation
+		public static IList<int?> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation
 			)
 		{
 			rf.Seek(coverageLocation);
 			int coverageFormat = rf.ReadShort();
-			IList<int> glyphIds;
+			IList<int?> glyphIds;
 			if (coverageFormat == 1)
 			{
 				int glyphCount = rf.ReadShort();
-				glyphIds = new List<int>(glyphCount);
+				glyphIds = new List<int?>(glyphCount);
 				for (int i = 0; i < glyphCount; i++)
 				{
 					int coverageGlyphId = rf.ReadShort();
@@ -102,7 +102,7 @@ namespace iTextSharp.IO.Font.Otf
 				if (coverageFormat == 2)
 				{
 					int rangeCount = rf.ReadShort();
-					glyphIds = new List<int>();
+					glyphIds = new List<int?>();
 					for (int i = 0; i < rangeCount; i++)
 					{
 						ReadRangeRecord(rf, glyphIds);
@@ -118,7 +118,7 @@ namespace iTextSharp.IO.Font.Otf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int> glyphIds
+		private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int?> glyphIds
 			)
 		{
 			int startGlyphId = rf.ReadShort();

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Util
@@ -140,7 +139,8 @@ namespace iTextSharp.IO.Util
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.CannotWriteBytes, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e
+					);
 			}
 		}
 
@@ -153,7 +153,8 @@ namespace iTextSharp.IO.Util
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.CannotWriteBytes, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e
+					);
 			}
 		}
 

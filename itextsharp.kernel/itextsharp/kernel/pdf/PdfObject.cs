@@ -117,7 +117,7 @@ namespace iTextSharp.Kernel.Pdf
 		// (because of multiple objects read from the same reference inconsistency).
 		/// <summary>Gets object type.</summary>
 		/// <returns>object type.</returns>
-		public abstract byte GetType();
+		public abstract byte GetObjectType();
 
 		/// <summary>Flushes the object to the document.</summary>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
@@ -148,8 +148,8 @@ namespace iTextSharp.Kernel.Pdf
 				if (document != null)
 				{
 					document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
-					document.FlushObject(this, canBeInObjStm && GetType() != STREAM && GetType() != INDIRECT_REFERENCE
-						 && GetIndirectReference().GetGenNumber() == 0);
+					document.FlushObject(this, canBeInObjStm && GetObjectType() != STREAM && GetObjectType
+						() != INDIRECT_REFERENCE && GetIndirectReference().GetGenNumber() == 0);
 				}
 			}
 			catch (System.IO.IOException e)
@@ -353,7 +353,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsNull()
 		{
-			return GetType() == NULL;
+			return GetObjectType() == NULL;
 		}
 
 		/// <summary>
@@ -363,7 +363,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsBoolean()
 		{
-			return GetType() == BOOLEAN;
+			return GetObjectType() == BOOLEAN;
 		}
 
 		/// <summary>
@@ -373,7 +373,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsNumber()
 		{
-			return GetType() == NUMBER;
+			return GetObjectType() == NUMBER;
 		}
 
 		/// <summary>
@@ -383,7 +383,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsString()
 		{
-			return GetType() == STRING;
+			return GetObjectType() == STRING;
 		}
 
 		/// <summary>
@@ -393,7 +393,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsName()
 		{
-			return GetType() == NAME;
+			return GetObjectType() == NAME;
 		}
 
 		/// <summary>
@@ -403,7 +403,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsArray()
 		{
-			return GetType() == ARRAY;
+			return GetObjectType() == ARRAY;
 		}
 
 		/// <summary>
@@ -413,7 +413,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsDictionary()
 		{
-			return GetType() == DICTIONARY;
+			return GetObjectType() == DICTIONARY;
 		}
 
 		/// <summary>
@@ -423,7 +423,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns><CODE>true</CODE> or <CODE>false</CODE></returns>
 		public virtual bool IsStream()
 		{
-			return GetType() == STREAM;
+			return GetObjectType() == STREAM;
 		}
 
 		/// <summary>
@@ -436,7 +436,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </returns>
 		public virtual bool IsIndirectReference()
 		{
-			return GetType() == INDIRECT_REFERENCE;
+			return GetObjectType() == INDIRECT_REFERENCE;
 		}
 
 		/// <summary>
@@ -449,7 +449,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </returns>
 		public virtual bool IsLiteral()
 		{
-			return GetType() == LITERAL;
+			return GetObjectType() == LITERAL;
 		}
 
 		/// <summary>Creates new instance of object.</summary>
@@ -483,7 +483,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="state">special flag state to clear</param>
 		protected internal virtual PdfObject ClearState(short state)
 		{
-			this.state &= ~state;
+			this.state &= (short)~state;
 			return this;
 		}
 

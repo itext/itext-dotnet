@@ -52,10 +52,10 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 	/// 	</summary>
 	public class SubTableLookup6Format1 : SubTableLookup6
 	{
-		private IDictionary<int, IList<ContextualSubstRule>> substMap;
+		private IDictionary<int?, IList<ContextualSubstRule>> substMap;
 
 		public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, 
-			IDictionary<int, IList<ContextualSubstRule>> substMap)
+			IDictionary<int?, IList<ContextualSubstRule>> substMap)
 			: base(openReader, lookupFlag)
 		{
 			this.substMap = substMap;

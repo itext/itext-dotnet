@@ -142,19 +142,20 @@ namespace iTextSharp.Kernel.Font
 			base.Flush();
 		}
 
-		protected internal virtual void AddRangeUni(ICollection<int> longTag)
+		protected internal virtual void AddRangeUni(ICollection<int?> longTag)
 		{
 			if (!subset && (subsetRanges != null || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset
 				() > 0))
 			{
 				int[] rg = subsetRanges == null && ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset
 					() > 0 ? new int[] { 0, 0xffff } : CompactRanges(subsetRanges);
-				IDictionary<int, int[]> usemap = ((TrueTypeFont)GetFontProgram()).GetActiveCmap();
+				IDictionary<int?, int[]> usemap = ((TrueTypeFont)GetFontProgram()).GetActiveCmap(
+					);
 				System.Diagnostics.Debug.Assert(usemap != null);
-				foreach (KeyValuePair<int, int[]> e in usemap)
+				foreach (KeyValuePair<int?, int[]> e in usemap)
 				{
 					int[] v = e.Value;
-					int gi = v[0];
+					int? gi = v[0];
 					if (longTag.Contains(gi))
 					{
 						continue;
@@ -211,7 +212,7 @@ namespace iTextSharp.Kernel.Font
 					else
 					{
 						fontFileName = PdfName.FontFile2;
-						ICollection<int> glyphs = new HashSet<int>();
+						ICollection<int?> glyphs = new HashSet<int?>();
 						for (int k = 0; k < shortTag.Length; k++)
 						{
 							if (shortTag[k] != 0)
@@ -233,7 +234,7 @@ namespace iTextSharp.Kernel.Font
 								 != null)
 							{
 								//clone glyphs due to possible cache issue
-								fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(new HashSet<int>(glyphs
+								fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(new HashSet<int?>(glyphs
 									), subset);
 							}
 							else

@@ -143,7 +143,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 				elem.SetLang(new PdfString(GetLanguage()));
 			}
 			IList<PdfDictionary> newAttributesList = GetAttributesList();
-			if (!newAttributesList.IsEmpty())
+			if (newAttributesList.Count > 0)
 			{
 				PdfObject attributesObject = elem.GetAttributes(false);
 				PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList

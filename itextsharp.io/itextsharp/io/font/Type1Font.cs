@@ -63,7 +63,7 @@ namespace iTextSharp.IO.Font
 		/// Represents the section KernPairs in the AFM file.
 		/// Key is uni1&lt;&lt;32 + uni2. Value is kerning value.
 		/// </remarks>
-		private IDictionary<long, int> kernPairs = new Dictionary<long, int>();
+		private IDictionary<long, int?> kernPairs = new Dictionary<long, int?>();
 
 		/// <summary>Types of records in a PFB file.</summary>
 		/// <remarks>Types of records in a PFB file. ASCII is 1 and BINARY is 2. They have to appear in the PFB file in this sequence.
@@ -84,7 +84,8 @@ namespace iTextSharp.IO.Font
 			}
 			else
 			{
-				throw new IOException("1.is.not.a.standard.type1.font").SetMessageParams(name);
+				throw new iTextSharp.IO.IOException("1.is.not.a.standard.type1.font").SetMessageParams
+					(name);
 			}
 		}
 
@@ -152,10 +153,10 @@ namespace iTextSharp.IO.Font
 		{
 			if (first.HasValidUnicode() && second.HasValidUnicode())
 			{
-				long record = ((long)first.GetUnicode() << 32) + second.GetUnicode();
+				long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
 				if (kernPairs.ContainsKey(record))
 				{
-					return kernPairs[record];
+					return (int)kernPairs[record];
 				}
 				else
 				{
@@ -188,14 +189,14 @@ namespace iTextSharp.IO.Font
 		/// <returns>Glyph instance if found, otherwise null.</returns>
 		public virtual Glyph GetGlyph(String name)
 		{
-			int unicode = AdobeGlyphList.NameToUnicode(name);
+			int? unicode = AdobeGlyphList.NameToUnicode(name);
 			if (unicode == null)
 			{
 				return null;
 			}
 			else
 			{
-				return GetGlyph(unicode);
+				return GetGlyph((int)unicode);
 			}
 		}
 
@@ -415,12 +416,13 @@ namespace iTextSharp.IO.Font
 				String metricsPath = fontParser.GetAfmPath();
 				if (metricsPath != null)
 				{
-					throw new IOException("missing.startcharmetrics.in.1").SetMessageParams(metricsPath
-						);
+					throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.1").SetMessageParams
+						(metricsPath);
 				}
 				else
 				{
-					throw new IOException("missing.startcharmetrics.in.the.metrics.file");
+					throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.the.metrics.file"
+						);
 				}
 			}
 			avgWidth = 0;
@@ -438,8 +440,8 @@ namespace iTextSharp.IO.Font
 					startKernPairs = false;
 					break;
 				}
-				int C = -1;
-				int WX = 250;
+				int? C = -1;
+				int? WX = 250;
 				String N = "";
 				int[] B = null;
 				tok = new StringTokenizer(line, ";");
@@ -480,8 +482,8 @@ namespace iTextSharp.IO.Font
 						}
 					}
 				}
-				int unicode = AdobeGlyphList.NameToUnicode(N);
-				Glyph glyph = new Glyph(C, WX, unicode != null ? unicode : -1, B);
+				int? unicode = AdobeGlyphList.NameToUnicode(N);
+				Glyph glyph = new Glyph((int)C, (int)WX, unicode != null ? (int)unicode : -1, B);
 				if (C >= 0)
 				{
 					codeToGlyph[C] = glyph;
@@ -490,7 +492,7 @@ namespace iTextSharp.IO.Font
 				{
 					unicodeToGlyph[unicode] = glyph;
 				}
-				avgWidth += WX;
+				avgWidth += (int)WX;
 				widthCount++;
 			}
 			if (widthCount != 0)
@@ -502,12 +504,12 @@ namespace iTextSharp.IO.Font
 				String metricsPath = fontParser.GetAfmPath();
 				if (metricsPath != null)
 				{
-					throw new IOException("missing.endcharmetrics.in.1").SetMessageParams(metricsPath
-						);
+					throw new iTextSharp.IO.IOException("missing.endcharmetrics.in.1").SetMessageParams
+						(metricsPath);
 				}
 				else
 				{
-					throw new IOException("missing.endcharmetrics.in.the.metrics.file");
+					throw new iTextSharp.IO.IOException("missing.endcharmetrics.in.the.metrics.file");
 				}
 			}
 			// From AdobeGlyphList:
@@ -563,12 +565,12 @@ namespace iTextSharp.IO.Font
 					{
 						String first = tok.NextToken();
 						String second = tok.NextToken();
-						int width = (int)float.Parse(tok.NextToken());
-						int firstUni = AdobeGlyphList.NameToUnicode(first);
-						int secondUni = AdobeGlyphList.NameToUnicode(second);
+						int? width = (int)float.Parse(tok.NextToken());
+						int? firstUni = AdobeGlyphList.NameToUnicode(first);
+						int? secondUni = AdobeGlyphList.NameToUnicode(second);
 						if (firstUni != null && secondUni != null)
 						{
-							long record = ((long)firstUni << 32) + secondUni;
+							long record = ((long)firstUni << 32) + (int)secondUni;
 							kernPairs[record] = width;
 						}
 					}
@@ -589,12 +591,12 @@ namespace iTextSharp.IO.Font
 					String metricsPath = fontParser.GetAfmPath();
 					if (metricsPath != null)
 					{
-						throw new IOException("missing.endfontmetrics.in.1").SetMessageParams(metricsPath
-							);
+						throw new iTextSharp.IO.IOException("missing.endfontmetrics.in.1").SetMessageParams
+							(metricsPath);
 					}
 					else
 					{
-						throw new IOException("missing.endfontmetrics.in.the.metrics.file");
+						throw new iTextSharp.IO.IOException("missing.endfontmetrics.in.the.metrics.file");
 					}
 				}
 			}
@@ -603,11 +605,12 @@ namespace iTextSharp.IO.Font
 				String metricsPath = fontParser.GetAfmPath();
 				if (metricsPath != null)
 				{
-					throw new IOException("missing.endkernpairs.in.1").SetMessageParams(metricsPath);
+					throw new iTextSharp.IO.IOException("missing.endkernpairs.in.1").SetMessageParams
+						(metricsPath);
 				}
 				else
 				{
-					throw new IOException("missing.endkernpairs.in.the.metrics.file");
+					throw new iTextSharp.IO.IOException("missing.endkernpairs.in.the.metrics.file");
 				}
 			}
 			raf.Close();

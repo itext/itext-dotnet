@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Font;
 
 namespace iTextSharp.IO.Image
@@ -181,7 +180,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.BmpImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BmpImageException, 
+					e);
 			}
 			RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
 		}
@@ -196,7 +196,8 @@ namespace iTextSharp.IO.Image
 				if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream
 					) == 'M'))
 				{
-					throw new IOException(IOException.InvalidMagicValueForBmpFile);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidMagicValueForBmpFile
+						);
 				}
 				// Read file size
 				bmp.bitmapFileSize = ReadDWord(bmp.inputStream);
@@ -489,7 +490,8 @@ namespace iTextSharp.IO.Image
 
 						default:
 						{
-							throw new IOException(IOException.InvalidBmpFileCompression);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
+								);
 						}
 					}
 				}
@@ -821,7 +823,8 @@ namespace iTextSharp.IO.Image
 
 						default:
 						{
-							throw new IOException(IOException.InvalidBmpFileCompression);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
+								);
 						}
 					}
 					return true;
@@ -845,7 +848,8 @@ namespace iTextSharp.IO.Image
 
 						default:
 						{
-							throw new IOException(IOException.InvalidBmpFileCompression);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
+								);
 						}
 					}
 					return true;
@@ -897,7 +901,8 @@ namespace iTextSharp.IO.Image
 
 						default:
 						{
-							throw new IOException(IOException.InvalidBmpFileCompression);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
+								);
 						}
 					}
 					return true;
@@ -921,7 +926,8 @@ namespace iTextSharp.IO.Image
 
 						default:
 						{
-							throw new IOException(IOException.InvalidBmpFileCompression);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
+								);
 						}
 					}
 					return true;
@@ -982,7 +988,7 @@ namespace iTextSharp.IO.Image
 				int r = bmp.inputStream.Read(bmp.palette, bytesRead, sizeOfPalette - bytesRead);
 				if (r < 0)
 				{
-					throw new IOException(IOException.IncompletePalette);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IncompletePalette);
 				}
 				bytesRead += r;
 			}

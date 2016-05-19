@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
@@ -56,11 +55,11 @@ namespace iTextSharp.IO.Font
 
 		public const int UNITS_NORMALIZATION = 1000;
 
-		protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph
+		protected internal IDictionary<int?, Glyph> codeToGlyph = new Dictionary<int?, Glyph
 			>();
 
-		protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph
-			>();
+		protected internal IDictionary<int?, Glyph> unicodeToGlyph = new Dictionary<int?, 
+			Glyph>();
 
 		protected internal bool isFontSpecific;
 
@@ -348,7 +347,8 @@ namespace iTextSharp.IO.Font
 			if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists
 				(path))
 			{
-				throw new IOException(IOException.FontFile1NotFound).SetMessageParams(path);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
+					SetMessageParams(path);
 			}
 		}
 

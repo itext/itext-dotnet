@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font
@@ -312,7 +311,8 @@ namespace iTextSharp.IO.Font
 					{
 					}
 				}
-				throw new IOException(IOException.FontIsNotRecognized);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontIsNotRecognized
+					);
 			}
 			FontProgram fontBuilt;
 			if (isBuiltinFonts14 || name.ToLower().EndsWith(".afm") || name.ToLower().EndsWith
@@ -342,7 +342,8 @@ namespace iTextSharp.IO.Font
 					}
 					else
 					{
-						throw new IOException(IOException.Font1IsNotRecognized).SetMessageParams(name);
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Font1IsNotRecognized
+							).SetMessageParams(name);
 					}
 				}
 			}

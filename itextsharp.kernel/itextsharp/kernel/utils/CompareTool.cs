@@ -175,7 +175,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath
-			, String differenceImagePrefix, IDictionary<int, IList<Rectangle>> ignoredAreas)
+			, String differenceImagePrefix, IDictionary<int?, IList<Rectangle>> ignoredAreas
+			)
 		{
 			Init(outPdf, cmpPdf);
 			return CompareVisually(outPath, differenceImagePrefix, ignoredAreas);
@@ -202,7 +203,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath
-			, String differenceImagePrefix, IDictionary<int, IList<Rectangle>> ignoredAreas)
+			, String differenceImagePrefix, IDictionary<int?, IList<Rectangle>> ignoredAreas
+			)
 		{
 			Init(outPdf, cmpPdf);
 			return CompareByContent(outPath, differenceImagePrefix, ignoredAreas, null, null);
@@ -211,8 +213,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath
-			, String differenceImagePrefix, IDictionary<int, IList<Rectangle>> ignoredAreas, 
-			byte[] outPass, byte[] cmpPass)
+			, String differenceImagePrefix, IDictionary<int?, IList<Rectangle>> ignoredAreas
+			, byte[] outPass, byte[] cmpPass)
 		{
 			Init(outPdf, cmpPdf);
 			return CompareByContent(outPath, differenceImagePrefix, ignoredAreas, outPass, cmpPass
@@ -348,7 +350,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool CompareXmls(String xmlFilePath1, String xmlFilePath2)
 		{
-			return CompareXmls(new FileStream(xmlFilePath1), new FileStream(xmlFilePath2));
+			return CompareXmls(new FileStream(xmlFilePath1, FileMode.Open), new FileStream(xmlFilePath2
+				, FileMode.Open));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -443,13 +446,13 @@ namespace iTextSharp.Kernel.Utils
 			String message = null;
 			PdfReader readerOut = new PdfReader(outPdf);
 			PdfDocument docOut = new PdfDocument(readerOut);
-			FileOutputStream xmlOut = new FileOutputStream(outXmlPath);
+			FileOutputStream xmlOut = new FileOutputStream(outXmlPath, FileMode.Create);
 			new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
 			docOut.Close();
 			xmlOut.Close();
 			PdfReader readerCmp = new PdfReader(cmpPdf);
 			PdfDocument docCmp = new PdfDocument(readerCmp);
-			FileOutputStream xmlCmp = new FileOutputStream(cmpXmlPath);
+			FileOutputStream xmlCmp = new FileOutputStream(cmpXmlPath, FileMode.Create);
 			new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
 			docCmp.Close();
 			xmlCmp.Close();
@@ -489,7 +492,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary
-			<int, IList<Rectangle>> ignoredAreas)
+			<int?, IList<Rectangle>> ignoredAreas)
 		{
 			return CompareVisually(outPath, differenceImagePrefix, ignoredAreas, null);
 		}
@@ -497,7 +500,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary
-			<int, IList<Rectangle>> ignoredAreas, IList<int> equalPages)
+			<int?, IList<Rectangle>> ignoredAreas, IList<int?> equalPages)
 		{
 			if (gsExec == null)
 			{
@@ -527,7 +530,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		private String CompareImagesOfPdfs(String outPath, String differenceImagePrefix, 
-			IList<int> equalPages)
+			IList<int?> equalPages)
 		{
 			File outputDir = new File(outPath);
 			File[] imageFiles = outputDir.ListFiles(new CompareTool.PngFileFilter(this));
@@ -547,7 +550,7 @@ namespace iTextSharp.Kernel.Utils
 			System.Array.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
 			String differentPagesFail = null;
 			bool compareExecIsOk = compareExec != null && new File(compareExec).Exists();
-			IList<int> diffPages = new List<int>();
+			IList<int?> diffPages = new List<int?>();
 			for (int i = 0; i < cnt; i++)
 			{
 				if (equalPages != null && equalPages.Contains(i))
@@ -556,8 +559,8 @@ namespace iTextSharp.Kernel.Utils
 				}
 				System.Console.Out.Write("Comparing page " + iTextSharp.IO.Util.JavaUtil.IntegerToString
 					(i + 1) + " (" + imageFiles[i].GetAbsolutePath() + ")...");
-				FileStream is1 = new FileStream(imageFiles[i]);
-				FileStream is2 = new FileStream(cmpImageFiles[i]);
+				FileStream is1 = new FileStream(imageFiles[i], FileMode.Open);
+				FileStream is2 = new FileStream(cmpImageFiles[i], FileMode.Open);
 				bool cmpResult = CompareStreams(is1, is2);
 				is1.Close();
 				is2.Close();
@@ -605,16 +608,16 @@ namespace iTextSharp.Kernel.Utils
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int, IList<Rectangle
+		private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int?, IList<Rectangle
 			>> ignoredAreas)
 		{
 			PdfWriter outWriter = new PdfWriter(new FileOutputStream(outPath + ignoredAreasPrefix
-				 + outPdfName));
+				 + outPdfName, FileMode.Create));
 			PdfWriter cmpWriter = new PdfWriter(new FileOutputStream(outPath + ignoredAreasPrefix
-				 + cmpPdfName));
+				 + cmpPdfName, FileMode.Create));
 			PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter);
 			PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter);
-			foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas)
+			foreach (KeyValuePair<int?, IList<Rectangle>> entry in ignoredAreas)
 			{
 				int pageNumber = entry.Key;
 				IList<Rectangle> rectangles = entry.Value;
@@ -751,7 +754,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		private String CompareByContent(String outPath, String differenceImagePrefix, IDictionary
-			<int, IList<Rectangle>> ignoredAreas)
+			<int?, IList<Rectangle>> ignoredAreas)
 		{
 			return CompareByContent(outPath, differenceImagePrefix, ignoredAreas, null, null);
 		}
@@ -759,7 +762,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="System.IO.IOException"/>
 		private String CompareByContent(String outPath, String differenceImagePrefix, IDictionary
-			<int, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass)
+			<int?, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass)
 		{
 			System.Console.Out.Write("[itext] INFO  Comparing by content..........");
 			PdfDocument outDocument;
@@ -794,7 +797,7 @@ namespace iTextSharp.Kernel.Utils
 			}
 			CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit
 				);
-			IList<int> equalPages = new List<int>(cmpPages.Count);
+			IList<int?> equalPages = new List<int?>(cmpPages.Count);
 			for (int i = 0; i < cmpPages.Count; i++)
 			{
 				CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(this, cmpPagesRef
@@ -822,7 +825,8 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					compareResult.WriteReportToXml(new FileOutputStream(outPath + "/report.xml"));
+					compareResult.WriteReportToXml(new FileOutputStream(outPath + "/report.xml", FileMode
+						.Create));
 				}
 				catch (Exception)
 				{
@@ -1047,7 +1051,7 @@ namespace iTextSharp.Kernel.Utils
 				}
 				else
 				{
-					if (cmpDirectObj.GetType() != outDirectObj.GetType())
+					if (cmpDirectObj.GetObjectType() != outDirectObj.GetObjectType())
 					{
 						compareResult.AddError(currentPath, String.Format("Types do not match. Expected: {0}. Found: {1}."
 							, cmpDirectObj.GetType().GetSimpleName(), outDirectObj.GetType().GetSimpleName()
@@ -1508,7 +1512,7 @@ namespace iTextSharp.Kernel.Utils
 			PdfObject outDestObject = outLink.GetDestinationObject();
 			if (cmpDestObject != null && outDestObject != null)
 			{
-				if (cmpDestObject.GetType() != outDestObject.GetType())
+				if (cmpDestObject.GetObjectType() != outDestObject.GetObjectType())
 				{
 					return false;
 				}
@@ -1520,7 +1524,7 @@ namespace iTextSharp.Kernel.Utils
 						(PdfName.Dests).GetNames();
 					IDictionary<String, PdfObject> outNamedDestinations = outDocument.GetCatalog().GetNameTree
 						(PdfName.Dests).GetNames();
-					switch (cmpDestObject.GetType())
+					switch (cmpDestObject.GetObjectType())
 					{
 						case PdfObject.ARRAY:
 						{
@@ -1578,11 +1582,11 @@ namespace iTextSharp.Kernel.Utils
 					return false;
 				}
 				PdfObject outObj = outDict.Get(cmpEntry.Key);
-				if (cmpObj.GetType() != outObj.GetType())
+				if (cmpObj.GetObjectType() != outObj.GetObjectType())
 				{
 					return false;
 				}
-				switch (cmpObj.GetType())
+				switch (cmpObj.GetObjectType())
 				{
 					case PdfObject.NULL:
 					case PdfObject.BOOLEAN:

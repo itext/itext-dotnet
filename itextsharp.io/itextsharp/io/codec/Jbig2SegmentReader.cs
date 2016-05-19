@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Source;
 
@@ -110,11 +109,11 @@ namespace iTextSharp.IO.Codec
 
 		public const int EXTENSION = 62;
 
-		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new 
-			SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment>();
+		private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Segment> segments = new 
+			SortedDictionary<int?, Jbig2SegmentReader.Jbig2Segment>();
 
-		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
-			<int, Jbig2SegmentReader.Jbig2Page>();
+		private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
+			<int?, Jbig2SegmentReader.Jbig2Page>();
 
 		private readonly ICollection<Jbig2SegmentReader.Jbig2Segment> globals = new SortedSet
 			<Jbig2SegmentReader.Jbig2Segment>();
@@ -195,8 +194,8 @@ namespace iTextSharp.IO.Codec
 
 			private readonly Jbig2SegmentReader sr;
 
-			private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
-				<int, Jbig2SegmentReader.Jbig2Segment>();
+			private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
+				<int?, Jbig2SegmentReader.Jbig2Segment>();
 
 			public int pageBitmapWidth = -1;
 
@@ -223,7 +222,7 @@ namespace iTextSharp.IO.Codec
 			public virtual byte[] GetData(bool for_embedding)
 			{
 				MemoryStream os = new MemoryStream();
-				foreach (int sn in segs.Keys)
+				foreach (int? sn in segs.Keys)
 				{
 					Jbig2SegmentReader.Jbig2Segment s = segs[sn];
 					// pdf reference 1.4, section 3.3.6 Jbig2Decode Filter
@@ -310,7 +309,7 @@ namespace iTextSharp.IO.Codec
 					segments[tmp.segmentNumber] = tmp;
 				}
 				while (tmp.type != END_OF_FILE);
-				IEnumerator<int> segs = segments.Keys.GetEnumerator();
+				IEnumerator<int?> segs = segments.Keys.GetEnumerator();
 				while (segs.MoveNext())
 				{
 					ReadSegment(segments[segs.Current]);
@@ -340,8 +339,8 @@ namespace iTextSharp.IO.Codec
 				Jbig2SegmentReader.Jbig2Page p = pages[s.page];
 				if (p == null)
 				{
-					throw new IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1").SetMessageParams
-						(s.page);
+					throw new iTextSharp.IO.IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1"
+						).SetMessageParams(s.page);
 				}
 				p.pageBitmapWidth = page_bitmap_width;
 				p.pageBitmapHeight = page_bitmap_height;
@@ -404,7 +403,7 @@ namespace iTextSharp.IO.Codec
 				{
 					if (count_of_referred_to_segments == 5 || count_of_referred_to_segments == 6)
 					{
-						throw new IOException("count.of.referred.to.segments.had.bad.value.in.header.for.segment.1.starting.at.2"
+						throw new iTextSharp.IO.IOException("count.of.referred.to.segments.had.bad.value.in.header.for.segment.1.starting.at.2"
 							).SetMessageParams(segment_number, ptr);
 					}
 				}
@@ -446,8 +445,8 @@ namespace iTextSharp.IO.Codec
 			}
 			if (segment_page_association < 0)
 			{
-				throw new IOException("page.1.invalid.for.segment.2.starting.at.3").SetMessageParams
-					(segment_page_association, segment_number, ptr);
+				throw new iTextSharp.IO.IOException("page.1.invalid.for.segment.2.starting.at.3")
+					.SetMessageParams(segment_page_association, segment_number, ptr);
 			}
 			s.page = segment_page_association;
 			// so we can change the page association at embedding time.
@@ -490,7 +489,7 @@ namespace iTextSharp.IO.Codec
 			{
 				if (idstring[i] != refidstring[i])
 				{
-					throw new IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams
+					throw new iTextSharp.IO.IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams
 						(i);
 				}
 			}
@@ -499,7 +498,7 @@ namespace iTextSharp.IO.Codec
 			this.number_of_pages_known = (fileheaderflags & 0x2) == 0x0;
 			if ((fileheaderflags & 0xfc) != 0x0)
 			{
-				throw new IOException("file.header.flags.bits.2.7.not.0");
+				throw new iTextSharp.IO.IOException("file.header.flags.bits.2.7.not.0");
 			}
 			if (this.number_of_pages_known)
 			{

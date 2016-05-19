@@ -530,8 +530,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					if (!node.GetOptions().IsCompositeProperty())
 					{
 						Object[] result = SerializeCompactRDFSimpleProp(node);
-						emitEndTag = ((bool)result[0]);
-						indentEndTag = ((bool)result[1]);
+						emitEndTag = ((bool?)result[0]);
+						indentEndTag = ((bool?)result[1]);
 					}
 					else
 					{
@@ -567,8 +567,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private Object[] SerializeCompactRDFSimpleProp(XMPNode node)
 		{
 			// This is a simple property.
-			bool emitEndTag = true;
-			bool indentEndTag = true;
+			bool? emitEndTag = true;
+			bool? indentEndTag = true;
 			if (node.GetOptions().IsURI())
 			{
 				Write(" rdf:resource=\"");

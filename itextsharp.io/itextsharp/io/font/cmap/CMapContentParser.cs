@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 
@@ -108,7 +107,7 @@ namespace iTextSharp.IO.Font.Cmap
 			{
 				if (!NextValidToken())
 				{
-					throw new IOException("unexpected.end.of.file");
+					throw new iTextSharp.IO.IOException("unexpected.end.of.file");
 				}
 				if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic)
 				{
@@ -121,8 +120,8 @@ namespace iTextSharp.IO.Font.Cmap
 				}
 				if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name)
 				{
-					throw new IOException("dictionary.key.1.is.not.a.name").SetMessageParams(tokeniser
-						.GetStringValue());
+					throw new iTextSharp.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams
+						(tokeniser.GetStringValue());
 				}
 				String name = tokeniser.GetStringValue();
 				CMapObject obj = ReadObject();
@@ -130,11 +129,11 @@ namespace iTextSharp.IO.Font.Cmap
 				{
 					if (obj.ToString().Equals(">>"))
 					{
-						tokeniser.ThrowError(IOException.UnexpectedGtGt);
+						tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedGtGt);
 					}
 					if (obj.ToString().Equals("]"))
 					{
-						tokeniser.ThrowError(IOException.UnexpectedCloseBracket);
+						tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedCloseBracket);
 					}
 				}
 				dic[name] = obj;
@@ -160,7 +159,7 @@ namespace iTextSharp.IO.Font.Cmap
 					}
 					if (obj.ToString().Equals(">>"))
 					{
-						tokeniser.ThrowError(IOException.UnexpectedGtGt);
+						tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedGtGt);
 					}
 				}
 				array.Add(obj);

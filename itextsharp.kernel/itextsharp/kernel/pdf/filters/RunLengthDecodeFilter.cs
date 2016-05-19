@@ -54,11 +54,11 @@ namespace iTextSharp.Kernel.Pdf.Filters
 			, PdfDictionary streamDictionary)
 		{
 			MemoryStream baos = new MemoryStream();
-			byte dupCount = -1;
+			byte dupCount;
 			for (int i = 0; i < b.Length; i++)
 			{
 				dupCount = b[i];
-				if (dupCount == -128)
+				if (dupCount == (byte)0x80)
 				{
 					// this is implicit end of data
 					break;

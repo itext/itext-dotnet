@@ -125,7 +125,8 @@ namespace iTextSharp.Kernel.Pdf
 				)from;
 			if (@object.content != null)
 			{
-				content = Arrays.CopyOf(@object.content, @object.content.Length);
+				content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content
+					.Length);
 			}
 		}
 

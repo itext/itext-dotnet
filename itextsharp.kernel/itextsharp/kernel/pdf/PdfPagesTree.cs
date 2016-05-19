@@ -213,7 +213,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (root != null)
 			{
 				// in this case we save tree structure
-				if (pageRefs.IsEmpty())
+				if (pageRefs.Count == 0)
 				{
 					pdfPages = root;
 				}
@@ -226,7 +226,7 @@ namespace iTextSharp.Kernel.Pdf
 			else
 			{
 				pdfPages = parents[parents.Count - 1];
-				if (pdfPages.GetCount() % leafSize == 0 && !pageRefs.IsEmpty())
+				if (pdfPages.GetCount() % leafSize == 0 && pageRefs.Count > 0)
 				{
 					pdfPages = new PdfPages(pdfPages.GetFrom() + pdfPages.GetCount(), document);
 					parents.Add(pdfPages);
@@ -306,7 +306,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="iTextSharp.Kernel.PdfException">in case empty document</exception>
 		protected internal virtual PdfObject GenerateTree()
 		{
-			if (pageRefs.IsEmpty())
+			if (pageRefs.Count == 0)
 			{
 				throw new PdfException(PdfException.DocumentHasNoPages);
 			}
@@ -406,7 +406,7 @@ namespace iTextSharp.Kernel.Pdf
 				PdfObject pageKids = page.Get(PdfName.Kids);
 				if (pageKids != null)
 				{
-					if (pageKids.GetType() == PdfObject.ARRAY)
+					if (pageKids.GetObjectType() == PdfObject.ARRAY)
 					{
 						findPdfPages = true;
 					}

@@ -29,7 +29,6 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Impl.Xpath;
 using iTextSharp.Kernel.Xmp.Options;
@@ -361,7 +360,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			Object[] result = XMPNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
-			int match = ((int)result[0]);
+			int match = ((int?)result[0]);
 			XMPNode itemNode = (XMPNode)result[1];
 			if (match != XMPNodeUtils.CLT_NO_VALUES)
 			{
@@ -471,7 +470,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// alternative.
 			Object[] result = XMPNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
-			int match = ((int)result[0]);
+			int match = ((int?)result[0]);
 			XMPNode itemNode = (XMPNode)result[1];
 			bool specificXDefault = XMPConst.X_DEFAULT.Equals(specificLang);
 			switch (match)
@@ -730,9 +729,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyBoolean(System.String, System.String)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual bool GetPropertyBoolean(String schemaNS, String propName)
+		public virtual bool? GetPropertyBoolean(String schemaNS, String propName)
 		{
-			return (bool)GetPropertyObject(schemaNS, propName, VALUE_BOOLEAN);
+			return (bool?)GetPropertyObject(schemaNS, propName, VALUE_BOOLEAN);
 		}
 
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
@@ -756,9 +755,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyInteger(System.String, System.String)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual int GetPropertyInteger(String schemaNS, String propName)
+		public virtual int? GetPropertyInteger(String schemaNS, String propName)
 		{
-			return (int)GetPropertyObject(schemaNS, propName, VALUE_INTEGER);
+			return (int?)GetPropertyObject(schemaNS, propName, VALUE_INTEGER);
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
@@ -808,9 +807,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyDouble(System.String, System.String)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual Double GetPropertyDouble(String schemaNS, String propName)
+		public virtual double? GetPropertyDouble(String schemaNS, String propName)
 		{
-			return (Double)GetPropertyObject(schemaNS, propName, VALUE_DOUBLE);
+			return (double?)GetPropertyObject(schemaNS, propName, VALUE_DOUBLE);
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
@@ -860,24 +859,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyCalendar(System.String, System.String)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual Calendar GetPropertyCalendar(String schemaNS, String propName)
+		public virtual DateTime GetPropertyCalendar(String schemaNS, String propName)
 		{
-			return (Calendar)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
+			return (DateTime)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar
+		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.Globalization.Calendar)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetPropertyCalendar(String schemaNS, String propName, Calendar
+		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue)
 		{
 			SetProperty(schemaNS, propName, propValue, null);

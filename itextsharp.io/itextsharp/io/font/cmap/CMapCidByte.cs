@@ -51,7 +51,7 @@ namespace iTextSharp.IO.Font.Cmap
 	/// <author>psoares</author>
 	public class CMapCidByte : AbstractCMap
 	{
-		private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
+		private IDictionary<int?, byte[]> map = new Dictionary<int?, byte[]>();
 
 		private readonly byte[] EMPTY = new byte[] {  };
 
@@ -80,7 +80,7 @@ namespace iTextSharp.IO.Font.Cmap
 		public virtual IntHashtable GetReversMap()
 		{
 			IntHashtable code2cid = new IntHashtable(map.Count);
-			foreach (int cid in map.Keys)
+			foreach (int? cid in map.Keys)
 			{
 				byte[] bytes = map[cid];
 				int byteCode = 0;
@@ -89,7 +89,7 @@ namespace iTextSharp.IO.Font.Cmap
 					byteCode <<= 8;
 					byteCode += b & 0xff;
 				}
-				code2cid.Put(byteCode, cid);
+				code2cid.Put(byteCode, (int)cid);
 			}
 			return code2cid;
 		}

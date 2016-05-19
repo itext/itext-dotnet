@@ -135,8 +135,8 @@ namespace iTextSharp.IO.Font.Otf
 			int classCount = openReader.rf.ReadUnsignedShort();
 			int markArrayLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
 			int baseArrayLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
-			IList<int> markCoverage = openReader.ReadCoverageFormat(markCoverageLocation);
-			IList<int> baseCoverage = openReader.ReadCoverageFormat(baseCoverageLocation);
+			IList<int?> markCoverage = openReader.ReadCoverageFormat(markCoverageLocation);
+			IList<int?> baseCoverage = openReader.ReadCoverageFormat(baseCoverageLocation);
 			IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation
 				);
 			GposLookupType4.MarkToBase markToBase = new GposLookupType4.MarkToBase();
@@ -155,10 +155,10 @@ namespace iTextSharp.IO.Font.Otf
 
 		public class MarkToBase
 		{
-			public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord
+			public readonly IDictionary<int?, OtfMarkRecord> marks = new Dictionary<int?, OtfMarkRecord
 				>();
 
-			public readonly IDictionary<int, GposAnchor[]> bases = new Dictionary<int, GposAnchor
+			public readonly IDictionary<int?, GposAnchor[]> bases = new Dictionary<int?, GposAnchor
 				[]>();
 		}
 	}

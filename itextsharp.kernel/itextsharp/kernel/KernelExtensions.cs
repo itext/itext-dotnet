@@ -6,11 +6,16 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Org.BouncyCastle.Crypto.Tls;
 
 namespace iTextSharp.Kernel {
     internal static class KernelExtensions {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);
+        }
+
+        public static String JSubstring(this StringBuilder sb, int beginIndex, int endIndex) {
+            return sb.ToString(beginIndex, endIndex - beginIndex);
         }
 
         public static void JReset(this MemoryStream stream) {
@@ -64,6 +69,14 @@ namespace iTextSharp.Kernel {
             }
         }
 
+        public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd)
+        {
+            foreach (T o in collectionToAdd)
+            {
+                c.Add(o);
+            }
+        }
+
         public static void GetChars(this StringBuilder sb, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
             sb.CopyTo(srcBegin, dst, dstBegin, srcEnd - srcBegin);
         }
@@ -76,14 +89,40 @@ namespace iTextSharp.Kernel {
             return Regex.IsMatch(str, regex);
         }
 
-        public static int[][] ToArray(this ICollection<int[]> col, int[][] toArray)
+        public static T[] ToArray<T>(this ICollection<T> col, T[] toArray)
         {
-            int[][] r = col.ToArray();
+            T[] r = col.ToArray();
             return r;
         }
 
         public static Stream OpenStream(this Uri uri) {
             return WebRequest.Create(uri).GetResponse().GetResponseStream();
+        }
+
+        public static void ReadFully(this BinaryReader input, byte[] b, int off, int len) {
+            if (len < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            int n = 0;
+            while (n < len)
+            {
+                int count = input.Read(b, off + n, len - n);
+                if (count < 0)
+                {
+                    throw new EndOfStreamException();
+                }
+                n += count;
+            }
+        }
+
+        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            dictionary.TryGetValue(key, out value);
+            dictionary.Remove(key);
+
+            return value;
         }
     }
 }

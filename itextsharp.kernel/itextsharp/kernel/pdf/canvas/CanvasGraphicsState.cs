@@ -143,7 +143,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 
 		private float flatnessTolerance = 1f;
 
-		private float smoothnessTolerance;
+		private float? smoothnessTolerance;
 
 		private PdfObject htp;
 
@@ -412,7 +412,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			return halftone;
 		}
 
-		public virtual float GetSmoothnessTolerance()
+		public virtual float? GetSmoothnessTolerance()
 		{
 			return smoothnessTolerance;
 		}
@@ -462,22 +462,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 		/// <param name="extGState">the wrapper around the extended graphic state dictionary</param>
 		public virtual void UpdateFromExtGState(PdfExtGState extGState)
 		{
-			float lw = extGState.GetLineWidth();
+			float? lw = extGState.GetLineWidth();
 			if (lw != null)
 			{
 				lineWidth = lw;
 			}
-			int lc = extGState.GetLineCapStyle();
+			int? lc = extGState.GetLineCapStyle();
 			if (lc != null)
 			{
 				lineCapStyle = lc;
 			}
-			int lj = extGState.GetLineJoinStyle();
+			int? lj = extGState.GetLineJoinStyle();
 			if (lj != null)
 			{
 				lineJoinStyle = lj;
 			}
-			float ml = extGState.GetMiterLimit();
+			float? ml = extGState.GetMiterLimit();
 			if (ml != null)
 			{
 				miterLimit = ml;
@@ -492,7 +492,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			{
 				renderingIntent = ri;
 			}
-			bool op = extGState.GetStrokeOverprintFlag();
+			bool? op = extGState.GetStrokeOverprintFlag();
 			if (op != null)
 			{
 				strokeOverprint = op;
@@ -502,7 +502,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			{
 				fillOverprint = op;
 			}
-			int opm = extGState.GetOverprintMode();
+			int? opm = extGState.GetOverprintMode();
 			if (opm != null)
 			{
 				overprintMode = opm;
@@ -561,17 +561,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			{
 				this.htp = local_htp;
 			}
-			float fl = extGState.GetFlatnessTolerance();
+			float? fl = extGState.GetFlatnessTolerance();
 			if (fl != null)
 			{
 				flatnessTolerance = fl;
 			}
-			float sm = extGState.GetSmothnessTolerance();
+			float? sm = extGState.GetSmothnessTolerance();
 			if (sm != null)
 			{
 				smoothnessTolerance = sm;
 			}
-			bool sa = extGState.GetAutomaticStrokeAdjustmentFlag();
+			bool? sa = extGState.GetAutomaticStrokeAdjustmentFlag();
 			if (sa != null)
 			{
 				automaticStrokeAdjustment = sa;
@@ -586,7 +586,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			{
 				softMask = sMask;
 			}
-			float ca = extGState.GetStrokeOpacity();
+			float? ca = extGState.GetStrokeOpacity();
 			if (ca != null)
 			{
 				strokeAlpha = ca;
@@ -596,12 +596,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			{
 				fillAlpha = ca;
 			}
-			bool ais = extGState.GetAlphaSourceFlag();
+			bool? ais = extGState.GetAlphaSourceFlag();
 			if (ais != null)
 			{
 				alphaIsShape = ais;
 			}
-			bool tk = extGState.GetTextKnockoutFlag();
+			bool? tk = extGState.GetTextKnockoutFlag();
 			if (tk != null)
 			{
 				textKnockout = tk;

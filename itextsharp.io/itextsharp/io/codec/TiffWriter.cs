@@ -51,7 +51,7 @@ namespace iTextSharp.IO.Codec
 	/// <summary>Exports images as TIFF.</summary>
 	public class TiffWriter
 	{
-		private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int
+		private SortedDictionary<int?, TiffWriter.FieldBase> ifd = new SortedDictionary<int?
 			, TiffWriter.FieldBase>();
 
 		public virtual void AddField(TiffWriter.FieldBase field)

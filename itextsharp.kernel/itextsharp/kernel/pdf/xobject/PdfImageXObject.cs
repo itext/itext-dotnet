@@ -46,9 +46,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Java.Awt.Image;
-using Javax.Imageio;
-using iTextSharp.IO;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel;
@@ -144,13 +141,6 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 			return image;
 		}
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual BufferedImage GetBufferedImage()
-		{
-			byte[] img = GetImageBytes();
-			return ImageIO.Read(new MemoryStream(img));
-		}
-
 		public virtual byte[] GetImageBytes()
 		{
 			return GetImageBytes(true);
@@ -177,7 +167,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 					}
 					catch (System.IO.IOException e)
 					{
-						throw new Exception(e);
+						throw new Exception("IO exception in PdfImageXObject", e);
 					}
 				}
 			}
@@ -330,15 +320,15 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 				{
 					Object value = entry.Value;
 					String key = entry.Key;
-					if (value is int)
+					if (value is int?)
 					{
-						dictionary.Put(new PdfName(key), new PdfNumber((int)value));
+						dictionary.Put(new PdfName(key), new PdfNumber((int?)value));
 					}
 					else
 					{
-						if (value is float)
+						if (value is float?)
 						{
-							dictionary.Put(new PdfName(key), new PdfNumber((float)value));
+							dictionary.Put(new PdfName(key), new PdfNumber((float?)value));
 						}
 						else
 						{
@@ -372,9 +362,9 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 								}
 								else
 								{
-									if (value is bool)
+									if (value is bool?)
 									{
-										dictionary.Put(new PdfName(key), new PdfBoolean((bool)value));
+										dictionary.Put(new PdfName(key), new PdfBoolean((bool?)value));
 									}
 									else
 									{
@@ -419,15 +409,15 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 				}
 				else
 				{
-					if (@object is int)
+					if (@object is int?)
 					{
-						array.Add(new PdfNumber((int)@object));
+						array.Add(new PdfNumber((int?)@object));
 					}
 					else
 					{
-						if (@object is float)
+						if (@object is float?)
 						{
-							array.Add(new PdfNumber((float)@object));
+							array.Add(new PdfNumber((float?)@object));
 						}
 						else
 						{
@@ -461,7 +451,8 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 			{
 				if (bpc != 8)
 				{
-					throw new IOException(IOException.ColorDepthIsNotSupported).SetMessageParams(bpc);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorDepthIsNotSupported
+						).SetMessageParams(bpc);
 				}
 				if (colorspace is PdfArray)
 				{
@@ -469,14 +460,15 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 					PdfObject tyca = ca.Get(0);
 					if (!PdfName.ICCBased.Equals(tyca))
 					{
-						throw new IOException(IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca
-							.ToString());
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported
+							).SetMessageParams(tyca.ToString());
 					}
 					PdfStream pr = (PdfStream)ca.Get(1);
 					int n = pr.GetAsNumber(PdfName.N).IntValue();
 					if (n != 4)
 					{
-						throw new IOException(IOException.NValueIsNotSupported).SetMessageParams(n);
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.NValueIsNotSupported
+							).SetMessageParams(n);
 					}
 					icc = pr.GetBytes();
 				}
@@ -484,8 +476,8 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 				{
 					if (!PdfName.DeviceCMYK.Equals(colorspace))
 					{
-						throw new IOException(IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace
-							.ToString());
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported
+							).SetMessageParams(colorspace.ToString());
 					}
 				}
 				stride = (int)(4 * width);

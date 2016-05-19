@@ -23,7 +23,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ActionTest01()
 		{
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest01.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = CreateDocument(writer, true);
 			document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
 			document.Close();
@@ -36,7 +36,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ActionTest02()
 		{
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest02.pdf"
-				));
+				, FileMode.Create));
 			PdfDocument document = CreateDocument(writer, false);
 			document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"
 				));

@@ -111,8 +111,8 @@ namespace iTextSharp.Kernel.Utils
 			{
 				PageRange nextRange = GetNextRange(currentPage, numOfPages, size);
 				splitRanges.Add(nextRange);
-				IList<int> allPages = nextRange.GetAllPages();
-				currentPage = allPages[allPages.Count - 1] + 1;
+				IList<int?> allPages = nextRange.GetAllPages();
+				currentPage = (int)allPages[allPages.Count - 1] + 1;
 			}
 			return ExtractPageRanges(splitRanges);
 		}
@@ -127,14 +127,14 @@ namespace iTextSharp.Kernel.Utils
 		/// You can close this document in this listener, for instance.
 		/// </param>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual void SplitByPageNumbers(IList<int> pageNumbers, PdfSplitter.IDocumentReadyListener
+		public virtual void SplitByPageNumbers(IList<int?> pageNumbers, PdfSplitter.IDocumentReadyListener
 			 documentReady)
 		{
 			int currentPageNumber = 1;
 			for (int ind = 0; ind <= pageNumbers.Count; ind++)
 			{
 				int nextPageNumber = ind == pageNumbers.Count ? pdfDocument.GetNumberOfPages() + 
-					1 : pageNumbers[ind];
+					1 : (int)pageNumbers[ind];
 				if (ind == 0 && nextPageNumber == 1)
 				{
 					continue;
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.Utils
 		/// </param>
 		/// <returns>the list of resultant documents. By warned that they are not closed.</returns>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers)
+		public virtual IList<PdfDocument> SplitByPageNumbers(IList<int?> pageNumbers)
 		{
 			IList<PdfDocument> splitDocuments = new List<PdfDocument>();
 			SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_158(splitDocuments));
@@ -310,7 +310,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			if (outlineTitles == null || outlineTitles.Count == 0)
 			{
-				return JavaCollectionsUtil.EmptyList();
+				return JavaCollectionsUtil.EmptyList<PdfDocument>();
 			}
 			IList<PdfDocument> documentList = new List<PdfDocument>(outlineTitles.Count);
 			foreach (String title in outlineTitles)
@@ -418,7 +418,7 @@ namespace iTextSharp.Kernel.Utils
 		private PageRange GetNextRange(int startPage, int endPage, long size)
 		{
 			PdfResourceCounter counter = new PdfResourceCounter(pdfDocument.GetTrailer());
-			IDictionary<int, PdfObject> resources = counter.GetResources();
+			IDictionary<int?, PdfObject> resources = counter.GetResources();
 			long lengthWithoutXref = counter.GetLength(null);
 			// initialize with trailer length
 			int currentPage = startPage;

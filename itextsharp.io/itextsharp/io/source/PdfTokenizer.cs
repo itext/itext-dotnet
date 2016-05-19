@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iTextSharp.IO;
 
 namespace iTextSharp.IO.Source
 {
@@ -269,7 +268,8 @@ namespace iTextSharp.IO.Source
 				idx = str.IndexOf("%FDF-");
 				if (idx < 0)
 				{
-					throw new IOException(IOException.PdfHeaderNotFound, this);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, 
+						this);
 				}
 			}
 			return idx;
@@ -283,7 +283,8 @@ namespace iTextSharp.IO.Source
 			int idx = str.IndexOf("%PDF-");
 			if (idx != 0)
 			{
-				throw new IOException(IOException.PdfHeaderNotFound, this);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, 
+					this);
 			}
 			return str.JSubstring(idx + 1, idx + 8);
 		}
@@ -296,7 +297,8 @@ namespace iTextSharp.IO.Source
 			int idx = str.IndexOf("%FDF-");
 			if (idx != 0)
 			{
-				throw new IOException(IOException.FdfStartxrefNotFound, this);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FdfStartxrefNotFound
+					, this);
 			}
 		}
 
@@ -322,7 +324,8 @@ namespace iTextSharp.IO.Source
 				pos = pos - arrLength + 9;
 			}
 			// 9 = "startxref".length()
-			throw new IOException(IOException.PdfStartxrefNotFound, this);
+			throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfStartxrefNotFound
+				, this);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -461,7 +464,7 @@ namespace iTextSharp.IO.Source
 					ch = file.Read();
 					if (ch != '>')
 					{
-						ThrowError(IOException.GtNotExpected);
+						ThrowError(iTextSharp.IO.IOException.GtNotExpected);
 					}
 					type = PdfTokenizer.TokenType.EndDic;
 					break;
@@ -513,7 +516,7 @@ namespace iTextSharp.IO.Source
 					}
 					if (v1 < 0 || v2 < 0)
 					{
-						ThrowError(IOException.ErrorReadingString);
+						ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
 					}
 					break;
 				}
@@ -572,7 +575,7 @@ namespace iTextSharp.IO.Source
 					}
 					if (ch == -1)
 					{
-						ThrowError(IOException.ErrorReadingString);
+						ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
 					}
 					break;
 				}
@@ -888,13 +891,15 @@ namespace iTextSharp.IO.Source
 		{
 			try
 			{
-				throw new IOException(IOException.ErrorAtFilePointer1, new IOException(error).SetMessageParams
-					(messageParams)).SetMessageParams(file.GetPosition());
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1
+					, new iTextSharp.IO.IOException(error).SetMessageParams(messageParams)).SetMessageParams
+					(file.GetPosition());
 			}
 			catch (System.IO.IOException)
 			{
-				throw new IOException(IOException.ErrorAtFilePointer1, new IOException(error).SetMessageParams
-					(messageParams)).SetMessageParams(error, "no position");
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1
+					, new iTextSharp.IO.IOException(error).SetMessageParams(messageParams)).SetMessageParams
+					(error, "no position");
 			}
 		}
 

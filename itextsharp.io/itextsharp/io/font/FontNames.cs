@@ -99,7 +99,7 @@ namespace iTextSharp.IO.Font
 
 		protected internal const int FWIDTH_ULTRA_EXPANDED = 9;
 
-		protected internal IDictionary<int, IList<String[]>> allNames;
+		protected internal IDictionary<int?, IList<String[]>> allNames;
 
 		private String[][] fullName;
 
@@ -262,7 +262,7 @@ namespace iTextSharp.IO.Font
 			return (macStyle & EXTENDED_FLAG) != 0;
 		}
 
-		protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames
+		protected internal virtual void SetAllNames(IDictionary<int?, IList<String[]>> allNames
 			)
 		{
 			this.allNames = allNames;

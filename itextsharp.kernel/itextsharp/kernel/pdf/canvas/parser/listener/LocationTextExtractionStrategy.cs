@@ -546,7 +546,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 				{
 					return result;
 				}
-				return float.Compare(DistParallelStart(), other.DistParallelStart());
+				return float?.Compare(DistParallelStart(), other.DistParallelStart());
 			}
 		}
 	}

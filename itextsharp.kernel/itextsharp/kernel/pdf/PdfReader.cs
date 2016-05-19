@@ -286,7 +286,7 @@ namespace iTextSharp.Kernel.Pdf
 						}
 						else
 						{
-							if (filter.GetType() == PdfObject.ARRAY)
+							if (filter.GetObjectType() == PdfObject.ARRAY)
 							{
 								PdfArray filters = (PdfArray)filter;
 								for (int k = 0; k < filters.Size(); k++)
@@ -371,13 +371,13 @@ namespace iTextSharp.Kernel.Pdf
 			PdfArray filters = new PdfArray();
 			if (filter != null)
 			{
-				if (filter.GetType() == PdfObject.NAME)
+				if (filter.GetObjectType() == PdfObject.NAME)
 				{
 					filters.Add(filter);
 				}
 				else
 				{
-					if (filter.GetType() == PdfObject.ARRAY)
+					if (filter.GetObjectType() == PdfObject.ARRAY)
 					{
 						filters = ((PdfArray)filter);
 					}
@@ -385,8 +385,8 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			PdfArray dp = new PdfArray();
 			PdfObject dpo = streamDictionary.Get(PdfName.DecodeParms);
-			if (dpo == null || (dpo.GetType() != PdfObject.DICTIONARY && dpo.GetType() != PdfObject
-				.ARRAY))
+			if (dpo == null || (dpo.GetObjectType() != PdfObject.DICTIONARY && dpo.GetObjectType
+				() != PdfObject.ARRAY))
 			{
 				if (dpo != null)
 				{
@@ -396,13 +396,13 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (dpo != null)
 			{
-				if (dpo.GetType() == PdfObject.DICTIONARY)
+				if (dpo.GetObjectType() == PdfObject.DICTIONARY)
 				{
 					dp.Add(dpo);
 				}
 				else
 				{
-					if (dpo.GetType() == PdfObject.ARRAY)
+					if (dpo.GetObjectType() == PdfObject.ARRAY)
 					{
 						dp = ((PdfArray)dpo);
 					}
@@ -422,13 +422,13 @@ namespace iTextSharp.Kernel.Pdf
 				if (j < dp.Size())
 				{
 					PdfObject dpEntry = dp.Get(j, true);
-					if (dpEntry == null || dpEntry.GetType() == PdfObject.NULL)
+					if (dpEntry == null || dpEntry.GetObjectType() == PdfObject.NULL)
 					{
 						decodeParams = null;
 					}
 					else
 					{
-						if (dpEntry.GetType() == PdfObject.DICTIONARY)
+						if (dpEntry.GetObjectType() == PdfObject.DICTIONARY)
 						{
 							decodeParams = (PdfDictionary)dpEntry;
 						}
@@ -942,7 +942,7 @@ namespace iTextSharp.Kernel.Pdf
 				tokens.Seek(startxref);
 				trailer2 = ReadXrefSection();
 			}
-			int xrefSize = trailer.GetAsInt(PdfName.Size);
+			int? xrefSize = trailer.GetAsInt(PdfName.Size);
 			if (xrefSize == null || xrefSize != pdfDocument.GetXref().Size())
 			{
 				throw new PdfException(PdfException.InvalidXrefTable);
@@ -1032,7 +1032,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			PdfDictionary trailer = (PdfDictionary)ReadObject(false);
 			PdfObject xrs = trailer.Get(PdfName.XRefStm);
-			if (xrs != null && xrs.GetType() == PdfObject.NUMBER)
+			if (xrs != null && xrs.GetObjectType() == PdfObject.NUMBER)
 			{
 				int loc = ((PdfNumber)xrs).IntValue();
 				try
@@ -1073,7 +1073,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfXrefTable xref = pdfDocument.GetXref();
 			PdfObject @object = ReadObject(false);
 			PdfStream xrefStream;
-			if (@object.GetType() == PdfObject.STREAM)
+			if (@object.GetObjectType() == PdfObject.STREAM)
 			{
 				xrefStream = (PdfStream)@object;
 				if (!PdfName.XRef.Equals(xrefStream.Get(PdfName.Type)))

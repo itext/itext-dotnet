@@ -188,11 +188,11 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition
 			)
 		{
-			IDictionary<float, TabStop> tabStops = ((IDictionary<float, TabStop>)GetProperty(
-				iTextSharp.Layout.Property.Property.TAB_STOPS));
+			IDictionary<float?, TabStop> tabStops = ((IDictionary<float?, TabStop>)GetProperty
+				(iTextSharp.Layout.Property.Property.TAB_STOPS));
 			if (tabStops != null)
 			{
-				tabStops.Remove(tabStopPosition);
+				tabStops.JRemove(tabStopPosition);
 			}
 			return this;
 		}
@@ -209,18 +209,18 @@ namespace iTextSharp.Layout.Element
 
 				case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT:
 				{
-					return (T1)float.ValueOf(0);
+					return (T1)float?.ValueOf(0);
 				}
 
 				case iTextSharp.Layout.Property.Property.MARGIN_TOP:
 				case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
 				{
-					return (T1)float.ValueOf(4);
+					return (T1)float?.ValueOf(4);
 				}
 
 				case iTextSharp.Layout.Property.Property.TAB_DEFAULT:
 				{
-					return (T1)float.ValueOf(50);
+					return (T1)float?.ValueOf(50);
 				}
 
 				default:
@@ -285,11 +285,11 @@ namespace iTextSharp.Layout.Element
 
 		private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
 		{
-			IDictionary<float, TabStop> tabStops = ((IDictionary<float, TabStop>)GetProperty(
-				iTextSharp.Layout.Property.Property.TAB_STOPS));
+			IDictionary<float?, TabStop> tabStops = ((IDictionary<float?, TabStop>)GetProperty
+				(iTextSharp.Layout.Property.Property.TAB_STOPS));
 			if (tabStops == null)
 			{
-				tabStops = new SortedDictionary<float, TabStop>();
+				tabStops = new SortedDictionary<float?, TabStop>();
 				SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, tabStops);
 			}
 			foreach (TabStop tabStop in newTabStops)

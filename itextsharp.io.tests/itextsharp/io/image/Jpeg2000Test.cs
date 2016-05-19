@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using iTextSharp.IO;
 
 namespace iTextSharp.IO.Image
 {
@@ -17,9 +16,10 @@ namespace iTextSharp.IO.Image
 				ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JP2");
 				Jpeg2000ImageHelper.ProcessImage(img);
 			}
-			catch (IOException e)
+			catch (iTextSharp.IO.IOException e)
 			{
-				NUnit.Framework.Assert.AreEqual(IOException.UnsupportedBoxSizeEqEq0, e.Message);
+				NUnit.Framework.Assert.AreEqual(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0
+					, e.Message);
 			}
 		}
 

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
@@ -65,7 +64,8 @@ namespace iTextSharp.IO.Font
 				GetFontName()];
 			if (fontDesc == null)
 			{
-				throw new IOException("no.such.predefined.font.1").SetMessageParams(fontName);
+				throw new iTextSharp.IO.IOException("no.such.predefined.font.1").SetMessageParams
+					(fontName);
 			}
 			InitializeCidFontProperties(fontDesc);
 		}
@@ -131,11 +131,11 @@ namespace iTextSharp.IO.Font
 			pdfFontFlags = System.Convert.ToInt32((String)fontDesc["Flags"]);
 			String fontBBox = (String)fontDesc["FontBBox"];
 			StringTokenizer tk = new StringTokenizer(fontBBox, " []\r\n\t\f");
-			int llx = System.Convert.ToInt32(tk.NextToken());
-			int lly = System.Convert.ToInt32(tk.NextToken());
-			int urx = System.Convert.ToInt32(tk.NextToken());
-			int ury = System.Convert.ToInt32(tk.NextToken());
-			fontMetrics.UpdateBbox(llx, lly, urx, ury);
+			int? llx = System.Convert.ToInt32(tk.NextToken());
+			int? lly = System.Convert.ToInt32(tk.NextToken());
+			int? urx = System.Convert.ToInt32(tk.NextToken());
+			int? ury = System.Convert.ToInt32(tk.NextToken());
+			fontMetrics.UpdateBbox((int)llx, (int)lly, (int)urx, (int)ury);
 			registry = (String)fontDesc["Registry"];
 			String uniMap = GetCompatibleUniMap(registry);
 			if (uniMap != null)

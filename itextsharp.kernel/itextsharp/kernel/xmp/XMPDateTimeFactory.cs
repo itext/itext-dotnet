@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp.Impl;
 
 namespace iTextSharp.Kernel.Xmp
@@ -53,7 +52,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// 	</summary>
 		/// <param name="calendar">a <code>Calendar</code>-object.</param>
 		/// <returns>An <code>XMPDateTime</code>-object.</returns>
-		public static XMPDateTime CreateFromCalendar(Calendar calendar)
+		public static XMPDateTime CreateFromCalendar(DateTime calendar)
 		{
 			return new XMPDateTimeImpl(calendar);
 		}
@@ -70,7 +69,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="month">
 		/// months from 1 to 12<br />
 		/// <em>Note:</em> Remember that the month in
-		/// <see cref="System.Globalization.Calendar"/>
+		/// <see cref="System.DateTime"/>
 		/// is defined from 0 to 11.
 		/// </param>
 		/// <param name="day">days</param>
@@ -89,7 +88,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="month">
 		/// months from 1 to 12<br />
 		/// <em>Note:</em> Remember that the month in
-		/// <see cref="System.Globalization.Calendar"/>
+		/// <see cref="System.DateTime"/>
 		/// is defined from 0 to 11.
 		/// </param>
 		/// <param name="day">days</param>
@@ -141,7 +140,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>Returns an updated <code>XMPDateTime</code>-object.</returns>
 		public static XMPDateTime SetLocalTimeZone(XMPDateTime dateTime)
 		{
-			Calendar cal = dateTime.GetCalendar();
+			DateTime cal = dateTime.GetCalendar();
 			cal.SetTimeZone(TimeZone.GetDefault());
 			return new XMPDateTimeImpl(cal);
 		}

@@ -180,7 +180,7 @@ namespace iTextSharp.Layout.Renderer
 				if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
 					 - 1] == renderer)
 				{
-					int positionedPageNumber = renderer.GetProperty(iTextSharp.Layout.Property.Property
+					int? positionedPageNumber = renderer.GetProperty(iTextSharp.Layout.Property.Property
 						.PAGE_NUMBER);
 					if (positionedPageNumber == null)
 					{

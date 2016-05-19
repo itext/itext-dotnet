@@ -136,8 +136,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				String prefixToDelete = GetNamespacePrefix(namespaceURI);
 				if (prefixToDelete != null)
 				{
-					namespaceToPrefixMap.Remove(namespaceURI);
-					prefixToNamespaceMap.Remove(prefixToDelete);
+					namespaceToPrefixMap.JRemove(namespaceURI);
+					prefixToNamespaceMap.JRemove(prefixToDelete);
 				}
 			}
 		}

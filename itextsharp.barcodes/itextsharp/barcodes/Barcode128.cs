@@ -158,7 +158,7 @@ namespace iTextSharp.Barcodes
 
 		public const char STARTC = '\u00cd';
 
-		private static IDictionary<int, int> ais = new Dictionary<int, int>();
+		private static IDictionary<int?, int?> ais = new Dictionary<int?, int?>();
 
 		/// <summary>Creates new Barcode128</summary>
 		public Barcode128(PdfDocument document)
@@ -240,7 +240,7 @@ namespace iTextSharp.Barcodes
 					{
 						break;
 					}
-					int subcode = System.Convert.ToInt32(code.JSubstring(0, k));
+					int? subcode = System.Convert.ToInt32(code.JSubstring(0, k));
 					n = ais.ContainsKey(subcode) ? ais[subcode] : 0;
 					if (n != 0)
 					{

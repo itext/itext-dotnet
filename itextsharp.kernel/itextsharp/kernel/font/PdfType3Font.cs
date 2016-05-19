@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Font
 			SetFontMatrix(fontMatrix);
 			foreach (PdfName glyphName in charProcsDic.KeySet())
 			{
-				int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
+				int? unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
 				if (unicode != null && fontEncoding.CanEncode(unicode))
 				{
 					int code = fontEncoding.ConvertToByte(unicode);

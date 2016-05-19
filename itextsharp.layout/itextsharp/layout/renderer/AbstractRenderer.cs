@@ -87,7 +87,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal IRenderer parent;
 
-		protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
+		protected internal IDictionary<int?, Object> properties = new Dictionary<int?, Object
 			>();
 
 		protected internal bool isLastRendererForModelElement = true;
@@ -123,7 +123,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			// https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
 			// "The rules can be summarized as follows:"...
-			int positioning = renderer.GetProperty(iTextSharp.Layout.Property.Property.POSITION
+			int? positioning = renderer.GetProperty(iTextSharp.Layout.Property.Property.POSITION
 				);
 			if (positioning == null || positioning == LayoutPosition.RELATIVE || positioning 
 				== LayoutPosition.STATIC)
@@ -175,7 +175,7 @@ namespace iTextSharp.Layout.Renderer
 
 		public virtual void DeleteOwnProperty(int property)
 		{
-			properties.Remove(property);
+			properties.JRemove(property);
 		}
 
 		/// <summary>
@@ -187,7 +187,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			if (properties.ContainsKey(property))
 			{
-				properties.Remove(property);
+				properties.JRemove(property);
 			}
 			else
 			{
@@ -280,9 +280,9 @@ namespace iTextSharp.Layout.Renderer
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="float"/>
+		/// <see cref="float?"/>
 		/// </returns>
-		public virtual float GetPropertyAsFloat(int property)
+		public virtual float? GetPropertyAsFloat(int property)
 		{
 			Number value = GetProperty(property);
 			return value != null ? value : null;
@@ -296,9 +296,9 @@ namespace iTextSharp.Layout.Renderer
 		/// <param name="defaultValue">default value to be returned if property is not found</param>
 		/// <returns>
 		/// a
-		/// <see cref="float"/>
+		/// <see cref="float?"/>
 		/// </returns>
-		public virtual float GetPropertyAsFloat(int property, float defaultValue)
+		public virtual float? GetPropertyAsFloat(int property, float? defaultValue)
 		{
 			Number value = GetProperty(property, defaultValue);
 			return value != null ? value : null;
@@ -311,9 +311,9 @@ namespace iTextSharp.Layout.Renderer
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="bool"/>
+		/// <see cref="bool?"/>
 		/// </returns>
-		public virtual bool GetPropertyAsBoolean(int property)
+		public virtual bool? GetPropertyAsBoolean(int property)
 		{
 			return GetProperty(property);
 		}
@@ -325,9 +325,9 @@ namespace iTextSharp.Layout.Renderer
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="int"/>
+		/// <see cref="int?"/>
 		/// </returns>
-		public virtual int GetPropertyAsInteger(int property)
+		public virtual int? GetPropertyAsInteger(int property)
 		{
 			Number value = GetProperty(property);
 			return value != null ? value : null;
@@ -578,18 +578,18 @@ namespace iTextSharp.Layout.Renderer
 			return rect;
 		}
 
-		protected internal virtual float RetrieveWidth(float parentBoxWidth)
+		protected internal virtual float? RetrieveWidth(float parentBoxWidth)
 		{
 			return RetrieveUnitValue(parentBoxWidth, iTextSharp.Layout.Property.Property.WIDTH
 				);
 		}
 
-		protected internal virtual float RetrieveHeight()
+		protected internal virtual float? RetrieveHeight()
 		{
 			return GetProperty(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
 
-		protected internal virtual float RetrieveUnitValue(float basePercentValue, int property
+		protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property
 			)
 		{
 			UnitValue value = GetProperty(property);
@@ -618,12 +618,12 @@ namespace iTextSharp.Layout.Renderer
 		}
 
 		//TODO is behavior of copying all properties in split case common to all renderers?
-		protected internal virtual IDictionary<int, Object> GetOwnProperties()
+		protected internal virtual IDictionary<int?, Object> GetOwnProperties()
 		{
 			return properties;
 		}
 
-		protected internal virtual void AddAllProperties(IDictionary<int, Object> properties
+		protected internal virtual void AddAllProperties(IDictionary<int?, Object> properties
 			)
 		{
 			this.properties.AddAll(properties);
@@ -636,7 +636,7 @@ namespace iTextSharp.Layout.Renderer
 		/// NOTE: this method will no go further than the first child.
 		/// Returns null if there is no text found.
 		/// </remarks>
-		protected internal virtual float GetFirstYLineRecursively()
+		protected internal virtual float? GetFirstYLineRecursively()
 		{
 			if (childRenderers.Count == 0)
 			{
@@ -780,7 +780,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual bool IsRelativePosition()
 		{
-			int positioning = GetPropertyAsInteger(iTextSharp.Layout.Property.Property.POSITION
+			int? positioning = GetPropertyAsInteger(iTextSharp.Layout.Property.Property.POSITION
 				);
 			return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
 		}

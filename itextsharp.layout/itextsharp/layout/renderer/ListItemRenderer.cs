@@ -115,7 +115,7 @@ namespace iTextSharp.Layout.Renderer
 				float x = occupiedArea.GetBBox().GetX();
 				if (childRenderers.Count > 0)
 				{
-					float yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
+					float? yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
 					if (yLine != null)
 					{
 						if (symbolRenderer is TextRenderer)

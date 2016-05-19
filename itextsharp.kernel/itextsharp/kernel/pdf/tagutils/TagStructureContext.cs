@@ -223,7 +223,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag
 			(IAccessibleElement element)
 		{
-			PdfStructElem structElem = connectedModelToStruct.Remove(element);
+			PdfStructElem structElem = connectedModelToStruct[element];
+			connectedModelToStruct.JRemove(element);
 			RemoveStructToModelConnection(structElem);
 			return this;
 		}
@@ -507,7 +508,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct
 			)
 		{
-			return connectedStructToModel[@struct];
+			return connectedStructToModel[@struct.GetPdfObject()];
 		}
 
 		internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role)
@@ -529,11 +530,12 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		/// <returns>parent of the flushed tag</returns>
 		internal virtual IPdfStructElem FlushTag(PdfStructElem tagStruct)
 		{
-			IAccessibleElement modelElement = connectedStructToModel.Remove(tagStruct.GetPdfObject
-				());
+			IAccessibleElement modelElement = connectedStructToModel[tagStruct.GetPdfObject()
+				];
+			connectedStructToModel.JRemove(tagStruct.GetPdfObject());
 			if (modelElement != null)
 			{
-				connectedModelToStruct.Remove(modelElement);
+				connectedModelToStruct.JRemove(modelElement);
 			}
 			IPdfStructElem parent = tagStruct.GetParent();
 			FlushStructElementAndItKids(tagStruct);
@@ -544,8 +546,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		{
 			if (structElem != null)
 			{
-				IAccessibleElement element = connectedStructToModel.Remove(structElem.GetPdfObject
-					());
+				IAccessibleElement element = connectedStructToModel[structElem.GetPdfObject()];
+				connectedStructToModel.JRemove(structElem.GetPdfObject());
 				structElem.SetRole(element.GetRole());
 				if (element.GetAccessibilityProperties() != null)
 				{
@@ -569,8 +571,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 				{
 					structParent.RemoveKid(pageTag);
 					PdfDictionary parentObject = structParent.GetPdfObject();
-					if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().IsEmpty
-						() && parentObject != rootTagElement.GetPdfObject())
+					if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().Count ==
+						 0 && parentObject != rootTagElement.GetPdfObject())
 					{
 						RemovePageTagFromParent(structParent, parent.GetParent());
 						parentObject.GetIndirectReference().SetFree();

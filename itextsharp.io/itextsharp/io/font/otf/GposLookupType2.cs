@@ -111,8 +111,8 @@ namespace iTextSharp.IO.Font.Otf
 
 		private class PairPosAdjustmentFormat1 : OpenTableLookup
 		{
-			private IDictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>> gposMap
-				 = new Dictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>>();
+			private IDictionary<int?, IDictionary<int?, GposLookupType2.PairValueFormat>> gposMap
+				 = new Dictionary<int?, IDictionary<int?, GposLookupType2.PairValueFormat>>();
 
 			/// <exception cref="System.IO.IOException"/>
 			public PairPosAdjustmentFormat1(OpenTypeFontTableReader openReader, int lookupFlag
@@ -130,7 +130,7 @@ namespace iTextSharp.IO.Font.Otf
 				}
 				bool changed = false;
 				Glyph g1 = line.Get(line.idx);
-				IDictionary<int, GposLookupType2.PairValueFormat> m = gposMap[g1.GetCode()];
+				IDictionary<int?, GposLookupType2.PairValueFormat> m = gposMap[g1.GetCode()];
 				if (m != null)
 				{
 					OpenTableLookup.GlyphIndexer gi = new OpenTableLookup.GlyphIndexer();
@@ -161,11 +161,11 @@ namespace iTextSharp.IO.Font.Otf
 				int valueFormat2 = openReader.rf.ReadUnsignedShort();
 				int pairSetCount = openReader.rf.ReadUnsignedShort();
 				int[] locationRule = openReader.ReadUShortArray(pairSetCount, subTableLocation);
-				IList<int> coverageList = openReader.ReadCoverageFormat(coverage);
+				IList<int?> coverageList = openReader.ReadCoverageFormat(coverage);
 				for (int k = 0; k < pairSetCount; ++k)
 				{
 					openReader.rf.Seek(locationRule[k]);
-					IDictionary<int, GposLookupType2.PairValueFormat> pairs = new Dictionary<int, GposLookupType2.PairValueFormat
+					IDictionary<int?, GposLookupType2.PairValueFormat> pairs = new Dictionary<int?, GposLookupType2.PairValueFormat
 						>();
 					gposMap[coverageList[k]] = pairs;
 					int pairValueCount = openReader.rf.ReadUnsignedShort();
@@ -193,10 +193,10 @@ namespace iTextSharp.IO.Font.Otf
 
 			private OtfClass classDef2;
 
-			private HashSet<int> coverageSet;
+			private HashSet<int?> coverageSet;
 
-			private IDictionary<int, GposLookupType2.PairValueFormat[]> posSubs = new Dictionary
-				<int, GposLookupType2.PairValueFormat[]>();
+			private IDictionary<int?, GposLookupType2.PairValueFormat[]> posSubs = new Dictionary
+				<int?, GposLookupType2.PairValueFormat[]>();
 
 			/// <exception cref="System.IO.IOException"/>
 			public PairPosAdjustmentFormat2(OpenTypeFontTableReader openReader, int lookupFlag
@@ -267,7 +267,7 @@ namespace iTextSharp.IO.Font.Otf
 						pairs[j] = pair;
 					}
 				}
-				coverageSet = new HashSet<int>(openReader.ReadCoverageFormat(coverage));
+				coverageSet = new HashSet<int?>(openReader.ReadCoverageFormat(coverage));
 				classDef1 = openReader.ReadClassDefinition(locationClass1);
 				classDef2 = openReader.ReadClassDefinition(locationClass2);
 			}

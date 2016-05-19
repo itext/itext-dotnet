@@ -64,28 +64,28 @@ namespace iTextSharp.IO.Image
 			public byte[] bpcBoxData;
 		}
 
-		public class ColorSpecBox : List<int>
+		public class ColorSpecBox : List<int?>
 		{
 			private byte[] colorProfile;
 
 			public virtual int GetMeth()
 			{
-				return this[0];
+				return (int)this[0];
 			}
 
 			public virtual int GetPrec()
 			{
-				return this[1];
+				return (int)this[1];
 			}
 
 			public virtual int GetApprox()
 			{
-				return this[2];
+				return (int)this[2];
 			}
 
 			public virtual int GetEnumCs()
 			{
-				return this[3];
+				return (int)this[3];
 			}
 
 			public virtual byte[] GetColorProfile()

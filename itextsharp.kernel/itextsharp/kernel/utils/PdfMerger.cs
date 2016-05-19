@@ -136,7 +136,7 @@ namespace iTextSharp.Kernel.Utils
 		public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage
 			, int toPage)
 		{
-			IList<int> pages = new List<int>(toPage - fromPage);
+			IList<int?> pages = new List<int?>(toPage - fromPage);
 			for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
 			{
 				pages.Add(pageNum);
@@ -162,7 +162,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <c>PdfMerger</c>
 		/// instance.
 		/// </returns>
-		public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int
+		public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int?
 			> pages)
 		{
 			if (mergeTags && from.IsTagged())

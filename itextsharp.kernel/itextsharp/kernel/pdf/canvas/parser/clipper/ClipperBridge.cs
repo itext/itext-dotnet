@@ -306,7 +306,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Clipper
 			return fillType;
 		}
 
-		public static void AddContour(Path path, IList<IntPoint> contour, bool close)
+		public static void AddContour(Path path, IList<IntPoint> contour, bool? close)
 		{
 			IList<Point> floatContour = ConvertToFloatPoints(contour);
 			IEnumerator<Point> iter = floatContour.GetEnumerator();

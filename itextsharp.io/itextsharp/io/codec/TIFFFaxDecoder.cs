@@ -43,8 +43,6 @@
 * use in the design, construction, operation or maintenance of any
 * nuclear facility.
 */
-using iTextSharp.IO;
-
 namespace iTextSharp.IO.Codec
 {
 	/// <summary>Class that can decode TIFF files.</summary>
@@ -579,14 +577,16 @@ namespace iTextSharp.IO.Codec
 						if (bits == 0)
 						{
 							// ERROR
-							throw new IOException(IOException.InvalidCodeEncountered);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncountered
+								);
 						}
 						else
 						{
 							if (bits == 15)
 							{
 								// EOL
-								throw new IOException(IOException.EolCodeWordEncounteredInWhiteRun);
+								throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun
+									);
 							}
 							else
 							{
@@ -648,7 +648,8 @@ namespace iTextSharp.IO.Codec
 							if (bits == 15)
 							{
 								// EOL code
-								throw new IOException(IOException.EolCodeWordEncounteredInWhiteRun);
+								throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun
+									);
 							}
 							else
 							{
@@ -731,7 +732,8 @@ namespace iTextSharp.IO.Codec
 			// The data must start with an EOL code
 			if (ReadEOL(true) != 1)
 			{
-				throw new IOException(IOException.FirstScanlineMustBe1dEncoded);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FirstScanlineMustBe1dEncoded
+					);
 			}
 			int lineOffset = 0;
 			int bitOffset;
@@ -829,7 +831,7 @@ namespace iTextSharp.IO.Codec
 								}
 								else
 								{
-									throw new IOException(IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
+									throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
 										);
 								}
 							}
@@ -980,7 +982,7 @@ namespace iTextSharp.IO.Codec
 								{
 									if (NextLesserThan8Bits(3) != 7)
 									{
-										throw new IOException(IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
+										throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
 											);
 									}
 									int zeros = 0;
@@ -1158,7 +1160,8 @@ escape_break: ;
 					if (bits == 0)
 					{
 						// ERROR
-						throw new IOException(IOException.InvalidCodeEncountered);
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncountered
+							);
 					}
 					else
 					{
@@ -1171,7 +1174,8 @@ escape_break: ;
 							}
 							else
 							{
-								throw new IOException(IOException.EolCodeWordEncounteredInWhiteRun);
+								throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun
+									);
 							}
 						}
 						else
@@ -1235,7 +1239,8 @@ escape_break: ;
 						if (bits == 15)
 						{
 							// EOL code
-							throw new IOException(IOException.EolCodeWordEncounteredInBlackRun);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInBlackRun
+								);
 						}
 						else
 						{
@@ -1293,7 +1298,8 @@ escape_break: ;
 				}
 				if (next12Bits != 1)
 				{
-					throw new IOException(IOException.ScanlineMustBeginWithEolCodeWord);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ScanlineMustBeginWithEolCodeWord
+						);
 				}
 			}
 			else
@@ -1306,7 +1312,8 @@ escape_break: ;
 					int bitsLeft = 8 - bitPointer;
 					if (NextNBits(bitsLeft) != 0)
 					{
-						throw new IOException(IOException.AllFillBitsPrecedingEolCodeMustBe0);
+						throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0
+							);
 					}
 					// If the number of bitsLeft is less than 8, then to have a 12
 					// bit EOL sequence, two more bytes are certainly going to be
@@ -1316,7 +1323,8 @@ escape_break: ;
 					{
 						if (NextNBits(8) != 0)
 						{
-							throw new IOException(IOException.AllFillBitsPrecedingEolCodeMustBe0);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0
+								);
 						}
 					}
 					// There might be a random number of fill bytes with 0s, so
@@ -1328,7 +1336,8 @@ escape_break: ;
 						// If not all zeros
 						if (n != 0)
 						{
-							throw new IOException(IOException.AllFillBitsPrecedingEolCodeMustBe0);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0
+								);
 						}
 					}
 				}
@@ -1437,7 +1446,8 @@ escape_break: ;
 				}
 				else
 				{
-					throw new IOException(IOException.TiffFillOrderTagMustBeEither1Or2);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffFillOrderTagMustBeEither1Or2
+						);
 				}
 			}
 			int bitsLeft = 8 - bitPointer;
@@ -1518,7 +1528,8 @@ escape_break: ;
 				}
 				else
 				{
-					throw new IOException(IOException.TiffFillOrderTagMustBeEither1Or2);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffFillOrderTagMustBeEither1Or2
+						);
 				}
 			}
 			int bitsLeft = 8 - bitPointer;

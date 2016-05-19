@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Source;
 
@@ -119,7 +118,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.Jbig2ImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException
+					, e);
 			}
 		}
 	}

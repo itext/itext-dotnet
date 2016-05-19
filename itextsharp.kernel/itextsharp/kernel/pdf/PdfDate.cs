@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Globalization;
 using System.Text;
 
 namespace iTextSharp.Kernel.Pdf
@@ -64,12 +63,12 @@ namespace iTextSharp.Kernel.Pdf
 	/// section 7.2 (page 183-184)
 	/// </summary>
 	/// <seealso cref="PdfString"/>
-	/// <seealso cref="System.Globalization.GregorianCalendar"/>
+	/// <seealso cref="Java.Util.GregorianCalendar"/>
 	public class PdfDate : PdfObjectWrapper<PdfString>
 	{
-		private static readonly int[] DATE_SPACE = new int[] { Calendar.YEAR, 4, 0, Calendar
-			.MONTH, 2, -1, Calendar.DAY_OF_MONTH, 2, 0, Calendar.HOUR_OF_DAY, 2, 0, Calendar
-			.MINUTE, 2, 0, Calendar.SECOND, 2, 0 };
+		private static readonly int[] DATE_SPACE = new int[] { DateTime.YEAR, 4, 0, DateTime
+			.MONTH, 2, -1, DateTime.DAY_OF_MONTH, 2, 0, DateTime.HOUR_OF_DAY, 2, 0, DateTime
+			.MINUTE, 2, 0, DateTime.SECOND, 2, 0 };
 
 		/// <summary>
 		/// Constructs a
@@ -81,7 +80,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <c>PdfDate</c>
 		/// &gt;-object
 		/// </param>
-		public PdfDate(Calendar d)
+		public PdfDate(DateTime d)
 			: base(new PdfString(GenerateStringByCalendar(d)))
 		{
 		}
@@ -199,7 +198,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// if the string
 		/// was not a date
 		/// </returns>
-		public static Calendar Decode(String s)
+		public static DateTime Decode(String s)
 		{
 			try
 			{
@@ -268,16 +267,16 @@ namespace iTextSharp.Kernel.Pdf
 			return false;
 		}
 
-		private static String GenerateStringByCalendar(Calendar d)
+		private static String GenerateStringByCalendar(DateTime d)
 		{
 			StringBuilder date = new StringBuilder("D:");
-			date.Append(SetLength(d.Get(Calendar.YEAR), 4));
-			date.Append(SetLength(d.Get(Calendar.MONTH) + 1, 2));
-			date.Append(SetLength(d.Get(Calendar.DATE), 2));
-			date.Append(SetLength(d.Get(Calendar.HOUR_OF_DAY), 2));
-			date.Append(SetLength(d.Get(Calendar.MINUTE), 2));
-			date.Append(SetLength(d.Get(Calendar.SECOND), 2));
-			int timezone = (d.Get(Calendar.ZONE_OFFSET) + d.Get(Calendar.DST_OFFSET)) / (60 *
+			date.Append(SetLength(d.Get(DateTime.YEAR), 4));
+			date.Append(SetLength(d.Get(DateTime.MONTH) + 1, 2));
+			date.Append(SetLength(d.Get(DateTime.DATE), 2));
+			date.Append(SetLength(d.Get(DateTime.HOUR_OF_DAY), 2));
+			date.Append(SetLength(d.Get(DateTime.MINUTE), 2));
+			date.Append(SetLength(d.Get(DateTime.SECOND), 2));
+			int timezone = (d.Get(DateTime.ZONE_OFFSET) + d.Get(DateTime.DST_OFFSET)) / (60 *
 				 60 * 1000);
 			if (timezone == 0)
 			{
@@ -298,7 +297,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (timezone != 0)
 			{
 				date.Append(SetLength(timezone, 2)).Append('\'');
-				int zone = Math.Abs((d.Get(Calendar.ZONE_OFFSET) + d.Get(Calendar.DST_OFFSET)) / 
+				int zone = Math.Abs((d.Get(DateTime.ZONE_OFFSET) + d.Get(DateTime.DST_OFFSET)) / 
 					(60 * 1000)) - (timezone * 60);
 				date.Append(SetLength(zone, 2)).Append('\'');
 			}

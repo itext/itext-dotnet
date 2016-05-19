@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Color;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
@@ -122,7 +121,8 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.JpegImageException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.JpegImageException, 
+					e);
 			}
 			finally
 			{
@@ -166,8 +166,8 @@ namespace iTextSharp.IO.Image
 			byte[][] icc = null;
 			if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8)
 			{
-				throw new IOException(IOException._1IsNotAValidJpegFile).SetMessageParams(errorID
-					);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAValidJpegFile
+					).SetMessageParams(errorID);
 			}
 			bool firstPass = true;
 			int len;
@@ -176,7 +176,8 @@ namespace iTextSharp.IO.Image
 				int v = jpegStream.Read();
 				if (v < 0)
 				{
-					throw new IOException(IOException.PrematureEofWhileReadingJpg);
+					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PrematureEofWhileReadingJpg
+						);
 				}
 				if (v == 0xFF)
 				{
@@ -194,8 +195,8 @@ namespace iTextSharp.IO.Image
 						int r = jpegStream.Read(bcomp);
 						if (r != bcomp.Length)
 						{
-							throw new IOException(IOException._1CorruptedJfifMarker).SetMessageParams(errorID
-								);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1CorruptedJfifMarker
+								).SetMessageParams(errorID);
 						}
 						bool found = true;
 						for (int k = 0; k < bcomp.Length; ++k)
@@ -387,8 +388,8 @@ namespace iTextSharp.IO.Image
 						StreamUtil.Skip(jpegStream, 2);
 						if (jpegStream.Read() != 0x08)
 						{
-							throw new IOException(IOException._1MustHave8BitsPerComponent).SetMessageParams(errorID
-								);
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1MustHave8BitsPerComponent
+								).SetMessageParams(errorID);
 						}
 						image.SetHeight(GetShort(jpegStream));
 						image.SetWidth(GetShort(jpegStream));
@@ -400,8 +401,8 @@ namespace iTextSharp.IO.Image
 					{
 						if (markertype == UNSUPPORTED_MARKER)
 						{
-							throw new IOException(IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID
-								, iTextSharp.IO.Util.JavaUtil.IntegerToString(marker));
+							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1UnsupportedJpegMarker2
+								).SetMessageParams(errorID, iTextSharp.IO.Util.JavaUtil.IntegerToString(marker));
 						}
 						else
 						{

@@ -133,7 +133,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return STRING;
 		}
@@ -278,7 +278,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (value == null)
 			{
-				return new String(content, System.Text.Encoding.GetEncoding(defaultCharset));
+				return EncodingUtil.ConvertToString(content, System.Text.Encoding.GetEncoding(defaultCharset
+					));
 			}
 			else
 			{
@@ -314,9 +315,10 @@ namespace iTextSharp.Kernel.Pdf
 				byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
 				content = null;
 				decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-				value = new String(decrypt.DecryptByteArray(decodedContent), System.Text.Encoding.GetEncoding
+				value = EncodingUtil.ConvertToString(decrypt.DecryptByteArray(decodedContent), System.Text.Encoding.GetEncoding
 					(defaultCharset));
 			}
+			//value = new String(decrypt.decryptByteArray(decodedContent), Charset.forName(defaultCharset));
 			return this;
 		}
 

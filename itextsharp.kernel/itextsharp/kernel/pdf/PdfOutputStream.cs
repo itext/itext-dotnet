@@ -95,7 +95,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				throw new PdfException(PdfException.CannotWriteObjectAfterItWasReleased);
 			}
-			switch (pdfObject.GetType())
+			switch (pdfObject.GetObjectType())
 			{
 				case PdfObject.ARRAY:
 				{
@@ -194,10 +194,10 @@ namespace iTextSharp.Kernel.Pdf
 						, entry.Key));
 					value = PdfNull.PDF_NULL;
 				}
-				if ((value.GetType() == PdfObject.NUMBER || value.GetType() == PdfObject.LITERAL 
-					|| value.GetType() == PdfObject.BOOLEAN || value.GetType() == PdfObject.NULL || 
-					value.GetType() == PdfObject.INDIRECT_REFERENCE || value.CheckState(PdfObject.MUST_BE_INDIRECT
-					)))
+				if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject
+					.LITERAL || value.GetObjectType() == PdfObject.BOOLEAN || value.GetObjectType() 
+					== PdfObject.NULL || value.GetObjectType() == PdfObject.INDIRECT_REFERENCE || value
+					.CheckState(PdfObject.MUST_BE_INDIRECT)))
 				{
 					isAlreadyWriteSpace = true;
 					WriteSpace();
@@ -470,7 +470,7 @@ namespace iTextSharp.Kernel.Pdf
 					}
 					else
 					{
-						if (filter.GetType() == PdfObject.ARRAY)
+						if (filter.GetObjectType() == PdfObject.ARRAY)
 						{
 							PdfArray filters = (PdfArray)filter;
 							if (!filters.IsEmpty() && PdfName.Crypt.Equals(filters.Get(0, true)))
@@ -489,7 +489,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfObject filter = pdfStream.Get(PdfName.Filter);
 			if (filter != null)
 			{
-				if (filter.GetType() == PdfObject.NAME)
+				if (filter.GetObjectType() == PdfObject.NAME)
 				{
 					if (PdfName.FlateDecode.Equals(filter))
 					{
@@ -498,7 +498,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				else
 				{
-					if (filter.GetType() == PdfObject.ARRAY)
+					if (filter.GetObjectType() == PdfObject.ARRAY)
 					{
 						if (((PdfArray)filter).Contains(PdfName.FlateDecode))
 						{
@@ -601,13 +601,13 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			else
 			{
-				if (decodeParamsObject.GetType() == PdfObject.DICTIONARY)
+				if (decodeParamsObject.GetObjectType() == PdfObject.DICTIONARY)
 				{
 					decodeParams = (PdfDictionary)decodeParamsObject;
 				}
 				else
 				{
-					if (decodeParamsObject.GetType() == PdfObject.ARRAY)
+					if (decodeParamsObject.GetObjectType() == PdfObject.ARRAY)
 					{
 						decodeParamsArray = (PdfArray)decodeParamsObject;
 						decodeParams = decodeParamsArray.GetAsDictionary(0);
@@ -647,8 +647,8 @@ namespace iTextSharp.Kernel.Pdf
 			if (decodeParamsArray != null)
 			{
 				decodeParamsArray.Remove(0);
-				if (decodeParamsArray.Size() == 1 && decodeParamsArray.Get(0).GetType() != PdfObject
-					.NULL)
+				if (decodeParamsArray.Size() == 1 && decodeParamsArray.Get(0).GetObjectType() != 
+					PdfObject.NULL)
 				{
 					decodeParamsObject = decodeParamsArray.Get(0);
 				}

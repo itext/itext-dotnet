@@ -94,7 +94,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
 		public virtual float GetTextRise()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE));
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE));
 		}
 
 		/// <summary>Sets the text rise.</summary>
@@ -111,9 +111,9 @@ namespace iTextSharp.Layout.Element
 		/// should be stretched.
 		/// </summary>
 		/// <returns>the horizontal spacing, as a <code>float</code></returns>
-		public virtual float GetHorizontalScaling()
+		public virtual float? GetHorizontalScaling()
 		{
-			return ((float)GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
 				));
 		}
 
@@ -129,7 +129,7 @@ namespace iTextSharp.Layout.Element
 		{
 			alpha = (float)Math.Tan(alpha * Math.PI / 180);
 			beta = (float)Math.Tan(beta * Math.PI / 180);
-			SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta }
+			SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float?[] { alpha, beta }
 				);
 			return this;
 		}

@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Util;
 
@@ -117,13 +116,13 @@ namespace iTextSharp.IO.Image
 		{
 			if (transparency != null && transparency.Length != 2)
 			{
-				throw new IOException(IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
 					);
 			}
 			if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && 
 				typeCCITT != RawImageData.CCITTG3_2D)
 			{
-				throw new IOException(IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
 					);
 			}
 			if (reverseBits)
@@ -144,7 +143,7 @@ namespace iTextSharp.IO.Image
 		{
 			if (transparency != null && transparency.Length != components * 2)
 			{
-				throw new IOException(IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
 					);
 			}
 			if (components == 1 && bpc == 1)
@@ -158,11 +157,13 @@ namespace iTextSharp.IO.Image
 			image.width = width;
 			if (components != 1 && components != 3 && components != 4)
 			{
-				throw new IOException(IOException.ComponentsMustBe1_3Or4);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4
+					);
 			}
 			if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8)
 			{
-				throw new IOException(IOException.BitsPerComponentMustBe1_2_4or8);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8
+					);
 			}
 			image.colorSpace = components;
 			image.bpc = bpc;
@@ -541,7 +542,8 @@ namespace iTextSharp.IO.Image
 					}
 				}
 			}
-			throw new IOException(IOException.ImageFormatCannotBeRecognized);
+			throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized
+				);
 		}
 
 		private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage)
@@ -607,7 +609,8 @@ namespace iTextSharp.IO.Image
 					}
 				}
 			}
-			throw new IOException(IOException.ImageFormatCannotBeRecognized);
+			throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized
+				);
 		}
 
 		private static bool ImageTypeIs(byte[] imageType, byte[] compareWith)
@@ -634,7 +637,7 @@ namespace iTextSharp.IO.Image
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 			finally
 			{

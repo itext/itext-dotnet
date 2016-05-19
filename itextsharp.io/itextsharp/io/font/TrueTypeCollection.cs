@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
@@ -79,7 +78,8 @@ namespace iTextSharp.IO.Font
 		{
 			if (!FileUtil.FileExists(ttcPath))
 			{
-				throw new IOException(IOException.FontFile1NotFound).SetMessageParams(ttcPath);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
+					SetMessageParams(ttcPath);
 			}
 			raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
 				(ttcPath));
@@ -96,7 +96,8 @@ namespace iTextSharp.IO.Font
 		{
 			if (ttcIndex > TTCSize - 1)
 			{
-				throw new IOException(IOException.TTCIndexDoesNotExistInFile);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile
+					);
 			}
 			if (ttcPath != null)
 			{
@@ -132,7 +133,7 @@ namespace iTextSharp.IO.Font
 			String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
 			if (!mainTag.Equals("ttcf"))
 			{
-				throw new IOException(IOException.InvalidTTCFile);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidTTCFile);
 			}
 			raf.SkipBytes(4);
 			TTCSize = raf.ReadInt();

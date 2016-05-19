@@ -52,7 +52,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 	/// 	</summary>
 	public class SubTableLookup6Format2 : SubTableLookup6
 	{
-		private ICollection<int> substCoverageGlyphIds;
+		private ICollection<int?> substCoverageGlyphIds;
 
 		private IList<IList<ContextualSubstRule>> subClassSets;
 
@@ -63,7 +63,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 		private OtfClass lookaheadClassDefinition;
 
 		public SubTableLookup6Format2(OpenTypeFontTableReader openReader, int lookupFlag, 
-			ICollection<int> substCoverageGlyphIds, OtfClass backtrackClassDefinition, OtfClass
+			ICollection<int?> substCoverageGlyphIds, OtfClass backtrackClassDefinition, OtfClass
 			 inputClassDefinition, OtfClass lookaheadClassDefinition)
 			: base(openReader, lookupFlag)
 		{

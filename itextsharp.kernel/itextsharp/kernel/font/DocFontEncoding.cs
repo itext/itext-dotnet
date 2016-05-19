@@ -161,7 +161,7 @@ namespace iTextSharp.Kernel.Font
 					else
 					{
 						String glyphName = ((PdfName)obj).GetValue();
-						int unicode = AdobeGlyphList.NameToUnicode(glyphName);
+						int? unicode = AdobeGlyphList.NameToUnicode(glyphName);
 						if (unicode != null)
 						{
 							fontEncoding.codeToUnicode[currentNumber] = unicode;
@@ -190,7 +190,7 @@ namespace iTextSharp.Kernel.Font
 			, CMapToUnicode toUnicode)
 		{
 			IntHashtable byte2uni = toUnicode.CreateDirectMapping();
-			foreach (int code in byte2uni.GetKeys())
+			foreach (int? code in byte2uni.GetKeys())
 			{
 				int unicode = byte2uni.Get(code);
 				String glyphName = AdobeGlyphList.UnicodeToName(unicode);

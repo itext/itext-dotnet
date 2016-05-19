@@ -247,7 +247,8 @@ namespace iTextSharp.Layout.Hyphenation
 			String name = key + ".xml";
 			try
 			{
-				Stream fis = new FileStream(new File(new File(searchDirectory), name));
+				Stream fis = new FileStream(new File(new File(searchDirectory), name), FileMode.Open
+					);
 				return GetHyphenationTree(fis, name);
 			}
 			catch (System.IO.IOException ioe)
@@ -314,7 +315,7 @@ namespace iTextSharp.Layout.Hyphenation
 			{
 				log.Warn("Soft hyphen unicode symbols will be used as hints for hyphenation");
 				char softHyphen = '\u00ad';
-				IList<int> softHyphens = new List<int>();
+				IList<int?> softHyphens = new List<int?>();
 				int lastSoftHyphenIndex = -1;
 				int curSoftHyphenIndex;
 				while ((curSoftHyphenIndex = word.IndexOf(softHyphen, lastSoftHyphenIndex + 1)) >

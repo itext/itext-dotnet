@@ -63,13 +63,13 @@ namespace iTextSharp.IO.Util
 			return src;
 		}
 
-		public static int[] ToArray(ICollection<int> collection)
+		public static int[] ToArray(ICollection<int?> collection)
 		{
 			int[] array = new int[collection.Count];
 			int k = 0;
-			foreach (int key in collection)
+			foreach (int? key in collection)
 			{
-				array[k++] = key;
+				array[k++] = (int)key;
 			}
 			return array;
 		}

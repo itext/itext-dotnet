@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using iTextSharp.IO;
 
 namespace iTextSharp.IO.Font
 {
@@ -13,7 +12,7 @@ namespace iTextSharp.IO.Font
 			{
 				FontProgramFactory.CreateFont("some-font.ttf");
 			}
-			catch (IOException ex)
+			catch (iTextSharp.IO.IOException ex)
 			{
 				NUnit.Framework.Assert.AreEqual("font.file some-font.ttf not.found", ex.Message);
 			}

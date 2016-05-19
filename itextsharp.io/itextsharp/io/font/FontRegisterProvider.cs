@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 
@@ -198,7 +197,7 @@ namespace iTextSharp.IO.Font
 					// the font is a type 1 font or CJK font
 					fontProgram = FontProgramFactory.CreateFont(fontName, cached);
 				}
-				catch (IOException)
+				catch (iTextSharp.IO.IOException)
 				{
 				}
 			}
@@ -375,7 +374,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(e);
+				throw new iTextSharp.IO.IOException(e);
 			}
 		}
 

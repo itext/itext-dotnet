@@ -46,7 +46,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
 using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Util;
 
@@ -280,7 +279,7 @@ namespace iTextSharp.IO.Font
 			}
 			catch (System.IO.IOException e)
 			{
-				throw new IOException(IOException.IoException, e);
+				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
 			}
 			return cmap;
 		}

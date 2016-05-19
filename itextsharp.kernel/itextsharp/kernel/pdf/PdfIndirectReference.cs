@@ -218,7 +218,7 @@ namespace iTextSharp.Kernel.Pdf
 			return (objNr > o.objNr) ? 1 : -1;
 		}
 
-		public override byte GetType()
+		public override byte GetObjectType()
 		{
 			return INDIRECT_REFERENCE;
 		}
@@ -277,7 +277,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				states.Append("ReadOnly; ");
 			}
-			return String.Format("{0} {1} R{2}", GetObjNumber(), GetGenNumber(), states.Substring
+			return String.Format("{0} {1} R{2}", GetObjNumber(), GetGenNumber(), states.JSubstring
 				(0, states.Length - 1));
 		}
 

@@ -103,7 +103,7 @@ namespace iTextSharp.Kernel.Pdf
 			GetPdfObject().Put(PdfName.TrimBox, new PdfArray(pageSize));
 			if (pdfDocument.IsTagged())
 			{
-				structParents = pdfDocument.GetNextStructParentIndex();
+				structParents = (int)pdfDocument.GetNextStructParentIndex();
 				GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
 			}
 		}
@@ -356,7 +356,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (toDocument.IsTagged())
 			{
-				page.structParents = toDocument.GetNextStructParentIndex();
+				page.structParents = (int)toDocument.GetNextStructParentIndex();
 				page.GetPdfObject().Put(PdfName.StructParents, new PdfNumber(page.structParents));
 			}
 			if (copier != null)
@@ -601,7 +601,7 @@ namespace iTextSharp.Kernel.Pdf
 			return mcid++;
 		}
 
-		public virtual int GetStructParentIndex()
+		public virtual int? GetStructParentIndex()
 		{
 			if (structParents == -1)
 			{
@@ -612,7 +612,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				else
 				{
-					structParents = GetDocument().GetNextStructParentIndex();
+					structParents = (int)GetDocument().GetNextStructParentIndex();
 				}
 			}
 			return structParents;
@@ -724,7 +724,7 @@ namespace iTextSharp.Kernel.Pdf
 				{
 					bool standardAnnotTagRole = tagPointer.GetRole().Equals(PdfName.Annot) || tagPointer
 						.GetRole().Equals(PdfName.Form);
-					if (tagPointer.GetKidsRoles().IsEmpty() && standardAnnotTagRole)
+					if (tagPointer.GetKidsRoles().Count == 0 && standardAnnotTagRole)
 					{
 						tagPointer.RemoveTag();
 					}

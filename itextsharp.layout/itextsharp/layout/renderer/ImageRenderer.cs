@@ -58,11 +58,11 @@ namespace iTextSharp.Layout.Renderer
 	{
 		private float height;
 
-		private float width;
+		private float? width;
 
-		protected internal float fixedXPosition;
+		protected internal float? fixedXPosition;
 
-		protected internal float fixedYPosition;
+		protected internal float? fixedYPosition;
 
 		protected internal float pivotY;
 
@@ -87,7 +87,7 @@ namespace iTextSharp.Layout.Renderer
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), 0, 0));
 			width = RetrieveWidth(layoutBox.GetWidth());
-			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
 			imageWidth = xObject.GetWidth();
@@ -96,9 +96,9 @@ namespace iTextSharp.Layout.Renderer
 			height = width / imageWidth * imageHeight;
 			fixedXPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 			fixedYPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
-			float horizontalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-				HORIZONTAL_SCALING, 1f);
-			float verticalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
+			float? horizontalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.HORIZONTAL_SCALING, 1f);
+			float? verticalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
 				, 1f);
 			AffineTransform t = new AffineTransform();
 			if (xObject is PdfFormXObject && width != imageWidth)
@@ -216,7 +216,7 @@ namespace iTextSharp.Layout.Renderer
 			PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
 			canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], fixedXPosition
 				 + deltaX, fixedYPosition);
-			if (bool.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+			if (bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 				.FLUSH_ON_DRAW)))
 			{
 				xObject.Flush();

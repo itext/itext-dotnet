@@ -26,5 +26,9 @@ namespace iTextSharp.IO.Util {
 		        return total;
 		    }
 		}
+
+	    public static String ConvertToString(byte[] bytes, Encoding encoding) {
+	        return encoding.GetString(bytes);
+	    }
 	}
 }

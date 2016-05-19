@@ -483,7 +483,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (HasOutlines())
 			{
 				GetOutlines(false);
-				if (!pagesWithOutlines.IsEmpty())
+				if (pagesWithOutlines.Count > 0)
 				{
 					foreach (PdfOutline outline in pagesWithOutlines[page.GetPdfObject()])
 					{

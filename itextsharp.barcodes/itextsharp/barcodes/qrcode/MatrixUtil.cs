@@ -154,7 +154,7 @@ namespace iTextSharp.Barcodes.Qrcode
 		// with the ByteMatrix initialized all to zero.
 		public static void ClearMatrix(ByteMatrix matrix)
 		{
-			matrix.Clear((byte)-1);
+			matrix.Clear((byte)0xff);
 		}
 
 		// Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
