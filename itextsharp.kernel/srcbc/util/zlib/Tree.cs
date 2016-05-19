@@ -1,6 +1,6 @@
 using System;
 /*
- * $Id: Tree.cs,v 1.2 2008/05/12 15:24:47 psoares33 Exp $
+ * $Id$
  *
 Copyright (c) 2000,2001,2002,2003 ymnk, JCraft,Inc. All rights reserved.
 

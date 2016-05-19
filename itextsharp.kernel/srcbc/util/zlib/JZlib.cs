@@ -1,6 +1,6 @@
 using System;
 /*
- * $Id: JZlib.cs,v 1.3 2011/02/15 05:46:04 bouncy Exp $
+ * $Id$
  *
 Copyright (c) 2000,2001,2002,2003 ymnk, JCraft,Inc. All rights reserved.
 
