@@ -33,12 +33,12 @@ namespace iTextSharp.Test
 
         private void CheckLogMessages(TestDetails testDetails)
         {
-            Object[] attributes = testDetails.Method.GetCustomAttributes(typeof(LogMessage), true);
+            Object[] attributes = testDetails.Method.GetCustomAttributes(typeof(LogMessageAttribute), true);
             if (attributes.Length > 0)
             {
                 for (int i = 0; i < attributes.Length; i++)
                 {
-                    LogMessage logMessage = (LogMessage)attributes[i];
+                    LogMessageAttribute logMessage = (LogMessageAttribute)attributes[i];
                     if (!logMessage.Ignore)
                     {
                         int foundedCount = Contains(logMessage.GetMessageTemplate());
