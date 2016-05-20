@@ -47,8 +47,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// <since>29.06.2006</since>
 	public class XMPIteratorImpl : XMPIterator
 	{
+		private static readonly IList EmptyList = new ArrayList();
+
 		/// <summary>stores the iterator options</summary>
-		private IteratorOptions options;
+		private readonly IteratorOptions options;
 
 		/// <summary>the base namespace of the property path, will be changed during the iteration
 		/// 	</summary>
@@ -61,7 +63,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		protected internal bool skipSubtree = false;
 
 		/// <summary>the node iterator doing the work</summary>
-		private IEnumerator nodeIterator = null;
+		private readonly IEnumerator nodeIterator = null;
 
 		/// <summary>Constructor with optionsl initial values.</summary>
 		/// <remarks>
@@ -82,65 +84,52 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			 options)
 		{
 			// make sure that options is defined at least with defaults
-			this.options = options != null ? options : new IteratorOptions();
+			this.options = options ?? new IteratorOptions();
+
 			// the start node of the iteration depending on the schema and property filter
-			XMPNode startNode = null;
-			String initialPath = null;
-			bool baseSchema = schemaNS != null && schemaNS.Length > 0;
-			bool baseProperty = propPath != null && propPath.Length > 0;
-			if (!baseSchema && !baseProperty)
-			{
+			XmpNode startNode;
+			string initialPath = null;
+			bool baseSchema = !String.IsNullOrEmpty(schemaNS);
+			bool baseProperty = !String.IsNullOrEmpty(propPath);
+
+			if (!baseSchema && !baseProperty) {
 				// complete tree will be iterated
 				startNode = xmp.GetRoot();
 			}
-			else
-			{
-				if (baseSchema && baseProperty)
-				{
-					// Schema and property node provided
-					XMPPath path = XMPPathParser.ExpandXPath(schemaNS, propPath);
-					// base path is the prop path without the property leaf
-					XMPPath basePath = new XMPPath();
-					for (int i = 0; i < path.Size() - 1; i++)
-					{
-						basePath.Add(path.GetSegment(i));
-					}
-					startNode = XMPNodeUtils.FindNode(xmp.GetRoot(), path, false, null);
-					baseNS = schemaNS;
-					initialPath = basePath.ToString();
+			else if (baseSchema && baseProperty) {
+				// Schema and property node provided
+				XMPPath path = XMPPathParser.ExpandXPath(schemaNS, propPath);
+
+				// base path is the prop path without the property leaf
+				XMPPath basePath = new XMPPath();
+				for (int i = 0; i < path.Size() - 1; i++) {
+					basePath.Add(path.GetSegment(i));
 				}
-				else
-				{
-					if (baseSchema && !baseProperty)
-					{
-						// Only Schema provided
-						startNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), schemaNS, false);
-					}
-					else
-					{
-						// !baseSchema  &&  baseProperty
-						// No schema but property provided -> error
-						throw new XMPException("Schema namespace URI is required", XMPError.BADSCHEMA);
-					}
-				}
+
+				startNode = XMPNodeUtils.FindNode(xmp.GetRoot(), path, false, null);
+				this.baseNS = schemaNS;
+				initialPath = basePath.ToString();
 			}
+			else if (baseSchema && !baseProperty) {
+				// Only Schema provided
+				startNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), schemaNS, false);
+			}
+			else // !baseSchema  &&  baseProperty
+			{
+				// No schema but property provided -> error
+				throw new XMPException("Schema namespace URI is required", XMPError.BADSCHEMA);
+			}
+
+
 			// create iterator
-			if (startNode != null)
-			{
-				if (!this.options.IsJustChildren())
-				{
-					nodeIterator = new XMPIteratorImpl.NodeIterator(this, startNode, initialPath, 1);
-				}
-				else
-				{
-					nodeIterator = new XMPIteratorImpl.NodeIteratorChildren(this, startNode, initialPath
-						);
-				}
+			if (startNode != null) {
+				this.nodeIterator = (!this.options.IsJustChildren())
+					? new NodeIterator(this, startNode, initialPath, 1)
+					: new NodeIteratorChildren(this, startNode, initialPath);
 			}
-			else
-			{
+			else {
 				// create null iterator
-				nodeIterator = JavaCollectionsUtil.EmptyIterator();
+				this.nodeIterator = EmptyList.GetEnumerator();
 			}
 		}
 
@@ -172,10 +161,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		/// <seealso cref="System.Collections.IEnumerator{E}.Remove()"/>
-		public virtual void Remove()
-		{
-			throw new NotSupportedException("The XMPIterator does not support remove().");
+		public virtual void Reset() {
+			nodeIterator.Reset();
 		}
 
 		/// <returns>Exposes the options for inner class.</returns>
@@ -202,412 +189,298 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// It first returns the node itself, then recursivly the children and qualifier of the node.
 		/// </remarks>
 		/// <since>29.06.2006</since>
-		private class NodeIterator : IEnumerator
-		{
-			/// <summary>iteration state</summary>
-			protected internal const int ITERATE_NODE = 0;
+		private class NodeIterator : IEnumerator {
+			/// <summary>
+			/// iteration state </summary>
+			private const int ITERATE_NODE = 0;
 
-			/// <summary>iteration state</summary>
-			protected internal const int ITERATE_CHILDREN = 1;
+			/// <summary>
+			/// iteration state </summary>
+			private const int ITERATE_CHILDREN = 1;
 
-			/// <summary>iteration state</summary>
-			protected internal const int ITERATE_QUALIFIER = 2;
+			/// <summary>
+			/// iteration state </summary>
+			private const int ITERATE_QUALIFIER = 2;
 
-			/// <summary>the state of the iteration</summary>
-			private int state = XMPIteratorImpl.NodeIterator.ITERATE_NODE;
+			private static readonly IList EmptyList = new ArrayList();
 
-			/// <summary>the currently visited node</summary>
-			private XMPNode visitedNode;
+			private readonly XMPIteratorImpl outerInstance;
 
-			/// <summary>the recursively accumulated path</summary>
-			private String path;
+			/// <summary>
+			/// the recursively accumulated path </summary>
+			private readonly string path;
 
-			/// <summary>the iterator that goes through the children and qualifier list</summary>
-			private IEnumerator childrenIterator = null;
+			/// <summary>
+			/// the currently visited node </summary>
+			private readonly XMPNode visitedNode;
 
-			/// <summary>index of node with parent, only interesting for arrays</summary>
-			private int index = 0;
+			/// <summary>
+			/// the iterator that goes through the children and qualifier list </summary>
+			private IEnumerator childrenIterator;
 
-			/// <summary>the iterator for each child</summary>
-			private IEnumerator subIterator = JavaCollectionsUtil.EmptyIterator();
+			/// <summary>
+			/// index of node with parent, only interesting for arrays </summary>
+			private int index;
 
-			/// <summary>the cached <code>PropertyInfo</code> to return</summary>
-			private XMPPropertyInfo returnProperty = null;
+			/// <summary>
+			/// the cached <code>PropertyInfo</code> to return </summary>
+			private XMPPropertyInfo returnProperty;
 
-			/// <summary>Default constructor</summary>
-			public NodeIterator(XMPIteratorImpl _enclosing)
-			{
-				this._enclosing = _enclosing;
-			}
+			/// <summary>
+			/// the state of the iteration </summary>
+			private int state = ITERATE_NODE;
 
-			/// <summary>Constructor for the node iterator.</summary>
-			/// <param name="visitedNode">the currently visited node</param>
-			/// <param name="parentPath">the accumulated path of the node</param>
-			/// <param name="index">the index within the parent node (only for arrays)</param>
-			public NodeIterator(XMPIteratorImpl _enclosing, XMPNode visitedNode, String parentPath
-				, int index)
-			{
-				this._enclosing = _enclosing;
-				// EMPTY
+			/// <summary>
+			/// the iterator for each child </summary>
+			private IEnumerator subIterator = EmptyList.GetEnumerator();
+
+			/// <summary>
+			/// Constructor for the node iterator. </summary>
+			/// <param name="visitedNode"> the currently visited node </param>
+			/// <param name="parentPath"> the accumulated path of the node </param>
+			/// <param name="index"> the index within the parent node (only for arrays) </param>
+			public NodeIterator(XMPIteratorImpl outerInstance, XMPNode visitedNode, string parentPath, int index) {
+				this.outerInstance = outerInstance;
 				this.visitedNode = visitedNode;
-				this.state = XMPIteratorImpl.NodeIterator.ITERATE_NODE;
-				if (visitedNode.GetOptions().IsSchemaNode())
-				{
-					this._enclosing.SetBaseNS(visitedNode.GetName());
+				this.state = ITERATE_NODE;
+				if (visitedNode.GetOptions().IsSchemaNode()) {
+					outerInstance.SetBaseNS(visitedNode.GetName());
 				}
+
 				// for all but the root node and schema nodes
-				this.path = this.AccumulatePath(visitedNode, parentPath, index);
+				this.path = AccumulatePath(visitedNode, parentPath, index);
 			}
 
-			/// <summary>Prepares the next node to return if not already done.</summary>
-			/// <seealso cref="System.Collections.IEnumerator{E}.MoveNext()"/>
-			public override bool MoveNext()
-			{
-				if (this.returnProperty != null)
-				{
-					// hasNext has been called before
-					return true;
-				}
+			/// <returns> the childrenIterator </returns>
+			protected internal virtual IEnumerator GetChildrenIterator() {
+				return childrenIterator;
+			}
+
+
+			/// <returns> Returns the returnProperty. </returns>
+			protected internal virtual XMPPropertyInfo GetReturnProperty() {
+				return returnProperty;
+			}
+
+			public virtual Object Current {
+				get { return returnProperty; }
+			}
+
+			/// <summary>
+			/// Prepares the next node to return if not already done. 
+			/// </summary>
+			/// <seealso cref= Iterator#hasNext() </seealso>
+			public virtual bool MoveNext() {
 				// find next node
-				if (this.state == XMPIteratorImpl.NodeIterator.ITERATE_NODE)
-				{
-					return this.ReportNode();
+				if (state == ITERATE_NODE) {
+					return ReportNode();
 				}
-				else
-				{
-					if (this.state == XMPIteratorImpl.NodeIterator.ITERATE_CHILDREN)
-					{
-						if (this.childrenIterator == null)
-						{
-							this.childrenIterator = this.visitedNode.IterateChildren();
-						}
-						bool hasNext = this.IterateChildren(this.childrenIterator);
-						if (!hasNext && this.visitedNode.HasQualifier() && !this._enclosing.GetOptions().
-							IsOmitQualifiers())
-						{
-							this.state = XMPIteratorImpl.NodeIterator.ITERATE_QUALIFIER;
-							this.childrenIterator = null;
-							hasNext = this.MoveNext();
-						}
-						return hasNext;
+				if (state == ITERATE_CHILDREN) {
+					if (childrenIterator == null) {
+						childrenIterator = visitedNode.IterateChildren();
 					}
-					else
-					{
-						if (this.childrenIterator == null)
-						{
-							this.childrenIterator = this.visitedNode.IterateQualifier();
-						}
-						return this.IterateChildren(this.childrenIterator);
+
+					bool hasNext = IterateChildren(childrenIterator);
+
+					if (!hasNext && visitedNode.HasQualifier() && !outerInstance.GetOptions().IsOmitQualifiers()) {
+						state = ITERATE_QUALIFIER;
+						childrenIterator = null;
+						hasNext = MoveNext();
 					}
+					return hasNext;
 				}
+				if (childrenIterator == null) {
+					childrenIterator = visitedNode.IterateQualifier();
+				}
+
+				return IterateChildren(childrenIterator);
 			}
 
-			/// <summary>Sets the returnProperty as next item or recurses into <code>hasNext()</code>.
-			/// 	</summary>
-			/// <returns>Returns if there is a next item to return.</returns>
-			protected internal virtual bool ReportNode()
-			{
-				this.state = XMPIteratorImpl.NodeIterator.ITERATE_CHILDREN;
-				if (this.visitedNode.GetParent() != null && (!this._enclosing.GetOptions().IsJustLeafnodes
-					() || !this.visitedNode.HasChildren()))
-				{
-					this.returnProperty = this.CreatePropertyInfo(this.visitedNode, this._enclosing.GetBaseNS
-						(), this.path);
-					return true;
-				}
-				else
-				{
-					return this.MoveNext();
-				}
-			}
-
-			/// <summary>Handles the iteration of the children or qualfier</summary>
-			/// <param name="iterator">an iterator</param>
-			/// <returns>Returns if there are more elements available.</returns>
-			private bool IterateChildren(IEnumerator iterator)
-			{
-				if (this._enclosing.skipSiblings)
-				{
-					// setSkipSiblings(false);
-					this._enclosing.skipSiblings = false;
-					this.subIterator = JavaCollectionsUtil.EmptyIterator();
-				}
-				// create sub iterator for every child,
-				// if its the first child visited or the former child is finished
-				if ((!this.subIterator.MoveNext()) && iterator.MoveNext())
-				{
-					XMPNode child = (XMPNode)iterator.Current;
-					this.index++;
-					this.subIterator = new XMPIteratorImpl.NodeIterator(this, child, this.path, this.
-						index);
-				}
-				if (this.subIterator.MoveNext())
-				{
-					this.returnProperty = (XMPPropertyInfo)this.subIterator.Current;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			/// <summary>Calls hasNext() and returnes the prepared node.</summary>
-			/// <remarks>
-			/// Calls hasNext() and returnes the prepared node. Afterwards its set to null.
-			/// The existance of returnProperty indicates if there is a next node, otherwise
-			/// an exceptio is thrown.
-			/// </remarks>
-			/// <seealso cref="System.Collections.IEnumerator{E}.Current()"/>
-			public override Object Current
-			{
-				get
-				{
-					if (this.MoveNext())
-					{
-						XMPPropertyInfo result = this.returnProperty;
-						this.returnProperty = null;
-						return result;
-					}
-					else
-					{
-						throw new NoSuchElementException("There are no more nodes to return");
-					}
-				}
-			}
-
-			/// <summary>Not supported.</summary>
-			/// <seealso cref="System.Collections.IEnumerator{E}.Remove()"/>
-			public override void Remove()
-			{
+			public virtual void Reset() {
 				throw new NotSupportedException();
 			}
 
-			/// <param name="currNode">the node that will be added to the path.</param>
-			/// <param name="parentPath">the path up to this node.</param>
-			/// <param name="currentIndex">the current array index if an arrey is traversed</param>
-			/// <returns>Returns the updated path.</returns>
-			protected internal virtual String AccumulatePath(XMPNode currNode, String parentPath
-				, int currentIndex)
-			{
+			/// <summary>
+			/// Sets the returnProperty as next item or recurses into <code>hasNext()</code>. </summary>
+			/// <returns> Returns if there is a next item to return.  </returns>
+			protected internal virtual bool ReportNode() {
+				state = ITERATE_CHILDREN;
+				if (visitedNode.GetParent() != null &&
+					(!outerInstance.GetOptions().IsJustLeafnodes() || !visitedNode.HasChildren())) {
+					returnProperty = CreatePropertyInfo(visitedNode, outerInstance.GetBaseNS(), path);
+					return true;
+				}
+				return MoveNext();
+			}
+
+			/// <summary>
+			/// Handles the iteration of the children or qualfier </summary>
+			/// <param name="iterator"> an iterator </param>
+			/// <returns> Returns if there are more elements available. </returns>
+			private bool IterateChildren(IEnumerator iterator) {
+				if (outerInstance.skipSiblings) {
+					// setSkipSiblings(false);
+					outerInstance.skipSiblings = false;
+					subIterator = EmptyList.GetEnumerator();
+				}
+
+				// create sub iterator for every child,
+				// if its the first child visited or the former child is finished 
+				bool subIteratorMoveNext = subIterator.MoveNext();
+				if (!subIteratorMoveNext && iterator.MoveNext()) {
+					XmpNode child = (XmpNode) iterator.Current;
+					index++;
+					subIterator = new NodeIterator(outerInstance, child, path, index);
+				}
+				if (subIteratorMoveNext) {
+					returnProperty = (XMPPropertyInfo) subIterator.Current;
+					return true;
+				}
+				return false;
+			}
+				
+			/// <param name="currNode"> the node that will be added to the path. </param>
+			/// <param name="parentPath"> the path up to this node. </param>
+			/// <param name="currentIndex"> the current array index if an arrey is traversed </param>
+			/// <returns> Returns the updated path. </returns>
+			protected internal virtual String AccumulatePath(XMPNode currNode, string parentPath, int currentIndex) {
 				String separator;
 				String segmentName;
-				if (currNode.GetParent() == null || currNode.GetOptions().IsSchemaNode())
-				{
+				if (currNode.GetParent() == null || currNode.GetOptions().IsSchemaNode()) {
 					return null;
 				}
-				else
-				{
-					if (currNode.GetParent().GetOptions().IsArray())
-					{
-						separator = "";
-						segmentName = "[" + currentIndex.ToString() + "]";
-					}
-					else
-					{
-						separator = "/";
-						segmentName = currNode.GetName();
-					}
+				if (currNode.GetParent().GetOptions().IsArray()) {
+					separator = "";
+					segmentName = "[" + Convert.ToString(currentIndex) + "]";
 				}
-				if (parentPath == null || parentPath.Length == 0)
-				{
+				else {
+					separator = "/";
+					segmentName = currNode.GetName();
+				}
+
+
+				if (String.IsNullOrEmpty(parentPath)) {
 					return segmentName;
 				}
-				else
-				{
-					if (this._enclosing.GetOptions().IsJustLeafname())
-					{
-						return !segmentName.StartsWith("?") ? segmentName : segmentName.Substring(1);
-					}
-					else
-					{
-						// qualifier
-						return parentPath + separator + segmentName;
-					}
+				if (outerInstance.GetOptions().IsJustLeafname()) {
+					return !segmentName.StartsWith("?") ? segmentName : segmentName.Substring(1); // qualifier
 				}
+				return parentPath + separator + segmentName;
 			}
 
-			/// <summary>Creates a property info object from an <code>XMPNode</code>.</summary>
-			/// <param name="node">an <code>XMPNode</code></param>
-			/// <param name="baseNS">the base namespace to report</param>
-			/// <param name="path">the full property path</param>
-			/// <returns>Returns a <code>XMPProperty</code>-object that serves representation of the node.
-			/// 	</returns>
-			protected internal virtual XMPPropertyInfo CreatePropertyInfo(XMPNode node, String
-				 baseNS, String path)
-			{
+			/// <summary>
+			/// Creates a property info object from an <code>XMPNode</code>. </summary>
+			/// <param name="node"> an <code>XMPNode</code> </param>
+			/// <param name="baseNs"> the base namespace to report </param>
+			/// <param name="path"> the full property path </param>
+			/// <returns> Returns a <code>XMPProperty</code>-object that serves representation of the node. </returns>
+			protected internal virtual XMPPropertyInfo CreatePropertyInfo(XMPNode node, String baseNS, String path) {
 				String value = node.GetOptions().IsSchemaNode() ? null : node.GetValue();
-				return new _XMPPropertyInfo_472(node, baseNS, path, value);
+				return new XmpPropertyInfoImpl(node, baseNS, path, value);
 			}
 
-			private sealed class _XMPPropertyInfo_472 : XMPPropertyInfo
-			{
-				public _XMPPropertyInfo_472(XMPNode node, String baseNS, String path, String value
-					)
-				{
-					this.node = node;
-					this.baseNS = baseNS;
-					this.path = path;
-					this.value = value;
+			private class XMPPropertyInfoImpl : XMPPropertyInfo {
+				
+				private readonly string baseNs;
+				private readonly XMPNode node;
+				private readonly string path;
+				private readonly string value;
+
+				public XMPPropertyInfoImpl(XMPNode node, string baseNs, string path, string value) {
+					node = node;
+					baseNs = baseNs;
+					path = path;
+					value = value;
 				}
 
-				public String GetNamespace()
-				{
-					if (!node.GetOptions().IsSchemaNode())
-					{
+				public virtual string GetNamespace() {
+					if (!node.GetOptions().IsSchemaNode()) {
 						// determine namespace of leaf node
 						QName qname = new QName(node.GetName());
 						return XMPMetaFactory.GetSchemaRegistry().GetNamespaceURI(qname.GetPrefix());
 					}
-					else
-					{
-						return baseNS;
-					}
+					return baseNs;
 				}
 
-				public String GetPath()
-				{
+				public virtual string GetPath() {
 					return path;
 				}
 
-				public String GetValue()
-				{
+				public virtual string GetValue() {
 					return value;
 				}
 
-				public PropertyOptions GetOptions()
-				{
+				public virtual PropertyOptions GetOptions() {
 					return node.GetOptions();
 				}
 
-				public String GetLanguage()
-				{
+				public virtual string GetLanguage() {
 					// the language is not reported
 					return null;
 				}
-
-				private readonly XMPNode node;
-
-				private readonly String baseNS;
-
-				private readonly String path;
-
-				private readonly String value;
 			}
-
-			/// <returns>the childrenIterator</returns>
-			protected internal virtual IEnumerator GetChildrenIterator()
-			{
-				return this.childrenIterator;
-			}
-
-			/// <param name="childrenIterator">the childrenIterator to set</param>
-			protected internal virtual void SetChildrenIterator(IEnumerator childrenIterator)
-			{
-				this.childrenIterator = childrenIterator;
-			}
-
-			/// <returns>Returns the returnProperty.</returns>
-			protected internal virtual XMPPropertyInfo GetReturnProperty()
-			{
-				return this.returnProperty;
-			}
-
-			/// <param name="returnProperty">the returnProperty to set</param>
-			protected internal virtual void SetReturnProperty(XMPPropertyInfo returnProperty)
-			{
-				this.returnProperty = returnProperty;
-			}
-
-			private readonly XMPIteratorImpl _enclosing;
 		}
 
 		/// <summary>
 		/// This iterator is derived from the default <code>NodeIterator</code>,
-		/// and is only used for the option
-		/// <see cref="iTextSharp.Kernel.Xmp.Options.IteratorOptions.JUST_CHILDREN"/>
-		/// .
+		/// and is only used for the option <seealso cref="IteratorOptions.JUST_CHILDREN"/>.
+		/// 
+		/// @since 02.10.2006
 		/// </summary>
-		/// <since>02.10.2006</since>
-		private class NodeIteratorChildren : XMPIteratorImpl.NodeIterator
-		{
-			private String parentPath;
+		private class NodeIteratorChildren : NodeIterator {
+			private readonly IEnumerator childrenIterator;
+			private readonly XMPIteratorImpl outerInstance;
 
-			private IEnumerator childrenIterator;
+			private readonly string parentPath;
+			private int index;
 
-			private int index = 0;
 
-			/// <summary>Constructor</summary>
-			/// <param name="parentNode">the node which children shall be iterated.</param>
-			/// <param name="parentPath">the full path of the former node without the leaf node.</param>
-			public NodeIteratorChildren(XMPIteratorImpl _enclosing, XMPNode parentNode, String
-				 parentPath)
-				: base(_enclosing)
-			{
-				this._enclosing = _enclosing;
-				if (parentNode.GetOptions().IsSchemaNode())
-				{
-					this._enclosing.SetBaseNS(parentNode.GetName());
+			/// <summary>
+			/// Constructor </summary>
+			/// <param name="parentNode"> the node which children shall be iterated. </param>
+			/// <param name="parentPath"> the full path of the former node without the leaf node. </param>
+			public NodeIteratorChildren(XMPIteratorImpl outerInstance, XMPNode parentNode, string parentPath)
+				: base(outerInstance, parentNode, parentPath, 0) {
+				this.outerInstance = outerInstance;
+				if (parentNode.GetOptions().IsSchemaNode()) {
+					outerInstance.BaseNs = parentNode.GetName();
 				}
-				this.parentPath = this.AccumulatePath(parentNode, parentPath, 1);
+				this.parentPath = AccumulatePath(parentNode, parentPath, 1);
 				this.childrenIterator = parentNode.IterateChildren();
 			}
 
-			/// <summary>Prepares the next node to return if not already done.</summary>
-			/// <seealso cref="System.Collections.IEnumerator{E}.MoveNext()"/>
-			public override bool MoveNext()
-			{
-				if (this.GetReturnProperty() != null)
-				{
-					// hasNext has been called before
-					return true;
-				}
-				else
-				{
-					if (this._enclosing.skipSiblings)
-					{
-						return false;
-					}
-					else
-					{
-						if (this.childrenIterator.MoveNext())
-						{
-							XMPNode child = (XMPNode)this.childrenIterator.Current;
-							this.index++;
-							String path = null;
-							if (child.GetOptions().IsSchemaNode())
-							{
-								this._enclosing.SetBaseNS(child.GetName());
-							}
-							else
-							{
-								if (child.GetParent() != null)
-								{
-									// for all but the root node and schema nodes
-									path = this.AccumulatePath(child, this.parentPath, this.index);
-								}
-							}
-							// report next property, skip not-leaf nodes in case options is set
-							if (!this._enclosing.GetOptions().IsJustLeafnodes() || !child.HasChildren())
-							{
-								this.SetReturnProperty(this.CreatePropertyInfo(child, this._enclosing.GetBaseNS()
-									, path));
-								return true;
-							}
-							else
-							{
-								return this.MoveNext();
-							}
-						}
-						else
-						{
-							return false;
-						}
-					}
-				}
-			}
 
-			private readonly XMPIteratorImpl _enclosing;
+			/// <summary>
+			/// Prepares the next node to return if not already done. 
+			/// </summary>
+			/// <seealso cref= Iterator#hasNext() </seealso>
+			public override bool MoveNext() {
+				if (outerInstance.skipSiblings) {
+					return false;
+				}
+				if (childrenIterator.MoveNext()) {
+					XmpNode child = (XmpNode) childrenIterator.Current;
+					if (child != null) {
+						index++;
+						string path = null;
+						if (child.GetOptions().IsSchemaNode()) {
+							outerInstance.SetBaseNS(child.GetName());
+						}
+						else if (child.GetParent() != null) {
+							// for all but the root node and schema nodes
+							path = AccumulatePath(child, parentPath, index);
+						}
+
+						// report next property, skip not-leaf nodes in case options is set
+						if (!outerInstance.GetOptions().IsJustLeafnodes() || !child.HasChildren()) {
+							ReturnProperty = CreatePropertyInfo(child, outerInstance.GetBaseNS(), path);
+							return true;
+						}
+					}
+					return MoveNext();
+				}
+				return false;
+			}
 		}
 	}
 }
