@@ -437,7 +437,7 @@ namespace iTextSharp.Forms.Xfa
 		/// </exception>
 		public virtual void FillXfaForm(File file, bool readOnly)
 		{
-			FillXfaForm(new FileStream(file), readOnly);
+			FillXfaForm(new FileStream(file, FileMode.Open), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>

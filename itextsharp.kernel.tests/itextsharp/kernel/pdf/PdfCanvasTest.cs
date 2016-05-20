@@ -40,7 +40,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvas()
 		{
 			String author = "Alexander Chingarev";
@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvasWithDrawing()
 		{
 			String fileName = "simpleCanvasWithDrawing.pdf";
@@ -117,7 +117,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvasWithText()
 		{
 			String fileName = "simpleCanvasWithText.pdf";
@@ -167,7 +167,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvasWithPageFlush()
 		{
 			String author = "Alexander Chingarev";
@@ -202,7 +202,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvasWithFullCompression()
 		{
 			String author = "Alexander Chingarev";
@@ -237,7 +237,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression()
 		{
 			String author = "Alexander Chingarev";
@@ -273,7 +273,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create1000PagesDocument()
 		{
 			int pageCount = 1000;
@@ -318,7 +318,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create100PagesDocument()
 		{
 			int pageCount = 100;
@@ -363,7 +363,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create10PagesDocument()
 		{
 			int pageCount = 10;
@@ -408,7 +408,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create1000PagesDocumentWithText()
 		{
 			int pageCount = 1000;
@@ -452,7 +452,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create1000PagesDocumentWithFullCompression()
 		{
 			int pageCount = 1000;
@@ -498,7 +498,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create100PagesDocumentWithFullCompression()
 		{
 			int pageCount = 100;
@@ -544,7 +544,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create197PagesDocumentWithFullCompression()
 		{
 			int pageCount = 197;
@@ -590,7 +590,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Create10PagesDocumentWithFullCompression()
 		{
 			int pageCount = 10;
@@ -637,7 +637,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest1()
 		{
 			String file1 = destinationFolder + "copyPages1_1.pdf";
@@ -684,7 +684,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest2()
 		{
 			String file1 = destinationFolder + "copyPages2_1.pdf";
@@ -737,7 +737,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest3()
 		{
 			String file1 = destinationFolder + "copyPages3_1.pdf";
@@ -790,7 +790,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest4()
 		{
 			String file1 = destinationFolder + "copyPages4_1.pdf";
@@ -841,7 +841,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest5()
 		{
 			int documentCount = 3;
@@ -904,7 +904,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesTest6()
 		{
 			String file1 = destinationFolder + "copyPages6_1.pdf";
@@ -974,7 +974,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MarkedContentTest1()
 		{
 			String message = "";
@@ -1000,7 +1000,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MarkedContentTest2()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "markedContentTest2.pdf"
@@ -1046,7 +1046,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GraphicsStateTest1()
 		{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1069,7 +1069,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest01()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest01.pdf"
@@ -1094,7 +1094,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest02()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest02.pdf"
@@ -1136,7 +1136,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest03()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest03.pdf"
@@ -1169,7 +1169,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest04()
 		{
 			//Create document with 3 colored rectangles in memory.
@@ -1210,7 +1210,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest05()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest05.pdf"
@@ -1245,7 +1245,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest06()
 		{
 			byte[] bytes = new byte[256 * 3];
@@ -1276,7 +1276,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest07()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest07.pdf"
@@ -1304,7 +1304,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ColorTest08()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest08.pdf"
@@ -1344,7 +1344,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void WmfImageTest01()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest01.pdf"
@@ -1363,7 +1363,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void WmfImageTest02()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest02.pdf"
@@ -1382,7 +1382,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void WmfImageTest03()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest03.pdf"
@@ -1401,7 +1401,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void WmfImageTest04()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest04.pdf"
@@ -1420,7 +1420,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GifImageTest01()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest01.pdf"
@@ -1439,7 +1439,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GifImageTest02()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest02.pdf"
@@ -1466,7 +1466,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GifImageTest03()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest03.pdf"
@@ -1494,7 +1494,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.ExpectedException(typeof(iTextSharp.IO.IOException))]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GifImageTest04()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest03.pdf"
@@ -1517,7 +1517,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GifImageTest05()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest05.pdf"
@@ -1594,7 +1594,7 @@ namespace iTextSharp.Kernel.Pdf
 		}*/
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
@@ -1628,7 +1628,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
 		[LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
@@ -1676,7 +1676,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AwtImagesTest01()
 		{
 			String filename = "awtImagesTest01.pdf";

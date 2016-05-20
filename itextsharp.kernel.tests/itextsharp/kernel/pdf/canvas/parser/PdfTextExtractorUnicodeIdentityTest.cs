@@ -13,7 +13,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/PdfTextExtractorUnicodeIdentityTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "user10.pdf"

@@ -33,7 +33,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextInParagraphTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -54,7 +54,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ImageTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -72,7 +72,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void DivTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -97,7 +97,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -128,7 +128,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -150,7 +150,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest03()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -180,7 +180,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest04()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -212,7 +212,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest05()
 		{
 			String outFileName = destinationFolder + "tableTest05.pdf";
@@ -247,7 +247,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TableTest06()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -283,7 +283,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -303,7 +303,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ArtifactTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -327,7 +327,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ArtifactTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -358,7 +358,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -392,7 +392,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
@@ -434,7 +434,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FlushingTest03()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder

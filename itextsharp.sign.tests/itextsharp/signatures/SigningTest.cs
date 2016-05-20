@@ -5,6 +5,7 @@ using Java.IO;
 using Java.Security;
 using NUnit.Framework;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Jce.Provider;
 using iTextSharp.Kernel.Geom;
@@ -168,7 +169,7 @@ namespace iTextSharp.Signatures
 			signer.SetFieldName(name);
 			// Creating the signature
 			IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
-			IExternalDigest digest = new BouncyCastleDigest();
+			IExternalDigest digest = new DigestUtilities();
 			signer.SignDetached(digest, pks, chain, null, null, null, 0, subfilter);
 		}
 	}

@@ -31,7 +31,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void OpenSimpleDoc()
 		{
 			String filename = destinationFolder + "openSimpleDoc.pdf";
@@ -65,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void OpenSimpleDocWithFullCompression()
 		{
 			String filename = sourceFolder + "simpleCanvasWithFullCompression.pdf";
@@ -94,7 +94,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void OpenDocWithFlateFilter()
 		{
 			String filename = sourceFolder + "100PagesDocumentWithFlateFilter.pdf";
@@ -118,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PrimitivesRead()
 		{
 			String filename = destinationFolder + "primitivesRead.pdf";
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void IndirectsChain1()
 		{
 			String filename = destinationFolder + "indirectsChain1.pdf";
@@ -208,7 +208,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void IndirectsChain2()
 		{
 			String filename = destinationFolder + "indirectsChain2.pdf";
@@ -266,7 +266,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void IndirectsChain3()
 		{
 			String filename = sourceFolder + "indirectsChain3.pdf";
@@ -299,7 +299,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void InvalidIndirect()
 		{
 			String filename = sourceFolder + "invalidIndirect.pdf";
@@ -331,7 +331,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest01()
 		{
 			String filename = sourceFolder + "1000PagesDocument.pdf";
@@ -378,7 +378,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest02()
 		{
 			String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
@@ -419,7 +419,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest03()
 		{
 			String filename = sourceFolder + "10PagesDocumentWithLeafs.pdf";
@@ -462,7 +462,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest04()
 		{
 			String filename = sourceFolder + "PagesDocument.pdf";
@@ -505,7 +505,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest05()
 		{
 			String filename = sourceFolder + "PagesDocument05.pdf";
@@ -548,7 +548,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest06()
 		{
 			String filename = sourceFolder + "PagesDocument06.pdf";
@@ -586,7 +586,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest07()
 		{
 			String filename = sourceFolder + "PagesDocument07.pdf";
@@ -612,7 +612,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest08()
 		{
 			String filename = sourceFolder + "PagesDocument08.pdf";
@@ -638,7 +638,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest09()
 		{
 			String filename = sourceFolder + "PagesDocument09.pdf";
@@ -662,7 +662,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PagesTest10()
 		{
 			String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
@@ -700,7 +700,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void CorrectSimpleDoc1()
 		{
@@ -717,7 +717,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CorrectSimpleDoc2()
 		{
 			String filename = sourceFolder + "correctSimpleDoc2.pdf";
@@ -733,7 +733,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void CorrectSimpleDoc3()
 		{
@@ -750,7 +750,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[Ignore]
 		public virtual void CorrectSimpleDoc4()
 		{
@@ -768,7 +768,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest01()
 		{
@@ -790,7 +790,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest02()
 		{
 			String filename = sourceFolder + "CompressionShift1.pdf";
@@ -813,7 +813,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest03()
 		{
 			String filename = sourceFolder + "CompressionShift2.pdf";
@@ -836,7 +836,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest04()
 		{
 			String filename = sourceFolder + "CompressionWrongObjStm.pdf";
@@ -855,7 +855,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest05()
 		{
@@ -875,7 +875,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest06()
 		{
 			String filename = sourceFolder + "InvalidOffsets.pdf";
@@ -896,7 +896,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest07()
 		{
 			String filename = sourceFolder + "XRefSectionWithFreeReferences1.pdf";
@@ -915,7 +915,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest08()
 		{
@@ -940,7 +940,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest09()
 		{
@@ -965,7 +965,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest10()
 		{
 			String filename = sourceFolder + "XRefSectionWithFreeReferences4.pdf";
@@ -991,7 +991,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest11()
 		{
@@ -1013,7 +1013,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest12()
 		{
@@ -1035,7 +1035,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
 		public virtual void FixPdfTest13()
 		{
@@ -1088,7 +1088,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
 		public virtual void FixPdfTest14()
 		{
@@ -1108,7 +1108,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest15()
 		{
@@ -1130,7 +1130,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FixPdfTest16()
 		{
 			String filename = sourceFolder + "XrefWithInvalidOffsets.pdf";
@@ -1152,7 +1152,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void FixPdfTest17()
 		{
@@ -1174,7 +1174,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AppendModeWith1000Pages()
 		{
 			String filename = sourceFolder + "1000PagesDocumentAppended.pdf";
@@ -1202,7 +1202,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AppendModeWith1000PagesWithCompression()
 		{
 			String filename = sourceFolder + "1000PagesDocumentWithFullCompressionAppended.pdf";
@@ -1230,7 +1230,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AppendModeWith10Pages()
 		{
 			String filename = sourceFolder + "10PagesDocumentAppended.pdf";
@@ -1258,7 +1258,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AppendModeWith10PagesWithCompression()
 		{
 			String filename = sourceFolder + "10PagesDocumentWithFullCompressionAppended.pdf";
@@ -1286,7 +1286,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void AppendModeWith10PagesFix1()
 		{
@@ -1316,7 +1316,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void AppendModeWith10PagesFix2()
 		{
@@ -1347,7 +1347,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection1()
 		{
 			lock (this)
@@ -1372,7 +1372,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection2()
 		{
 			lock (this)
@@ -1393,7 +1393,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection3()
 		{
 			lock (this)
@@ -1414,7 +1414,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection4()
 		{
 			lock (this)
@@ -1435,7 +1435,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection5()
 		{
 			lock (this)
@@ -1456,7 +1456,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection6()
 		{
 			lock (this)
@@ -1477,7 +1477,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection7()
 		{
 			lock (this)
@@ -1498,7 +1498,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection8()
 		{
 			lock (this)
@@ -1519,7 +1519,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Timeout(1000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void StreamLengthCorrection9()
 		{
 			lock (this)
@@ -1544,7 +1544,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FreeReferencesTest()
 		{
 			String filename = sourceFolder + "freeReferences.pdf";
@@ -1558,7 +1558,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PdfVersionTest()
 		{
 			String filename = sourceFolder + "hello.pdf";
@@ -1570,7 +1570,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ZeroUpdateTest()
 		{
 			String filename = sourceFolder + "stationery.pdf";
@@ -1591,7 +1591,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void IncrementalUpdateWithOnlyZeroObjectUpdate()
 		{
 			String filename = sourceFolder + "pdfReferenceUpdated.pdf";

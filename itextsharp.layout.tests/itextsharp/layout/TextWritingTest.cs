@@ -26,7 +26,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextRiseTest01()
 		{
 			// CountryChunks example
@@ -52,7 +52,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextRenderingModeTest01()
 		{
 			String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
@@ -79,7 +79,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LeadingTest01()
 		{
 			String outFileName = destinationFolder + "leadingTest01.pdf";
@@ -101,7 +101,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FirstLineIndentTest01()
 		{
 			String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
@@ -140,7 +140,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CharSpacingTest01()
 		{
 			String outFileName = destinationFolder + "charSpacingTest01.pdf";
@@ -165,7 +165,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void WordSpacingTest01()
 		{
 			String outFileName = destinationFolder + "wordSpacingTest01.pdf";
@@ -192,7 +192,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FontStyleSimulationTest01()
 		{
 			String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";

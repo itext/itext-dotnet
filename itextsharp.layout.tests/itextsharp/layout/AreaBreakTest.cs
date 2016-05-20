@@ -24,7 +24,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PageBreakTest1()
 		{
 			String outFileName = destinationFolder + "pageBreak1.pdf";
@@ -40,7 +40,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PageBreakTest2()
 		{
 			String outFileName = destinationFolder + "pageBreak2.pdf";
@@ -57,7 +57,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PageBreakTest03()
 		{
 			String outFileName = destinationFolder + "pageBreak3.pdf";
@@ -76,7 +76,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LastPageAreaBreakTest()
 		{
 			String inputFileName = sourceFolder + "input.pdf";

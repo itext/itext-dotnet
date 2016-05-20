@@ -882,7 +882,7 @@ namespace iTextSharp.Kernel.Font
 			{
 				int m1 = o1[0];
 				int m2 = o2[0];
-				return iTextSharp.IO.Util.JavaUtil.IntegerCompare(m1, m2);
+				return int.CompareTo(m1, m2);
 			}
 		}
 	}

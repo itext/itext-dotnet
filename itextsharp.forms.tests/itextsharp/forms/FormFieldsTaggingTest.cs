@@ -26,7 +26,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest01()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms01.pdf";
@@ -45,7 +45,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest02()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms02.pdf";
@@ -69,7 +69,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest03()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms03.pdf";
@@ -87,7 +87,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest04()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms04.pdf";
@@ -106,7 +106,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest05()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms05.pdf";
@@ -125,7 +125,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest06()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms06.pdf";
@@ -145,7 +145,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFieldTaggingTest07()
 		{
 			String outFileName = destinationFolder + "taggedPdfWithForms07.pdf";

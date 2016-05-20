@@ -218,16 +218,9 @@ namespace iTextSharp.Layout
 				throw new InvalidOperationException("Operation not supported with immediate flush"
 					);
 			}
-			try
+			while (pdfDocument.GetNumberOfPages() > 0)
 			{
-				while (pdfDocument.GetNumberOfPages() > 0)
-				{
-					pdfDocument.RemovePage(pdfDocument.GetNumberOfPages());
-				}
-			}
-			catch (Exception exc)
-			{
-				throw new Exception(exc);
+				pdfDocument.RemovePage(pdfDocument.GetNumberOfPages());
 			}
 			rootRenderer = new DocumentRenderer(this, immediateFlush);
 			foreach (IElement element in childElements)

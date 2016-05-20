@@ -24,7 +24,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LinkTest01()
 		{
 			String outFileName = destinationFolder + "linkTest01.pdf";
@@ -43,7 +43,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LinkTest02()
 		{
 			String outFileName = destinationFolder + "linkTest02.pdf";

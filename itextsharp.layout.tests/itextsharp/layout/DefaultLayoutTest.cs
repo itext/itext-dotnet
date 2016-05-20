@@ -26,7 +26,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MultipleAdditionsOfSameModelElementTest()
 		{
 			String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
@@ -44,7 +44,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void RendererTest01()
 		{
 			String outFileName = destinationFolder + "rendererTest01.pdf";
@@ -63,7 +63,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
 		public virtual void EmptyParagraphsTest01()
 		{
@@ -90,7 +90,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EmptyParagraphsTest02()
 		{
 			String outFileName = destinationFolder + "emptyParagraphsTest02.pdf";

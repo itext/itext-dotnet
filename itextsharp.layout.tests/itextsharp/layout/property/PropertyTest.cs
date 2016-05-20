@@ -9,7 +9,7 @@ namespace iTextSharp.Layout.Property
 	public class PropertyTest : ExtendedITextTest
 	{
 		/// <exception cref="System.MemberAccessException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void PropertyUniquenessTest()
 		{
 			ICollection<int?> fieldValues = new HashSet<int?>();

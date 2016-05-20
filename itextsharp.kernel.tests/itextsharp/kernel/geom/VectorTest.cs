@@ -5,7 +5,7 @@ namespace iTextSharp.Kernel.Geom
 {
 	public class VectorTest : ExtendedITextTest
 	{
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestCrossVector()
 		{
 			Vector v = new Vector(2, 3, 4);

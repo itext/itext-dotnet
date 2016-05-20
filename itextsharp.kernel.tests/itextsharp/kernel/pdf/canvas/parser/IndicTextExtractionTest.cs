@@ -13,7 +13,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/IndicTextExtractionTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"
@@ -51,7 +51,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test02()
 		{
 			String expectedText = "\u0926\u0947\u0935\u0928\u093E\u0917\u0930\u0940 \u090F\u0915 \u0932\u093F\u092A\u093F \u0939\u0948 \u091C\u093F\u0938\u092E\u0947\u0902 \u0905\u0928\u0947\u0915 \u092D\u093E\u0930\u0924\u0940\u092F \u092D\u093E\u0937\u093E\u090F\u0901 \u0924\u0925\u093E \u0915\u0941\u091B \u0935\u093F\u0926\u0947\u0936\u0940 \u092D\u093E\u0937\u093E\u090F\u0902 \u0932\u093F\u0916\u0940\u0902 \u091C\u093E\u0924\u0940 \u0939\u0948\u0902\u0964 \u0926\u0947\u0935\u0928\u093E\u0917\u0930\u0940 \u092C\u093E\u092F\u0947\u0902 \u0938\u0947 \u0926\u093E\u092F\u0947\u0902 \u0932\u093F\u0916\u0940"

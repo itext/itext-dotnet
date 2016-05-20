@@ -6,7 +6,7 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNameTest : ITextTest
 	{
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void SpecialCharactersTest()
 		{
 			String str1 = " %()<>";

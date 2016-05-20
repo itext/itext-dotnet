@@ -23,7 +23,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateEmptyDocumentWithXmp()
 		{
 			String filename = "emptyDocumentWithXmp.pdf";
@@ -48,7 +48,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateEmptyDocumentWithAbcXmp()
 		{
 			MemoryStream fos = new MemoryStream();
@@ -69,7 +69,7 @@ namespace iTextSharp.Kernel.Pdf
 			reader.Close();
 		}
 
-		[NUnit.Framework.AfterClass]
+		[AfterClass]
 		public static void AfterClass()
 		{
 			TimeZone.SetDefault(CURRENT_USER_TIME_ZONE);

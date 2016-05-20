@@ -283,7 +283,7 @@ namespace iTextSharp.IO.Codec
 		}
 
 		// indicate length of dat unpacked
-		public virtual void Dump(TextWriter output)
+		public virtual void Dump(StreamWriter output)
 		{
 			int i;
 			for (i = 258; i < numStrings_; ++i)

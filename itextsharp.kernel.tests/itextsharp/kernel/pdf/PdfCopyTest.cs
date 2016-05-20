@@ -23,7 +23,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		[LogMessage(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
 		public virtual void CopySignedDocuments()
@@ -48,7 +48,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Copying1()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copying1_1.pdf"
@@ -86,7 +86,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Copying2()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copying2_1.pdf"
@@ -131,7 +131,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Copying3()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "copying3_1.pdf", 
@@ -186,7 +186,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void CopyDocumentsWithFormFieldsTest()
 		{

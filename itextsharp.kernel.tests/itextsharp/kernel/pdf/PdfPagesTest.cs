@@ -27,7 +27,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void SimplePagesTest()
 		{
 			String filename = "simplePagesTest.pdf";
@@ -69,7 +69,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        verifyPagesOrder(destinationFolder + filename, pageCount);
 		//    }
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ReversePagesTest()
 		{
 			String filename = "reversePagesTest.pdf";
@@ -90,7 +90,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void RandomObjectPagesTest()
 		{
 			String filename = "randomObjectPagesTest.pdf";
@@ -138,7 +138,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void RandomNumberPagesTest()
 		{
 			String filename = "randomNumberPagesTest.pdf";
@@ -187,7 +187,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
 		public virtual void InsertFlushedPageTest()
 		{
@@ -213,7 +213,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
 		public virtual void AddFlushedPageTest()
 		{
@@ -239,7 +239,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
 		public virtual void RemoveFlushedPage()
 		{
@@ -340,7 +340,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        Assert.assertEquals(2, fontCount);
 		//    }
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void GetPageByDictionary()
 		{
 			String filename = sourceFolder + "1000PagesDocument.pdf";
@@ -360,7 +360,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void RemovePageWithFormFieldsTest()
 		{
 			String filename = sourceFolder + "docWithFields.pdf";

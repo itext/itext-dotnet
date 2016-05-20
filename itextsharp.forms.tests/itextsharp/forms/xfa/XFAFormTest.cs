@@ -24,7 +24,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateEmptyXFAFormTest01()
 		{
 			String outFileName = destinationFolder + "createEmptyXFAFormTest01.pdf";
@@ -41,7 +41,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateEmptyXFAFormTest02()
 		{
 			String outFileName = destinationFolder + "createEmptyXFAFormTest02.pdf";
@@ -58,7 +58,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateXFAFormTest()
 		{
 			String outFileName = destinationFolder + "createXFAFormTest.pdf";

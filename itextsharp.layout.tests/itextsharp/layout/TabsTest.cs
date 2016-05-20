@@ -47,7 +47,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void DefaultTabsTest()
 		{
 			String outFileName = destinationFolder + "defaultTabTest.pdf";
@@ -73,7 +73,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void SimpleTabStopsTest()
 		{
 			String fileName = "simpleTabStopsTest.pdf";
@@ -129,7 +129,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void AnchorTabStopsTest()
 		{
 			String fileName = "anchorTabStopsTest.pdf";
@@ -157,7 +157,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void SeveralTabsInRowTest()
 		{
 			String fileName = "severalTabsInRowTest.pdf";
@@ -198,7 +198,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void OutOfPageBoundsTest()
 		{
 			String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";

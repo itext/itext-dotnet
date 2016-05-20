@@ -26,7 +26,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestInStamperMode1()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 
@@ -40,7 +40,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestInStamperMode2()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 

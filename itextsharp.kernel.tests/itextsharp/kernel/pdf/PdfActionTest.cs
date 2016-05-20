@@ -19,7 +19,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ActionTest01()
 		{
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest01.pdf"
@@ -32,7 +32,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ActionTest02()
 		{
 			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest02.pdf"

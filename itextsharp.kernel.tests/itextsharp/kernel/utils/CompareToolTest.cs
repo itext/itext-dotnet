@@ -10,7 +10,7 @@ namespace iTextSharp.Kernel.Utils
 
 		public const String destinationFolder = "test/itextsharp/kernel/utils/CompareToolTest/";
 
-		[NUnit.Framework.SetUp]
+		[SetUp]
 		public virtual void SetUp()
 		{
 			File dest = new File(destinationFolder);

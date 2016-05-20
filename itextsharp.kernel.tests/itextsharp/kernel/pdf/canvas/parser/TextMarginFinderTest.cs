@@ -12,7 +12,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test()
 		{
 			TextMarginFinder finder = new TextMarginFinder();

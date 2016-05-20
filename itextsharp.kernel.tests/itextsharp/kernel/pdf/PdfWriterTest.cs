@@ -20,7 +20,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateEmptyDocument()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "emptyDocument.pdf"
@@ -47,7 +47,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void UseObjectForMultipleTimes1()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes1.pdf"
@@ -67,7 +67,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void UseObjectForMultipleTimes2()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes2.pdf"
@@ -88,7 +88,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void UseObjectForMultipleTimes3()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes3.pdf"
@@ -109,7 +109,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void UseObjectForMultipleTimes4()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "useObjectForMultipleTimes4.pdf"
@@ -154,7 +154,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject1()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject1_1.pdf"
@@ -233,7 +233,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject2()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject2_1.pdf"
@@ -321,7 +321,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Copy objects recursively.</summary>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject3()
 		{
 			{
@@ -374,7 +374,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Copies stream.</summary>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject4()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject4_1.pdf"
@@ -427,7 +427,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Copies page.</summary>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject5()
 		{
 			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copyObject5_1.pdf"
@@ -469,7 +469,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>Copies object with different method overloads.</summary>
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject6()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "copyObject6_1.pdf"
@@ -520,7 +520,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>Attempts to copy from the document that is being written.</summary>
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject7()
 		{
 			String exceptionMessage = null;
@@ -563,7 +563,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>Attempts to copy to copy with null document</summary>
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyObject8()
 		{
 			String exceptionMessage = null;
@@ -596,7 +596,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.ExpectedException(typeof(System.IO.IOException))]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CloseStream1()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "closeStream1.pdf"
@@ -609,7 +609,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CloseStream2()
 		{
 			FileOutputStream fos = new FileOutputStream(destinationFolder + "closeStream2.pdf"
@@ -623,7 +623,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void DirectInIndirectChain()
 		{
 			String filename = destinationFolder + "directInIndirectChain.pdf";
@@ -656,7 +656,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreatePdfStreamByInputStream()
 		{
 			String filename = destinationFolder + "createPdfStreamByInputStream.pdf";

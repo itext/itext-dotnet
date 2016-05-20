@@ -22,7 +22,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void FormFlatteningTest01()
 		{
 			String srcFilename = sourceFolder + "formFlatteningSource.pdf";

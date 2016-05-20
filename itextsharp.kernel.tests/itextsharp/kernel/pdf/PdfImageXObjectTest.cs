@@ -44,42 +44,42 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestMultiStageFilters()
 		{
 			TestFile("multistagefilter1.pdf", 1, "Obj13");
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestAscii85Filters()
 		{
 			TestFile("ASCII85_RunLengthDecode.pdf", 1, "Im9");
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestCcittFilters()
 		{
 			TestFile("ccittfaxdecode.pdf", 1, "background0");
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestFlateDecodeFilters()
 		{
 			TestFile("flatedecode_runlengthdecode.pdf", 1, "Im9");
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestDctDecodeFilters()
 		{
 			TestFile("dctdecode.pdf", 1, "im1");
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Testjbig2Filters()
 		{
 			TestFile("jbig2decode.pdf", 1, "2");

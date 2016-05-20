@@ -22,7 +22,7 @@ namespace iTextSharp.Layout
 
 		/// <summary>Test parsing a document which uses a standard non-embedded font.</summary>
 		/// <exception cref="System.Exception">any exception will cause the test to fail</exception>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestStandardFont()
 		{
 			PdfFont font = PdfFontFactory.CreateFont(FontConstants.TIMES_ROMAN);
@@ -35,7 +35,7 @@ namespace iTextSharp.Layout
 		/// PdfArray in the PDF.
 		/// </summary>
 		/// <exception cref="System.Exception">any exception will cause the test to fail</exception>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestEncodedFont()
 		{
 			PdfFont font = GetTTFont("ISO-8859-1", true);
@@ -48,7 +48,7 @@ namespace iTextSharp.Layout
 		/// PdfArray.
 		/// </summary>
 		/// <exception cref="System.Exception">any exception will cause the test to fail</exception>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestUnicodeFont()
 		{
 			PdfFont font = GetTTFont(PdfEncodings.IDENTITY_H, true);

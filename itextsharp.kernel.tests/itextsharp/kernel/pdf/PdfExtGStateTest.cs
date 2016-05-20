@@ -23,7 +23,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void EgsTest1()
 		{
 			String destinationDocument = destinationFolder + "egsTest1.pdf";

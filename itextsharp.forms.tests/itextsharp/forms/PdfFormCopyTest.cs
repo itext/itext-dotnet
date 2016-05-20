@@ -25,7 +25,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
 		public virtual void CopyFieldsTest01()
 		{
@@ -52,7 +52,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyFieldsTest02()
 		{
 			String srcFilename = sourceFolder + "hello_with_comments.pdf";
@@ -70,7 +70,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyFieldsTest03()
 		{
 			String srcFilename = sourceFolder + "hello2_with_comments.pdf";
@@ -89,7 +89,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Timeout(60000)]
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeFilePerformanceTest()
 		{
 			String srcFilename1 = sourceFolder + "frontpage.pdf";
@@ -113,7 +113,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
 		public virtual void CopyFieldsTest04()
 		{
@@ -134,7 +134,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyFieldsTest05()
 		{
 			String srcFilename = sourceFolder + "srcFile1.pdf";
@@ -151,7 +151,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CopyPagesWithInheritedResources()
 		{
 			String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";

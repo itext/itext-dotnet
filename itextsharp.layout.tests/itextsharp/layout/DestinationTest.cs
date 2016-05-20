@@ -21,7 +21,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void DestinationTest01()
 		{
 			String outFileName = destinationFolder + "destinationTest01.pdf";

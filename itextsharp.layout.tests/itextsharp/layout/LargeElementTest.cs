@@ -23,7 +23,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableTest01()
 		{
 			String testName = "largeTableTest01.pdf";
@@ -57,7 +57,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableTest02()
 		{
 			String testName = "largeTableTest02.pdf";
@@ -85,7 +85,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableWithHeaderFooterTest01A()
 		{
 			String testName = "largeTableWithHeaderFooterTest01A.pdf";
@@ -116,7 +116,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableWithHeaderFooterTest01B()
 		{
 			String testName = "largeTableWithHeaderFooterTest01B.pdf";
@@ -150,7 +150,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableWithHeaderFooterTest02()
 		{
 			String testName = "largeTableWithHeaderFooterTest02.pdf";
@@ -186,7 +186,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableWithHeaderFooterTest03()
 		{
 			String testName = "largeTableWithHeaderFooterTest03.pdf";
@@ -222,7 +222,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void LargeTableWithHeaderFooterTest04()
 		{
 			String testName = "largeTableWithHeaderFooterTest04.pdf";

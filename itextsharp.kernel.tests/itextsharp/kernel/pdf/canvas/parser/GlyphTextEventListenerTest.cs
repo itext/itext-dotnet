@@ -13,7 +13,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/GlyphTextEventListenerTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"
@@ -33,7 +33,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "Sample.pdf"
@@ -45,7 +45,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestWithMultiFilteredRenderListener()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"

@@ -144,8 +144,7 @@ namespace iTextSharp.Kernel.Pdf
 					return -1;
 				}
 			}
-			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length
-				);
+			return int.CompareTo(content.Length, o.content.Length);
 		}
 	}
 }

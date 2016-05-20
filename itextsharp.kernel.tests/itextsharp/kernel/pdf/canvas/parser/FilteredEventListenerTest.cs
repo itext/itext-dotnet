@@ -14,7 +14,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/FilteredEventListenerTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Test()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder
@@ -52,7 +52,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MultipleFiltersForOneRegionTest()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder

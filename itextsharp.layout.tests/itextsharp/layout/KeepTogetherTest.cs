@@ -26,7 +26,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void KeepTogetherParagraphTest01()
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
@@ -49,7 +49,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void KeepTogetherParagraphTest02()
 		{
@@ -77,7 +77,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void KeepTogetherListTest01()
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
@@ -100,7 +100,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void KeepTogetherDivTest01()
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
@@ -126,7 +126,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void KeepTogetherDivTest02()
 		{

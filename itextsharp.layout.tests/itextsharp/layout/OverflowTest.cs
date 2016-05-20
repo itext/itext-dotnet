@@ -25,7 +25,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextOverflowTest01()
 		{
 			String outFileName = destinationFolder + "textOverflowTest01.pdf";
@@ -48,7 +48,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextOverflowTest02()
 		{
 			String outFileName = destinationFolder + "textOverflowTest02.pdf";
@@ -69,7 +69,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextOverflowTest03()
 		{
 			String outFileName = destinationFolder + "textOverflowTest03.pdf";
@@ -90,7 +90,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TextOverflowTest04()
 		{
 			String outFileName = destinationFolder + "textOverflowTest04.pdf";

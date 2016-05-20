@@ -158,14 +158,14 @@ namespace iTextSharp.Forms.Xfa
 		{
 			if (n != null)
 			{
-				IDictionary<String, int> ss = new Dictionary<String, int>();
+				IDictionary<String, int?> ss = new Dictionary<String, int?>();
 				Node n2 = n.GetFirstChild();
 				while (n2 != null)
 				{
 					if (n2.GetNodeType() == Node.ELEMENT_NODE)
 					{
 						String s = EscapeSom(n2.GetLocalName());
-						int i = ss[s];
+						int? i = ss[s];
 						if (i == null)
 						{
 							i = 0;

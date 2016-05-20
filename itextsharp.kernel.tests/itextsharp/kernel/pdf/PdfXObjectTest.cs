@@ -31,7 +31,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateDocumentFromImages1()
 		{
 			String destinationDocument = destinationFolder + "documentFromImages1.pdf";
@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
 		public virtual void CreateDocumentFromImages2()
 		{
@@ -95,7 +95,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreateDocumentWithForms()
 		{
 			String destinationDocument = destinationFolder + "documentWithForms1.pdf";

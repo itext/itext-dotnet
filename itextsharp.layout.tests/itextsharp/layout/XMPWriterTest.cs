@@ -25,7 +25,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void CreatePdfTest()
 		{
 			String fileName = "xmp_metadata.pdf";

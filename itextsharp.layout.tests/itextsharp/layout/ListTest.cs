@@ -26,7 +26,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void NestedListTest01()
 		{
 			String outFileName = destinationFolder + "nestedListTest01.pdf";
@@ -49,7 +49,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListNumberingTest01()
 		{
 			String outFileName = destinationFolder + "listNumberingTest01.pdf";
@@ -83,7 +83,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void DivInListItemTest01()
 		{
 			String outFileName = destinationFolder + "divInListItemTest01.pdf";
@@ -101,7 +101,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListOverflowTest01()
 		{
 			String outFileName = destinationFolder + "listOverflowTest01.pdf";
@@ -124,7 +124,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListOverflowTest02()
 		{
 			String outFileName = destinationFolder + "listOverflowTest02.pdf";
@@ -149,7 +149,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListOverflowTest03()
 		{
 			String outFileName = destinationFolder + "listOverflowTest03.pdf";
@@ -172,7 +172,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListEmptyItemTest01()
 		{
 			String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
@@ -191,7 +191,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ImageInListTest01()
 		{
 			String outFileName = destinationFolder + "imageInListTest01.pdf";
@@ -215,7 +215,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListItemAlignmentTest01()
 		{
 			String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
@@ -237,7 +237,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void ListItemTest01()
 		{
 			String outFileName = destinationFolder + "listItemTest01.pdf";

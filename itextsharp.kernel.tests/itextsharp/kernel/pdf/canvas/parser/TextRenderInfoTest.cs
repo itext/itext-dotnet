@@ -20,7 +20,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		public const int FIRST_ELEMENT_INDEX = 0;
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestCharacterRenderInfos()
 		{
 			PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener
@@ -38,7 +38,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		/// Japanese. TextRenderInfo threw an AIOOBE for some characters.
 		/// </remarks>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestUnicodeEmptyString()
 		{
 			//    @Ignore("Seems to be a problem with decode")
@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void TestType3FontWidth()
 		{
 			String inFile = "type3font_text.pdf";

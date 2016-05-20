@@ -19,7 +19,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		private const String outputPath = "test/itextsharp/kernel/parser/HighlightItemsTest/";
 
-		[NUnit.Framework.SetUp]
+		[SetUp]
 		public virtual void SetUp()
 		{
 			new File(outputPath).Mkdirs();
@@ -27,7 +27,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightPage229()
 		{
 			String input = sourceFolder + "page229.pdf";
@@ -40,7 +40,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightCharactersPage229()
 		{
 			String input = sourceFolder + "page229.pdf";
@@ -53,7 +53,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightIsoTc171()
 		{
 			String input = sourceFolder + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
@@ -66,7 +66,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightCharactersIsoTc171()
 		{
 			String input = sourceFolder + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
@@ -79,7 +79,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightHeaderFooter()
 		{
 			String input = sourceFolder + "HeaderFooter.pdf";
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightCharactersHeaderFooter()
 		{
 			String input = sourceFolder + "HeaderFooter.pdf";
@@ -105,7 +105,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightReferencePage2Test()
 		{
 			String input = sourceFolder + "reference_page2.pdf";
@@ -118,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightReferencePage832Test()
 		{
 			String input = sourceFolder + "reference_page832.pdf";
@@ -131,7 +131,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void HighlightReferencePage604Test()
 		{
 			String input = sourceFolder + "reference_page604.pdf";

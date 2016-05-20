@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
@@ -15,7 +16,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		public const String sourceFolder = "../../resources/itextsharp/kernel/parser/PdfCanvasProcessorTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void ContentStreamProcessorTest()
 		{

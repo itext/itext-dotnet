@@ -1927,7 +1927,7 @@ namespace iTextSharp.Forms.Fields
 		/// 2 Right-justified
 		/// </summary>
 		/// <returns>the current justification attribute</returns>
-		public virtual int GetJustification()
+		public virtual int? GetJustification()
 		{
 			return GetPdfObject().GetAsInt(PdfName.Q);
 		}
@@ -2921,7 +2921,7 @@ namespace iTextSharp.Forms.Fields
 			{
 				paragraph.SetFontColor(color);
 			}
-			int justification = GetJustification();
+			int? justification = GetJustification();
 			if (justification == null)
 			{
 				justification = 0;
@@ -2973,7 +2973,7 @@ namespace iTextSharp.Forms.Fields
 				(), new Rectangle(3, 0, Math.Max(0, width - 6), Math.Max(0, height - 2)));
 			for (int index = 0; index < strings.Count; index++)
 			{
-				bool isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+				bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 					.FULL);
 				if (isFull != null && isFull)
 				{

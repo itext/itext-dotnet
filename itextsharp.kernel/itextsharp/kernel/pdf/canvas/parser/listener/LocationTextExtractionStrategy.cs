@@ -534,19 +534,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 					return 0;
 				}
 				int result;
-				result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(OrientationMagnitude(), other
-					.OrientationMagnitude());
+				result = int.CompareTo(OrientationMagnitude(), other.OrientationMagnitude());
 				if (result != 0)
 				{
 					return result;
 				}
-				result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular
-					());
+				result = int.CompareTo(DistPerpendicular(), other.DistPerpendicular());
 				if (result != 0)
 				{
 					return result;
 				}
-				return float?.Compare(DistParallelStart(), other.DistParallelStart());
+				return float.CompareTo(DistParallelStart(), other.DistParallelStart());
 			}
 		}
 	}

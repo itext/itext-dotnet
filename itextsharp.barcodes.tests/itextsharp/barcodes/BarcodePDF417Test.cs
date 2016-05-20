@@ -22,7 +22,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Barcode01Test()
 		{
 			String filename = "barcode417_01.pdf";
@@ -43,7 +43,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Barcode02Test()
 		{
 			String filename = "barcode417_02.pdf";

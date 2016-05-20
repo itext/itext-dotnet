@@ -24,7 +24,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MergeDocumentTest01()
 		{
 			String filename = sourceFolder + "courierTest.pdf";
@@ -56,7 +56,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void MergeDocumentTest02()
 		{
 			String filename = sourceFolder + "doc1.pdf";
@@ -87,7 +87,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest03()
 		{
@@ -123,7 +123,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[NUnit.Framework.Test]
+		[Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest04()
 		{

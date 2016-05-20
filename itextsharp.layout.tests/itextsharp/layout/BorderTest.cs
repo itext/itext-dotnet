@@ -32,7 +32,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void SimpleBordersTest()
 		{
 			fileName = "simpleBordersTest.pdf";
@@ -74,7 +74,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void Borders3DTest()
 		{
 			fileName = "borders3DTest.pdf";
@@ -138,7 +138,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void BorderSidesTest()
 		{
 			fileName = "borderSidesTest.pdf";
@@ -165,7 +165,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
+		[Test]
 		public virtual void BorderBoxTest()
 		{
 			fileName = "borderBoxTest.pdf";
