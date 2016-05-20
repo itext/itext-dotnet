@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using System.Globalization;
 
 namespace iTextSharp.Kernel.Xmp
 {
@@ -130,9 +129,9 @@ namespace iTextSharp.Kernel.Xmp
 		/// <em>Note:</em> the dates before Oct 15th 1585 (which normally fall into validity of
 		/// the Julian calendar) are also rendered internally as Gregorian dates.
 		/// </returns>
-		XMPCalendar GetCalendar();
+		DateTime GetCalendar();
 
 		/// <returns>Returns the ISO 8601 string representation of the date and time.</returns>
-		String GetIso8601String();
+		String GetISO8601String();
 	}
 }

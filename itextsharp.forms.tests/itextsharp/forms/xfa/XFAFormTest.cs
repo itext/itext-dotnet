@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
@@ -29,8 +28,8 @@ namespace iTextSharp.Forms.Xfa
 		{
 			String outFileName = destinationFolder + "createEmptyXFAFormTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest01.pdf";
-			PdfDocument doc = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName, 
-				FileMode.Create)));
+			PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
+				.Create)));
 			XfaForm xfa = new XfaForm(doc);
 			XfaForm.SetXfaForm(xfa, doc);
 			doc.AddNewPage();
@@ -46,8 +45,8 @@ namespace iTextSharp.Forms.Xfa
 		{
 			String outFileName = destinationFolder + "createEmptyXFAFormTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest02.pdf";
-			PdfDocument doc = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName, 
-				FileMode.Create)));
+			PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
+				.Create)));
 			XfaForm xfa = new XfaForm();
 			XfaForm.SetXfaForm(xfa, doc);
 			doc.AddNewPage();
@@ -63,8 +62,8 @@ namespace iTextSharp.Forms.Xfa
 		{
 			String outFileName = destinationFolder + "createXFAFormTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
-			PdfDocument doc = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName, 
-				FileMode.Create)));
+			PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
+				.Create)));
 			XfaForm xfa = new XfaForm(new FileStream(XML, FileMode.Open));
 			xfa.Write(doc);
 			doc.AddNewPage();

@@ -27,99 +27,58 @@
 //        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
-using System;
 using System.IO;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
-	/// <summary>
-	/// An <code>OutputStream</code> that counts the written bytes.
-	/// 
-	/// @since   08.11.2006
-	/// </summary>
-	public sealed class CountOutputStream : Stream {
-		/// <summary>
-		/// the decorated output stream </summary>
+	/// <summary>An <code>OutputStream</code> that counts the written bytes.</summary>
+	/// <since>08.11.2006</since>
+	public sealed class CountOutputStream : Stream
+	{
+		/// <summary>the decorated output stream</summary>
 		private readonly Stream output;
 
-		/// <summary>
-		/// the byte counter </summary>
-		private int bytesWritten;
+		/// <summary>the byte counter</summary>
+		private int bytesWritten = 0;
 
-
-		/// <summary>
-		/// Constructor with providing the output stream to decorate. </summary>
-		/// <param name="output"> an <code>OutputStream</code> </param>
-		internal CountOutputStream(Stream output) {
+		/// <summary>Constructor with providing the output stream to decorate.</summary>
+		/// <param name="output">an <code>OutputStream</code></param>
+		internal CountOutputStream(Stream output)
+		{
 			this.output = output;
 		}
 
-
-		/// <returns> the bytesWritten </returns>
-		public int BytesWritten {
-			get { return bytesWritten; }
-		}
-
-		public override bool CanRead {
-			get { return false; }
-		}
-
-		public override bool CanSeek {
-			get { return false; }
-		}
-
-		public override bool CanWrite {
-			get { return true; }
-		}
-
-		public override long Length {
-			get { return BytesWritten; }
-		}
-
-		public override long Position {
-			get { return Length; }
-			set { throw new Exception("The method or operation is not implemented."); }
-		}
-
-		/// <summary>
-		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(byte[], int, int) </seealso>
-		public override void Write(byte[] buf, int off, int len) {
+		/// <summary>Counts the written bytes.</summary>
+		/// <seealso cref="System.IO.Stream.Write(byte[], int, int)"/>
+		/// <exception cref="System.IO.IOException"/>
+		public override void Write(byte[] buf, int off, int len)
+		{
 			output.Write(buf, off, len);
 			bytesWritten += len;
 		}
 
-
-		/// <summary>
-		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(byte[]) </seealso>
-		public void Write(byte[] buf) {
-			Write(buf, 0, buf.Length);
+		/// <summary>Counts the written bytes.</summary>
+		/// <seealso cref="System.IO.Stream.Write(byte[])"/>
+		/// <exception cref="System.IO.IOException"/>
+		public override void Write(byte[] buf)
+		{
+			output.Write(buf);
+			bytesWritten += buf.Length;
 		}
 
-
-		/// <summary>
-		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(int) </seealso>
-		public void Write(int b) {
-			output.WriteByte((byte) b);
+		/// <summary>Counts the written bytes.</summary>
+		/// <seealso cref="System.IO.Stream.Write(int)"/>
+		/// <exception cref="System.IO.IOException"/>
+		public override void Write(int b)
+		{
+			output.Write(b);
 			bytesWritten++;
 		}
 
-		public override void Flush() {
-			output.Flush();
-		}
-
-		public override long Seek(long offset, SeekOrigin origin) {
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		public override void SetLength(long value) {
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		public override int Read(byte[] buffer, int offset, int count) {
-			throw new Exception("The method or operation is not implemented.");
+		/// <returns>the bytesWritten</returns>
+		public int GetBytesWritten()
+		{
+			return bytesWritten;
 		}
 	}
 }

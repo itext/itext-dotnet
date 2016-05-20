@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Source;
@@ -1502,36 +1501,6 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				pdfNumber.SetValue(streamLength);
 				pdfStream.UpdateLength(streamLength);
-			}
-		}
-
-		/// <summary>This method is invoked while deserialization</summary>
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="System.TypeLoadException"/>
-		private void ReadObject(ObjectInputStream @in)
-		{
-			@in.DefaultReadObject();
-			if (sourcePath != null && tokens == null)
-			{
-				tokens = GetOffsetTokeniser(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource
-					(sourcePath));
-			}
-		}
-
-		/// <summary>This method is invoked while serialization</summary>
-		/// <exception cref="System.IO.IOException"/>
-		private void WriteObject(ObjectOutputStream @out)
-		{
-			if (sourcePath != null)
-			{
-				PdfTokenizer tempTokens = tokens;
-				tokens = null;
-				@out.DefaultWriteObject();
-				tokens = tempTokens;
-			}
-			else
-			{
-				@out.DefaultWriteObject();
 			}
 		}
 

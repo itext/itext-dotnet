@@ -124,5 +124,12 @@ namespace iTextSharp.Kernel {
 
             return value;
         }
+
+        public static T PollFirst<T>(this SortedSet<T> set) {
+            T item = set.First();
+            set.Remove(item);
+
+            return item;
+        }
     }
 }

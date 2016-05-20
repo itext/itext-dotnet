@@ -45,8 +45,8 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.IO;
 using System.Text;
-using Java.Text;
 using iTextSharp.IO.Font;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -84,9 +84,6 @@ namespace iTextSharp.Kernel.Pdf
 		/// If <CODE>false</CODE> uses the faster, although less precise, representation.
 		/// </remarks>
 		public static bool HIGH_PRECISION = false;
-
-		private static readonly DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale
-			.US);
 
 		/// <summary>Creates new ByteBufferOutputStream with capacity 128</summary>
 		public ByteBufferOutputStream()
@@ -370,8 +367,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (HIGH_PRECISION)
 			{
-				DecimalFormat dn = new DecimalFormat("0.######", dfs);
-				String sform = dn.Format(d);
+				String sform = DecimalFormatUtil.FormatNumber(d, "0.######");
 				if (buf == null)
 				{
 					return sform;

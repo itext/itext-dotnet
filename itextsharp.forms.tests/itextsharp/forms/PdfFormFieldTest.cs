@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Forms.Fields;
 using iTextSharp.Kernel.Geom;
@@ -43,7 +43,7 @@ namespace iTextSharp.Forms
 		public virtual void FormFieldTest02()
 		{
 			String filename = destinationFolder + "formFieldTest02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			Rectangle rect = new Rectangle(210, 490, 150, 22);
@@ -67,7 +67,7 @@ namespace iTextSharp.Forms
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
 			String filename = destinationFolder + "formFieldTest03.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			PdfPage page = pdfDoc.GetFirstPage();
@@ -91,7 +91,7 @@ namespace iTextSharp.Forms
 		public virtual void ChoiceFieldTest01()
 		{
 			String filename = destinationFolder + "choiceFieldTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			Rectangle rect = new Rectangle(210, 490, 150, 20);
@@ -121,7 +121,7 @@ namespace iTextSharp.Forms
 		public virtual void ButtonFieldTest01()
 		{
 			String filename = destinationFolder + "buttonFieldTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(filename, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			Rectangle rect = new Rectangle(36, 700, 20, 20);
@@ -154,7 +154,7 @@ namespace iTextSharp.Forms
 		{
 			String filename = destinationFolder + "buttonFieldTest02.pdf";
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(destinationFolder + "buttonFieldTest01.pdf"
-				), new PdfWriter(new FileOutputStream(filename, FileMode.Create)));
+				), new PdfWriter(new FileStream(filename, FileMode.Create)));
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			((PdfButtonFormField)form.GetField("push")).SetImage(sourceFolder + "Desert.jpg");
 			pdfDoc.Close();

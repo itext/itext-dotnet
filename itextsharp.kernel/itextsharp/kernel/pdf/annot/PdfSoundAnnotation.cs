@@ -42,9 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.IO;
-using Java.IO;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
@@ -73,8 +71,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
 			, float sampleRate, PdfName encoding, int channels, int sampleSizeInBits)
 			: base(rect)
 		{
-			PdfStream sound = new PdfStream(document, CorrectInputStreamForWavFile(soundStream
-				));
+			PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile
+				(soundStream));
 			sound.Put(PdfName.R, new PdfNumber(sampleRate));
 			sound.Put(PdfName.E, encoding);
 			sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));
@@ -90,24 +88,6 @@ namespace iTextSharp.Kernel.Pdf.Annot
 		public virtual PdfStream GetSound()
 		{
 			return GetPdfObject().GetAsStream(PdfName.Sound);
-		}
-
-		/// <exception cref="System.IO.IOException"/>
-		private Stream CorrectInputStreamForWavFile(Stream @is)
-		{
-			String header = "";
-			Stream bufferedIn = new BufferedInputStream(@is);
-			bufferedIn.Mark(0);
-			for (int i = 0; i < 4; i++)
-			{
-				header = header + (char)bufferedIn.Read();
-			}
-			bufferedIn.Reset();
-			if (header.Equals("RIFF"))
-			{
-				bufferedIn.Read();
-			}
-			return bufferedIn;
 		}
 	}
 }

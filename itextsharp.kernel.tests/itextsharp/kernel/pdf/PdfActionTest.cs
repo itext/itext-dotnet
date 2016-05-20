@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Pdf.Action;
 using iTextSharp.Test;
@@ -22,7 +22,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ActionTest01()
 		{
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest01.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest01.pdf"
 				, FileMode.Create));
 			PdfDocument document = CreateDocument(writer, true);
 			document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
@@ -35,7 +35,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ActionTest02()
 		{
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "actionTest02.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest02.pdf"
 				, FileMode.Create));
 			PdfDocument document = CreateDocument(writer, false);
 			document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"

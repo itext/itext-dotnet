@@ -446,13 +446,13 @@ namespace iTextSharp.Kernel.Utils
 			String message = null;
 			PdfReader readerOut = new PdfReader(outPdf);
 			PdfDocument docOut = new PdfDocument(readerOut);
-			FileOutputStream xmlOut = new FileOutputStream(outXmlPath, FileMode.Create);
+			FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create);
 			new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
 			docOut.Close();
 			xmlOut.Close();
 			PdfReader readerCmp = new PdfReader(cmpPdf);
 			PdfDocument docCmp = new PdfDocument(readerCmp);
-			FileOutputStream xmlCmp = new FileOutputStream(cmpXmlPath, FileMode.Create);
+			FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create);
 			new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
 			docCmp.Close();
 			xmlCmp.Close();
@@ -611,10 +611,10 @@ namespace iTextSharp.Kernel.Utils
 		private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int?, IList<Rectangle
 			>> ignoredAreas)
 		{
-			PdfWriter outWriter = new PdfWriter(new FileOutputStream(outPath + ignoredAreasPrefix
-				 + outPdfName, FileMode.Create));
-			PdfWriter cmpWriter = new PdfWriter(new FileOutputStream(outPath + ignoredAreasPrefix
-				 + cmpPdfName, FileMode.Create));
+			PdfWriter outWriter = new PdfWriter(new FileStream(outPath + ignoredAreasPrefix +
+				 outPdfName, FileMode.Create));
+			PdfWriter cmpWriter = new PdfWriter(new FileStream(outPath + ignoredAreasPrefix +
+				 cmpPdfName, FileMode.Create));
 			PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter);
 			PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter);
 			foreach (KeyValuePair<int?, IList<Rectangle>> entry in ignoredAreas)
@@ -825,8 +825,8 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					compareResult.WriteReportToXml(new FileOutputStream(outPath + "/report.xml", FileMode
-						.Create));
+					compareResult.WriteReportToXml(new FileStream(outPath + "/report.xml", FileMode.Create
+						));
 				}
 				catch (Exception)
 				{

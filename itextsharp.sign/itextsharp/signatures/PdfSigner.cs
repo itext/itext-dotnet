@@ -190,7 +190,7 @@ namespace iTextSharp.Signatures
 				{
 					tempFile = File.CreateTempFile("pdf", null, tempFile);
 				}
-				Stream os = new FileOutputStream(tempFile, FileMode.Create);
+				Stream os = new FileStream(tempFile, FileMode.Create);
 				this.tempFile = tempFile;
 				document = new PdfDocument(reader, new PdfWriter(os), properties);
 			}

@@ -126,7 +126,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfIndirectReference reference;
 			if (freeReferences.Count > 0)
 			{
-				int num = freeReferences.PollFirst();
+				int num = (int)freeReferences.PollFirst();
 				reference = xref[num];
 				if (reference == null)
 				{

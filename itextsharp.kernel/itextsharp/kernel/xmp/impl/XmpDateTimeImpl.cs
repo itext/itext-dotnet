@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using System.Globalization;
 using iTextSharp.Kernel.Xmp;
 
 namespace iTextSharp.Kernel.Xmp.Impl
@@ -75,44 +74,53 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 		}
 
-		/// <summary>
-		/// Creates an <code>XMPDateTime</code>-instance from a calendar.
-		/// </summary>
-		/// <param name="calendar"> a <code>Calendar</code> </param>
-		public XMPDateTimeImpl(XMPCalendar calendar) {
+		/// <summary>Creates an <code>XMPDateTime</code>-instance from a calendar.</summary>
+		/// <param name="calendar">a <code>Calendar</code></param>
+		public XMPDateTimeImpl(DateTime calendar)
+		{
+			// EMPTY
 			// extract the date and timezone from the calendar provided
-			DateTime date = calendar.GetDateTime();
+			DateTime date = calendar.GetTime();
 			TimeZone zone = calendar.GetTimeZone();
-
-			year = date.Year;
-			month = date.Month + 1; // cal is from 0..12
-			day = date.Day;
-			hour = date.Hour;
-			minute = date.Minute;
-			second = date.Second;
-			nanoSeconds = date.Millisecond * 1000000;
-			timeZone = zone;
-
+			// put that date into a calendar the pretty much represents ISO8601
+			// I use US because it is close to the "locale" for the ISO8601 spec
+			GregorianCalendar intCalendar = (GregorianCalendar)DateTime.GetInstance(Locale.US
+				);
+			intCalendar.SetGregorianChange(new DateTime(long.MinValue));
+			intCalendar.SetTimeZone(zone);
+			intCalendar.SetTime(date);
+			this.year = intCalendar.Get(DateTime.YEAR);
+			this.month = intCalendar.Get(DateTime.MONTH) + 1;
+			// cal is from 0..12
+			this.day = intCalendar.Get(DateTime.DAY_OF_MONTH);
+			this.hour = intCalendar.Get(DateTime.HOUR_OF_DAY);
+			this.minute = intCalendar.Get(DateTime.MINUTE);
+			this.second = intCalendar.Get(DateTime.SECOND);
+			this.nanoSeconds = intCalendar.Get(DateTime.MILLISECOND) * 1000000;
+			this.timeZone = intCalendar.GetTimeZone();
 			// object contains all date components
 			hasDate = hasTime = hasTimeZone = true;
 		}
 
 		/// <summary>
-		/// Creates an <code>XMPDateTime</code>-instance from 
+		/// Creates an <code>XMPDateTime</code>-instance from
 		/// a <code>Date</code> and a <code>TimeZone</code>.
 		/// </summary>
-		/// <param name="date"> a date describing an absolute point in time </param>
-		/// <param name="timeZone"> a TimeZone how to interpret the date </param>
-		public XMPDateTimeImpl(DateTime date, TimeZone timeZone) {
-			year = date.Year;
-			month = date.Month + 1; // cal is from 0..12
-			day = date.Day;
-			hour = date.Hour;
-			minute = date.Minute;
-			second = date.Second;
-			nanoSeconds = date.Millisecond * 1000000;
-			timeZone = timeZone;
-
+		/// <param name="date">a date describing an absolute point in time</param>
+		/// <param name="timeZone">a TimeZone how to interpret the date</param>
+		public XMPDateTimeImpl(DateTime date, TimeZone timeZone)
+		{
+			GregorianCalendar calendar = new GregorianCalendar(timeZone);
+			calendar.SetTime(date);
+			this.year = calendar.Get(DateTime.YEAR);
+			this.month = calendar.Get(DateTime.MONTH) + 1;
+			// cal is from 0..12
+			this.day = calendar.Get(DateTime.DAY_OF_MONTH);
+			this.hour = calendar.Get(DateTime.HOUR_OF_DAY);
+			this.minute = calendar.Get(DateTime.MINUTE);
+			this.second = calendar.Get(DateTime.SECOND);
+			this.nanoSeconds = calendar.Get(DateTime.MILLISECOND) * 1000000;
+			this.timeZone = timeZone;
 			// object contains all date components
 			hasDate = hasTime = hasTimeZone = true;
 		}
@@ -248,13 +256,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
 		public virtual int CompareTo(Object dt)
 		{
-			long d = GetCalendar().GetTimeInMillis() - ((XMPDateTime) dt).GetCalendar().GetTimeInMillis();
-			if (d != 0) {
-				return Math.Sign(d);
+			long d = GetCalendar().GetTimeInMillis() - ((XMPDateTime)dt).GetCalendar().GetTimeInMillis
+				();
+			if (d != 0)
+			{
+				return (int)System.Math.Sign(d);
 			}
-			// if millis are equal, compare nanoseconds
-			d = nanoSeconds - ((XMPDateTime) dt).GetNanoSecond();
-			return Math.Sign(d);
+			else
+			{
+				// if millis are equal, compare nanoseconds
+				d = nanoSeconds - ((XMPDateTime)dt).GetNanoSecond();
+				return (int)System.Math.Sign(d);
+			}
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetTimeZone()"/>
@@ -291,15 +304,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetCalendar()"/>
-		public virtual Calendar GetCalendar()
+		public virtual DateTime GetCalendar()
 		{
-			TimeZone tz;
-			if (hasTimeZone) {
-				tz = timeZone;
-			} else {
-				tz = TimeZone.CurrentTimeZone;
+			GregorianCalendar calendar = (GregorianCalendar)DateTime.GetInstance(Locale.US);
+			calendar.SetGregorianChange(new DateTime(long.MinValue));
+			if (hasTimeZone)
+			{
+				calendar.SetTimeZone(timeZone);
 			}
-			return new XMPCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
+			calendar.Set(DateTime.YEAR, year);
+			calendar.Set(DateTime.MONTH, month - 1);
+			calendar.Set(DateTime.DAY_OF_MONTH, day);
+			calendar.Set(DateTime.HOUR_OF_DAY, hour);
+			calendar.Set(DateTime.MINUTE, minute);
+			calendar.Set(DateTime.SECOND, second);
+			calendar.Set(DateTime.MILLISECOND, nanoSeconds / 1000000);
+			return calendar;
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetISO8601String()"/>

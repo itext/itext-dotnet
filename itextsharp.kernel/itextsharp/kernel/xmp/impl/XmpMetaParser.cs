@@ -1,5 +1,4 @@
-
-//Copyright (c) 2006, Adobe Systems Incorporated\' 
+//Copyright (c) 2006, Adobe Systems Incorporated
 //All rights reserved.
 //
 //        Redistribution and use in source and binary forms, with or without
@@ -30,8 +29,11 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.IO;
-using System.Text;
-using System.Xml;
+using Java.IO;
+using Javax.Xml;
+using Javax.Xml.Parsers;
+using Org.W3c.Dom;
+using Org.Xml.Sax;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
 
@@ -50,6 +52,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	public class XMPMetaParser
 	{
 		private static readonly Object XMP_RDF = new Object();
+
+		/// <summary>the DOM Parser Factory, options are set</summary>
+		private static DocumentBuilderFactory factory = CreateDocumentBuilderFactory();
 
 		/// <summary>Hidden constructor, initialises the SAX parser handler.</summary>
 		private XMPMetaParser()
@@ -72,26 +77,30 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		public static XMPMeta Parse(Object input, ParseOptions options)
 		{
 			ParameterAsserts.AssertNotNull(input);
-			options = options ?? new ParseOptions();
-
-			XmlDocument document = ParseXml(input, options);
-
+			options = options != null ? options : new ParseOptions();
+			Document document = ParseXml(input, options);
 			bool xmpmetaRequired = options.GetRequireXMPMeta();
-			object[] result = new object[3];
+			Object[] result = new Object[3];
 			result = FindRootNode(document, xmpmetaRequired, result);
-
-			if (result != null && result[1] == XMP_RDF) {
-				XmpMetaImpl xmp = ParseRDF.Parse((XmlNode) result[0]);
-				xmp.SetPacketHeader((string) result[2]);
-
+			if (result != null && result[1] == XMP_RDF)
+			{
+				XMPMetaImpl xmp = ParseRDF.Parse((Node)result[0]);
+				xmp.SetPacketHeader((String)result[2]);
 				// Check if the XMP object shall be normalized
-				if (!options.GetOmitNormalization()) {
+				if (!options.GetOmitNormalization())
+				{
 					return XMPNormalizer.Process(xmp, options);
 				}
-				return xmp;
+				else
+				{
+					return xmp;
+				}
 			}
-			// no appropriate root node found, return empty metadata object
-			return new XMPMetaImpl();
+			else
+			{
+				// no appropriate root node found, return empty metadata object
+				return new XMPMetaImpl();
+			}
 		}
 
 		/// <summary>Parses the raw XML metadata packet considering the parsing options.</summary>
@@ -114,37 +123,55 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns the parsed XML document or an exception.</returns>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the parsing fails for different reasons
 		/// 	</exception>
-		private static XmlDocument ParseXml(Object input, ParseOptions options) {
-			if (input is Stream) {
-				return ParseXmlFromInputStream((Stream) input, options);
+		private static Document ParseXml(Object input, ParseOptions options)
+		{
+			if (input is Stream)
+			{
+				return ParseXmlFromInputStream((Stream)input, options);
 			}
-			if (input is byte[]) {
-				return ParseXmlFromBytebuffer(new ByteBuffer((byte[]) input), options);
+			else
+			{
+				if (input is byte[])
+				{
+					return ParseXmlFromBytebuffer(new ByteBuffer((byte[])input), options);
+				}
+				else
+				{
+					return ParseXmlFromString((String)input, options);
+				}
 			}
-			return ParseXmlFromString((string) input, options);
 		}
 
 		/// <summary>
-		/// Parses XML from an <seealso cref="Stream"/>,
+		/// Parses XML from an
+		/// <see cref="System.IO.Stream"/>
+		/// ,
 		/// fixing the encoding (Latin-1 to UTF-8) and illegal control character optionally.
 		/// </summary>
-		/// <param name="stream"> an <code>InputStream</code> </param>
-		/// <param name="options"> the parsing options </param>
-		/// <returns> Returns an XML DOM-Document. </returns>
-		/// <exception cref="XmpException"> Thrown when the parsing fails. </exception>
-		private static XmlDocument ParseXmlFromInputStream(Stream stream, ParseOptions options) {
-			if (!options.GetAcceptLatin1() && !options.GetFixControlChars()) {
-				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(stream));
-				return doc;
+		/// <param name="stream">an <code>InputStream</code></param>
+		/// <param name="options">the parsing options</param>
+		/// <returns>Returns an XML DOM-Document.</returns>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
+		/// 	</exception>
+		private static Document ParseXmlFromInputStream(Stream stream, ParseOptions options
+			)
+		{
+			if (!options.GetAcceptLatin1() && !options.GetFixControlChars())
+			{
+				return ParseInputSource(new InputSource(stream));
 			}
-			// load stream into bytebuffer
-			try {
-				ByteBuffer buffer = new ByteBuffer(stream);
-				return ParseXmlFromBytebuffer(buffer, options);
-			}
-			catch (IOException e) {
-				throw new XMPException("Error reading the XML-file", XMPError.BADSTREAM, e);
+			else
+			{
+				// load stream into bytebuffer
+				try
+				{
+					ByteBuffer buffer = new ByteBuffer(stream);
+					return ParseXmlFromBytebuffer(buffer, options);
+				}
+				catch (System.IO.IOException e)
+				{
+					throw new XMPException("Error reading the XML-file", XMPError.BADSTREAM, e);
+				}
 			}
 		}
 
@@ -157,30 +184,44 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns an XML DOM-Document.</returns>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
-		private static XmlDocument ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options) {
-			try {
-				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(buffer.GetByteStream()));
-				return doc;
-			} catch (XmlException e) {
-				XmlDocument doc = new XmlDocument();
-				if (options.GetAcceptLatin1()) {
-					buffer = Latin1Converter.Convert(buffer);
-				}
-
-				if (options.GetFixControlChars()) {
-					try {
-						StreamReader streamReader = new StreamReader(buffer.GetByteStream(), Encoding.GetEncoding(buffer.GetEncoding()));
-						FixASCIIControlsReader fixReader = new FixASCIIControlsReader(streamReader);
-						doc.Load(GetSecureXmlReader(fixReader));
-						return doc;
-					} catch (Exception) {
-						// can normally not happen as the encoding is provided by a util function
-						throw new XMPException("Unsupported Encoding", XMPError.INTERNALFAILURE, e);
+		private static Document ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options
+			)
+		{
+			InputSource source = new InputSource(buffer.GetByteStream());
+			try
+			{
+				return ParseInputSource(source);
+			}
+			catch (XMPException e)
+			{
+				if (e.GetErrorCode() == XMPError.BADXML || e.GetErrorCode() == XMPError.BADSTREAM)
+				{
+					if (options.GetAcceptLatin1())
+					{
+						buffer = Latin1Converter.Convert(buffer);
 					}
+					if (options.GetFixControlChars())
+					{
+						try
+						{
+							String encoding = buffer.GetEncoding();
+							TextReader fixReader = new FixASCIIControlsReader(new InputStreamReader(buffer.GetByteStream
+								(), encoding));
+							return ParseInputSource(new InputSource(fixReader));
+						}
+						catch (ArgumentException)
+						{
+							// can normally not happen as the encoding is provided by a util function
+							throw new XMPException("Unsupported Encoding", XMPError.INTERNALFAILURE, e);
+						}
+					}
+					source = new InputSource(buffer.GetByteStream());
+					return ParseInputSource(source);
 				}
-				doc.Load(buffer.GetByteStream());
-				return doc;
+				else
+				{
+					throw;
+				}
 			}
 		}
 
@@ -195,20 +236,52 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns an XML DOM-Document.</returns>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
-		private static XmlDocument ParseXmlFromString(string input, ParseOptions options) {
-			try {
-
-				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(input));
-				return doc;
+		private static Document ParseXmlFromString(String input, ParseOptions options)
+		{
+			InputSource source = new InputSource(new StringReader(input));
+			try
+			{
+				return ParseInputSource(source);
 			}
-			catch (XMPException e) {
-				if (e.GetErrorCode() == XMPError.BADXML && options.GetFixControlChars()) {
-					XmlDocument doc = new XmlDocument();
-					doc.Load(GetSecureXmlReader(new FixASCIIControlsReader(new StringReader(input))));
-					return doc;
+			catch (XMPException e)
+			{
+				if (e.GetErrorCode() == XMPError.BADXML && options.GetFixControlChars())
+				{
+					source = new InputSource(new FixASCIIControlsReader(new StringReader(input)));
+					return ParseInputSource(source);
 				}
-				throw e;
+				else
+				{
+					throw;
+				}
+			}
+		}
+
+		/// <summary>Runs the XML-Parser.</summary>
+		/// <param name="source">an <code>InputSource</code></param>
+		/// <returns>Returns an XML DOM-Document.</returns>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Wraps parsing and I/O-exceptions into an XMPException.
+		/// 	</exception>
+		private static Document ParseInputSource(InputSource source)
+		{
+			try
+			{
+				DocumentBuilder builder = factory.NewDocumentBuilder();
+				builder.SetErrorHandler(null);
+				return builder.Parse(source);
+			}
+			catch (SAXException e)
+			{
+				throw new XMPException("XML parsing failure", XMPError.BADXML, e);
+			}
+			catch (ParserConfigurationException e)
+			{
+				throw new XMPException("XML Parser not correctly configured", XMPError.UNKNOWN, e
+					);
+			}
+			catch (System.IO.IOException e)
+			{
+				throw new XMPException("Error reading the XML-file", XMPError.BADSTREAM, e);
 			}
 		}
 
@@ -245,68 +318,92 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <li>[2] - the body text of the xpacket-instruction.
 		/// </ul>
 		/// </returns>
-		private static Object[] FindRootNode(XmlNode root, bool xmpmetaRequired, Object[] result) {
+		private static Object[] FindRootNode(Node root, bool xmpmetaRequired, Object[] result
+			)
+		{
 			// Look among this parent's content for x:xapmeta or x:xmpmeta.
 			// The recursion for x:xmpmeta is broader than the strictly defined choice, 
 			// but gives us smaller code.
-			XmlNodeList children = root.ChildNodes;
-			for (int i = 0; i < children.Count; i++) {
-				root = children[i];
-				if (XmlNodeType.ProcessingInstruction == root.NodeType &&
-					XMPConst.XMP_PI.Equals(((XmlProcessingInstruction) root).Target)) {
+			NodeList children = root.GetChildNodes();
+			for (int i = 0; i < children.GetLength(); i++)
+			{
+				root = children.Item(i);
+				if (Node.PROCESSING_INSTRUCTION_NODE == root.GetNodeType() && XMPConst.XMP_PI.Equals
+					(((ProcessingInstruction)root).GetTarget()))
+				{
 					// Store the processing instructions content
-					if (result != null) {
-						result[2] = ((XmlProcessingInstruction) root).Data;
+					if (result != null)
+					{
+						result[2] = ((ProcessingInstruction)root).GetData();
 					}
 				}
-				else if (XmlNodeType.Text != root.NodeType && XmlNodeType.ProcessingInstruction != root.NodeType) {
-					string rootNs = root.NamespaceURI;
-					string rootLocal = root.LocalName;
-					if ((XMPConst.TAG_XMPMETA.Equals(rootLocal) || XMPConst.TAG_XAPMETA.Equals(rootLocal)) &&
-						XMPConst.NS_X.Equals(rootNs)) {
-						// by not passing the RequireXmpMeta-option, the rdf-Node will be valid
-						return FindRootNode(root, false, result);
-					}
-					if (!xmpmetaRequired && "RDF".Equals(rootLocal) && XMPConst.NS_RDF.Equals(rootNs)) {
-						if (result != null) {
-							result[0] = root;
-							result[1] = XMP_RDF;
+				else
+				{
+					if (Node.TEXT_NODE != root.GetNodeType() && Node.PROCESSING_INSTRUCTION_NODE != root
+						.GetNodeType())
+					{
+						String rootNS = root.GetNamespaceURI();
+						String rootLocal = root.GetLocalName();
+						if ((XMPConst.TAG_XMPMETA.Equals(rootLocal) || XMPConst.TAG_XAPMETA.Equals(rootLocal
+							)) && XMPConst.NS_X.Equals(rootNS))
+						{
+							// by not passing the RequireXMPMeta-option, the rdf-Node will be valid
+							return FindRootNode(root, false, result);
 						}
-						return result;
-					}
-					// continue searching
-					object[] newResult = FindRootNode(root, xmpmetaRequired, result);
-					if (newResult != null) {
-						return newResult;
+						else
+						{
+							if (!xmpmetaRequired && "RDF".Equals(rootLocal) && XMPConst.NS_RDF.Equals(rootNS))
+							{
+								if (result != null)
+								{
+									result[0] = root;
+									result[1] = XMP_RDF;
+								}
+								return result;
+							}
+							else
+							{
+								// continue searching
+								Object[] newResult = FindRootNode(root, xmpmetaRequired, result);
+								if (newResult != null)
+								{
+									return newResult;
+								}
+								else
+								{
+									continue;
+								}
+							}
+						}
 					}
 				}
 			}
-
 			// no appropriate node has been found
 			return null;
-			//     is extracted here in the C++ Toolkit		
 		}
 
-		//Security stuff. Protecting against XEE attacks as described here: https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing
-		private static XmlReaderSettings GetSecureReaderSettings()
+		//     is extracted here in the C++ Toolkit		
+		/// <returns>
+		/// Creates, configures and returnes the document builder factory for
+		/// the Metadata Parser.
+		/// </returns>
+		private static DocumentBuilderFactory CreateDocumentBuilderFactory()
 		{
-			XmlReaderSettings settings = new XmlReaderSettings();
-			settings.ProhibitDtd = true;
-			return settings;
-		}
-
-		private static XmlReader GetSecureXmlReader(Stream stream) {
-			return XmlReader.Create(stream, GetSecureReaderSettings());
-		}
-
-		private static XmlReader GetSecureXmlReader(TextReader textReader)
-		{
-			return XmlReader.Create(textReader, GetSecureReaderSettings());
-		}
-
-		private static XmlReader GetSecureXmlReader(String str)
-		{
-			return XmlReader.Create(new StringReader(str), GetSecureReaderSettings());
+			DocumentBuilderFactory factory = DocumentBuilderFactory.NewInstance();
+			factory.SetNamespaceAware(true);
+			factory.SetIgnoringComments(true);
+			try
+			{
+				// honor System parsing limits, e.g.
+				// System.setProperty("entityExpansionLimit", "10");
+				factory.SetFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			}
+			catch (Exception)
+			{
+			}
+			// Ignore IllegalArgumentException and ParserConfigurationException
+			// in case the configured XML-Parser does not implement the feature.
+			return factory;
 		}
 	}
 }

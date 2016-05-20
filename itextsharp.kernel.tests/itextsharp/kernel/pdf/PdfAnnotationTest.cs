@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
@@ -33,7 +32,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddLinkAnnotation01()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "linkAnnotation01.pdf", FileMode.Create)));
 			PdfPage page1 = document.AddNewPage();
 			PdfPage page2 = document.AddNewPage();
@@ -68,7 +67,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddLinkAnnotation02()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "linkAnnotation02.pdf", FileMode.Create)));
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
@@ -93,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddAndGetLinkAnnotations()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "linkAnnotation03.pdf", FileMode.Create)));
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
@@ -137,7 +136,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddTextAnnotation01()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "textAnnotation01.pdf", FileMode.Create)));
 			PdfPage page = document.AddNewPage();
 			PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40
@@ -164,7 +163,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CaretTest()
 		{
 			String filename = destinationFolder + "caretAnnotation.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -200,7 +199,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddFreeTextAnnotation01()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "freeTextAnnotation01.pdf", FileMode.Create)));
 			PdfPage page = document.AddNewPage();
 			new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
@@ -225,7 +224,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void AddSquareAndCircleAnnotations01()
 		{
-			PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "squareAndCircleAnnotations01.pdf", FileMode.Create)));
 			PdfPage page = document.AddNewPage();
 			PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 
@@ -251,7 +250,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void FileAttachmentTest()
 		{
 			String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			writer1.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -279,7 +278,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void RubberStampTest()
 		{
 			String filename = destinationFolder + "rubberStampAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -354,7 +353,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void RubberStampWrongStampTest()
 		{
 			String filename = destinationFolder + "rubberStampAnnotation02.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -378,7 +377,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void InkTest()
 		{
 			String filename = destinationFolder + "inkAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -413,7 +412,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TextMarkupTest01()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -446,7 +445,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TextMarkupTest02()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation02.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -479,7 +478,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TextMarkupTest03()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation03.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -512,7 +511,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TextMarkupTest04()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation04.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -545,7 +544,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrinterMarkText()
 		{
 			String filename = destinationFolder + "printerMarkAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -578,7 +577,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TrapNetworkText()
 		{
 			String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page = pdfDoc1.AddNewPage();
@@ -613,7 +612,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = destinationFolder + "soundAnnotation02.pdf";
 			String audioFile = sourceFolder + "sample.aif";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -658,7 +657,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = destinationFolder + "soundAnnotation03.pdf";
 			String audioFile = sourceFolder + "sample.aiff";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -704,7 +703,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = destinationFolder + "soundAnnotation04.pdf";
 			String audioFile = sourceFolder + "sample.snd";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -731,7 +730,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = destinationFolder + "soundAnnotation01.pdf";
 			String audioFile = sourceFolder + "sample.wav";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -758,7 +757,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = destinationFolder + "soundAnnotation05.pdf";
 			String audioFile = sourceFolder + "sample.wav";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -802,7 +801,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ScreenTestExternalWavFile()
 		{
 			String filename = destinationFolder + "screenAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -832,7 +831,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ScreenTestEmbeddedWavFile01()
 		{
 			String filename = destinationFolder + "screenAnnotation02.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -862,7 +861,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ScreenTestEmbeddedWavFile02()
 		{
 			String filename = destinationFolder + "screenAnnotation03.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -892,7 +891,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ScreenTestEmbeddedWavFile03()
 		{
 			String filename = destinationFolder + "screenAnnotation04.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -930,7 +929,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void WaterMarkTest()
 		{
 			String filename = destinationFolder + "waterMarkAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -967,7 +966,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void RedactionTest()
 		{
 			String filename = destinationFolder + "redactionAnnotation01.pdf";
-			FileOutputStream fos1 = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos1 = new FileStream(filename, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();

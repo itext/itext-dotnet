@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Source;
@@ -39,8 +38,8 @@ namespace iTextSharp.Forms
 				.Open)));
 			PdfDocument doc3 = new PdfDocument(new PdfReader(new FileStream(srcFilename3, FileMode
 				.Open)));
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(filename, 
-				FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode
+				.Create)));
 			pdfDoc.InitializeOutlines();
 			doc3.CopyPagesTo(1, doc3.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
@@ -59,8 +58,8 @@ namespace iTextSharp.Forms
 			String filename = destinationFolder + "copyFields02.pdf";
 			PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode
 				.Open)));
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(filename, 
-				FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode
+				.Create)));
 			pdfDoc.InitializeOutlines();
 			doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			pdfDoc.Close();
@@ -77,8 +76,8 @@ namespace iTextSharp.Forms
 			String filename = destinationFolder + "copyFields03.pdf";
 			PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode
 				.Open)));
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(filename, 
-				FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode
+				.Create)));
 			pdfDoc.InitializeOutlines();
 			doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			pdfDoc.Close();
@@ -100,8 +99,8 @@ namespace iTextSharp.Forms
 				.Open)));
 			PdfDocument doc2 = new PdfDocument(new PdfReader(new FileStream(srcFilename2, FileMode
 				.Open)));
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(filename, 
-				FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode
+				.Create)));
 			pdfDoc.InitializeOutlines();
 			doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
@@ -141,8 +140,8 @@ namespace iTextSharp.Forms
 			String destFilename = destinationFolder + "copyFields05.pdf";
 			PdfDocument srcDoc = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode
 				.Open)));
-			PdfDocument destDoc = new PdfDocument(new PdfWriter(new FileOutputStream(destFilename
-				, FileMode.Create)));
+			PdfDocument destDoc = new PdfDocument(new PdfWriter(new FileStream(destFilename, 
+				FileMode.Create)));
 			destDoc.AddPage(srcDoc.GetFirstPage().CopyTo(destDoc, new PdfPageFormCopier()));
 			destDoc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace iTextSharp.IO.Util
@@ -169,6 +170,22 @@ namespace iTextSharp.IO.Util
             T[] copy = new T[newLength];
             System.Array.Copy(original, 0, copy, 0, Math.Min(original.Length, newLength));
             return copy;
+        }
+
+        public static Stream CorrectWavFile(Stream stream)
+        {
+            String header = "";
+            for (int i = 0; i < 4; i++)
+            {
+                header = header + (char)stream.Read();
+            }
+            stream.Position = 0;
+            if (header.Equals("RIFF"))
+            {
+                stream.Read();
+            }
+
+            return stream;
         }
     }
 }
