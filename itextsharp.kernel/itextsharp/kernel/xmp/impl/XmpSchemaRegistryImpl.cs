@@ -29,6 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Xmp;
@@ -44,20 +45,23 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// is only one single instance used by the toolkit.
 	/// </remarks>
 	/// <since>27.01.2006</since>
-	public sealed class XMPSchemaRegistryImpl : XMPSchemaRegistry, XMPConst
+	public sealed class XMPSchemaRegistryImpl : XMPSchemaRegistry
 	{
 		/// <summary>a map from a namespace URI to its registered prefix</summary>
-		private IDictionary namespaceToPrefixMap = new Hashtable();
+		private IDictionary<String, String> namespaceToPrefixMap = new Dictionary<String, 
+			String>();
 
 		/// <summary>a map from a prefix to the associated namespace URI</summary>
-		private IDictionary prefixToNamespaceMap = new Hashtable();
+		private IDictionary<String, String> prefixToNamespaceMap = new Dictionary<String, 
+			String>();
 
 		/// <summary>a map of all registered aliases.</summary>
 		/// <remarks>
 		/// a map of all registered aliases.
 		/// The map is a relationship from a qname to an <code>XMPAliasInfo</code>-object.
 		/// </remarks>
-		private IDictionary aliasMap = new Hashtable();
+		private IDictionary<String, XMPAliasInfo> aliasMap = new Dictionary<String, XMPAliasInfo
+			>();
 
 		/// <summary>The pattern that must not be contained in simple properties</summary>
 		private Regex p = iTextSharp.IO.Util.StringUtil.RegexCompile("[/*?\\[\\]]");
@@ -98,8 +102,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					throw new XMPException("The prefix is a bad XML name", XMPError.BADXML);
 				}
-				String registeredPrefix = (String)namespaceToPrefixMap[namespaceURI];
-				String registeredNS = (String)prefixToNamespaceMap[suggestedPrefix];
+				String registeredPrefix = namespaceToPrefixMap[namespaceURI];
+				String registeredNS = prefixToNamespaceMap[suggestedPrefix];
 				if (registeredPrefix != null)
 				{
 					// Return the actual prefix
@@ -148,7 +152,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return (String)namespaceToPrefixMap[namespaceURI];
+				return namespaceToPrefixMap[namespaceURI];
 			}
 		}
 
@@ -162,7 +166,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					namespacePrefix += ":";
 				}
-				return (String)prefixToNamespaceMap[namespacePrefix];
+				return prefixToNamespaceMap[namespacePrefix];
 			}
 		}
 
@@ -171,7 +175,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(namespaceToPrefixMap));
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, String>(namespaceToPrefixMap
+					));
 			}
 		}
 
@@ -180,7 +185,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(prefixToNamespaceMap));
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, String>(prefixToNamespaceMap
+					));
 			}
 		}
 
@@ -273,7 +279,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					return null;
 				}
-				return (XMPAliasInfo)aliasMap[aliasPrefix + aliasProp];
+				return aliasMap[aliasPrefix + aliasProp];
 			}
 		}
 
@@ -283,7 +289,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return (XMPAliasInfo)aliasMap[qname];
+				return aliasMap[qname];
 			}
 		}
 
@@ -294,19 +300,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			lock (this)
 			{
 				String prefix = GetNamespacePrefix(aliasNS);
-				IList result = new ArrayList();
+				IList<XMPAliasInfo> result = new List<XMPAliasInfo>();
 				if (prefix != null)
 				{
-					for (IEnumerator it = aliasMap.Keys.GetEnumerator(); it.MoveNext(); )
+					foreach (String qname in aliasMap.Keys)
 					{
-						String qname = (String)it.Current;
 						if (qname.StartsWith(prefix))
 						{
 							result.Add(FindAlias(qname));
 						}
 					}
 				}
-				return (XMPAliasInfo[])result.ToArray(new XMPAliasInfo[result.Count]);
+				return result.ToArray(new XMPAliasInfo[result.Count]);
 			}
 		}
 
@@ -398,15 +403,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							, XMPError.BADPARAM);
 					}
 				}
-				XMPAliasInfo aliasInfo = new _XMPAliasInfo_412(actualNS, actualPrefix, actualProp
+				XMPAliasInfo aliasInfo = new _XMPAliasInfo_408(actualNS, actualPrefix, actualProp
 					, aliasOpts);
 				aliasMap[key] = aliasInfo;
 			}
 		}
 
-		private sealed class _XMPAliasInfo_412 : XMPAliasInfo
+		private sealed class _XMPAliasInfo_408 : XMPAliasInfo
 		{
-			public _XMPAliasInfo_412(String actualNS, String actualPrefix, String actualProp, 
+			public _XMPAliasInfo_408(String actualNS, String actualPrefix, String actualProp, 
 				AliasOptions aliasOpts)
 			{
 				this.actualNS = actualNS;
@@ -459,7 +464,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedList(aliasMap));
+				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, XMPAliasInfo
+					>(aliasMap));
 			}
 		}
 

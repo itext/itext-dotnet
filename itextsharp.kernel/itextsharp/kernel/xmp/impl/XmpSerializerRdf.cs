@@ -29,6 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
@@ -74,9 +75,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private const String RDF_EMPTY_STRUCT = "<rdf:Description/>";
 
 		/// <summary>a set of all rdf attribute qualifier</summary>
-		internal static readonly Set RDF_ATTR_QUALIFIER = new HashSet(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-			(new String[] { XMPConst.XML_LANG, "rdf:resource", "rdf:ID", "rdf:bagID", "rdf:nodeID"
-			 }));
+		internal static readonly ICollection<String> RDF_ATTR_QUALIFIER = new HashSet<String
+			>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new String[] { XMPConst.XML_LANG, "rdf:resource"
+			, "rdf:ID", "rdf:bagID", "rdf:nodeID" }));
 
 		/// <summary>the metadata object to be serialized.</summary>
 		private XMPMetaImpl xmp;
@@ -361,7 +362,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			Write(RDF_SCHEMA_START);
 			WriteTreeName();
 			// Write all necessary xmlns attributes.
-			Set usedPrefixes = new HashSet();
+			ICollection<String> usedPrefixes = new HashSet<String>();
 			usedPrefixes.Add("xml");
 			usedPrefixes.Add("rdf");
 			for (IEnumerator it = xmp.GetRoot().IterateChildren(); it.MoveNext(); )
@@ -529,9 +530,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					// This node has only attribute qualifiers. Emit as a property element.
 					if (!node.GetOptions().IsCompositeProperty())
 					{
-						Object[] result = SerializeCompactRDFSimpleProp(node);
-						emitEndTag = ((bool?)result[0]);
-						indentEndTag = ((bool?)result[1]);
+						bool[] result = SerializeCompactRDFSimpleProp(node);
+						emitEndTag = result[0];
+						indentEndTag = result[1];
 					}
 					else
 					{
@@ -564,11 +565,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="node">an XMPNode</param>
 		/// <returns>Returns an array containing the flags emitEndTag and indentEndTag.</returns>
 		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
-		private Object[] SerializeCompactRDFSimpleProp(XMPNode node)
+		private bool[] SerializeCompactRDFSimpleProp(XMPNode node)
 		{
 			// This is a simple property.
-			bool? emitEndTag = true;
-			bool? indentEndTag = true;
+			bool emitEndTag = true;
+			bool indentEndTag = true;
 			if (node.GetOptions().IsURI())
 			{
 				Write(" rdf:resource=\"");
@@ -592,7 +593,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					indentEndTag = false;
 				}
 			}
-			return new Object[] { emitEndTag, indentEndTag };
+			return new bool[] { emitEndTag, indentEndTag };
 		}
 
 		/// <summary>Serializes an array property.</summary>
@@ -774,7 +775,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="usedPrefixes">a set containing currently used prefixes</param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		private void DeclareUsedNamespaces(XMPNode node, Set usedPrefixes, int indent)
+		private void DeclareUsedNamespaces(XMPNode node, ICollection<String> usedPrefixes
+			, int indent)
 		{
 			if (node.GetOptions().IsSchemaNode())
 			{
@@ -813,8 +815,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="usedPrefixes">a set containing currently used prefixes</param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		private void DeclareNamespace(String prefix, String @namespace, Set usedPrefixes, 
-			int indent)
+		private void DeclareNamespace(String prefix, String @namespace, ICollection<String
+			> usedPrefixes, int indent)
 		{
 			if (@namespace == null)
 			{
@@ -858,7 +860,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			WriteIndent(level + 1);
 			Write(RDF_SCHEMA_START);
 			WriteTreeName();
-			Set usedPrefixes = new HashSet();
+			ICollection<String> usedPrefixes = new HashSet<String>();
 			usedPrefixes.Add("xml");
 			usedPrefixes.Add("rdf");
 			DeclareUsedNamespaces(schemaNode, usedPrefixes, level + 3);

@@ -38,7 +38,7 @@ using iTextSharp.Kernel.Xmp.Properties;
 namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>11.08.2006</since>
-	public class XMPUtilsImpl : XMPConst
+	public class XMPUtilsImpl
 	{
 		private const int UCK_NORMAL = 0;
 

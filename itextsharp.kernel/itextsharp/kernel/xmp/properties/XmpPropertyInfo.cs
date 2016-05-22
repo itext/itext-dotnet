@@ -28,7 +28,6 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.Xmp.Options;
 
 namespace iTextSharp.Kernel.Xmp.Properties
 {
@@ -46,11 +45,5 @@ namespace iTextSharp.Kernel.Xmp.Properties
 
 		/// <returns>Returns the path of the property, but only if returned by the iterator.</returns>
 		String GetPath();
-
-		/// <returns>Returns the value of the property.</returns>
-		String GetValue();
-
-		/// <returns>Returns the options of the property.</returns>
-		PropertyOptions GetOptions();
 	}
 }
