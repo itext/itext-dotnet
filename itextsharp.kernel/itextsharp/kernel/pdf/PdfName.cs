@@ -44,9 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using Java.Lang.Reflect;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.Kernel.Pdf
@@ -2247,27 +2245,7 @@ namespace iTextSharp.Kernel.Pdf
 			//  '}'
 			//  '/'
 			//  '#'
-			FieldInfo[] fields = typeof(iTextSharp.Kernel.Pdf.PdfName).GetFields();
-			staticNames = new Dictionary<String, iTextSharp.Kernel.Pdf.PdfName>(fields.Length
-				);
-			int flags = Modifier.STATIC | Modifier.PUBLIC | Modifier.FINAL;
-			try
-			{
-				foreach (FieldInfo field in fields)
-				{
-					if ((field.GetModifiers() & flags) == flags && field.GetType().Equals(typeof(iTextSharp.Kernel.Pdf.PdfName
-						)))
-					{
-						iTextSharp.Kernel.Pdf.PdfName name = (iTextSharp.Kernel.Pdf.PdfName)field.GetValue
-							(null);
-						staticNames[name.GetValue()] = name;
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				iTextSharp.PrintStackTrace(e);
-			}
+			staticNames = PdfNameLoader.LoadPdfNames();
 		}
 
 		private static iTextSharp.Kernel.Pdf.PdfName CreateDirectName(String name)

@@ -42,7 +42,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Java.Util.Zip;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -52,15 +51,15 @@ namespace iTextSharp.Kernel.Pdf
 		public const int UNDEFINED_COMPRESSION = int.MinValue;
 
 		/// <summary>A possible compression level.</summary>
-		public const int DEFAULT_COMPRESSION = Deflater.DEFAULT_COMPRESSION;
+		public const int DEFAULT_COMPRESSION = -1;
 
 		/// <summary>A possible compression level.</summary>
-		public const int NO_COMPRESSION = Deflater.NO_COMPRESSION;
+		public const int NO_COMPRESSION = 0;
 
 		/// <summary>A possible compression level.</summary>
-		public const int BEST_SPEED = Deflater.BEST_SPEED;
+		public const int BEST_SPEED = 1;
 
 		/// <summary>A possible compression level.</summary>
-		public const int BEST_COMPRESSION = Deflater.BEST_COMPRESSION;
+		public const int BEST_COMPRESSION = 9;
 	}
 }
