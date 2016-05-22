@@ -6,7 +6,7 @@ namespace iTextSharp.Kernel.Pdf
 {
 	internal sealed class PdfNameLoader
 	{
-		internal static IDictionary<String, PdfName> LoadPdfNames()
+		internal static IDictionary<String, PdfName> LoadNames()
 		{
 			FieldInfo[] fields = typeof(PdfName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 			IDictionary<String, PdfName> staticNames = new Dictionary<String, PdfName>(fields.Length);
@@ -18,8 +18,9 @@ namespace iTextSharp.Kernel.Pdf
 						staticNames.Add(name.GetValue(), name);
 					}
 				}
-			} 
-			catch {}
+			} catch {
+				return null;
+			}
 			return staticNames;
 		}
 	}

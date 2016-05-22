@@ -2245,7 +2245,7 @@ namespace iTextSharp.Kernel.Pdf
 			//  '}'
 			//  '/'
 			//  '#'
-			staticNames = PdfNameLoader.LoadPdfNames();
+			staticNames = PdfNameLoader.LoadNames();
 		}
 
 		private static iTextSharp.Kernel.Pdf.PdfName CreateDirectName(String name)
