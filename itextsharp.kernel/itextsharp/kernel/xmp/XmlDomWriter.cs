@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Org.W3c.Dom;
+using System.Xml;
 
 namespace iTextSharp.Kernel.Xmp
 {
@@ -101,213 +101,178 @@ namespace iTextSharp.Kernel.Xmp
 		// setOutput(OutputStream,String)
 		/// <summary>Writes the specified node, recursively.</summary>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual void Write(Node node)
+		public virtual void Write(XmlNode node)
 		{
+
 			// is there anything to do?
-			if (node == null)
-			{
+			if (node == null) {
 				return;
 			}
-			short type = node.GetNodeType();
-			switch (type)
-			{
-				case Node.DOCUMENT_NODE:
-				{
-					Document document = (Document)node;
-					fXML11 = false;
-					//"1.1".equals(getVersion(document));
-					if (!fCanonical)
-					{
-						if (fXML11)
-						{
-							fOut.Write("<?xml version=\"1.1\" encoding=\"UTF-8\"?>");
-						}
-						else
-						{
-							fOut.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-						}
-						fOut.Write("\n");
-						fOut.Flush();
-						Write(document.GetDoctype());
-					}
-					Write(document.GetDocumentElement());
-					break;
-				}
 
-				case Node.DOCUMENT_TYPE_NODE:
-				{
-					DocumentType doctype = (DocumentType)node;
-					fOut.Write("<!DOCTYPE ");
-					fOut.Write(doctype.GetName());
-					String publicId = doctype.GetPublicId();
-					String systemId = doctype.GetSystemId();
-					if (publicId != null)
-					{
-						fOut.Write(" PUBLIC '");
-						fOut.Write(publicId);
-						fOut.Write("' '");
-						fOut.Write(systemId);
-						fOut.Write('\'');
+			XmlNodeType type = node.NodeType;
+			switch (type) {
+				case XmlNodeType.Document: {
+						XmlDocument document = (XmlDocument)node;
+						fXML11 = false; //"1.1".Equals(GetVersion(document));
+						if (!fCanonical) {
+							if (fXML11) {
+								fOut.WriteLine("<?xml version=\"1.1\" encoding=\"UTF-8\"?>");
+							} else {
+								fOut.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+							}
+							fOut.Flush();
+							Write(document.DocumentType);
+						}
+						Write(document.DocumentElement);
+						break;
 					}
-					else
-					{
-						if (systemId != null)
-						{
+
+				case XmlNodeType.DocumentType: {
+						XmlDocumentType doctype = (XmlDocumentType)node;
+						fOut.Write("<!DOCTYPE ");
+						fOut.Write(doctype.Name);
+						String publicId = doctype.PublicId;
+						String systemId = doctype.SystemId;
+						if (publicId != null) {
+							fOut.Write(" PUBLIC '");
+							fOut.Write(publicId);
+							fOut.Write("' '");
+							fOut.Write(systemId);
+							fOut.Write('\'');
+						} else if (systemId != null) {
 							fOut.Write(" SYSTEM '");
 							fOut.Write(systemId);
 							fOut.Write('\'');
 						}
+						String internalSubset = doctype.InternalSubset;
+						if (internalSubset != null) {
+							fOut.WriteLine(" [");
+							fOut.Write(internalSubset);
+							fOut.Write(']');
+						}
+						fOut.WriteLine('>');
+						break;
 					}
-					String internalSubset = doctype.GetInternalSubset();
-					if (internalSubset != null)
-					{
-						fOut.Write(" [" + Environment.NewLine);
-						fOut.Write(internalSubset);
-						fOut.Write(']');
-					}
-					fOut.Write('>' + Environment.NewLine);
-					break;
-				}
 
-				case Node.ELEMENT_NODE:
-				{
-					fOut.Write('<');
-					fOut.Write(node.GetNodeName());
-					Attr[] attrs = SortAttributes(node.GetAttributes());
-					for (int i = 0; i < attrs.Length; i++)
-					{
-						Attr attr = attrs[i];
-						fOut.Write(' ');
-						fOut.Write(attr.GetNodeName());
-						fOut.Write("=\"");
-						NormalizeAndPrint(attr.GetNodeValue(), true);
-						fOut.Write('"');
-					}
-					fOut.Write('>');
-					fOut.Flush();
-					Node child = node.GetFirstChild();
-					while (child != null)
-					{
-						Write(child);
-						child = child.GetNextSibling();
-					}
-					break;
-				}
+				case XmlNodeType.Element: {
+						fOut.Write('<');
+						fOut.Write(node.Name);
+						XmlAttribute[] attrs = SortAttributes(node.Attributes);
+						for (int i = 0; i < attrs.Length; i++) {
+							XmlAttribute attr = attrs[i];
+							fOut.Write(' ');
+							fOut.Write(attr.Name);
+							fOut.Write("=\"");
+							NormalizeAndPrint(attr.Value, true);
+							fOut.Write('"');
+						}
+						fOut.Write('>');
+						fOut.Flush();
 
-				case Node.ENTITY_REFERENCE_NODE:
-				{
-					if (fCanonical)
-					{
-						Node child = node.GetFirstChild();
-						while (child != null)
-						{
+						XmlNode child = node.FirstChild;
+						while (child != null) {
 							Write(child);
-							child = child.GetNextSibling();
+							child = child.NextSibling;
 						}
+						break;
 					}
-					else
-					{
-						fOut.Write('&');
-						fOut.Write(node.GetNodeName());
-						fOut.Write(';');
-						fOut.Flush();
-					}
-					break;
-				}
 
-				case Node.CDATA_SECTION_NODE:
-				{
-					if (fCanonical)
-					{
-						NormalizeAndPrint(node.GetNodeValue(), false);
-					}
-					else
-					{
-						fOut.Write("<![CDATA[");
-						fOut.Write(node.GetNodeValue());
-						fOut.Write("]]>");
-					}
-					fOut.Flush();
-					break;
-				}
-
-				case Node.TEXT_NODE:
-				{
-					NormalizeAndPrint(node.GetNodeValue(), false);
-					fOut.Flush();
-					break;
-				}
-
-				case Node.PROCESSING_INSTRUCTION_NODE:
-				{
-					fOut.Write("<?");
-					fOut.Write(node.GetNodeName());
-					String data = node.GetNodeValue();
-					if (data != null && data.Length > 0)
-					{
-						fOut.Write(' ');
-						fOut.Write(data);
-					}
-					fOut.Write("?>");
-					fOut.Flush();
-					break;
-				}
-
-				case Node.COMMENT_NODE:
-				{
-					if (!fCanonical)
-					{
-						fOut.Write("<!--");
-						String comment = node.GetNodeValue();
-						if (comment != null && comment.Length > 0)
-						{
-							fOut.Write(comment);
+				case XmlNodeType.EntityReference: {
+						if (fCanonical) {
+							XmlNode child = node.FirstChild;
+							while (child != null) {
+								Write(child);
+								child = child.NextSibling;
+							}
+						} else {
+							fOut.Write('&');
+							fOut.Write(node.Name);
+							fOut.Write(';');
+							fOut.Flush();
 						}
-						fOut.Write("-->");
-						fOut.Flush();
+						break;
 					}
-					break;
-				}
+
+				case XmlNodeType.CDATA: {
+						if (fCanonical) {
+							NormalizeAndPrint(node.Value, false);
+						} else {
+							fOut.Write("<![CDATA[");
+							fOut.Write(node.Value);
+							fOut.Write("]]>");
+						}
+						fOut.Flush();
+						break;
+					}
+
+				case XmlNodeType.SignificantWhitespace:
+				case XmlNodeType.Whitespace:
+				case XmlNodeType.Text: {
+						NormalizeAndPrint(node.Value, false);
+						fOut.Flush();
+						break;
+					}
+
+				case XmlNodeType.ProcessingInstruction: {
+						fOut.Write("<?");
+						fOut.Write(node.Name);
+						String data = node.Value;
+						if (data != null && data.Length > 0) {
+							fOut.Write(' ');
+							fOut.Write(data);
+						}
+						fOut.Write("?>");
+						fOut.Flush();
+						break;
+					}
+
+				case XmlNodeType.Comment: {
+						if (!fCanonical) {
+							fOut.Write("<!--");
+							String comment = node.Value;
+							if (comment != null && comment.Length > 0) {
+								fOut.Write(comment);
+							}
+							fOut.Write("-->");
+							fOut.Flush();
+						}
+						break;
+					}
 			}
-			if (type == Node.ELEMENT_NODE)
-			{
+
+			if (type == XmlNodeType.Element) {
 				fOut.Write("</");
-				fOut.Write(node.GetNodeName());
+				fOut.Write(node.Name);
 				fOut.Write('>');
 				fOut.Flush();
 			}
 		}
 
-		// write(Node)
 		/// <summary>Returns a sorted list of attributes.</summary>
-		protected internal virtual Attr[] SortAttributes(NamedNodeMap attrs)
-		{
-			int len = (attrs != null) ? attrs.GetLength() : 0;
-			Attr[] array = new Attr[len];
-			for (int i = 0; i < len; i++)
-			{
-				array[i] = (Attr)attrs.Item(i);
+		protected internal virtual XmlAttribute[] SortAttributes(XmlAttributeCollection attrs) {
+
+			int len = (attrs != null) ? attrs.Count : 0;
+			XmlAttribute[] array = new XmlAttribute[len];
+			for (int i = 0; i < len; i++) {
+				array[i] = attrs[i];
 			}
-			for (int i_1 = 0; i_1 < len - 1; i_1++)
-			{
-				String name = array[i_1].GetNodeName();
-				int index = i_1;
-				for (int j = i_1 + 1; j < len; j++)
-				{
-					String curName = array[j].GetNodeName();
-					if (string.CompareOrdinal(curName, name) < 0)
-					{
+			for (int i = 0; i < len - 1; i++) {
+				String name = array[i].Name;
+				int index = i;
+				for (int j = i + 1; j < len; j++) {
+					String curName = array[j].Name;
+					if (curName.CompareTo(name) < 0) {
 						name = curName;
 						index = j;
 					}
 				}
-				if (index != i_1)
-				{
-					Attr temp = array[i_1];
-					array[i_1] = array[index];
+				if (index != i) {
+					XmlAttribute temp = array[i];
+					array[i] = array[index];
 					array[index] = temp;
 				}
 			}
+
 			return array;
 		}
 
@@ -332,85 +297,73 @@ namespace iTextSharp.Kernel.Xmp
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void NormalizeAndPrint(char c, bool isAttValue)
 		{
-			switch (c)
-			{
+			switch (c) {
 				case '<':
-				{
-					fOut.Write("&lt;");
-					break;
-				}
-
-				case '>':
-				{
-					fOut.Write("&gt;");
-					break;
-				}
-
-				case '&':
-				{
-					fOut.Write("&amp;");
-					break;
-				}
-
-				case '"':
-				{
-					// A '"' that appears in character data
-					// does not need to be escaped.
-					if (isAttValue)
 					{
-						fOut.Write("&quot;");
-					}
-					else
-					{
-						fOut.Write("\"");
-					}
-					break;
-				}
-
-				case '\r':
-				{
-					// If CR is part of the document's content, it
-					// must not be printed as a literal otherwise
-					// it would be normalized to LF when the document
-					// is reparsed.
-					fOut.Write("&#xD;");
-					break;
-				}
-
-				case '\n':
-				{
-					if (fCanonical)
-					{
-						fOut.Write("&#xA;");
+						fOut.Write("&lt;");
 						break;
 					}
-					goto default;
-				}
-
+				case '>':
+					{
+						fOut.Write("&gt;");
+						break;
+					}
+				case '&':
+					{
+						fOut.Write("&amp;");
+						break;
+					}
+				case '"':
+					{
+						// A '"' that appears in character data
+						// does not need to be escaped.
+						if (isAttValue) {
+							fOut.Write("&quot;");
+						} else {
+							fOut.Write("\"");
+						}
+						break;
+					}
+				case '\r':
+					{
+						// If CR is part of the document's content, it
+						// must not be printed as a literal otherwise
+						// it would be normalized to LF when the document
+						// is reparsed.
+						fOut.Write("&#xD;");
+						break;
+					}
+				case '\n':
+					{
+						if (fCanonical) {
+							fOut.Write("&#xA;");
+							break;
+						}
+						// else, default print char
+						goto default;
+					}
 				default:
-				{
-					// else, default print char
-					// In XML 1.1, control chars in the ranges [#x1-#x1F, #x7F-#x9F] must be escaped.
-					//
-					// Escape space characters that would be normalized to #x20 in attribute values
-					// when the document is reparsed.
-					//
-					// Escape NEL (0x85) and LSEP (0x2028) that appear in content
-					// if the document is XML 1.1, since they would be normalized to LF
-					// when the document is reparsed.
-					if (fXML11 && ((c >= 0x01 && c <= 0x1F && c != 0x09 && c != 0x0A) || (c >= 0x7F &&
-						 c <= 0x9F) || c == 0x2028) || isAttValue && (c == 0x09 || c == 0x0A))
 					{
-						fOut.Write("&#x");
-						fOut.Write(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper());
-						fOut.Write(";");
+						// In XML 1.1, control chars in the ranges [#x1-#x1F, #x7F-#x9F] must be escaped.
+						//
+						// Escape space characters that would be normalized to #x20 in attribute values
+						// when the document is reparsed.
+						//
+						// Escape NEL (0x85) and LSEP (0x2028) that appear in content
+						// if the document is XML 1.1, since they would be normalized to LF
+						// when the document is reparsed.
+						if (fXML11 && ((c >= 0x01 && c <= 0x1F && c != 0x09 && c != 0x0A)
+						   || (c >= 0x7F && c <= 0x9F) || c == 0x2028)
+						   || isAttValue && (c == 0x09 || c == 0x0A)) {
+							fOut.Write("&#x");
+							int ci = (int) c;
+							fOut.Write(ci.ToString("X"));
+							fOut.Write(";");
+						} else {
+							fOut.Write(c);
+						}
+						break;
 					}
-					else
-					{
-						fOut.Write(c);
-					}
-					break;
-				}
 			}
 		}
 	}
