@@ -39,9 +39,6 @@ namespace iTextSharp.Kernel.Xmp
 	/// <since>16.02.2006</since>
 	public sealed class XMPDateTimeFactory
 	{
-		/// <summary>The UTC TimeZone</summary>
-		private static readonly TimeZone UTC = TimeZone.GetTimeZone("UTC");
-
 		/// <summary>Private constructor</summary>
 		private XMPDateTimeFactory()
 		{
@@ -52,7 +49,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// 	</summary>
 		/// <param name="calendar">a <code>Calendar</code>-object.</param>
 		/// <returns>An <code>XMPDateTime</code>-object.</returns>
-		public static XMPDateTime CreateFromCalendar(DateTime calendar)
+		public static XMPDateTime CreateFromCalendar(XMPDateTime calendar)
 		{
 			return new XMPDateTimeImpl(calendar);
 		}
