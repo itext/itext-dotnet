@@ -29,7 +29,6 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Text;
-using Java.Text;
 using iTextSharp.Kernel.Xmp;
 
 namespace iTextSharp.Kernel.Xmp.Impl
@@ -95,192 +94,143 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// 	</exception>
 		public static XMPDateTime Parse(String iso8601String, XMPDateTime binValue)
 		{
-			if (iso8601String == null)
-			{
+			if (iso8601String == null) {
 				throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
 			}
-			else
-			{
-				if (iso8601String.Length == 0)
-				{
-					return binValue;
-				}
+			if (iso8601String.Length == 0) {
+				return binValue;
 			}
+
 			ParseState input = new ParseState(iso8601String);
-			int value;
-			if (input.Ch(0) == '-')
-			{
+
+			if (input.Ch(0) == '-') {
 				input.Skip();
 			}
+
 			// Extract the year.
-			value = input.GatherInt("Invalid year in date string", 9999);
-			if (input.HasNext() && input.Ch() != '-')
-			{
+			int value = input.GatherInt("Invalid year in date string", 9999);
+			if (input.HasNext() && input.Ch() != '-') {
 				throw new XMPException("Invalid date string, after year", XMPError.BADVALUE);
 			}
-			if (input.Ch(0) == '-')
-			{
+
+			if (input.Ch(0) == '-') {
 				value = -value;
 			}
 			binValue.SetYear(value);
-			if (!input.HasNext())
-			{
+			if (!input.HasNext()) {
 				return binValue;
 			}
 			input.Skip();
+
+
 			// Extract the month.
 			value = input.GatherInt("Invalid month in date string", 12);
-			if (input.HasNext() && input.Ch() != '-')
-			{
+			if (input.HasNext() && input.Ch() != '-') {
 				throw new XMPException("Invalid date string, after month", XMPError.BADVALUE);
 			}
 			binValue.SetMonth(value);
-			if (!input.HasNext())
-			{
+			if (!input.HasNext()) {
 				return binValue;
 			}
 			input.Skip();
+
+
 			// Extract the day.
 			value = input.GatherInt("Invalid day in date string", 31);
-			if (input.HasNext() && input.Ch() != 'T')
-			{
+			if (input.HasNext() && input.Ch() != 'T') {
 				throw new XMPException("Invalid date string, after day", XMPError.BADVALUE);
 			}
 			binValue.SetDay(value);
-			if (!input.HasNext())
-			{
+			if (!input.HasNext()) {
 				return binValue;
 			}
 			input.Skip();
+
 			// Extract the hour.
 			value = input.GatherInt("Invalid hour in date string", 23);
 			binValue.SetHour(value);
-			if (!input.HasNext())
-			{
+			if (!input.HasNext()) {
 				return binValue;
 			}
+
 			// Extract the minute.
-			if (input.Ch() == ':')
-			{
+			if (input.Ch() == ':') {
 				input.Skip();
 				value = input.GatherInt("Invalid minute in date string", 59);
-				if (input.HasNext() && input.Ch() != ':' && input.Ch() != 'Z' && input.Ch() != '+'
-					 && input.Ch() != '-')
-				{
+				if (input.HasNext() && input.Ch() != ':' && input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
 					throw new XMPException("Invalid date string, after minute", XMPError.BADVALUE);
 				}
 				binValue.SetMinute(value);
 			}
-			if (!input.HasNext())
-			{
+
+			if (!input.HasNext()) {
 				return binValue;
 			}
-			else
-			{
-				if (input.HasNext() && input.Ch() == ':')
-				{
-					input.Skip();
-					value = input.GatherInt("Invalid whole seconds in date string", 59);
-					if (input.HasNext() && input.Ch() != '.' && input.Ch() != 'Z' && input.Ch() != '+'
-						 && input.Ch() != '-')
-					{
-						throw new XMPException("Invalid date string, after whole seconds", XMPError.BADVALUE
-							);
-					}
-					binValue.SetSecond(value);
-					if (input.Ch() == '.')
-					{
-						input.Skip();
-						int digits = input.Pos();
-						value = input.GatherInt("Invalid fractional seconds in date string", 999999999);
-						if (input.HasNext() && (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-'
-							))
-						{
-							throw new XMPException("Invalid date string, after fractional second", XMPError.BADVALUE
-								);
-						}
-						digits = input.Pos() - digits;
-						for (; digits > 9; --digits)
-						{
-							value = value / 10;
-						}
-						for (; digits < 9; ++digits)
-						{
-							value = value * 10;
-						}
-						binValue.SetNanoSecond(value);
-					}
+			if (input.HasNext() && input.Ch() == ':') {
+				input.Skip();
+				value = input.GatherInt("Invalid whole seconds in date string", 59);
+				if (input.HasNext() && input.Ch() != '.' && input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
+					throw new XMPException("Invalid date string, after whole seconds", XMPError.BADVALUE);
 				}
-				else
-				{
-					if (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-')
-					{
-						throw new XMPException("Invalid date string, after time", XMPError.BADVALUE);
+				binValue.SetSecond(value);
+				if (input.Ch() == '.') {
+					input.Skip();
+					int digits = input.Pos();
+					value = input.GatherInt("Invalid fractional seconds in date string", 999999999);
+					if (input.HasNext() && (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-')) {
+						throw new XMPException("Invalid date string, after fractional second",
+							XMPError.BADVALUE);
 					}
+					digits = input.Pos() - digits;
+					for (; digits > 9; --digits) {
+						value = value/10;
+					}
+					for (; digits < 9; ++digits) {
+						value = value*10;
+					}
+					binValue.SetNanoSecond(value);
 				}
 			}
-			int tzSign = 0;
-			int tzHour = 0;
-			int tzMinute = 0;
-			if (!input.HasNext())
-			{
+			else if (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
+				throw new XMPException("Invalid date string, after time", XMPError.BADVALUE);
+			}
+
+
+			if (!input.HasNext()) {
 				// no Timezone at all
 				return binValue;
 			}
-			else
-			{
-				if (input.Ch() == 'Z')
-				{
-					input.Skip();
+			if (input.Ch() == 'Z') {
+				input.Skip();
+			}
+			else if (input.HasNext()) {
+				if (input.Ch() == '+') {
 				}
-				else
-				{
-					if (input.HasNext())
-					{
-						if (input.Ch() == '+')
-						{
-							tzSign = 1;
-						}
-						else
-						{
-							if (input.Ch() == '-')
-							{
-								tzSign = -1;
-							}
-							else
-							{
-								throw new XMPException("Time zone must begin with 'Z', '+', or '-'", XMPError.BADVALUE
-									);
-							}
-						}
+				else if (input.Ch() == '-') {
+				}
+				else {
+					throw new XMPException("Time zone must begin with 'Z', '+', or '-'", XMPError.BADVALUE);
+				}
+
+				input.Skip();
+				// Extract the time zone hour.
+				if (input.HasNext()) {
+					if (input.Ch() == ':') {
 						input.Skip();
-						// Extract the time zone hour.
-						tzHour = input.GatherInt("Invalid time zone hour in date string", 23);
-						if (input.HasNext())
-						{
-							if (input.Ch() == ':')
-							{
-								input.Skip();
-								// Extract the time zone minute.
-								tzMinute = input.GatherInt("Invalid time zone minute in date string", 59);
-							}
-							else
-							{
-								throw new XMPException("Invalid date string, after time zone hour", XMPError.BADVALUE
-									);
-							}
-						}
+					}
+					else {
+						throw new XMPException("Invalid date string, after time zone hour", XMPError.BADVALUE);
 					}
 				}
 			}
+
 			// create a corresponding TZ and set it time zone
-			int offset = (tzHour * 3600 * 1000 + tzMinute * 60 * 1000) * tzSign;
-			binValue.SetTimeZone(new SimpleTimeZone(offset, ""));
-			if (input.HasNext())
-			{
-				throw new XMPException("Invalid date string, extra chars at end", XMPError.BADVALUE
-					);
+			binValue.SetTimeZone(TimeZone.CurrentTimeZone);
+
+			if (input.HasNext()) {
+				throw new XMPException("Invalid date string, extra chars at end", XMPError.BADVALUE);
 			}
+
 			return binValue;
 		}
 
@@ -315,75 +265,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </remarks>
 		/// <param name="dateTime">an XMPDateTime-object.</param>
 		/// <returns>Returns an ISO 8601 string.</returns>
-		public static String Render(XMPDateTime dateTime)
-		{
-			StringBuilder buffer = new StringBuilder();
-			if (dateTime.HasDate())
-			{
-				// year is rendered in any case, even 0000
-				DecimalFormat df = new DecimalFormat("0000", new DecimalFormatSymbols(Locale.ENGLISH
-					));
-				buffer.Append(df.Format(dateTime.GetYear()));
-				if (dateTime.GetMonth() == 0)
-				{
-					return buffer.ToString();
-				}
-				// month
-				df.ApplyPattern("'-'00");
-				buffer.Append(df.Format(dateTime.GetMonth()));
-				if (dateTime.GetDay() == 0)
-				{
-					return buffer.ToString();
-				}
-				// day
-				buffer.Append(df.Format(dateTime.GetDay()));
-				// time, rendered if any time field is not zero
-				if (dateTime.HasTime())
-				{
-					// hours and minutes
-					buffer.Append('T');
-					df.ApplyPattern("00");
-					buffer.Append(df.Format(dateTime.GetHour()));
-					buffer.Append(':');
-					buffer.Append(df.Format(dateTime.GetMinute()));
-					// seconds and nanoseconds
-					if (dateTime.GetSecond() != 0 || dateTime.GetNanoSecond() != 0)
-					{
-						double seconds = dateTime.GetSecond() + dateTime.GetNanoSecond() / 1e9d;
-						df.ApplyPattern(":00.#########");
-						buffer.Append(df.Format(seconds));
-					}
-					// time zone
-					if (dateTime.HasTimeZone())
-					{
-						// used to calculate the time zone offset incl. Daylight Savings
-						long timeInMillis = dateTime.GetCalendar().GetTimeInMillis();
-						int offset = dateTime.GetTimeZone().GetOffset(timeInMillis);
-						if (offset == 0)
-						{
-							// UTC
-							buffer.Append('Z');
-						}
-						else
-						{
-							int thours = offset / 3600000;
-							int tminutes = Math.Abs(offset % 3600000 / 60000);
-							df.ApplyPattern("+00;-00");
-							buffer.Append(df.Format(thours));
-							df.ApplyPattern(":00");
-							buffer.Append(df.Format(tminutes));
-						}
-					}
-				}
-			}
-			return buffer.ToString();
+		public static String Render(XMPDateTime dateTime) {
+			return dateTime.GetCalendar().GetDateTime().ToString("s");
 		}
 	}
 
 	/// <since>22.08.2006</since>
 	internal class ParseState
 	{
-		private String str;
+		private readonly String str;
 
 		private int pos = 0;
 

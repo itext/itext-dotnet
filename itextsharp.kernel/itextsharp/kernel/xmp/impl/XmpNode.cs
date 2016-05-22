@@ -349,41 +349,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (qualifier != null)
 			{
 				IEnumerator it = GetQualifier().GetEnumerator();
-				return new _IEnumerator_412(it);
+				return it;
 			}
 			else
 			{
 				return JavaCollectionsUtil.EmptyIterator();
 			}
-		}
-
-		private sealed class _IEnumerator_412 : IEnumerator
-		{
-			public _IEnumerator_412(IEnumerator it)
-			{
-				this.it = it;
-			}
-
-			public override bool MoveNext()
-			{
-				return it.MoveNext();
-			}
-
-			public override Object Current
-			{
-				get
-				{
-					return it.Current;
-				}
-			}
-
-			public override void Remove()
-			{
-				throw new NotSupportedException("remove() is not allowed due to the internal contraints"
-					);
-			}
-
-			private readonly IEnumerator it;
 		}
 
 		/// <summary>Performs a <b>deep clone</b> of the node and the complete subtree.</summary>
@@ -571,38 +542,31 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		public virtual void Sort()
 		{
 			// sort qualifier
-			if (HasQualifier())
-			{
-				iTextSharp.Kernel.Xmp.Impl.XMPNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XMPNode[]
-					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetQualifierLength
-					()]);
+			if (HasQualifier()) {
+				XmpNode[] quals = new XmpNode[GetQualifier().Count];
+				GetQualifier().CopyTo(quals, 0);
 				int sortFrom = 0;
-				while (quals.Length > sortFrom && (XMPConst.XML_LANG.Equals(quals[sortFrom].GetName
-					()) || "rdf:type".Equals(quals[sortFrom].GetName())))
-				{
+				while (quals.Length > sortFrom &&
+					(XMPConst.XML_LANG.Equals(quals[sortFrom].GetName()) || "rdf:type".Equals(quals[sortFrom].GetName()))) {
 					quals[sortFrom].Sort();
 					sortFrom++;
 				}
-				System.Array.Sort(quals, sortFrom, quals.Length);
-				ListIterator it = qualifier.ListIterator();
-				for (int j = 0; j < quals.Length; j++)
-				{
-					it.Current;
-					it.Set(quals[j]);
+				Array.Sort(quals, sortFrom, quals.Length - sortFrom);
+				for (int j = 0; j < quals.Length; j++) {
+					qualifier[j] = quals[j];
 					quals[j].Sort();
 				}
 			}
+
 			// sort children
-			if (HasChildren())
-			{
-				if (!GetOptions().IsArray())
-				{
-					JavaCollectionsUtil.Sort(children);
+			if (HasChildren()) {
+				if (!GetOptions().IsArray()) {
+					ArrayList.Adapter(children).Sort();
 				}
-				for (IEnumerator it = IterateChildren(); it.MoveNext(); )
-				{
-					((iTextSharp.Kernel.Xmp.Impl.XMPNode)it.Current).Sort();
-				}
+				IEnumerator it = IterateChildren();
+				while (it.MoveNext())
+					if (it.Current != null)
+						((XmpNode) it.Current).Sort();
 			}
 		}
 

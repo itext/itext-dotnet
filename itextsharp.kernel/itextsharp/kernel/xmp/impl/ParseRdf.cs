@@ -29,7 +29,8 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using Org.W3c.Dom;
+using System.Diagnostics;
+using System.Xml;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
 
@@ -37,7 +38,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Parser for "normal" XML serialisation of RDF.</summary>
 	/// <since>14.07.2006</since>
-	public class ParseRDF : XMPError, XMPConst
+	public class ParseRDF : XMPConst
 	{
 		public const int RDFTERM_OTHER = 0;
 
@@ -96,7 +97,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns an XMP metadata object (not normalized)</returns>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Occurs if the parsing fails for any reason.
 		/// 	</exception>
-		internal static XMPMetaImpl Parse(Node xmlRoot)
+		internal static XMPMetaImpl Parse(XmlNode xmlRoot)
 		{
 			XMPMetaImpl xmp = new XMPMetaImpl();
 			Rdf_RDF(xmp, xmlRoot);
@@ -115,14 +116,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		internal static void Rdf_RDF(XMPMetaImpl xmp, Node rdfRdfNode)
+		internal static void Rdf_RDF(XMPMetaImpl xmp, XmlNode rdfRdfNode)
 		{
-			if (rdfRdfNode.HasAttributes())
-			{
+			if (rdfRdfNode.Attributes != null && rdfRdfNode.Attributes.Count > 0) {
 				Rdf_NodeElementList(xmp, xmp.GetRoot(), rdfRdfNode);
-			}
-			else
-			{
+			} else {
 				throw new XMPException("Invalid attributes of rdf:RDF element", BADRDF);
 			}
 		}
@@ -136,15 +134,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElementList(XMPMetaImpl xmp, XMPNode xmpParent, Node 
+		private static void Rdf_NodeElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode 
 			rdfRdfNode)
 		{
-			for (int i = 0; i < rdfRdfNode.GetChildNodes().GetLength(); i++)
-			{
-				Node child = rdfRdfNode.GetChildNodes().Item(i);
+			for (int i = 0; i < rdfRdfNode.ChildNodes.Count; i++) {
+				XmlNode child = rdfRdfNode.ChildNodes[i];
 				// filter whitespaces (and all text nodes)
-				if (!IsWhitespaceNode(child))
-				{
+				if (!IsWhitespaceNode(child)) {
 					Rdf_NodeElement(xmp, xmpParent, child, true);
 				}
 			}
@@ -166,7 +162,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElement(XMPMetaImpl xmp, XMPNode xmpParent, Node xmlNode
+		private static void Rdf_NodeElement(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode xmlNode
 			, bool isTopLevel)
 		{
 			int nodeTerm = GetRDFTermKind(xmlNode);
@@ -216,64 +212,59 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElementAttrs(XMPMetaImpl xmp, XMPNode xmpParent, Node
+		private static void Rdf_NodeElementAttrs(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode
 			 xmlNode, bool isTopLevel)
 		{
 			// Used to detect attributes that are mutually exclusive.
 			int exclusiveAttrs = 0;
-			for (int i = 0; i < xmlNode.GetAttributes().GetLength(); i++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i);
+			if (xmlNode == null || xmlNode.Attributes == null)
+				return;
+
+			for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+				XmlNode attribute = xmlNode.Attributes[i];
+
 				// quick hack, ns declarations do not appear in C++
 				// ignore "ID" without namespace
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
+				if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 					continue;
 				}
+
 				int attrTerm = GetRDFTermKind(attribute);
-				switch (attrTerm)
-				{
+
+				switch (attrTerm) {
 					case RDFTERM_ID:
 					case RDFTERM_NODE_ID:
 					case RDFTERM_ABOUT:
-					{
-						if (exclusiveAttrs > 0)
-						{
-							throw new XMPException("Mutally exclusive about, ID, nodeID attributes", BADRDF);
+						if (exclusiveAttrs > 0) {
+							throw new XMPException("Mutally exclusive about, ID, nodeID attributes",
+								BADRDF);
 						}
+
 						exclusiveAttrs++;
-						if (isTopLevel && (attrTerm == RDFTERM_ABOUT))
-						{
+
+						if (isTopLevel && (attrTerm == RDFTERM_ABOUT)) {
 							// This is the rdf:about attribute on a top level node. Set
 							// the XMP tree name if
 							// it doesn't have a name yet. Make sure this name matches
 							// the XMP tree name.
-							if (xmpParent.GetName() != null && xmpParent.GetName().Length > 0)
-							{
-								if (!xmpParent.GetName().Equals(attribute.GetNodeValue()))
-								{
-									throw new XMPException("Mismatched top level rdf:about values", BADXMP);
+							if (!string.IsNullOrEmpty(xmpParent.GetName())) {
+								if (!xmpParent.GetName().Equals(attribute.Value)) {
+									throw new XMPException("Mismatched top level rdf:about values",
+										BADXMP);
 								}
 							}
-							else
-							{
-								xmpParent.SetName(attribute.GetNodeValue());
+							else {
+								xmpParent.SetName(attribute.Value);
 							}
 						}
 						break;
-					}
 
 					case RDFTERM_OTHER:
-					{
-						AddChildNode(xmp, xmpParent, attribute, attribute.GetNodeValue(), isTopLevel);
+						AddChildNode(xmp, xmpParent, attribute, attribute.Value, isTopLevel);
 						break;
-					}
 
 					default:
-					{
 						throw new XMPException("Invalid nodeElement attribute", BADRDF);
-					}
 				}
 			}
 		}
@@ -287,27 +278,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmlParent">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_PropertyElementList(XMPMetaImpl xmp, XMPNode xmpParent, Node
+		private static void Rdf_PropertyElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode
 			 xmlParent, bool isTopLevel)
 		{
-			for (int i = 0; i < xmlParent.GetChildNodes().GetLength(); i++)
-			{
-				Node currChild = xmlParent.GetChildNodes().Item(i);
-				if (IsWhitespaceNode(currChild))
-				{
+			for (int i = 0; i < xmlParent.ChildNodes.Count; i++) {
+				XmlNode currChild = xmlParent.ChildNodes[i];
+				if (IsWhitespaceNode(currChild)) {
 					continue;
 				}
-				else
-				{
-					if (currChild.GetNodeType() != Node.ELEMENT_NODE)
-					{
-						throw new XMPException("Expected property element node not found", BADRDF);
-					}
-					else
-					{
-						Rdf_PropertyElement(xmp, xmpParent, currChild, isTopLevel);
-					}
+				if (currChild.NodeType != XmlNodeType.Element) {
+					throw new XMPException("Expected property element node not found", BADRDF);
 				}
+				Rdf_PropertyElement(xmp, xmpParent, currChild, isTopLevel);
 			}
 		}
 
@@ -399,113 +381,89 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_PropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, Node 
+		private static void Rdf_PropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode 
 			xmlNode, bool isTopLevel)
 		{
 			int nodeTerm = GetRDFTermKind(xmlNode);
-			if (!IsPropertyElementName(nodeTerm))
-			{
+			if (!IsPropertyElementName(nodeTerm)) {
 				throw new XMPException("Invalid property element name", BADRDF);
 			}
+
 			// remove the namespace-definitions from the list
-			NamedNodeMap attributes = xmlNode.GetAttributes();
+			XmlAttributeCollection attributes = xmlNode.Attributes;
+			if (attributes == null)
+				return;
 			IList nsAttrs = null;
-			for (int i = 0; i < attributes.GetLength(); i++)
-			{
-				Node attribute = attributes.Item(i);
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
-					if (nsAttrs == null)
-					{
+			for (int i = 0; i < attributes.Count; i++) {
+				XmlNode attribute = attributes[i];
+				if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+					if (nsAttrs == null) {
 						nsAttrs = new ArrayList();
 					}
-					nsAttrs.Add(attribute.GetNodeName());
+					nsAttrs.Add(attribute.Name);
 				}
 			}
-			if (nsAttrs != null)
-			{
-				for (IEnumerator it = nsAttrs.GetEnumerator(); it.MoveNext(); )
-				{
-					String ns = (String)it.Current;
+			if (nsAttrs != null) {
+				for (IEnumerator it = nsAttrs.GetEnumerator(); it.MoveNext();) {
+					string ns = (string) it.Current;
 					attributes.RemoveNamedItem(ns);
 				}
 			}
-			if (attributes.GetLength() > 3)
-			{
+
+
+			if (attributes.Count > 3) {
 				// Only an emptyPropertyElt can have more than 3 attributes.
 				Rdf_EmptyPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 			}
-			else
-			{
+			else {
 				// Look through the attributes for one that isn't rdf:ID or xml:lang, 
 				// it will usually tell what we should be dealing with. 
 				// The called routines must verify their specific syntax!
-				for (int i_1 = 0; i_1 < attributes.GetLength(); i_1++)
-				{
-					Node attribute = attributes.Item(i_1);
-					String attrLocal = attribute.GetLocalName();
-					String attrNS = attribute.GetNamespaceURI();
-					String attrValue = attribute.GetNodeValue();
-					if (!(XML_LANG.Equals(attribute.GetNodeName()) && !("ID".Equals(attrLocal) && NS_RDF
-						.Equals(attrNS))))
-					{
-						if ("datatype".Equals(attrLocal) && NS_RDF.Equals(attrNS))
-						{
+
+				for (int i = 0; i < attributes.Count; i++) {
+					XmlNode attribute = attributes[i];
+					string attrLocal = attribute.LocalName;
+					string attrNs = attribute.NamespaceURI;
+					string attrValue = attribute.Value;
+					if (!(XML_LANG.Equals(attribute.Name) && !("ID".Equals(attrLocal) && NS_RDF.Equals(attrNs)))) {
+						if ("datatype".Equals(attrLocal) && NS_RDF.Equals(attrNs)) {
 							Rdf_LiteralPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 						}
-						else
-						{
-							if (!("parseType".Equals(attrLocal) && NS_RDF.Equals(attrNS)))
-							{
-								Rdf_EmptyPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
-							}
-							else
-							{
-								if ("Literal".Equals(attrValue))
-								{
-									Rdf_ParseTypeLiteralPropertyElement();
-								}
-								else
-								{
-									if ("Resource".Equals(attrValue))
-									{
-										Rdf_ParseTypeResourcePropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
-									}
-									else
-									{
-										if ("Collection".Equals(attrValue))
-										{
-											Rdf_ParseTypeCollectionPropertyElement();
-										}
-										else
-										{
-											Rdf_ParseTypeOtherPropertyElement();
-										}
-									}
-								}
-							}
+						else if (!("parseType".Equals(attrLocal) && NS_RDF.Equals(attrNs))) {
+							Rdf_EmptyPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 						}
+						else if ("Literal".Equals(attrValue)) {
+							Rdf_ParseTypeLiteralPropertyElement();
+						}
+						else if ("Resource".Equals(attrValue)) {
+							Rdf_ParseTypeResourcePropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
+						}
+						else if ("Collection".Equals(attrValue)) {
+							Rdf_ParseTypeCollectionPropertyElement();
+						}
+						else {
+							Rdf_ParseTypeOtherPropertyElement();
+						}
+
 						return;
 					}
 				}
+
 				// Only rdf:ID and xml:lang, could be a resourcePropertyElt, a literalPropertyElt, 
 				// or an emptyPropertyElt. Look at the child XML nodes to decide which.
-				if (xmlNode.HasChildNodes())
-				{
-					for (int i_2 = 0; i_2 < xmlNode.GetChildNodes().GetLength(); i_2++)
-					{
-						Node currChild = xmlNode.GetChildNodes().Item(i_2);
-						if (currChild.GetNodeType() != Node.TEXT_NODE)
-						{
+
+				if (xmlNode.HasChildNodes) {
+					for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
+						XmlNode currChild = xmlNode.ChildNodes[i];
+						if (currChild.NodeType != XmlNodeType.Text) {
 							Rdf_ResourcePropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 							return;
 						}
 					}
+
 					Rdf_LiteralPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 				}
-				else
-				{
+				else {
 					Rdf_EmptyPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 				}
 			}
@@ -534,119 +492,93 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ResourcePropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
-			, Node xmlNode, bool isTopLevel)
+			, XmlNode xmlNode, bool isTopLevel)
 		{
-			if (isTopLevel && "iX:changes".Equals(xmlNode.GetNodeName()))
-			{
+			if (isTopLevel && "iX:changes".Equals(xmlNode.Name)) {
 				// Strip old "punchcard" chaff which has on the prefix "iX:".
 				return;
 			}
-			XMPNode newCompound = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
+
+			XmpNode newCompound = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
+
 			// walk through the attributes
-			for (int i = 0; i < xmlNode.GetAttributes().GetLength(); i++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i);
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
-					continue;
-				}
-				String attrLocal = attribute.GetLocalName();
-				String attrNS = attribute.GetNamespaceURI();
-				if (XML_LANG.Equals(attribute.GetNodeName()))
-				{
-					AddQualifierNode(newCompound, XML_LANG, attribute.GetNodeValue());
-				}
-				else
-				{
-					if ("ID".Equals(attrLocal) && NS_RDF.Equals(attrNS))
-					{
+			if (xmlNode.Attributes != null) {
+				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+					XmlNode attribute = xmlNode.Attributes[i];
+					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
-					else
-					{
-						// Ignore all rdf:ID attributes.
-						throw new XMPException("Invalid attribute for resource property element", BADRDF);
+
+					string attrLocal = attribute.LocalName;
+					string attrNs = attribute.NamespaceURI;
+					if (XML_LANG.Equals(attribute.Name)) {
+						AddQualifierNode(newCompound, XML_LANG, attribute.Value);
 					}
+					else if ("ID".Equals(attrLocal) && NS_RDF.Equals(attrNs)) {
+						continue; // Ignore all rdf:ID attributes.
+					}
+					throw new XMPException("Invalid attribute for resource property element", BADRDF);
 				}
 			}
+
 			// walk through the children
-			Node currChild = null;
+
 			bool found = false;
-			int i_1;
-			for (i_1 = 0; i_1 < xmlNode.GetChildNodes().GetLength(); i_1++)
-			{
-				currChild = xmlNode.GetChildNodes().Item(i_1);
-				if (!IsWhitespaceNode(currChild))
-				{
-					if (currChild.GetNodeType() == Node.ELEMENT_NODE && !found)
-					{
-						bool isRDF = NS_RDF.Equals(currChild.GetNamespaceURI());
-						String childLocal = currChild.GetLocalName();
-						if (isRDF && "Bag".Equals(childLocal))
-						{
+			for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
+				XmlNode currChild = xmlNode.ChildNodes[i];
+				if (!IsWhitespaceNode(currChild)) {
+					if (currChild.NodeType == XmlNodeType.Element && !found) {
+						bool isRdf = NS_RDF.Equals(currChild.NamespaceURI);
+						string childLocal = currChild.LocalName;
+
+						if (isRdf && "Bag".Equals(childLocal)) {
 							newCompound.GetOptions().SetArray(true);
 						}
-						else
-						{
-							if (isRDF && "Seq".Equals(childLocal))
-							{
-								newCompound.GetOptions().SetArray(true).SetArrayOrdered(true);
-							}
-							else
-							{
-								if (isRDF && "Alt".Equals(childLocal))
-								{
-									newCompound.GetOptions().SetArray(true).SetArrayOrdered(true).SetArrayAlternate(true
-										);
+						else if (isRdf && "Seq".Equals(childLocal)) {
+							newCompound.GetOptions().SetArray(true);
+							newCompound.GetOptions().SetArrayOrdered(true);
+						}
+						else if (isRdf && "Alt".Equals(childLocal)) {
+							newCompound.GetOptions().SetArray(true);
+							newCompound.GetOptions().SetArrayOrdered(true);
+							newCompound.GetOptions().SetArrayAlternate(true);
+						}
+						else {
+							newCompound.GetOptions().SetStruct(true);
+							if (!isRdf && !"Description".Equals(childLocal)) {
+								string typeName = currChild.NamespaceURI;
+								if (typeName == null) {
+									throw new XMPException("All XML elements must be in a namespace",
+										BADXMP);
 								}
-								else
-								{
-									newCompound.GetOptions().SetStruct(true);
-									if (!isRDF && !"Description".Equals(childLocal))
-									{
-										String typeName = currChild.GetNamespaceURI();
-										if (typeName == null)
-										{
-											throw new XMPException("All XML elements must be in a namespace", BADXMP);
-										}
-										typeName += ':' + childLocal;
-										AddQualifierNode(newCompound, "rdf:type", typeName);
-									}
-								}
+								typeName += ':' + childLocal;
+								AddQualifierNode(newCompound, "rdf:type", typeName);
 							}
 						}
+
 						Rdf_NodeElement(xmp, newCompound, currChild, false);
-						if (newCompound.GetHasValueChild())
-						{
+
+						if (newCompound.GetHasValueChild()) {
 							FixupQualifiedNode(newCompound);
 						}
-						else
-						{
-							if (newCompound.GetOptions().IsArrayAlternate())
-							{
-								XMPNodeUtils.DetectAltText(newCompound);
-							}
+						else if (newCompound.GetOptions().IsArrayAlternate()) {
+							XMPNodeUtils.DetectAltText(newCompound);
 						}
+
 						found = true;
 					}
-					else
-					{
-						if (found)
-						{
-							// found second child element
-							throw new XMPException("Invalid child of resource property element", BADRDF);
-						}
-						else
-						{
-							throw new XMPException("Children of resource property element must be XML elements"
-								, BADRDF);
-						}
+					else if (found) {
+						// found second child element
+						throw new XMPException("Invalid child of resource property element", BADRDF);
+					}
+					else {
+						throw new XMPException("Children of resource property element must be XML elements",
+							BADRDF);
 					}
 				}
 			}
-			if (!found)
-			{
+
+			if (!found) {
 				// didn't found any child elements
 				throw new XMPException("Missing child of resource property element", BADRDF);
 			}
@@ -666,47 +598,33 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_LiteralPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
-			, Node xmlNode, bool isTopLevel)
+			, XmlNode xmlNode, bool isTopLevel)
 		{
 			XMPNode newChild = AddChildNode(xmp, xmpParent, xmlNode, null, isTopLevel);
-			for (int i = 0; i < xmlNode.GetAttributes().GetLength(); i++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i);
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
-					continue;
-				}
-				String attrNS = attribute.GetNamespaceURI();
-				String attrLocal = attribute.GetLocalName();
-				if (XML_LANG.Equals(attribute.GetNodeName()))
-				{
-					AddQualifierNode(newChild, XML_LANG, attribute.GetNodeValue());
-				}
-				else
-				{
-					if (NS_RDF.Equals(attrNS) && ("ID".Equals(attrLocal) || "datatype".Equals(attrLocal
-						)))
-					{
+			if (xmlNode.Attributes != null) {
+				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+					XmlNode attribute = xmlNode.Attributes[i];
+					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
-					else
-					{
-						// Ignore all rdf:ID and rdf:datatype attributes.
+
+					String attrNs = attribute.NamespaceURI;
+					String attrLocal = attribute.LocalName;
+					if (XML_LANG.Equals(attribute.Name)) {
+						AddQualifierNode(newChild, XML_LANG, attribute.Value);
+					} else if (NS_RDF.Equals(attrNs) && ("ID".Equals(attrLocal) || "datatype".Equals(attrLocal))) {
+						continue; // Ignore all rdf:ID and rdf:datatype attributes.
+					} else
 						throw new XMPException("Invalid attribute for literal property element", BADRDF);
-					}
 				}
 			}
 			String textValue = "";
-			for (int i_1 = 0; i_1 < xmlNode.GetChildNodes().GetLength(); i_1++)
-			{
-				Node child = xmlNode.GetChildNodes().Item(i_1);
-				if (child.GetNodeType() == Node.TEXT_NODE)
-				{
-					textValue += child.GetNodeValue();
+			for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
+				XmlNode child = xmlNode.ChildNodes[i];
+				if (child.NodeType == XmlNodeType.Text) {
+					textValue += child.Value;
 				}
-				else
-				{
+				else {
 					throw new XMPException("Invalid child of literal property element", BADRDF);
 				}
 			}
@@ -749,43 +667,35 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeResourcePropertyElement(XMPMetaImpl xmp, XMPNode
-			 xmpParent, Node xmlNode, bool isTopLevel)
+			 xmpParent, XmlNode xmlNode, bool isTopLevel)
 		{
 			XMPNode newStruct = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
 			newStruct.GetOptions().SetStruct(true);
-			for (int i = 0; i < xmlNode.GetAttributes().GetLength(); i++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i);
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
-					continue;
-				}
-				String attrLocal = attribute.GetLocalName();
-				String attrNS = attribute.GetNamespaceURI();
-				if (XML_LANG.Equals(attribute.GetNodeName()))
-				{
-					AddQualifierNode(newStruct, XML_LANG, attribute.GetNodeValue());
-				}
-				else
-				{
-					if (NS_RDF.Equals(attrNS) && ("ID".Equals(attrLocal) || "parseType".Equals(attrLocal
-						)))
-					{
+
+			if (xmlNode.Attributes != null) {
+				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+					XmlNode attribute = xmlNode.Attributes[i];
+					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
-					else
-					{
-						// The caller ensured the value is "Resource".
-						// Ignore all rdf:ID attributes.
-						throw new XMPException("Invalid attribute for ParseTypeResource property element"
-							, BADRDF);
+
+					String attrLocal = attribute.LocalName;
+					String attrNs = attribute.NamespaceURI;
+					if (XML_LANG.Equals(attribute.Name)) {
+						AddQualifierNode(newStruct, XML_LANG, attribute.Value);
 					}
+					else if (NS_RDF.Equals(attrNs) && ("ID".Equals(attrLocal) || "parseType".Equals(attrLocal))) {
+						continue; // The caller ensured the value is "Resource".
+						// Ignore all rdf:ID attributes.
+					}
+					throw new XMPException("Invalid attribute for ParseTypeResource property element",
+						BADRDF);
 				}
 			}
+
 			Rdf_PropertyElementList(xmp, newStruct, xmlNode, false);
-			if (newStruct.GetHasValueChild())
-			{
+
+			if (newStruct.GetHasValueChild()) {
 				FixupQualifiedNode(newStruct);
 			}
 		}
@@ -869,174 +779,138 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
 		private static void Rdf_EmptyPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, 
-			Node xmlNode, bool isTopLevel)
+			XmlNode xmlNode, bool isTopLevel)
 		{
 			bool hasPropertyAttrs = false;
 			bool hasResourceAttr = false;
-			bool hasNodeIDAttr = false;
+			bool hasNodeIdAttr = false;
 			bool hasValueAttr = false;
-			Node valueNode = null;
-			// ! Can come from rdf:value or rdf:resource.
-			if (xmlNode.HasChildNodes())
-			{
-				throw new XMPException("Nested content not allowed with rdf:resource or property attributes"
-					, BADRDF);
+
+			XmlNode valueNode = null; // ! Can come from rdf:value or rdf:resource.
+
+			if (xmlNode.HasChildNodes) {
+				throw new XMPException("Nested content not allowed with rdf:resource or property attributes",
+					BADRDF);
 			}
+
 			// First figure out what XMP this maps to and remember the XML node for a simple value.
-			for (int i = 0; i < xmlNode.GetAttributes().GetLength(); i++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i);
-				if ("xmlns".Equals(attribute.GetPrefix()) || (attribute.GetPrefix() == null && "xmlns"
-					.Equals(attribute.GetNodeName())))
-				{
-					continue;
-				}
-				int attrTerm = GetRDFTermKind(attribute);
-				switch (attrTerm)
-				{
-					case RDFTERM_ID:
-					{
-						// Nothing to do.
-						break;
+			if (xmlNode.Attributes != null) {
+				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+					XmlNode attribute = xmlNode.Attributes[i];
+					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+						continue;
 					}
 
-					case RDFTERM_RESOURCE:
-					{
-						if (hasNodeIDAttr)
-						{
-							throw new XMPException("Empty property element can't have both rdf:resource and rdf:nodeID"
-								, BADRDF);
-						}
-						else
-						{
-							if (hasValueAttr)
-							{
-								throw new XMPException("Empty property element can't have both rdf:value and rdf:resource"
-									, BADXMP);
+					int attrTerm = GetRdfTermKind(attribute);
+
+					switch (attrTerm) {
+						case RDFTERM_ID:
+							// Nothing to do.
+							break;
+
+						case RDFTERM_RESOURCE:
+							if (hasNodeIdAttr) {
+								throw new XMPException(
+									"Empty property element can't have both rdf:resource and rdf:nodeID",
+									BADRDF);
 							}
-						}
-						hasResourceAttr = true;
-						if (!hasValueAttr)
-						{
-							valueNode = attribute;
-						}
-						break;
-					}
-
-					case RDFTERM_NODE_ID:
-					{
-						if (hasResourceAttr)
-						{
-							throw new XMPException("Empty property element can't have both rdf:resource and rdf:nodeID"
-								, BADRDF);
-						}
-						hasNodeIDAttr = true;
-						break;
-					}
-
-					case RDFTERM_OTHER:
-					{
-						if ("value".Equals(attribute.GetLocalName()) && NS_RDF.Equals(attribute.GetNamespaceURI
-							()))
-						{
-							if (hasResourceAttr)
-							{
-								throw new XMPException("Empty property element can't have both rdf:value and rdf:resource"
-									, BADXMP);
+							if (hasValueAttr) {
+								throw new XMPException(
+									"Empty property element can't have both rdf:value and rdf:resource",
+									BADXMP);
 							}
-							hasValueAttr = true;
-							valueNode = attribute;
-						}
-						else
-						{
-							if (!XML_LANG.Equals(attribute.GetNodeName()))
-							{
+
+							hasResourceAttr = true;
+							if (!hasValueAttr) {
+								valueNode = attribute;
+							}
+							break;
+
+						case RDFTERM_NODE_ID:
+							if (hasResourceAttr) {
+								throw new XMPException(
+									"Empty property element can't have both rdf:resource and rdf:nodeID",
+									BADRDF);
+							}
+							hasNodeIdAttr = true;
+							break;
+
+						case RDFTERM_OTHER:
+							if ("value".Equals(attribute.LocalName) && NS_RDF.Equals(attribute.NamespaceURI)) {
+								if (hasResourceAttr) {
+									throw new XMPException(
+										"Empty property element can't have both rdf:value and rdf:resource",
+										BADXMP);
+								}
+								hasValueAttr = true;
+								valueNode = attribute;
+							}
+							else if (!XML_LANG.Equals(attribute.Name)) {
 								hasPropertyAttrs = true;
 							}
-						}
-						break;
-					}
+							break;
 
-					default:
-					{
-						throw new XMPException("Unrecognized attribute of empty property element", BADRDF
-							);
+						default:
+							throw new XMPException("Unrecognized attribute of empty property element",
+								BADRDF);
 					}
 				}
 			}
+
 			// Create the right kind of child node and visit the attributes again 
 			// to add the fields or qualifiers.
 			// ! Because of implementation vagaries, 
 			//   the xmpParent is the tree root for top level properties.
 			// ! The schema is found, created if necessary, by addChildNode.
-			XMPNode childNode = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
+
+			XmpNode childNode = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
 			bool childIsStruct = false;
-			if (hasValueAttr || hasResourceAttr)
-			{
-				childNode.SetValue(valueNode != null ? valueNode.GetNodeValue() : "");
-				if (!hasValueAttr)
-				{
+
+			if (hasValueAttr || hasResourceAttr) {
+				childNode.SetValue(valueNode != null ? valueNode.Value : "");
+				if (!hasValueAttr) {
 					// ! Might have both rdf:value and rdf:resource.
 					childNode.GetOptions().SetURI(true);
 				}
 			}
-			else
-			{
-				if (hasPropertyAttrs)
-				{
-					childNode.GetOptions().SetStruct(true);
-					childIsStruct = true;
-				}
+			else if (hasPropertyAttrs) {
+				childNode.GetOptions().SetStruct(true);
+				childIsStruct = true;
 			}
-			for (int i_1 = 0; i_1 < xmlNode.GetAttributes().GetLength(); i_1++)
-			{
-				Node attribute = xmlNode.GetAttributes().Item(i_1);
-				if (attribute == valueNode || "xmlns".Equals(attribute.GetPrefix()) || (attribute
-					.GetPrefix() == null && "xmlns".Equals(attribute.GetNodeName())))
-				{
-					continue;
-				}
-				// Skip the rdf:value or rdf:resource attribute holding the value.
-				int attrTerm = GetRDFTermKind(attribute);
-				switch (attrTerm)
-				{
-					case RDFTERM_ID:
-					case RDFTERM_NODE_ID:
-					{
-						break;
+
+			if (xmlNode.Attributes != null) {
+				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
+					XmlNode attribute = xmlNode.Attributes[i];
+					if (attribute == valueNode || "xmlns".Equals(attribute.Prefix) ||
+						(attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+						continue; // Skip the rdf:value or rdf:resource attribute holding the value.
 					}
 
-					case RDFTERM_RESOURCE:
-					{
-						// Ignore all rdf:ID and rdf:nodeID attributes.
-						AddQualifierNode(childNode, "rdf:resource", attribute.GetNodeValue());
-						break;
-					}
+					int attrTerm = GetRdfTermKind(attribute);
 
-					case RDFTERM_OTHER:
-					{
-						if (!childIsStruct)
-						{
-							AddQualifierNode(childNode, attribute.GetNodeName(), attribute.GetNodeValue());
-						}
-						else
-						{
-							if (XML_LANG.Equals(attribute.GetNodeName()))
-							{
-								AddQualifierNode(childNode, XML_LANG, attribute.GetNodeValue());
+					switch (attrTerm) {
+						case RDFTERM_ID:
+						case RDFTERM_NODE_ID:
+							break; // Ignore all rdf:ID and rdf:nodeID attributes.
+						case RDFTERM_RESOURCE:
+							AddQualifierNode(childNode, "rdf:resource", attribute.Value);
+							break;
+
+						case RDFTERM_OTHER:
+							if (!childIsStruct) {
+								AddQualifierNode(childNode, attribute.Name, attribute.Value);
 							}
-							else
-							{
-								AddChildNode(xmp, childNode, attribute, attribute.GetNodeValue(), false);
+							else if (XML_LANG.Equals(attribute.Name)) {
+								AddQualifierNode(childNode, XML_LANG, attribute.Value);
 							}
-						}
-						break;
-					}
+							else {
+								AddChildNode(xmp, childNode, attribute, attribute.Value, false);
+							}
+							break;
 
-					default:
-					{
-						throw new XMPException("Unrecognized attribute of empty property element", BADRDF
-							);
+						default:
+							throw new XMPException("Unrecognized attribute of empty property element",
+								BADRDF);
 					}
 				}
 			}
@@ -1050,85 +924,83 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <returns>Returns the newly created child node.</returns>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static XMPNode AddChildNode(XMPMetaImpl xmp, XMPNode xmpParent, Node xmlNode
+		private static XMPNode AddChildNode(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode xmlNode
 			, String value, bool isTopLevel)
 		{
 			XMPSchemaRegistry registry = XMPMetaFactory.GetSchemaRegistry();
-			String @namespace = xmlNode.GetNamespaceURI();
+			String ns = xmlNode.NamespaceURI;
 			String childName;
-			if (@namespace != null)
-			{
-				if (NS_DC_DEPRECATED.Equals(@namespace))
-				{
+			if (ns != null) {
+				if (NS_DC_DEPRECATED.Equals(ns)) {
 					// Fix a legacy DC namespace
-					@namespace = NS_DC;
+					ns = NS_DC;
 				}
-				String prefix = registry.GetNamespacePrefix(@namespace);
-				if (prefix == null)
-				{
-					prefix = xmlNode.GetPrefix() != null ? xmlNode.GetPrefix() : DEFAULT_PREFIX;
-					prefix = registry.RegisterNamespace(@namespace, prefix);
+
+				string prefix = registry.GetNamespacePrefix(ns);
+				if (prefix == null) {
+					prefix = xmlNode.Prefix ?? DEFAULT_PREFIX;
+					prefix = registry.RegisterNamespace(ns, prefix);
 				}
-				childName = prefix + xmlNode.GetLocalName();
+				childName = prefix + xmlNode.LocalName;
 			}
-			else
-			{
-				throw new XMPException("XML namespace required for all elements and attributes", 
+			else {
+				throw new XMPException("XML namespace required for all elements and attributes",
 					BADRDF);
 			}
+
+
 			// create schema node if not already there
 			PropertyOptions childOptions = new PropertyOptions();
 			bool isAlias = false;
-			if (isTopLevel)
-			{
+			if (isTopLevel) {
 				// Lookup the schema node, adjust the XMP parent pointer.
 				// Incoming parent must be the tree root.
-				XMPNode schemaNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), @namespace, DEFAULT_PREFIX
-					, true);
-				schemaNode.SetImplicit(false);
-				// Clear the implicit node bit.
+				XmpNode schemaNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), ns, DEFAULT_PREFIX, true);
+				schemaNode.SetImplicit(false); // Clear the implicit node bit.
 				// need runtime check for proper 32 bit code.
 				xmpParent = schemaNode;
+
 				// If this is an alias set the alias flag in the node 
 				// and the hasAliases flag in the tree.
-				if (registry.FindAlias(childName) != null)
-				{
+				if (registry.FindAlias(childName) != null) {
 					isAlias = true;
 					xmp.GetRoot().SetHasAliases(true);
 					schemaNode.SetHasAliases(true);
 				}
 			}
+
+
 			// Make sure that this is not a duplicate of a named node.
 			bool isArrayItem = "rdf:li".Equals(childName);
 			bool isValueNode = "rdf:value".Equals(childName);
+
 			// Create XMP node and so some checks
-			XMPNode newChild = new XMPNode(childName, value, childOptions);
+			XmpNode newChild = new XmpNode(childName, value, childOptions);
 			newChild.SetAlias(isAlias);
+
 			// Add the new child to the XMP parent node, a value node first.
-			if (!isValueNode)
-			{
+			if (!isValueNode) {
 				xmpParent.AddChild(newChild);
 			}
-			else
-			{
+			else {
 				xmpParent.AddChild(1, newChild);
 			}
-			if (isValueNode)
-			{
-				if (isTopLevel || !xmpParent.GetOptions().IsStruct())
-				{
+
+
+			if (isValueNode) {
+				if (isTopLevel || !xmpParent.Options.Struct) {
 					throw new XMPException("Misplaced rdf:value element", BADRDF);
 				}
 				xmpParent.SetHasValueChild(true);
 			}
-			if (isArrayItem)
-			{
-				if (!xmpParent.GetOptions().IsArray())
-				{
+
+			if (isArrayItem) {
+				if (!xmpParent.GetOptions().IsArray()) {
 					throw new XMPException("Misplaced rdf:li element", BADRDF);
 				}
 				newChild.SetName(ARRAY_ITEM_NAME);
 			}
+
 			return newChild;
 		}
 
@@ -1219,20 +1091,19 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Returns whether the node is a whitespace node,
 		/// i.e. a text node that contains only whitespaces.
 		/// </returns>
-		private static bool IsWhitespaceNode(Node node)
+		private static bool IsWhitespaceNode(XmlNode node)
 		{
-			if (node.GetNodeType() != Node.TEXT_NODE)
-			{
+			if (node.NodeType != XmlNodeType.Text) {
 				return false;
 			}
-			String value = node.GetNodeValue();
-			for (int i = 0; i < value.Length; i++)
-			{
-				if (!char.IsWhiteSpace(value[i]))
-				{
+
+			string value = node.Value;
+			for (int i = 0; i < value.Length; i++) {
+				if (!char.IsWhiteSpace(value[i])) {
 					return false;
 				}
 			}
+
 			return true;
 		}
 
@@ -1284,100 +1155,55 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </remarks>
 		/// <param name="node">an XML node</param>
 		/// <returns>Returns the term ID.</returns>
-		private static int GetRDFTermKind(Node node)
+		private static int GetRdfTermKind(XmlNode node)
 		{
-			String localName = node.GetLocalName();
-			String @namespace = node.GetNamespaceURI();
-			if (@namespace == null && ("about".Equals(localName) || "ID".Equals(localName)) &&
-				 (node is Attr) && NS_RDF.Equals(((Attr)node).GetOwnerElement().GetNamespaceURI(
-				)))
-			{
+			string localName = node.LocalName;
+			string @namespace = node.NamespaceURI;
+
+			if (@namespace == null && ("about".Equals(localName) || "ID".Equals(localName)) && (node is XmlAttribute) &&
+				NS_RDF.Equals(((XmlAttribute) node).OwnerElement.NamespaceURI)) {
 				@namespace = NS_RDF;
 			}
-			if (NS_RDF.Equals(@namespace))
-			{
-				if ("li".Equals(localName))
-				{
+
+			if (NS_RDF.Equals(@namespace)) {
+				if ("li".Equals(localName)) {
 					return RDFTERM_LI;
 				}
-				else
-				{
-					if ("parseType".Equals(localName))
-					{
-						return RDFTERM_PARSE_TYPE;
-					}
-					else
-					{
-						if ("Description".Equals(localName))
-						{
-							return RDFTERM_DESCRIPTION;
-						}
-						else
-						{
-							if ("about".Equals(localName))
-							{
-								return RDFTERM_ABOUT;
-							}
-							else
-							{
-								if ("resource".Equals(localName))
-								{
-									return RDFTERM_RESOURCE;
-								}
-								else
-								{
-									if ("RDF".Equals(localName))
-									{
-										return RDFTERM_RDF;
-									}
-									else
-									{
-										if ("ID".Equals(localName))
-										{
-											return RDFTERM_ID;
-										}
-										else
-										{
-											if ("nodeID".Equals(localName))
-											{
-												return RDFTERM_NODE_ID;
-											}
-											else
-											{
-												if ("datatype".Equals(localName))
-												{
-													return RDFTERM_DATATYPE;
-												}
-												else
-												{
-													if ("aboutEach".Equals(localName))
-													{
-														return RDFTERM_ABOUT_EACH;
-													}
-													else
-													{
-														if ("aboutEachPrefix".Equals(localName))
-														{
-															return RDFTERM_ABOUT_EACH_PREFIX;
-														}
-														else
-														{
-															if ("bagID".Equals(localName))
-															{
-																return RDFTERM_BAG_ID;
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+				if ("parseType".Equals(localName)) {
+					return RDFTERM_PARSE_TYPE;
+				}
+				if ("Description".Equals(localName)) {
+					return RDFTERM_DESCRIPTION;
+				}
+				if ("about".Equals(localName)) {
+					return RDFTERM_ABOUT;
+				}
+				if ("resource".Equals(localName)) {
+					return RDFTERM_RESOURCE;
+				}
+				if ("RDF".Equals(localName)) {
+					return RDFTERM_RDF;
+				}
+				if ("ID".Equals(localName)) {
+					return RDFTERM_ID;
+				}
+				if ("nodeID".Equals(localName)) {
+					return RDFTERM_NODE_ID;
+				}
+				if ("datatype".Equals(localName)) {
+					return RDFTERM_DATATYPE;
+				}
+				if ("aboutEach".Equals(localName)) {
+					return RDFTERM_ABOUT_EACH;
+				}
+				if ("aboutEachPrefix".Equals(localName)) {
+					return RDFTERM_ABOUT_EACH_PREFIX;
+				}
+				if ("bagID".Equals(localName)) {
+					return RDFTERM_BAG_ID;
 				}
 			}
+
 			return RDFTERM_OTHER;
 		}
 	}
