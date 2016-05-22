@@ -46,23 +46,23 @@ using System;
 
 namespace iTextSharp.Kernel.Xmp {
 	
-    public class XMPCalendar {
+    public class XmpCalendar {
         private DateTime dateTime;
         private TimeZone timeZone;
 
-        public XMPCalendar(DateTime dateTime, TimeZone timeZone) {
+        public XmpCalendar(DateTime dateTime, TimeZone timeZone) {
 			this.dateTime = dateTime;
             this.timeZone = timeZone;
         }
 
-        public XMPCalendar(DateTime dateTime) : this(dateTime, TimeZone.CurrentTimeZone) {
+        public XmpCalendar(DateTime dateTime) : this(dateTime, TimeZone.CurrentTimeZone) {
         }
 
-        public XMPCalendar(TimeZone tz)
+        public XmpCalendar(TimeZone tz)
             : this(DateTime.Now, tz) {
         }
 
-        public XMPCalendar() : this(DateTime.Now, TimeZone.CurrentTimeZone) {
+        public XmpCalendar() : this(DateTime.Now, TimeZone.CurrentTimeZone) {
         }
 
 		public virtual DateTime GetDateTime() {

@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 
 		/// <summary>Constructor with the options bit mask.</summary>
 		/// <param name="options">the options bit mask</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not correct
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the options are not correct
 		/// 	</exception>
 		public Options(int options)
 		{
@@ -114,7 +114,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		}
 
 		/// <param name="options">The options to set.</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
 		public virtual void SetOptions(int options)
 		{
 			AssertOptionsValid(options);
@@ -194,7 +194,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// (it has to be made public therefore).
 		/// </remarks>
 		/// <param name="options">the bitmask to check.</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are not consistent.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if the options are not consistent.
 		/// 	</exception>
 		protected internal virtual void AssertConsistency(int options)
 		{
@@ -210,7 +210,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// -method is called.
 		/// </remarks>
 		/// <param name="options">the options to check</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are invalid.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if the options are invalid.
 		/// 	</exception>
 		private void AssertOptionsValid(int options)
 		{
@@ -221,8 +221,8 @@ namespace iTextSharp.Kernel.Xmp.Options
 			}
 			else
 			{
-				throw new XMPException("The option bit(s) 0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
-					(invalidOptions) + " are invalid!", XMPError.BADOPTIONS);
+				throw new XmpException("The option bit(s) 0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
+					(invalidOptions) + " are invalid!", XmpError.BADOPTIONS);
 			}
 		}
 

@@ -33,7 +33,7 @@ using iTextSharp.IO.Util;
 namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>22.08.2006</since>
-	public class FixASCIIControlsReader : PushbackReader
+	public class FixAsciiControlsReader : PushbackReader
 	{
 		private const int STATE_START = 0;
 
@@ -62,7 +62,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)
 		/// 	"/>
 		/// <param name="input">a Reader</param>
-		public FixASCIIControlsReader(TextReader input)
+		public FixAsciiControlsReader(TextReader input)
 			: base(input, BUFFER_SIZE)
 		{
 		}

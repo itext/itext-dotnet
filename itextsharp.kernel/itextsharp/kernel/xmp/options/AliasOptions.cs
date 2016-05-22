@@ -61,7 +61,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		}
 
 		/// <param name="options">the options to init with</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If options are not consistant
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If options are not consistant
 		/// 	</exception>
 		public AliasOptions(int options)
 			: base(options)
@@ -137,7 +137,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// <see cref="PropertyOptions"/>
 		/// s object
 		/// </returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the options are not consistant.
 		/// 	</exception>
 		public PropertyOptions ToPropertyOptions()
 		{

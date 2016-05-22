@@ -31,14 +31,14 @@ using System;
 using System.Collections;
 using System.Text;
 using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 using iTextSharp.Kernel.Xmp.Options;
 using iTextSharp.Kernel.Xmp.Properties;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>11.08.2006</since>
-	public class XMPUtilsImpl
+	public class XmpUtilsImpl
 	{
 		private const int UCK_NORMAL = 0;
 
@@ -53,12 +53,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private const int UCK_CONTROL = 5;
 
 		/// <summary>Private constructor, as</summary>
-		private XMPUtilsImpl()
+		private XmpUtilsImpl()
 		{
 		}
 
 		// EMPTY
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.CatenateArrayItems(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, System.String, System.String, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpUtils.CatenateArrayItems(iTextSharp.Kernel.Xmp.XmpMeta, System.String, System.String, System.String, System.String, bool)
 		/// 	"/>
 		/// <param name="xmp">The XMP object containing the array to be catenated.</param>
 		/// <param name="schemaNS">
@@ -81,9 +81,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </param>
 		/// <param name="allowCommas">Option flag to control the catenation.</param>
 		/// <returns>Returns the string containing the catenated array items.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
+		public static String CatenateArrayItems(XmpMeta xmp, String schemaNS, String arrayName
 			, String separator, String quotes, bool allowCommas)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
@@ -97,13 +97,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				quotes = "\"";
 			}
-			XMPMetaImpl xmpImpl = (XMPMetaImpl)xmp;
-			XMPNode arrayNode = null;
-			XMPNode currItem = null;
+			XmpMetaImpl xmpImpl = (XmpMetaImpl)xmp;
+			XmpNode arrayNode = null;
+			XmpNode currItem = null;
 			// Return an empty result if the array does not exist, 
 			// hurl if it isn't the right form.
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
-			arrayNode = XMPNodeUtils.FindNode(xmpImpl.GetRoot(), arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
+			arrayNode = XmpNodeUtils.FindNode(xmpImpl.GetRoot(), arrayPath, false, null);
 			if (arrayNode == null)
 			{
 				return "";
@@ -113,7 +113,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				if (!arrayNode.GetOptions().IsArray() || arrayNode.GetOptions().IsArrayAlternate(
 					))
 				{
-					throw new XMPException("Named property must be non-alternate array", XMPError.BADPARAM
+					throw new XmpException("Named property must be non-alternate array", XmpError.BADPARAM
 						);
 				}
 			}
@@ -127,10 +127,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			StringBuilder catinatedString = new StringBuilder();
 			for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
 			{
-				currItem = (XMPNode)it.Current;
+				currItem = (XmpNode)it.Current;
 				if (currItem.GetOptions().IsCompositeProperty())
 				{
-					throw new XMPException("Array items must be simple", XMPError.BADPARAM);
+					throw new XmpException("Array items must be simple", XmpError.BADPARAM);
 				}
 				String str = ApplyQuotes(currItem.GetValue(), openQuote, closeQuote, allowCommas);
 				catinatedString.Append(str);
@@ -144,7 +144,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 		/// <summary>
 		/// see
-		/// <see cref="iTextSharp.Kernel.Xmp.XMPUtils.SeparateArrayItems(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, bool)
+		/// <see cref="iTextSharp.Kernel.Xmp.XmpUtils.SeparateArrayItems(iTextSharp.Kernel.Xmp.XmpMeta, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, bool)
 		/// 	"/>
 		/// </summary>
 		/// <param name="xmp">The XMP object containing the array to be updated.</param>
@@ -160,21 +160,21 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="catedStr">The string to be separated into the array items.</param>
 		/// <param name="arrayOptions">Option flags to control the separation.</param>
 		/// <param name="preserveCommas">Flag if commas shall be preserved</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
+		public static void SeparateArrayItems(XmpMeta xmp, String schemaNS, String arrayName
 			, String catedStr, PropertyOptions arrayOptions, bool preserveCommas)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(arrayName);
 			if (catedStr == null)
 			{
-				throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
+				throw new XmpException("Parameter must not be null", XmpError.BADPARAM);
 			}
 			ParameterAsserts.AssertImplementation(xmp);
-			XMPMetaImpl xmpImpl = (XMPMetaImpl)xmp;
+			XmpMetaImpl xmpImpl = (XmpMetaImpl)xmp;
 			// Keep a zero value, has special meaning below.
-			XMPNode arrayNode = SeparateFindCreateArray(schemaNS, arrayName, arrayOptions, xmpImpl
+			XmpNode arrayNode = SeparateFindCreateArray(schemaNS, arrayName, arrayOptions, xmpImpl
 				);
 			// Extract the item values one at a time, until the whole input string is done.
 			String itemValue;
@@ -317,10 +317,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						break;
 					}
 				}
-				XMPNode newItem = null;
+				XmpNode newItem = null;
 				if (foundIndex < 0)
 				{
-					newItem = new XMPNode(ARRAY_ITEM_NAME, itemValue, null);
+					newItem = new XmpNode(ARRAY_ITEM_NAME, itemValue, null);
 					arrayNode.AddChild(newItem);
 				}
 			}
@@ -333,20 +333,20 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="arrayOptions">the options for the array if newly created</param>
 		/// <param name="xmp">the xmp object</param>
 		/// <returns>Returns the array node.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards exceptions</exception>
-		private static XMPNode SeparateFindCreateArray(String schemaNS, String arrayName, 
-			PropertyOptions arrayOptions, XMPMetaImpl xmp)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards exceptions</exception>
+		private static XmpNode SeparateFindCreateArray(String schemaNS, String arrayName, 
+			PropertyOptions arrayOptions, XmpMetaImpl xmp)
 		{
-			arrayOptions = XMPNodeUtils.VerifySetOptions(arrayOptions, null);
+			arrayOptions = XmpNodeUtils.VerifySetOptions(arrayOptions, null);
 			if (!arrayOptions.IsOnlyArrayOptions())
 			{
-				throw new XMPException("Options can only provide array form", XMPError.BADOPTIONS
+				throw new XmpException("Options can only provide array form", XmpError.BADOPTIONS
 					);
 			}
 			// Find the array node, make sure it is OK. Move the current children
 			// aside, to be readded later if kept.
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
-			XMPNode arrayNode = XMPNodeUtils.FindNode(xmp.GetRoot(), arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(xmp.GetRoot(), arrayPath, false, null);
 			if (arrayNode != null)
 			{
 				// The array exists, make sure the form is compatible. Zero
@@ -354,12 +354,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				PropertyOptions arrayForm = arrayNode.GetOptions();
 				if (!arrayForm.IsArray() || arrayForm.IsArrayAlternate())
 				{
-					throw new XMPException("Named property must be non-alternate array", XMPError.BADXPATH
+					throw new XmpException("Named property must be non-alternate array", XmpError.BADXPATH
 						);
 				}
 				if (arrayOptions.EqualArrayTypes(arrayForm))
 				{
-					throw new XMPException("Mismatch of specified and existing array form", XMPError.
+					throw new XmpException("Mismatch of specified and existing array form", XmpError.
 						BADXPATH);
 				}
 			}
@@ -368,17 +368,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// *** Right error?
 				// The array does not exist, try to create it.
 				// don't modify the options handed into the method
-				arrayNode = XMPNodeUtils.FindNode(xmp.GetRoot(), arrayPath, true, arrayOptions.SetArray
+				arrayNode = XmpNodeUtils.FindNode(xmp.GetRoot(), arrayPath, true, arrayOptions.SetArray
 					(true));
 				if (arrayNode == null)
 				{
-					throw new XMPException("Failed to create named array", XMPError.BADXPATH);
+					throw new XmpException("Failed to create named array", XmpError.BADXPATH);
 				}
 			}
 			return arrayNode;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.RemoveProperties(iTextSharp.Kernel.Xmp.XMPMeta, System.String, System.String, bool, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpUtils.RemoveProperties(iTextSharp.Kernel.Xmp.XmpMeta, System.String, System.String, bool, bool)
 		/// 	"/>
 		/// <param name="xmp">The XMP object containing the properties to be removed.</param>
 		/// <param name="schemaNS">
@@ -394,13 +394,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Option flag to control the deletion: Include aliases in the
 		/// "named schema" case above.
 		/// </param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If metadata processing fails
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If metadata processing fails
 		/// 	</exception>
-		public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName
+		public static void RemoveProperties(XmpMeta xmp, String schemaNS, String propName
 			, bool doAllProperties, bool includeAliases)
 		{
 			ParameterAsserts.AssertImplementation(xmp);
-			XMPMetaImpl xmpImpl = (XMPMetaImpl)xmp;
+			XmpMetaImpl xmpImpl = (XmpMetaImpl)xmp;
 			if (propName != null && propName.Length > 0)
 			{
 				// Remove just the one indicated property. This might be an alias,
@@ -408,17 +408,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// schema node.
 				if (schemaNS == null || schemaNS.Length == 0)
 				{
-					throw new XMPException("Property name requires schema namespace", XMPError.BADPARAM
+					throw new XmpException("Property name requires schema namespace", XmpError.BADPARAM
 						);
 				}
-				XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-				XMPNode propNode = XMPNodeUtils.FindNode(xmpImpl.GetRoot(), expPath, false, null);
+				XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+				XmpNode propNode = XmpNodeUtils.FindNode(xmpImpl.GetRoot(), expPath, false, null);
 				if (propNode != null)
 				{
-					if (doAllProperties || !Utils.IsInternalProperty(expPath.GetSegment(XMPPath.STEP_SCHEMA
-						).GetName(), expPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName()))
+					if (doAllProperties || !Utils.IsInternalProperty(expPath.GetSegment(XmpPath.STEP_SCHEMA
+						).GetName(), expPath.GetSegment(XmpPath.STEP_ROOT_PROP).GetName()))
 					{
-						XMPNode parent = propNode.GetParent();
+						XmpNode parent = propNode.GetParent();
 						parent.RemoveChild(propNode);
 						if (parent.GetOptions().IsSchemaNode() && !parent.HasChildren())
 						{
@@ -436,7 +436,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					// aliases, in which case
 					// there might not be an actual schema node.
 					// XMP_NodePtrPos schemaPos;
-					XMPNode schemaNode = XMPNodeUtils.FindSchemaNode(xmpImpl.GetRoot(), schemaNS, false
+					XmpNode schemaNode = XmpNodeUtils.FindSchemaNode(xmpImpl.GetRoot(), schemaNS, false
 						);
 					if (schemaNode != null)
 					{
@@ -452,15 +452,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// But that takes more code and the extra speed isn't worth it.
 						// Lookup the XMP node
 						// from the alias, to make sure the actual exists.
-						XMPAliasInfo[] aliases = XMPMetaFactory.GetSchemaRegistry().FindAliases(schemaNS);
+						XmpAliasInfo[] aliases = XmpMetaFactory.GetSchemaRegistry().FindAliases(schemaNS);
 						for (int i = 0; i < aliases.Length; i++)
 						{
-							XMPAliasInfo info = aliases[i];
-							XMPPath path = XMPPathParser.ExpandXPath(info.GetNamespace(), info.GetPropName());
-							XMPNode actualProp = XMPNodeUtils.FindNode(xmpImpl.GetRoot(), path, false, null);
+							XmpAliasInfo info = aliases[i];
+							XmpPath path = XmpPathParser.ExpandXPath(info.GetNamespace(), info.GetPropName());
+							XmpNode actualProp = XmpNodeUtils.FindNode(xmpImpl.GetRoot(), path, false, null);
 							if (actualProp != null)
 							{
-								XMPNode parent = actualProp.GetParent();
+								XmpNode parent = actualProp.GetParent();
 								parent.RemoveChild(actualProp);
 							}
 						}
@@ -474,7 +474,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					// actual properties.
 					for (IEnumerator it = xmpImpl.GetRoot().IterateChildren(); it.MoveNext(); )
 					{
-						XMPNode schema = (XMPNode)it.Current;
+						XmpNode schema = (XmpNode)it.Current;
 						if (RemoveSchemaChildren(schema, doAllProperties))
 						{
 							it.Remove();
@@ -484,7 +484,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPUtils.AppendProperties(iTextSharp.Kernel.Xmp.XMPMeta, iTextSharp.Kernel.Xmp.XMPMeta, bool, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpUtils.AppendProperties(iTextSharp.Kernel.Xmp.XmpMeta, iTextSharp.Kernel.Xmp.XmpMeta, bool, bool)
 		/// 	"/>
 		/// <param name="source">The source XMP object.</param>
 		/// <param name="destination">The destination XMP object.</param>
@@ -493,25 +493,25 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="replaceOldValues">Replace the values of existing properties.</param>
 		/// <param name="deleteEmptyValues">Delete destination values if source property is empty.
 		/// 	</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		public static void AppendProperties(XMPMeta source, XMPMeta destination, bool doAllProperties
+		public static void AppendProperties(XmpMeta source, XmpMeta destination, bool doAllProperties
 			, bool replaceOldValues, bool deleteEmptyValues)
 		{
 			ParameterAsserts.AssertImplementation(source);
 			ParameterAsserts.AssertImplementation(destination);
-			XMPMetaImpl src = (XMPMetaImpl)source;
-			XMPMetaImpl dest = (XMPMetaImpl)destination;
+			XmpMetaImpl src = (XmpMetaImpl)source;
+			XmpMetaImpl dest = (XmpMetaImpl)destination;
 			for (IEnumerator it = src.GetRoot().IterateChildren(); it.MoveNext(); )
 			{
-				XMPNode sourceSchema = (XMPNode)it.Current;
+				XmpNode sourceSchema = (XmpNode)it.Current;
 				// Make sure we have a destination schema node
-				XMPNode destSchema = XMPNodeUtils.FindSchemaNode(dest.GetRoot(), sourceSchema.GetName
+				XmpNode destSchema = XmpNodeUtils.FindSchemaNode(dest.GetRoot(), sourceSchema.GetName
 					(), false);
 				bool createdSchema = false;
 				if (destSchema == null)
 				{
-					destSchema = new XMPNode(sourceSchema.GetName(), sourceSchema.GetValue(), new PropertyOptions
+					destSchema = new XmpNode(sourceSchema.GetName(), sourceSchema.GetValue(), new PropertyOptions
 						().SetSchemaNode(true));
 					dest.GetRoot().AddChild(destSchema);
 					createdSchema = true;
@@ -519,7 +519,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// Process the source schema's children.			
 				for (IEnumerator ic = sourceSchema.IterateChildren(); ic.MoveNext(); )
 				{
-					XMPNode sourceProp = (XMPNode)ic.Current;
+					XmpNode sourceProp = (XmpNode)ic.Current;
 					if (doAllProperties || !Utils.IsInternalProperty(sourceSchema.GetName(), sourceProp
 						.GetName()))
 					{
@@ -547,12 +547,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="doAllProperties">flag if all properties or only externals shall be removed.
 		/// 	</param>
 		/// <returns>Returns true if the schema is empty after the operation.</returns>
-		private static bool RemoveSchemaChildren(XMPNode schemaNode, bool doAllProperties
+		private static bool RemoveSchemaChildren(XmpNode schemaNode, bool doAllProperties
 			)
 		{
 			for (IEnumerator it = schemaNode.IterateChildren(); it.MoveNext(); )
 			{
-				XMPNode currProp = (XMPNode)it.Current;
+				XmpNode currProp = (XmpNode)it.Current;
 				if (doAllProperties || !Utils.IsInternalProperty(schemaNode.GetName(), currProp.GetName
 					()))
 				{
@@ -562,7 +562,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			return !schemaNode.HasChildren();
 		}
 
-		/// <seealso cref="AppendProperties(iTextSharp.Kernel.Xmp.XMPMeta, iTextSharp.Kernel.Xmp.XMPMeta, bool, bool, bool)
+		/// <seealso cref="AppendProperties(iTextSharp.Kernel.Xmp.XmpMeta, iTextSharp.Kernel.Xmp.XmpMeta, bool, bool, bool)
 		/// 	"/>
 		/// <param name="destXMP">The destination XMP object.</param>
 		/// <param name="sourceNode">the source node</param>
@@ -572,11 +572,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// flag if properties with empty values should be deleted
 		/// in the destination object.
 		/// </param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		private static void AppendSubtree(XMPMetaImpl destXMP, XMPNode sourceNode, XMPNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		private static void AppendSubtree(XmpMetaImpl destXMP, XmpNode sourceNode, XmpNode
 			 destParent, bool replaceOldValues, bool deleteEmptyValues)
 		{
-			XMPNode destNode = XMPNodeUtils.FindChildNode(destParent, sourceNode.GetName(), false
+			XmpNode destNode = XmpNodeUtils.FindChildNode(destParent, sourceNode.GetName(), false
 				);
 			bool valueIsEmpty = false;
 			if (deleteEmptyValues)
@@ -596,7 +596,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				if (destNode == null)
 				{
 					// The one easy case, the destination does not exist.
-					destParent.AddChild((XMPNode)sourceNode.Clone());
+					destParent.AddChild((XmpNode)sourceNode.Clone());
 				}
 				else
 				{
@@ -605,7 +605,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// The destination exists and should be replaced.
 						destXMP.SetNode(destNode, sourceNode.GetValue(), sourceNode.GetOptions(), true);
 						destParent.RemoveChild(destNode);
-						destNode = (XMPNode)sourceNode.Clone();
+						destNode = (XmpNode)sourceNode.Clone();
 						destParent.AddChild(destNode);
 					}
 					else
@@ -625,7 +625,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							// values.
 							for (IEnumerator it = sourceNode.IterateChildren(); it.MoveNext(); )
 							{
-								XMPNode sourceField = (XMPNode)it.Current;
+								XmpNode sourceField = (XmpNode)it.Current;
 								AppendSubtree(destXMP, sourceField, destNode, replaceOldValues, deleteEmptyValues
 									);
 								if (deleteEmptyValues && !destNode.HasChildren())
@@ -643,13 +643,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 								// because the "xml:lang" qualifier provides unambiguous source/dest correspondence.
 								for (IEnumerator it = sourceNode.IterateChildren(); it.MoveNext(); )
 								{
-									XMPNode sourceItem = (XMPNode)it.Current;
-									if (!sourceItem.HasQualifier() || !XMPConst.XML_LANG.Equals(sourceItem.GetQualifier
+									XmpNode sourceItem = (XmpNode)it.Current;
+									if (!sourceItem.HasQualifier() || !XmpConst.XML_LANG.Equals(sourceItem.GetQualifier
 										(1).GetName()))
 									{
 										continue;
 									}
-									int destIndex = XMPNodeUtils.LookupLanguageItem(destNode, sourceItem.GetQualifier
+									int destIndex = XmpNodeUtils.LookupLanguageItem(destNode, sourceItem.GetQualifier
 										(1).GetValue());
 									if (deleteEmptyValues && (sourceItem.GetValue() == null || sourceItem.GetValue().
 										Length == 0))
@@ -668,14 +668,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 										if (destIndex == -1)
 										{
 											// Not replacing, keep the existing item.						
-											if (!XMPConst.X_DEFAULT.Equals(sourceItem.GetQualifier(1).GetValue()) || !destNode
+											if (!XmpConst.X_DEFAULT.Equals(sourceItem.GetQualifier(1).GetValue()) || !destNode
 												.HasChildren())
 											{
 												sourceItem.CloneSubtree(destNode);
 											}
 											else
 											{
-												XMPNode destItem = new XMPNode(sourceItem.GetName(), sourceItem.GetValue(), sourceItem
+												XmpNode destItem = new XmpNode(sourceItem.GetName(), sourceItem.GetValue(), sourceItem
 													.GetOptions());
 												sourceItem.CloneSubtree(destItem);
 												destNode.AddChild(1, destItem);
@@ -693,11 +693,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 									// merging.
 									for (IEnumerator @is = sourceNode.IterateChildren(); @is.MoveNext(); )
 									{
-										XMPNode sourceItem = (XMPNode)@is.Current;
+										XmpNode sourceItem = (XmpNode)@is.Current;
 										bool match = false;
 										for (IEnumerator id = destNode.IterateChildren(); id.MoveNext(); )
 										{
-											XMPNode destItem = (XMPNode)id.Current;
+											XmpNode destItem = (XmpNode)id.Current;
 											if (ItemValuesMatch(sourceItem, destItem))
 											{
 												match = true;
@@ -705,7 +705,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 										}
 										if (!match)
 										{
-											destNode = (XMPNode)sourceItem.Clone();
+											destNode = (XmpNode)sourceItem.Clone();
 											destParent.AddChild(destNode);
 										}
 									}
@@ -721,9 +721,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="leftNode">an <code>XMPNode</code></param>
 		/// <param name="rightNode">an <code>XMPNode</code></param>
 		/// <returns>Returns true if the nodes are equal, false otherwise.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Forwards exceptions to the calling method.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards exceptions to the calling method.
 		/// 	</exception>
-		private static bool ItemValuesMatch(XMPNode leftNode, XMPNode rightNode)
+		private static bool ItemValuesMatch(XmpNode leftNode, XmpNode rightNode)
 		{
 			PropertyOptions leftForm = leftNode.GetOptions();
 			PropertyOptions rightForm = rightNode.GetOptions();
@@ -760,8 +760,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					}
 					for (IEnumerator it = leftNode.IterateChildren(); it.MoveNext(); )
 					{
-						XMPNode leftField = (XMPNode)it.Current;
-						XMPNode rightField = XMPNodeUtils.FindChildNode(rightNode, leftField.GetName(), false
+						XmpNode leftField = (XmpNode)it.Current;
+						XmpNode rightField = XmpNodeUtils.FindChildNode(rightNode, leftField.GetName(), false
 							);
 						if (rightField == null || !ItemValuesMatch(leftField, rightField))
 						{
@@ -778,11 +778,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					System.Diagnostics.Debug.Assert(leftForm.IsArray());
 					for (IEnumerator il = leftNode.IterateChildren(); il.MoveNext(); )
 					{
-						XMPNode leftItem = (XMPNode)il.Current;
+						XmpNode leftItem = (XmpNode)il.Current;
 						bool match = false;
 						for (IEnumerator ir = rightNode.IterateChildren(); ir.MoveNext(); )
 						{
-							XMPNode rightItem = (XMPNode)ir.Current;
+							XmpNode rightItem = (XmpNode)ir.Current;
 							if (ItemValuesMatch(leftItem, rightItem))
 							{
 								match = true;
@@ -807,7 +807,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// allowed.
 		/// </remarks>
 		/// <param name="separator"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static void CheckSeparator(String separator)
 		{
 			bool haveSemicolon = false;
@@ -818,7 +818,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					if (haveSemicolon)
 					{
-						throw new XMPException("Separator can have only one semicolon", XMPError.BADPARAM
+						throw new XmpException("Separator can have only one semicolon", XmpError.BADPARAM
 							);
 					}
 					haveSemicolon = true;
@@ -827,14 +827,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					if (charKind != UCK_SPACE)
 					{
-						throw new XMPException("Separator can have only spaces and one semicolon", XMPError
+						throw new XmpException("Separator can have only spaces and one semicolon", XmpError
 							.BADPARAM);
 					}
 				}
 			}
 			if (!haveSemicolon)
 			{
-				throw new XMPException("Separator must have one semicolon", XMPError.BADPARAM);
+				throw new XmpException("Separator must have one semicolon", XmpError.BADPARAM);
 			}
 		}
 
@@ -845,14 +845,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="quotes">opened and closing quote in a string</param>
 		/// <param name="openQuote">the open quote</param>
 		/// <returns>Returns a corresponding closing quote.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static char CheckQuotes(String quotes, char openQuote)
 		{
 			char closeQuote;
 			int charKind = ClassifyCharacter(openQuote);
 			if (charKind != UCK_QUOTE)
 			{
-				throw new XMPException("Invalid quoting character", XMPError.BADPARAM);
+				throw new XmpException("Invalid quoting character", XmpError.BADPARAM);
 			}
 			if (quotes.Length == 1)
 			{
@@ -864,12 +864,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				charKind = ClassifyCharacter(closeQuote);
 				if (charKind != UCK_QUOTE)
 				{
-					throw new XMPException("Invalid quoting character", XMPError.BADPARAM);
+					throw new XmpException("Invalid quoting character", XmpError.BADPARAM);
 				}
 			}
 			if (closeQuote != GetClosingQuote(openQuote))
 			{
-				throw new XMPException("Mismatched quote pair", XMPError.BADPARAM);
+				throw new XmpException("Mismatched quote pair", XmpError.BADPARAM);
 			}
 			return closeQuote;
 		}

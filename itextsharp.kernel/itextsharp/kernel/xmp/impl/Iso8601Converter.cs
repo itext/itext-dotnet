@@ -44,9 +44,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		// EMPTY
-		/// <summary>Converts an ISO 8601 string to an <code>XMPDateTime</code>.</summary>
+		/// <summary>Converts an ISO 8601 string to an <code>XmpDateTime</code>.</summary>
 		/// <remarks>
-		/// Converts an ISO 8601 string to an <code>XMPDateTime</code>.
+		/// Converts an ISO 8601 string to an <code>XmpDateTime</code>.
 		/// Parse a date according to ISO 8601 and
 		/// http://www.w3.org/TR/NOTE-datetime:
 		/// <ul>
@@ -80,22 +80,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </remarks>
 		/// <param name="iso8601String">a date string that is ISO 8601 conform.</param>
 		/// <returns>Returns a <code>Calendar</code>.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Is thrown when the string is non-conform.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Is thrown when the string is non-conform.
 		/// 	</exception>
-		public static XMPDateTime Parse(String iso8601String)
+		public static XmpDateTime Parse(String iso8601String)
 		{
-			return Parse(iso8601String, new XMPDateTimeImpl());
+			return Parse(iso8601String, new XmpDateTimeImpl());
 		}
 
 		/// <param name="iso8601String">a date string that is ISO 8601 conform.</param>
-		/// <param name="binValue">an existing XMPDateTime to set with the parsed date</param>
-		/// <returns>Returns an XMPDateTime-object containing the ISO8601-date.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Is thrown when the string is non-conform.
+		/// <param name="binValue">an existing XmpDateTime to set with the parsed date</param>
+		/// <returns>Returns an XmpDateTime-object containing the ISO8601-date.</returns>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Is thrown when the string is non-conform.
 		/// 	</exception>
-		public static XMPDateTime Parse(String iso8601String, XMPDateTime binValue)
+		public static XmpDateTime Parse(String iso8601String, XmpDateTime binValue)
 		{
 			if (iso8601String == null) {
-				throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
+				throw new XmpException("Parameter must not be null", XmpError.BADPARAM);
 			}
 			if (iso8601String.Length == 0) {
 				return binValue;
@@ -110,7 +110,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// Extract the year.
 			int value = input.GatherInt("Invalid year in date string", 9999);
 			if (input.HasNext() && input.Ch() != '-') {
-				throw new XMPException("Invalid date string, after year", XMPError.BADVALUE);
+				throw new XmpException("Invalid date string, after year", XmpError.BADVALUE);
 			}
 
 			if (input.Ch(0) == '-') {
@@ -126,7 +126,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// Extract the month.
 			value = input.GatherInt("Invalid month in date string", 12);
 			if (input.HasNext() && input.Ch() != '-') {
-				throw new XMPException("Invalid date string, after month", XMPError.BADVALUE);
+				throw new XmpException("Invalid date string, after month", XmpError.BADVALUE);
 			}
 			binValue.SetMonth(value);
 			if (!input.HasNext()) {
@@ -138,7 +138,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// Extract the day.
 			value = input.GatherInt("Invalid day in date string", 31);
 			if (input.HasNext() && input.Ch() != 'T') {
-				throw new XMPException("Invalid date string, after day", XMPError.BADVALUE);
+				throw new XmpException("Invalid date string, after day", XmpError.BADVALUE);
 			}
 			binValue.SetDay(value);
 			if (!input.HasNext()) {
@@ -158,7 +158,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				input.Skip();
 				value = input.GatherInt("Invalid minute in date string", 59);
 				if (input.HasNext() && input.Ch() != ':' && input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
-					throw new XMPException("Invalid date string, after minute", XMPError.BADVALUE);
+					throw new XmpException("Invalid date string, after minute", XmpError.BADVALUE);
 				}
 				binValue.SetMinute(value);
 			}
@@ -170,7 +170,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				input.Skip();
 				value = input.GatherInt("Invalid whole seconds in date string", 59);
 				if (input.HasNext() && input.Ch() != '.' && input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
-					throw new XMPException("Invalid date string, after whole seconds", XMPError.BADVALUE);
+					throw new XmpException("Invalid date string, after whole seconds", XmpError.BADVALUE);
 				}
 				binValue.SetSecond(value);
 				if (input.Ch() == '.') {
@@ -178,8 +178,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					int digits = input.Pos();
 					value = input.GatherInt("Invalid fractional seconds in date string", 999999999);
 					if (input.HasNext() && (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-')) {
-						throw new XMPException("Invalid date string, after fractional second",
-							XMPError.BADVALUE);
+						throw new XmpException("Invalid date string, after fractional second",
+							XmpError.BADVALUE);
 					}
 					digits = input.Pos() - digits;
 					for (; digits > 9; --digits) {
@@ -192,7 +192,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				}
 			}
 			else if (input.Ch() != 'Z' && input.Ch() != '+' && input.Ch() != '-') {
-				throw new XMPException("Invalid date string, after time", XMPError.BADVALUE);
+				throw new XmpException("Invalid date string, after time", XmpError.BADVALUE);
 			}
 
 
@@ -209,7 +209,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				else if (input.Ch() == '-') {
 				}
 				else {
-					throw new XMPException("Time zone must begin with 'Z', '+', or '-'", XMPError.BADVALUE);
+					throw new XmpException("Time zone must begin with 'Z', '+', or '-'", XmpError.BADVALUE);
 				}
 
 				input.Skip();
@@ -219,7 +219,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						input.Skip();
 					}
 					else {
-						throw new XMPException("Invalid date string, after time zone hour", XMPError.BADVALUE);
+						throw new XmpException("Invalid date string, after time zone hour", XmpError.BADVALUE);
 					}
 				}
 			}
@@ -228,7 +228,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			binValue.SetTimeZone(TimeZone.CurrentTimeZone);
 
 			if (input.HasNext()) {
-				throw new XMPException("Invalid date string, extra chars at end", XMPError.BADVALUE);
+				throw new XmpException("Invalid date string, extra chars at end", XmpError.BADVALUE);
 			}
 
 			return binValue;
@@ -263,9 +263,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <em>Note:</em> Fix for bug 1269463 (silently fix out of range values) included in parsing.
 		/// The quasi-bogus "time only" values from Photoshop CS are not supported.
 		/// </remarks>
-		/// <param name="dateTime">an XMPDateTime-object.</param>
+		/// <param name="dateTime">an XmpDateTime-object.</param>
 		/// <returns>Returns an ISO 8601 string.</returns>
-		public static String Render(XMPDateTime dateTime) {
+		public static String Render(XmpDateTime dateTime) {
 			return dateTime.GetCalendar().GetDateTime().ToString("s");
 		}
 	}
@@ -325,7 +325,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// 	</param>
 		/// <param name="maxValue">the max value of the number to return</param>
 		/// <returns>Returns the parsed integer.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if no integer can be found.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if no integer can be found.
 		/// 	</exception>
 		public virtual int GatherInt(String errorMsg, int maxValue)
 		{
@@ -359,7 +359,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else
 			{
-				throw new XMPException(errorMsg, XMPError.BADVALUE);
+				throw new XmpException(errorMsg, XmpError.BADVALUE);
 			}
 		}
 	}

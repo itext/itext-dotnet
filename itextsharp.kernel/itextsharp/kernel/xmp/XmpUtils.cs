@@ -18,10 +18,10 @@ namespace iTextSharp.Kernel.Xmp
 	/// Java default conversion utilities.
 	/// </remarks>
 	/// <since>21.02.2006</since>
-	public class XMPUtils
+	public class XmpUtils
 	{
 		/// <summary>Private constructor</summary>
-		private XMPUtils()
+		private XmpUtils()
 		{
 		}
 
@@ -48,13 +48,13 @@ namespace iTextSharp.Kernel.Xmp
 		/// </param>
 		/// <param name="allowCommas">Option flag to control the catenation.</param>
 		/// <returns>Returns the string containing the catenated array items.</returns>
-		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static String CatenateArrayItems(XmpMeta xmp, String schemaNS, String arrayName
 			, String separator, String quotes, bool allowCommas)
 		{
-			return XMPUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes
+			return XmpUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes
 				, allowCommas);
 		}
 
@@ -72,13 +72,13 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="catedStr">The string to be separated into the array items.</param>
 		/// <param name="arrayOptions">Option flags to control the separation.</param>
 		/// <param name="preserveCommas">Flag if commas shall be preserved</param>
-		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void SeparateArrayItems(XmpMeta xmp, String schemaNS, String arrayName
 			, String catedStr, PropertyOptions arrayOptions, bool preserveCommas)
 		{
-			XMPUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, 
+			XmpUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, 
 				preserveCommas);
 		}
 
@@ -121,13 +121,13 @@ namespace iTextSharp.Kernel.Xmp
 		/// Include aliases in the "named schema" case above.
 		/// <em>Note:</em> Currently not supported.
 		/// </param>
-		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void RemoveProperties(XmpMeta xmp, String schemaNS, String propName
 			, bool doAllProperties, bool includeAliases)
 		{
-			XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases
+			XmpUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases
 				);
 		}
 
@@ -137,10 +137,10 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="doAllProperties">Do internal properties in addition to external properties.
 		/// 	</param>
 		/// <param name="replaceOldValues">Replace the values of existing properties.</param>
-		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void AppendProperties(XmpMeta source, XmpMeta dest, bool doAllProperties
 			, bool replaceOldValues)
 		{
 			AppendProperties(source, dest, doAllProperties, replaceOldValues, false);
@@ -218,13 +218,13 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="replaceOldValues">Replace the values of existing properties.</param>
 		/// <param name="deleteEmptyValues">Delete destination values if source property is empty.
 		/// 	</param>
-		/// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
+		/// <exception cref="XmpException">Forwards the Exceptions from the metadata processing
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void AppendProperties(XmpMeta source, XmpMeta dest, bool doAllProperties
 			, bool replaceOldValues, bool deleteEmptyValues)
 		{
-			XMPUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues
+			XmpUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues
 				);
 		}
 
@@ -235,22 +235,22 @@ namespace iTextSharp.Kernel.Xmp
 		/// for <code>true</code> and <code>false</code> are:
 		/// <ul>
 		/// <li>
-		/// <see cref="XMPConst.TRUESTR"/>
+		/// <see cref="XmpConst.TRUESTR"/>
 		/// and
-		/// <see cref="XMPConst.FALSESTR"/>
+		/// <see cref="XmpConst.FALSESTR"/>
 		/// <li>&quot;t&quot; and &quot;f&quot;
 		/// <li>&quot;on&quot; and &quot;off&quot;
 		/// <li>&quot;yes&quot; and &quot;no&quot;
 		/// <li>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
 		/// </ul>
 		/// </returns>
-		/// <exception cref="XMPException">If an empty string is passed.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">If an empty string is passed.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static bool ConvertToBoolean(String value)
 		{
 			if (value == null || value.Length == 0)
 			{
-				throw new XMPException("Empty convert-string", XMPError.BADVALUE);
+				throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 			}
 			value = value.ToLower();
 			try
@@ -270,31 +270,31 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>
 		/// The XMP string representation of the boolean. The values used are
 		/// given by the constnts
-		/// <see cref="XMPConst.TRUESTR"/>
+		/// <see cref="XmpConst.TRUESTR"/>
 		/// and
-		/// <see cref="XMPConst.FALSESTR"/>
+		/// <see cref="XmpConst.FALSESTR"/>
 		/// .
 		/// </returns>
 		public static String ConvertFromBoolean(bool value)
 		{
-			return value ? XMPConst.TRUESTR : XMPConst.FALSESTR;
+			return value ? XmpConst.TRUESTR : XmpConst.FALSESTR;
 		}
 
 		/// <summary>Converts a string value to an <code>int</code>.</summary>
 		/// <param name="rawValue">the string value</param>
 		/// <returns>Returns an int.</returns>
-		/// <exception cref="XMPException">
+		/// <exception cref="XmpException">
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static int ConvertToInteger(String rawValue)
 		{
 			try
 			{
 				if (rawValue == null || rawValue.Length == 0)
 				{
-					throw new XMPException("Empty convert-string", XMPError.BADVALUE);
+					throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 				}
 				if (rawValue.StartsWith("0x"))
 				{
@@ -307,7 +307,7 @@ namespace iTextSharp.Kernel.Xmp
 			}
 			catch (FormatException)
 			{
-				throw new XMPException("Invalid integer string", XMPError.BADVALUE);
+				throw new XmpException("Invalid integer string", XmpError.BADVALUE);
 			}
 		}
 
@@ -322,18 +322,18 @@ namespace iTextSharp.Kernel.Xmp
 		/// <summary>Converts a string value to a <code>long</code>.</summary>
 		/// <param name="rawValue">the string value</param>
 		/// <returns>Returns a long.</returns>
-		/// <exception cref="XMPException">
+		/// <exception cref="XmpException">
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static long ConvertToLong(String rawValue)
 		{
 			try
 			{
 				if (rawValue == null || rawValue.Length == 0)
 				{
-					throw new XMPException("Empty convert-string", XMPError.BADVALUE);
+					throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 				}
 				if (rawValue.StartsWith("0x"))
 				{
@@ -346,7 +346,7 @@ namespace iTextSharp.Kernel.Xmp
 			}
 			catch (FormatException)
 			{
-				throw new XMPException("Invalid long string", XMPError.BADVALUE);
+				throw new XmpException("Invalid long string", XmpError.BADVALUE);
 			}
 		}
 
@@ -361,18 +361,18 @@ namespace iTextSharp.Kernel.Xmp
 		/// <summary>Converts a string value to a <code>double</code>.</summary>
 		/// <param name="rawValue">the string value</param>
 		/// <returns>Returns a double.</returns>
-		/// <exception cref="XMPException">
+		/// <exception cref="XmpException">
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static double ConvertToDouble(String rawValue)
 		{
 			try
 			{
 				if (rawValue == null || rawValue.Length == 0)
 				{
-					throw new XMPException("Empty convert-string", XMPError.BADVALUE);
+					throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 				}
 				else
 				{
@@ -381,7 +381,7 @@ namespace iTextSharp.Kernel.Xmp
 			}
 			catch (FormatException)
 			{
-				throw new XMPException("Invalid double string", XMPError.BADVALUE);
+				throw new XmpException("Invalid double string", XmpError.BADVALUE);
 			}
 		}
 
@@ -396,29 +396,29 @@ namespace iTextSharp.Kernel.Xmp
 		/// <summary>Converts a string value to an <code>XMPDateTime</code>.</summary>
 		/// <param name="rawValue">the string value</param>
 		/// <returns>Returns an <code>XMPDateTime</code>-object.</returns>
-		/// <exception cref="XMPException">
+		/// <exception cref="XmpException">
 		/// If the <code>rawValue</code> is <code>null</code> or empty or the
 		/// conversion fails.
 		/// </exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPDateTime ConvertToDate(String rawValue)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpDateTime ConvertToDate(String rawValue)
 		{
 			if (rawValue == null || rawValue.Length == 0)
 			{
-				throw new XMPException("Empty convert-string", XMPError.BADVALUE);
+				throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 			}
 			else
 			{
-				return ISO8601Converter.Parse(rawValue);
+				return Iso8601Converter.Parse(rawValue);
 			}
 		}
 
 		/// <summary>Convert from <code>XMPDateTime</code> to string.</summary>
 		/// <param name="value">an <code>XMPDateTime</code></param>
 		/// <returns>The string representation of the long.</returns>
-		public static String ConvertFromDate(XMPDateTime value)
+		public static String ConvertFromDate(XmpDateTime value)
 		{
-			return ISO8601Converter.Render(value);
+			return Iso8601Converter.Render(value);
 		}
 
 		/// <summary>Convert from a byte array to a base64 encoded string.</summary>
@@ -432,9 +432,9 @@ namespace iTextSharp.Kernel.Xmp
 		/// <summary>Decode from Base64 encoded string to raw data.</summary>
 		/// <param name="base64String">a base64 encoded string</param>
 		/// <returns>Returns a byte array containg the decoded string.</returns>
-		/// <exception cref="XMPException">Thrown if the given string is not property base64 encoded
+		/// <exception cref="XmpException">Thrown if the given string is not property base64 encoded
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static byte[] DecodeBase64(String base64String)
 		{
 			try
@@ -443,7 +443,7 @@ namespace iTextSharp.Kernel.Xmp
 			}
 			catch (Exception e)
 			{
-				throw new XMPException("Invalid base64 string", XMPError.BADVALUE, e);
+				throw new XmpException("Invalid base64 string", XmpError.BADVALUE, e);
 			}
 		}
 	}

@@ -34,7 +34,7 @@ namespace iTextSharp.Kernel.Xmp.Properties
 {
 	/// <summary>This interface is used to return info about an alias.</summary>
 	/// <since>27.01.2006</since>
-	public interface XMPAliasInfo
+	public interface XmpAliasInfo
 	{
 		/// <returns>Returns Returns the namespace URI for the base property.</returns>
 		String GetNamespace();

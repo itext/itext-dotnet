@@ -64,7 +64,7 @@ namespace iTextSharp.Kernel.Xmp
 	/// first item of an array of structures.
 	/// </remarks>
 	/// <since>27.01.2006</since>
-	public interface XMPSchemaRegistry
+	public interface XmpSchemaRegistry
 	{
 		// ---------------------------------------------------------------------------------------------
 		// Namespace Functions
@@ -89,8 +89,8 @@ namespace iTextSharp.Kernel.Xmp
 		/// suggestedPrefix if the namespace hasn't been registered before,
 		/// otherwise the existing prefix.
 		/// </returns>
-		/// <exception cref="XMPException">If the parameters are not accordingly set</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">If the parameters are not accordingly set</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		String RegisterNamespace(String namespaceURI, String suggestedPrefix);
 
 		/// <summary>Obtain the prefix for a registered namespace URI.</summary>
@@ -158,7 +158,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// Returns the <code>XMPAliasInfo</code> for the given alias namespace and property or
 		/// <code>null</code> if there is no such alias.
 		/// </returns>
-		XMPAliasInfo ResolveAlias(String aliasNS, String aliasProp);
+		XmpAliasInfo ResolveAlias(String aliasNS, String aliasProp);
 
 		/// <summary>Collects all aliases that are contained in the provided namespace.</summary>
 		/// <remarks>
@@ -168,7 +168,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="aliasNS">a schema namespace URI</param>
 		/// <returns>Returns all alias infos from aliases that are contained in the provided namespace.
 		/// 	</returns>
-		XMPAliasInfo[] FindAliases(String aliasNS);
+		XmpAliasInfo[] FindAliases(String aliasNS);
 
 		/// <summary>Searches for registered aliases.</summary>
 		/// <param name="qname">an XML conform qname</param>
@@ -176,7 +176,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// Returns if an alias definition for the given qname to another
 		/// schema and property is registered.
 		/// </returns>
-		XMPAliasInfo FindAlias(String qname);
+		XmpAliasInfo FindAlias(String qname);
 
 		/// <returns>
 		/// Returns the registered aliases as map, where the key is the "qname" (prefix and name)

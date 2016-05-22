@@ -31,21 +31,21 @@ using System;
 using System.Collections;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 using iTextSharp.Kernel.Xmp.Options;
 using iTextSharp.Kernel.Xmp.Properties;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
-	/// <summary>The <code>XMPIterator</code> implementation.</summary>
+	/// <summary>The <code>XmpIterator</code> implementation.</summary>
 	/// <remarks>
-	/// The <code>XMPIterator</code> implementation.
+	/// The <code>XmpIterator</code> implementation.
 	/// Iterates the XMP Tree according to a set of options.
-	/// During the iteration the XMPMeta-object must not be changed.
+	/// During the iteration the XmpMeta-object must not be changed.
 	/// Calls to <code>skipSubtree()</code> / <code>skipSiblings()</code> will affect the iteration.
 	/// </remarks>
 	/// <since>29.06.2006</since>
-	public class XMPIteratorImpl : XMPIterator
+	public class XmpIteratorImpl : XmpIterator
 	{
 		private static readonly IList EmptyList = new ArrayList();
 
@@ -78,9 +78,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// advanced iteration options, see
 		/// <see cref="iTextSharp.Kernel.Xmp.Options.IteratorOptions"/>
 		/// </param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the node defined by the paramters is not existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the node defined by the paramters is not existing.
 		/// 	</exception>
-		public XMPIteratorImpl(XMPMetaImpl xmp, String schemaNS, String propPath, IteratorOptions
+		public XmpIteratorImpl(XmpMetaImpl xmp, String schemaNS, String propPath, IteratorOptions
 			 options)
 		{
 			// make sure that options is defined at least with defaults
@@ -98,26 +98,26 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else if (baseSchema && baseProperty) {
 				// Schema and property node provided
-				XMPPath path = XMPPathParser.ExpandXPath(schemaNS, propPath);
+				XmpPath path = XmpPathParser.ExpandXPath(schemaNS, propPath);
 
 				// base path is the prop path without the property leaf
-				XMPPath basePath = new XMPPath();
+				XmpPath basePath = new XmpPath();
 				for (int i = 0; i < path.Size() - 1; i++) {
 					basePath.Add(path.GetSegment(i));
 				}
 
-				startNode = XMPNodeUtils.FindNode(xmp.GetRoot(), path, false, null);
+				startNode = XmpNodeUtils.FindNode(xmp.GetRoot(), path, false, null);
 				this.baseNS = schemaNS;
 				initialPath = basePath.ToString();
 			}
 			else if (baseSchema && !baseProperty) {
 				// Only Schema provided
-				startNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), schemaNS, false);
+				startNode = XmpNodeUtils.FindSchemaNode(xmp.GetRoot(), schemaNS, false);
 			}
 			else // !baseSchema  &&  baseProperty
 			{
 				// No schema but property provided -> error
-				throw new XMPException("Schema namespace URI is required", XMPError.BADSCHEMA);
+				throw new XmpException("Schema namespace URI is required", XmpError.BADSCHEMA);
 			}
 
 
@@ -133,13 +133,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPIterator.SkipSubtree()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpIterator.SkipSubtree()"/>
 		public virtual void SkipSubtree()
 		{
 			this.skipSubtree = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPIterator.SkipSiblings()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpIterator.SkipSiblings()"/>
 		public virtual void SkipSiblings()
 		{
 			SkipSubtree();
@@ -183,9 +183,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.baseNS = baseNS;
 		}
 
-		/// <summary>The <code>XMPIterator</code> implementation.</summary>
+		/// <summary>The <code>XmpIterator</code> implementation.</summary>
 		/// <remarks>
-		/// The <code>XMPIterator</code> implementation.
+		/// The <code>XmpIterator</code> implementation.
 		/// It first returns the node itself, then recursivly the children and qualifier of the node.
 		/// </remarks>
 		/// <since>29.06.2006</since>
@@ -204,7 +204,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			private static readonly IList EmptyList = new ArrayList();
 
-			private readonly XMPIteratorImpl outerInstance;
+			private readonly XmpIteratorImpl outerInstance;
 
 			/// <summary>
 			/// the recursively accumulated path </summary>
@@ -212,7 +212,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			/// <summary>
 			/// the currently visited node </summary>
-			private readonly XMPNode visitedNode;
+			private readonly XmpNode visitedNode;
 
 			/// <summary>
 			/// the iterator that goes through the children and qualifier list </summary>
@@ -224,7 +224,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			/// <summary>
 			/// the cached <code>PropertyInfo</code> to return </summary>
-			private XMPPropertyInfo returnProperty;
+			private XmpPropertyInfo returnProperty;
 
 			/// <summary>
 			/// the state of the iteration </summary>
@@ -239,7 +239,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			/// <param name="visitedNode"> the currently visited node </param>
 			/// <param name="parentPath"> the accumulated path of the node </param>
 			/// <param name="index"> the index within the parent node (only for arrays) </param>
-			public NodeIterator(XMPIteratorImpl outerInstance, XMPNode visitedNode, string parentPath, int index) {
+			public NodeIterator(XmpIteratorImpl outerInstance, XmpNode visitedNode, string parentPath, int index) {
 				this.outerInstance = outerInstance;
 				this.visitedNode = visitedNode;
 				this.state = ITERATE_NODE;
@@ -258,7 +258,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 
 			/// <returns> Returns the returnProperty. </returns>
-			protected internal virtual XMPPropertyInfo GetReturnProperty() {
+			protected internal virtual XmpPropertyInfo GetReturnProperty() {
 				return returnProperty;
 			}
 
@@ -333,7 +333,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					subIterator = new NodeIterator(outerInstance, child, path, index);
 				}
 				if (subIteratorMoveNext) {
-					returnProperty = (XMPPropertyInfo) subIterator.Current;
+					returnProperty = (XmpPropertyInfo) subIterator.Current;
 					return true;
 				}
 				return false;
@@ -343,7 +343,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			/// <param name="parentPath"> the path up to this node. </param>
 			/// <param name="currentIndex"> the current array index if an arrey is traversed </param>
 			/// <returns> Returns the updated path. </returns>
-			protected internal virtual String AccumulatePath(XMPNode currNode, string parentPath, int currentIndex) {
+			protected internal virtual String AccumulatePath(XmpNode currNode, string parentPath, int currentIndex) {
 				String separator;
 				String segmentName;
 				if (currNode.GetParent() == null || currNode.GetOptions().IsSchemaNode()) {
@@ -369,24 +369,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 
 			/// <summary>
-			/// Creates a property info object from an <code>XMPNode</code>. </summary>
-			/// <param name="node"> an <code>XMPNode</code> </param>
+			/// Creates a property info object from an <code>XmpNode</code>. </summary>
+			/// <param name="node"> an <code>XmpNode</code> </param>
 			/// <param name="baseNs"> the base namespace to report </param>
 			/// <param name="path"> the full property path </param>
-			/// <returns> Returns a <code>XMPProperty</code>-object that serves representation of the node. </returns>
-			protected internal virtual XMPPropertyInfo CreatePropertyInfo(XMPNode node, String baseNS, String path) {
+			/// <returns> Returns a <code>XmpProperty</code>-object that serves representation of the node. </returns>
+			protected internal virtual XmpPropertyInfo CreatePropertyInfo(XmpNode node, String baseNS, String path) {
 				String value = node.GetOptions().IsSchemaNode() ? null : node.GetValue();
 				return new XmpPropertyInfoImpl(node, baseNS, path, value);
 			}
 
-			private class XMPPropertyInfoImpl : XMPPropertyInfo {
+			private class XmpPropertyInfoImpl : XmpPropertyInfo {
 				
 				private readonly string baseNs;
-				private readonly XMPNode node;
+				private readonly XmpNode node;
 				private readonly string path;
 				private readonly string value;
 
-				public XMPPropertyInfoImpl(XMPNode node, string baseNs, string path, string value) {
+				public XmpPropertyInfoImpl(XmpNode node, string baseNs, string path, string value) {
 					node = node;
 					baseNs = baseNs;
 					path = path;
@@ -397,7 +397,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					if (!node.GetOptions().IsSchemaNode()) {
 						// determine namespace of leaf node
 						QName qname = new QName(node.GetName());
-						return XMPMetaFactory.GetSchemaRegistry().GetNamespaceURI(qname.GetPrefix());
+						return XmpMetaFactory.GetSchemaRegistry().GetNamespaceURI(qname.GetPrefix());
 					}
 					return baseNs;
 				}
@@ -429,7 +429,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </summary>
 		private class NodeIteratorChildren : NodeIterator {
 			private readonly IEnumerator childrenIterator;
-			private readonly XMPIteratorImpl outerInstance;
+			private readonly XmpIteratorImpl outerInstance;
 
 			private readonly string parentPath;
 			private int index;
@@ -439,7 +439,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			/// Constructor </summary>
 			/// <param name="parentNode"> the node which children shall be iterated. </param>
 			/// <param name="parentPath"> the full path of the former node without the leaf node. </param>
-			public NodeIteratorChildren(XMPIteratorImpl outerInstance, XMPNode parentNode, string parentPath)
+			public NodeIteratorChildren(XmpIteratorImpl outerInstance, XmpNode parentNode, string parentPath)
 				: base(outerInstance, parentNode, parentPath, 0) {
 				this.outerInstance = outerInstance;
 				if (parentNode.GetOptions().IsSchemaNode()) {

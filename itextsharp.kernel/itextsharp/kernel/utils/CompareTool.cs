@@ -279,27 +279,27 @@ namespace iTextSharp.Kernel.Utils
 				byte[] outBytes = outDocument.GetXmpMetadata();
 				if (ignoreDateAndProducerProperties)
 				{
-					XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true
+					XmpMeta xmpMeta = XmpMetaFactory.ParseFromBuffer(cmpBytes);
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.CreateDate, true, true
 						);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.ModifyDate, true, true
 						);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, 
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.MetadataDate, true, 
 						true);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_PDF, PdfConst.Producer, true, true
 						);
-					cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
+					cmpBytes = XmpMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
 						.SORT));
-					xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true
+					xmpMeta = XmpMetaFactory.ParseFromBuffer(outBytes);
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.CreateDate, true, true
 						);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.ModifyDate, true, true
 						);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, 
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.MetadataDate, true, 
 						true);
-					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true
+					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_PDF, PdfConst.Producer, true, true
 						);
-					outBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
+					outBytes = XmpMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
 						.SORT));
 				}
 				if (!CompareXmls(cmpBytes, outBytes))
@@ -307,7 +307,7 @@ namespace iTextSharp.Kernel.Utils
 					return "The XMP packages different!";
 				}
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				return "XMP parsing failure!";
 			}

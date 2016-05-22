@@ -38,7 +38,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Parser for "normal" XML serialisation of RDF.</summary>
 	/// <since>14.07.2006</since>
-	public class ParseRDF : XMPConst
+	public class ParseRdf : XmpConst
 	{
 		public const int RDFTERM_OTHER = 0;
 
@@ -95,11 +95,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </remarks>
 		/// <param name="xmlRoot">the XML root node</param>
 		/// <returns>Returns an XMP metadata object (not normalized)</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Occurs if the parsing fails for any reason.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Occurs if the parsing fails for any reason.
 		/// 	</exception>
-		internal static XMPMetaImpl Parse(XmlNode xmlRoot)
+		internal static XmpMetaImpl Parse(XmlNode xmlRoot)
 		{
-			XMPMetaImpl xmp = new XMPMetaImpl();
+			XmpMetaImpl xmp = new XmpMetaImpl();
 			Rdf_RDF(xmp, xmlRoot);
 			return xmp;
 		}
@@ -115,13 +115,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </remarks>
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		internal static void Rdf_RDF(XMPMetaImpl xmp, XmlNode rdfRdfNode)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		internal static void Rdf_RDF(XmpMetaImpl xmp, XmlNode rdfRdfNode)
 		{
 			if (rdfRdfNode.Attributes != null && rdfRdfNode.Attributes.Count > 0) {
 				Rdf_NodeElementList(xmp, xmp.GetRoot(), rdfRdfNode);
 			} else {
-				throw new XMPException("Invalid attributes of rdf:RDF element", BADRDF);
+				throw new XmpException("Invalid attributes of rdf:RDF element", BADRDF);
 			}
 		}
 
@@ -133,8 +133,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="rdfRdfNode">the top-level xml node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode 
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_NodeElementList(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode 
 			rdfRdfNode)
 		{
 			for (int i = 0; i < rdfRdfNode.ChildNodes.Count; i++) {
@@ -161,21 +161,21 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElement(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode xmlNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_NodeElement(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode xmlNode
 			, bool isTopLevel)
 		{
 			int nodeTerm = GetRDFTermKind(xmlNode);
 			if (nodeTerm != RDFTERM_DESCRIPTION && nodeTerm != RDFTERM_OTHER)
 			{
-				throw new XMPException("Node element must be rdf:Description or typed node", BADRDF
+				throw new XmpException("Node element must be rdf:Description or typed node", BADRDF
 					);
 			}
 			else
 			{
 				if (isTopLevel && nodeTerm == RDFTERM_OTHER)
 				{
-					throw new XMPException("Top level typed node not allowed", BADXMP);
+					throw new XmpException("Top level typed node not allowed", BADXMP);
 				}
 				else
 				{
@@ -211,8 +211,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_NodeElementAttrs(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_NodeElementAttrs(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode
 			 xmlNode, bool isTopLevel)
 		{
 			// Used to detect attributes that are mutually exclusive.
@@ -236,7 +236,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					case RDFTERM_NODE_ID:
 					case RDFTERM_ABOUT:
 						if (exclusiveAttrs > 0) {
-							throw new XMPException("Mutally exclusive about, ID, nodeID attributes",
+							throw new XmpException("Mutally exclusive about, ID, nodeID attributes",
 								BADRDF);
 						}
 
@@ -249,7 +249,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							// the XMP tree name.
 							if (!string.IsNullOrEmpty(xmpParent.GetName())) {
 								if (!xmpParent.GetName().Equals(attribute.Value)) {
-									throw new XMPException("Mismatched top level rdf:about values",
+									throw new XmpException("Mismatched top level rdf:about values",
 										BADXMP);
 								}
 							}
@@ -264,7 +264,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						break;
 
 					default:
-						throw new XMPException("Invalid nodeElement attribute", BADRDF);
+						throw new XmpException("Invalid nodeElement attribute", BADRDF);
 				}
 			}
 		}
@@ -277,8 +277,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlParent">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_PropertyElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_PropertyElementList(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode
 			 xmlParent, bool isTopLevel)
 		{
 			for (int i = 0; i < xmlParent.ChildNodes.Count; i++) {
@@ -287,7 +287,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					continue;
 				}
 				if (currChild.NodeType != XmlNodeType.Element) {
-					throw new XMPException("Expected property element node not found", BADRDF);
+					throw new XmpException("Expected property element node not found", BADRDF);
 				}
 				Rdf_PropertyElement(xmp, xmpParent, currChild, isTopLevel);
 			}
@@ -380,13 +380,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_PropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode 
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_PropertyElement(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode 
 			xmlNode, bool isTopLevel)
 		{
 			int nodeTerm = GetRDFTermKind(xmlNode);
 			if (!IsPropertyElementName(nodeTerm)) {
-				throw new XMPException("Invalid property element name", BADRDF);
+				throw new XmpException("Invalid property element name", BADRDF);
 			}
 
 			// remove the namespace-definitions from the list
@@ -490,8 +490,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_ResourcePropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_ResourcePropertyElement(XmpMetaImpl xmp, XmpNode xmpParent
 			, XmlNode xmlNode, bool isTopLevel)
 		{
 			if (isTopLevel && "iX:changes".Equals(xmlNode.Name)) {
@@ -517,7 +517,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					else if ("ID".Equals(attrLocal) && NS_RDF.Equals(attrNs)) {
 						continue; // Ignore all rdf:ID attributes.
 					}
-					throw new XMPException("Invalid attribute for resource property element", BADRDF);
+					throw new XmpException("Invalid attribute for resource property element", BADRDF);
 				}
 			}
 
@@ -548,7 +548,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							if (!isRdf && !"Description".Equals(childLocal)) {
 								string typeName = currChild.NamespaceURI;
 								if (typeName == null) {
-									throw new XMPException("All XML elements must be in a namespace",
+									throw new XmpException("All XML elements must be in a namespace",
 										BADXMP);
 								}
 								typeName += ':' + childLocal;
@@ -562,17 +562,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							FixupQualifiedNode(newCompound);
 						}
 						else if (newCompound.GetOptions().IsArrayAlternate()) {
-							XMPNodeUtils.DetectAltText(newCompound);
+							XmpNodeUtils.DetectAltText(newCompound);
 						}
 
 						found = true;
 					}
 					else if (found) {
 						// found second child element
-						throw new XMPException("Invalid child of resource property element", BADRDF);
+						throw new XmpException("Invalid child of resource property element", BADRDF);
 					}
 					else {
-						throw new XMPException("Children of resource property element must be XML elements",
+						throw new XmpException("Children of resource property element must be XML elements",
 							BADRDF);
 					}
 				}
@@ -580,7 +580,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			if (!found) {
 				// didn't found any child elements
-				throw new XMPException("Missing child of resource property element", BADRDF);
+				throw new XmpException("Missing child of resource property element", BADRDF);
 			}
 		}
 
@@ -596,11 +596,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_LiteralPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_LiteralPropertyElement(XmpMetaImpl xmp, XmpNode xmpParent
 			, XmlNode xmlNode, bool isTopLevel)
 		{
-			XMPNode newChild = AddChildNode(xmp, xmpParent, xmlNode, null, isTopLevel);
+			XmpNode newChild = AddChildNode(xmp, xmpParent, xmlNode, null, isTopLevel);
 			if (xmlNode.Attributes != null) {
 				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
 					XmlNode attribute = xmlNode.Attributes[i];
@@ -615,7 +615,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					} else if (NS_RDF.Equals(attrNs) && ("ID".Equals(attrLocal) || "datatype".Equals(attrLocal))) {
 						continue; // Ignore all rdf:ID and rdf:datatype attributes.
 					} else
-						throw new XMPException("Invalid attribute for literal property element", BADRDF);
+						throw new XmpException("Invalid attribute for literal property element", BADRDF);
 				}
 			}
 			String textValue = "";
@@ -625,7 +625,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					textValue += child.Value;
 				}
 				else {
-					throw new XMPException("Invalid child of literal property element", BADRDF);
+					throw new XmpException("Invalid child of literal property element", BADRDF);
 				}
 			}
 			newChild.SetValue(textValue);
@@ -638,10 +638,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// literal
 		/// end-element()
 		/// </summary>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeLiteralPropertyElement()
 		{
-			throw new XMPException("ParseTypeLiteral property element not allowed", BADXMP);
+			throw new XmpException("ParseTypeLiteral property element not allowed", BADXMP);
 		}
 
 		/// <summary>
@@ -665,11 +665,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_ParseTypeResourcePropertyElement(XMPMetaImpl xmp, XMPNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_ParseTypeResourcePropertyElement(XmpMetaImpl xmp, XmpNode
 			 xmpParent, XmlNode xmlNode, bool isTopLevel)
 		{
-			XMPNode newStruct = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
+			XmpNode newStruct = AddChildNode(xmp, xmpParent, xmlNode, "", isTopLevel);
 			newStruct.GetOptions().SetStruct(true);
 
 			if (xmlNode.Attributes != null) {
@@ -688,7 +688,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						continue; // The caller ensured the value is "Resource".
 						// Ignore all rdf:ID attributes.
 					}
-					throw new XMPException("Invalid attribute for ParseTypeResource property element",
+					throw new XmpException("Invalid attribute for ParseTypeResource property element",
 						BADRDF);
 				}
 			}
@@ -707,10 +707,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// nodeElementList
 		/// end-element()
 		/// </summary>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeCollectionPropertyElement()
 		{
-			throw new XMPException("ParseTypeCollection property element not allowed", BADXMP
+			throw new XmpException("ParseTypeCollection property element not allowed", BADXMP
 				);
 		}
 
@@ -720,10 +720,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// propertyEltList
 		/// end-element()
 		/// </summary>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeOtherPropertyElement()
 		{
-			throw new XMPException("ParseTypeOther property element not allowed", BADXMP);
+			throw new XmpException("ParseTypeOther property element not allowed", BADXMP);
 		}
 
 		/// <summary>
@@ -777,8 +777,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="xmpParent">the parent xmp node</param>
 		/// <param name="xmlNode">the currently processed XML node</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void Rdf_EmptyPropertyElement(XMPMetaImpl xmp, XMPNode xmpParent, 
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void Rdf_EmptyPropertyElement(XmpMetaImpl xmp, XmpNode xmpParent, 
 			XmlNode xmlNode, bool isTopLevel)
 		{
 			bool hasPropertyAttrs = false;
@@ -789,7 +789,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			XmlNode valueNode = null; // ! Can come from rdf:value or rdf:resource.
 
 			if (xmlNode.HasChildNodes) {
-				throw new XMPException("Nested content not allowed with rdf:resource or property attributes",
+				throw new XmpException("Nested content not allowed with rdf:resource or property attributes",
 					BADRDF);
 			}
 
@@ -810,12 +810,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 						case RDFTERM_RESOURCE:
 							if (hasNodeIdAttr) {
-								throw new XMPException(
+								throw new XmpException(
 									"Empty property element can't have both rdf:resource and rdf:nodeID",
 									BADRDF);
 							}
 							if (hasValueAttr) {
-								throw new XMPException(
+								throw new XmpException(
 									"Empty property element can't have both rdf:value and rdf:resource",
 									BADXMP);
 							}
@@ -828,7 +828,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 						case RDFTERM_NODE_ID:
 							if (hasResourceAttr) {
-								throw new XMPException(
+								throw new XmpException(
 									"Empty property element can't have both rdf:resource and rdf:nodeID",
 									BADRDF);
 							}
@@ -838,7 +838,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						case RDFTERM_OTHER:
 							if ("value".Equals(attribute.LocalName) && NS_RDF.Equals(attribute.NamespaceURI)) {
 								if (hasResourceAttr) {
-									throw new XMPException(
+									throw new XmpException(
 										"Empty property element can't have both rdf:value and rdf:resource",
 										BADXMP);
 								}
@@ -851,7 +851,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							break;
 
 						default:
-							throw new XMPException("Unrecognized attribute of empty property element",
+							throw new XmpException("Unrecognized attribute of empty property element",
 								BADRDF);
 					}
 				}
@@ -909,7 +909,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							break;
 
 						default:
-							throw new XMPException("Unrecognized attribute of empty property element",
+							throw new XmpException("Unrecognized attribute of empty property element",
 								BADRDF);
 					}
 				}
@@ -923,11 +923,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="value">Node value</param>
 		/// <param name="isTopLevel">Flag if the node is a top-level node</param>
 		/// <returns>Returns the newly created child node.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static XMPNode AddChildNode(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode xmlNode
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static XmpNode AddChildNode(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode xmlNode
 			, String value, bool isTopLevel)
 		{
-			XMPSchemaRegistry registry = XMPMetaFactory.GetSchemaRegistry();
+			XmpSchemaRegistry registry = XmpMetaFactory.GetSchemaRegistry();
 			String ns = xmlNode.NamespaceURI;
 			String childName;
 			if (ns != null) {
@@ -944,7 +944,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				childName = prefix + xmlNode.LocalName;
 			}
 			else {
-				throw new XMPException("XML namespace required for all elements and attributes",
+				throw new XmpException("XML namespace required for all elements and attributes",
 					BADRDF);
 			}
 
@@ -955,7 +955,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (isTopLevel) {
 				// Lookup the schema node, adjust the XMP parent pointer.
 				// Incoming parent must be the tree root.
-				XmpNode schemaNode = XMPNodeUtils.FindSchemaNode(xmp.GetRoot(), ns, DEFAULT_PREFIX, true);
+				XmpNode schemaNode = XmpNodeUtils.FindSchemaNode(xmp.GetRoot(), ns, DEFAULT_PREFIX, true);
 				schemaNode.SetImplicit(false); // Clear the implicit node bit.
 				// need runtime check for proper 32 bit code.
 				xmpParent = schemaNode;
@@ -989,14 +989,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			if (isValueNode) {
 				if (isTopLevel || !xmpParent.Options.Struct) {
-					throw new XMPException("Misplaced rdf:value element", BADRDF);
+					throw new XmpException("Misplaced rdf:value element", BADRDF);
 				}
 				xmpParent.SetHasValueChild(true);
 			}
 
 			if (isArrayItem) {
 				if (!xmpParent.GetOptions().IsArray()) {
-					throw new XMPException("Misplaced rdf:li element", BADRDF);
+					throw new XmpException("Misplaced rdf:li element", BADRDF);
 				}
 				newChild.SetName(ARRAY_ITEM_NAME);
 			}
@@ -1012,14 +1012,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </param>
 		/// <param name="value">the value of the qualifier</param>
 		/// <returns>Returns the newly created child node.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static XMPNode AddQualifierNode(XMPNode xmpParent, String name, String value
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static XmpNode AddQualifierNode(XmpNode xmpParent, String name, String value
 			)
 		{
 			bool isLang = XML_LANG.Equals(name);
-			XMPNode newQual = null;
+			XmpNode newQual = null;
 			// normalize value of language qualifiers
-			newQual = new XMPNode(name, isLang ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
+			newQual = new XmpNode(name, isLang ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
 				(value) : value, null);
 			xmpParent.AddQualifier(newQual);
 			return newQual;
@@ -1034,39 +1034,39 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// the others.
 		/// </remarks>
 		/// <param name="xmpParent">the parent xmp node</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thown on parsing errors</exception>
-		private static void FixupQualifiedNode(XMPNode xmpParent)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
+		private static void FixupQualifiedNode(XmpNode xmpParent)
 		{
 			System.Diagnostics.Debug.Assert(xmpParent.GetOptions().IsStruct() && xmpParent.HasChildren
 				());
-			XMPNode valueNode = xmpParent.GetChild(1);
+			XmpNode valueNode = xmpParent.GetChild(1);
 			System.Diagnostics.Debug.Assert("rdf:value".Equals(valueNode.GetName()));
 			// Move the qualifiers on the value node to the parent. 
 			// Make sure an xml:lang qualifier stays at the front.
 			// Check for duplicate names between the value node's qualifiers and the parent's children. 
 			// The parent's children are about to become qualifiers. Check here, between the groups. 
-			// Intra-group duplicates are caught by XMPNode#addChild(...).
+			// Intra-group duplicates are caught by XmpNode#addChild(...).
 			if (valueNode.GetOptions().GetHasLanguage())
 			{
 				if (xmpParent.GetOptions().GetHasLanguage())
 				{
-					throw new XMPException("Redundant xml:lang for rdf:value element", BADXMP);
+					throw new XmpException("Redundant xml:lang for rdf:value element", BADXMP);
 				}
-				XMPNode langQual = valueNode.GetQualifier(1);
+				XmpNode langQual = valueNode.GetQualifier(1);
 				valueNode.RemoveQualifier(langQual);
 				xmpParent.AddQualifier(langQual);
 			}
 			// Start the remaining copy after the xml:lang qualifier.		
 			for (int i = 1; i <= valueNode.GetQualifierLength(); i++)
 			{
-				XMPNode qualifier = valueNode.GetQualifier(i);
+				XmpNode qualifier = valueNode.GetQualifier(i);
 				xmpParent.AddQualifier(qualifier);
 			}
 			// Change the parent's other children into qualifiers. 
 			// This loop starts at 1, child 0 is the rdf:value node.
 			for (int i_1 = 2; i_1 <= xmpParent.GetChildrenLength(); i_1++)
 			{
-				XMPNode qualifier = xmpParent.GetChild(i_1);
+				XmpNode qualifier = xmpParent.GetChild(i_1);
 				xmpParent.AddQualifier(qualifier);
 			}
 			// Move the options and value last, other checks need the parent's original options. 
@@ -1080,7 +1080,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			xmpParent.RemoveChildren();
 			for (IEnumerator it = valueNode.IterateChildren(); it.MoveNext(); )
 			{
-				XMPNode child = (XMPNode)it.Current;
+				XmpNode child = (XmpNode)it.Current;
 				xmpParent.AddChild(child);
 			}
 		}
@@ -1151,7 +1151,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>Determines the ID for a certain RDF Term.</summary>
 		/// <remarks>
 		/// Determines the ID for a certain RDF Term.
-		/// Arranged to hopefully minimize the parse time for large XMP.
+		/// Arranged to hopefully minimize the parse time for large Xmp.
 		/// </remarks>
 		/// <param name="node">an XML node</param>
 		/// <returns>Returns the term ID.</returns>

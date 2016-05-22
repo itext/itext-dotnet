@@ -43,88 +43,88 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		// EMPTY
 		/// <summary>Asserts that an array name is set.</summary>
 		/// <param name="arrayName">an array name</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Array name is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Array name is null or empty</exception>
 		public static void AssertArrayName(String arrayName)
 		{
 			if (arrayName == null || arrayName.Length == 0)
 			{
-				throw new XMPException("Empty array name", XMPError.BADPARAM);
+				throw new XmpException("Empty array name", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that a property name is set.</summary>
 		/// <param name="propName">a property name or path</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Property name is null or empty
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Property name is null or empty
 		/// 	</exception>
 		public static void AssertPropName(String propName)
 		{
 			if (propName == null || propName.Length == 0)
 			{
-				throw new XMPException("Empty property name", XMPError.BADPARAM);
+				throw new XmpException("Empty property name", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that a schema namespace is set.</summary>
 		/// <param name="schemaNS">a schema namespace</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Schema is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Schema is null or empty</exception>
 		public static void AssertSchemaNS(String schemaNS)
 		{
 			if (schemaNS == null || schemaNS.Length == 0)
 			{
-				throw new XMPException("Empty schema namespace URI", XMPError.BADPARAM);
+				throw new XmpException("Empty schema namespace URI", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that a prefix is set.</summary>
 		/// <param name="prefix">a prefix</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Prefix is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Prefix is null or empty</exception>
 		public static void AssertPrefix(String prefix)
 		{
 			if (prefix == null || prefix.Length == 0)
 			{
-				throw new XMPException("Empty prefix", XMPError.BADPARAM);
+				throw new XmpException("Empty prefix", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that a specific language is set.</summary>
 		/// <param name="specificLang">a specific lang</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Specific language is null or empty
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Specific language is null or empty
 		/// 	</exception>
 		public static void AssertSpecificLang(String specificLang)
 		{
 			if (specificLang == null || specificLang.Length == 0)
 			{
-				throw new XMPException("Empty specific language", XMPError.BADPARAM);
+				throw new XmpException("Empty specific language", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that a struct name is set.</summary>
 		/// <param name="structName">a struct name</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Struct name is null or empty
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Struct name is null or empty
 		/// 	</exception>
 		public static void AssertStructName(String structName)
 		{
 			if (structName == null || structName.Length == 0)
 			{
-				throw new XMPException("Empty array name", XMPError.BADPARAM);
+				throw new XmpException("Empty array name", XmpError.BADPARAM);
 			}
 		}
 
 		/// <summary>Asserts that any string parameter is set.</summary>
 		/// <param name="param">any string parameter</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the parameter is null or has length 0.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if the parameter is null or has length 0.
 		/// 	</exception>
 		public static void AssertNotNull(Object param)
 		{
 			if (param == null)
 			{
-				throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
+				throw new XmpException("Parameter must not be null", XmpError.BADPARAM);
 			}
 			else
 			{
 				if ((param is String) && ((String)param).Length == 0)
 				{
-					throw new XMPException("Parameter must not be null or empty", XMPError.BADPARAM);
+					throw new XmpException("Parameter must not be null or empty", XmpError.BADPARAM);
 				}
 			}
 		}
@@ -132,24 +132,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>
 		/// Asserts that the xmp object is of this implemention
 		/// (
-		/// <see cref="XMPMetaImpl"/>
+		/// <see cref="XmpMetaImpl"/>
 		/// ).
 		/// </summary>
 		/// <param name="xmp">the XMP object</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">A wrong implentaion is used.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">A wrong implentaion is used.
 		/// 	</exception>
-		public static void AssertImplementation(XMPMeta xmp)
+		public static void AssertImplementation(XmpMeta xmp)
 		{
 			if (xmp == null)
 			{
-				throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
+				throw new XmpException("Parameter must not be null", XmpError.BADPARAM);
 			}
 			else
 			{
-				if (!(xmp is XMPMetaImpl))
+				if (!(xmp is XmpMetaImpl))
 				{
-					throw new XMPException("The XMPMeta-object is not compatible with this implementation"
-						, XMPError.BADPARAM);
+					throw new XmpException("The XMPMeta-object is not compatible with this implementation"
+						, XmpError.BADPARAM);
 				}
 			}
 		}

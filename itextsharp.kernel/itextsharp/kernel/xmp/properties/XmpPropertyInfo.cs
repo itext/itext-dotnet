@@ -38,7 +38,7 @@ namespace iTextSharp.Kernel.Xmp.Properties
 	/// It is returned when properties are iterated with the <code>XMPIterator</code>.
 	/// </remarks>
 	/// <since>06.07.2006</since>
-	public interface XMPPropertyInfo : XMPProperty
+	public interface XmpPropertyInfo : XmpProperty
 	{
 		/// <returns>Returns the namespace of the property</returns>
 		String GetNamespace();

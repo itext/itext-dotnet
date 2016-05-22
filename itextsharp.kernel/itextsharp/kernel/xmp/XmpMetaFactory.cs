@@ -36,41 +36,41 @@ namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>Creates <code>XMPMeta</code>-instances from an <code>InputStream</code></summary>
 	/// <since>30.01.2006</since>
-	public sealed class XMPMetaFactory
+	public sealed class XmpMetaFactory
 	{
 		/// <summary>The singleton instance of the <code>XMPSchemaRegistry</code>.</summary>
-		private static XMPSchemaRegistry schema = new XMPSchemaRegistryImpl();
+		private static XmpSchemaRegistry schema = new XmpSchemaRegistryImpl();
 
 		/// <summary>cache for version info</summary>
-		private static XMPVersionInfo versionInfo = null;
+		private static XmpVersionInfo versionInfo = null;
 
 		/// <summary>Hides public constructor</summary>
-		private XMPMetaFactory()
+		private XmpMetaFactory()
 		{
 		}
 
 		// EMPTY
 		/// <returns>Returns the singleton instance of the <code>XMPSchemaRegistry</code>.</returns>
-		public static XMPSchemaRegistry GetSchemaRegistry()
+		public static XmpSchemaRegistry GetSchemaRegistry()
 		{
 			return schema;
 		}
 
 		/// <returns>Returns an empty <code>XMPMeta</code>-object.</returns>
-		public static XMPMeta Create()
+		public static XmpMeta Create()
 		{
-			return new XMPMetaImpl();
+			return new XmpMetaImpl();
 		}
 
 		/// <summary>Parsing with default options.</summary>
 		/// <param name="in">an <code>InputStream</code></param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
 		/// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta Parse(Stream @in)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta Parse(Stream @in)
 		{
 			return Parse(@in, null);
 		}
@@ -100,22 +100,22 @@ namespace iTextSharp.Kernel.Xmp
 		/// <em>Note:</em>The XMP_STRICT_ALIASING option is not yet implemented.
 		/// </param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta Parse(Stream @in, ParseOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta Parse(Stream @in, ParseOptions options)
 		{
-			return XMPMetaParser.Parse(@in, options);
+			return XmpMetaParser.Parse(@in, options);
 		}
 
 		/// <summary>Parsing with default options.</summary>
 		/// <param name="packet">a String contain an XMP-file.</param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
 		/// <seealso cref="Parse(System.IO.Stream)"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta ParseFromString(String packet)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta ParseFromString(String packet)
 		{
 			return ParseFromString(packet, null);
 		}
@@ -124,25 +124,25 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="packet">a String contain an XMP-file.</param>
 		/// <param name="options">Options controlling the parsing.</param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
 		/// <seealso cref="ParseFromString(System.String, iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta ParseFromString(String packet, ParseOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta ParseFromString(String packet, ParseOptions options)
 		{
-			return XMPMetaParser.Parse(packet, options);
+			return XmpMetaParser.Parse(packet, options);
 		}
 
 		/// <summary>Parsing with default options.</summary>
 		/// <param name="buffer">a String contain an XMP-file.</param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
 		/// <seealso cref="ParseFromBuffer(byte[], iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta ParseFromBuffer(byte[] buffer)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta ParseFromBuffer(byte[] buffer)
 		{
 			return ParseFromBuffer(buffer, null);
 		}
@@ -151,14 +151,14 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="buffer">a String contain an XMP-file.</param>
 		/// <param name="options">Options controlling the parsing.</param>
 		/// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-		/// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
+		/// <exception cref="XmpException">If the file is not well-formed XML or if the parsing fails.
 		/// 	</exception>
 		/// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static XMPMeta ParseFromBuffer(byte[] buffer, ParseOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static XmpMeta ParseFromBuffer(byte[] buffer, ParseOptions options)
 		{
-			return XMPMetaParser.Parse(buffer, options);
+			return XmpMetaParser.Parse(buffer, options);
 		}
 
 		/// <summary>
@@ -167,9 +167,9 @@ namespace iTextSharp.Kernel.Xmp
 		/// </summary>
 		/// <param name="xmp">a metadata object</param>
 		/// <param name="out">an <code>OutputStream</code> to write the serialized RDF to.</param>
-		/// <exception cref="XMPException">on serializsation errors.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void Serialize(XMPMeta xmp, Stream @out)
+		/// <exception cref="XmpException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void Serialize(XmpMeta xmp, Stream @out)
 		{
 			Serialize(xmp, @out, null);
 		}
@@ -183,12 +183,12 @@ namespace iTextSharp.Kernel.Xmp
 		/// ).
 		/// </param>
 		/// <param name="out">an <code>OutputStream</code> to write the serialized RDF to.</param>
-		/// <exception cref="XMPException">on serializsation errors.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void Serialize(XMPMeta xmp, Stream @out, SerializeOptions options)
+		/// <exception cref="XmpException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void Serialize(XmpMeta xmp, Stream @out, SerializeOptions options)
 		{
 			AssertImplementation(xmp);
-			XMPSerializerHelper.Serialize((XMPMetaImpl)xmp, @out, options);
+			XmpSerializerHelper.Serialize((XmpMetaImpl)xmp, @out, options);
 		}
 
 		/// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a byte buffer.</summary>
@@ -199,12 +199,12 @@ namespace iTextSharp.Kernel.Xmp
 		/// ).
 		/// </param>
 		/// <returns>Returns a byte buffer containing the serialized RDF.</returns>
-		/// <exception cref="XMPException">on serializsation errors.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static byte[] SerializeToBuffer(XMPMeta xmp, SerializeOptions options)
+		/// <exception cref="XmpException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static byte[] SerializeToBuffer(XmpMeta xmp, SerializeOptions options)
 		{
 			AssertImplementation(xmp);
-			return XMPSerializerHelper.SerializeToBuffer((XMPMetaImpl)xmp, options);
+			return XmpSerializerHelper.SerializeToBuffer((XmpMetaImpl)xmp, options);
 		}
 
 		/// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a string.</summary>
@@ -219,18 +219,18 @@ namespace iTextSharp.Kernel.Xmp
 		/// ).
 		/// </param>
 		/// <returns>Returns a string containing the serialized RDF.</returns>
-		/// <exception cref="XMPException">on serializsation errors.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static String SerializeToString(XMPMeta xmp, SerializeOptions options)
+		/// <exception cref="XmpException">on serializsation errors.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static String SerializeToString(XmpMeta xmp, SerializeOptions options)
 		{
 			AssertImplementation(xmp);
-			return XMPSerializerHelper.SerializeToString((XMPMetaImpl)xmp, options);
+			return XmpSerializerHelper.SerializeToString((XmpMetaImpl)xmp, options);
 		}
 
 		/// <param name="xmp">Asserts that xmp is compatible to <code>XMPMetaImpl</code>.s</param>
-		private static void AssertImplementation(XMPMeta xmp)
+		private static void AssertImplementation(XmpMeta xmp)
 		{
-			if (!(xmp is XMPMetaImpl))
+			if (!(xmp is XmpMetaImpl))
 			{
 				throw new NotSupportedException("The serializing service works only" + "with the XMPMeta implementation of this library"
 					);
@@ -245,7 +245,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// </remarks>
 		public static void Reset()
 		{
-			schema = new XMPSchemaRegistryImpl();
+			schema = new XmpSchemaRegistryImpl();
 		}
 
 		/// <summary>Obtain version information.</summary>
@@ -254,9 +254,9 @@ namespace iTextSharp.Kernel.Xmp
 		/// its requested.
 		/// </remarks>
 		/// <returns>Returns the version information.</returns>
-		public static XMPVersionInfo GetVersionInfo()
+		public static XmpVersionInfo GetVersionInfo()
 		{
-			lock (typeof(XMPMetaFactory))
+			lock (typeof(XmpMetaFactory))
 			{
 				if (versionInfo == null)
 				{
@@ -269,7 +269,7 @@ namespace iTextSharp.Kernel.Xmp
 						bool debug = false;
 						// Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
 						String message = "Adobe XMP Core 5.1.0-jc003";
-						versionInfo = new _XMPVersionInfo_263(major, minor, micro, debug, engBuild, message
+						versionInfo = new _XmpVersionInfo_263(major, minor, micro, debug, engBuild, message
 							);
 					}
 					catch (Exception e)
@@ -282,9 +282,9 @@ namespace iTextSharp.Kernel.Xmp
 			}
 		}
 
-		private sealed class _XMPVersionInfo_263 : XMPVersionInfo
+		private sealed class _XmpVersionInfo_263 : XmpVersionInfo
 		{
-			public _XMPVersionInfo_263(int major, int minor, int micro, bool debug, int engBuild
+			public _XmpVersionInfo_263(int major, int minor, int micro, bool debug, int engBuild
 				, String message)
 			{
 				this.major = major;

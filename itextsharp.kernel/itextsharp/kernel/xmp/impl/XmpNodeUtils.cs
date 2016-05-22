@@ -30,14 +30,14 @@
 using System;
 using System.Collections;
 using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 using iTextSharp.Kernel.Xmp.Options;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Utilities for <code>XMPNode</code>.</summary>
 	/// <since>Aug 28, 2006</since>
-	public class XMPNodeUtils
+	public class XmpNodeUtils
 	{
 		internal const int CLT_NO_VALUES = 0;
 
@@ -52,7 +52,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		internal const int CLT_FIRST_ITEM = 5;
 
 		/// <summary>Private Constructor</summary>
-		private XMPNodeUtils()
+		private XmpNodeUtils()
 		{
 		}
 
@@ -69,11 +69,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">
 		/// An exception is only thrown if an error occurred, not if a
 		/// node was not found.
 		/// </exception>
-		internal static XMPNode FindSchemaNode(XMPNode tree, String namespaceURI, bool createNodes
+		internal static XmpNode FindSchemaNode(XmpNode tree, String namespaceURI, bool createNodes
 			)
 		{
 			return FindSchemaNode(tree, namespaceURI, null, createNodes);
@@ -93,33 +93,33 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">
 		/// An exception is only thrown if an error occurred, not if a
 		/// node was not found.
 		/// </exception>
-		internal static XMPNode FindSchemaNode(XMPNode tree, String namespaceURI, String 
+		internal static XmpNode FindSchemaNode(XmpNode tree, String namespaceURI, String 
 			suggestedPrefix, bool createNodes)
 		{
 			System.Diagnostics.Debug.Assert(tree.GetParent() == null);
 			// make sure that its the root
-			XMPNode schemaNode = tree.FindChildByName(namespaceURI);
+			XmpNode schemaNode = tree.FindChildByName(namespaceURI);
 			if (schemaNode == null && createNodes)
 			{
-				schemaNode = new XMPNode(namespaceURI, new PropertyOptions().SetSchemaNode(true));
+				schemaNode = new XmpNode(namespaceURI, new PropertyOptions().SetSchemaNode(true));
 				schemaNode.SetImplicit(true);
 				// only previously registered schema namespaces are allowed in the XMP tree.
-				String prefix = XMPMetaFactory.GetSchemaRegistry().GetNamespacePrefix(namespaceURI
+				String prefix = XmpMetaFactory.GetSchemaRegistry().GetNamespacePrefix(namespaceURI
 					);
 				if (prefix == null)
 				{
 					if (suggestedPrefix != null && suggestedPrefix.Length != 0)
 					{
-						prefix = XMPMetaFactory.GetSchemaRegistry().RegisterNamespace(namespaceURI, suggestedPrefix
+						prefix = XmpMetaFactory.GetSchemaRegistry().RegisterNamespace(namespaceURI, suggestedPrefix
 							);
 					}
 					else
 					{
-						throw new XMPException("Unregistered schema namespace URI", XMPError.BADSCHEMA);
+						throw new XmpException("Unregistered schema namespace URI", XmpError.BADSCHEMA);
 					}
 				}
 				schemaNode.SetValue(prefix);
@@ -137,22 +137,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="childName">the node name to find</param>
 		/// <param name="createNodes">flag, if new nodes shall be created.</param>
 		/// <returns>Returns the found or created node or <code>null</code>.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if</exception>
-		internal static XMPNode FindChildNode(XMPNode parent, String childName, bool createNodes
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if</exception>
+		internal static XmpNode FindChildNode(XmpNode parent, String childName, bool createNodes
 			)
 		{
 			if (!parent.GetOptions().IsSchemaNode() && !parent.GetOptions().IsStruct())
 			{
 				if (!parent.IsImplicit())
 				{
-					throw new XMPException("Named children only allowed for schemas and structs", XMPError
+					throw new XmpException("Named children only allowed for schemas and structs", XmpError
 						.BADXPATH);
 				}
 				else
 				{
 					if (parent.GetOptions().IsArray())
 					{
-						throw new XMPException("Named children not allowed for arrays", XMPError.BADXPATH
+						throw new XmpException("Named children not allowed for arrays", XmpError.BADXPATH
 							);
 					}
 					else
@@ -164,11 +164,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					}
 				}
 			}
-			XMPNode childNode = parent.FindChildByName(childName);
+			XmpNode childNode = parent.FindChildByName(childName);
 			if (childNode == null && createNodes)
 			{
 				PropertyOptions options = new PropertyOptions();
-				childNode = new XMPNode(childName, options);
+				childNode = new XmpNode(childName, options);
 				childNode.SetImplicit(true);
 				parent.AddChild(childNode);
 			}
@@ -188,24 +188,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <code>createNodes == true</code>).
 		/// </param>
 		/// <returns>Returns the node if found or created or <code>null</code>.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">
 		/// An exception is only thrown if an error occurred,
 		/// not if a node was not found.
 		/// </exception>
-		internal static XMPNode FindNode(XMPNode xmpTree, XMPPath xpath, bool createNodes
+		internal static XmpNode FindNode(XmpNode xmpTree, XmpPath xpath, bool createNodes
 			, PropertyOptions leafOptions)
 		{
 			// check if xpath is set.
 			if (xpath == null || xpath.Size() == 0)
 			{
-				throw new XMPException("Empty XMPPath", XMPError.BADXPATH);
+				throw new XmpException("Empty XMPPath", XmpError.BADXPATH);
 			}
 			// Root of implicitly created subtree to possible delete it later. 
 			// Valid only if leaf is new.
-			XMPNode rootImplicitNode = null;
-			XMPNode currNode = null;
+			XmpNode rootImplicitNode = null;
+			XmpNode currNode = null;
 			// resolve schema step
-			currNode = FindSchemaNode(xmpTree, xpath.GetSegment(XMPPath.STEP_SCHEMA).GetName(
+			currNode = FindSchemaNode(xmpTree, xpath.GetSegment(XmpPath.STEP_SCHEMA).GetName(
 				), createNodes);
 			if (currNode == null)
 			{
@@ -252,7 +252,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							else
 							{
 								// "CheckImplicitStruct" in C++
-								if (i < xpath.Size() - 1 && xpath.GetSegment(i).GetKind() == XMPPath.STRUCT_FIELD_STEP
+								if (i < xpath.Size() - 1 && xpath.GetSegment(i).GetKind() == XmpPath.STRUCT_FIELD_STEP
 									 && !currNode.GetOptions().IsCompositeProperty())
 								{
 									currNode.GetOptions().SetStruct(true);
@@ -266,7 +266,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					}
 				}
 			}
-			catch (XMPException e)
+			catch (XmpException e)
 			{
 				// Save the top most implicit node.
 				// if new notes have been created prior to the error, delete them
@@ -291,9 +291,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Takes care about adjusting the flags.
 		/// </remarks>
 		/// <param name="node">the top-most node to delete.</param>
-		internal static void DeleteNode(XMPNode node)
+		internal static void DeleteNode(XmpNode node)
 		{
-			XMPNode parent = node.GetParent();
+			XmpNode parent = node.GetParent();
 			if (node.GetOptions().IsQualifier())
 			{
 				// root is qualifier
@@ -314,7 +314,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>This is setting the value of a leaf node.</summary>
 		/// <param name="node">an XMPNode</param>
 		/// <param name="value">a value</param>
-		internal static void SetNodeValue(XMPNode node, Object value)
+		internal static void SetNodeValue(XmpNode node, Object value)
 		{
 			String strValue = SerializeNodeValue(value);
 			if (!(node.GetOptions().IsQualifier() && XML_LANG.Equals(node.GetName())))
@@ -336,7 +336,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="options">the <code>PropertyOptions</code></param>
 		/// <param name="itemValue">the node value to set</param>
 		/// <returns>Returns the updated options.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the options are not consistant.
 		/// 	</exception>
 		internal static PropertyOptions VerifySetOptions(PropertyOptions options, Object 
 			itemValue)
@@ -362,7 +362,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (options.IsCompositeProperty() && itemValue != null && itemValue.ToString().Length
 				 > 0)
 			{
-				throw new XMPException("Structs and arrays can't have values", XMPError.BADOPTIONS
+				throw new XmpException("Structs and arrays can't have values", XmpError.BADOPTIONS
 					);
 			}
 			options.AssertConsistency(options.GetOptions());
@@ -386,44 +386,44 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				if (value is bool?)
 				{
-					strValue = XMPUtils.ConvertFromBoolean(((bool?)value));
+					strValue = XmpUtils.ConvertFromBoolean(((bool?)value));
 				}
 				else
 				{
 					if (value is int?)
 					{
-						strValue = XMPUtils.ConvertFromInteger(((int?)value));
+						strValue = XmpUtils.ConvertFromInteger(((int?)value));
 					}
 					else
 					{
 						if (value is long)
 						{
-							strValue = XMPUtils.ConvertFromLong(((long)value));
+							strValue = XmpUtils.ConvertFromLong(((long)value));
 						}
 						else
 						{
 							if (value is double?)
 							{
-								strValue = XMPUtils.ConvertFromDouble(((double?)value));
+								strValue = XmpUtils.ConvertFromDouble(((double?)value));
 							}
 							else
 							{
-								if (value is XMPDateTime)
+								if (value is XmpDateTime)
 								{
-									strValue = XMPUtils.ConvertFromDate((XMPDateTime)value);
+									strValue = XmpUtils.ConvertFromDate((XmpDateTime)value);
 								}
 								else
 								{
 									if (value is GregorianCalendar)
 									{
-										XMPDateTime dt = XMPDateTimeFactory.CreateFromCalendar((GregorianCalendar)value);
-										strValue = XMPUtils.ConvertFromDate(dt);
+										XmpDateTime dt = XmpDateTimeFactory.CreateFromCalendar((GregorianCalendar)value);
+										strValue = XmpUtils.ConvertFromDate(dt);
 									}
 									else
 									{
 										if (value is byte[])
 										{
-											strValue = XMPUtils.EncodeBase64((byte[])value);
+											strValue = XmpUtils.EncodeBase64((byte[])value);
 										}
 										else
 										{
@@ -460,20 +460,20 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="nextStep">the xpath segment</param>
 		/// <param name="createNodes"></param>
 		/// <returns>returns the found or created XMPPath node</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		private static XMPNode FollowXPathStep(XMPNode parentNode, XMPPathSegment nextStep
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		private static XmpNode FollowXPathStep(XmpNode parentNode, XmpPathSegment nextStep
 			, bool createNodes)
 		{
-			XMPNode nextNode = null;
+			XmpNode nextNode = null;
 			int index = 0;
 			int stepKind = nextStep.GetKind();
-			if (stepKind == XMPPath.STRUCT_FIELD_STEP)
+			if (stepKind == XmpPath.STRUCT_FIELD_STEP)
 			{
 				nextNode = FindChildNode(parentNode, nextStep.GetName(), createNodes);
 			}
 			else
 			{
-				if (stepKind == XMPPath.QUALIFIER_STEP)
+				if (stepKind == XmpPath.QUALIFIER_STEP)
 				{
 					nextNode = FindQualifierNode(parentNode, nextStep.GetName().Substring(1), createNodes
 						);
@@ -483,21 +483,21 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					// This is an array indexing step. First get the index, then get the node.
 					if (!parentNode.GetOptions().IsArray())
 					{
-						throw new XMPException("Indexing applied to non-array", XMPError.BADXPATH);
+						throw new XmpException("Indexing applied to non-array", XmpError.BADXPATH);
 					}
-					if (stepKind == XMPPath.ARRAY_INDEX_STEP)
+					if (stepKind == XmpPath.ARRAY_INDEX_STEP)
 					{
 						index = FindIndexedItem(parentNode, nextStep.GetName(), createNodes);
 					}
 					else
 					{
-						if (stepKind == XMPPath.ARRAY_LAST_STEP)
+						if (stepKind == XmpPath.ARRAY_LAST_STEP)
 						{
 							index = parentNode.GetChildrenLength();
 						}
 						else
 						{
-							if (stepKind == XMPPath.FIELD_SELECTOR_STEP)
+							if (stepKind == XmpPath.FIELD_SELECTOR_STEP)
 							{
 								String[] result = Utils.SplitNameAndValue(nextStep.GetName());
 								String fieldName = result[0];
@@ -506,7 +506,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							}
 							else
 							{
-								if (stepKind == XMPPath.QUAL_SELECTOR_STEP)
+								if (stepKind == XmpPath.QUAL_SELECTOR_STEP)
 								{
 									String[] result = Utils.SplitNameAndValue(nextStep.GetName());
 									String qualName = result[0];
@@ -516,7 +516,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 								}
 								else
 								{
-									throw new XMPException("Unknown array indexing step in FollowXPathStep", XMPError
+									throw new XmpException("Unknown array indexing step in FollowXPathStep", XmpError
 										.INTERNALFAILURE);
 								}
 							}
@@ -545,15 +545,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="createNodes">flag if nodes shall be created</param>
 		/// <returns>Returns the qualifier node if found or created, <code>null</code> otherwise.
 		/// 	</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		private static XMPNode FindQualifierNode(XMPNode parent, String qualName, bool createNodes
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		private static XmpNode FindQualifierNode(XmpNode parent, String qualName, bool createNodes
 			)
 		{
 			System.Diagnostics.Debug.Assert(!qualName.StartsWith("?"));
-			XMPNode qualNode = parent.FindQualifierByName(qualName);
+			XmpNode qualNode = parent.FindQualifierByName(qualName);
 			if (qualNode == null && createNodes)
 			{
-				qualNode = new XMPNode(qualName, null);
+				qualNode = new XmpNode(qualName, null);
 				qualNode.SetImplicit(true);
 				parent.AddQualifier(qualNode);
 			}
@@ -564,8 +564,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="segment">the segment containing the array index</param>
 		/// <param name="createNodes">flag if new nodes are allowed to be created.</param>
 		/// <returns>Returns the index or index = -1 if not found</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Throws Exceptions</exception>
-		private static int FindIndexedItem(XMPNode arrayNode, String segment, bool createNodes
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Throws Exceptions</exception>
+		private static int FindIndexedItem(XmpNode arrayNode, String segment, bool createNodes
 			)
 		{
 			int index = 0;
@@ -575,17 +575,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				index = System.Convert.ToInt32(segment);
 				if (index < 1)
 				{
-					throw new XMPException("Array index must be larger than zero", XMPError.BADXPATH);
+					throw new XmpException("Array index must be larger than zero", XmpError.BADXPATH);
 				}
 			}
 			catch (FormatException)
 			{
-				throw new XMPException("Array index not digits.", XMPError.BADXPATH);
+				throw new XmpException("Array index not digits.", XmpError.BADXPATH);
 			}
 			if (createNodes && index == arrayNode.GetChildrenLength() + 1)
 			{
 				// Append a new last + 1 node.
-				XMPNode newItem = new XMPNode(ARRAY_ITEM_NAME, null);
+				XmpNode newItem = new XmpNode(ARRAY_ITEM_NAME, null);
 				newItem.SetImplicit(true);
 				arrayNode.AddChild(newItem);
 			}
@@ -605,22 +605,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="fieldName"/>
 		/// <param name="fieldValue"/>
 		/// <returns>Returns the index of the field if found, otherwise -1.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		private static int LookupFieldSelector(XMPNode arrayNode, String fieldName, String
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		private static int LookupFieldSelector(XmpNode arrayNode, String fieldName, String
 			 fieldValue)
 		{
 			int result = -1;
 			for (int index = 1; index <= arrayNode.GetChildrenLength() && result < 0; index++)
 			{
-				XMPNode currItem = arrayNode.GetChild(index);
+				XmpNode currItem = arrayNode.GetChild(index);
 				if (!currItem.GetOptions().IsStruct())
 				{
-					throw new XMPException("Field selector must be used on array of struct", XMPError
+					throw new XmpException("Field selector must be used on array of struct", XmpError
 						.BADXPATH);
 				}
 				for (int f = 1; f <= currItem.GetChildrenLength(); f++)
 				{
-					XMPNode currField = currItem.GetChild(f);
+					XmpNode currField = currItem.GetChild(f);
 					if (!fieldName.Equals(currField.GetName()))
 					{
 						continue;
@@ -653,19 +653,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// an x-default node is created if there has not been one.
 		/// </param>
 		/// <returns>Returns the index of th</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		private static int LookupQualSelector(XMPNode arrayNode, String qualName, String 
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		private static int LookupQualSelector(XmpNode arrayNode, String qualName, String 
 			qualValue, int aliasForm)
 		{
 			if (XML_LANG.Equals(qualName))
 			{
 				qualValue = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(qualValue);
-				int index = iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.LookupLanguageItem(arrayNode, 
-					qualValue);
+				int index = XmpNodeUtils.LookupLanguageItem(arrayNode, qualValue);
 				if (index < 0 && (aliasForm & AliasOptions.PROP_ARRAY_ALT_TEXT) > 0)
 				{
-					XMPNode langNode = new XMPNode(ARRAY_ITEM_NAME, null);
-					XMPNode xdefault = new XMPNode(XML_LANG, X_DEFAULT, null);
+					XmpNode langNode = new XmpNode(ARRAY_ITEM_NAME, null);
+					XmpNode xdefault = new XmpNode(XML_LANG, X_DEFAULT, null);
 					langNode.AddQualifier(xdefault);
 					arrayNode.AddChild(1, langNode);
 					return 1;
@@ -679,10 +678,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				for (int index = 1; index < arrayNode.GetChildrenLength(); index++)
 				{
-					XMPNode currItem = arrayNode.GetChild(index);
+					XmpNode currItem = arrayNode.GetChild(index);
 					for (IEnumerator it = currItem.IterateQualifier(); it.MoveNext(); )
 					{
-						XMPNode qualifier = (XMPNode)it.Current;
+						XmpNode qualifier = (XmpNode)it.Current;
 						if (qualName.Equals(qualifier.GetName()) && qualValue.Equals(qualifier.GetValue()
 							))
 						{
@@ -703,7 +702,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// item.
 		/// </remarks>
 		/// <param name="arrayNode">an alt text array node</param>
-		internal static void NormalizeLangArray(XMPNode arrayNode)
+		internal static void NormalizeLangArray(XmpNode arrayNode)
 		{
 			if (!arrayNode.GetOptions().IsArrayAltText())
 			{
@@ -712,7 +711,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// check if node with x-default qual is first place
 			for (int i = 2; i <= arrayNode.GetChildrenLength(); i++)
 			{
-				XMPNode child = arrayNode.GetChild(i);
+				XmpNode child = arrayNode.GetChild(i);
 				if (child.HasQualifier() && X_DEFAULT.Equals(child.GetQualifier(1).GetValue()))
 				{
 					// move node to first place
@@ -721,7 +720,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						arrayNode.RemoveChild(i);
 						arrayNode.AddChild(1, child);
 					}
-					catch (XMPException)
+					catch (XmpException)
 					{
 						// cannot occur, because same child is removed before
 						System.Diagnostics.Debug.Assert(false);
@@ -741,14 +740,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// is first.
 		/// </remarks>
 		/// <param name="arrayNode">the array node to check if its an alt-text array</param>
-		internal static void DetectAltText(XMPNode arrayNode)
+		internal static void DetectAltText(XmpNode arrayNode)
 		{
 			if (arrayNode.GetOptions().IsArrayAlternate() && arrayNode.HasChildren())
 			{
 				bool isAltText = false;
 				for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
 				{
-					XMPNode child = (XMPNode)it.Current;
+					XmpNode child = (XmpNode)it.Current;
 					if (child.GetOptions().GetHasLanguage())
 					{
 						isAltText = true;
@@ -767,13 +766,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="arrayNode">the language array</param>
 		/// <param name="itemLang">the language of the item</param>
 		/// <param name="itemValue">the content of the item</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a duplicate property is added
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if a duplicate property is added
 		/// 	</exception>
-		internal static void AppendLangItem(XMPNode arrayNode, String itemLang, String itemValue
+		internal static void AppendLangItem(XmpNode arrayNode, String itemLang, String itemValue
 			)
 		{
-			XMPNode newItem = new XMPNode(ARRAY_ITEM_NAME, itemValue, null);
-			XMPNode langQual = new XMPNode(XML_LANG, itemLang, null);
+			XmpNode newItem = new XmpNode(ARRAY_ITEM_NAME, itemValue, null);
+			XmpNode langQual = new XmpNode(XML_LANG, itemLang, null);
 			newItem.AddQualifier(langQual);
 			if (!X_DEFAULT.Equals(langQual.GetValue()))
 			{
@@ -804,42 +803,41 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Returns the kind of match as an Integer and the found node in an
 		/// array.
 		/// </returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		internal static Object[] ChooseLocalizedText(XMPNode arrayNode, String genericLang
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		internal static Object[] ChooseLocalizedText(XmpNode arrayNode, String genericLang
 			, String specificLang)
 		{
 			// See if the array has the right form. Allow empty alt arrays,
 			// that is what parsing returns.
 			if (!arrayNode.GetOptions().IsArrayAltText())
 			{
-				throw new XMPException("Localized text array is not alt-text", XMPError.BADXPATH);
+				throw new XmpException("Localized text array is not alt-text", XmpError.BADXPATH);
 			}
 			else
 			{
 				if (!arrayNode.HasChildren())
 				{
-					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_NO_VALUES, null
-						 };
+					return new Object[] { XmpNodeUtils.CLT_NO_VALUES, null };
 				}
 			}
 			int foundGenericMatches = 0;
-			XMPNode resultNode = null;
-			XMPNode xDefault = null;
+			XmpNode resultNode = null;
+			XmpNode xDefault = null;
 			// Look for the first partial match with the generic language.
 			for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
 			{
-				XMPNode currItem = (XMPNode)it.Current;
+				XmpNode currItem = (XmpNode)it.Current;
 				// perform some checks on the current item
 				if (currItem.GetOptions().IsCompositeProperty())
 				{
-					throw new XMPException("Alt-text array item is not simple", XMPError.BADXPATH);
+					throw new XmpException("Alt-text array item is not simple", XmpError.BADXPATH);
 				}
 				else
 				{
 					if (!currItem.HasQualifier() || !XML_LANG.Equals(currItem.GetQualifier(1).GetName
 						()))
 					{
-						throw new XMPException("Alt-text array item has no language qualifier", XMPError.
+						throw new XmpException("Alt-text array item has no language qualifier", XmpError.
 							BADXPATH);
 					}
 				}
@@ -847,8 +845,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// Look for an exact match with the specific language.
 				if (specificLang.Equals(currLang))
 				{
-					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_SPECIFIC_MATCH, 
-						currItem };
+					return new Object[] { XmpNodeUtils.CLT_SPECIFIC_MATCH, currItem };
 				}
 				else
 				{
@@ -873,28 +870,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// evaluate loop
 			if (foundGenericMatches == 1)
 			{
-				return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_SINGLE_GENERIC, 
-					resultNode };
+				return new Object[] { XmpNodeUtils.CLT_SINGLE_GENERIC, resultNode };
 			}
 			else
 			{
 				if (foundGenericMatches > 1)
 				{
-					return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_MULTIPLE_GENERIC
-						, resultNode };
+					return new Object[] { XmpNodeUtils.CLT_MULTIPLE_GENERIC, resultNode };
 				}
 				else
 				{
 					if (xDefault != null)
 					{
-						return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_XDEFAULT, xDefault
-							 };
+						return new Object[] { XmpNodeUtils.CLT_XDEFAULT, xDefault };
 					}
 					else
 					{
 						// Everything failed, choose the first item.
-						return new Object[] { iTextSharp.Kernel.Xmp.Impl.XMPNodeUtils.CLT_FIRST_ITEM, arrayNode
-							.GetChild(1) };
+						return new Object[] { XmpNodeUtils.CLT_FIRST_ITEM, arrayNode.GetChild(1) };
 					}
 				}
 			}
@@ -905,16 +898,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="arrayNode">an array node</param>
 		/// <param name="language">the requested language</param>
 		/// <returns>Returns the index if the language has been found, -1 otherwise.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		internal static int LookupLanguageItem(XMPNode arrayNode, String language)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		internal static int LookupLanguageItem(XmpNode arrayNode, String language)
 		{
 			if (!arrayNode.GetOptions().IsArray())
 			{
-				throw new XMPException("Language item must be used on array", XMPError.BADXPATH);
+				throw new XmpException("Language item must be used on array", XmpError.BADXPATH);
 			}
 			for (int index = 1; index <= arrayNode.GetChildrenLength(); index++)
 			{
-				XMPNode child = arrayNode.GetChild(index);
+				XmpNode child = arrayNode.GetChild(index);
 				if (!child.HasQualifier() || !XML_LANG.Equals(child.GetQualifier(1).GetName()))
 				{
 					continue;

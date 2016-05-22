@@ -29,11 +29,11 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.Xmp.Impl.Xpath
+namespace iTextSharp.Kernel.Xmp.Impl.XPath
 {
 	/// <summary>A segment of a parsed <code>XMPPath</code>.</summary>
 	/// <since>23.06.2006</since>
-	public class XMPPathSegment
+	public class XmpPathSegment
 	{
 		/// <summary>name of the path segment</summary>
 		private String name;
@@ -49,7 +49,7 @@ namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 
 		/// <summary>Constructor with initial values.</summary>
 		/// <param name="name">the name of the segment</param>
-		public XMPPathSegment(String name)
+		public XmpPathSegment(String name)
 		{
 			this.name = name;
 		}
@@ -57,7 +57,7 @@ namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 		/// <summary>Constructor with initial values.</summary>
 		/// <param name="name">the name of the segment</param>
 		/// <param name="kind">the kind of the segment</param>
-		public XMPPathSegment(String name, int kind)
+		public XmpPathSegment(String name, int kind)
 		{
 			this.name = name;
 			this.kind = kind;
@@ -116,16 +116,16 @@ namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 		{
 			switch (kind)
 			{
-				case XMPPath.STRUCT_FIELD_STEP:
-				case XMPPath.ARRAY_INDEX_STEP:
-				case XMPPath.QUALIFIER_STEP:
-				case XMPPath.ARRAY_LAST_STEP:
+				case XmpPath.STRUCT_FIELD_STEP:
+				case XmpPath.ARRAY_INDEX_STEP:
+				case XmpPath.QUALIFIER_STEP:
+				case XmpPath.ARRAY_LAST_STEP:
 				{
 					return name;
 				}
 
-				case XMPPath.QUAL_SELECTOR_STEP:
-				case XMPPath.FIELD_SELECTOR_STEP:
+				case XmpPath.QUAL_SELECTOR_STEP:
+				case XmpPath.FIELD_SELECTOR_STEP:
 				{
 					return name;
 				}

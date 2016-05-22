@@ -84,7 +84,7 @@ namespace iTextSharp.Kernel.Xmp
 	/// return.
 	/// </remarks>
 	/// <since>25.01.2006</since>
-	public interface XMPIterator : IEnumerator
+	public interface XmpIterator : IEnumerator
 	{
 		/// <summary>
 		/// Skip the subtree below the current node when <code>next()</code> is

@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 using iTextSharp.Kernel.Xmp.Options;
 using iTextSharp.Kernel.Xmp.Properties;
 
@@ -38,11 +38,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>
 	/// Implementation for
-	/// <see cref="iTextSharp.Kernel.Xmp.XMPMeta"/>
+	/// <see cref="iTextSharp.Kernel.Xmp.XmpMeta"/>
 	/// .
 	/// </summary>
 	/// <since>17.02.2006</since>
-	public class XMPMetaImpl : XMPMeta
+	public class XmpMetaImpl : XmpMeta
 	{
 		/// <summary>Property values are Strings by default</summary>
 		private const int VALUE_STRING = 0;
@@ -62,16 +62,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private const int VALUE_BASE64 = 7;
 
 		/// <summary>root of the metadata tree</summary>
-		private XMPNode tree;
+		private XmpNode tree;
 
 		/// <summary>the xpacket processing instructions content</summary>
 		private String packetHeader = null;
 
 		/// <summary>Constructor for an empty metadata object.</summary>
-		public XMPMetaImpl()
+		public XmpMetaImpl()
 		{
 			// create root node
-			tree = new XMPNode(null, null, null);
+			tree = new XmpNode(null, null, null);
 		}
 
 		/// <summary>Constructor for a cloned metadata tree.</summary>
@@ -79,14 +79,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// an prefilled metadata tree which fulfills all
 		/// <code>XMPNode</code> contracts.
 		/// </param>
-		public XMPMetaImpl(XMPNode tree)
+		public XmpMetaImpl(XmpNode tree)
 		{
 			this.tree = tree;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.AppendArrayItem(System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.AppendArrayItem(System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, PropertyOptions
 			 arrayOptions, String itemValue, PropertyOptions itemOptions)
 		{
@@ -98,24 +98,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			if (!arrayOptions.IsOnlyArrayOptions())
 			{
-				throw new XMPException("Only array form flags allowed for arrayOptions", XMPError
+				throw new XmpException("Only array form flags allowed for arrayOptions", XmpError
 					.BADOPTIONS);
 			}
 			// Check if array options are set correctly.
-			arrayOptions = XMPNodeUtils.VerifySetOptions(arrayOptions, null);
+			arrayOptions = XmpNodeUtils.VerifySetOptions(arrayOptions, null);
 			// Locate or create the array. If it already exists, make sure the array
 			// form from the options
 			// parameter is compatible with the current state.
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
 			// Just lookup, don't try to create.
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode != null)
 			{
 				// The array exists, make sure the form is compatible. Zero
 				// arrayForm means take what exists.
 				if (!arrayNode.GetOptions().IsArray())
 				{
-					throw new XMPException("The named property is not an array", XMPError.BADXPATH);
+					throw new XmpException("The named property is not an array", XmpError.BADXPATH);
 				}
 			}
 			else
@@ -127,40 +127,40 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// The array does not exist, try to create it.
 				if (arrayOptions.IsArray())
 				{
-					arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, true, arrayOptions);
+					arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, true, arrayOptions);
 					if (arrayNode == null)
 					{
-						throw new XMPException("Failure creating array node", XMPError.BADXPATH);
+						throw new XmpException("Failure creating array node", XmpError.BADXPATH);
 					}
 				}
 				else
 				{
 					// array options missing
-					throw new XMPException("Explicit arrayOptions required to create new array", XMPError
+					throw new XmpException("Explicit arrayOptions required to create new array", XmpError
 						.BADOPTIONS);
 				}
 			}
 			DoSetArrayItem(arrayNode, ARRAY_LAST_ITEM, itemValue, itemOptions, true);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.AppendArrayItem(System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.AppendArrayItem(System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, String itemValue
 			)
 		{
 			AppendArrayItem(schemaNS, arrayName, null, itemValue, null);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.CountArrayItems(System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.CountArrayItems(System.String, System.String)
 		/// 	"/>
 		public virtual int CountArrayItems(String schemaNS, String arrayName)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(arrayName);
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode == null)
 			{
 				return 0;
@@ -171,11 +171,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else
 			{
-				throw new XMPException("The named property is not an array", XMPError.BADXPATH);
+				throw new XmpException("The named property is not an array", XmpError.BADXPATH);
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteArrayItem(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DeleteArrayItem(System.String, System.String, int)
 		/// 	"/>
 		public virtual void DeleteArrayItem(String schemaNS, String arrayName, int itemIndex
 			)
@@ -184,16 +184,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertArrayName(arrayName);
-				String itemPath = XMPPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
+				String itemPath = XmpPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
 				DeleteProperty(schemaNS, itemPath);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 			}
 		}
 
 		// EMPTY, exceptions are ignored within delete
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DeleteProperty(System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteProperty(String schemaNS, String propName)
 		{
@@ -201,20 +201,20 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertPropName(propName);
-				XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-				XMPNode propNode = XMPNodeUtils.FindNode(tree, expPath, false, null);
+				XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+				XmpNode propNode = XmpNodeUtils.FindNode(tree, expPath, false, null);
 				if (propNode != null)
 				{
-					XMPNodeUtils.DeleteNode(propNode);
+					XmpNodeUtils.DeleteNode(propNode);
 				}
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 			}
 		}
 
 		// EMPTY, exceptions are ignored within delete
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteQualifier(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DeleteQualifier(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteQualifier(String schemaNS, String propName, String qualNS
 			, String qualName)
@@ -224,17 +224,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// Note: qualNS and qualName are checked inside composeQualfierPath
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertPropName(propName);
-				String qualPath = propName + XMPPathFactory.ComposeQualifierPath(qualNS, qualName
+				String qualPath = propName + XmpPathFactory.ComposeQualifierPath(qualNS, qualName
 					);
 				DeleteProperty(schemaNS, qualPath);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 			}
 		}
 
 		// EMPTY, exceptions within delete are ignored
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DeleteStructField(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DeleteStructField(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual void DeleteStructField(String schemaNS, String structName, String 
 			fieldNS, String fieldName)
@@ -244,17 +244,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// fieldNS and fieldName are checked inside composeStructFieldPath
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertStructName(structName);
-				String fieldPath = structName + XMPPathFactory.ComposeStructFieldPath(fieldNS, fieldName
+				String fieldPath = structName + XmpPathFactory.ComposeStructFieldPath(fieldNS, fieldName
 					);
 				DeleteProperty(schemaNS, fieldPath);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 			}
 		}
 
 		// EMPTY, exceptions within delete are ignored
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesPropertyExist(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DoesPropertyExist(System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesPropertyExist(String schemaNS, String propName)
 		{
@@ -262,17 +262,17 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertPropName(propName);
-				XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-				XMPNode propNode = XMPNodeUtils.FindNode(tree, expPath, false, null);
+				XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+				XmpNode propNode = XmpNodeUtils.FindNode(tree, expPath, false, null);
 				return propNode != null;
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				return false;
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesArrayItemExist(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DoesArrayItemExist(System.String, System.String, int)
 		/// 	"/>
 		public virtual bool DoesArrayItemExist(String schemaNS, String arrayName, int itemIndex
 			)
@@ -281,16 +281,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertArrayName(arrayName);
-				String path = XMPPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
+				String path = XmpPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
 				return DoesPropertyExist(schemaNS, path);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				return false;
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesStructFieldExist(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DoesStructFieldExist(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesStructFieldExist(String schemaNS, String structName, String
 			 fieldNS, String fieldName)
@@ -300,16 +300,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// fieldNS and fieldName are checked inside composeStructFieldPath()
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertStructName(structName);
-				String path = XMPPathFactory.ComposeStructFieldPath(fieldNS, fieldName);
+				String path = XmpPathFactory.ComposeStructFieldPath(fieldNS, fieldName);
 				return DoesPropertyExist(schemaNS, structName + path);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				return false;
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DoesQualifierExist(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DoesQualifierExist(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual bool DoesQualifierExist(String schemaNS, String propName, String qualNS
 			, String qualName)
@@ -319,31 +319,31 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// qualNS and qualName are checked inside composeQualifierPath()
 				ParameterAsserts.AssertSchemaNS(schemaNS);
 				ParameterAsserts.AssertPropName(propName);
-				String path = XMPPathFactory.ComposeQualifierPath(qualNS, qualName);
+				String path = XmpPathFactory.ComposeQualifierPath(qualNS, qualName);
 				return DoesPropertyExist(schemaNS, propName + path);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				return false;
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetArrayItem(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetArrayItem(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual XMPProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual XmpProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex
 			)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(arrayName);
-			String itemPath = XMPPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
+			String itemPath = XmpPathFactory.ComposeArrayItemPath(arrayName, itemIndex);
 			return GetProperty(schemaNS, itemPath);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
 		/// 	"/>
-		public virtual XMPProperty GetLocalizedText(String schemaNS, String altTextName, 
+		public virtual XmpProperty GetLocalizedText(String schemaNS, String altTextName, 
 			String genericLang, String specificLang)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
@@ -352,19 +352,19 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			genericLang = genericLang != null ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
 				(genericLang) : null;
 			specificLang = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(specificLang);
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, altTextName);
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, altTextName);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode == null)
 			{
 				return null;
 			}
-			Object[] result = XMPNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
+			Object[] result = XmpNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
 			int match = ((int?)result[0]);
-			XMPNode itemNode = (XMPNode)result[1];
-			if (match != XMPNodeUtils.CLT_NO_VALUES)
+			XmpNode itemNode = (XmpNode)result[1];
+			if (match != XmpNodeUtils.CLT_NO_VALUES)
 			{
-				return new _XMPProperty_428(itemNode);
+				return new _XmpProperty_428(itemNode);
 			}
 			else
 			{
@@ -372,9 +372,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		private sealed class _XMPProperty_428 : XMPProperty
+		private sealed class _XmpProperty_428 : XmpProperty
 		{
-			public _XMPProperty_428(XMPNode itemNode)
+			public _XmpProperty_428(XmpNode itemNode)
 			{
 				this.itemNode = itemNode;
 			}
@@ -399,12 +399,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				return itemNode.GetValue().ToString();
 			}
 
-			private readonly XMPNode itemNode;
+			private readonly XmpNode itemNode;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue, PropertyOptions options)
 		{
@@ -414,14 +414,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			genericLang = genericLang != null ? iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue
 				(genericLang) : null;
 			specificLang = iTextSharp.Kernel.Xmp.Impl.Utils.NormalizeLangValue(specificLang);
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, altTextName);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, altTextName);
 			// Find the array node and set the options if it was just created.
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, true, new PropertyOptions
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, true, new PropertyOptions
 				(PropertyOptions.ARRAY | PropertyOptions.ARRAY_ORDERED | PropertyOptions.ARRAY_ALTERNATE
 				 | PropertyOptions.ARRAY_ALT_TEXT));
 			if (arrayNode == null)
 			{
-				throw new XMPException("Failed to find or create array node", XMPError.BADXPATH);
+				throw new XmpException("Failed to find or create array node", XmpError.BADXPATH);
 			}
 			else
 			{
@@ -433,25 +433,25 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					}
 					else
 					{
-						throw new XMPException("Specified property is no alt-text array", XMPError.BADXPATH
+						throw new XmpException("Specified property is no alt-text array", XmpError.BADXPATH
 							);
 					}
 				}
 			}
 			// Make sure the x-default item, if any, is first.
 			bool haveXDefault = false;
-			XMPNode xdItem = null;
+			XmpNode xdItem = null;
 			for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
 			{
-				XMPNode currItem = (XMPNode)it.Current;
-				if (!currItem.HasQualifier() || !XMPConst.XML_LANG.Equals(currItem.GetQualifier(1
+				XmpNode currItem = (XmpNode)it.Current;
+				if (!currItem.HasQualifier() || !XmpConst.XML_LANG.Equals(currItem.GetQualifier(1
 					).GetName()))
 				{
-					throw new XMPException("Language qualifier must be first", XMPError.BADXPATH);
+					throw new XmpException("Language qualifier must be first", XmpError.BADXPATH);
 				}
 				else
 				{
-					if (XMPConst.X_DEFAULT.Equals(currItem.GetQualifier(1).GetValue()))
+					if (XmpConst.X_DEFAULT.Equals(currItem.GetQualifier(1).GetValue()))
 					{
 						xdItem = currItem;
 						haveXDefault = true;
@@ -468,27 +468,27 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// Find the appropriate item.
 			// chooseLocalizedText will make sure the array is a language
 			// alternative.
-			Object[] result = XMPNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
+			Object[] result = XmpNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
 			int match = ((int?)result[0]);
-			XMPNode itemNode = (XMPNode)result[1];
-			bool specificXDefault = XMPConst.X_DEFAULT.Equals(specificLang);
+			XmpNode itemNode = (XmpNode)result[1];
+			bool specificXDefault = XmpConst.X_DEFAULT.Equals(specificLang);
 			switch (match)
 			{
-				case XMPNodeUtils.CLT_NO_VALUES:
+				case XmpNodeUtils.CLT_NO_VALUES:
 				{
 					// Create the array items for the specificLang and x-default, with
 					// x-default first.
-					XMPNodeUtils.AppendLangItem(arrayNode, XMPConst.X_DEFAULT, itemValue);
+					XmpNodeUtils.AppendLangItem(arrayNode, XmpConst.X_DEFAULT, itemValue);
 					haveXDefault = true;
 					if (!specificXDefault)
 					{
-						XMPNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
+						XmpNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
 					}
 					break;
 				}
 
-				case XMPNodeUtils.CLT_SPECIFIC_MATCH:
+				case XmpNodeUtils.CLT_SPECIFIC_MATCH:
 				{
 					if (!specificXDefault)
 					{
@@ -508,7 +508,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						System.Diagnostics.Debug.Assert(haveXDefault && xdItem == itemNode);
 						for (IEnumerator it_1 = arrayNode.IterateChildren(); it_1.MoveNext(); )
 						{
-							XMPNode currItem = (XMPNode)it_1.Current;
+							XmpNode currItem = (XmpNode)it_1.Current;
 							if (currItem == xdItem || !currItem.GetValue().Equals(xdItem != null ? xdItem.GetValue
 								() : null))
 							{
@@ -525,7 +525,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					break;
 				}
 
-				case XMPNodeUtils.CLT_SINGLE_GENERIC:
+				case XmpNodeUtils.CLT_SINGLE_GENERIC:
 				{
 					// Update the generic item, update x-default if it matches the old
 					// value.
@@ -541,10 +541,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					break;
 				}
 
-				case XMPNodeUtils.CLT_MULTIPLE_GENERIC:
+				case XmpNodeUtils.CLT_MULTIPLE_GENERIC:
 				{
 					// Create the specific language, ignore x-default.
-					XMPNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
+					XmpNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
 					if (specificXDefault)
 					{
 						haveXDefault = true;
@@ -552,7 +552,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					break;
 				}
 
-				case XMPNodeUtils.CLT_XDEFAULT:
+				case XmpNodeUtils.CLT_XDEFAULT:
 				{
 					// Create the specific language, update x-default if it was the only
 					// item.
@@ -560,14 +560,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					{
 						xdItem.SetValue(itemValue);
 					}
-					XMPNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
+					XmpNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
 					break;
 				}
 
-				case XMPNodeUtils.CLT_FIRST_ITEM:
+				case XmpNodeUtils.CLT_FIRST_ITEM:
 				{
 					// Create the specific language, don't add an x-default item.
-					XMPNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
+					XmpNodeUtils.AppendLangItem(arrayNode, specificLang, itemValue);
 					if (specificXDefault)
 					{
 						haveXDefault = true;
@@ -578,20 +578,20 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				default:
 				{
 					// does not happen under normal circumstances
-					throw new XMPException("Unexpected result from ChooseLocalizedText", XMPError.INTERNALFAILURE
+					throw new XmpException("Unexpected result from ChooseLocalizedText", XmpError.INTERNALFAILURE
 						);
 				}
 			}
 			// Add an x-default at the front if needed.
 			if (!haveXDefault && arrayNode.GetChildrenLength() == 1)
 			{
-				XMPNodeUtils.AppendLangItem(arrayNode, XMPConst.X_DEFAULT, itemValue);
+				XmpNodeUtils.AppendLangItem(arrayNode, XmpConst.X_DEFAULT, itemValue);
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue)
 		{
@@ -599,10 +599,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetProperty(System.String, System.String)
 		/// 	"/>
-		public virtual XMPProperty GetProperty(String schemaNS, String propName)
+		public virtual XmpProperty GetProperty(String schemaNS, String propName)
 		{
 			return GetProperty(schemaNS, propName, VALUE_STRING);
 		}
@@ -628,30 +628,30 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <see cref="VALUE_BASE64"/>
 		/// .
 		/// </remarks>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		/// <param name="schemaNS">a schema namespace</param>
 		/// <param name="propName">a property name or path</param>
 		/// <param name="valueType">the type of the value, see VALUE_...</param>
 		/// <returns>Returns an <code>XMPProperty</code></returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Collects any exception that occurs.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Collects any exception that occurs.
 		/// 	</exception>
-		protected internal virtual XMPProperty GetProperty(String schemaNS, String propName
+		protected internal virtual XmpProperty GetProperty(String schemaNS, String propName
 			, int valueType)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertPropName(propName);
-			XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-			XMPNode propNode = XMPNodeUtils.FindNode(tree, expPath, false, null);
+			XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+			XmpNode propNode = XmpNodeUtils.FindNode(tree, expPath, false, null);
 			if (propNode != null)
 			{
 				if (valueType != VALUE_STRING && propNode.GetOptions().IsCompositeProperty())
 				{
-					throw new XMPException("Property must be simple when a value type is requested", 
-						XMPError.BADXPATH);
+					throw new XmpException("Property must be simple when a value type is requested", 
+						XmpError.BADXPATH);
 				}
 				Object value = EvaluateNodeValue(valueType, propNode);
-				return new _XMPProperty_703(value, propNode);
+				return new _XmpProperty_703(value, propNode);
 			}
 			else
 			{
@@ -659,9 +659,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		private sealed class _XMPProperty_703 : XMPProperty
+		private sealed class _XmpProperty_703 : XmpProperty
 		{
-			public _XMPProperty_703(Object value, XMPNode propNode)
+			public _XmpProperty_703(Object value, XmpNode propNode)
 			{
 				this.value = value;
 				this.propNode = propNode;
@@ -689,11 +689,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			private readonly Object value;
 
-			private readonly XMPNode propNode;
+			private readonly XmpNode propNode;
 		}
 
 		/// <summary>Returns a property, but the result value can be requested.</summary>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetProperty(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		/// <param name="schemaNS">a schema namespace</param>
 		/// <param name="propName">a property name or path</param>
@@ -702,21 +702,21 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Returns the node value as an object according to the
 		/// <code>valueType</code>.
 		/// </returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Collects any exception that occurs.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Collects any exception that occurs.
 		/// 	</exception>
 		protected internal virtual Object GetPropertyObject(String schemaNS, String propName
 			, int valueType)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertPropName(propName);
-			XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-			XMPNode propNode = XMPNodeUtils.FindNode(tree, expPath, false, null);
+			XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+			XmpNode propNode = XmpNodeUtils.FindNode(tree, expPath, false, null);
 			if (propNode != null)
 			{
 				if (valueType != VALUE_STRING && propNode.GetOptions().IsCompositeProperty())
 				{
-					throw new XMPException("Property must be simple when a value type is requested", 
-						XMPError.BADXPATH);
+					throw new XmpException("Property must be simple when a value type is requested", 
+						XmpError.BADXPATH);
 				}
 				return EvaluateNodeValue(valueType, propNode);
 			}
@@ -726,16 +726,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyBoolean(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyBoolean(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual bool? GetPropertyBoolean(String schemaNS, String propName)
 		{
 			return (bool?)GetPropertyObject(schemaNS, propName, VALUE_BOOLEAN);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyBoolean(System.String, System.String, bool, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
 			, PropertyOptions options)
@@ -743,233 +743,233 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			SetProperty(schemaNS, propName, propValue ? TRUESTR : FALSESTR, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBoolean(System.String, System.String, bool)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyBoolean(System.String, System.String, bool)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue ? TRUESTR : FALSESTR, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyInteger(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyInteger(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual int? GetPropertyInteger(String schemaNS, String propName)
 		{
 			return (int?)GetPropertyObject(schemaNS, propName, VALUE_INTEGER);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyInteger(System.String, System.String, int, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyInteger(System.String, System.String, int)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyInteger(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyLong(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyLong(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual long GetPropertyLong(String schemaNS, String propName)
 		{
 			return (long)GetPropertyObject(schemaNS, propName, VALUE_LONG);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyLong(System.String, System.String, long, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyLong(System.String, System.String, long, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyLong(System.String, System.String, long)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyLong(System.String, System.String, long)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyDouble(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyDouble(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual double? GetPropertyDouble(String schemaNS, String propName)
 		{
 			return (double?)GetPropertyObject(schemaNS, propName, VALUE_DOUBLE);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyDouble(System.String, System.String, double, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDouble(System.String, System.String, double)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyDouble(System.String, System.String, double)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyDate(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyDate(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual XMPDateTime GetPropertyDate(String schemaNS, String propName)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual XmpDateTime GetPropertyDate(String schemaNS, String propName)
 		{
-			return (XMPDateTime)GetPropertyObject(schemaNS, propName, VALUE_DATE);
+			return (XmpDateTime)GetPropertyObject(schemaNS, propName, VALUE_DATE);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XMPDateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XmpDateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual void SetPropertyDate(String schemaNS, String propName, XmpDateTime
 			 propValue, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XMPDateTime)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyDate(System.String, System.String, iTextSharp.Kernel.Xmp.XmpDateTime)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual void SetPropertyDate(String schemaNS, String propName, XmpDateTime
 			 propValue)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyCalendar(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyCalendar(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual DateTime GetPropertyCalendar(String schemaNS, String propName)
 		{
 			return (DateTime)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyCalendar(System.String, System.String, System.DateTime, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyCalendar(System.String, System.String, System.DateTime)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyBase64(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyBase64(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual byte[] GetPropertyBase64(String schemaNS, String propName)
 		{
 			return (byte[])GetPropertyObject(schemaNS, propName, VALUE_BASE64);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPropertyString(System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyString(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual String GetPropertyString(String schemaNS, String propName)
 		{
 			return (String)GetPropertyObject(schemaNS, propName, VALUE_STRING);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[], iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyBase64(System.String, System.String, byte[], iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			, PropertyOptions options)
 		{
 			SetProperty(schemaNS, propName, propValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetPropertyBase64(System.String, System.String, byte[])
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyBase64(System.String, System.String, byte[])
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetQualifier(System.String, System.String, System.String, System.String)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetQualifier(System.String, System.String, System.String, System.String)
 		/// 	"/>
-		public virtual XMPProperty GetQualifier(String schemaNS, String propName, String 
+		public virtual XmpProperty GetQualifier(String schemaNS, String propName, String 
 			qualNS, String qualName)
 		{
 			// qualNS and qualName are checked inside composeQualfierPath
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertPropName(propName);
-			String qualPath = propName + XMPPathFactory.ComposeQualifierPath(qualNS, qualName
+			String qualPath = propName + XmpPathFactory.ComposeQualifierPath(qualNS, qualName
 				);
 			return GetProperty(schemaNS, qualPath);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetStructField(System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetStructField(System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual XMPProperty GetStructField(String schemaNS, String structName, String
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual XmpProperty GetStructField(String schemaNS, String structName, String
 			 fieldNS, String fieldName)
 		{
 			// fieldNS and fieldName are checked inside composeStructFieldPath
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertStructName(structName);
-			String fieldPath = structName + XMPPathFactory.ComposeStructFieldPath(fieldNS, fieldName
+			String fieldPath = structName + XmpPathFactory.ComposeStructFieldPath(fieldNS, fieldName
 				);
 			return GetProperty(schemaNS, fieldPath);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator()"/>
-		public virtual XMPIterator Iterator()
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.Iterator()"/>
+		public virtual XmpIterator Iterator()
 		{
 			return Iterator(null, null, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator(iTextSharp.Kernel.Xmp.Options.IteratorOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.Iterator(iTextSharp.Kernel.Xmp.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual XMPIterator Iterator(IteratorOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual XmpIterator Iterator(IteratorOptions options)
 		{
 			return Iterator(null, null, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Iterator(System.String, System.String, iTextSharp.Kernel.Xmp.Options.IteratorOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.Iterator(System.String, System.String, iTextSharp.Kernel.Xmp.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual XMPIterator Iterator(String schemaNS, String propName, IteratorOptions
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual XmpIterator Iterator(String schemaNS, String propName, IteratorOptions
 			 options)
 		{
-			return new XMPIteratorImpl(this, schemaNS, propName, options);
+			return new XmpIteratorImpl(this, schemaNS, propName, options);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue, PropertyOptions options)
@@ -977,29 +977,29 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(arrayName);
 			// Just lookup, don't try to create.
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode != null)
 			{
 				DoSetArrayItem(arrayNode, itemIndex, itemValue, options, false);
 			}
 			else
 			{
-				throw new XMPException("Specified array does not exist", XMPError.BADXPATH);
+				throw new XmpException("Specified array does not exist", XmpError.BADXPATH);
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetArrayItem(System.String, System.String, int, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			SetArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.InsertArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue, PropertyOptions options)
@@ -1007,59 +1007,59 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertArrayName(arrayName);
 			// Just lookup, don't try to create.
-			XMPPath arrayPath = XMPPathParser.ExpandXPath(schemaNS, arrayName);
-			XMPNode arrayNode = XMPNodeUtils.FindNode(tree, arrayPath, false, null);
+			XmpPath arrayPath = XmpPathParser.ExpandXPath(schemaNS, arrayName);
+			XmpNode arrayNode = XmpNodeUtils.FindNode(tree, arrayPath, false, null);
 			if (arrayNode != null)
 			{
 				DoSetArrayItem(arrayNode, itemIndex, itemValue, options, true);
 			}
 			else
 			{
-				throw new XMPException("Specified array does not exist", XMPError.BADXPATH);
+				throw new XmpException("Specified array does not exist", XmpError.BADXPATH);
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.InsertArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			InsertArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetProperty(System.String, System.String, System.Object, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetProperty(System.String, System.String, System.Object, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
 			, PropertyOptions options)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertPropName(propName);
-			options = XMPNodeUtils.VerifySetOptions(options, propValue);
-			XMPPath expPath = XMPPathParser.ExpandXPath(schemaNS, propName);
-			XMPNode propNode = XMPNodeUtils.FindNode(tree, expPath, true, options);
+			options = XmpNodeUtils.VerifySetOptions(options, propValue);
+			XmpPath expPath = XmpPathParser.ExpandXPath(schemaNS, propName);
+			XmpNode propNode = XmpNodeUtils.FindNode(tree, expPath, true, options);
 			if (propNode != null)
 			{
 				SetNode(propNode, propValue, options, false);
 			}
 			else
 			{
-				throw new XMPException("Specified property does not exist", XMPError.BADXPATH);
+				throw new XmpException("Specified property does not exist", XmpError.BADXPATH);
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetProperty(System.String, System.String, System.Object)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetProperty(System.String, System.String, System.Object)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
 			String qualName, String qualValue, PropertyOptions options)
@@ -1068,57 +1068,57 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			ParameterAsserts.AssertPropName(propName);
 			if (!DoesPropertyExist(schemaNS, propName))
 			{
-				throw new XMPException("Specified property does not exist!", XMPError.BADXPATH);
+				throw new XmpException("Specified property does not exist!", XmpError.BADXPATH);
 			}
-			String qualPath = propName + XMPPathFactory.ComposeQualifierPath(qualNS, qualName
+			String qualPath = propName + XmpPathFactory.ComposeQualifierPath(qualNS, qualName
 				);
 			SetProperty(schemaNS, qualPath, qualValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
 			String qualName, String qualValue)
 		{
 			SetQualifier(schemaNS, propName, qualNS, qualName, qualValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetStructField(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.Xmp.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue, PropertyOptions options)
 		{
 			ParameterAsserts.AssertSchemaNS(schemaNS);
 			ParameterAsserts.AssertStructName(structName);
-			String fieldPath = structName + XMPPathFactory.ComposeStructFieldPath(fieldNS, fieldName
+			String fieldPath = structName + XmpPathFactory.ComposeStructFieldPath(fieldNS, fieldName
 				);
 			SetProperty(schemaNS, fieldPath, fieldValue, options);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetStructField(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue)
 		{
 			SetStructField(schemaNS, structName, fieldNS, fieldName, fieldValue, null);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetObjectName()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetObjectName()"/>
 		public virtual String GetObjectName()
 		{
 			return tree.GetName() != null ? tree.GetName() : "";
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.SetObjectName(System.String)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetObjectName(System.String)"/>
 		public virtual void SetObjectName(String name)
 		{
 			tree.SetName(name);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.GetPacketHeader()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPacketHeader()"/>
 		public virtual String GetPacketHeader()
 		{
 			return packetHeader;
@@ -1135,37 +1135,37 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="System.Object.Clone()"/>
 		public virtual Object Clone()
 		{
-			XMPNode clonedTree = (XMPNode)tree.Clone();
-			return new iTextSharp.Kernel.Xmp.Impl.XMPMetaImpl(clonedTree);
+			XmpNode clonedTree = (XmpNode)tree.Clone();
+			return new XmpMetaImpl(clonedTree);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.DumpObject()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.DumpObject()"/>
 		public virtual String DumpObject()
 		{
 			// renders tree recursively
 			return GetRoot().DumpNode(true);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Sort()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.Sort()"/>
 		public virtual void Sort()
 		{
 			this.tree.Sort();
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPMeta.Normalize(iTextSharp.Kernel.Xmp.Options.ParseOptions)
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.Normalize(iTextSharp.Kernel.Xmp.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public virtual void Normalize(ParseOptions options)
 		{
 			if (options == null)
 			{
 				options = new ParseOptions();
 			}
-			XMPNormalizer.Process(this, options);
+			XmpNormalizer.Process(this, options);
 		}
 
 		/// <returns>Returns the root node of the XMP tree.</returns>
-		public virtual XMPNode GetRoot()
+		public virtual XmpNode GetRoot()
 		{
 			return tree;
 		}
@@ -1185,12 +1185,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="itemValue">the item value</param>
 		/// <param name="itemOptions">the options for the new item</param>
 		/// <param name="insert">insert oder overwrite at index position?</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		private void DoSetArrayItem(XMPNode arrayNode, int itemIndex, String itemValue, PropertyOptions
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		private void DoSetArrayItem(XmpNode arrayNode, int itemIndex, String itemValue, PropertyOptions
 			 itemOptions, bool insert)
 		{
-			XMPNode itemNode = new XMPNode(ARRAY_ITEM_NAME, null);
-			itemOptions = XMPNodeUtils.VerifySetOptions(itemOptions, itemValue);
+			XmpNode itemNode = new XmpNode(ARRAY_ITEM_NAME, null);
+			itemOptions = XmpNodeUtils.VerifySetOptions(itemOptions, itemValue);
 			// in insert mode the index after the last is allowed,
 			// even ARRAY_LAST_ITEM points to the index *after* the last.
 			int maxIndex = insert ? arrayNode.GetChildrenLength() + 1 : arrayNode.GetChildrenLength
@@ -1210,7 +1210,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else
 			{
-				throw new XMPException("Array index out of bounds", XMPError.BADINDEX);
+				throw new XmpException("Array index out of bounds", XmpError.BADINDEX);
 			}
 		}
 
@@ -1223,9 +1223,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="newOptions">options for the new node, must not be <code>null</code>.
 		/// 	</param>
 		/// <param name="deleteExisting">flag if the existing value is to be overwritten</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">thrown if options and value do not correspond
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thrown if options and value do not correspond
 		/// 	</exception>
-		internal virtual void SetNode(XMPNode node, Object value, PropertyOptions newOptions
+		internal virtual void SetNode(XmpNode node, Object value, PropertyOptions newOptions
 			, bool deleteExisting)
 		{
 			if (deleteExisting)
@@ -1237,13 +1237,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (!node.GetOptions().IsCompositeProperty())
 			{
 				// This is setting the value of a leaf node.
-				XMPNodeUtils.SetNodeValue(node, value);
+				XmpNodeUtils.SetNodeValue(node, value);
 			}
 			else
 			{
 				if (value != null && value.ToString().Length > 0)
 				{
-					throw new XMPException("Composite nodes can't have values", XMPError.BADXPATH);
+					throw new XmpException("Composite nodes can't have values", XmpError.BADXPATH);
 				}
 				node.RemoveChildren();
 			}
@@ -1256,8 +1256,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="valueType">an int indicating the value type</param>
 		/// <param name="propNode">the node containing the value</param>
 		/// <returns>Returns a literal value for the node.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		private Object EvaluateNodeValue(int valueType, XMPNode propNode)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		private Object EvaluateNodeValue(int valueType, XmpNode propNode)
 		{
 			Object value;
 			String rawValue = propNode.GetValue();
@@ -1265,44 +1265,44 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				case VALUE_BOOLEAN:
 				{
-					value = XMPUtils.ConvertToBoolean(rawValue);
+					value = XmpUtils.ConvertToBoolean(rawValue);
 					break;
 				}
 
 				case VALUE_INTEGER:
 				{
-					value = XMPUtils.ConvertToInteger(rawValue);
+					value = XmpUtils.ConvertToInteger(rawValue);
 					break;
 				}
 
 				case VALUE_LONG:
 				{
-					value = XMPUtils.ConvertToLong(rawValue);
+					value = XmpUtils.ConvertToLong(rawValue);
 					break;
 				}
 
 				case VALUE_DOUBLE:
 				{
-					value = XMPUtils.ConvertToDouble(rawValue);
+					value = XmpUtils.ConvertToDouble(rawValue);
 					break;
 				}
 
 				case VALUE_DATE:
 				{
-					value = XMPUtils.ConvertToDate(rawValue);
+					value = XmpUtils.ConvertToDate(rawValue);
 					break;
 				}
 
 				case VALUE_CALENDAR:
 				{
-					XMPDateTime dt = XMPUtils.ConvertToDate(rawValue);
+					XmpDateTime dt = XmpUtils.ConvertToDate(rawValue);
 					value = dt.GetCalendar();
 					break;
 				}
 
 				case VALUE_BASE64:
 				{
-					value = XMPUtils.DecodeBase64(rawValue);
+					value = XmpUtils.DecodeBase64(rawValue);
 					break;
 				}
 

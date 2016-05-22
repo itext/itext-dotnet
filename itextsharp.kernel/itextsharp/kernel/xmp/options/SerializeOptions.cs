@@ -34,7 +34,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>
 	/// Options for
-	/// <see cref="iTextSharp.Kernel.Xmp.XMPMetaFactory.SerializeToBuffer(iTextSharp.Kernel.Xmp.XMPMeta, SerializeOptions)
+	/// <see cref="iTextSharp.Kernel.Xmp.XmpMetaFactory.SerializeToBuffer(iTextSharp.Kernel.Xmp.XmpMeta, SerializeOptions)
 	/// 	"/>
 	/// .
 	/// </summary>
@@ -144,7 +144,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 
 		/// <summary>Constructor using inital options</summary>
 		/// <param name="options">the inital options</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if options are not consistant.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if options are not consistant.
 		/// 	</exception>
 		public SerializeOptions(int options)
 			: base(options)
@@ -409,7 +409,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 				clone.SetPadding(padding);
 				return clone;
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				// This cannot happen, the options are already checked in "this" object.
 				return null;

@@ -33,7 +33,7 @@ namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>Common constants for the XMP Toolkit.</summary>
 	/// <since>20.01.2006</since>
-	public abstract class XMPConst
+	public abstract class XmpConst
 	{
 		/// <summary>The XML namespace for XML.</summary>
 		public const String NS_XML = "http://www.w3.org/XML/1998/namespace";

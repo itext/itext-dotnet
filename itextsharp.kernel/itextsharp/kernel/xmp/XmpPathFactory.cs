@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using iTextSharp.Kernel.Xmp.Impl;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 
 namespace iTextSharp.Kernel.Xmp
 {
@@ -74,10 +74,10 @@ namespace iTextSharp.Kernel.Xmp
 	/// path or array indices.
 	/// </remarks>
 	/// <since>25.01.2006</since>
-	public sealed class XMPPathFactory
+	public sealed class XmpPathFactory
 	{
 		/// <summary>Private constructor</summary>
-		private XMPPathFactory()
+		private XmpPathFactory()
 		{
 		}
 
@@ -96,8 +96,8 @@ namespace iTextSharp.Kernel.Xmp
 		/// <tt>ns:arrayName[i]</tt>, where &quot;ns&quot; is the prefix for schemaNS and
 		/// &quot;i&quot; is the decimal representation of itemIndex.
 		/// </returns>
-		/// <exception cref="XMPException">Throws exeption if index zero is used.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Throws exeption if index zero is used.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static String ComposeArrayItemPath(String arrayName, int itemIndex)
 		{
 			if (itemIndex > 0)
@@ -106,13 +106,13 @@ namespace iTextSharp.Kernel.Xmp
 			}
 			else
 			{
-				if (itemIndex == XMPConst.ARRAY_LAST_ITEM)
+				if (itemIndex == XmpConst.ARRAY_LAST_ITEM)
 				{
 					return arrayName + "[last()]";
 				}
 				else
 				{
-					throw new XMPException("Array index must be larger than zero", XMPError.BADINDEX);
+					throw new XmpException("Array index must be larger than zero", XmpError.BADINDEX);
 				}
 			}
 		}
@@ -135,18 +135,18 @@ namespace iTextSharp.Kernel.Xmp
 		/// <tt>ns:structName/fNS:fieldName</tt>, where &quot;ns&quot; is the prefix for
 		/// schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
 		/// </returns>
-		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Thrown if the path to create is not valid.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static String ComposeStructFieldPath(String fieldNS, String fieldName)
 		{
 			AssertFieldNS(fieldNS);
 			AssertFieldName(fieldName);
-			XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
+			XmpPath fieldPath = XmpPathParser.ExpandXPath(fieldNS, fieldName);
 			if (fieldPath.Size() != 2)
 			{
-				throw new XMPException("The field name must be simple", XMPError.BADXPATH);
+				throw new XmpException("The field name must be simple", XmpError.BADXPATH);
 			}
-			return '/' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName();
+			return '/' + fieldPath.GetSegment(XmpPath.STEP_ROOT_PROP).GetName();
 		}
 
 		/// <summary>Compose the path expression for a qualifier.</summary>
@@ -163,18 +163,18 @@ namespace iTextSharp.Kernel.Xmp
 		/// <tt>ns:propName/?qNS:qualName</tt>, where &quot;ns&quot; is the prefix for
 		/// schemaNS and &quot;qNS&quot; is the prefix for qualNS.
 		/// </returns>
-		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Thrown if the path to create is not valid.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static String ComposeQualifierPath(String qualNS, String qualName)
 		{
 			AssertQualNS(qualNS);
 			AssertQualName(qualName);
-			XMPPath qualPath = XMPPathParser.ExpandXPath(qualNS, qualName);
+			XmpPath qualPath = XmpPathParser.ExpandXPath(qualNS, qualName);
 			if (qualPath.Size() != 2)
 			{
-				throw new XMPException("The qualifier name must be simple", XMPError.BADXPATH);
+				throw new XmpException("The qualifier name must be simple", XmpError.BADXPATH);
 			}
-			return "/?" + qualPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName();
+			return "/?" + qualPath.GetSegment(XmpPath.STEP_ROOT_PROP).GetName();
 		}
 
 		/// <summary>Compose the path expression to select an alternate item by language.</summary>
@@ -246,65 +246,65 @@ namespace iTextSharp.Kernel.Xmp
 		/// <tt>ns:arrayName[fNS:fieldName='fieldValue']</tt>, where &quot;ns&quot; is the
 		/// prefix for schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
 		/// </returns>
-		/// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Thrown if the path to create is not valid.</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		public static String ComposeFieldSelector(String arrayName, String fieldNS, String
 			 fieldName, String fieldValue)
 		{
-			XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
+			XmpPath fieldPath = XmpPathParser.ExpandXPath(fieldNS, fieldName);
 			if (fieldPath.Size() != 2)
 			{
-				throw new XMPException("The fieldName name must be simple", XMPError.BADXPATH);
+				throw new XmpException("The fieldName name must be simple", XmpError.BADXPATH);
 			}
-			return arrayName + '[' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName() +
+			return arrayName + '[' + fieldPath.GetSegment(XmpPath.STEP_ROOT_PROP).GetName() +
 				 "=\"" + fieldValue + "\"]";
 		}
 
 		/// <summary>ParameterAsserts that a qualifier namespace is set.</summary>
 		/// <param name="qualNS">a qualifier namespace</param>
-		/// <exception cref="XMPException">Qualifier schema is null or empty</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Qualifier schema is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static void AssertQualNS(String qualNS)
 		{
 			if (qualNS == null || qualNS.Length == 0)
 			{
-				throw new XMPException("Empty qualifier namespace URI", XMPError.BADSCHEMA);
+				throw new XmpException("Empty qualifier namespace URI", XmpError.BADSCHEMA);
 			}
 		}
 
 		/// <summary>ParameterAsserts that a qualifier name is set.</summary>
 		/// <param name="qualName">a qualifier name or path</param>
-		/// <exception cref="XMPException">Qualifier name is null or empty</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Qualifier name is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static void AssertQualName(String qualName)
 		{
 			if (qualName == null || qualName.Length == 0)
 			{
-				throw new XMPException("Empty qualifier name", XMPError.BADXPATH);
+				throw new XmpException("Empty qualifier name", XmpError.BADXPATH);
 			}
 		}
 
 		/// <summary>ParameterAsserts that a struct field namespace is set.</summary>
 		/// <param name="fieldNS">a struct field namespace</param>
-		/// <exception cref="XMPException">Struct field schema is null or empty</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Struct field schema is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static void AssertFieldNS(String fieldNS)
 		{
 			if (fieldNS == null || fieldNS.Length == 0)
 			{
-				throw new XMPException("Empty field namespace URI", XMPError.BADSCHEMA);
+				throw new XmpException("Empty field namespace URI", XmpError.BADSCHEMA);
 			}
 		}
 
 		/// <summary>ParameterAsserts that a struct field name is set.</summary>
 		/// <param name="fieldName">a struct field name or path</param>
-		/// <exception cref="XMPException">Struct field name is null or empty</exception>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="XmpException">Struct field name is null or empty</exception>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		private static void AssertFieldName(String fieldName)
 		{
 			if (fieldName == null || fieldName.Length == 0)
 			{
-				throw new XMPException("Empty f name", XMPError.BADXPATH);
+				throw new XmpException("Empty f name", XmpError.BADXPATH);
 			}
 		}
 	}

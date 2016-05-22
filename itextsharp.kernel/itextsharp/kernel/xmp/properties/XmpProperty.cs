@@ -35,7 +35,7 @@ namespace iTextSharp.Kernel.Xmp.Properties
 	/// <summary>This interface is used to return a text property together with its and options.
 	/// 	</summary>
 	/// <since>23.01.2006</since>
-	public interface XMPProperty
+	public interface XmpProperty
 	{
 		/// <returns>Returns the value of the property.</returns>
 		String GetValue();
@@ -45,7 +45,7 @@ namespace iTextSharp.Kernel.Xmp.Properties
 
 		/// <summary>
 		/// Only set by
-		/// <see cref="iTextSharp.Kernel.Xmp.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
+		/// <see cref="iTextSharp.Kernel.Xmp.XmpMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		/// .
 		/// </summary>

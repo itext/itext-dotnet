@@ -37,12 +37,12 @@ namespace iTextSharp.Kernel.Xmp
 	/// <p>
 	/// Version information for the XMP toolkit is stored in the jar-library and available through a
 	/// runtime call,
-	/// <see cref="XMPMetaFactory.GetVersionInfo()"/>
+	/// <see cref="XmpMetaFactory.GetVersionInfo()"/>
 	/// ,  addition static version numbers are
 	/// defined in "version.properties".
 	/// </remarks>
 	/// <since>23.01.2006</since>
-	public interface XMPVersionInfo
+	public interface XmpVersionInfo
 	{
 		/// <returns>Returns the primary release number, the "1" in version "1.2.3".</returns>
 		int GetMajor();

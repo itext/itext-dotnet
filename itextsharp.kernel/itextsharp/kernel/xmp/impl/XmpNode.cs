@@ -47,10 +47,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// 1. The kind Node of node might be better represented by a class-hierarchy of different nodes.
 	/// 2. The array type should be an enum
 	/// 3. isImplicitNode should be removed completely and replaced by return values of fi.
-	/// 4. hasLanguage, hasType should be automatically maintained by XMPNode
+	/// 4. hasLanguage, hasType should be automatically maintained by XmpNode
 	/// </remarks>
 	/// <since>21.02.2006</since>
-	public class XMPNode : IComparable
+	public class XmpNode : IComparable
 	{
 		/// <summary>name of the node, contains different information depending of the node kind
 		/// 	</summary>
@@ -61,7 +61,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private String value;
 
 		/// <summary>link to the parent node</summary>
-		private iTextSharp.Kernel.Xmp.Impl.XMPNode parent;
+		private iTextSharp.Kernel.Xmp.Impl.XmpNode parent;
 
 		/// <summary>list of child nodes, lazy initialized</summary>
 		private IList children = null;
@@ -84,11 +84,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>flag if the node has an "rdf:value" child node.</summary>
 		private bool hasValueChild;
 
-		/// <summary>Creates an <code>XMPNode</code> with initial values.</summary>
+		/// <summary>Creates an <code>XmpNode</code> with initial values.</summary>
 		/// <param name="name">the name of the node</param>
 		/// <param name="value">the value of the node</param>
 		/// <param name="options">the options of the node</param>
-		public XMPNode(String name, String value, PropertyOptions options)
+		public XmpNode(String name, String value, PropertyOptions options)
 		{
 			// internal processing options
 			this.name = name;
@@ -99,7 +99,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>Constructor for the node without value.</summary>
 		/// <param name="name">the name of the node</param>
 		/// <param name="options">the options of the node</param>
-		public XMPNode(String name, PropertyOptions options)
+		public XmpNode(String name, PropertyOptions options)
 			: this(name, null, options)
 		{
 		}
@@ -115,22 +115,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <returns>Returns the parent node.</returns>
-		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetParent()
+		public virtual iTextSharp.Kernel.Xmp.Impl.XmpNode GetParent()
 		{
 			return parent;
 		}
 
 		/// <param name="index">an index [1..size]</param>
 		/// <returns>Returns the child with the requested index.</returns>
-		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetChild(int index)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XmpNode GetChild(int index)
 		{
-			return (iTextSharp.Kernel.Xmp.Impl.XMPNode)GetChildren()[index - 1];
+			return (iTextSharp.Kernel.Xmp.Impl.XmpNode)GetChildren()[index - 1];
 		}
 
 		/// <summary>Adds a node as child to this node.</summary>
-		/// <param name="node">an XMPNode</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		public virtual void AddChild(iTextSharp.Kernel.Xmp.Impl.XMPNode node)
+		/// <param name="node">an XmpNode</param>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		public virtual void AddChild(iTextSharp.Kernel.Xmp.Impl.XmpNode node)
 		{
 			// check for duplicate properties
 			AssertChildNotExisting(node.GetName());
@@ -144,9 +144,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <em>Note:</em> The node children are indexed from [1..size]!
 		/// An index of size + 1 appends a node.
 		/// </param>
-		/// <param name="node">an XMPNode</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		public virtual void AddChild(int index, iTextSharp.Kernel.Xmp.Impl.XMPNode node)
+		/// <param name="node">an XmpNode</param>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		public virtual void AddChild(int index, iTextSharp.Kernel.Xmp.Impl.XmpNode node)
 		{
 			AssertChildNotExisting(node.GetName());
 			node.SetParent(this);
@@ -158,8 +158,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// the index of the node that will be replaced.
 		/// <em>Note:</em> The node children are indexed from [1..size]!
 		/// </param>
-		/// <param name="node">the replacement XMPNode</param>
-		public virtual void ReplaceChild(int index, iTextSharp.Kernel.Xmp.Impl.XMPNode node
+		/// <param name="node">the replacement XmpNode</param>
+		public virtual void ReplaceChild(int index, iTextSharp.Kernel.Xmp.Impl.XmpNode node
 			)
 		{
 			node.SetParent(this);
@@ -180,7 +180,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// If its a schema node and doesn't have any children anymore, its deleted.
 		/// </remarks>
 		/// <param name="node">the child node to delete.</param>
-		public virtual void RemoveChild(iTextSharp.Kernel.Xmp.Impl.XMPNode node)
+		public virtual void RemoveChild(iTextSharp.Kernel.Xmp.Impl.XmpNode node)
 		{
 			GetChildren().Remove(node);
 			CleanupChildren();
@@ -212,18 +212,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <param name="expr">child node name to look for</param>
-		/// <returns>Returns an <code>XMPNode</code> if node has been found, <code>null</code> otherwise.
+		/// <returns>Returns an <code>XmpNode</code> if node has been found, <code>null</code> otherwise.
 		/// 	</returns>
-		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode FindChildByName(String expr)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XmpNode FindChildByName(String expr)
 		{
 			return Find(GetChildren(), expr);
 		}
 
 		/// <param name="index">an index [1..size]</param>
 		/// <returns>Returns the qualifier with the requested index.</returns>
-		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode GetQualifier(int index)
+		public virtual iTextSharp.Kernel.Xmp.Impl.XmpNode GetQualifier(int index)
 		{
-			return (iTextSharp.Kernel.Xmp.Impl.XMPNode)GetQualifier()[index - 1];
+			return (iTextSharp.Kernel.Xmp.Impl.XmpNode)GetQualifier()[index - 1];
 		}
 
 		/// <returns>Returns the number of qualifier without neccessarily creating a list.</returns>
@@ -234,8 +234,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 		/// <summary>Appends a qualifier to the qualifier list and sets respective options.</summary>
 		/// <param name="qualNode">a qualifier node.</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"></exception>
-		public virtual void AddQualifier(iTextSharp.Kernel.Xmp.Impl.XMPNode qualNode)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"></exception>
+		public virtual void AddQualifier(iTextSharp.Kernel.Xmp.Impl.XmpNode qualNode)
 		{
 			AssertQualifierNotExisting(qualNode.GetName());
 			qualNode.SetParent(this);
@@ -266,7 +266,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 		/// <summary>Removes one qualifier node and fixes the options.</summary>
 		/// <param name="qualNode">qualifier to remove</param>
-		public virtual void RemoveQualifier(iTextSharp.Kernel.Xmp.Impl.XMPNode qualNode)
+		public virtual void RemoveQualifier(iTextSharp.Kernel.Xmp.Impl.XmpNode qualNode)
 		{
 			PropertyOptions opts = GetOptions();
 			if (qualNode.IsLanguageNode())
@@ -303,10 +303,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 		/// <param name="expr">qualifier node name to look for</param>
 		/// <returns>
-		/// Returns a qualifier <code>XMPNode</code> if node has been found,
+		/// Returns a qualifier <code>XmpNode</code> if node has been found,
 		/// <code>null</code> otherwise.
 		/// </returns>
-		public virtual iTextSharp.Kernel.Xmp.Impl.XMPNode FindQualifierByName(String expr
+		public virtual iTextSharp.Kernel.Xmp.Impl.XmpNode FindQualifierByName(String expr
 			)
 		{
 			return Find(qualifier, expr);
@@ -366,12 +366,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				newOptions = new PropertyOptions(GetOptions().GetOptions());
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				// cannot happen
 				newOptions = new PropertyOptions();
 			}
-			iTextSharp.Kernel.Xmp.Impl.XMPNode newNode = new iTextSharp.Kernel.Xmp.Impl.XMPNode
+			iTextSharp.Kernel.Xmp.Impl.XmpNode newNode = new iTextSharp.Kernel.Xmp.Impl.XmpNode
 				(name, value, newOptions);
 			CloneSubtree(newNode);
 			return newNode;
@@ -382,24 +382,24 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// qualifier )into and add it to the destination node.
 		/// </summary>
 		/// <param name="destination">the node to add the cloned subtree</param>
-		public virtual void CloneSubtree(iTextSharp.Kernel.Xmp.Impl.XMPNode destination)
+		public virtual void CloneSubtree(iTextSharp.Kernel.Xmp.Impl.XmpNode destination)
 		{
 			try
 			{
 				for (IEnumerator it = IterateChildren(); it.MoveNext(); )
 				{
-					iTextSharp.Kernel.Xmp.Impl.XMPNode child = (iTextSharp.Kernel.Xmp.Impl.XMPNode)it
+					iTextSharp.Kernel.Xmp.Impl.XmpNode child = (iTextSharp.Kernel.Xmp.Impl.XmpNode)it
 						.Current;
-					destination.AddChild((iTextSharp.Kernel.Xmp.Impl.XMPNode)child.Clone());
+					destination.AddChild((iTextSharp.Kernel.Xmp.Impl.XmpNode)child.Clone());
 				}
 				for (IEnumerator it_1 = IterateQualifier(); it_1.MoveNext(); )
 				{
-					iTextSharp.Kernel.Xmp.Impl.XMPNode qualifier = (iTextSharp.Kernel.Xmp.Impl.XMPNode
+					iTextSharp.Kernel.Xmp.Impl.XmpNode qualifier = (iTextSharp.Kernel.Xmp.Impl.XmpNode
 						)it_1.Current;
-					destination.AddQualifier((iTextSharp.Kernel.Xmp.Impl.XMPNode)qualifier.Clone());
+					destination.AddQualifier((iTextSharp.Kernel.Xmp.Impl.XmpNode)qualifier.Clone());
 				}
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				// cannot happen (duplicate childs/quals do not exist in this node)
 				System.Diagnostics.Debug.Assert(false);
@@ -422,12 +422,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			if (GetOptions().IsSchemaNode())
 			{
-				return string.CompareOrdinal(this.value, ((iTextSharp.Kernel.Xmp.Impl.XMPNode)xmpNode
+				return string.CompareOrdinal(this.value, ((iTextSharp.Kernel.Xmp.Impl.XmpNode)xmpNode
 					).GetValue());
 			}
 			else
 			{
-				return string.CompareOrdinal(this.name, ((iTextSharp.Kernel.Xmp.Impl.XMPNode)xmpNode
+				return string.CompareOrdinal(this.name, ((iTextSharp.Kernel.Xmp.Impl.XmpNode)xmpNode
 					).GetName());
 			}
 		}
@@ -547,7 +547,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				GetQualifier().CopyTo(quals, 0);
 				int sortFrom = 0;
 				while (quals.Length > sortFrom &&
-					(XMPConst.XML_LANG.Equals(quals[sortFrom].GetName()) || "rdf:type".Equals(quals[sortFrom].GetName()))) {
+					(XmpConst.XML_LANG.Equals(quals[sortFrom].GetName()) || "rdf:type".Equals(quals[sortFrom].GetName()))) {
 					quals[sortFrom].Sort();
 					sortFrom++;
 				}
@@ -641,11 +641,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// render qualifier
 			if (recursive && HasQualifier())
 			{
-				iTextSharp.Kernel.Xmp.Impl.XMPNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XMPNode[]
-					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetQualifierLength
+				iTextSharp.Kernel.Xmp.Impl.XmpNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XmpNode[]
+					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XmpNode[GetQualifierLength
 					()]);
 				int i_1 = 0;
-				while (quals.Length > i_1 && (XMPConst.XML_LANG.Equals(quals[i_1].GetName()) || "rdf:type"
+				while (quals.Length > i_1 && (XmpConst.XML_LANG.Equals(quals[i_1].GetName()) || "rdf:type"
 					.Equals(quals[i_1].GetName())))
 				{
 					i_1++;
@@ -653,15 +653,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				System.Array.Sort(quals, i_1, quals.Length);
 				for (i_1 = 0; i_1 < quals.Length; i_1++)
 				{
-					iTextSharp.Kernel.Xmp.Impl.XMPNode qualifier = quals[i_1];
+					iTextSharp.Kernel.Xmp.Impl.XmpNode qualifier = quals[i_1];
 					qualifier.DumpNode(result, recursive, indent + 2, i_1 + 1);
 				}
 			}
 			// render children
 			if (recursive && HasChildren())
 			{
-				iTextSharp.Kernel.Xmp.Impl.XMPNode[] children = (iTextSharp.Kernel.Xmp.Impl.XMPNode
-					[])GetChildren().ToArray(new iTextSharp.Kernel.Xmp.Impl.XMPNode[GetChildrenLength
+				iTextSharp.Kernel.Xmp.Impl.XmpNode[] children = (iTextSharp.Kernel.Xmp.Impl.XmpNode
+					[])GetChildren().ToArray(new iTextSharp.Kernel.Xmp.Impl.XmpNode[GetChildrenLength
 					()]);
 				if (!GetOptions().IsArray())
 				{
@@ -669,7 +669,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				}
 				for (int i_1 = 0; i_1 < children.Length; i_1++)
 				{
-					iTextSharp.Kernel.Xmp.Impl.XMPNode child = children[i_1];
+					iTextSharp.Kernel.Xmp.Impl.XmpNode child = children[i_1];
 					child.DumpNode(result, recursive, indent + 1, i_1 + 1);
 				}
 			}
@@ -678,7 +678,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns whether this node is a language qualifier.</returns>
 		private bool IsLanguageNode()
 		{
-			return XMPConst.XML_LANG.Equals(name);
+			return XmpConst.XML_LANG.Equals(name);
 		}
 
 		/// <returns>Returns whether this node is a type qualifier.</returns>
@@ -722,7 +722,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// and <code>addQualifier()</code>.
 		/// </summary>
 		/// <param name="parent">Sets the parent node.</param>
-		protected internal virtual void SetParent(iTextSharp.Kernel.Xmp.Impl.XMPNode parent
+		protected internal virtual void SetParent(iTextSharp.Kernel.Xmp.Impl.XmpNode parent
 			)
 		{
 			this.parent = parent;
@@ -732,13 +732,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="list">the list to search in</param>
 		/// <param name="expr">the search expression</param>
 		/// <returns>Returns the found node or <code>nulls</code>.</returns>
-		private iTextSharp.Kernel.Xmp.Impl.XMPNode Find(IList list, String expr)
+		private iTextSharp.Kernel.Xmp.Impl.XmpNode Find(IList list, String expr)
 		{
 			if (list != null)
 			{
 				for (IEnumerator it = list.GetEnumerator(); it.MoveNext(); )
 				{
-					iTextSharp.Kernel.Xmp.Impl.XMPNode child = (iTextSharp.Kernel.Xmp.Impl.XMPNode)it
+					iTextSharp.Kernel.Xmp.Impl.XmpNode child = (iTextSharp.Kernel.Xmp.Impl.XmpNode)it
 						.Current;
 					if (child.GetName().Equals(expr))
 					{
@@ -752,28 +752,28 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>Checks that a node name is not existing on the same level, except for array items.
 		/// 	</summary>
 		/// <param name="childName">the node name to check</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a node with the same name is existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if a node with the same name is existing.
 		/// 	</exception>
 		private void AssertChildNotExisting(String childName)
 		{
-			if (!XMPConst.ARRAY_ITEM_NAME.Equals(childName) && FindChildByName(childName) != 
+			if (!XmpConst.ARRAY_ITEM_NAME.Equals(childName) && FindChildByName(childName) != 
 				null)
 			{
-				throw new XMPException("Duplicate property or field node '" + childName + "'", XMPError
-					.BADXMP);
+				throw new XmpException("Duplicate property or field node '" + childName + "'", XmpError
+					.BADXmp);
 			}
 		}
 
 		/// <summary>Checks that a qualifier name is not existing on the same level.</summary>
 		/// <param name="qualifierName">the new qualifier name</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if a node with the same name is existing.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if a node with the same name is existing.
 		/// 	</exception>
 		private void AssertQualifierNotExisting(String qualifierName)
 		{
-			if (!XMPConst.ARRAY_ITEM_NAME.Equals(qualifierName) && FindQualifierByName(qualifierName
+			if (!XmpConst.ARRAY_ITEM_NAME.Equals(qualifierName) && FindQualifierByName(qualifierName
 				) != null)
 			{
-				throw new XMPException("Duplicate '" + qualifierName + "' qualifier", XMPError.BADXMP
+				throw new XmpException("Duplicate '" + qualifierName + "' qualifier", XmpError.BADXmp
 					);
 			}
 		}

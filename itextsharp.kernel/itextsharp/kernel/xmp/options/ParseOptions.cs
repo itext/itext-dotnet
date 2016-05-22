@@ -33,7 +33,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 {
 	/// <summary>
 	/// Options for
-	/// <see cref="iTextSharp.Kernel.Xmp.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
+	/// <see cref="iTextSharp.Kernel.Xmp.XmpMetaFactory.Parse(System.IO.Stream, ParseOptions)
 	/// 	"/>
 	/// .
 	/// </summary>

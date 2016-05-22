@@ -33,14 +33,14 @@ using iTextSharp.Kernel.Xmp;
 
 namespace iTextSharp.Kernel.Xmp.Impl
 {
-	/// <summary>The implementation of <code>XMPDateTime</code>.</summary>
+	/// <summary>The implementation of <code>XmpDateTime</code>.</summary>
 	/// <remarks>
-	/// The implementation of <code>XMPDateTime</code>. Internally a <code>calendar</code> is used
+	/// The implementation of <code>XmpDateTime</code>. Internally a <code>calendar</code> is used
 	/// plus an additional nano seconds field, because <code>Calendar</code> supports only milli
 	/// seconds. The <code>nanoSeconds</code> convers only the resolution beyond a milli second.
 	/// </remarks>
 	/// <since>16.02.2006</since>
-	public class XMPDateTimeImpl : XMPDateTime
+	public class XmpDateTimeImpl : XmpDateTime
 	{
 		private int year = 0;
 
@@ -68,18 +68,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private bool hasTimeZone = false;
 
 		/// <summary>
-		/// Creates an <code>XMPDateTime</code>-instance with the current time in the default time
+		/// Creates an <code>XmpDateTime</code>-instance with the current time in the default time
 		/// zone.
 		/// </summary>
-		public XMPDateTimeImpl()
+		public XmpDateTimeImpl()
 		{
 		}
 
 		/// <summary>
-		/// Creates an <code>XMPDateTime</code>-instance from a calendar.
+		/// Creates an <code>XmpDateTime</code>-instance from a calendar.
 		/// </summary>
 		/// <param name="calendar"> a <code>Calendar</code> </param>
-		public XMPDateTimeImpl(XMPCalendar calendar) {
+		public XmpDateTimeImpl(XmpCalendar calendar) {
 			// extract the date and timezone from the calendar provided
 			DateTime date = calendar.GetDateTime();
 			TimeZone zone = calendar.GetTimeZone();
@@ -98,12 +98,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <summary>
-		/// Creates an <code>XMPDateTime</code>-instance from 
+		/// Creates an <code>XmpDateTime</code>-instance from 
 		/// a <code>Date</code> and a <code>TimeZone</code>.
 		/// </summary>
 		/// <param name="date"> a date describing an absolute point in time </param>
 		/// <param name="timeZone"> a TimeZone how to interpret the date </param>
-		public XMPDateTimeImpl(DateTime date, TimeZone timeZone) {
+		public XmpDateTimeImpl(DateTime date, TimeZone timeZone) {
 			year = date.Year;
 			month = date.Month + 1; // cal is from 0..12
 			day = date.Day;
@@ -117,35 +117,35 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			hasDate = hasTime = hasTimeZone = true;
 		}
 
-		/// <summary>Creates an <code>XMPDateTime</code>-instance from an ISO 8601 string.</summary>
+		/// <summary>Creates an <code>XmpDateTime</code>-instance from an ISO 8601 string.</summary>
 		/// <param name="strValue">an ISO 8601 string</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the string is a non-conform ISO 8601 string, an exception is thrown
 		/// 	</exception>
-		public XMPDateTimeImpl(String strValue)
+		public XmpDateTimeImpl(String strValue)
 		{
 			ISO8601Converter.Parse(strValue, this);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetYear()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetYear()"/>
 		public virtual int GetYear()
 		{
 			return year;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetYear(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetYear(int)"/>
 		public virtual void SetYear(int year)
 		{
 			this.year = Math.Min(Math.Abs(year), 9999);
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetMonth()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetMonth()"/>
 		public virtual int GetMonth()
 		{
 			return month;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetMonth(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetMonth(int)"/>
 		public virtual void SetMonth(int month)
 		{
 			if (month < 1)
@@ -166,13 +166,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetDay()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetDay()"/>
 		public virtual int GetDay()
 		{
 			return day;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetDay(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetDay(int)"/>
 		public virtual void SetDay(int day)
 		{
 			if (day < 1)
@@ -193,52 +193,52 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetHour()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetHour()"/>
 		public virtual int GetHour()
 		{
 			return hour;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetHour(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetHour(int)"/>
 		public virtual void SetHour(int hour)
 		{
 			this.hour = Math.Min(Math.Abs(hour), 23);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetMinute()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetMinute()"/>
 		public virtual int GetMinute()
 		{
 			return minute;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetMinute(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetMinute(int)"/>
 		public virtual void SetMinute(int minute)
 		{
 			this.minute = Math.Min(Math.Abs(minute), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetSecond()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetSecond()"/>
 		public virtual int GetSecond()
 		{
 			return second;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetSecond(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetSecond(int)"/>
 		public virtual void SetSecond(int second)
 		{
 			this.second = Math.Min(Math.Abs(second), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetNanoSecond()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetNanoSecond()"/>
 		public virtual int GetNanoSecond()
 		{
 			return nanoSeconds;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetNanoSecond(int)"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetNanoSecond(int)"/>
 		public virtual void SetNanoSecond(int nanoSecond)
 		{
 			this.nanoSeconds = nanoSecond;
@@ -248,22 +248,22 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
 		public virtual int CompareTo(Object dt)
 		{
-			long d = GetCalendar().GetTimeInMillis() - ((XMPDateTime) dt).GetCalendar().GetTimeInMillis();
+			long d = GetCalendar().GetTimeInMillis() - ((XmpDateTime) dt).GetCalendar().GetTimeInMillis();
 			if (d != 0) {
 				return Math.Sign(d);
 			}
 			// if millis are equal, compare nanoseconds
-			d = nanoSeconds - ((XMPDateTime) dt).GetNanoSecond();
+			d = nanoSeconds - ((XmpDateTime) dt).GetNanoSecond();
 			return Math.Sign(d);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetTimeZone()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetTimeZone()"/>
 		public virtual TimeZone GetTimeZone()
 		{
 			return timeZone;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.SetTimeZone(Java.Util.TimeZone)"
 		/// 	/>
 		public virtual void SetTimeZone(TimeZone timeZone)
 		{
@@ -272,25 +272,25 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.hasTimeZone = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasDate()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.HasDate()"/>
 		public virtual bool HasDate()
 		{
 			return this.hasDate;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasTime()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.HasTime()"/>
 		public virtual bool HasTime()
 		{
 			return this.hasTime;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.HasTimeZone()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.HasTimeZone()"/>
 		public virtual bool HasTimeZone()
 		{
 			return this.hasTimeZone;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetCalendar()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetCalendar()"/>
 		public virtual Calendar GetCalendar()
 		{
 			TimeZone tz;
@@ -299,10 +299,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			} else {
 				tz = TimeZone.CurrentTimeZone;
 			}
-			return new XMPCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
+			return new XmpCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XMPDateTime.GetISO8601String()"/>
+		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetISO8601String()"/>
 		public virtual String GetISO8601String()
 		{
 			return ISO8601Converter.Render(this);

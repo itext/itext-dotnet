@@ -230,15 +230,15 @@ namespace iTextSharp.Kernel.Pdf
 			this.xmpMetadata = xmpMetadata;
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual void SetXmpMetadata(XmpMeta xmpMeta, SerializeOptions serializeOptions
 			)
 		{
-			SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+			SetXmpMetadata(XmpMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public virtual void SetXmpMetadata(XMPMeta xmpMeta)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public virtual void SetXmpMetadata(XmpMeta xmpMeta)
 		{
 			SerializeOptions serializeOptions = new SerializeOptions();
 			serializeOptions.SetPadding(2000);
@@ -259,17 +259,17 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (xmpMetadata == null && createNew)
 			{
-				XMPMeta xmpMeta = XMPMetaFactory.Create();
-				xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
+				XmpMeta xmpMeta = XmpMetaFactory.Create();
+				xmpMeta.SetObjectName(XmpConst.TAG_XMPMETA);
 				xmpMeta.SetObjectName("");
 				try
 				{
-					xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-					xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion
+					xmpMeta.SetProperty(XmpConst.NS_DC, PdfConst.Format, "application/pdf");
+					xmpMeta.SetProperty(XmpConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion
 						());
 					SetXmpMetadata(xmpMeta);
 				}
-				catch (XMPException)
+				catch (XmpException)
 				{
 				}
 			}
@@ -1473,10 +1473,10 @@ namespace iTextSharp.Kernel.Pdf
 						xmpMetadata = catalog.GetPdfObject().GetAsStream(PdfName.Metadata).GetBytes();
 						try
 						{
-							reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory
+							reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XmpMetaFactory
 								.ParseFromBuffer(xmpMetadata));
 						}
-						catch (XMPException)
+						catch (XmpException)
 						{
 						}
 					}
@@ -1622,7 +1622,7 @@ namespace iTextSharp.Kernel.Pdf
 					SetXmpMetadata(UpdateDefaultXmpMetadata());
 				}
 			}
-			catch (XMPException e)
+			catch (XmpException e)
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfDocument
 					));
@@ -1630,10 +1630,10 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		protected internal virtual XMPMeta UpdateDefaultXmpMetadata()
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		protected internal virtual XmpMeta UpdateDefaultXmpMetadata()
 		{
-			XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
+			XmpMeta xmpMeta = XmpMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
 			PdfDictionary docInfo = info.GetPdfObject();
 			if (docInfo != null)
 			{
@@ -1655,22 +1655,22 @@ namespace iTextSharp.Kernel.Pdf
 					value = ((PdfString)obj).ToUnicodeString();
 					if (PdfName.Title.Equals(key))
 					{
-						xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst
+						xmpMeta.SetLocalizedText(XmpConst.NS_DC, PdfConst.Title, XmpConst.X_DEFAULT, XmpConst
 							.X_DEFAULT, value);
 					}
 					else
 					{
 						if (PdfName.Author.Equals(key))
 						{
-							xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Creator, new PropertyOptions(PropertyOptions
+							xmpMeta.AppendArrayItem(XmpConst.NS_DC, PdfConst.Creator, new PropertyOptions(PropertyOptions
 								.ARRAY_ORDERED), value, null);
 						}
 						else
 						{
 							if (PdfName.Subject.Equals(key))
 							{
-								xmpMeta.SetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT
-									, XMPConst.X_DEFAULT, value);
+								xmpMeta.SetLocalizedText(XmpConst.NS_DC, PdfConst.Description, XmpConst.X_DEFAULT
+									, XmpConst.X_DEFAULT, value);
 							}
 							else
 							{
@@ -1680,36 +1680,36 @@ namespace iTextSharp.Kernel.Pdf
 									{
 										if (v.Trim().Length > 0)
 										{
-											xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions
+											xmpMeta.AppendArrayItem(XmpConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions
 												.ARRAY), v.Trim(), null);
 										}
 									}
-									xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Keywords, value);
+									xmpMeta.SetProperty(XmpConst.NS_PDF, PdfConst.Keywords, value);
 								}
 								else
 								{
 									if (PdfName.Creator.Equals(key))
 									{
-										xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool, value);
+										xmpMeta.SetProperty(XmpConst.NS_XMP, PdfConst.CreatorTool, value);
 									}
 									else
 									{
 										if (PdfName.Producer.Equals(key))
 										{
-											xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, value);
+											xmpMeta.SetProperty(XmpConst.NS_PDF, PdfConst.Producer, value);
 										}
 										else
 										{
 											if (PdfName.CreationDate.Equals(key))
 											{
-												xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.CreateDate, PdfDate.GetW3CDate(value
+												xmpMeta.SetProperty(XmpConst.NS_XMP, PdfConst.CreateDate, PdfDate.GetW3CDate(value
 													));
 											}
 											else
 											{
 												if (PdfName.ModDate.Equals(key))
 												{
-													xmpMeta.SetProperty(XMPConst.NS_XMP, PdfConst.ModifyDate, PdfDate.GetW3CDate(value
+													xmpMeta.SetProperty(XmpConst.NS_XMP, PdfConst.ModifyDate, PdfDate.GetW3CDate(value
 														));
 												}
 											}
@@ -1721,10 +1721,10 @@ namespace iTextSharp.Kernel.Pdf
 					}
 				}
 			}
-			if (IsTagged() && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID, XMPConst.PART
+			if (IsTagged() && !IsXmpMetaHasProperty(xmpMeta, XmpConst.NS_PDFUA_ID, XmpConst.PART
 				))
 			{
-				xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions
+				xmpMeta.SetPropertyInteger(XmpConst.NS_PDFUA_ID, XmpConst.PART, 1, new PropertyOptions
 					(PropertyOptions.SEPARATE_NODE));
 			}
 			return xmpMeta;
@@ -2028,8 +2028,8 @@ namespace iTextSharp.Kernel.Pdf
 			names.Put(treeType, treeRoot);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		private static bool IsXmpMetaHasProperty(XmpMeta xmpMeta, String schemaNS, String
 			 propName)
 		{
 			return xmpMeta.GetProperty(schemaNS, propName) != null;

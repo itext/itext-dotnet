@@ -31,11 +31,11 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace iTextSharp.Kernel.Xmp.Impl.Xpath
+namespace iTextSharp.Kernel.Xmp.Impl.XPath
 {
 	/// <summary>Representates an XMP XMPPath with segment accessor methods.</summary>
 	/// <since>28.02.2006</since>
-	public class XMPPath
+	public class XmpPath
 	{
 		/// <summary>Marks a struct field step , also for top level nodes (schema "fields").</summary>
 		public const int STRUCT_FIELD_STEP = 0x01;
@@ -69,16 +69,16 @@ namespace iTextSharp.Kernel.Xmp.Impl.Xpath
 		// 
 		/// <summary>Append a path segment</summary>
 		/// <param name="segment">the segment to add</param>
-		public virtual void Add(XMPPathSegment segment)
+		public virtual void Add(XmpPathSegment segment)
 		{
 			segments.Add(segment);
 		}
 
 		/// <param name="index">the index of the segment to return</param>
 		/// <returns>Returns a path segment.</returns>
-		public virtual XMPPathSegment GetSegment(int index)
+		public virtual XmpPathSegment GetSegment(int index)
 		{
-			return (XMPPathSegment)segments[index];
+			return (XmpPathSegment)segments[index];
 		}
 
 		/// <returns>Returns the size of the xmp path.</returns>

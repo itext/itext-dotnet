@@ -78,7 +78,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 
 		/// <summary>Intialization constructor</summary>
 		/// <param name="options">the initialization options</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If the options are not valid
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If the options are not valid
 		/// 	</exception>
 		public PropertyOptions(int options)
 			: base(options)
@@ -298,7 +298,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// If the other options set is null, this objects stays the same.
 		/// </remarks>
 		/// <param name="options">other options</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">If illegal options are provided
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If illegal options are provided
 		/// 	</exception>
 		public void MergeWith(iTextSharp.Kernel.Xmp.Options.PropertyOptions options)
 		{
@@ -394,20 +394,20 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// and URI cannot be a struct.
 		/// </summary>
 		/// <param name="options">the bitmask to check.</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the options are not consistent.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if the options are not consistent.
 		/// 	</exception>
 		protected internal override void AssertConsistency(int options)
 		{
 			if ((options & STRUCT) > 0 && (options & ARRAY) > 0)
 			{
-				throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError
+				throw new XmpException("IsStruct and IsArray options are mutually exclusive", XmpError
 					.BADOPTIONS);
 			}
 			else
 			{
 				if ((options & URI) > 0 && (options & (ARRAY | STRUCT)) > 0)
 				{
-					throw new XMPException("Structs and arrays can't have \"value\" options", XMPError
+					throw new XmpException("Structs and arrays can't have \"value\" options", XmpError
 						.BADOPTIONS);
 				}
 			}

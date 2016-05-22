@@ -30,7 +30,7 @@
 namespace iTextSharp.Kernel.Xmp
 {
 	/// <since>21.09.2006</since>
-	public abstract class XMPError
+	public abstract class XmpError
 	{
 		public const int UNKNOWN = 0;
 

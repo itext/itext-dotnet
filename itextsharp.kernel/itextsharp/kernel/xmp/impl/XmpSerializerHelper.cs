@@ -38,7 +38,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// <code>SerializeOptions</code>.
 	/// </summary>
 	/// <since>11.07.2006</since>
-	public class XMPSerializerHelper
+	public class XmpSerializerHelper
 	{
 		/// <summary>Static method to serialize the metadata object.</summary>
 		/// <remarks>
@@ -50,8 +50,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="out">the output stream to serialize to</param>
 		/// <param name="options">serialization options, can be <code>null</code> for default.
 		/// 	</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
-		public static void Serialize(XMPMetaImpl xmp, Stream @out, SerializeOptions options
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		public static void Serialize(XmpMetaImpl xmp, Stream @out, SerializeOptions options
 			)
 		{
 			options = options != null ? options : new SerializeOptions();
@@ -60,7 +60,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				xmp.Sort();
 			}
-			new XMPSerializerRDF().Serialize(xmp, @out, options);
+			new XmpSerializerRdf().Serialize(xmp, @out, options);
 		}
 
 		/// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a string.</summary>
@@ -76,8 +76,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a string containing the serialized RDF.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">on serializsation errors.</exception>
-		public static String SerializeToString(XMPMetaImpl xmp, SerializeOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">on serializsation errors.</exception>
+		public static String SerializeToString(XmpMetaImpl xmp, SerializeOptions options)
 		{
 			// forces the encoding to be UTF-16 to get the correct string length
 			options = options != null ? options : new SerializeOptions();
@@ -104,8 +104,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a byte buffer containing the serialized RDF.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">on serializsation errors.</exception>
-		public static byte[] SerializeToBuffer(XMPMetaImpl xmp, SerializeOptions options)
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">on serializsation errors.</exception>
+		public static byte[] SerializeToBuffer(XmpMetaImpl xmp, SerializeOptions options)
 		{
 			MemoryStream @out = new MemoryStream(2048);
 			Serialize(xmp, @out, options);

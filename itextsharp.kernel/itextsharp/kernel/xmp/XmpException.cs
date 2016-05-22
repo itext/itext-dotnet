@@ -33,7 +33,7 @@ namespace iTextSharp.Kernel.Xmp
 {
 	/// <summary>This exception wraps all errors that occur in the XMP Toolkit.</summary>
 	/// <since>16.02.2006</since>
-	public class XMPException : Exception
+	public class XmpException : Exception
 	{
 		/// <summary>the errorCode of the XMP toolkit</summary>
 		private int errorCode;
@@ -41,7 +41,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <summary>Constructs an exception with a message and an error code.</summary>
 		/// <param name="message">the message</param>
 		/// <param name="errorCode">the error code</param>
-		public XMPException(String message, int errorCode)
+		public XmpException(String message, int errorCode)
 			: base(message)
 		{
 			this.errorCode = errorCode;
@@ -52,7 +52,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// <param name="message">the error message.</param>
 		/// <param name="errorCode">the error code</param>
 		/// <param name="t">the exception source</param>
-		public XMPException(String message, int errorCode, Exception t)
+		public XmpException(String message, int errorCode, Exception t)
 			: base(message, t)
 		{
 			this.errorCode = errorCode;

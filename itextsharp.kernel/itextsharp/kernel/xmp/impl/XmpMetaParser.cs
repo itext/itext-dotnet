@@ -44,15 +44,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// <remarks>
 	/// This class replaces the <code>ExpatAdapter.cpp</code> and does the
 	/// XML-parsing and fixes the prefix. After the parsing several normalisations
-	/// are applied to the XMPTree.
+	/// are applied to the XmpTree.
 	/// </remarks>
 	/// <since>01.02.2006</since>
-	public class XMPMetaParser
+	public class XmpMetaParser
 	{
 		private static readonly Object XMP_RDF = new Object();
 
 		/// <summary>Hidden constructor, initialises the SAX parser handler.</summary>
-		private XMPMetaParser()
+		private XmpMetaParser()
 		{
 		}
 
@@ -67,16 +67,16 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </param>
 		/// <param name="options">the parse options</param>
 		/// <returns>Returns the resulting XMP metadata object</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if parsing or normalisation fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if parsing or normalisation fails.
 		/// 	</exception>
-		public static XMPMeta Parse(Object input, ParseOptions options)
+		public static XmpMeta Parse(Object input, ParseOptions options)
 		{
 			ParameterAsserts.AssertNotNull(input);
 			options = options ?? new ParseOptions();
 
 			XmlDocument document = ParseXml(input, options);
 
-			bool xmpmetaRequired = options.GetRequireXMPMeta();
+			bool xmpmetaRequired = options.GetRequireXmpMeta();
 			object[] result = new object[3];
 			result = FindRootNode(document, xmpmetaRequired, result);
 
@@ -86,12 +86,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 				// Check if the XMP object shall be normalized
 				if (!options.GetOmitNormalization()) {
-					return XMPNormalizer.Process(xmp, options);
+					return XmpNormalizer.Process(xmp, options);
 				}
 				return xmp;
 			}
 			// no appropriate root node found, return empty metadata object
-			return new XMPMetaImpl();
+			return new XmpMetaImpl();
 		}
 
 		/// <summary>Parses the raw XML metadata packet considering the parsing options.</summary>
@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// </param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the parsed XML document or an exception.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown if the parsing fails for different reasons
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown if the parsing fails for different reasons
 		/// 	</exception>
 		private static XmlDocument ParseXml(Object input, ParseOptions options) {
 			if (input is Stream) {
@@ -144,7 +144,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				return ParseXmlFromBytebuffer(buffer, options);
 			}
 			catch (IOException e) {
-				throw new XMPException("Error reading the XML-file", XMPError.BADSTREAM, e);
+				throw new XmpException("Error reading the XML-file", XmpError.BADSTREAM, e);
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="buffer">a byte buffer containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static XmlDocument ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options) {
 			try {
@@ -176,7 +176,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						return doc;
 					} catch (Exception) {
 						// can normally not happen as the encoding is provided by a util function
-						throw new XMPException("Unsupported Encoding", XMPError.INTERNALFAILURE, e);
+						throw new XmpException("Unsupported Encoding", XmpError.INTERNALFAILURE, e);
 					}
 				}
 				doc.Load(buffer.GetByteStream());
@@ -193,7 +193,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <param name="input">a <code>String</code> containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static XmlDocument ParseXmlFromString(string input, ParseOptions options) {
 			try {
@@ -202,8 +202,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				doc.Load(GetSecureXmlReader(input));
 				return doc;
 			}
-			catch (XMPException e) {
-				if (e.GetErrorCode() == XMPError.BADXML && options.GetFixControlChars()) {
+			catch (XmpException e) {
+				if (e.GetErrorCode() == XmpError.BADXML && options.GetFixControlChars()) {
 					XmlDocument doc = new XmlDocument();
 					doc.Load(GetSecureXmlReader(new FixASCIIControlsReader(new StringReader(input))));
 					return doc;
@@ -220,7 +220,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// pxmp:XMP_Packet nodes, and kept a pointer to the last one. If there is
 		/// more than one possible root use PickBestRoot to choose among them.
 		/// <p>
-		/// If there is a root node, try to extract the version of the previous XMP
+		/// If there is a root node, try to extract the version of the previous Xmp
 		/// toolkit.
 		/// <p>
 		/// Pick the first x:xmpmeta among multiple root candidates. If there aren't
@@ -253,7 +253,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			for (int i = 0; i < children.Count; i++) {
 				root = children[i];
 				if (XmlNodeType.ProcessingInstruction == root.NodeType &&
-					XMPConst.XMP_PI.Equals(((XmlProcessingInstruction) root).Target)) {
+					XmpConst.XMP_PI.Equals(((XmlProcessingInstruction) root).Target)) {
 					// Store the processing instructions content
 					if (result != null) {
 						result[2] = ((XmlProcessingInstruction) root).Data;
@@ -262,12 +262,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				else if (XmlNodeType.Text != root.NodeType && XmlNodeType.ProcessingInstruction != root.NodeType) {
 					string rootNs = root.NamespaceURI;
 					string rootLocal = root.LocalName;
-					if ((XMPConst.TAG_XMPMETA.Equals(rootLocal) || XMPConst.TAG_XAPMETA.Equals(rootLocal)) &&
-						XMPConst.NS_X.Equals(rootNs)) {
+					if ((XmpConst.TAG_XmpMETA.Equals(rootLocal) || XmpConst.TAG_XAPMETA.Equals(rootLocal)) &&
+						XmpConst.NS_X.Equals(rootNs)) {
 						// by not passing the RequireXmpMeta-option, the rdf-Node will be valid
 						return FindRootNode(root, false, result);
 					}
-					if (!xmpmetaRequired && "RDF".Equals(rootLocal) && XMPConst.NS_RDF.Equals(rootNs)) {
+					if (!xmpmetaRequired && "RDF".Equals(rootLocal) && XmpConst.NS_RDF.Equals(rootNs)) {
 						if (result != null) {
 							result[0] = root;
 							result[1] = XMP_RDF;

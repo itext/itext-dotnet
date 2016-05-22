@@ -154,18 +154,18 @@ namespace iTextSharp.Kernel.Pdf
 			return null;
 		}
 
-		public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XMPMeta
+		public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XmpMeta
 			 meta)
 		{
-			XMPProperty conformanceXmpProperty = null;
-			XMPProperty partXmpProperty = null;
+			XmpProperty conformanceXmpProperty = null;
+			XmpProperty partXmpProperty = null;
 			try
 			{
-				conformanceXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE
+				conformanceXmpProperty = meta.GetProperty(XmpConst.NS_PDFA_ID, XmpConst.CONFORMANCE
 					);
-				partXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART);
+				partXmpProperty = meta.GetProperty(XmpConst.NS_PDFA_ID, XmpConst.PART);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 			}
 			if (conformanceXmpProperty == null || partXmpProperty == null)
