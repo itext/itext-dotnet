@@ -1,5 +1,5 @@
 /*
-$Id: 1c1f59218fd1d3b5f5ac39a0d8a971f9b2a77412 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -104,6 +104,11 @@ namespace iTextSharp.IO.Util {
 		public static StreamWriter CreatePrintWriter(Stream output, String encoding)
 		{
 			return new StreamWriter(output, Encoding.GetEncoding(encoding));
+		}
+
+		public static Stream GetBufferedOutputStream(String filename)
+		{			
+			return new FileStream(filename, FileMode.Create);
 		}
 	}
 }

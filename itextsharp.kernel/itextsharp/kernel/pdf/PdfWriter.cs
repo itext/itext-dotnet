@@ -45,11 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using Org.BouncyCastle.Crypto;
 using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Pdf
@@ -87,7 +87,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		public PdfWriter(Stream os, WriterProperties properties)
-			: base(new BufferedOutputStream(os))
+			: base(os)
 		{
 			// For internal usage only
 			//forewarned is forearmed
@@ -115,13 +115,13 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename)
-			: this(new FileStream(filename, FileMode.Create), new WriterProperties())
+			: this(filename, new WriterProperties())
 		{
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		public PdfWriter(String filename, WriterProperties properties)
-			: this(new FileStream(filename, FileMode.Create), properties)
+			: this(FileUtil.GetBufferedOutputStream(filename), properties)
 		{
 		}
 
