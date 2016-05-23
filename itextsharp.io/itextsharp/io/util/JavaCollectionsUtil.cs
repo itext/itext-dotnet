@@ -30,6 +30,10 @@ namespace iTextSharp.IO.Util {
             return new UnmodifiableDictionary<TKey, TValue>(dict);
         }
 
+		public static ISet<T> UnmodifiableSet<T>(ISet<T> set) {
+			return new UnmodifiableSet<T>(set);
+		}
+
         public static IList<T> SingletonList<T>(T o) {
             return new SingletonList<T>(o);
         }
