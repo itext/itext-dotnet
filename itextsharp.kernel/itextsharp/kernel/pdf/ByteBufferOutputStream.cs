@@ -755,13 +755,13 @@ namespace iTextSharp.Kernel.Pdf
 		/// if an I/O error occurs.
 		/// </exception>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual void WriteTo(Stream @out)
+		public virtual void WriteTo(Stream output)
 		{
-			@out.Write(buf, 0, count);
+			output.Write(buf, 0, count);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public override void Write(int b)
+		public void Write(int b)
 		{
 			Append((byte)b);
 		}
@@ -774,6 +774,42 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual byte[] GetBuffer()
 		{
 			return buf;
+		}
+
+		public override bool CanRead {
+			get { return false; }
+		}
+
+		public override bool CanSeek {
+			get { return false; }
+		}
+
+		public override bool CanWrite {
+			get { return true; }
+		}
+
+		public override long Length {
+			get { return Size(); }
+		}
+
+		public override long Position {
+			get { return Size(); }
+			set { throw new NotImplementedException(); }
+		}
+
+		public override void Flush() {
+		}
+
+		public override int Read(byte[] buffer, int offset, int count) {
+			throw new InvalidOperationException();
+		}
+
+		public override long Seek(long offset, SeekOrigin origin) {
+			throw new InvalidOperationException();
+		}
+
+		public override void SetLength(long value) {
+			SetSize((int)value);
 		}
 	}
 }
