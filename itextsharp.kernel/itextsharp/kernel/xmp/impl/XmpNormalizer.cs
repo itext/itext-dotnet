@@ -32,7 +32,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Impl.Xpath;
+using iTextSharp.Kernel.Xmp.Impl.XPath;
 using iTextSharp.Kernel.Xmp.Options;
 using iTextSharp.Kernel.Xmp.Properties;
 
