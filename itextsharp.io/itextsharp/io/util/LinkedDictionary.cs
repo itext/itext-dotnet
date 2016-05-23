@@ -50,6 +50,7 @@ using System.Collections;
 
 namespace iTextSharp.IO.Util {
     public class LinkedDictionary <TKey, TValue> : IDictionary<TKey, TValue> {
+		
         private Dictionary<TKey, LinkedListNode<KeyValuePair<TKey,TValue>>> dic;
         private LinkedList<KeyValuePair<TKey,TValue>> link;
 
@@ -64,23 +65,23 @@ namespace iTextSharp.IO.Util {
             link = new LinkedList<KeyValuePair<TKey,TValue>>();
         }
 
-        virtual public void Add(TKey key, TValue value) {
+        public virtual void Add(TKey key, TValue value) {
             LinkedListNode<KeyValuePair<TKey,TValue>> v = new LinkedListNode<KeyValuePair<TKey,TValue>>(new KeyValuePair<TKey,TValue>(key, value));
             dic.Add(key, v);
             link.AddLast(v);
         }
 
-        virtual public bool ContainsKey(TKey key) {
+        public virtual bool ContainsKey(TKey key) {
             return dic.ContainsKey(key);
         }
 
-        virtual public ICollection<TKey> Keys {
+        public virtual ICollection<TKey> Keys {
             get {
                 return new KeyCollection(link, dic);
             }
         }
 
-        virtual public bool Remove(TKey key) {
+		public virtual bool Remove(TKey key) {
             if (dic.ContainsKey(key)) {
                 link.Remove(dic[key]);
                 dic.Remove(key);
@@ -90,7 +91,12 @@ namespace iTextSharp.IO.Util {
                 return false;
         }
 
-        virtual public bool TryGetValue(TKey key, out TValue value) {
+		public virtual void Clear() {
+			dic.Clear();
+			link.Clear();
+		}
+
+		public virtual bool TryGetValue(TKey key, out TValue value) {
             if (dic.ContainsKey(key)) {
                 value = dic[key].Value.Value;
                 return true;
@@ -101,7 +107,7 @@ namespace iTextSharp.IO.Util {
             }
         }
 
-        virtual public ICollection<TValue> Values {
+		public virtual ICollection<TValue> Values {
             get {
                 return new ValueCollection(link);
             }
