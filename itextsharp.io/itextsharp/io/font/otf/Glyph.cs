@@ -161,7 +161,7 @@ namespace iTextSharp.IO.Font.Otf
 			return unicode > -1;
 		}
 
-		public virtual int? GetUnicode()
+		public virtual int GetUnicode()
 		{
 			return unicode;
 		}
