@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Java.Text;
 using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Pdf
@@ -56,11 +56,9 @@ namespace iTextSharp.Kernel.Pdf
 
 		private const int MAX_GENERATION = 65535;
 
-		private static readonly DecimalFormat objectOffsetFormatter = new DecimalFormat("0000000000"
-			);
+		private const String objectOffsetFormatter = "0000000000";
 
-		private static readonly DecimalFormat objectGenerationFormatter = new DecimalFormat
-			("00000");
+		private const String objectGenerationFormatter = "00000";
 
 		private static readonly byte[] freeXRefEntry = ByteUtils.GetIsoBytes("f \n");
 
@@ -339,9 +337,9 @@ namespace iTextSharp.Kernel.Pdf
 					for (int i_2 = first; i_2 < first + len; i_2++)
 					{
 						PdfIndirectReference reference = xrefTable.Get(i_2);
-						writer.WriteString(objectOffsetFormatter.Format(reference.GetOffset())).WriteSpace
-							().WriteString(objectGenerationFormatter.Format(reference.GetGenNumber())).WriteSpace
-							();
+						writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter
+							)).WriteSpace().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber
+							(), objectGenerationFormatter)).WriteSpace();
 						if (reference.IsFree())
 						{
 							writer.WriteBytes(freeXRefEntry);

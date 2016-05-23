@@ -100,6 +100,26 @@ namespace iTextSharp.IO.Util {
 			return null;
 		}
 
+        public static String[] ListFilesInDirectoryByFilter(String path, bool recursive, FileFilter filter)
+        {
+            if (!String.IsNullOrEmpty(path))
+            {
+                DirectoryInfo dir = new DirectoryInfo(path);
+                if (dir.Exists)
+                {
+                    FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    String[] list = new String[files.Length];
+                    for (int i = 0; i < files.Length; i++) {
+                        if (filter.Accept(files[i].Name)) {
+                            list[i] = files[i].FullName;    
+                        }
+                    }
+                    return list;
+                }
+            }
+            return null;
+        }
+
 		/// <exception cref="System.ArgumentException"/>
 		public static StreamWriter CreatePrintWriter(Stream output, String encoding)
 		{
@@ -110,5 +130,10 @@ namespace iTextSharp.IO.Util {
 		{			
 			return new FileStream(filename, FileMode.Create);
 		}
+	    public class FileFilter {
+	        public virtual bool Accept(String pathname) {
+	            return true;
+	        }
+	    }
 	}
 }

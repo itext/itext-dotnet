@@ -43,6 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Geom;
@@ -212,7 +213,7 @@ namespace iTextSharp.Kernel.Pdf
 			return list.Contains(o);
 		}
 
-		public override IEnumerator<PdfObject> GetEnumerator()
+		public IEnumerator<PdfObject> GetEnumerator()
 		{
 			return list.GetEnumerator();
 		}
@@ -385,7 +386,11 @@ namespace iTextSharp.Kernel.Pdf
 			return @string;
 		}
 
-		/// <param name="asDirect">true is to extract direct object always.</param>
+	    IEnumerator IEnumerable.GetEnumerator() {
+	        return GetEnumerator();
+	    }
+
+	    /// <param name="asDirect">true is to extract direct object always.</param>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		public virtual PdfObject Get(int index, bool asDirect)
 		{

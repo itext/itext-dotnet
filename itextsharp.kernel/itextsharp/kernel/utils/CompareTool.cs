@@ -45,16 +45,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Java.IO;
-using Java.Lang;
-using Javax.Xml.Parsers;
-using Javax.Xml.Transform;
-using Javax.Xml.Transform.Dom;
-using Javax.Xml.Transform.Stream;
-using Org.W3c.Dom;
-using Org.Xml.Sax;
+using System.Xml;
+using System.Xml.Linq;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
@@ -63,6 +58,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Xmp;
 using iTextSharp.Kernel.Xmp.Options;
+using Path = System.IO.Path;
 
 namespace iTextSharp.Kernel.Utils
 {
@@ -124,7 +120,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			CompareTool.CompareResult compareResult = null;
 			compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
-			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
+			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
 			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
@@ -315,14 +311,6 @@ namespace iTextSharp.Kernel.Utils
 			{
 				return "XMP parsing failure!";
 			}
-			catch (ParserConfigurationException)
-			{
-				return "XMP parsing failure!";
-			}
-			catch (SAXException)
-			{
-				return "XMP parsing failure!";
-			}
 			finally
 			{
 				if (cmpDocument != null)
@@ -476,8 +464,8 @@ namespace iTextSharp.Kernel.Utils
 		{
 			this.outPdf = outPdf;
 			this.cmpPdf = cmpPdf;
-			outPdfName = new File(outPdf).GetName();
-			cmpPdfName = new File(cmpPdf).GetName();
+		    outPdfName = FileUtil.GetFileName(outPdf);
+		    cmpPdfName = FileUtil.GetFileName(cmpPdf);
 			outImage = outPdfName + "-%03d.png";
 			if (cmpPdfName.StartsWith("cmp_"))
 			{
@@ -506,16 +494,16 @@ namespace iTextSharp.Kernel.Utils
 			{
 				return undefinedGsPath;
 			}
-			if (!(new File(gsExec).Exists()))
+			if (!FileUtil.FileExists(gsExec))
 			{
-				return new File(gsExec).GetAbsolutePath() + " does not exist";
+				return Path.GetFullPath(gsExec) + " does not exist";
 			}
 			if (!outPath.EndsWith("/"))
 			{
 				outPath = outPath + "/";
 			}
 			PrepareOutputDirs(outPath, differenceImagePrefix);
-			if (ignoredAreas != null && !ignoredAreas.IsEmpty())
+			if (ignoredAreas != null && ignoredAreas.Count > 0)
 			{
 				CreateIgnoredAreasPdfs(outPath, ignoredAreas);
 			}
@@ -532,10 +520,9 @@ namespace iTextSharp.Kernel.Utils
 		private String CompareImagesOfPdfs(String outPath, String differenceImagePrefix, 
 			IList<int?> equalPages)
 		{
-			File outputDir = new File(outPath);
-			File[] imageFiles = outputDir.ListFiles(new CompareTool.PngFileFilter(this));
-			File[] cmpImageFiles = outputDir.ListFiles(new CompareTool.CmpPngFileFilter(this)
-				);
+            String[] imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, false, new PngFileFilter(this));
+            String[] cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, false, new CmpPngFileFilter(this));
+			
 			bool bUnexpectedNumberOfPages = false;
 			if (imageFiles.Length != cmpImageFiles.Length)
 			{
@@ -549,7 +536,7 @@ namespace iTextSharp.Kernel.Utils
 			System.Array.Sort(imageFiles, new CompareTool.ImageNameComparator(this));
 			System.Array.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
 			String differentPagesFail = null;
-			bool compareExecIsOk = compareExec != null && new File(compareExec).Exists();
+            bool compareExecIsOk = compareExec != null && FileUtil.FileExists(compareExec);
 			IList<int?> diffPages = new List<int?>();
 			for (int i = 0; i < cnt; i++)
 			{
@@ -558,7 +545,7 @@ namespace iTextSharp.Kernel.Utils
 					continue;
 				}
 				System.Console.Out.Write("Comparing page " + iTextSharp.IO.Util.JavaUtil.IntegerToString
-					(i + 1) + " (" + imageFiles[i].GetAbsolutePath() + ")...");
+					(i + 1) + " (" + imageFiles[i] + ")...");
 				FileStream is1 = new FileStream(imageFiles[i], FileMode.Open);
 				FileStream is2 = new FileStream(cmpImageFiles[i], FileMode.Open);
 				bool cmpResult = CompareStreams(is1, is2);
@@ -570,8 +557,8 @@ namespace iTextSharp.Kernel.Utils
 					diffPages.Add(i + 1);
 					if (compareExecIsOk)
 					{
-						String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].GetAbsolutePath
-							()).Replace("<image2>", cmpImageFiles[i].GetAbsolutePath()).Replace("<difference>"
+						String currCompareParams = compareParams.Replace("<image1>", imageFiles[i])
+                            .Replace("<image2>", cmpImageFiles[i]).Replace("<difference>"
 							, outPath + differenceImagePrefix + iTextSharp.IO.Util.JavaUtil.IntegerToString(
 							i + 1) + ".png");
 						if (RunProcessAndWait(compareExec, currCompareParams))
@@ -619,9 +606,9 @@ namespace iTextSharp.Kernel.Utils
 			PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter);
 			foreach (KeyValuePair<int?, IList<Rectangle>> entry in ignoredAreas)
 			{
-				int pageNumber = entry.Key;
+				int pageNumber = (int) entry.Key;
 				IList<Rectangle> rectangles = entry.Value;
-				if (rectangles != null && !rectangles.IsEmpty())
+				if (rectangles != null && rectangles.Count > 0)
 				{
 					//drawing rectangles manually, because we don't want to create dependency on itextpdf.canvas module for itextpdf.kernel
 					PdfStream outStream = GetPageContentStream(pdfOutDoc.GetPage(pageNumber));
@@ -659,31 +646,29 @@ namespace iTextSharp.Kernel.Utils
 
 		private void PrepareOutputDirs(String outPath, String differenceImagePrefix)
 		{
-			File outputDir = new File(outPath);
-			File[] imageFiles;
-			File[] cmpImageFiles;
-			File[] diffFiles;
-			if (!outputDir.Exists())
-			{
-				outputDir.Mkdirs();
+			String[] imageFiles;
+            String[] cmpImageFiles;
+            String[] diffFiles;
+			if (FileUtil.DirectoryExists(outPath)) {
+			    Directory.CreateDirectory(outPath);
 			}
 			else
 			{
-				imageFiles = outputDir.ListFiles(new CompareTool.PngFileFilter(this));
-				foreach (File file in imageFiles)
+				imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, false, new CompareTool.PngFileFilter(this));
+				foreach (String file in imageFiles)
 				{
-					file.Delete();
+					File.Delete(file);
 				}
-				cmpImageFiles = outputDir.ListFiles(new CompareTool.CmpPngFileFilter(this));
-				foreach (File file_1 in cmpImageFiles)
+                cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, false, new CompareTool.CmpPngFileFilter(this));
+				foreach (String file in cmpImageFiles)
 				{
-					file_1.Delete();
+                    File.Delete(file);
 				}
-				diffFiles = outputDir.ListFiles(new CompareTool.DiffPngFileFilter(this, differenceImagePrefix
+                diffFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, false, new CompareTool.DiffPngFileFilter(this, differenceImagePrefix
 					));
-				foreach (File file_2 in diffFiles)
+				foreach (String file in diffFiles)
 				{
-					file_2.Delete();
+                    File.Delete(file);
 				}
 			}
 		}
@@ -695,8 +680,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		private String RunGhostScriptImageGeneration(String outPath)
 		{
-			File outputDir = new File(outPath);
-			if (!outputDir.Exists())
+			if (!FileUtil.DirectoryExists(outPath))
 			{
 				return cannotOpenOutputDirectory.Replace("<filename>", outPdf);
 			}
@@ -726,18 +710,16 @@ namespace iTextSharp.Kernel.Utils
 			{
 				cmdArray[i] = st.NextToken();
 			}
-			Process p = Runtime.GetRuntime().Exec(cmdArray);
+		    Process p = Process.Start(execPath, @params);
 			PrintProcessOutput(p);
-			return p.WaitFor() == 0;
+		    p.WaitForExit();
+			return true;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private void PrintProcessOutput(Process p)
-		{
-			BufferedReader bri = new BufferedReader(new InputStreamReader(p.GetInputStream())
-				);
-			BufferedReader bre = new BufferedReader(new InputStreamReader(p.GetErrorStream())
-				);
+		private void PrintProcessOutput(Process p) {
+		    StreamReader bri = p.StandardOutput;
+		    StreamReader bre = p.StandardError;
 			String line;
 			while ((line = bri.ReadLine()) != null)
 			{
@@ -800,7 +782,7 @@ namespace iTextSharp.Kernel.Utils
 			IList<int?> equalPages = new List<int?>(cmpPages.Count);
 			for (int i = 0; i < cmpPages.Count; i++)
 			{
-				CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(this, cmpPagesRef
+				CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpPagesRef
 					[i], outPagesRef[i]);
 				if (CompareDictionariesExtended(outPages[i], cmpPages[i], currentPath, compareResult
 					))
@@ -808,7 +790,7 @@ namespace iTextSharp.Kernel.Utils
 					equalPages.Add(i);
 				}
 			}
-			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(this, cmpDocument
+			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
 			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
@@ -879,7 +861,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				return;
 			}
-			CompareTool.TrailerPath trailerPath = new CompareTool.TrailerPath(this, cmpDocument
+			CompareTool.TrailerPath trailerPath = new CompareTool.TrailerPath(cmpDocument
 				, outDocument);
 			if (outEncrypt == null)
 			{
@@ -893,7 +875,7 @@ namespace iTextSharp.Kernel.Utils
 			}
 			ICollection<PdfName> ignoredEncryptEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.O, PdfName.U, PdfName.OE, PdfName.UE, PdfName.Perms));
-			CompareTool.ObjectPath objectPath = new CompareTool.ObjectPath(this, outEncrypt.GetIndirectReference
+			CompareTool.ObjectPath objectPath = new CompareTool.ObjectPath(outEncrypt.GetIndirectReference
 				(), cmpEncrypt.GetIndirectReference());
 			CompareDictionariesExtended(outEncrypt, cmpEncrypt, objectPath, compareResult, ignoredEncryptEntries
 				);
@@ -1054,7 +1036,7 @@ namespace iTextSharp.Kernel.Utils
 					if (cmpDirectObj.GetObjectType() != outDirectObj.GetObjectType())
 					{
 						compareResult.AddError(currentPath, String.Format("Types do not match. Expected: {0}. Found: {1}."
-							, cmpDirectObj.GetType().GetSimpleName(), outDirectObj.GetType().GetSimpleName()
+							, cmpDirectObj.GetType().Name, outDirectObj.GetType().Name
 							));
 						return false;
 					}
@@ -1476,17 +1458,10 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		private bool CompareXmls(Stream xml1, Stream xml2)
 		{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.NewInstance();
-			dbf.SetNamespaceAware(true);
-			dbf.SetCoalescing(true);
-			dbf.SetIgnoringElementContentWhitespace(true);
-			dbf.SetIgnoringComments(true);
-			DocumentBuilder db = dbf.NewDocumentBuilder();
-			Document doc1 = db.Parse(xml1);
-			doc1.NormalizeDocument();
-			Document doc2 = db.Parse(xml2);
-			doc2.NormalizeDocument();
-			return doc2.IsEqualNode(doc1);
+            XElement el1 = XElement.Load(xml1);
+            XElement el2 = XElement.Load(xml2);
+
+            return XElement.DeepEquals(el1, el2);
 		}
 
 		private IList<PdfLinkAnnotation> GetLinkAnnotations(int pageNum, PdfDocument document
@@ -1535,8 +1510,8 @@ namespace iTextSharp.Kernel.Utils
 
 						case PdfObject.NAME:
 						{
-							explicitCmpDest = (PdfArray)cmpNamedDestinations[cmpDestObject];
-							explicitOutDest = (PdfArray)outNamedDestinations[outDestObject];
+							explicitCmpDest = (PdfArray)cmpNamedDestinations[((PdfName)cmpDestObject).GetValue()];
+							explicitOutDest = (PdfArray)outNamedDestinations[((PdfName)outDestObject).GetValue()];
 							break;
 						}
 
@@ -1646,11 +1621,9 @@ namespace iTextSharp.Kernel.Utils
 			return convertedInfo;
 		}
 
-		private class PngFileFilter : FileFilter
+		private class PngFileFilter : FileUtil.FileFilter
 		{
-			public virtual bool Accept(File pathname)
-			{
-				String ap = pathname.GetName();
+			public virtual bool Accept(String ap) {
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.Contains("cmp_");
 				return b1 && !b2 && ap.Contains(this._enclosing.outPdfName);
@@ -1664,11 +1637,10 @@ namespace iTextSharp.Kernel.Utils
 			private readonly CompareTool _enclosing;
 		}
 
-		private class CmpPngFileFilter : FileFilter
+		private class CmpPngFileFilter : FileUtil.FileFilter
 		{
-			public virtual bool Accept(File pathname)
+			public virtual bool Accept(String ap)
 			{
-				String ap = pathname.GetName();
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.Contains("cmp_");
 				return b1 && b2 && ap.Contains(this._enclosing.cmpPdfName);
@@ -1682,7 +1654,7 @@ namespace iTextSharp.Kernel.Utils
 			private readonly CompareTool _enclosing;
 		}
 
-		private class DiffPngFileFilter : FileFilter
+		private class DiffPngFileFilter : FileUtil.FileFilter
 		{
 			private String differenceImagePrefix;
 
@@ -1692,9 +1664,8 @@ namespace iTextSharp.Kernel.Utils
 				this.differenceImagePrefix = differenceImagePrefix;
 			}
 
-			public virtual bool Accept(File pathname)
+			public virtual bool Accept(String ap)
 			{
-				String ap = pathname.GetName();
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.StartsWith(this.differenceImagePrefix);
 				return b1 && b2;
@@ -1703,12 +1674,12 @@ namespace iTextSharp.Kernel.Utils
 			private readonly CompareTool _enclosing;
 		}
 
-		private class ImageNameComparator : IComparer<File>
+		private class ImageNameComparator : IComparer<String>
 		{
-			public virtual int Compare(File f1, File f2)
+			public virtual int Compare(String f1, String f2)
 			{
-				String f1Name = f1.GetName();
-				String f2Name = f2.GetName();
+				String f1Name = Path.GetFileName(f1);
+			    String f2Name = Path.GetFileName(f2);
 				return string.CompareOrdinal(f1Name, f2Name);
 			}
 
@@ -1770,29 +1741,26 @@ namespace iTextSharp.Kernel.Utils
 			/// <exception cref="Javax.Xml.Transform.TransformerException"/>
 			public virtual void WriteReportToXml(Stream stream)
 			{
-				Document xmlReport = DocumentBuilderFactory.NewInstance().NewDocumentBuilder().NewDocument
-					();
-				Element root = xmlReport.CreateElement("report");
-				Element errors = xmlReport.CreateElement("errors");
+                XmlDocument doc = new XmlDocument();
+
+			    XmlElement root = doc.CreateElement("report");
+			    XmlElement errors = doc.CreateElement("errors");
+
 				errors.SetAttribute("count", this.differences.Count.ToString());
 				root.AppendChild(errors);
 				foreach (KeyValuePair<CompareTool.ObjectPath, String> entry in this.differences)
 				{
-					Node errorNode = xmlReport.CreateElement("error");
-					Node message = xmlReport.CreateElement("message");
-					message.AppendChild(xmlReport.CreateTextNode(entry.Value));
-					Node path = entry.Key.ToXmlNode(xmlReport);
+                    XmlElement errorNode = doc.CreateElement("error");
+                    XmlElement message = doc.CreateElement("message");
+                    message.AppendChild(doc.CreateTextNode(entry.Value));
+                    XmlElement path = entry.Key.ToXmlNode(doc);
 					errorNode.AppendChild(message);
 					errorNode.AppendChild(path);
 					errors.AppendChild(errorNode);
 				}
-				xmlReport.AppendChild(root);
-				TransformerFactory tFactory = TransformerFactory.NewInstance();
-				Transformer transformer = tFactory.NewTransformer();
-				transformer.SetOutputProperty(OutputKeys.INDENT, "yes");
-				DOMSource source = new DOMSource(xmlReport);
-				StreamResult result = new StreamResult(stream);
-				transformer.Transform(source, result);
+                doc.AppendChild(root);
+                XmlWriter writer = new XmlTextWriter(stream, Encoding.Default);
+                doc.WriteTo(writer);
 			}
 
 			protected internal virtual bool IsMessageLimitReached()
@@ -1824,24 +1792,21 @@ namespace iTextSharp.Kernel.Utils
 			protected internal Stack<CompareTool.ObjectPath.IndirectPathItem> indirects = new 
 				Stack<CompareTool.ObjectPath.IndirectPathItem>();
 
-			public ObjectPath(CompareTool _enclosing)
+			public ObjectPath()
 			{
-				this._enclosing = _enclosing;
 			}
 
-			protected internal ObjectPath(CompareTool _enclosing, PdfIndirectReference baseCmpObject
+			protected internal ObjectPath(PdfIndirectReference baseCmpObject
 				, PdfIndirectReference baseOutObject)
 			{
-				this._enclosing = _enclosing;
 				this.baseCmpObject = baseCmpObject;
 				this.baseOutObject = baseOutObject;
 			}
 
-			private ObjectPath(CompareTool _enclosing, PdfIndirectReference baseCmpObject, PdfIndirectReference
+			private ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference
 				 baseOutObject, Stack<CompareTool.ObjectPath.LocalPathItem> path, Stack<CompareTool.ObjectPath.IndirectPathItem
 				> indirects)
 			{
-				this._enclosing = _enclosing;
 				this.baseCmpObject = baseCmpObject;
 				this.baseOutObject = baseOutObject;
 				this.path = path;
@@ -1851,11 +1816,13 @@ namespace iTextSharp.Kernel.Utils
 			public virtual CompareTool.ObjectPath ResetDirectPath(PdfIndirectReference baseCmpObject
 				, PdfIndirectReference baseOutObject)
 			{
-				CompareTool.ObjectPath newPath = new CompareTool.ObjectPath(this, baseCmpObject, 
+				CompareTool.ObjectPath newPath = new CompareTool.ObjectPath(baseCmpObject, 
 					baseOutObject);
-				newPath.indirects = (Stack<CompareTool.ObjectPath.IndirectPathItem>)this.indirects
-					.Clone();
-				newPath.indirects.Add(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject
+				newPath.indirects.Clear();
+			    foreach (IndirectPathItem item in indirects) {
+			        newPath.indirects.Push(item);
+			    }
+				newPath.indirects.Push(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject
 					, baseOutObject));
 				return newPath;
 			}
@@ -1869,17 +1836,17 @@ namespace iTextSharp.Kernel.Utils
 
 			public virtual void PushArrayItemToPath(int index)
 			{
-				this.path.Add(new CompareTool.ObjectPath.ArrayPathItem(this, index));
+                this.path.Push(new CompareTool.ObjectPath.ArrayPathItem(index));
 			}
 
 			public virtual void PushDictItemToPath(PdfName key)
 			{
-				this.path.Add(new CompareTool.ObjectPath.DictPathItem(this, key));
+                this.path.Push(new CompareTool.ObjectPath.DictPathItem(key));
 			}
 
 			public virtual void PushOffsetToPath(int offset)
 			{
-				this.path.Add(new CompareTool.ObjectPath.OffsetPathItem(this, offset));
+                this.path.Push(new CompareTool.ObjectPath.OffsetPathItem(offset));
 			}
 
 			public virtual void Pop()
@@ -1907,10 +1874,10 @@ namespace iTextSharp.Kernel.Utils
 				return this.baseOutObject;
 			}
 
-			public virtual Node ToXmlNode(Document document)
+			public virtual XmlElement ToXmlNode(XmlDocument document)
 			{
-				Element element = document.CreateElement("path");
-				Element baseNode = document.CreateElement("base");
+                XmlElement element = document.CreateElement("path");
+                XmlElement baseNode = document.CreateElement("base");
 				baseNode.SetAttribute("cmp", String.Format("{0} {1} obj", this.baseCmpObject.GetObjNumber
 					(), this.baseCmpObject.GetGenNumber()));
 				baseNode.SetAttribute("out", String.Format("{0} {1} obj", this.baseOutObject.GetObjNumber
@@ -1957,9 +1924,16 @@ namespace iTextSharp.Kernel.Utils
 
 			protected internal virtual Object Clone()
 			{
-				return new CompareTool.ObjectPath(this, this.baseCmpObject, this.baseOutObject, (
-					Stack<CompareTool.ObjectPath.LocalPathItem>)this.path.Clone(), (Stack<CompareTool.ObjectPath.IndirectPathItem
-					>)this.indirects.Clone());
+                Stack<LocalPathItem> clonedPath = new Stack<LocalPathItem>();
+			    foreach (LocalPathItem item in path) {
+			        clonedPath.Push(item);
+			    }
+                Stack<IndirectPathItem> clonedIndirects = new Stack<IndirectPathItem>();
+                foreach (IndirectPathItem item in indirects)
+                {
+                    clonedIndirects.Push(item);
+                }
+				return new CompareTool.ObjectPath(this.baseCmpObject, this.baseOutObject, clonedPath, clonedIndirects);
 			}
 
 			public class IndirectPathItem
@@ -2003,24 +1977,15 @@ namespace iTextSharp.Kernel.Utils
 
 			public abstract class LocalPathItem
 			{
-				protected internal abstract Node ToXmlNode(Document document);
-
-				internal LocalPathItem(ObjectPath _enclosing)
-				{
-					this._enclosing = _enclosing;
-				}
-
-				private readonly ObjectPath _enclosing;
+				protected internal abstract XmlElement ToXmlNode(XmlDocument document);
 			}
 
 			public class DictPathItem : CompareTool.ObjectPath.LocalPathItem
 			{
 				internal PdfName key;
 
-				public DictPathItem(ObjectPath _enclosing, PdfName key)
-					: base(_enclosing)
+				public DictPathItem(PdfName key)
 				{
-					this._enclosing = _enclosing;
 					this.key = key;
 				}
 
@@ -2040,9 +2005,9 @@ namespace iTextSharp.Kernel.Utils
 						)obj).key);
 				}
 
-				protected internal override Node ToXmlNode(Document document)
+                protected internal override XmlElement ToXmlNode(XmlDocument document)
 				{
-					Node element = document.CreateElement("dictKey");
+                    XmlElement element = document.CreateElement("dictKey");
 					element.AppendChild(document.CreateTextNode(this.key.ToString()));
 					return element;
 				}
@@ -2059,10 +2024,8 @@ namespace iTextSharp.Kernel.Utils
 			{
 				internal int index;
 
-				public ArrayPathItem(ObjectPath _enclosing, int index)
-					: base(_enclosing)
+				public ArrayPathItem(int index)
 				{
-					this._enclosing = _enclosing;
 					this.index = index;
 				}
 
@@ -2082,9 +2045,9 @@ namespace iTextSharp.Kernel.Utils
 						)obj).index;
 				}
 
-				protected internal override Node ToXmlNode(Document document)
+                protected internal override XmlElement ToXmlNode(XmlDocument document)
 				{
-					Node element = document.CreateElement("arrayIndex");
+                    XmlElement element = document.CreateElement("arrayIndex");
 					element.AppendChild(document.CreateTextNode(this.index.ToString()));
 					return element;
 				}
@@ -2093,18 +2056,14 @@ namespace iTextSharp.Kernel.Utils
 				{
 					return this.index;
 				}
-
-				private readonly ObjectPath _enclosing;
 			}
 
 			public class OffsetPathItem : CompareTool.ObjectPath.LocalPathItem
 			{
 				internal int offset;
 
-				public OffsetPathItem(ObjectPath _enclosing, int offset)
-					: base(_enclosing)
+				public OffsetPathItem(int offset)
 				{
-					this._enclosing = _enclosing;
 					this.offset = offset;
 				}
 
@@ -2129,17 +2088,13 @@ namespace iTextSharp.Kernel.Utils
 						)obj).offset;
 				}
 
-				protected internal override Node ToXmlNode(Document document)
+                protected internal override XmlElement ToXmlNode(XmlDocument document)
 				{
-					Node element = document.CreateElement("offset");
+                    XmlElement element = document.CreateElement("offset");
 					element.AppendChild(document.CreateTextNode(this.offset.ToString()));
 					return element;
 				}
-
-				private readonly ObjectPath _enclosing;
 			}
-
-			private readonly CompareTool _enclosing;
 		}
 
 		private class TrailerPath : CompareTool.ObjectPath
@@ -2148,29 +2103,25 @@ namespace iTextSharp.Kernel.Utils
 
 			private PdfDocument cmpDocument;
 
-			public TrailerPath(CompareTool _enclosing, PdfDocument cmpDoc, PdfDocument outDoc
+			public TrailerPath(PdfDocument cmpDoc, PdfDocument outDoc
 				)
-				: base(_enclosing)
 			{
-				this._enclosing = _enclosing;
 				this.outDocument = outDoc;
 				this.cmpDocument = cmpDoc;
 			}
 
-			public TrailerPath(CompareTool _enclosing, PdfDocument cmpDoc, PdfDocument outDoc
+			public TrailerPath(PdfDocument cmpDoc, PdfDocument outDoc
 				, Stack<CompareTool.ObjectPath.LocalPathItem> path)
-				: base(_enclosing)
 			{
-				this._enclosing = _enclosing;
 				this.outDocument = outDoc;
 				this.cmpDocument = cmpDoc;
 				this.path = path;
 			}
 
-			public override Node ToXmlNode(Document document)
+            public override XmlElement ToXmlNode(XmlDocument document)
 			{
-				Element element = document.CreateElement("path");
-				Element baseNode = document.CreateElement("base");
+                XmlElement element = document.CreateElement("path");
+                XmlElement baseNode = document.CreateElement("base");
 				baseNode.SetAttribute("cmp", "trailer");
 				baseNode.SetAttribute("out", "trailer");
 				element.AppendChild(baseNode);
@@ -2214,11 +2165,12 @@ namespace iTextSharp.Kernel.Utils
 
 			protected internal override Object Clone()
 			{
-				return new CompareTool.TrailerPath(this, this.cmpDocument, this.outDocument, (Stack
-					<CompareTool.ObjectPath.LocalPathItem>)this.path.Clone());
+                Stack<LocalPathItem> clonedPath = new Stack<LocalPathItem>();
+			    foreach (LocalPathItem item in path) {
+			        clonedPath.Push(item);
+			    }
+				return new CompareTool.TrailerPath(this.cmpDocument, this.outDocument, clonedPath);
 			}
-
-			private readonly CompareTool _enclosing;
 		}
 	}
 }

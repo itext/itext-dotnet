@@ -248,7 +248,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="System.IComparable{T}.CompareTo(System.Object)"/>
 		public virtual int CompareTo(Object dt)
 		{
-			long d = GetCalendar().GetTimeInMillis() - ((XmpDateTime) dt).GetCalendar().GetTimeInMillis();
+			long d =  (long) (DateTime.Now - DateTime.MinValue).TotalMilliseconds  - ((XmpDateTime) dt).GetCalendar().GetTimeInMillis();
 			if (d != 0) {
 				return Math.Sign(d);
 			}
@@ -291,7 +291,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetCalendar()"/>
-		public virtual Calendar GetCalendar()
+		public virtual XmpCalendar GetCalendar()
 		{
 			TimeZone tz;
 			if (hasTimeZone) {
@@ -302,8 +302,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			return new XmpCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetISO8601String()"/>
-		public virtual String GetISO8601String()
+	    /// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetISO8601String()"/>
+		public virtual String GetIso8601String()
 		{
 			return ISO8601Converter.Render(this);
 		}
@@ -311,7 +311,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns the ISO string representation.</returns>
 		public override String ToString()
 		{
-			return GetISO8601String();
+			return GetIso8601String();
 		}
 	}
 }
