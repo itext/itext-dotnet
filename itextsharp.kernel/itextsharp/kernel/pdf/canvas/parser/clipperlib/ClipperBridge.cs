@@ -47,7 +47,7 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Clipper
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 {
 	/// <summary>
 	/// This class contains variety of methods allowing to convert iText
@@ -306,7 +306,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Clipper
 			return fillType;
 		}
 
-		public static void AddContour(Path path, IList<IntPoint> contour, bool? close)
+		public static void AddContour(Path path, IList<IntPoint> contour, bool close)
 		{
 			IList<Point> floatContour = ConvertToFloatPoints(contour);
 			IEnumerator<Point> iter = floatContour.GetEnumerator();

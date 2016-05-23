@@ -46,7 +46,7 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Clipper;
+using iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
@@ -208,7 +208,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 			}
 			catch (NoninvertibleTransformException e)
 			{
-				throw new Exception(e);
+				throw new Exception(e.Message, e);
 			}
 		}
 	}
