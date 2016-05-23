@@ -44,6 +44,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
+using System.Globalization;
+
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -66,10 +68,6 @@ namespace iTextSharp.Kernel.Pdf
 	/// <seealso cref="Java.Util.GregorianCalendar"/>
 	public class PdfDate : PdfObjectWrapper<PdfString>
 	{
-		private static readonly int[] DATE_SPACE = new int[] { DateTime.YEAR, 4, 0, DateTime
-			.MONTH, 2, -1, DateTime.DAY_OF_MONTH, 2, 0, DateTime.HOUR_OF_DAY, 2, 0, DateTime
-			.MINUTE, 2, 0, DateTime.SECOND, 2, 0 };
-
 		/// <summary>
 		/// Constructs a
 		/// <c>PdfDate</c>
@@ -81,7 +79,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// &gt;-object
 		/// </param>
 		public PdfDate(DateTime d)
-			: base(new PdfString(GenerateStringByCalendar(d)))
+			: base(new PdfString(GenerateStringByDateTime(d)))
 		{
 		}
 
@@ -91,7 +89,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// -object, representing the current day and time.
 		/// </summary>
 		public PdfDate()
-			: this(new GregorianCalendar())
+			: this(DateTime.Now)
 		{
 		}
 
@@ -186,80 +184,55 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <summary>
 		/// Converts a PDF string representing a date into a
-		/// <c>Calendar</c>
+		/// <c>DateTime</c>
 		/// .
 		/// </summary>
 		/// <param name="s">the PDF string representing a date</param>
 		/// <returns>
 		/// a
-		/// <c>Calendar</c>
-		/// representing the date or
-		/// <see langword="null"/>
-		/// if the string
-		/// was not a date
+		/// <c>DateTime</c>
+		/// representing the date
 		/// </returns>
-		public static DateTime Decode(String s)
-		{
-			try
-			{
-				if (s.StartsWith("D:"))
-				{
-					s = s.Substring(2);
-				}
-				GregorianCalendar calendar;
-				int slen = s.Length;
-				int idx = s.IndexOf('Z');
-				if (idx >= 0)
-				{
-					slen = idx;
-					calendar = new GregorianCalendar(new SimpleTimeZone(0, "ZPDF"));
-				}
-				else
-				{
-					int sign = 1;
-					idx = s.IndexOf('+');
-					if (idx < 0)
-					{
-						idx = s.IndexOf('-');
-						if (idx >= 0)
-						{
-							sign = -1;
+		public static DateTime Decode(String s) {
+			if (s.StartsWith("D:"))
+				s = s.Substring(2);
+			int year, month = 1, day = 1, hour = 0, minute = 0, second = 0;
+			int offsetHour = 0, offsetMinute = 0;
+			char variation = '\0';
+			year = int.Parse(s.Substring(0, 4));
+			if (s.Length >= 6) {
+				month = int.Parse(s.Substring(4, 2));
+				if (s.Length >= 8) {
+					day = int.Parse(s.Substring(6, 2));
+					if (s.Length >= 10) {
+						hour = int.Parse(s.Substring(8, 2));
+						if (s.Length >= 12) {
+							minute = int.Parse(s.Substring(10, 2));
+							if (s.Length >= 14) {
+								second = int.Parse(s.Substring(12, 2));
+							}
 						}
 					}
-					if (idx < 0)
-					{
-						calendar = new GregorianCalendar();
-					}
-					else
-					{
-						int offset = System.Convert.ToInt32(s.JSubstring(idx + 1, idx + 3)) * 60;
-						if (idx + 5 < s.Length)
-						{
-							offset += System.Convert.ToInt32(s.JSubstring(idx + 4, idx + 6));
-						}
-						calendar = new GregorianCalendar(new SimpleTimeZone(offset * sign * 60000, "ZPDF"
-							));
-						slen = idx;
-					}
 				}
-				calendar.Clear();
-				idx = 0;
-				for (int k = 0; k < DATE_SPACE.Length; k += 3)
-				{
-					if (idx >= slen)
-					{
-						break;
-					}
-					calendar.Set(DATE_SPACE[k], System.Convert.ToInt32(s.JSubstring(idx, idx + DATE_SPACE
-						[k + 1])) + DATE_SPACE[k + 2]);
-					idx += DATE_SPACE[k + 1];
+			}
+			DateTime d = new DateTime(year, month, day, hour, minute, second);
+			if (s.Length <= 14)
+				return d;
+			variation = s[14];
+			if (variation == 'Z')
+				return d.ToLocalTime();
+			if (s.Length >= 17) {
+				offsetHour = int.Parse(s.Substring(15, 2));
+				if (s.Length >= 20) {
+					offsetMinute = int.Parse(s.Substring(18, 2));
 				}
-				return calendar;
 			}
-			catch (Exception)
-			{
-				return null;
-			}
+			TimeSpan span = new TimeSpan(offsetHour, offsetMinute, 0);
+			if (variation == '-')
+				d += span;
+			else
+				d -= span;
+			return d.ToLocalTime();
 		}
 
 		protected internal override bool IsWrappedObjectMustBeIndirect()
@@ -267,70 +240,11 @@ namespace iTextSharp.Kernel.Pdf
 			return false;
 		}
 
-		private static String GenerateStringByCalendar(DateTime d)
+		private static String GenerateStringByDateTime(DateTime d)
 		{
-			StringBuilder date = new StringBuilder("D:");
-			date.Append(SetLength(d.Get(DateTime.YEAR), 4));
-			date.Append(SetLength(d.Get(DateTime.MONTH) + 1, 2));
-			date.Append(SetLength(d.Get(DateTime.DATE), 2));
-			date.Append(SetLength(d.Get(DateTime.HOUR_OF_DAY), 2));
-			date.Append(SetLength(d.Get(DateTime.MINUTE), 2));
-			date.Append(SetLength(d.Get(DateTime.SECOND), 2));
-			int timezone = (d.Get(DateTime.ZONE_OFFSET) + d.Get(DateTime.DST_OFFSET)) / (60 *
-				 60 * 1000);
-			if (timezone == 0)
-			{
-				date.Append('Z');
-			}
-			else
-			{
-				if (timezone < 0)
-				{
-					date.Append('-');
-					timezone = -timezone;
-				}
-				else
-				{
-					date.Append('+');
-				}
-			}
-			if (timezone != 0)
-			{
-				date.Append(SetLength(timezone, 2)).Append('\'');
-				int zone = Math.Abs((d.Get(DateTime.ZONE_OFFSET) + d.Get(DateTime.DST_OFFSET)) / 
-					(60 * 1000)) - (timezone * 60);
-				date.Append(SetLength(zone, 2)).Append('\'');
-			}
-			return date.ToString();
-		}
-
-		/// <summary>
-		/// Adds a number of leading zeros to a given
-		/// <c>String</c>
-		/// in order to get a
-		/// <c>String</c>
-		/// of a certain length.
-		/// </summary>
-		/// <param name="i">a given number</param>
-		/// <param name="length">
-		/// the length of the resulting
-		/// <c>String</c>
-		/// </param>
-		/// <returns>
-		/// the resulting
-		/// <c>String</c>
-		/// </returns>
-		private static String SetLength(int i, int length)
-		{
-			// 1.3-1.4 problem fixed by Finn Bock
-			StringBuilder tmp = new StringBuilder();
-			tmp.Append(i);
-			while (tmp.Length < length)
-			{
-				tmp.Insert(0, "0");
-			}
-			tmp.Length = length;
-			return tmp.ToString();
+			String value = d.ToString("\\D\\:yyyyMMddHHmmss", DateTimeFormatInfo.InvariantInfo);
+			String timezone = d.ToString("zzz", DateTimeFormatInfo.InvariantInfo).Replace(":", "'") + "'";
+			return value + timezone;
 		}
 	}
 }
