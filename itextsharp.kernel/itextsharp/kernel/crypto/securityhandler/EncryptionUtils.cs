@@ -10,7 +10,7 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
-	internal class EncryptionUtils
+	internal static class EncryptionUtils
 	{
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);

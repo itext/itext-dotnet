@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Java.Security.Cert;
 using Org.BouncyCastle.X509;
 using iTextSharp.Kernel;
 
@@ -79,7 +78,7 @@ namespace iTextSharp.Signatures
 		{
 			try
 			{
-				crls.Add(((X509CRL)crl).GetEncoded());
+				crls.Add(((X509Crl)crl).GetEncoded());
 			}
 			catch (Exception ex)
 			{

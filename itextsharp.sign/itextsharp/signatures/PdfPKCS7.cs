@@ -52,7 +52,9 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Asn1;
 using Org.Bouncycastle.Asn1.Cms;
@@ -166,7 +168,7 @@ namespace iTextSharp.Signatures
 				signCert = (X509Certificate)certs.GetEnumerator().Current;
 				crls = new List<X509Crl>();
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(contentsKey));
-				digest = ((ASN1OctetString)@in.ReadObject()).GetOctets();
+				digest = ((Asn1OctetString)@in.ReadObject()).GetOctets();
 				if (provider == null)
 				{
 					sig = Signature.GetInstance("SHA1withRSA");
@@ -243,9 +245,9 @@ namespace iTextSharp.Signatures
 				}
 				// the possible ID_PKCS7_DATA
 				Asn1Sequence rsaData = (Asn1Sequence)content.GetObjectAt(2);
-				if (rsaData.Size() > 1)
+				if (rsaData.Count > 1)
 				{
-					ASN1OctetString rsaDataContent = (ASN1OctetString)((Asn1TaggedObject)rsaData.GetObjectAt
+					Asn1OctetString rsaDataContent = (Asn1OctetString)((Asn1TaggedObject)rsaData.GetObjectAt
 						(1)).GetObject();
 					RSAdata = rsaDataContent.GetOctets();
 				}
@@ -327,7 +329,7 @@ namespace iTextSharp.Signatures
 				if (signCert == null)
 				{
 					throw new PdfException(PdfException.CantFindSigningCertificateWithSerial1).SetMessageParams
-						(issuer.GetName() + " / " + serialNumber.ToString(16));
+						(issuer.ToString() + " / " + serialNumber.ToString(16));
 				}
 				SignCertificateChain();
 				digestAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo.GetObjectAt(
@@ -348,7 +350,7 @@ namespace iTextSharp.Signatures
 						if (idSeq2.Equals(SecurityIDs.ID_MESSAGE_DIGEST))
 						{
 							Asn1Set set = (Asn1Set)seq2.GetObjectAt(1);
-							digestAttr = ((ASN1OctetString)set.GetObjectAt(0)).GetOctets();
+							digestAttr = ((Asn1OctetString)set.GetObjectAt(0)).GetOctets();
 						}
 						else
 						{
@@ -356,7 +358,7 @@ namespace iTextSharp.Signatures
 							{
 								Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 								Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
-								for (int j = 0; j < seqout.Size(); ++j)
+								for (int j = 0; j < seqout.Count; ++j)
 								{
 									Asn1TaggedObject tg = (Asn1TaggedObject)seqout.GetObjectAt(j);
 									if (tg.GetTagNo() == 0)
@@ -430,8 +432,8 @@ namespace iTextSharp.Signatures
 				}
 				digestEncryptionAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo.GetObjectAt
 					(next++)).GetObjectAt(0)).Id;
-				digest = ((ASN1OctetString)signerInfo.GetObjectAt(next++)).GetOctets();
-				if (next < signerInfo.Size() && signerInfo.GetObjectAt(next) is Asn1TaggedObject)
+				digest = ((Asn1OctetString)signerInfo.GetObjectAt(next++)).GetOctets();
+				if (next < signerInfo.Count && signerInfo.GetObjectAt(next) is Asn1TaggedObject)
 				{
 					Asn1TaggedObject taggedObject = (Asn1TaggedObject)signerInfo.GetObjectAt(next);
 					Asn1Set unat = Asn1Set.GetInstance(taggedObject, false);
@@ -1328,12 +1330,12 @@ namespace iTextSharp.Signatures
 			try
 			{
 				crls = new List<X509Crl>();
-				for (int k = 0; k < seq.Size(); ++k)
+				for (int k = 0; k < seq.Count; ++k)
 				{
 					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToAsn1Object().GetEncoded(ASN1Encoding
 						.DER));
 					CertificateFactory cf = CertificateFactory.GetInstance("X.509");
-					X509CRL crl = (X509CRL)cf.GenerateCRL(ar);
+					X509Crl crl = (X509Crl)cf.GenerateCRL(ar);
 					crls.Add(crl);
 				}
 			}
@@ -1343,13 +1345,13 @@ namespace iTextSharp.Signatures
 		}
 
 		/// <summary>BouncyCastle BasicOCSPResp</summary>
-		private BasicOCSPResp basicResp;
+		private BasicOcspResp basicResp;
 
 		// ignore
 		// Online Certificate Status Protocol
 		/// <summary>Gets the OCSP basic response if there is one.</summary>
 		/// <returns>the OCSP basic response or null</returns>
-		public virtual BasicOCSPResp GetOcsp()
+		public virtual BasicOcspResp GetOcsp()
 		{
 			return basicResp;
 		}
@@ -1369,7 +1371,7 @@ namespace iTextSharp.Signatures
 			try
 			{
 				X509Certificate[] cs = (X509Certificate[])GetSignCertificateChain();
-				SingleResp sr = basicResp.GetResponses()[0];
+				SingleResp sr = basicResp.Responses[0];
 				CertificateID cid = sr.GetCertID();
 				DigestCalculator digestalg = new JcaDigestCalculatorProviderBuilder().Build().Get
 					(new AlgorithmIdentifier(cid.GetHashAlgOID(), DERNull.INSTANCE));
@@ -1390,7 +1392,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="System.IO.IOException"/>
 		private void FindOcsp(Asn1Sequence seq)
 		{
-			basicResp = (BasicOCSPResp)null;
+			basicResp = (BasicOcspResp)null;
 			bool ret = false;
 			while (true)
 			{
@@ -1400,7 +1402,7 @@ namespace iTextSharp.Signatures
 					break;
 				}
 				ret = true;
-				for (int k = 0; k < seq.Size(); ++k)
+				for (int k = 0; k < seq.Count; ++k)
 				{
 					if (seq.GetObjectAt(k) is Asn1Sequence)
 					{
@@ -1428,10 +1430,10 @@ namespace iTextSharp.Signatures
 					return;
 				}
 			}
-			ASN1OctetString os = (ASN1OctetString)seq.GetObjectAt(1);
+			Asn1OctetString os = (Asn1OctetString)seq.GetObjectAt(1);
 			Asn1InputStream inp = new Asn1InputStream(os.GetOctets());
 			BasicOCSPResponse resp = BasicOCSPResponse.GetInstance(inp.ReadObject());
-			basicResp = new BasicOCSPResp(resp);
+			basicResp = new BasicOcspResp(resp);
 		}
 
 		/// <summary>True if there's a PAdES LTV time stamp.</summary>

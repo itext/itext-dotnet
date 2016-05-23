@@ -44,12 +44,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.Security.Cert;
 using Org.BouncyCastle;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1;
 
 namespace iTextSharp.Signatures
 {
@@ -74,7 +72,8 @@ namespace iTextSharp.Signatures
 		/// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
 		/// <param name="certificate">the Certificate</param>
 		/// <returns>the String where you can check if the certificate was revoked</returns>
-		/// <exception cref="Java.Security.Cert.CertificateParsingException"/>
+		/// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException
+		/// 	"/>
 		/// <exception cref="System.IO.IOException"/>
 		public static String GetCRLURL(X509Certificate certificate)
 		{
@@ -128,9 +127,8 @@ namespace iTextSharp.Signatures
 			{
 				return null;
 			}
-			Stream @is = new Uri(url).OpenStream();
-			CertificateFactory cf = CertificateFactory.GetInstance("X.509");
-			return (X509Crl)cf.GenerateCRL(@is);
+			return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new 
+				Uri(url)));
 		}
 
 		// Online Certificate Status Protocol
@@ -143,16 +141,16 @@ namespace iTextSharp.Signatures
 			Asn1Object obj;
 			try
 			{
-				obj = GetExtensionValue(certificate, X509Extensions.authorityInfoAccess.Id);
+				obj = GetExtensionValue(certificate, X509Extensions.AuthorityInfoAccess.Id);
 				if (obj == null)
 				{
 					return null;
 				}
 				Asn1Sequence AccessDescriptions = (Asn1Sequence)obj;
-				for (int i = 0; i < AccessDescriptions.Size(); i++)
+				for (int i = 0; i < AccessDescriptions.Count; i++)
 				{
 					Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions.GetObjectAt(i);
-					if (AccessDescription.Size() != 2)
+					if (AccessDescription.Count != 2)
 					{
 						continue;
 					}
@@ -192,7 +190,8 @@ namespace iTextSharp.Signatures
 		/// <exception cref="System.IO.IOException"/>
 		public static String GetTSAURL(X509Certificate certificate)
 		{
-			byte[] der = certificate.GetExtensionValue(SecurityIDs.ID_TSA);
+			byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA
+				);
 			if (der == null)
 			{
 				return null;
@@ -220,13 +219,13 @@ namespace iTextSharp.Signatures
 		private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid
 			)
 		{
-			byte[] bytes = certificate.GetExtensionValue(oid);
+			byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
 			if (bytes == null)
 			{
 				return null;
 			}
 			Asn1InputStream aIn = new Asn1InputStream(new MemoryStream(bytes));
-			ASN1OctetString octs = (ASN1OctetString)aIn.ReadObject();
+			Asn1OctetString octs = (Asn1OctetString)aIn.ReadObject();
 			aIn = new Asn1InputStream(new MemoryStream(octs.GetOctets()));
 			return aIn.ReadObject();
 		}
@@ -238,7 +237,7 @@ namespace iTextSharp.Signatures
 		private static String GetStringFromGeneralName(Asn1Object names)
 		{
 			Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
-			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ASN1OctetString.GetInstance(
+			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(
 				taggedObject, false).GetOctets(), "ISO-8859-1");
 		}
 	}

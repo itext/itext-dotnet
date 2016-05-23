@@ -49,6 +49,7 @@ using Java.Math;
 using Java.Net;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Asn1.Ocsp;
 using Org.Bouncycastle.Asn1.X509;
@@ -95,21 +96,21 @@ namespace iTextSharp.Signatures
 		/// <seealso>OCSPVerifier</seealso>
 		/// was setted, the response will be checked.
 		/// </remarks>
-		public virtual BasicOCSPResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate
+		public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate
 			 rootCert, String url)
 		{
 			try
 			{
-				OCSPResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
+				OcspResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
 				if (ocspResponse == null)
 				{
 					return null;
 				}
-				if (ocspResponse.GetStatus() != OCSPRespStatus.SUCCESSFUL)
+				if (ocspResponse.Status != OcspRespStatus.Successful)
 				{
 					return null;
 				}
-				BasicOCSPResp basicResponse = (BasicOCSPResp)ocspResponse.GetResponseObject();
+				BasicOcspResp basicResponse = (BasicOcspResp)ocspResponse.GetResponseObject();
 				if (verifier != null)
 				{
 					verifier.IsValidResponse(basicResponse, rootCert);
@@ -139,15 +140,15 @@ namespace iTextSharp.Signatures
 		{
 			try
 			{
-				BasicOCSPResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
+				BasicOcspResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
 				if (basicResponse != null)
 				{
-					SingleResp[] responses = basicResponse.GetResponses();
+					SingleResp[] responses = basicResponse.Responses;
 					if (responses.Length == 1)
 					{
 						SingleResp resp = responses[0];
 						Object status = resp.GetCertStatus();
-						if (status == CertificateStatus.GOOD)
+						if (status == CertificateStatus.Good)
 						{
 							return basicResponse.GetEncoded();
 						}
@@ -176,7 +177,7 @@ namespace iTextSharp.Signatures
 		/// <param name="issuerCert">certificate of the issues</param>
 		/// <param name="serialNumber">serial number</param>
 		/// <returns>an OCSP request</returns>
-		/// <exception cref="Org.Bouncycastle.Cert.Ocsp.OCSPException"/>
+		/// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
 		/// <exception cref="Java.Security.Cert.CertificateEncodingException"/>
@@ -200,10 +201,10 @@ namespace iTextSharp.Signatures
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		/// <exception cref="Org.Bouncycastle.Cert.Ocsp.OCSPException"/>
+		/// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
-		private OCSPResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert
+		private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert
 			, String url)
 		{
 			if (checkCert == null || rootCert == null)
@@ -238,7 +239,7 @@ namespace iTextSharp.Signatures
 			}
 			//Get Response
 			Stream @in = (Stream)con.GetContent();
-			return new OCSPResp(StreamUtil.InputStreamToArray(@in));
+			return new OcspResp(StreamUtil.InputStreamToArray(@in));
 		}
 	}
 }

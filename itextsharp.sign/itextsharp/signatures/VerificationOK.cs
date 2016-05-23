@@ -83,7 +83,7 @@ namespace iTextSharp.Signatures
 			StringBuilder sb = new StringBuilder();
 			if (certificate != null)
 			{
-				sb.Append(certificate.GetSubjectDN().GetName());
+				sb.Append(certificate.SubjectDN.ToString());
 				sb.Append(" verified with ");
 			}
 			sb.Append(verifierClass.FullName);

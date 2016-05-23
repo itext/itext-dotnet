@@ -46,7 +46,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Java.Net;
-using Java.Security.Cert;
+using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
 using iTextSharp.Kernel;
@@ -99,7 +99,7 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < chain.Length; i++)
 			{
 				X509Certificate cert = (X509Certificate)chain[i];
-				LOGGER.Info("Checking certificate: " + cert.GetSubjectDN());
+				LOGGER.Info("Checking certificate: " + cert.SubjectDN);
 				try
 				{
 					AddUrl(CertificateUtil.GetCRLURL(cert));
@@ -158,7 +158,7 @@ namespace iTextSharp.Signatures
 			IList<Uri> urllist = new List<Uri>(urls);
 			if (urllist.Count == 0)
 			{
-				LOGGER.Info("Looking for CRL for certificate " + checkCert.GetSubjectDN());
+				LOGGER.Info("Looking for CRL for certificate " + checkCert.SubjectDN);
 				try
 				{
 					if (url == null)

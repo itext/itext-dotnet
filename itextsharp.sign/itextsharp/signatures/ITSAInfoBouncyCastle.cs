@@ -42,7 +42,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Org.Bouncycastle.Tsp;
+using Org.BouncyCastle.Tsp;
 
 namespace iTextSharp.Signatures
 {

@@ -54,7 +54,7 @@ namespace iTextSharp.Signatures
 		/// <summary>Creates a VerificationException</summary>
 		public VerificationException(X509Certificate cert, String message)
 			: base(String.Format("Certificate {0} failed: {1}", cert == null ? "Unknown" : ((
-				X509Certificate)cert).GetSubjectDN().GetName(), message))
+				X509Certificate)cert).SubjectDN.ToString(), message))
 		{
 		}
 	}

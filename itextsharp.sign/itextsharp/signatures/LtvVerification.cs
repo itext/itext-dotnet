@@ -148,7 +148,7 @@ namespace iTextSharp.Signatures
 			for (int k = 0; k < xc.Length; ++k)
 			{
 				cert = (X509Certificate)xc[k];
-				LOGGER.Info("Certificate: " + cert.GetSubjectDN());
+				LOGGER.Info("Certificate: " + cert.SubjectDN);
 				if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.
 					Equals(signingCert))
 				{
@@ -213,7 +213,7 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < certs.Length; i++)
 			{
 				parent = (X509Certificate)certs[i];
-				if (!cert.GetIssuerDN().Equals(parent.GetSubjectDN()))
+				if (!cert.GetIssuerDN().Equals(parent.SubjectDN))
 				{
 					continue;
 				}

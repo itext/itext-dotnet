@@ -62,12 +62,12 @@ namespace iTextSharp.Signatures
 			iTextSharp.Signatures.CRLVerifier));
 
 		/// <summary>The list of CRLs to check for revocation date.</summary>
-		internal IList<X509CRL> crls;
+		internal IList<X509Crl> crls;
 
 		/// <summary>Creates a CRLVerifier instance.</summary>
 		/// <param name="verifier">the next verifier in the chain</param>
 		/// <param name="crls">a list of CRLs</param>
-		public CRLVerifier(CertificateVerifier verifier, IList<X509CRL> crls)
+		public CRLVerifier(CertificateVerifier verifier, IList<X509Crl> crls)
 			: base(verifier)
 		{
 			this.crls = crls;
@@ -97,7 +97,7 @@ namespace iTextSharp.Signatures
 			// first check the list of CRLs that is provided
 			if (crls != null)
 			{
-				foreach (X509CRL crl in crls)
+				foreach (X509Crl crl in crls)
 				{
 					if (Verify(crl, signCert, issuerCert, signDate))
 					{
@@ -137,7 +137,7 @@ namespace iTextSharp.Signatures
 		/// <param name="signDate">the sign date</param>
 		/// <returns>true if the verification succeeded</returns>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		public virtual bool Verify(X509CRL crl, X509Certificate signCert, X509Certificate
+		public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
 		{
 			if (crl == null || signDate == null)
@@ -163,7 +163,7 @@ namespace iTextSharp.Signatures
 		/// <param name="signCert">the certificate</param>
 		/// <param name="issuerCert">its issuer</param>
 		/// <returns>an X509CRL object</returns>
-		public virtual X509CRL GetCRL(X509Certificate signCert, X509Certificate issuerCert
+		public virtual X509Crl GetCRL(X509Certificate signCert, X509Certificate issuerCert
 			)
 		{
 			if (issuerCert == null)
@@ -181,7 +181,8 @@ namespace iTextSharp.Signatures
 				LOGGER.Info("Getting CRL from " + crlurl);
 				CertificateFactory cf = CertificateFactory.GetInstance("X.509");
 				// Creates the CRL
-				return (X509CRL)cf.GenerateCRL(new Uri(crlurl).OpenStream());
+				return (X509Crl)cf.GenerateCRL(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(crlurl
+					)));
 			}
 			catch (System.IO.IOException)
 			{
@@ -198,7 +199,7 @@ namespace iTextSharp.Signatures
 		/// <param name="crl">the CRL</param>
 		/// <param name="crlIssuer">the trusted anchor</param>
 		/// <returns>true if the CRL can be trusted</returns>
-		public virtual bool IsSignatureValid(X509CRL crl, X509Certificate crlIssuer)
+		public virtual bool IsSignatureValid(X509Crl crl, X509Certificate crlIssuer)
 		{
 			// check if the CRL was issued by the issuer
 			if (crlIssuer != null)

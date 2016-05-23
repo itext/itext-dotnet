@@ -45,10 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Security.Cert;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Cert.Ocsp;
 using iTextSharp.Forms;
 using iTextSharp.IO.Log;
 using iTextSharp.Kernel.Pdf;
@@ -211,7 +210,7 @@ namespace iTextSharp.Signatures
 					issuerCert = (X509Certificate)chain[i];
 				}
 				// now lets verify the certificate
-				LOGGER.Info(signCert.GetSubjectDN().GetName());
+				LOGGER.Info(signCert.SubjectDN.ToString());
 				IList<VerificationOK> list = Verify(signCert, issuerCert, signDate);
 				if (list.Count == 0)
 				{
@@ -341,9 +340,9 @@ namespace iTextSharp.Signatures
 		/// <returns>a list of CRLs</returns>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual IList<X509CRL> GetCRLsFromDSS()
+		public virtual IList<X509Crl> GetCRLsFromDSS()
 		{
-			IList<X509CRL> crls = new List<X509CRL>();
+			IList<X509Crl> crls = new List<X509Crl>();
 			if (dss == null)
 			{
 				return crls;
@@ -353,12 +352,11 @@ namespace iTextSharp.Signatures
 			{
 				return crls;
 			}
-			CertificateFactory cf = CertificateFactory.GetInstance("X.509");
 			for (int i = 0; i < crlarray.Size(); i++)
 			{
 				PdfStream stream = crlarray.GetAsStream(i);
-				X509CRL crl = (X509CRL)cf.GenerateCRL(new MemoryStream(stream.GetBytes()));
-				crls.Add(crl);
+				crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes
+					())));
 			}
 			return crls;
 		}
@@ -367,9 +365,9 @@ namespace iTextSharp.Signatures
 		/// <returns>a list of BasicOCSPResp objects</returns>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		public virtual IList<BasicOCSPResp> GetOCSPResponsesFromDSS()
+		public virtual IList<BasicOcspResp> GetOCSPResponsesFromDSS()
 		{
-			IList<BasicOCSPResp> ocsps = new List<BasicOCSPResp>();
+			IList<BasicOcspResp> ocsps = new List<BasicOcspResp>();
 			if (dss == null)
 			{
 				return ocsps;
@@ -382,16 +380,16 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < ocsparray.Size(); i++)
 			{
 				PdfStream stream = ocsparray.GetAsStream(i);
-				OCSPResp ocspResponse = new OCSPResp(stream.GetBytes());
-				if (ocspResponse.GetStatus() == 0)
+				OcspResp ocspResponse = new OcspResp(stream.GetBytes());
+				if (ocspResponse.Status == 0)
 				{
 					try
 					{
-						ocsps.Add((BasicOCSPResp)ocspResponse.GetResponseObject());
+						ocsps.Add((BasicOcspResp)ocspResponse.GetResponseObject());
 					}
-					catch (OCSPException e)
+					catch (OcspException e)
 					{
-						throw new GeneralSecurityException(e);
+						throw new GeneralSecurityException(e.ToString());
 					}
 				}
 			}

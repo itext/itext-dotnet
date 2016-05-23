@@ -49,6 +49,7 @@ using Java.Net;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Tsp;
 using Org.Bouncycastle.Asn1.Cmp;
 using Org.Bouncycastle.Tsp;
 using iTextSharp.IO.Codec;

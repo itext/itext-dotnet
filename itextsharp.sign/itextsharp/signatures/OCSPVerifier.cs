@@ -45,8 +45,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Java.Security;
-using Java.Security.Cert;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using Org.Bouncycastle.Asn1.Ocsp;
 using Org.Bouncycastle.Cert;
@@ -72,12 +73,12 @@ namespace iTextSharp.Signatures
 		protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
 
 		/// <summary>The list of OCSP responses.</summary>
-		protected internal IList<BasicOCSPResp> ocsps;
+		protected internal IList<BasicOcspResp> ocsps;
 
 		/// <summary>Creates an OCSPVerifier instance.</summary>
 		/// <param name="verifier">the next verifier in the chain</param>
 		/// <param name="ocsps">a list of OCSP responses</param>
-		public OCSPVerifier(CertificateVerifier verifier, IList<BasicOCSPResp> ocsps)
+		public OCSPVerifier(CertificateVerifier verifier, IList<BasicOcspResp> ocsps)
 			: base(verifier)
 		{
 			this.ocsps = ocsps;
@@ -107,7 +108,7 @@ namespace iTextSharp.Signatures
 			// first check in the list of OCSP responses that was provided
 			if (ocsps != null)
 			{
-				foreach (BasicOCSPResp ocspResp in ocsps)
+				foreach (BasicOcspResp ocspResp in ocsps)
 				{
 					if (Verify(ocspResp, signCert, issuerCert, signDate))
 					{
@@ -152,7 +153,7 @@ namespace iTextSharp.Signatures
 		/// </returns>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual bool Verify(BasicOCSPResp ocspResp, X509Certificate signCert, X509Certificate
+		public virtual bool Verify(BasicOcspResp ocspResp, X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
 		{
 			if (ocspResp == null)
@@ -160,7 +161,7 @@ namespace iTextSharp.Signatures
 				return false;
 			}
 			// Getting the responses
-			SingleResp[] resp = ocspResp.GetResponses();
+			SingleResp[] resp = ocspResp.Responses;
 			for (int i = 0; i < resp.Length; i++)
 			{
 				// check if the serial number corresponds
@@ -182,7 +183,7 @@ namespace iTextSharp.Signatures
 						continue;
 					}
 				}
-				catch (OCSPException)
+				catch (OcspException)
 				{
 					continue;
 				}
@@ -202,7 +203,7 @@ namespace iTextSharp.Signatures
 				}
 				// check the status of the certificate
 				Object status = resp[i].GetCertStatus();
-				if (status == CertificateStatus.GOOD)
+				if (status == CertificateStatus.Good)
 				{
 					// check if the OCSP response was genuine
 					IsValidResponse(ocspResp, issuerCert);
@@ -221,7 +222,7 @@ namespace iTextSharp.Signatures
 		/// <param name="issuerCert">the issuer certificate</param>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual void IsValidResponse(BasicOCSPResp ocspResp, X509Certificate issuerCert
+		public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert
 			)
 		{
 			//OCSP response might be signed by the issuer certificate or
@@ -335,12 +336,12 @@ namespace iTextSharp.Signatures
 				{
 					crl = (X509Crl)null;
 				}
-				if (crl != null && crl is X509CRL)
+				if (crl != null && crl is X509Crl)
 				{
 					CRLVerifier crlVerifier = new CRLVerifier(null, null);
 					crlVerifier.SetRootStore(rootStore);
 					crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-					crlVerifier.Verify((X509CRL)crl, responderCert, issuerCert, new DateTime());
+					crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, new DateTime());
 					return;
 				}
 			}
@@ -361,7 +362,7 @@ namespace iTextSharp.Signatures
 		/// <param name="issuerCert">the issuer certificate</param>
 		/// <returns>true if the response can be trusted</returns>
 		[Obsolete]
-		public virtual bool VerifyResponse(BasicOCSPResp ocspResp, X509Certificate issuerCert
+		public virtual bool VerifyResponse(BasicOcspResp ocspResp, X509Certificate issuerCert
 			)
 		{
 			try
@@ -379,7 +380,7 @@ namespace iTextSharp.Signatures
 		/// <param name="ocspResp">the OCSP response</param>
 		/// <param name="responderCert">the responder certificate</param>
 		/// <returns>true if the OCSP response verifies against the responder certificate</returns>
-		public virtual bool IsSignatureValid(BasicOCSPResp ocspResp, X509Certificate responderCert
+		public virtual bool IsSignatureValid(BasicOcspResp ocspResp, X509Certificate responderCert
 			)
 		{
 			try
@@ -392,7 +393,7 @@ namespace iTextSharp.Signatures
 			{
 				return false;
 			}
-			catch (OCSPException)
+			catch (OcspException)
 			{
 				return false;
 			}
@@ -405,7 +406,7 @@ namespace iTextSharp.Signatures
 		/// <param name="signCert">the signing certificate</param>
 		/// <param name="issuerCert">the issuer certificate</param>
 		/// <returns>an OCSP response</returns>
-		public virtual BasicOCSPResp GetOcspResponse(X509Certificate signCert, X509Certificate
+		public virtual BasicOcspResp GetOcspResponse(X509Certificate signCert, X509Certificate
 			 issuerCert)
 		{
 			if (signCert == null && issuerCert == null)
@@ -413,16 +414,16 @@ namespace iTextSharp.Signatures
 				return null;
 			}
 			OcspClientBouncyCastle ocsp = new OcspClientBouncyCastle(null);
-			BasicOCSPResp ocspResp = ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
+			BasicOcspResp ocspResp = ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
 			if (ocspResp == null)
 			{
 				return null;
 			}
-			SingleResp[] resps = ocspResp.GetResponses();
+			SingleResp[] resps = ocspResp.Responses;
 			foreach (SingleResp resp in resps)
 			{
 				Object status = resp.GetCertStatus();
-				if (status == CertificateStatus.GOOD)
+				if (status == CertificateStatus.Good)
 				{
 					return ocspResp;
 				}
