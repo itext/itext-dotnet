@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -131,5 +132,13 @@ namespace iTextSharp.Kernel {
 
             return item;
         }
-    }
+
+		public static bool IsEmpty<T>(this ICollection<T> collection) {
+			return collection.Count == 0;
+		}
+
+		public static bool IsEmpty(this ICollection collection) {
+			return collection.Count == 0;
+		}
+	}
 }
