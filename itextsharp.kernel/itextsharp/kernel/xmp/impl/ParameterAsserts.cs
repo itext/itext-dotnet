@@ -33,7 +33,7 @@ using iTextSharp.Kernel.Xmp;
 namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <since>11.08.2006</since>
-	internal class ParameterAsserts
+	internal class ParameterAsserts : XmpConst
 	{
 		/// <summary>private constructor</summary>
 		private ParameterAsserts()

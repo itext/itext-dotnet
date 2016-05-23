@@ -37,7 +37,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Utilities for <code>XMPNode</code>.</summary>
 	/// <since>Aug 28, 2006</since>
-	public class XmpNodeUtils
+	public class XmpNodeUtils : XmpConst
 	{
 		internal const int CLT_NO_VALUES = 0;
 

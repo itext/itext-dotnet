@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (rdfRdfNode.Attributes != null && rdfRdfNode.Attributes.Count > 0) {
 				Rdf_NodeElementList(xmp, xmp.GetRoot(), rdfRdfNode);
 			} else {
-				throw new XmpException("Invalid attributes of rdf:RDF element", BADRDF);
+				throw new XmpException("Invalid attributes of rdf:RDF element", XmpError.BADRDF);
 			}
 		}
 
@@ -168,14 +168,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			int nodeTerm = GetRDFTermKind(xmlNode);
 			if (nodeTerm != RDFTERM_DESCRIPTION && nodeTerm != RDFTERM_OTHER)
 			{
-				throw new XmpException("Node element must be rdf:Description or typed node", BADRDF
+				throw new XmpException("Node element must be rdf:Description or typed node", XmpError.BADRDF
 					);
 			}
 			else
 			{
 				if (isTopLevel && nodeTerm == RDFTERM_OTHER)
 				{
-					throw new XmpException("Top level typed node not allowed", BADXMP);
+					throw new XmpException("Top level typed node not allowed", XmpError.BADXMP);
 				}
 				else
 				{
@@ -237,7 +237,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					case RDFTERM_ABOUT:
 						if (exclusiveAttrs > 0) {
 							throw new XmpException("Mutally exclusive about, ID, nodeID attributes",
-								BADRDF);
+								XmpError.BADRDF);
 						}
 
 						exclusiveAttrs++;
@@ -250,7 +250,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							if (!string.IsNullOrEmpty(xmpParent.GetName())) {
 								if (!xmpParent.GetName().Equals(attribute.Value)) {
 									throw new XmpException("Mismatched top level rdf:about values",
-										BADXMP);
+										XmpError.BADXMP);
 								}
 							}
 							else {
@@ -264,7 +264,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						break;
 
 					default:
-						throw new XmpException("Invalid nodeElement attribute", BADRDF);
+						throw new XmpException("Invalid nodeElement attribute", XmpError.BADRDF);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					continue;
 				}
 				if (currChild.NodeType != XmlNodeType.Element) {
-					throw new XmpException("Expected property element node not found", BADRDF);
+					throw new XmpException("Expected property element node not found", XmpError.BADRDF);
 				}
 				Rdf_PropertyElement(xmp, xmpParent, currChild, isTopLevel);
 			}
@@ -386,7 +386,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			int nodeTerm = GetRDFTermKind(xmlNode);
 			if (!IsPropertyElementName(nodeTerm)) {
-				throw new XmpException("Invalid property element name", BADRDF);
+				throw new XmpException("Invalid property element name", XmpError.BADRDF);
 			}
 
 			// remove the namespace-definitions from the list
@@ -517,7 +517,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					else if ("ID".Equals(attrLocal) && NS_RDF.Equals(attrNs)) {
 						continue; // Ignore all rdf:ID attributes.
 					}
-					throw new XmpException("Invalid attribute for resource property element", BADRDF);
+					throw new XmpException("Invalid attribute for resource property element", XmpError.BADRDF);
 				}
 			}
 
@@ -549,7 +549,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 								string typeName = currChild.NamespaceURI;
 								if (typeName == null) {
 									throw new XmpException("All XML elements must be in a namespace",
-										BADXMP);
+										XmpError.BADXMP);
 								}
 								typeName += ':' + childLocal;
 								AddQualifierNode(newCompound, "rdf:type", typeName);
@@ -569,18 +569,18 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					}
 					else if (found) {
 						// found second child element
-						throw new XmpException("Invalid child of resource property element", BADRDF);
+						throw new XmpException("Invalid child of resource property element", XmpError.BADRDF);
 					}
 					else {
 						throw new XmpException("Children of resource property element must be XML elements",
-							BADRDF);
+							XmpError.BADRDF);
 					}
 				}
 			}
 
 			if (!found) {
 				// didn't found any child elements
-				throw new XmpException("Missing child of resource property element", BADRDF);
+				throw new XmpException("Missing child of resource property element", XmpError.BADRDF);
 			}
 		}
 
@@ -615,7 +615,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					} else if (NS_RDF.Equals(attrNs) && ("ID".Equals(attrLocal) || "datatype".Equals(attrLocal))) {
 						continue; // Ignore all rdf:ID and rdf:datatype attributes.
 					} else
-						throw new XmpException("Invalid attribute for literal property element", BADRDF);
+						throw new XmpException("Invalid attribute for literal property element", XmpError.BADRDF);
 				}
 			}
 			String textValue = "";
@@ -625,7 +625,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					textValue += child.Value;
 				}
 				else {
-					throw new XmpException("Invalid child of literal property element", BADRDF);
+					throw new XmpException("Invalid child of literal property element", XmpError.BADRDF);
 				}
 			}
 			newChild.SetValue(textValue);
@@ -641,7 +641,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeLiteralPropertyElement()
 		{
-			throw new XmpException("ParseTypeLiteral property element not allowed", BADXMP);
+			throw new XmpException("ParseTypeLiteral property element not allowed", XmpError.BADXMP);
 		}
 
 		/// <summary>
@@ -689,7 +689,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// Ignore all rdf:ID attributes.
 					}
 					throw new XmpException("Invalid attribute for ParseTypeResource property element",
-						BADRDF);
+						XmpError.BADRDF);
 				}
 			}
 
@@ -710,7 +710,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeCollectionPropertyElement()
 		{
-			throw new XmpException("ParseTypeCollection property element not allowed", BADXMP
+			throw new XmpException("ParseTypeCollection property element not allowed", XmpError.BADXMP
 				);
 		}
 
@@ -723,7 +723,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">thown on parsing errors</exception>
 		private static void Rdf_ParseTypeOtherPropertyElement()
 		{
-			throw new XmpException("ParseTypeOther property element not allowed", BADXMP);
+			throw new XmpException("ParseTypeOther property element not allowed", XmpError.BADXMP);
 		}
 
 		/// <summary>
@@ -790,7 +790,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			if (xmlNode.HasChildNodes) {
 				throw new XmpException("Nested content not allowed with rdf:resource or property attributes",
-					BADRDF);
+					XmpError.BADRDF);
 			}
 
 			// First figure out what XMP this maps to and remember the XML node for a simple value.
@@ -812,12 +812,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							if (hasNodeIdAttr) {
 								throw new XmpException(
 									"Empty property element can't have both rdf:resource and rdf:nodeID",
-									BADRDF);
+									XmpError.BADRDF);
 							}
 							if (hasValueAttr) {
 								throw new XmpException(
 									"Empty property element can't have both rdf:value and rdf:resource",
-									BADXMP);
+									XmpError.BADXMP);
 							}
 
 							hasResourceAttr = true;
@@ -830,7 +830,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 							if (hasResourceAttr) {
 								throw new XmpException(
 									"Empty property element can't have both rdf:resource and rdf:nodeID",
-									BADRDF);
+									XmpError.BADRDF);
 							}
 							hasNodeIdAttr = true;
 							break;
@@ -840,7 +840,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 								if (hasResourceAttr) {
 									throw new XmpException(
 										"Empty property element can't have both rdf:value and rdf:resource",
-										BADXMP);
+										XmpError.BADXMP);
 								}
 								hasValueAttr = true;
 								valueNode = attribute;
@@ -852,7 +852,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 						default:
 							throw new XmpException("Unrecognized attribute of empty property element",
-								BADRDF);
+								XmpError.BADRDF);
 					}
 				}
 			}
@@ -910,7 +910,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 						default:
 							throw new XmpException("Unrecognized attribute of empty property element",
-								BADRDF);
+								XmpError.BADRDF);
 					}
 				}
 			}
@@ -945,7 +945,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			else {
 				throw new XmpException("XML namespace required for all elements and attributes",
-					BADRDF);
+					XmpError.BADRDF);
 			}
 
 
@@ -989,14 +989,14 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			if (isValueNode) {
 				if (isTopLevel || !xmpParent.Options.Struct) {
-					throw new XmpException("Misplaced rdf:value element", BADRDF);
+					throw new XmpException("Misplaced rdf:value element", XmpError.BADRDF);
 				}
 				xmpParent.SetHasValueChild(true);
 			}
 
 			if (isArrayItem) {
 				if (!xmpParent.GetOptions().IsArray()) {
-					throw new XmpException("Misplaced rdf:li element", BADRDF);
+					throw new XmpException("Misplaced rdf:li element", XmpError.BADRDF);
 				}
 				newChild.SetName(ARRAY_ITEM_NAME);
 			}
@@ -1050,7 +1050,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				if (xmpParent.GetOptions().GetHasLanguage())
 				{
-					throw new XmpException("Redundant xml:lang for rdf:value element", BADXMP);
+					throw new XmpException("Redundant xml:lang for rdf:value element", XmpError.BADXMP);
 				}
 				XmpNode langQual = valueNode.GetQualifier(1);
 				valueNode.RemoveQualifier(langQual);

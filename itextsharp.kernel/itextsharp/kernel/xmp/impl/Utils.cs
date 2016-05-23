@@ -35,7 +35,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 {
 	/// <summary>Utility functions for the XMPToolkit implementation.</summary>
 	/// <since>06.06.2006</since>
-	public class Utils
+	public class Utils : XmpConst
 	{
 		/// <summary>segments of a UUID</summary>
 		public const int UUID_SEGMENT_COUNT = 4;

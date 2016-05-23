@@ -45,7 +45,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	/// is only one single instance used by the toolkit.
 	/// </remarks>
 	/// <since>27.01.2006</since>
-	public sealed class XmpSchemaRegistryImpl : XmpSchemaRegistry
+	public sealed class XmpSchemaRegistryImpl : XmpConst, XmpSchemaRegistry
 	{
 		/// <summary>a map from a namespace URI to its registered prefix</summary>
 		private IDictionary<String, String> namespaceToPrefixMap = new Dictionary<String, 
