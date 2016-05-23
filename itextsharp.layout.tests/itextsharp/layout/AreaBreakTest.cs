@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -29,7 +29,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "pageBreak1.pdf";
 			String cmpFileName = sourceFolder + "cmp_pageBreak1.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new AreaBreak());
@@ -45,7 +45,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "pageBreak2.pdf";
 			String cmpFileName = sourceFolder + "cmp_pageBreak2.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph("Hello World!")).Add(new AreaBreak(new PageSize(200, 200
@@ -62,7 +62,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "pageBreak3.pdf";
 			String cmpFileName = sourceFolder + "cmp_pageBreak3.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.SetRenderer(new ColumnDocumentRenderer(document, new Rectangle[] { new Rectangle

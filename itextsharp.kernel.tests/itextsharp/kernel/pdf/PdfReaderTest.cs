@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using Java.Lang;
 using NUnit.Framework;
 using iTextSharp.IO;
@@ -35,7 +34,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void OpenSimpleDoc()
 		{
 			String filename = destinationFolder + "openSimpleDoc.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -122,7 +121,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void PrimitivesRead()
 		{
 			String filename = destinationFolder + "primitivesRead.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
@@ -159,7 +158,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void IndirectsChain1()
 		{
 			String filename = destinationFolder + "indirectsChain1.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
@@ -212,7 +211,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void IndirectsChain2()
 		{
 			String filename = destinationFolder + "indirectsChain2.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();

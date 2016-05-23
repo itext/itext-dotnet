@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -52,7 +52,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "defaultTabTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -203,7 +203,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_outOfPageBoundsTest.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -255,7 +255,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="Java.IO.FileNotFoundException"/>
 		private Document InitDocument(String outFileName)
 		{
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());

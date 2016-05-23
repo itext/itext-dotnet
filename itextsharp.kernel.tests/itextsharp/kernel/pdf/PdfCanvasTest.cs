@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Java.Awt;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Font;
@@ -46,8 +45,8 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "simpleCanvas.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "simpleCanvas.pdf", FileMode.
+				Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -80,8 +79,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + fileName, FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + fileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -124,8 +122,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + fileName, FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + fileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -173,7 +170,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "simpleCanvasWithPageFlush.pdf"
+			FileStream fos = new FileStream(destinationFolder + "simpleCanvasWithPageFlush.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -208,7 +205,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "simpleCanvasWithFullCompression.pdf"
+			FileStream fos = new FileStream(destinationFolder + "simpleCanvasWithFullCompression.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
@@ -243,7 +240,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "simpleCanvasWithPageFlushAndFullCompression.pdf"
+			FileStream fos = new FileStream(destinationFolder + "simpleCanvasWithPageFlushAndFullCompression.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
@@ -281,7 +278,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -326,7 +323,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -371,7 +368,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -416,7 +413,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
@@ -460,7 +457,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -506,7 +503,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -552,7 +549,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -598,7 +595,7 @@ namespace iTextSharp.Kernel.Pdf
 			String author = "Alexander Chingarev";
 			String creator = "iText 6";
 			String title = "Empty iText 6 Document";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode
 				(true));
 			PdfDocument pdfDoc = new PdfDocument(writer);
@@ -642,7 +639,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String file1 = destinationFolder + "copyPages1_1.pdf";
 			String file2 = destinationFolder + "copyPages1_2.pdf";
-			PdfWriter writer1 = new PdfWriter(new FileOutputStream(file1, FileMode.Create));
+			PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page1);
@@ -659,7 +656,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader1 = new PdfReader(new FileStream(file1, FileMode.Open));
 			pdfDoc1 = new PdfDocument(reader1);
 			page1 = pdfDoc1.GetPage(1);
-			FileOutputStream fos2 = new FileOutputStream(file2, FileMode.Create);
+			FileStream fos2 = new FileStream(file2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = page1.CopyTo(pdfDoc2);
@@ -689,7 +686,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String file1 = destinationFolder + "copyPages2_1.pdf";
 			String file2 = destinationFolder + "copyPages2_2.pdf";
-			PdfWriter writer1 = new PdfWriter(new FileOutputStream(file1, FileMode.Create));
+			PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			for (int i = 0; i < 10; i++)
 			{
@@ -707,7 +704,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			pdfDoc1.Close();
 			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(file2, FileMode.Create));
+			PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			for (int i_1 = 9; i_1 >= 0; i_1--)
 			{
@@ -742,7 +739,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String file1 = destinationFolder + "copyPages3_1.pdf";
 			String file2 = destinationFolder + "copyPages3_2.pdf";
-			PdfWriter writer1 = new PdfWriter(new FileOutputStream(file1, FileMode.Create));
+			PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page1);
@@ -758,7 +755,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc1.Close();
 			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
 			page1 = pdfDoc1.GetPage(1);
-			PdfWriter writer2 = new PdfWriter(new FileOutputStream(file2, FileMode.Create));
+			PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			for (int i = 0; i < 10; i++)
 			{
@@ -794,7 +791,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyPagesTest4()
 		{
 			String file1 = destinationFolder + "copyPages4_1.pdf";
-			FileOutputStream fos1 = new FileOutputStream(file1, FileMode.Create);
+			FileStream fos1 = new FileStream(file1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			for (int i = 0; i < 5; i++)
@@ -814,7 +811,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
 			for (int i_1 = 0; i_1 < 5; i_1++)
 			{
-				FileOutputStream fos2 = new FileOutputStream(destinationFolder + String.Format("copyPages4_{0}.pdf"
+				FileStream fos2 = new FileStream(destinationFolder + String.Format("copyPages4_{0}.pdf"
 					, i_1 + 2), FileMode.Create);
 				PdfWriter writer2 = new PdfWriter(fos2);
 				PdfDocument pdfDoc2 = new PdfDocument(writer2);
@@ -847,7 +844,7 @@ namespace iTextSharp.Kernel.Pdf
 			int documentCount = 3;
 			for (int i = 0; i < documentCount; i++)
 			{
-				FileOutputStream fos1 = new FileOutputStream(destinationFolder + String.Format("copyPages5_{0}.pdf"
+				FileStream fos1 = new FileStream(destinationFolder + String.Format("copyPages5_{0}.pdf"
 					, i + 1), FileMode.Create);
 				PdfWriter writer1 = new PdfWriter(fos1);
 				PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -871,8 +868,8 @@ namespace iTextSharp.Kernel.Pdf
 				PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(fos1));
 				docs.Add(pdfDoc1);
 			}
-			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copyPages5_4.pdf"
-				, FileMode.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copyPages5_4.pdf", FileMode
+				.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			for (int i_2 = 0; i_2 < 3; i_2++)
@@ -911,7 +908,7 @@ namespace iTextSharp.Kernel.Pdf
 			String file2 = destinationFolder + "copyPages6_2.pdf";
 			String file3 = destinationFolder + "copyPages6_3.pdf";
 			String file1_upd = destinationFolder + "copyPages6_1_upd.pdf";
-			FileOutputStream fos1 = new FileOutputStream(file1, FileMode.Create);
+			FileStream fos1 = new FileStream(file1, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -926,13 +923,13 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Release();
 			pdfDoc1.Close();
 			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
-			FileOutputStream fos2 = new FileOutputStream(file2, FileMode.Create);
+			FileStream fos2 = new FileStream(file2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			pdfDoc2.AddPage(pdfDoc1.GetPage(1).CopyTo(pdfDoc2));
 			pdfDoc2.Close();
 			pdfDoc2 = new PdfDocument(new PdfReader(new FileStream(file2, FileMode.Open)));
-			FileOutputStream fos3 = new FileOutputStream(file3, FileMode.Create);
+			FileStream fos3 = new FileStream(file3, FileMode.Create);
 			PdfWriter writer3 = new PdfWriter(fos3);
 			PdfDocument pdfDoc3 = new PdfDocument(writer3);
 			pdfDoc3.AddPage(pdfDoc2.GetPage(1).CopyTo(pdfDoc3));
@@ -940,7 +937,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc3 = new PdfDocument(new PdfReader(new FileStream(file3, FileMode.Open)));
 			pdfDoc1.Close();
 			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)), new 
-				PdfWriter(new FileOutputStream(file1_upd, FileMode.Create)));
+				PdfWriter(new FileStream(file1_upd, FileMode.Create)));
 			pdfDoc1.AddPage(pdfDoc3.GetPage(1).CopyTo(pdfDoc1));
 			pdfDoc1.Close();
 			pdfDoc2.Close();
@@ -1003,8 +1000,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void MarkedContentTest2()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "markedContentTest2.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "markedContentTest2.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1072,8 +1069,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest01()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest01.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest01.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1097,8 +1094,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest02()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest02.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest02.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -1139,8 +1136,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest03()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest03.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest03.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -1197,8 +1194,8 @@ namespace iTextSharp.Kernel.Pdf
 			byte[] bytes = baos.ToArray();
 			PdfReader reader = new PdfReader(new MemoryStream(bytes));
 			document = new PdfDocument(reader);
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest04.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest04.pdf", FileMode.Create
+				);
 			writer = new PdfWriter(fos);
 			PdfDocument newDocument = new PdfDocument(writer);
 			newDocument.AddPage(document.GetPage(1).CopyTo(newDocument));
@@ -1213,8 +1210,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest05()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest05.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest05.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1256,8 +1253,8 @@ namespace iTextSharp.Kernel.Pdf
 				bytes[k++] = (byte)i;
 				bytes[k++] = (byte)i;
 			}
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest06.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest06.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -1279,8 +1276,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest07()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest07.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest07.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -1307,8 +1304,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void ColorTest08()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "colorTest08.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "colorTest08.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -1347,8 +1344,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void WmfImageTest01()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest01.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "wmfImageTest01.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1366,8 +1363,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void WmfImageTest02()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest02.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "wmfImageTest02.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1385,8 +1382,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void WmfImageTest03()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest03.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "wmfImageTest03.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1404,8 +1401,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void WmfImageTest04()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "wmfImageTest04.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "wmfImageTest04.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1423,8 +1420,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest01()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest01.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest01.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1442,8 +1439,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest02()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest02.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest02.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1469,8 +1466,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest03()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest03.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest03.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1497,8 +1494,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest04()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest03.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest03.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1520,8 +1517,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest05()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "gifImageTest05.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest05.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
@@ -1602,8 +1599,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void InlineImagesTest01()
 		{
 			String filename = "inlineImages01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
+				.Create));
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
@@ -1636,8 +1633,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void InlineImagesTest02()
 		{
 			String filename = "inlineImages02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
+				.Create));
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
@@ -1680,8 +1677,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AwtImagesTest01()
 		{
 			String filename = "awtImagesTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
+				.Create));
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);

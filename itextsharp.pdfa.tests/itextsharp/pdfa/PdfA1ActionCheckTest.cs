@@ -13,7 +13,7 @@ namespace iTextSharp.Pdfa
 		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck01()
 		{
@@ -35,7 +35,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck02()
 		{
@@ -57,7 +57,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck03()
 		{
@@ -79,7 +79,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck04()
 		{
@@ -101,7 +101,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck05()
 		{
@@ -123,7 +123,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck06()
 		{
@@ -145,7 +145,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck07()
 		{
@@ -167,7 +167,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck08()
 		{
@@ -190,7 +190,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck09()
 		{
@@ -210,7 +210,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck10()
 		{
@@ -232,7 +232,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void ActionCheck11()
 		{

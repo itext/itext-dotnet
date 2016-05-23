@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
@@ -24,23 +24,23 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void CreatePdfTest()
 		{
 			String fileName = "xmp_metadata.pdf";
 			// step 1
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "xmp_metadata.pdf", FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			// step 2
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			XMPMeta xmp = XMPMetaFactory.Create();
-			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			XmpMeta xmp = XmpMetaFactory.Create();
+			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "Hello World", null);
-			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "XMP & Metadata", null);
-			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "Metadata", null);
 			pdfDocument.SetXmpMetadata(xmp);
 			// step 4

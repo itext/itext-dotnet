@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
@@ -27,7 +27,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void EgsTest1()
 		{
 			String destinationDocument = destinationFolder + "egsTest1.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationDocument, FileMode.Create);
+			FileStream fos = new FileStream(destinationDocument, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			//Create page and canvas

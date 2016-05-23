@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Source;
@@ -32,8 +31,8 @@ namespace iTextSharp.Kernel.Pdf
 				);
 			PdfReader reader1 = new PdfReader(fis1);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
-			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copySignedDocuments.pdf"
-				, FileMode.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode
+				.Create);
 			PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(fos2));
 			pdfDoc1.CopyPagesTo(1, 1, pdfDoc2);
 			pdfDoc2.Close();
@@ -51,8 +50,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void Copying1()
 		{
-			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copying1_1.pdf"
-				, FileMode.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
@@ -66,8 +65,8 @@ namespace iTextSharp.Kernel.Pdf
 				);
 			PdfReader reader1 = new PdfReader(fis1);
 			pdfDoc1 = new PdfDocument(reader1);
-			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copying1_2.pdf"
-				, FileMode.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copying1_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			pdfDoc2.AddNewPage();
@@ -89,8 +88,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void Copying2()
 		{
-			FileOutputStream fos1 = new FileOutputStream(destinationFolder + "copying2_1.pdf"
-				, FileMode.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			for (int i = 0; i < 10; i++)
@@ -105,8 +104,8 @@ namespace iTextSharp.Kernel.Pdf
 				);
 			PdfReader reader1 = new PdfReader(fis1);
 			pdfDoc1 = new PdfDocument(reader1);
-			FileOutputStream fos2 = new FileOutputStream(destinationFolder + "copying2_2.pdf"
-				, FileMode.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copying2_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			for (int i_1 = 0; i_1 < 10; i_1++)
@@ -134,8 +133,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void Copying3()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "copying3_1.pdf", 
-				FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "copying3_1.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -192,7 +191,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = sourceFolder + "fieldsOn2-sPage.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "copyDocumentsWithFormFields.pdf"
+			FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument sourceDoc = new PdfDocument(reader);

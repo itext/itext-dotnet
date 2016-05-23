@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Test;
 
@@ -27,8 +26,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateEmptyDocumentWithXmp()
 		{
 			String filename = "emptyDocumentWithXmp.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationFolder + filename, FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos, new WriterProperties().AddXmpMetadata());
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle
@@ -47,7 +45,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void CreateEmptyDocumentWithAbcXmp()
 		{

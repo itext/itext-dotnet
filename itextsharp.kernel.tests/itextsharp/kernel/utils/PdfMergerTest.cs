@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf;
@@ -34,7 +33,7 @@ namespace iTextSharp.Kernel.Utils
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
 			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
 			PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open));
-			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
+			FileStream fos1 = new FileStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -66,7 +65,7 @@ namespace iTextSharp.Kernel.Utils
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
 			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
 			PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open));
-			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
+			FileStream fos1 = new FileStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -96,7 +95,7 @@ namespace iTextSharp.Kernel.Utils
 			String resultFile = destinationFolder + "mergedResult03.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
 			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
-			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
+			FileStream fos1 = new FileStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -132,7 +131,7 @@ namespace iTextSharp.Kernel.Utils
 			String resultFile = destinationFolder + "mergedResult04.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
 			PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open));
-			FileOutputStream fos1 = new FileOutputStream(resultFile, FileMode.Create);
+			FileStream fos1 = new FileStream(resultFile, FileMode.Create);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);

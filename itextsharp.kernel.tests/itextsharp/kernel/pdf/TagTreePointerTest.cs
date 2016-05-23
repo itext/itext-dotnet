@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel;
@@ -29,8 +29,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void TagTreePointerTest01()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "tagTreePointerTest01.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest01.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
 				);
 			PdfDocument document = new PdfDocument(writer);
@@ -69,8 +69,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void TagTreePointerTest02()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "tagTreePointerTest02.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest02.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);

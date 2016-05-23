@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
@@ -49,7 +49,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			SolidBorder border = new SolidBorder(0.5f);
@@ -80,7 +80,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String longText = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
@@ -100,7 +100,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest03.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String simpleText = "text simple text";
@@ -124,7 +124,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest04.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String simpleText = "text simple text";
@@ -147,7 +147,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph();
@@ -171,7 +171,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph(para1Text));
@@ -192,7 +192,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest03.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph(para1Text));
@@ -212,7 +212,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest04.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph(para1Text));
@@ -231,7 +231,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph(para1Text));
@@ -251,7 +251,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph(para1Text));
@@ -277,7 +277,7 @@ namespace iTextSharp.Layout
 			String fileName = "rotationInfiniteLoopTest01.pdf";
 			String outFileName = destinationFolder + fileName;
 			String cmpFileName = sourceFolder + cmpPrefix + fileName;
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
 			Document document = new Document(pdfDocument);
@@ -296,7 +296,7 @@ namespace iTextSharp.Layout
 			String fileName = "rotationInfiniteLoopTest02.pdf";
 			String outFileName = destinationFolder + fileName;
 			String cmpFileName = sourceFolder + cmpPrefix + fileName;
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
 			Document document = new Document(pdfDocument);
@@ -313,7 +313,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "tableRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -335,7 +335,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "divRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -359,7 +359,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "divRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -387,7 +387,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "listRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -411,7 +411,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "listRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -439,7 +439,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "alignedTextRotationTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -462,7 +462,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "innerRotationTest01.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -482,7 +482,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "innerRotationTest02.pdf";
 			String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);

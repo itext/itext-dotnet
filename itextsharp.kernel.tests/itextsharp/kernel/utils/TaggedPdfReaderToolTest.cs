@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
@@ -38,7 +39,7 @@ namespace iTextSharp.Kernel.Utils
 			String cmpXmlPath = sourceFolder + "cmpXml01.xml";
 			PdfReader reader = new PdfReader(sourceFolder + filename);
 			PdfDocument document = new PdfDocument(reader);
-			FileOutputStream outXml = new FileOutputStream(outXmlPath, FileMode.Create);
+			FileStream outXml = new FileStream(outXmlPath, FileMode.Create);
 			TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
 			tool.SetRootTag("root");
 			tool.ConvertToXml(outXml);

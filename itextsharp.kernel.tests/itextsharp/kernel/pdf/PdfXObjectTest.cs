@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
@@ -35,7 +36,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateDocumentFromImages1()
 		{
 			String destinationDocument = destinationFolder + "documentFromImages1.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationDocument, FileMode.Create);
+			FileStream fos = new FileStream(destinationDocument, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfImageXObject[] images = new PdfImageXObject[4];
@@ -78,7 +79,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateDocumentFromImages2()
 		{
 			String destinationDocument = destinationFolder + "documentFromImages2.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationDocument, FileMode.Create);
+			FileStream fos = new FileStream(destinationDocument, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			ImageData image = ImageDataFactory.Create(sourceFolder + "itext.jpg");
@@ -99,7 +100,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateDocumentWithForms()
 		{
 			String destinationDocument = destinationFolder + "documentWithForms1.pdf";
-			FileOutputStream fos = new FileOutputStream(destinationDocument, FileMode.Create);
+			FileStream fos = new FileStream(destinationDocument, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			//Create form XObject and flush to document.

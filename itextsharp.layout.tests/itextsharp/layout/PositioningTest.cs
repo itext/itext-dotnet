@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Geom;
@@ -32,7 +32,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "relativePositioningTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth
@@ -52,7 +52,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "relativePositioningTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth
@@ -73,7 +73,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 
@@ -92,7 +92,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.GetPdfDocument().AddNewPage();
@@ -113,7 +113,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			pdfDocument.AddNewPage();
@@ -191,7 +191,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String watermarkText = "WATERMARK";

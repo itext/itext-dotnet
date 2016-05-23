@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
@@ -31,7 +31,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
 			String cmpFileName = sourceFolder + "cmp_multipleAdditionsOfSameModelElementTest1.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p = new Paragraph("Hello. I am a paragraph. I want you to process me correctly"
@@ -49,7 +49,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "rendererTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_rendererTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
@@ -69,7 +69,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			// the next 3 lines should not cause any effect
@@ -95,7 +95,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "emptyParagraphsTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest02.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph("Hello, i'm the text of the first paragraph on the first line. Let's break me and meet on the next line!\nSee? I'm on the second line. Now let's create some empty lines,\n for example one\n\nor two\n\n\nor three\n\n\n\nNow let's do something else"

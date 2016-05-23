@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Font;
@@ -32,8 +31,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void StructElemTest01()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest01.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest01.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -84,8 +83,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void StructElemTest02()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest02.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest02.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -121,8 +120,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void StructElemTest03()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest03.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest03.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -212,8 +211,8 @@ namespace iTextSharp.Kernel.Pdf
 			document.Close();
 			byte[] bytes = baos.ToArray();
 			PdfReader reader = new PdfReader(new MemoryStream(bytes));
-			writer = new PdfWriter(new FileOutputStream(destinationFolder + "structElemTest04.pdf"
-				, FileMode.Create));
+			writer = new PdfWriter(new FileStream(destinationFolder + "structElemTest04.pdf", 
+				FileMode.Create));
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			document = new PdfDocument(reader, writer);
 			page = document.GetPage(1);
@@ -245,8 +244,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void StructElemTest05()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest05.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest05.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -292,8 +291,8 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void StructElemTest06()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "structElemTest06.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest06.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -329,7 +328,7 @@ namespace iTextSharp.Kernel.Pdf
 				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest01.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest01.pdf"
 				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
@@ -364,7 +363,7 @@ namespace iTextSharp.Kernel.Pdf
 				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest02.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest02.pdf"
 				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
@@ -386,7 +385,7 @@ namespace iTextSharp.Kernel.Pdf
 				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest03.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest03.pdf"
 				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.InitializeOutlines();
@@ -409,7 +408,7 @@ namespace iTextSharp.Kernel.Pdf
 				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest04.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest04.pdf"
 				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
@@ -430,7 +429,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest05.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest05.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
@@ -457,7 +456,7 @@ namespace iTextSharp.Kernel.Pdf
 				Open);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest06.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest06.pdf"
 				, FileMode.Create));
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
@@ -475,7 +474,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest07.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest07.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(writer);
 			document.SetTagged();
@@ -512,7 +511,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest08.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest08.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
@@ -532,7 +531,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest09.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest09.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
@@ -553,7 +552,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "88th_Academy_Awards.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "structTreeCopyingTest10.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest10.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"

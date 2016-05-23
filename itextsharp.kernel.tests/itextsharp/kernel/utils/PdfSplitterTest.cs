@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
@@ -61,7 +62,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument1_"
+					return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument1_"
 						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
@@ -104,7 +105,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument2_"
+					return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument2_"
 						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
@@ -178,7 +179,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitDocument3_"
+					return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument3_"
 						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)
@@ -243,7 +244,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					return new PdfWriter(new FileOutputStream(PdfSplitterTest.destinationFolder + "splitBySize_part"
+					return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitBySize_part"
 						 + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
 				}
 				catch (FileNotFoundException)

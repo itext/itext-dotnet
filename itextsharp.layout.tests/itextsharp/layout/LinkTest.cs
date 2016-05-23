@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Action;
@@ -29,7 +29,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "linkTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_linkTest01.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -48,7 +48,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "linkTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_linkTest02.pdf";
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);

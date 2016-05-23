@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Pdf;
@@ -208,7 +208,7 @@ namespace iTextSharp.Layout
 		{
 			outFileName = destinationFolder + fileName;
 			cmpFileName = sourceFolder + cmpPrefix + fileName;
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			return new Document(pdfDocument);
 		}

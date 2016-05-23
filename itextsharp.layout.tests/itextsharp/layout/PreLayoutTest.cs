@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
@@ -34,7 +34,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "preLayoutTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument, PageSize.Default, false);
 			IList<Text> pageNumberTexts = new List<Text>();
@@ -75,8 +75,8 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "preLayoutTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				, FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
+				.Create)));
 			Document document = new Document(pdfDoc, PageSize.Default, false);
 			document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 			StringBuilder text = new StringBuilder();
@@ -85,7 +85,7 @@ namespace iTextSharp.Layout
 				text.Append("A very long text is here...");
 			}
 			Paragraph twoColumnParagraph = new Paragraph();
-			twoColumnParagraph.SetNextRenderer(new _T802745355(this, twoColumnParagraph));
+			twoColumnParagraph.SetNextRenderer(new _T746118038(this, twoColumnParagraph));
 			iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text
 				.ToString());
 			twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants
@@ -104,7 +104,7 @@ namespace iTextSharp.Layout
 					break;
 				}
 			}
-			twoColumnParagraph.SetNextRenderer(new _T802745355(this, twoColumnParagraph, paragraphLastPageNumber
+			twoColumnParagraph.SetNextRenderer(new _T746118038(this, twoColumnParagraph, paragraphLastPageNumber
 				));
 			document.Relayout();
 			//Close document. Drawing of content is happened on close
@@ -113,17 +113,17 @@ namespace iTextSharp.Layout
 				, destinationFolder, "diff"));
 		}
 
-		internal class _T802745355 : ParagraphRenderer
+		internal class _T746118038 : ParagraphRenderer
 		{
 			internal int oneColumnPage = -1;
 
-			public _T802745355(PreLayoutTest _enclosing, Paragraph modelElement)
+			public _T746118038(PreLayoutTest _enclosing, Paragraph modelElement)
 				: base(modelElement)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public _T802745355(PreLayoutTest _enclosing, Paragraph modelElement, int oneColumnPage
+			public _T746118038(PreLayoutTest _enclosing, Paragraph modelElement, int oneColumnPage
 				)
 				: this(modelElement)
 			{
@@ -153,7 +153,7 @@ namespace iTextSharp.Layout
 
 			public override IRenderer GetNextRenderer()
 			{
-				return new _T802745355(this, (Paragraph)this.modelElement, this.oneColumnPage);
+				return new _T746118038(this, (Paragraph)this.modelElement, this.oneColumnPage);
 			}
 
 			private readonly PreLayoutTest _enclosing;

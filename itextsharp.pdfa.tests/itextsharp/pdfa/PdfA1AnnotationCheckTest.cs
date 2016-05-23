@@ -25,7 +25,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest01()
 		{
@@ -47,7 +47,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest02()
 		{
@@ -71,7 +71,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest03()
 		{
@@ -94,7 +94,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest04()
 		{
@@ -118,7 +118,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest05()
 		{
@@ -144,7 +144,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest06()
 		{
@@ -168,7 +168,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void AnnotationCheckTest07()
@@ -191,7 +191,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="Java.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AnnotationCheckTest08()
 		{
@@ -216,7 +216,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XMPException"/>
+		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
 		public virtual void AnnotationCheckTest09()

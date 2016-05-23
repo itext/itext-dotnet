@@ -157,8 +157,8 @@ namespace iTextSharp.Signatures
 			 setReuseAppearance)
 		{
 			PdfReader reader = new PdfReader(src);
-			PdfSigner signer = new PdfSigner(reader, new FileOutputStream(dest, FileMode.Create
-				), false);
+			PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), false
+				);
 			// Creating the appearance
 			PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason
 				).SetLocation(location).SetReuseAppearance(setReuseAppearance);

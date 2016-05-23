@@ -1,6 +1,6 @@
 using System;
+using System.IO;
 using System.Text;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Image;
@@ -36,7 +36,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TextInParagraphTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "textInParagraphTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -57,7 +57,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void ImageTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "imageTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -75,7 +75,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void DivTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "divTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -100,7 +100,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TableTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -131,7 +131,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TableTest02()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -153,7 +153,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TableTest03()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest03.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -183,7 +183,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TableTest04()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest04.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
@@ -217,7 +217,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "tableTest05.pdf";
 			String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest05.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
@@ -250,7 +250,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void TableTest06()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "tableTest06.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
@@ -286,7 +286,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void ListTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "listTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
@@ -306,7 +306,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void ArtifactTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "artifactTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -330,7 +330,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void ArtifactTest02()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "artifactTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -361,7 +361,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void FlushingTest01()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "flushingTest01.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document document = new Document(pdfDocument);
@@ -395,7 +395,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void FlushingTest02()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "flushingTest02.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);
@@ -437,7 +437,7 @@ namespace iTextSharp.Layout
 		[Test]
 		public virtual void FlushingTest03()
 		{
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "flushingTest03.pdf", FileMode.Create)));
 			pdfDocument.SetTagged();
 			Document doc = new Document(pdfDocument);

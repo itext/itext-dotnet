@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Image;
 using iTextSharp.IO.Source;
@@ -46,7 +45,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
 				, FileMode.Open));
 			String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			PdfArray array1 = new PdfArray();
@@ -108,8 +107,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void RemoveUnusedObjectsInWriterModeTest()
 		{
 			String filename = "removeUnusedObjectsInWriter.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
+				.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -133,8 +132,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filenameIn = "docWithUnusedObjects_1.pdf";
 			String filenameOut = "removeUnusedObjectsInStamping.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
+				.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -144,7 +143,7 @@ namespace iTextSharp.Kernel.Pdf
 			((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
 			pdfDocument.Close();
 			PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder
 				 + filenameOut, FileMode.Create)));
 			NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
 			//on closing, all unused objects shall not be written to resultant document
@@ -161,8 +160,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddUnusedObjectsInWriterModeTest()
 		{
 			String filename = "addUnusedObjectsInWriter.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
+				.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -186,8 +185,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filenameIn = "docWithUnusedObjects_2.pdf";
 			String filenameOut = "addUnusedObjectsInStamping.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
+				.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -197,7 +196,7 @@ namespace iTextSharp.Kernel.Pdf
 			((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
 			pdfDocument.Close();
 			PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder
 				 + filenameOut, FileMode.Create)));
 			NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
 			doc.SetFlushUnusedObjects(true);
@@ -214,8 +213,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddUnusedStreamObjectsTest()
 		{
 			String filenameIn = "docWithUnusedObjects_3.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filenameIn
-				, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
+				.Create));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();

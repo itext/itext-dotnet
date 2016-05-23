@@ -82,12 +82,12 @@ namespace iTextSharp.Pdfa
 				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
 					);
 			}
-			XMPMeta meta;
+			XmpMeta meta;
 			try
 			{
-				meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
+				meta = XmpMetaFactory.ParseFromBuffer(existingXmpMetadata);
 			}
-			catch (XMPException)
+			catch (XmpException)
 			{
 				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
 					);
@@ -246,20 +246,20 @@ namespace iTextSharp.Pdfa
 		{
 			try
 			{
-				XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
-				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel
+				XmpMeta xmpMeta = UpdateDefaultXmpMetadata();
+				xmpMeta.SetProperty(XmpConst.NS_PDFA_ID, XmpConst.PART, checker.GetConformanceLevel
 					().GetPart());
-				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel
+				xmpMeta.SetProperty(XmpConst.NS_PDFA_ID, XmpConst.CONFORMANCE, checker.GetConformanceLevel
 					().GetConformance());
 				if (this.IsTagged())
 				{
-					XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
+					XmpMeta taggedExtensionMeta = XmpMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
 						);
-					XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+					XmpUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
 				}
 				SetXmpMetadata(xmpMeta);
 			}
-			catch (XMPException e)
+			catch (XmpException e)
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Pdfa.PdfADocument));
 				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);

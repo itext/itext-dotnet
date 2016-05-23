@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Color;
@@ -32,7 +32,7 @@ namespace iTextSharp.Layout
 			// CountryChunks example
 			String outFileName = destinationFolder + "textRiseTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
@@ -57,7 +57,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_textRenderingModeTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
@@ -84,7 +84,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "leadingTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Paragraph p1 = new Paragraph("first, leading of 150").SetFixedLeading(150);
@@ -106,7 +106,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, 25);
@@ -145,7 +145,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "charSpacingTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
@@ -170,7 +170,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "wordSpacingTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
@@ -197,7 +197,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
 			String cmpFileName = sourceFolder + "cmp_fontStyleSimulationTest01.pdf";
-			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
+			PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			document.Add(new Paragraph("I'm underlined").SetUnderline());

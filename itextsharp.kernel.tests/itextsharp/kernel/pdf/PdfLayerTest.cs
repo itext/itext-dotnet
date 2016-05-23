@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
@@ -30,7 +29,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TestInStamperMode1()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 
-				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileOutputStream(destinationFolder
+				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileStream(destinationFolder
 				 + "output_copy_layered.pdf", FileMode.Create)));
 			pdfDoc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
@@ -44,7 +43,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void TestInStamperMode2()
 		{
 			PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + 
-				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileOutputStream(destinationFolder
+				"input_layered.pdf", FileMode.Open)), new PdfWriter(new FileStream(destinationFolder
 				 + "output_layered.pdf", FileMode.Create)));
 			PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
 			PdfLayer newLayer = new PdfLayer("appended", pdfDoc);

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
@@ -43,7 +44,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -63,7 +64,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest02.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -85,7 +86,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest03.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -112,7 +113,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest04.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -138,7 +139,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest05.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -163,7 +164,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest06.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -188,7 +189,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest07.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -213,7 +214,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest08.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -243,7 +244,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest09.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -276,7 +277,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest10.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -312,7 +313,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest11.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -348,7 +349,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest12.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -390,7 +391,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest13.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -424,7 +425,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest14.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -459,7 +460,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest15.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -497,7 +498,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest16.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -529,7 +530,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest17.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -560,7 +561,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest18.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -592,7 +593,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest19.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -624,7 +625,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest20.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -652,7 +653,7 @@ namespace iTextSharp.Layout
 			String testName = "tableTest21.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -685,7 +686,7 @@ namespace iTextSharp.Layout
 			String testName = "bigRowspanTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -716,7 +717,7 @@ namespace iTextSharp.Layout
 			String testName = "bigRowspanTest02.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -747,7 +748,7 @@ namespace iTextSharp.Layout
 			String testName = "bigRowspanTest03.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -775,7 +776,7 @@ namespace iTextSharp.Layout
 			String testName = "bigRowspanTest04.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -806,7 +807,7 @@ namespace iTextSharp.Layout
 			String testName = "differentPageOrientationTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
@@ -858,8 +859,8 @@ namespace iTextSharp.Layout
 			String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(outFileName
-				, FileMode.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
+				.Create)));
 			Document doc = new Document(pdfDoc);
 			Table table = new Table(1);
 			Cell cell = new Cell();
@@ -888,7 +889,7 @@ namespace iTextSharp.Layout
 			String testName = "toLargeElementInTableTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(destinationFolder
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
 				 + "toLargeElementInTableTest01.pdf", FileMode.Create)));
 			Document doc = new Document(pdfDoc);
 			Table table = new Table(new float[] { 5 });
@@ -910,7 +911,7 @@ namespace iTextSharp.Layout
 			String testName = "nestedTableSkipHeaderFooter.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			FileOutputStream file = new FileOutputStream(outFileName, FileMode.Create);
+			FileStream file = new FileStream(outFileName, FileMode.Create);
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc, PageSize.A4.Rotate());

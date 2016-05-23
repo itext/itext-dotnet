@@ -1,5 +1,5 @@
 using System;
-using Java.IO;
+using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
@@ -31,7 +31,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherParagraphTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 29; i++)
@@ -55,7 +55,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest02.pdf";
 			String outFile = destinationFolder + "keepTogetherParagraphTest02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 28; i++)
@@ -82,7 +82,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherListTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			for (int i = 0; i < 28; i++)
@@ -105,7 +105,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
 			String outFile = destinationFolder + "keepTogetherDivTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			Paragraph p = new Paragraph("Test String");
@@ -132,7 +132,7 @@ namespace iTextSharp.Layout
 		{
 			String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest02.pdf";
 			String outFile = destinationFolder + "keepTogetherDivTest02.pdf";
-			PdfWriter writer = new PdfWriter(new FileOutputStream(outFile, FileMode.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
 			Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle

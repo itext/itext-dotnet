@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf.Navigation;
@@ -58,8 +57,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "addOutlinesResult.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "addOutlinesResult.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			pdfDoc.SetTagged();
@@ -99,7 +98,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "removePagesWithOutlinesResult.pdf"
+			FileStream fos = new FileStream(destinationFolder + "removePagesWithOutlinesResult.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -125,7 +124,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "updateOutlineTitleResult.pdf"
+			FileStream fos = new FileStream(destinationFolder + "updateOutlineTitleResult.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -152,7 +151,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
 			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf"
+			FileStream fos = new FileStream(destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
@@ -186,8 +185,8 @@ namespace iTextSharp.Kernel.Pdf
 		[SetUp]
 		public virtual void SetupCreateDocWithOutlines()
 		{
-			FileOutputStream fos = new FileOutputStream(destinationFolder + "documentWithOutlines.pdf"
-				, FileMode.Create);
+			FileStream fos = new FileStream(destinationFolder + "documentWithOutlines.pdf", FileMode
+				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
@@ -222,7 +221,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
 				, FileMode.Open));
-			PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + "copyPagesWithOutlines01.pdf"
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "copyPagesWithOutlines01.pdf"
 				, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(writer);
@@ -250,7 +249,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
 				, FileMode.Open));
 			String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(reader, writer);
 			PdfArray array1 = new PdfArray();
@@ -300,7 +299,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddOutlinesWithNamedDestinations02()
 		{
 			String filename = destinationFolder + "outlinesWithNamedDestinations02.pdf";
-			FileOutputStream fos = new FileOutputStream(filename, FileMode.Create);
+			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfArray array1 = new PdfArray();
