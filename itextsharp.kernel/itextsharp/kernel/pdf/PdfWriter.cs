@@ -113,13 +113,13 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		public PdfWriter(String filename)
 			: this(filename, new WriterProperties())
 		{
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		public PdfWriter(String filename, WriterProperties properties)
 			: this(FileUtil.GetBufferedOutputStream(filename), properties)
 		{

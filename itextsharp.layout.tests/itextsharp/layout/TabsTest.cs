@@ -252,7 +252,7 @@ namespace iTextSharp.Layout
 				, destinationFolder, "diff"));
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		private Document InitDocument(String outFileName)
 		{
 			FileStream file = new FileStream(outFileName, FileMode.Create);

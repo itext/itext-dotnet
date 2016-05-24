@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using Java.Security;
 using NUnit.Framework;
 using Org.BouncyCastle.Crypto;
@@ -40,13 +39,12 @@ namespace iTextSharp.Signatures
 		public virtual void Init()
 		{
 			provider = new BouncyCastleProvider();
-			Java.Security.Security.AddProvider(provider);
 			KeyStore ks = KeyStore.GetInstance(KeyStore.GetDefaultType());
 			ks.Load(new FileStream(keystorePath, FileMode.Open), password);
 			String alias = ks.Aliases().Current;
 			pk = (ICipherParameters)ks.GetKey(alias, password);
 			chain = ks.GetCertificateChain(alias);
-			new File(destinationFolder).Mkdirs();
+			new FileInfo(destinationFolder).Mkdirs();
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>

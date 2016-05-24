@@ -42,7 +42,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Layout.Property;
 using iTextSharp.Layout.Renderer;
@@ -125,8 +124,8 @@ namespace iTextSharp.Layout.Element
 		/// </returns>
 		public virtual AreaBreakType GetType()
 		{
-			return (AreaBreakType)((Object)GetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
-				));
+			return ((AreaBreakType)this.GetProperty<AreaBreakType>(iTextSharp.Layout.Property.Property
+				.AREA_BREAK_TYPE));
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

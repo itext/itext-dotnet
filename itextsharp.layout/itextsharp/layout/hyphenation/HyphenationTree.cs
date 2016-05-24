@@ -133,7 +133,7 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void LoadPatterns(String filename)
 		{
-			File f = new File(filename);
+			FileInfo f = new FileInfo(filename);
 			try
 			{
 				Uri url = f.ToURI().ToURL();

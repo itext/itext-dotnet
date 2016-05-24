@@ -1759,7 +1759,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			if (layerDepth != null && !layerDepth.IsEmpty())
 			{
 				num = (int)layerDepth[layerDepth.Count - 1];
-				layerDepth.RemoveAt(layerDepth.Count - 1);
+				layerDepth.JRemoveAt(layerDepth.Count - 1);
 			}
 			else
 			{

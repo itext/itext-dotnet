@@ -55,7 +55,6 @@ using Org.Bouncycastle.Asn1.Ocsp;
 using Org.Bouncycastle.Asn1.X509;
 using Org.Bouncycastle.Cert.Jcajce;
 using Org.Bouncycastle.Cert.Ocsp;
-using Org.Bouncycastle.Jce.Provider;
 using Org.Bouncycastle.Ocsp;
 using Org.Bouncycastle.Operator.Jcajce;
 using iTextSharp.IO;
@@ -185,7 +184,6 @@ namespace iTextSharp.Signatures
 			 serialNumber)
 		{
 			//Add provider BC
-			Java.Security.Security.AddProvider(new BouncyCastleProvider());
 			// Generate the id for the certificate we are looking for
 			CertificateID id = new CertificateID(new JcaDigestCalculatorProviderBuilder().Build
 				().Get(CertificateID.HASH_SHA1), new JcaX509CertificateHolder(issuerCert), serialNumber

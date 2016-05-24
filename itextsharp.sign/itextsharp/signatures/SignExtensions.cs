@@ -19,6 +19,13 @@ namespace iTextSharp.Signatures
             }
         }
 
+        public static T JRemoveAt<T>(this IList<T> list, int index) {
+            T value = list[index];
+            list.RemoveAt(index);
+
+            return value;
+        }
+
         public static int Read(this Stream stream, byte[] buffer)
         {
             return stream.Read(buffer, 0, buffer.Length);

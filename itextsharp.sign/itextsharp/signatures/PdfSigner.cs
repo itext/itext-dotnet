@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
@@ -118,7 +117,7 @@ namespace iTextSharp.Signatures
 		protected internal MemoryStream temporaryOS;
 
 		/// <summary>Tempfile to hold the output temporarily.</summary>
-		protected internal File tempFile;
+		protected internal FileInfo tempFile;
 
 		/// <summary>Name and content of keys that can only be added in the close() method.</summary>
 		protected internal IDictionary<PdfName, PdfLiteral> exclusionLocations;
@@ -170,10 +169,10 @@ namespace iTextSharp.Signatures
 		public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
 		{
 			StampingProperties properties = new StampingProperties().PreserveEncryption();
-			File tempFile = null;
+			FileInfo tempFile = null;
 			if (path != null)
 			{
-				tempFile = new File(path);
+				tempFile = new FileInfo(path);
 			}
 			if (append)
 			{
@@ -188,7 +187,7 @@ namespace iTextSharp.Signatures
 			{
 				if (tempFile.IsDirectory())
 				{
-					tempFile = File.CreateTempFile("pdf", null, tempFile);
+					tempFile = FileInfo.CreateTempFile("pdf", null, tempFile);
 				}
 				Stream os = new FileStream(tempFile, FileMode.Create);
 				this.tempFile = tempFile;

@@ -452,7 +452,7 @@ namespace iTextSharp.Kernel.Pdf
 						kidsCount -= lastPdfPages.GetCount();
 					}
 				}
-				parents.RemoveAt(parentIndex);
+				parents.JRemoveAt(parentIndex);
 				for (int i_2 = newParents.Count - 1; i_2 >= 0; i_2--)
 				{
 					parents.Insert(parentIndex, newParents[i_2]);
@@ -483,7 +483,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				if (pdfPages.GetCount() == 0)
 				{
-					parents.RemoveAt(parentIndex);
+					parents.JRemoveAt(parentIndex);
 					pdfPages.RemoveFromParent();
 					--parentIndex;
 				}
@@ -496,8 +496,8 @@ namespace iTextSharp.Kernel.Pdf
 				{
 					CorrectPdfPagesFromProperty(parentIndex + 1, -1);
 				}
-				pageRefs.RemoveAt(pageNum);
-				pages.RemoveAt(pageNum);
+				pageRefs.JRemoveAt(pageNum);
+				pages.JRemoveAt(pageNum);
 				return true;
 			}
 			else

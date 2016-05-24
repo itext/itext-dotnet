@@ -120,7 +120,7 @@ namespace iTextSharp.Layout.Element
 			{
 				foreach (Style style in styles)
 				{
-					result = style.GetProperty(property);
+					result = style.GetProperty<T1>(property);
 					if (result != null || base.HasProperty(property))
 					{
 						break;
@@ -144,7 +144,7 @@ namespace iTextSharp.Layout.Element
 				styles = new LinkedHashSet<Style>();
 			}
 			styles.Add(style);
-			return (T)this;
+			return (T)(Object)this;
 		}
 
 		protected internal abstract IRenderer MakeNewRenderer();
@@ -169,13 +169,13 @@ namespace iTextSharp.Layout.Element
 		public virtual T SetAction(PdfAction action)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
-			return (T)this;
+			return (T)(Object)this;
 		}
 
 		public virtual T SetPageNumber(int pageNumber)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
-			return (T)this;
+			return (T)(Object)this;
 		}
 	}
 }

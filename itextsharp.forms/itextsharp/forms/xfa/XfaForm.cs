@@ -45,7 +45,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using Javax.Xml.Parsers;
 using Org.W3c.Dom;
 using Org.Xml.Sax;
@@ -397,7 +396,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="Java.IO.File">
+		/// <see cref="System.IO.FileInfo">
 		/// file
 		/// object
 		/// </see>
@@ -406,13 +405,13 @@ namespace iTextSharp.Forms.Xfa
 		/// </remarks>
 		/// <param name="file">
 		/// the
-		/// <see cref="Java.IO.File"/>
+		/// <see cref="System.IO.FileInfo"/>
 		/// </param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
-		public virtual void FillXfaForm(File file)
+		public virtual void FillXfaForm(FileInfo file)
 		{
 			FillXfaForm(file, false);
 		}
@@ -420,7 +419,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
 		/// <remarks>
 		/// Replaces the XFA data under datasets/data. Accepts a
-		/// <see cref="Java.IO.File">
+		/// <see cref="System.IO.FileInfo">
 		/// file
 		/// object
 		/// </see>
@@ -428,14 +427,14 @@ namespace iTextSharp.Forms.Xfa
 		/// </remarks>
 		/// <param name="file">
 		/// the
-		/// <see cref="Java.IO.File"/>
+		/// <see cref="System.IO.FileInfo"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		/// <exception cref="System.IO.IOException">
 		/// on IO error on the
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
-		public virtual void FillXfaForm(File file, bool readOnly)
+		public virtual void FillXfaForm(FileInfo file, bool readOnly)
 		{
 			FillXfaForm(new FileStream(file, FileMode.Open), readOnly);
 		}

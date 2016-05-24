@@ -363,10 +363,10 @@ namespace iTextSharp.IO.Font.Otf
 
 		private void RemoveGlyph(int index)
 		{
-			glyphs.RemoveAt(index);
+			glyphs.JRemoveAt(index);
 			if (actualText != null)
 			{
-				actualText.RemoveAt(index);
+				actualText.JRemoveAt(index);
 			}
 		}
 

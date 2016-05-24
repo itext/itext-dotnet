@@ -69,7 +69,7 @@ namespace iTextSharp.Layout.Renderer
 			if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers
 				.Count - 1] == renderer)
 			{
-				childRenderers.RemoveAt(childRenderers.Count - 1);
+				childRenderers.JRemoveAt(childRenderers.Count - 1);
 				IList<IRenderer> resultRenderers = new List<IRenderer>();
 				LayoutResult result = null;
 				LayoutArea storedArea = null;
@@ -116,8 +116,8 @@ namespace iTextSharp.Layout.Renderer
 							{
 								if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
 								{
-									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty(iTextSharp.Layout.Property.Property
-										.KEEP_TOGETHER)))
+									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>
+										(iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
 									{
 										result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
 											.KEEP_TOGETHER, false);
@@ -180,18 +180,18 @@ namespace iTextSharp.Layout.Renderer
 				if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
 					 - 1] == renderer)
 				{
-					int? positionedPageNumber = renderer.GetProperty(iTextSharp.Layout.Property.Property
+					int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
 						.PAGE_NUMBER);
 					if (positionedPageNumber == null)
 					{
 						positionedPageNumber = currentPageNumber;
 					}
-					renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(positionedPageNumber
+					renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber
 						, currentArea.GetBBox().Clone())));
 					if (immediateFlush)
 					{
 						FlushSingleRenderer(renderer);
-						positionedRenderers.RemoveAt(positionedRenderers.Count - 1);
+						positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
 					}
 				}
 			}

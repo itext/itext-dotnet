@@ -144,22 +144,22 @@ namespace iTextSharp.Layout.Renderer
 				), layoutBox.GetY() + layoutBox.GetHeight(), 0, 0));
 			bool anythingPlaced = false;
 			int currentTextPos = text.start;
-			float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+			float fontSize = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
 				);
-			float textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
+			float textRise = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
 				);
 			float? characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
 				CHARACTER_SPACING);
 			float? wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
 				);
-			PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
-			float? hScale = GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+			PdfFont font = this.GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
+			float? hScale = this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
 				, 1f);
-			ISplitCharacters splitCharacters = GetProperty(iTextSharp.Layout.Property.Property
+			ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(iTextSharp.Layout.Property.Property
 				.SPLIT_CHARACTERS);
-			float italicSkewAddition = bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+			float italicSkewAddition = true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 				.ITALIC_SIMULATION)) ? ITALIC_ANGLE * fontSize : 0;
-			float boldSimulationAddition = bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+			float boldSimulationAddition = true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 				.BOLD_SIMULATION)) ? BOLD_SIMULATION_STROKE_COEFF * fontSize : 0;
 			line = new GlyphLine(text);
 			line.start = line.end = -1;
@@ -184,8 +184,8 @@ namespace iTextSharp.Layout.Renderer
 			int initialLineTextPos = currentTextPos;
 			float currentLineWidth = 0;
 			int previousCharPos = -1;
-			char tabAnchorCharacter = GetProperty(iTextSharp.Layout.Property.Property.TAB_ANCHOR
-				);
+			char tabAnchorCharacter = this.GetProperty<char>(iTextSharp.Layout.Property.Property
+				.TAB_ANCHOR);
 			TextLayoutResult result = null;
 			// true in situations like "\nHello World"
 			bool isSplitForcedByImmediateNewLine = false;
@@ -228,7 +228,7 @@ namespace iTextSharp.Layout.Renderer
 						())
 					{
 						tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
-						tabAnchorCharacter = null;
+						tabAnchorCharacter = (char)(Object)null;
 					}
 					float glyphWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, 
 						wordSpacing) / TEXT_SPACE_COEFF;
@@ -303,7 +303,7 @@ namespace iTextSharp.Layout.Renderer
 						// cannot fit a word as a whole
 						bool wordSplit = false;
 						bool hyphenationApplied = false;
-						HyphenationConfig hyphenationConfig = GetProperty(iTextSharp.Layout.Property.Property
+						HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(iTextSharp.Layout.Property.Property
 							.HYPHENATION);
 						if (hyphenationConfig != null)
 						{
@@ -508,8 +508,8 @@ namespace iTextSharp.Layout.Renderer
 				{
 					TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
 				}
-				FontKerning fontKerning = GetProperty(iTextSharp.Layout.Property.Property.FONT_KERNING
-					);
+				FontKerning fontKerning = this.GetProperty<FontKerning>(iTextSharp.Layout.Property.Property
+					.FONT_KERNING);
 				if (fontKerning == FontKerning.YES)
 				{
 					TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
@@ -558,24 +558,25 @@ namespace iTextSharp.Layout.Renderer
 			if (line.end > line.start)
 			{
 				PdfFont font = GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
-				float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+				float fontSize = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
 					);
 				iTextSharp.Kernel.Color.Color fontColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
 					.FONT_COLOR);
-				int? textRenderingMode = GetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
-					);
+				int? textRenderingMode = this.GetProperty<int?>(iTextSharp.Layout.Property.Property
+					.TEXT_RENDERING_MODE);
 				float? textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
 					);
 				float? characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
 					CHARACTER_SPACING);
 				float? wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
 					);
-				float? horizontalScaling = GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				float? horizontalScaling = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
+					.HORIZONTAL_SCALING);
+				float?[] skew = this.GetProperty<float?[]>(iTextSharp.Layout.Property.Property.SKEW
 					);
-				float?[] skew = GetProperty(iTextSharp.Layout.Property.Property.SKEW);
-				bool italicSimulation = bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+				bool italicSimulation = true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 					.ITALIC_SIMULATION));
-				bool boldSimulation = bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
+				bool boldSimulation = true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 					.BOLD_SIMULATION));
 				float? strokeWidth = null;
 				if (boldSimulation)
@@ -598,7 +599,7 @@ namespace iTextSharp.Layout.Renderer
 				canvas.SaveState().BeginText().SetFontAndSize(font, fontSize);
 				if (skew != null && skew.Length == 2)
 				{
-					canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
+					canvas.SetTextMatrix(1, (float)skew[0], (float)skew[1], 1, leftBBoxX, GetYLine());
 				}
 				else
 				{
@@ -613,7 +614,7 @@ namespace iTextSharp.Layout.Renderer
 				}
 				if (textRenderingMode != PdfCanvasConstants.TextRenderingMode.FILL)
 				{
-					canvas.SetTextRenderingMode(textRenderingMode);
+					canvas.SetTextRenderingMode((int)textRenderingMode);
 				}
 				if (textRenderingMode == PdfCanvasConstants.TextRenderingMode.STROKE || textRenderingMode
 					 == PdfCanvasConstants.TextRenderingMode.FILL_STROKE)
@@ -625,7 +626,7 @@ namespace iTextSharp.Layout.Renderer
 					}
 					if (strokeWidth != null && strokeWidth != 1f)
 					{
-						canvas.SetLineWidth(strokeWidth);
+						canvas.SetLineWidth((float)strokeWidth);
 					}
 					iTextSharp.Kernel.Color.Color strokeColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
 						.STROKE_COLOR);
@@ -644,19 +645,19 @@ namespace iTextSharp.Layout.Renderer
 				}
 				if (textRise != null && textRise != 0)
 				{
-					canvas.SetTextRise(textRise);
+					canvas.SetTextRise((float)textRise);
 				}
 				if (characterSpacing != null && characterSpacing != 0)
 				{
-					canvas.SetCharacterSpacing(characterSpacing);
+					canvas.SetCharacterSpacing((float)characterSpacing);
 				}
 				if (wordSpacing != null && wordSpacing != 0)
 				{
-					canvas.SetWordSpacing(wordSpacing);
+					canvas.SetWordSpacing((float)wordSpacing);
 				}
 				if (horizontalScaling != null && horizontalScaling != 1)
 				{
-					canvas.SetHorizontalScaling(horizontalScaling * 100);
+					canvas.SetHorizontalScaling((float)horizontalScaling * 100);
 				}
 				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_547();
 				if (HasOwnProperty(iTextSharp.Layout.Property.Property.REVERSED))
@@ -686,7 +687,8 @@ namespace iTextSharp.Layout.Renderer
 				{
 					canvas.CloseTag();
 				}
-				Object underlines = GetProperty(iTextSharp.Layout.Property.Property.UNDERLINE);
+				Object underlines = this.GetProperty<Object>(iTextSharp.Layout.Property.Property.
+					UNDERLINE);
 				if (underlines is IList)
 				{
 					foreach (Object underline in (IList)underlines)
@@ -735,8 +737,8 @@ namespace iTextSharp.Layout.Renderer
 
 		public override void DrawBackground(DrawContext drawContext)
 		{
-			Background background = GetProperty(iTextSharp.Layout.Property.Property.BACKGROUND
-				);
+			Background background = this.GetProperty<Background>(iTextSharp.Layout.Property.Property
+				.BACKGROUND);
 			float? textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
 				);
 			float bottomBBoxY = occupiedArea.GetBBox().GetY();
@@ -750,8 +752,8 @@ namespace iTextSharp.Layout.Renderer
 					canvas.OpenTag(new CanvasArtifact());
 				}
 				canvas.SaveState().SetFillColor(background.GetColor());
-				canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + textRise - 
-					background.GetExtraBottom(), occupiedArea.GetBBox().GetWidth() + background.GetExtraLeft
+				canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), (float)bottomBBoxY + textRise
+					 - background.GetExtraBottom(), occupiedArea.GetBBox().GetWidth() + background.GetExtraLeft
 					() + background.GetExtraRight(), occupiedArea.GetBBox().GetHeight() - textRise +
 					 background.GetExtraTop() + background.GetExtraBottom());
 				canvas.Fill().RestoreState();
@@ -795,7 +797,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				return trimmedSpace;
 			}
-			float fontSize = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
+			float fontSize = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FONT_SIZE
 				);
 			float? characterSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
 				CHARACTER_SPACING);
@@ -842,8 +844,8 @@ namespace iTextSharp.Layout.Renderer
 		/// </returns>
 		public virtual float GetDescent()
 		{
-			return -(occupiedArea.GetBBox().GetHeight() - yLineOffset - GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.TEXT_RISE));
+			return -(occupiedArea.GetBBox().GetHeight() - yLineOffset - (float)GetPropertyAsFloat
+				(iTextSharp.Layout.Property.Property.TEXT_RISE));
 		}
 
 		/// <summary>
@@ -859,7 +861,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual float GetYLine()
 		{
 			return occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - yLineOffset
-				 - GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE);
+				 - (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE);
 		}
 
 		/// <summary>Moves the vertical position to the parameter's value.</summary>
@@ -1060,10 +1062,10 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float CalculateLineWidth()
 		{
-			return GetGlyphLineWidth(line, GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.FONT_SIZE), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				, 1f), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING)
-				, GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
+			return GetGlyphLineWidth(line, (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.FONT_SIZE), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, 1f), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
+				), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
 		}
 
 		/// <summary>This method return a LinkedHashMap with glyphlines as its keys.</summary>
@@ -1073,8 +1075,8 @@ namespace iTextSharp.Layout.Renderer
 		/// </remarks>
 		private IDictionary<GlyphLine, bool?> GetOutputChunks()
 		{
-			IList<int[]> reversedRange = GetProperty(iTextSharp.Layout.Property.Property.REVERSED
-				);
+			IList<int[]> reversedRange = this.GetProperty<IList<int[]>>(iTextSharp.Layout.Property.Property
+				.REVERSED);
 			IDictionary<GlyphLine, bool?> outputs = new LinkedDictionary<GlyphLine, bool?>();
 			if (reversedRange != null)
 			{
@@ -1121,21 +1123,21 @@ namespace iTextSharp.Layout.Renderer
 			{
 				hScale = 1f;
 			}
-			float resultWidth = g.GetWidth() * fontSize * hScale;
+			float resultWidth = g.GetWidth() * fontSize * (float)hScale;
 			if (characterSpacing != null)
 			{
-				resultWidth += characterSpacing * hScale * TEXT_SPACE_COEFF;
+				resultWidth += (float)characterSpacing * hScale * TEXT_SPACE_COEFF;
 			}
 			if (wordSpacing != null && g.HasValidUnicode() && g.GetUnicode() == ' ')
 			{
-				resultWidth += wordSpacing * hScale * TEXT_SPACE_COEFF;
+				resultWidth += (float)wordSpacing * hScale * TEXT_SPACE_COEFF;
 			}
 			return resultWidth;
 		}
 
 		private float ScaleXAdvance(float xAdvance, float fontSize, float? hScale)
 		{
-			return xAdvance * fontSize * hScale;
+			return xAdvance * fontSize * (float)hScale;
 		}
 
 		private float GetGlyphLineWidth(GlyphLine glyphLine, float fontSize, float? hScale

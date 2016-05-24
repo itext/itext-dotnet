@@ -96,12 +96,12 @@ namespace iTextSharp.Layout.Element
 			{
 				case iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT:
 				{
-					return (T1)"";
+					return (T1)(Object)"";
 				}
 
 				case iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT:
 				{
-					return (T1)". ";
+					return (T1)(Object)". ";
 				}
 
 				default:
@@ -254,7 +254,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the indent offset as a <code>float</code>.</returns>
 		public virtual float? GetSymbolIndent()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT
 				));
 		}
 
@@ -279,7 +279,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the post symbol text</returns>
 		public virtual String GetPostSymbolText()
 		{
-			return ((String)GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT
+			return ((String)this.GetProperty<String>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT
 				));
 		}
 
@@ -303,7 +303,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the pre symbol text</returns>
 		public virtual String GetPreSymbolText()
 		{
-			return ((String)GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT
+			return ((String)this.GetProperty<String>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT
 				));
 		}
 

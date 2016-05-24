@@ -262,7 +262,8 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the left margin width, as a <code>float</code></returns>
 		public virtual float? GetMarginLeft()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT));
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_LEFT
+				));
 		}
 
 		/// <summary>Sets the left margin width of the element.</summary>
@@ -278,7 +279,8 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the right margin width, as a <code>float</code></returns>
 		public virtual float? GetMarginRight()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT));
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_RIGHT
+				));
 		}
 
 		/// <summary>Sets the right margin width of the element.</summary>
@@ -294,7 +296,8 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the top margin width, as a <code>float</code></returns>
 		public virtual float? GetMarginTop()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP));
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_TOP
+				));
 		}
 
 		/// <summary>Sets the top margin width of the element.</summary>
@@ -310,7 +313,8 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the bottom margin width, as a <code>float</code></returns>
 		public virtual float? GetMarginBottom()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM));
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM
+				));
 		}
 
 		/// <summary>Sets the bottom margin width of the element.</summary>
@@ -390,9 +394,9 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScale(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && HasProperty
-				(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool?)
-				((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) || (
-				bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
+				(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && (((bool?
+				)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) 
+				|| ((bool?)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
 				))))
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Image));
@@ -409,7 +413,7 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScaleHeight(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && autoScale
-				 && (bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
+				 && ((bool?)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
 				)))
 			{
 				SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
@@ -430,7 +434,7 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Image SetAutoScaleWidth(bool autoScale)
 		{
 			if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale
-				 && (bool?)((Object)GetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
+				 && ((bool?)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
 				)))
 			{
 				SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
@@ -511,18 +515,18 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the current scaled width</returns>
 		public virtual float GetImageScaledWidth()
 		{
-			return null == ((Object)GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				)) ? xObject.GetWidth() : xObject.GetWidth() * (float?)((Object)GetProperty(iTextSharp.Layout.Property.Property
-				.HORIZONTAL_SCALING));
+			return null == ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property
+				.HORIZONTAL_SCALING)) ? xObject.GetWidth() : xObject.GetWidth() * ((float?)this.
+				GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING));
 		}
 
 		/// <summary>Gets scaled height of the image.</summary>
 		/// <returns>the current scaled height</returns>
 		public virtual float GetImageScaledHeight()
 		{
-			return null == ((Object)GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
-				)) ? xObject.GetHeight() : xObject.GetHeight() * (float?)((Object)GetProperty(iTextSharp.Layout.Property.Property
-				.VERTICAL_SCALING));
+			return null == ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property
+				.VERTICAL_SCALING)) ? xObject.GetHeight() : xObject.GetHeight() * ((float?)this.
+				GetProperty<float?>(iTextSharp.Layout.Property.Property.VERTICAL_SCALING));
 		}
 
 		public virtual PdfName GetRole()

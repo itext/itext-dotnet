@@ -11,7 +11,7 @@ namespace iTextSharp.Pdfa
 	{
 		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void CatalogCheck01()

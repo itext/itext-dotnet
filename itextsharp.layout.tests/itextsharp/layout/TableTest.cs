@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
@@ -292,7 +291,7 @@ namespace iTextSharp.Layout
 				(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph("2, 2")));
 			doc.Add(table2);
 			doc.Add(new Paragraph("Table 3"));
-			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(new File
+			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(new FileInfo
 				(sourceFolder + "itext.png").ToURI().ToURL()));
 			iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
 				, 50);

@@ -552,7 +552,7 @@ namespace iTextSharp.Kernel.Font
 					{
 						r1[0] = Math.Min(r1[0], r2[0]);
 						r1[1] = Math.Max(r1[1], r2[1]);
-						simp.RemoveAt(k2);
+						simp.JRemoveAt(k2);
 						--k2;
 					}
 				}

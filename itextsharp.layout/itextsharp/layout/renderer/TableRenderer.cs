@@ -153,7 +153,7 @@ namespace iTextSharp.Layout.Renderer
 			ApplyBorderBox(layoutBox, false);
 			if (IsPositioned())
 			{
-				float x = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+				float x = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
 				layoutBox.SetX(relativeX + x);
 			}
@@ -164,7 +164,7 @@ namespace iTextSharp.Layout.Renderer
 				tableWidth = layoutBox.GetWidth();
 			}
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
-				), layoutBox.GetY() + layoutBox.GetHeight(), tableWidth, 0));
+				), layoutBox.GetY() + layoutBox.GetHeight(), (float)tableWidth, 0));
 			int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
 			horizontalBorders = new List<List<iTextSharp.Layout.Border.Border>>();
 			verticalBorders = new List<List<iTextSharp.Layout.Border.Border>>();
@@ -201,7 +201,7 @@ namespace iTextSharp.Layout.Renderer
 				footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
 				layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
 			}
-			columnWidths = CalculateScaledColumnWidths(tableModel, tableWidth);
+			columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth);
 			LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
 			// This represents the target row index for the overflow renderer to be placed to.
 			// Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
@@ -211,12 +211,12 @@ namespace iTextSharp.Layout.Renderer
 			{
 				// if forced placement was earlier set, this means the element did not fit into the area, and in this case
 				// we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
-				if (row == 1 && true.Equals(GetOwnProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
-					)))
+				if (row == 1 && true.Equals(this.GetOwnProperty<bool?>(iTextSharp.Layout.Property.Property
+					.FORCED_PLACEMENT)))
 				{
 					DeleteOwnProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT);
 				}
-				VerticalAlignment verticalAlignment = null;
+				VerticalAlignment verticalAlignment = (VerticalAlignment)(Object)null;
 				CellRenderer[] currentRow = rows[row];
 				float rowHeight = 0;
 				bool split = false;
@@ -260,10 +260,10 @@ namespace iTextSharp.Layout.Renderer
 					targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
 					// This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
 					bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
-					int colspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.COLSPAN
-						);
-					int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
-						);
+					int colspan = (int)cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+						COLSPAN);
+					int rowspan = (int)cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+						ROWSPAN);
 					float cellWidth = 0;
 					float colOffset = 0;
 					for (int i = col_1; i < col_1 + colspan; i++)
@@ -278,7 +278,7 @@ namespace iTextSharp.Layout.Renderer
 					for (int i_2 = row - 1; i_2 > currentCellInfo.finishRowInd - rowspan && i_2 >= 0; 
 						i_2--)
 					{
-						rowspanOffset += heights[i_2];
+						rowspanOffset += (float)heights[i_2];
 					}
 					float cellLayoutBoxHeight = rowspanOffset + (!currentCellHasBigRowspan || hasContent
 						 ? layoutBox.GetHeight() : 0);
@@ -288,8 +288,8 @@ namespace iTextSharp.Layout.Renderer
 						, cellWidth, cellLayoutBoxHeight);
 					LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox
 						);
-					verticalAlignment = cell.GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT
-						);
+					verticalAlignment = cell.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
+						.VERTICAL_ALIGNMENT);
 					cell.SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, null);
 					LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea)
 						);
@@ -360,8 +360,8 @@ namespace iTextSharp.Layout.Renderer
 											if (rows[addRow][addCol_1] != null)
 											{
 												CellRenderer addRenderer = rows[addRow][addCol_1];
-												verticalAlignment = addRenderer.GetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT
-													);
+												verticalAlignment = addRenderer.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
+													.VERTICAL_ALIGNMENT);
 												if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM
 													))
 												{
@@ -612,7 +612,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (IsPositioned())
 			{
-				float y = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+				float y = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
@@ -841,7 +841,10 @@ namespace iTextSharp.Layout.Renderer
 				splitRenderer.verticalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 				for (int j = 0; j < rowN; j++)
 				{
-					splitRenderer.verticalBorders[i_1].Add(verticalBorders[i_1][j]);
+					if (verticalBorders[i_1].Count != 0)
+					{
+						splitRenderer.verticalBorders[i_1].Add(verticalBorders[i_1][j]);
+					}
 				}
 			}
 			splitRenderer.heights = heights;
@@ -999,7 +1002,7 @@ namespace iTextSharp.Layout.Renderer
 				}
 				if (i < heights.Count)
 				{
-					y1 -= heights[i];
+					y1 -= (float)heights[i];
 				}
 			}
 			float x1_1 = startX;
@@ -1010,7 +1013,7 @@ namespace iTextSharp.Layout.Renderer
 				float y2 = y1;
 				if (!heights.IsEmpty())
 				{
-					y2 = y1 - heights[0];
+					y2 = y1 - (float)heights[0];
 				}
 				int j;
 				for (j = 1; j < borders.Count; j++)
@@ -1027,12 +1030,12 @@ namespace iTextSharp.Layout.Renderer
 					}
 					else
 					{
-						y1 -= heights[j - 1];
+						y1 -= (float)heights[j - 1];
 						y2 = y1;
 					}
 					if (curBorder != null)
 					{
-						y2 -= heights[j];
+						y2 -= (float)heights[j];
 					}
 				}
 				if (borders.Count == 0)
@@ -1092,10 +1095,10 @@ namespace iTextSharp.Layout.Renderer
 					{
 						continue;
 					}
-					int colspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.COLSPAN
-						);
-					int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
-						);
+					int colspan = (int)cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+						COLSPAN);
+					int rowspan = (int)cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+						ROWSPAN);
 					float cellWidth = 0;
 					float colOffset = 0;
 					for (int i = col; i < col + colspan; i++)
@@ -1109,7 +1112,7 @@ namespace iTextSharp.Layout.Renderer
 					float rowspanOffset = 0;
 					for (int i_2 = row - 1; i_2 > row - rowspan && i_2 >= 0; i_2--)
 					{
-						rowspanOffset += heights[i_2];
+						rowspanOffset += (float)heights[i_2];
 					}
 					float cellLayoutBoxHeight = rowspanOffset + layoutArea.GetBBox().GetHeight();
 					Rectangle cellLayoutBox = new Rectangle(layoutArea.GetBBox().GetX() + colOffset, 

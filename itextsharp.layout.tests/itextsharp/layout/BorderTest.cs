@@ -203,7 +203,7 @@ namespace iTextSharp.Layout
 			CloseDocumentAndCompareOutputs(doc);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		private Document CreateDocument()
 		{
 			outFileName = destinationFolder + fileName;

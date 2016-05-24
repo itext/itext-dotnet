@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Color;
@@ -198,7 +197,7 @@ namespace iTextSharp.Layout
 				, FileMode.Create)));
 			Document document = new Document(pdfDocument);
 			Div div = new Div();
-			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new File
+			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new FileInfo
 				(sourceFolder + "Desert.jpg").ToURI().ToURL()));
 			iTextSharp.Layout.Element.Image image1 = new iTextSharp.Layout.Element.Image(xObject
 				, 100).SetHorizontalAlignment(HorizontalAlignment.RIGHT);
@@ -224,7 +223,7 @@ namespace iTextSharp.Layout
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
-			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new File
+			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new FileInfo
 				(sourceFolder + "Desert.jpg").ToURI().ToURL()));
 			iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
 				, 100).SetHorizontalAlignment(HorizontalAlignment.RIGHT);

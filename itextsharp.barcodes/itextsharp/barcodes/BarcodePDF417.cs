@@ -1980,7 +1980,7 @@ namespace iTextSharp.Barcodes
 				{
 					return;
 				}
-				list.RemoveAt(idx);
+				list.JRemoveAt(idx);
 			}
 
 			public virtual int Size()

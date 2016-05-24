@@ -71,8 +71,8 @@ namespace iTextSharp.Layout.Renderer
 			maxAscent = 0;
 			maxDescent = 0;
 			int childPos = 0;
-			BaseDirection baseDirection = GetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION
-				);
+			BaseDirection baseDirection = this.GetProperty<BaseDirection>(iTextSharp.Layout.Property.Property
+				.BASE_DIRECTION);
 			foreach (IRenderer renderer in childRenderers)
 			{
 				if (renderer is TextRenderer)
@@ -82,8 +82,8 @@ namespace iTextSharp.Layout.Renderer
 					renderer.SetParent(null);
 					if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
 					{
-						baseDirection = renderer.GetOwnProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION
-							);
+						baseDirection = renderer.GetOwnProperty<BaseDirection>(iTextSharp.Layout.Property.Property
+							.BASE_DIRECTION);
 					}
 				}
 			}
@@ -459,7 +459,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void Justify(float width)
 		{
-			float ratio = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.SPACING_RATIO
+			float ratio = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.SPACING_RATIO
 				);
 			float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().
 				GetOccupiedArea().GetBBox().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox
@@ -480,7 +480,7 @@ namespace iTextSharp.Layout.Renderer
 				childX = lastRightPos;
 				if (child is TextRenderer)
 				{
-					float childHSCale = ((TextRenderer)child).GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+					float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 						.HORIZONTAL_SCALING, 1f);
 					child.SetProperty(iTextSharp.Layout.Property.Property.CHARACTER_SPACING, characterSpacing
 						 / childHSCale);
@@ -637,8 +637,8 @@ namespace iTextSharp.Layout.Renderer
 
 		private TabStop GetNextTabStop(float curWidth)
 		{
-			NavigableMap<float?, TabStop> tabStops = GetProperty(iTextSharp.Layout.Property.Property
-				.TAB_STOPS);
+			NavigableMap<float?, TabStop> tabStops = this.GetProperty<NavigableMap<float?, TabStop
+				>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
 			KeyValuePair<float?, TabStop> nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
@@ -752,7 +752,7 @@ namespace iTextSharp.Layout.Renderer
 				tabWidth = lineWidth - curWidth;
 			}
 			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-				(tabWidth));
+				((float)tabWidth));
 			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
 				);
 		}

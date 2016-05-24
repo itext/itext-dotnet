@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using Java.IO;
 using Java.Net;
 using Javax.Xml.Parsers;
 using Org.Xml.Sax;
@@ -88,7 +87,7 @@ namespace iTextSharp.Layout.Hyphenation
 		{
 			try
 			{
-				Uri url = new File(filename).ToURI().ToURL();
+				Uri url = new FileInfo(filename).ToURI().ToURL();
 				Parse(iTextSharp.IO.Util.UrlUtil.OpenStream(url), url.ToExternalForm());
 			}
 			catch (MalformedURLException e)

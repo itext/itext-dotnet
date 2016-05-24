@@ -71,8 +71,8 @@ namespace iTextSharp.Layout.Renderer
 			}
 			PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
 			linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-			iTextSharp.Layout.Border.Border border = GetProperty(iTextSharp.Layout.Property.Property
-				.BORDER);
+			iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border
+				>(iTextSharp.Layout.Property.Property.BORDER);
 			if (border != null)
 			{
 				linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));

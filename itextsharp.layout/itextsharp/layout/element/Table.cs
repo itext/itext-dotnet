@@ -699,7 +699,7 @@ namespace iTextSharp.Layout.Element
 			}
 			for (int i = 0; i <= lastRow - firstRow; i++)
 			{
-				rows.RemoveAt(firstRow - rowWindowStart);
+				rows.JRemoveAt(firstRow - rowWindowStart);
 			}
 			rowWindowStart = lastAddedRowGroups[lastAddedRowGroups.Count - 1].GetFinishRow() 
 				+ 1;
@@ -730,11 +730,11 @@ namespace iTextSharp.Layout.Element
 					if (cell != null)
 					{
 						iTextSharp.Layout.Border.Border border = ((iTextSharp.Layout.Border.Border)cell.GetProperty
-							(iTextSharp.Layout.Property.Property.BORDER));
+							<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property.BORDER));
 						if (border == null)
 						{
-							border = ((iTextSharp.Layout.Border.Border)cell.GetProperty(iTextSharp.Layout.Property.Property
-								.BORDER_BOTTOM));
+							border = ((iTextSharp.Layout.Border.Border)cell.GetProperty<iTextSharp.Layout.Border.Border
+								>(iTextSharp.Layout.Property.Property.BORDER_BOTTOM));
 						}
 						horizontalBorder.Add(border);
 					}

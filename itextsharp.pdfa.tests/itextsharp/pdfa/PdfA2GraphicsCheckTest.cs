@@ -300,7 +300,7 @@ namespace iTextSharp.Pdfa
 ;
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="Java.Net.MalformedURLException"/>
 		[Test]
@@ -325,7 +325,7 @@ namespace iTextSharp.Pdfa
 ;
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="Java.Net.MalformedURLException"/>
 		[Test]
@@ -350,7 +350,7 @@ namespace iTextSharp.Pdfa
 ;
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="Java.Net.MalformedURLException"/>
 		[Test]
@@ -421,7 +421,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void TransparencyCheckTest1()
@@ -477,7 +477,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void TransparencyCheckTest3()

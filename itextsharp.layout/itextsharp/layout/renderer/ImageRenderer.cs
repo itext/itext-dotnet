@@ -93,7 +93,7 @@ namespace iTextSharp.Layout.Renderer
 			imageWidth = xObject.GetWidth();
 			imageHeight = xObject.GetHeight();
 			width = width == null ? imageWidth : width;
-			height = width / imageWidth * imageHeight;
+			height = (float)width / imageWidth * imageHeight;
 			fixedXPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 			fixedYPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 			float? horizontalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property
@@ -110,9 +110,9 @@ namespace iTextSharp.Layout.Renderer
 			{
 				if (xObject is PdfFormXObject)
 				{
-					t.Scale(horizontalScaling, 1);
+					t.Scale((float)horizontalScaling, 1);
 				}
-				width *= horizontalScaling;
+				width *= (float)horizontalScaling;
 			}
 			if (verticalScaling != 1)
 			{
@@ -120,18 +120,18 @@ namespace iTextSharp.Layout.Renderer
 				{
 					t.Scale(1, verticalScaling);
 				}
-				height *= verticalScaling;
+				height *= (float)verticalScaling;
 			}
-			float imageItselfScaledWidth = width;
-			float imageItselfScaledHeight = height;
+			float imageItselfScaledWidth = (float)width;
+			float imageItselfScaledHeight = (float)height;
 			// See in adjustPositionAfterRotation why angle = 0 is necessary
 			if (null == angle)
 			{
 				angle = 0f;
 			}
-			t.Rotate(angle);
-			float scaleCoef = AdjustPositionAfterRotation(angle, layoutBox.GetWidth(), layoutBox
-				.GetHeight());
+			t.Rotate((float)angle);
+			float scaleCoef = AdjustPositionAfterRotation((float)angle, layoutBox.GetWidth(), 
+				layoutBox.GetHeight());
 			imageItselfScaledHeight *= scaleCoef;
 			imageItselfScaledWidth *= scaleCoef;
 			if (xObject is PdfFormXObject)
@@ -146,10 +146,10 @@ namespace iTextSharp.Layout.Renderer
 			}
 			occupiedArea.GetBBox().MoveDown(height);
 			occupiedArea.GetBBox().SetHeight(height);
-			occupiedArea.GetBBox().SetWidth(width);
-			float leftMargin = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_LEFT
-				);
-			float topMargin = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_TOP
+			occupiedArea.GetBBox().SetWidth((float)width);
+			float leftMargin = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+				MARGIN_LEFT);
+			float topMargin = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_TOP
 				);
 			if (leftMargin != 0 || topMargin != 0)
 			{
@@ -214,10 +214,10 @@ namespace iTextSharp.Layout.Renderer
 				}
 			}
 			PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
-			canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], fixedXPosition
-				 + deltaX, fixedYPosition);
-			if (bool?.ValueOf(true).Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
-				.FLUSH_ON_DRAW)))
+			canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition
+				 + deltaX, (float)fixedYPosition);
+			if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FLUSH_ON_DRAW
+				)))
 			{
 				xObject.Flush();
 			}
@@ -255,11 +255,11 @@ namespace iTextSharp.Layout.Renderer
 					().GetHeight())
 				{
 					SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-						(area.GetBBox().GetHeight() / GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-						.HEIGHT) * ((UnitValue)GetProperty(iTextSharp.Layout.Property.Property.WIDTH)).GetValue
-						()));
+						((float)area.GetBBox().GetHeight() / GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+						.HEIGHT) * (this.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property.WIDTH
+						)).GetValue()));
 					SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, UnitValue.CreatePointValue
-						(area.GetBBox().GetHeight()));
+						((float)area.GetBBox().GetHeight()));
 				}
 			}
 			return this;
@@ -287,8 +287,8 @@ namespace iTextSharp.Layout.Renderer
 				AffineTransform t = AffineTransform.GetRotateInstance(angle);
 				Point p00 = t.Transform(new Point(0, 0), new Point());
 				Point p01 = t.Transform(new Point(0, height), new Point());
-				Point p10 = t.Transform(new Point(width, 0), new Point());
-				Point p11 = t.Transform(new Point(width, height), new Point());
+				Point p10 = t.Transform(new Point((float)width, 0), new Point());
+				Point p11 = t.Transform(new Point((float)width, height), new Point());
 				double[] xValues = new double[] { p01.GetX(), p10.GetX(), p11.GetX() };
 				double[] yValues = new double[] { p01.GetY(), p10.GetY(), p11.GetY() };
 				double minX = p00.GetX();
@@ -318,23 +318,25 @@ namespace iTextSharp.Layout.Renderer
 			if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE
 				)))
 			{
-				scaleCoeff = Math.Min(maxWidth / width, maxHeight / height);
+				scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / height);
 				height *= scaleCoeff;
 				width *= scaleCoeff;
 			}
 			else
 			{
 				if (null != GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
-					) && GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH))
+					) && (bool)GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH
+					))
 				{
-					scaleCoeff = maxWidth / width;
+					scaleCoeff = maxWidth / (float)width;
 					height *= scaleCoeff;
 					width = maxWidth;
 				}
 				else
 				{
 					if (null != GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
-						) && GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT))
+						) && (bool)GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
+						))
 					{
 						scaleCoeff = maxHeight / height;
 						height = maxHeight;

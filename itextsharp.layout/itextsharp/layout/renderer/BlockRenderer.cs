@@ -66,7 +66,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -84,14 +85,14 @@ namespace iTextSharp.Layout.Renderer
 			bool isPositioned = IsPositioned();
 			if (isPositioned)
 			{
-				float x = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+				float x = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
 			float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
 			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned))
 			{
-				parentBBox.SetWidth(blockWidth);
+				parentBBox.SetWidth((float)blockWidth);
 			}
 			float[] paddings = GetPaddings();
 			ApplyPaddings(parentBBox, paddings, false);
@@ -124,7 +125,8 @@ namespace iTextSharp.Layout.Renderer
 						layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
 							());
 					}
-					if (childRenderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH) != null)
+					if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) 
+						!= null)
 					{
 						AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
 					}
@@ -228,7 +230,8 @@ namespace iTextSharp.Layout.Renderer
 				{
 					layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
 						());
-					if (childRenderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH) != null)
+					if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) 
+						!= null)
 					{
 						AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
 					}
@@ -237,18 +240,19 @@ namespace iTextSharp.Layout.Renderer
 			ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
 			if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
 			{
-				occupiedArea.GetBBox().MoveDown(blockHeight - occupiedArea.GetBBox().GetHeight())
-					.SetHeight(blockHeight);
+				occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight
+					()).SetHeight((float)blockHeight);
 			}
 			if (isPositioned)
 			{
-				float y = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+				float y = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
 			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 			ApplyMargins(occupiedArea.GetBBox(), margins, true);
-			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))
@@ -346,13 +350,13 @@ namespace iTextSharp.Layout.Renderer
 		public override Rectangle GetOccupiedAreaBBox()
 		{
 			Rectangle bBox = occupiedArea.GetBBox().Clone();
-			float? rotationAngle = GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
-				);
+			float? rotationAngle = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
+				.ROTATION_ANGLE);
 			if (rotationAngle != null)
 			{
-				bBox.SetWidth(GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
+				bBox.SetWidth((float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
 					));
-				bBox.SetHeight(GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+				bBox.SetHeight((float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
 					));
 			}
 			return bBox;
@@ -360,7 +364,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyVerticalAlignment()
 		{
-			VerticalAlignment verticalAlignment = GetProperty(iTextSharp.Layout.Property.Property
+			VerticalAlignment verticalAlignment = this.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
 				.VERTICAL_ALIGNMENT);
 			if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers
 				.Count > 0)
@@ -411,7 +415,8 @@ namespace iTextSharp.Layout.Renderer
 			if (!IsPositioned())
 			{
 				IList<Point> rotatedPoints = new List<Point>();
-				GetLayoutShiftAndRotatedPoints(rotatedPoints, rotationPointX, rotationPointY);
+				GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, rotationPointY
+					);
 				Point clipLineBeg = new Point(layoutBox.GetRight(), layoutBox.GetTop());
 				Point clipLineEnd = new Point(layoutBox.GetRight(), layoutBox.GetBottom());
 				IList<Point> newOccupiedBox = ClipBBox(rotatedPoints, clipLineBeg, clipLineEnd);
@@ -449,24 +454,24 @@ namespace iTextSharp.Layout.Renderer
 			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			AffineTransform transform = new AffineTransform();
-			transform.Rotate(angle);
+			transform.Rotate((float)angle);
 			float[] ctm = new float[6];
 			transform.GetMatrix(ctm);
-			ctm[4] = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X)
-				 + dx;
-			ctm[5] = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y)
-				 + dy;
+			ctm[4] = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+				) + dx;
+			ctm[5] = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+				) + dy;
 			return ctm;
 		}
 
 		private Point GetLayoutShiftAndRotatedPoints(IList<Point> rotatedPoints, float shiftX
 			, float shiftY)
 		{
-			float angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float angle = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
-			float width = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
+			float width = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH
 				);
-			float height = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+			float height = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
 				);
 			float left = occupiedArea.GetBBox().GetX() - shiftX;
 			float bottom = occupiedArea.GetBBox().GetY() - shiftY;
@@ -503,11 +508,11 @@ namespace iTextSharp.Layout.Renderer
 				);
 			if (angle != null)
 			{
-				float heightDiff = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
-					) - occupiedArea.GetBBox().GetHeight();
-				float shiftX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+				float heightDiff = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+					ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox().GetHeight();
+				float shiftX = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
 					);
-				float shiftY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+				float shiftY = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
 					) + heightDiff;
 				Move(-shiftX, -shiftY);
 				float[] ctm = ApplyRotation();
@@ -521,11 +526,11 @@ namespace iTextSharp.Layout.Renderer
 				);
 			if (angle != null)
 			{
-				float heightDiff = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
-					) - occupiedArea.GetBBox().GetHeight();
-				float shiftX = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
+				float heightDiff = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+					ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox().GetHeight();
+				float shiftX = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
 					);
-				float shiftY = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
+				float shiftY = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
 					) + heightDiff;
 				canvas.RestoreState();
 				Move(shiftX, shiftY);

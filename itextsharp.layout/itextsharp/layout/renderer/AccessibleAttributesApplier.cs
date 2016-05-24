@@ -109,8 +109,8 @@ namespace iTextSharp.Layout.Renderer
 			PdfDictionary attributes = new PdfDictionary();
 			PdfName attributesType = PdfName.List;
 			attributes.Put(PdfName.O, attributesType);
-			Object listSymbol = renderer.GetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL
-				);
+			Object listSymbol = renderer.GetProperty<Object>(iTextSharp.Layout.Property.Property
+				.LIST_SYMBOL);
 			if (listSymbol is ListNumberingType)
 			{
 				ListNumberingType numberingType = (ListNumberingType)listSymbol;
@@ -196,30 +196,30 @@ namespace iTextSharp.Layout.Renderer
 			float? spaceBefore = margins[marginsOrder[0]];
 			if (spaceBefore != null && spaceBefore != 0)
 			{
-				attributes.Put(PdfName.SpaceBefore, new PdfNumber(spaceBefore));
+				attributes.Put(PdfName.SpaceBefore, new PdfNumber((float)spaceBefore));
 			}
 			float? spaceAfter = margins[marginsOrder[1]];
 			if (spaceAfter != null && spaceAfter != 0)
 			{
-				attributes.Put(PdfName.SpaceAfter, new PdfNumber(spaceAfter));
+				attributes.Put(PdfName.SpaceAfter, new PdfNumber((float)spaceAfter));
 			}
 			float? startIndent = margins[marginsOrder[2]];
 			if (startIndent != null && startIndent != 0)
 			{
-				attributes.Put(PdfName.StartIndent, new PdfNumber(startIndent));
+				attributes.Put(PdfName.StartIndent, new PdfNumber((float)startIndent));
 			}
 			float? endIndent = margins[marginsOrder[3]];
 			if (endIndent != null && endIndent != 0)
 			{
-				attributes.Put(PdfName.EndIndent, new PdfNumber(endIndent));
+				attributes.Put(PdfName.EndIndent, new PdfNumber((float)endIndent));
 			}
-			float? firstLineIndent = renderer.GetProperty(iTextSharp.Layout.Property.Property
+			float? firstLineIndent = renderer.GetProperty<float?>(iTextSharp.Layout.Property.Property
 				.FIRST_LINE_INDENT);
 			if (firstLineIndent != null && firstLineIndent != 0)
 			{
-				attributes.Put(PdfName.TextIndent, new PdfNumber(firstLineIndent));
+				attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
 			}
-			TextAlignment textAlignment = renderer.GetProperty(iTextSharp.Layout.Property.Property
+			TextAlignment textAlignment = renderer.GetProperty<TextAlignment>(iTextSharp.Layout.Property.Property
 				.TEXT_ALIGNMENT);
 			if (textAlignment != null && (!role.Equals(PdfName.TH) && !role.Equals(PdfName.TD
 				)))
@@ -239,7 +239,8 @@ namespace iTextSharp.Layout.Renderer
 			if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD) || role.Equals(PdfName.Table
 				))
 			{
-				UnitValue width = renderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH);
+				UnitValue width = renderer.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property
+					.WIDTH);
 				if (width != null && width.IsPointValue())
 				{
 					attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
@@ -248,13 +249,13 @@ namespace iTextSharp.Layout.Renderer
 					);
 				if (height != null)
 				{
-					attributes.Put(PdfName.Height, new PdfNumber(height));
+					attributes.Put(PdfName.Height, new PdfNumber((float)height));
 				}
 			}
 			if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD))
 			{
-				HorizontalAlignment horizontalAlignment = renderer.GetProperty(iTextSharp.Layout.Property.Property
-					.HORIZONTAL_ALIGNMENT);
+				HorizontalAlignment horizontalAlignment = renderer.GetProperty<HorizontalAlignment
+					>(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
 				if (horizontalAlignment != null)
 				{
 					attributes.Put(PdfName.BlockAlign, TransformBlockAlignToName(horizontalAlignment)
@@ -277,10 +278,10 @@ namespace iTextSharp.Layout.Renderer
 				.TEXT_RISE);
 			if (textRise != null && textRise != 0)
 			{
-				attributes.Put(PdfName.BaselineShift, new PdfNumber(textRise));
+				attributes.Put(PdfName.BaselineShift, new PdfNumber((float)textRise));
 			}
-			Object underlines = renderer.GetProperty(iTextSharp.Layout.Property.Property.UNDERLINE
-				);
+			Object underlines = renderer.GetProperty<Object>(iTextSharp.Layout.Property.Property
+				.UNDERLINE);
 			if (underlines != null)
 			{
 				float? fontSize = renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
@@ -301,15 +302,15 @@ namespace iTextSharp.Layout.Renderer
 				}
 				if (underline != null)
 				{
-					attributes.Put(PdfName.TextDecorationType, underline.GetYPosition(fontSize) > 0 ? 
-						PdfName.LineThrough : PdfName.Underline);
+					attributes.Put(PdfName.TextDecorationType, underline.GetYPosition((float)fontSize
+						) > 0 ? PdfName.LineThrough : PdfName.Underline);
 					if (underline.GetColor() is DeviceRgb)
 					{
 						attributes.Put(PdfName.TextDecorationColor, new PdfArray(underline.GetColor().GetColorValue
 							()));
 					}
 					attributes.Put(PdfName.TextDecorationThickness, new PdfNumber(underline.GetThickness
-						(fontSize)));
+						((float)fontSize)));
 				}
 			}
 		}
@@ -319,7 +320,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
 			attributes.Put(PdfName.BBox, new PdfArray(bbox));
-			UnitValue width = renderer.GetProperty(iTextSharp.Layout.Property.Property.WIDTH);
+			UnitValue width = renderer.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property
+				.WIDTH);
 			if (width != null && width.IsPointValue())
 			{
 				attributes.Put(PdfName.Width, new PdfNumber(width.GetValue()));
@@ -332,7 +334,7 @@ namespace iTextSharp.Layout.Renderer
 				);
 			if (height != null)
 			{
-				attributes.Put(PdfName.Height, new PdfNumber(height));
+				attributes.Put(PdfName.Height, new PdfNumber((float)height));
 			}
 			else
 			{
@@ -343,11 +345,11 @@ namespace iTextSharp.Layout.Renderer
 		private static void ApplyPaddingAttribute(AbstractRenderer renderer, PdfDictionary
 			 attributes)
 		{
-			float[] paddings = new float[] { renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.PADDING_TOP), renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_RIGHT
-				), renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_BOTTOM
-				), renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_LEFT)
-				 };
+			float[] paddings = new float[] { (float)renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_TOP), (float)renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_RIGHT), (float)renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_BOTTOM), (float)renderer.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_LEFT) };
 			PdfObject padding = null;
 			if (paddings[0] == paddings[1] && paddings[0] == paddings[2] && paddings[0] == paddings
 				[3])
@@ -377,17 +379,18 @@ namespace iTextSharp.Layout.Renderer
 		private static void ApplyBorderAttributes(AbstractRenderer renderer, PdfDictionary
 			 attributes)
 		{
-			bool specificBorderProperties = renderer.GetProperty(iTextSharp.Layout.Property.Property
-				.BORDER_TOP) != null || renderer.GetProperty(iTextSharp.Layout.Property.Property
-				.BORDER_RIGHT) != null || renderer.GetProperty(iTextSharp.Layout.Property.Property
-				.BORDER_BOTTOM) != null || renderer.GetProperty(iTextSharp.Layout.Property.Property
-				.BORDER_LEFT) != null;
-			bool generalBorderProperties = !specificBorderProperties && renderer.GetProperty(
-				iTextSharp.Layout.Property.Property.BORDER) != null;
+			bool specificBorderProperties = renderer.GetProperty<iTextSharp.Layout.Border.Border
+				>(iTextSharp.Layout.Property.Property.BORDER_TOP) != null || renderer.GetProperty
+				<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property.BORDER_RIGHT
+				) != null || renderer.GetProperty<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property
+				.BORDER_BOTTOM) != null || renderer.GetProperty<iTextSharp.Layout.Border.Border>
+				(iTextSharp.Layout.Property.Property.BORDER_LEFT) != null;
+			bool generalBorderProperties = !specificBorderProperties && renderer.GetProperty<
+				Object>(iTextSharp.Layout.Property.Property.BORDER) != null;
 			if (generalBorderProperties)
 			{
-				iTextSharp.Layout.Border.Border generalBorder = renderer.GetProperty(iTextSharp.Layout.Property.Property
-					.BORDER);
+				iTextSharp.Layout.Border.Border generalBorder = renderer.GetProperty<iTextSharp.Layout.Border.Border
+					>(iTextSharp.Layout.Property.Property.BORDER);
 				iTextSharp.Kernel.Color.Color generalBorderColor = generalBorder.GetColor();
 				int borderType = generalBorder.GetType();
 				float borderWidth = generalBorder.GetWidth();
@@ -696,7 +699,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (i < attributesList.Count)
 			{
-				attributesList.RemoveAt(i);
+				attributesList.JRemoveAt(i);
 			}
 		}
 	}

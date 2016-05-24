@@ -92,9 +92,10 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the text rise.</summary>
 		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
-		public virtual float GetTextRise()
+		public virtual float? GetTextRise()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE));
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE
+				));
 		}
 
 		/// <summary>Sets the text rise.</summary>
@@ -103,7 +104,7 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Text SetTextRise(float textRise)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE, textRise);
-			return this;
+			return (iTextSharp.Layout.Element.Text)(Object)this;
 		}
 
 		/// <summary>
@@ -113,7 +114,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the horizontal spacing, as a <code>float</code></returns>
 		public virtual float? GetHorizontalScaling()
 		{
-			return ((float?)GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+			return ((float?)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
 				));
 		}
 
@@ -149,7 +150,7 @@ namespace iTextSharp.Layout.Element
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling
 				);
-			return this;
+			return (iTextSharp.Layout.Element.Text)(Object)this;
 		}
 
 		public virtual PdfName GetRole()

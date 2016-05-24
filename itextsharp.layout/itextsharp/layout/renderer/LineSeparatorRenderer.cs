@@ -57,8 +57,8 @@ namespace iTextSharp.Layout.Renderer
 
 		public override LayoutResult Layout(LayoutContext layoutContext)
 		{
-			ILineDrawer lineDrawer = GetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER
-				);
+			ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+				.LINE_DRAWER);
 			float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
 			occupiedArea = layoutContext.GetArea().Clone();
 			ApplyMargins(occupiedArea.GetBBox(), false);
@@ -81,8 +81,8 @@ namespace iTextSharp.Layout.Renderer
 		public override void Draw(DrawContext drawContext)
 		{
 			base.Draw(drawContext);
-			ILineDrawer lineDrawer = GetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER
-				);
+			ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+				.LINE_DRAWER);
 			if (lineDrawer != null)
 			{
 				lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());

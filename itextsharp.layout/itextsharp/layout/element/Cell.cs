@@ -231,7 +231,7 @@ namespace iTextSharp.Layout.Element
 			{
 				case iTextSharp.Layout.Property.Property.BORDER:
 				{
-					return (T1)DEFAULT_BORDER;
+					return (T1)(Object)DEFAULT_BORDER;
 				}
 
 				case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
@@ -239,7 +239,7 @@ namespace iTextSharp.Layout.Element
 				case iTextSharp.Layout.Property.Property.PADDING_RIGHT:
 				case iTextSharp.Layout.Property.Property.PADDING_TOP:
 				{
-					return (T1)float?.ValueOf(2);
+					return (T1)(Object)2f;
 				}
 
 				default:

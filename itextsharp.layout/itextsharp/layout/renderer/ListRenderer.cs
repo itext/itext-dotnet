@@ -67,7 +67,8 @@ namespace iTextSharp.Layout.Renderer
 			if (!HasOwnProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED))
 			{
 				IList<IRenderer> symbolRenderers = new List<IRenderer>();
-				int listItemNum = GetProperty(iTextSharp.Layout.Property.Property.LIST_START, 1);
+				int listItemNum = (int)this.GetProperty<int?>(iTextSharp.Layout.Property.Property
+					.LIST_START, 1);
 				for (int i = 0; i < childRenderers.Count; i++)
 				{
 					if (childRenderers[i].GetModelElement() is ListItem)
@@ -92,14 +93,14 @@ namespace iTextSharp.Layout.Renderer
 					maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox
 						().GetWidth());
 				}
-				float? symbolIndent = modelElement.GetProperty(iTextSharp.Layout.Property.Property
+				float? symbolIndent = modelElement.GetProperty<float?>(iTextSharp.Layout.Property.Property
 					.LIST_SYMBOL_INDENT);
 				listItemNum = 0;
 				foreach (IRenderer childRenderer in childRenderers)
 				{
 					childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
 					childRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, childRenderer
-						.GetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0f) + maxSymbolWidth
+						.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0f) + maxSymbolWidth
 						 + (symbolIndent != null ? symbolIndent : 0f));
 					if (childRenderer.GetModelElement() is ListItem)
 					{
@@ -138,7 +139,7 @@ namespace iTextSharp.Layout.Renderer
 		protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer 
 			renderer)
 		{
-			Object defaultListSymbol = renderer.GetProperty(iTextSharp.Layout.Property.Property
+			Object defaultListSymbol = renderer.GetProperty<Object>(iTextSharp.Layout.Property.Property
 				.LIST_SYMBOL);
 			if (defaultListSymbol is Text)
 			{
@@ -229,8 +230,8 @@ namespace iTextSharp.Layout.Renderer
 								throw new InvalidOperationException();
 							}
 						}
-						Text textElement = new Text(renderer.GetProperty(iTextSharp.Layout.Property.Property
-							.LIST_SYMBOL_PRE_TEXT) + numberText + renderer.GetProperty(iTextSharp.Layout.Property.Property
+						Text textElement = new Text(renderer.GetProperty<String>(iTextSharp.Layout.Property.Property
+							.LIST_SYMBOL_PRE_TEXT) + numberText + renderer.GetProperty<String>(iTextSharp.Layout.Property.Property
 							.LIST_SYMBOL_POST_TEXT));
 						IRenderer textRenderer;
 						// Be careful. There is a workaround here. For Greek symbols we first set a dummy font with document=null

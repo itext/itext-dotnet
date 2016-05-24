@@ -1276,7 +1276,7 @@ namespace iTextSharp.Signatures
 			{
 				if (signCert.Equals(oc[k]))
 				{
-					oc.RemoveAt(k);
+					oc.JRemoveAt(k);
 					--k;
 					continue;
 				}
@@ -1301,7 +1301,7 @@ namespace iTextSharp.Signatures
 						}
 						found = true;
 						cc.Add(oc[k_1]);
-						oc.RemoveAt(k_1);
+						oc.JRemoveAt(k_1);
 						break;
 					}
 					catch (Exception)

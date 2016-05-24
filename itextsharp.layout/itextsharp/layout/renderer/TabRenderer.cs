@@ -63,13 +63,15 @@ namespace iTextSharp.Layout.Renderer
 			float? width = RetrieveWidth(area.GetBBox().GetWidth());
 			float? height = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT);
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().
-				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), width, height));
+				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), (float)width, height
+				));
 			return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
 		}
 
 		public override void Draw(DrawContext drawContext)
 		{
-			ILineDrawer leader = GetProperty(iTextSharp.Layout.Property.Property.TAB_LEADER);
+			ILineDrawer leader = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+				.TAB_LEADER);
 			if (leader == null)
 			{
 				return;

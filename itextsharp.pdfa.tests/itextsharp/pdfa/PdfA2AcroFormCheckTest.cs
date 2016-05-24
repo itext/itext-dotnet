@@ -22,7 +22,7 @@ namespace iTextSharp.Pdfa
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[NUnit.Framework.ExpectedException(typeof(PdfAConformanceException))]
 		[Test]
@@ -81,7 +81,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="Java.IO.FileNotFoundException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		[Test]
 		public virtual void AcroFormCheck04()

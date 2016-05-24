@@ -82,7 +82,7 @@ namespace iTextSharp.Layout
 		{
 			childElements.Add(element);
 			EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
-			return (T)this;
+			return (T)(Object)this;
 		}
 
 		/// <summary>Adds an image to the root.</summary>
@@ -95,7 +95,7 @@ namespace iTextSharp.Layout
 		{
 			childElements.Add(image);
 			EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
-			return (T)this;
+			return (T)(Object)this;
 		}
 
 		public override bool HasProperty(int property)
@@ -110,7 +110,7 @@ namespace iTextSharp.Layout
 
 		public override T1 GetProperty<T1>(int property)
 		{
-			return ((T1)GetOwnProperty(property));
+			return ((T1)this.GetOwnProperty<T1>(property));
 		}
 
 		public override T1 GetOwnProperty<T1>(int property)
@@ -130,7 +130,7 @@ namespace iTextSharp.Layout
 						{
 							defaultFont = PdfFontFactory.CreateFont();
 						}
-						return (T1)defaultFont;
+						return (T1)(Object)defaultFont;
 					}
 
 					case iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS:
@@ -139,32 +139,32 @@ namespace iTextSharp.Layout
 						{
 							defaultSplitCharacters = new DefaultSplitCharacters();
 						}
-						return (T1)defaultSplitCharacters;
+						return (T1)(Object)defaultSplitCharacters;
 					}
 
 					case iTextSharp.Layout.Property.Property.FONT_SIZE:
 					{
-						return (T1)System.Convert.ToInt32(12);
+						return (T1)(Object)12;
 					}
 
 					case iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE:
 					{
-						return (T1)System.Convert.ToInt32(PdfCanvasConstants.TextRenderingMode.FILL);
+						return (T1)(Object)PdfCanvasConstants.TextRenderingMode.FILL;
 					}
 
 					case iTextSharp.Layout.Property.Property.TEXT_RISE:
 					{
-						return (T1)float?.ValueOf(0);
+						return (T1)(Object)0f;
 					}
 
 					case iTextSharp.Layout.Property.Property.SPACING_RATIO:
 					{
-						return (T1)float?.ValueOf(0.75f);
+						return (T1)(Object)0.75f;
 					}
 
 					default:
 					{
-						return null;
+						return (T1)(Object)null;
 					}
 				}
 			}
@@ -350,14 +350,15 @@ namespace iTextSharp.Layout
 				pageNumber = 1;
 			}
 			div.SetFixedPosition(pageNumber, divX, divY, divWidth).SetHeight(divHeight);
-			if (((Object)p.GetProperty(iTextSharp.Layout.Property.Property.LEADING)) == null)
+			if (((float?)p.GetProperty<float?>(iTextSharp.Layout.Property.Property.LEADING)) 
+				== null)
 			{
 				p.SetMultipliedLeading(1);
 			}
 			div.Add(p.SetMargins(0, 0, 0, 0));
 			div.SetRole(PdfName.Artifact);
 			this.Add(div);
-			return (T)this;
+			return (T)(Object)this;
 		}
 
 		protected internal abstract RootRenderer EnsureRootRendererNotNull();

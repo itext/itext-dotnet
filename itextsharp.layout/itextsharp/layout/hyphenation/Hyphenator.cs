@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 
@@ -244,8 +243,8 @@ namespace iTextSharp.Layout.Hyphenation
 			String name = key + ".xml";
 			try
 			{
-				Stream fis = new FileStream(new File(new File(searchDirectory), name), FileMode.Open
-					);
+				Stream fis = new FileStream(new FileInfo(new FileInfo(searchDirectory), name), FileMode
+					.Open);
 				return GetHyphenationTree(fis, name);
 			}
 			catch (System.IO.IOException ioe)

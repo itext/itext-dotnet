@@ -107,17 +107,17 @@ namespace iTextSharp.Layout.Renderer
 
 		public virtual T1 GetProperty<T1>(int key)
 		{
-			return null;
+			return (T1)(Object)null;
 		}
 
 		public virtual T1 GetOwnProperty<T1>(int property)
 		{
-			return null;
+			return (T1)(Object)null;
 		}
 
 		public virtual T1 GetDefaultProperty<T1>(int property)
 		{
-			return null;
+			return (T1)(Object)null;
 		}
 
 		public virtual T1 GetProperty<T1>(int property, T1 defaultValue)

@@ -68,7 +68,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -80,14 +81,14 @@ namespace iTextSharp.Layout.Renderer
 			bool isPositioned = IsPositioned();
 			if (isPositioned)
 			{
-				float x = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+				float x = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
 			float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
 			if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned))
 			{
-				parentBBox.SetWidth(blockWidth);
+				parentBBox.SetWidth((float)blockWidth);
 			}
 			float[] paddings = GetPaddings();
 			ApplyPaddings(parentBBox, paddings, false);
@@ -132,16 +133,17 @@ namespace iTextSharp.Layout.Renderer
 				paddings = GetPaddings();
 			}
 			float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
-			Leading leading = GetProperty(iTextSharp.Layout.Property.Property.LEADING);
+			Leading leading = this.GetProperty<Leading>(iTextSharp.Layout.Property.Property.LEADING
+				);
 			float leadingValue = 0;
 			float lastLineHeight = 0;
 			while (currentRenderer != null)
 			{
 				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_DEFAULT, GetPropertyAsFloat
 					(iTextSharp.Layout.Property.Property.TAB_DEFAULT));
-				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, GetProperty
-					(iTextSharp.Layout.Property.Property.TAB_STOPS));
-				float lineIndent = anythingPlaced ? 0 : GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, this.GetProperty
+					<Object>(iTextSharp.Layout.Property.Property.TAB_STOPS));
+				float lineIndent = anythingPlaced ? 0 : (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 					.FIRST_LINE_INDENT);
 				float availableWidth = layoutBox.GetWidth() - lineIndent;
 				Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox
@@ -160,8 +162,8 @@ namespace iTextSharp.Layout.Renderer
 						processedRenderer = (LineRenderer)result.GetSplitRenderer();
 					}
 				}
-				TextAlignment textAlignment = GetProperty(iTextSharp.Layout.Property.Property.TEXT_ALIGNMENT
-					);
+				TextAlignment textAlignment = this.GetProperty<TextAlignment>(iTextSharp.Layout.Property.Property
+					.TEXT_ALIGNMENT);
 				if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.
 					JUSTIFIED && !result.IsSplitForcedByNewline() || textAlignment == TextAlignment.
 					JUSTIFIED_ALL)
@@ -299,19 +301,20 @@ namespace iTextSharp.Layout.Renderer
 			ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
 			if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
 			{
-				occupiedArea.GetBBox().MoveDown(blockHeight - occupiedArea.GetBBox().GetHeight())
-					.SetHeight(blockHeight);
+				occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight
+					()).SetHeight((float)blockHeight);
 				ApplyVerticalAlignment();
 			}
 			if (isPositioned)
 			{
-				float y = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+				float y = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
 			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 			ApplyMargins(occupiedArea.GetBBox(), margins, true);
-			if (GetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))
@@ -335,7 +338,7 @@ namespace iTextSharp.Layout.Renderer
 			if ((property == iTextSharp.Layout.Property.Property.MARGIN_TOP || property == iTextSharp.Layout.Property.Property
 				.MARGIN_BOTTOM) && parent is CellRenderer)
 			{
-				return (T1)float?.ValueOf(0);
+				return (T1)(Object)0f;
 			}
 			return base.GetDefaultProperty(property);
 		}
@@ -346,8 +349,8 @@ namespace iTextSharp.Layout.Renderer
 			iTextSharp.Layout.Renderer.ParagraphRenderer overflowRenderer = (iTextSharp.Layout.Renderer.ParagraphRenderer
 				)GetNextRenderer();
 			// Reset first line indent in case of overflow.
-			float firstLineIndent = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT
-				);
+			float firstLineIndent = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.FIRST_LINE_INDENT);
 			if (firstLineIndent != 0)
 			{
 				overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT
