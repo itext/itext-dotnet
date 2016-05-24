@@ -96,10 +96,6 @@ namespace iTextSharp.Kernel {
             return r;
         }
 
-        public static Stream OpenStream(this Uri uri) {
-            return WebRequest.Create(uri).GetResponse().GetResponseStream();
-        }
-
         public static void ReadFully(this BinaryReader input, byte[] b, int off, int len) {
             if (len < 0)
             {
