@@ -125,7 +125,7 @@ namespace iTextSharp.Kernel {
         public static T JRemoveAt<T>(this IList<T> list, int index)
         {
             T value = list[index];
-            list.Remove(value);
+            list.RemoveAt(index);
 
             return value;
         }

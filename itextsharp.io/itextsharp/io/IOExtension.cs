@@ -83,5 +83,12 @@ namespace iTextSharp.IO {
                 list.Insert(index, c[i]);
             }
         }
+
+        public static T JRemoveAt<T>(this IList<T> list, int index) {
+            T value = list[index];
+            list.RemoveAt(index);
+
+            return value;
+        }
     }
 }
