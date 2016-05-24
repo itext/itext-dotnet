@@ -122,6 +122,14 @@ namespace iTextSharp.Kernel {
             return value;
         }
 
+        public static T JRemoveAt<T>(this IList<T> list, int index)
+        {
+            T value = list[index];
+            list.Remove(value);
+
+            return value;
+        }
+
         public static T PollFirst<T>(this SortedSet<T> set) {
             T item = set.First();
             set.Remove(item);
