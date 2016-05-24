@@ -346,8 +346,8 @@ namespace iTextSharp.Kernel.Pdf
 				{
 					copyObjectKey = GetCopyObjectKey(obj);
 				}
-				PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference(
-					);
+				PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference
+					();
 				copiedObjects[copyObjectKey] = reference;
 			}
 			newObject.CopyContent(obj, document);
@@ -355,19 +355,19 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <summary>Writes object to body of PDF document.</summary>
-		/// <param name="object">object to write.</param>
+		/// <param name="pdfObj">object to write.</param>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		protected internal virtual void WriteToBody(PdfObject obj)
+		protected internal virtual void WriteToBody(PdfObject pdfObj)
 		{
 			if (crypto != null)
 			{
-				crypto.SetHashKeyForNextObject(obj.GetIndirectReference().GetObjNumber(), obj
+				crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj
 					.GetIndirectReference().GetGenNumber());
 			}
-			WriteInteger(obj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger
-				(obj.GetIndirectReference().GetGenNumber()).WriteBytes(obj);
-			Write(obj);
+			WriteInteger(pdfObj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger
+				(pdfObj.GetIndirectReference().GetGenNumber()).WriteBytes(obj);
+			Write(pdfObj);
 			WriteBytes(endobj);
 		}
 
@@ -441,7 +441,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// Calculates hash code for object to be copied.
 		/// The hash code and the copied object is the stored in @{link copiedObjects} hash map to avoid duplications.
 		/// </remarks>
-		/// <param name="object">object to be copied.</param>
+		/// <param name="obj">object to be copied.</param>
 		/// <returns>calculated hash code.</returns>
 		protected internal virtual int GetCopyObjectKey(PdfObject obj)
 		{
