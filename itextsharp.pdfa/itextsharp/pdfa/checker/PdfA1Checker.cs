@@ -296,7 +296,7 @@ namespace iTextSharp.Pdfa.Checker
 				throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainOpiKey
 					);
 			}
-			if (image.ContainsKey(PdfName.Interpolate) && image.GetAsBool(PdfName.Interpolate
+			if (image.ContainsKey(PdfName.Interpolate) && (bool)image.GetAsBool(PdfName.Interpolate
 				))
 			{
 				throw new PdfAConformanceException(PdfAConformanceException.TheValueOfInterpolateKeyShallNotBeTrue
@@ -497,7 +497,7 @@ namespace iTextSharp.Pdfa.Checker
 				throw new PdfAConformanceException(PdfAConformanceException.AnnotationShallContainKeyF
 					);
 			}
-			int flags = annotDic.GetAsInt(PdfName.F);
+			int flags = (int)annotDic.GetAsInt(PdfName.F);
 			if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN
 				) || CheckFlag(flags, PdfAnnotation.INVISIBLE) || CheckFlag(flags, PdfAnnotation
 				.NO_VIEW))
