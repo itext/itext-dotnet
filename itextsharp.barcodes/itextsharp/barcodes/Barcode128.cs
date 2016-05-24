@@ -241,7 +241,7 @@ namespace iTextSharp.Barcodes
 						break;
 					}
 					int? subcode = System.Convert.ToInt32(code.JSubstring(0, k));
-					n = ais.ContainsKey(subcode) ? ais[subcode] : 0;
+					n = ais.ContainsKey(subcode) ? (int)ais[subcode] : 0;
 					if (n != 0)
 					{
 						idlen = k;
@@ -807,7 +807,7 @@ namespace iTextSharp.Barcodes
 						throw new ArgumentException("AI is too short");
 					}
 					int ai = System.Convert.ToInt32(sai);
-					int len = ais[ai];
+					int len = (int)ais[ai];
 					if (len == 0)
 					{
 						throw new ArgumentException("AI not found");
