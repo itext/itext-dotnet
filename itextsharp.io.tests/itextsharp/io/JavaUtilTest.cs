@@ -53,7 +53,7 @@ namespace iTextSharp.IO
             IEnumerator<int> emptyIterator = JavaCollectionsUtil.EmptyIterator<int>();
             Assert.False(emptyIterator.MoveNext());
 
-            IList<int> unmodifiableList = JavaCollectionsUtil.UnmodifiableList(new int[] { 10, 20, 30, 20 }.ToList());
+            IList<int> unmodifiableList = JavaCollectionsUtil.UnmodifiableList<int>(new int[] { 10, 20, 30, 20 }.ToList());
             Assert.Throws<NotSupportedException>(() => unmodifiableList.Insert(0, 20));
             Assert.Throws<NotSupportedException>(() => { unmodifiableList[2] = 50; });
             int test = unmodifiableList[3];
