@@ -509,7 +509,7 @@ namespace iTextSharp.Kernel.Pdf
 			errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences
 				 + "\n";
 			errorMessage += contentDifferences == null ? "" : contentDifferences;
-			if (!errorMessage.IsEmpty())
+			if (!String.IsNullOrEmpty(errorMessage))
 			{
 				NUnit.Framework.Assert.Fail(errorMessage);
 			}

@@ -137,44 +137,44 @@ namespace iTextSharp.Kernel.Pdf
 			reference.SetState(PdfObject.FREE);
 			reference.SetState(PdfObject.READING);
 			reference.SetState(PdfObject.MODIFIED);
-			NUnit.Framework.Assert.AreEqual("Free", true, reference.CheckState(PdfObject.FREE
-				));
-			NUnit.Framework.Assert.AreEqual("Reading", true, reference.CheckState(PdfObject.READING
-				));
-			NUnit.Framework.Assert.AreEqual("Modified", true, reference.CheckState(PdfObject.
-				MODIFIED));
-			NUnit.Framework.Assert.AreEqual("Free|Reading|Modified", true, reference.CheckState
-				((byte)(PdfObject.FREE | PdfObject.MODIFIED | PdfObject.READING)));
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.FREE), "Free"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.FREE 
+				| PdfObject.MODIFIED | PdfObject.READING)), "Free|Reading|Modified");
 			reference.ClearState(PdfObject.FREE);
-			NUnit.Framework.Assert.AreEqual("Free", false, reference.CheckState(PdfObject.FREE
-				));
-			NUnit.Framework.Assert.AreEqual("Reading", true, reference.CheckState(PdfObject.READING
-				));
-			NUnit.Framework.Assert.AreEqual("Modified", true, reference.CheckState(PdfObject.
-				MODIFIED));
-			NUnit.Framework.Assert.AreEqual("Reading|Modified", true, reference.CheckState((byte
-				)(PdfObject.READING | PdfObject.MODIFIED)));
-			NUnit.Framework.Assert.AreEqual("Free|Reading|Modified", false, reference.CheckState
-				((byte)(PdfObject.FREE | PdfObject.READING | PdfObject.MODIFIED)));
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.READING
+				 | PdfObject.MODIFIED)), "Reading|Modified");
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE
+				 | PdfObject.READING | PdfObject.MODIFIED)), "Free|Reading|Modified");
 			reference.ClearState(PdfObject.READING);
-			NUnit.Framework.Assert.AreEqual("Free", false, reference.CheckState(PdfObject.FREE
-				));
-			NUnit.Framework.Assert.AreEqual("Reading", false, reference.CheckState(PdfObject.
-				READING));
-			NUnit.Framework.Assert.AreEqual("Modified", true, reference.CheckState(PdfObject.
-				MODIFIED));
-			NUnit.Framework.Assert.AreEqual("Free|Reading", false, reference.CheckState((byte
-				)(PdfObject.FREE | PdfObject.READING)));
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
+				);
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading"
+				);
+			NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
+				);
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE
+				 | PdfObject.READING)), "Free|Reading");
 			reference.ClearState(PdfObject.MODIFIED);
-			NUnit.Framework.Assert.AreEqual("Free", false, reference.CheckState(PdfObject.FREE
-				));
-			NUnit.Framework.Assert.AreEqual("Reading", false, reference.CheckState(PdfObject.
-				READING));
-			NUnit.Framework.Assert.AreEqual("Modified", false, reference.CheckState(PdfObject
-				.MODIFIED));
-			NUnit.Framework.Assert.AreEqual("Is InUse", true, !reference.IsFree());
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
+				);
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading"
+				);
+			NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.MODIFIED), 
+				"Modified");
+			NUnit.Framework.Assert.AreEqual(true, !reference.IsFree(), "Is InUse");
 			reference.SetState(PdfObject.FREE);
-			NUnit.Framework.Assert.AreEqual("Not IsInUse", false, !reference.IsFree());
+			NUnit.Framework.Assert.AreEqual(false, !reference.IsFree(), "Not IsInUse");
 		}
 
 		/// <exception cref="System.IO.IOException"/>

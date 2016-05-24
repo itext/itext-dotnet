@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Test;
 
@@ -33,12 +34,13 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "emptyDocument.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
 			String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.CreationDate
 				).GetValue();
 			DateTime cl = PdfDate.Decode(date);
-			long diff = new GregorianCalendar().GetTimeInMillis() - cl.GetTimeInMillis();
+			double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl
+				);
 			String message = "Unexpected creation date. Different from now is " + (float)diff
 				 / 1000 + "s";
 			NUnit.Framework.Assert.IsTrue(diff < 5000, message);
@@ -133,7 +135,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDoc = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary page = pdfDoc.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.IsNotNull(page);
 			PdfDictionary helloWorld = page.GetAsDictionary(new PdfName("HelloWorld"));
@@ -164,9 +166,9 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfArray aDirect = new PdfArray();
-			aDirect.Add(new PdfArray(new _List_160()));
+			aDirect.Add(new PdfArray(new _List_158()));
 			aDirect.Add(new PdfBoolean(true));
-			aDirect.Add(new PdfDictionary(new _SortedDictionary_165()));
+			aDirect.Add(new PdfDictionary(new _SortedDictionary_163()));
 			aDirect.Add(new PdfName("name"));
 			aDirect.Add(new PdfNull());
 			aDirect.Add(new PdfNumber(100));
@@ -184,7 +186,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copyObject1_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
 			PdfArray a = (PdfArray)catalog.Get(new PdfName("aDirect"));
 			NUnit.Framework.Assert.IsNotNull(a);
@@ -205,9 +207,9 @@ namespace iTextSharp.Kernel.Pdf
 			reader.Close();
 		}
 
-		private sealed class _List_160 : List<PdfObject>
+		private sealed class _List_158 : List<PdfObject>
 		{
-			public _List_160()
+			public _List_158()
 			{
 				{
 					this.Add(new PdfNumber(1));
@@ -216,9 +218,9 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		private sealed class _SortedDictionary_165 : SortedDictionary<PdfName, PdfObject>
+		private sealed class _SortedDictionary_163 : SortedDictionary<PdfName, PdfObject>
 		{
-			public _SortedDictionary_165()
+			public _SortedDictionary_163()
 			{
 				{
 					this[new PdfName("one")] = new PdfNumber(1);
@@ -244,9 +246,9 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfName aDirectName = new PdfName("aDirect");
 			PdfArray aDirect = ((PdfArray)new PdfArray().MakeIndirect(pdfDoc1));
-			aDirect.Add(new PdfArray(new _List_221(pdfDoc1)));
+			aDirect.Add(new PdfArray(new _List_219(pdfDoc1)));
 			aDirect.Add(new PdfBoolean(true));
-			aDirect.Add(new PdfDictionary(new _SortedDictionary_226(pdfDoc1)));
+			aDirect.Add(new PdfDictionary(new _SortedDictionary_224(pdfDoc1)));
 			aDirect.Add(new PdfName("name"));
 			aDirect.Add(((PdfNull)new PdfNull().MakeIndirect(pdfDoc1)));
 			aDirect.Add(new PdfNumber(100));
@@ -268,7 +270,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copyObject2_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
 			PdfArray a = catalog.GetAsArray(new PdfName("aDirect"));
 			NUnit.Framework.Assert.IsNotNull(a);
@@ -289,9 +291,9 @@ namespace iTextSharp.Kernel.Pdf
 			reader.Close();
 		}
 
-		private sealed class _List_221 : List<PdfObject>
+		private sealed class _List_219 : List<PdfObject>
 		{
-			public _List_221(PdfDocument pdfDoc1)
+			public _List_219(PdfDocument pdfDoc1)
 			{
 				this.pdfDoc1 = pdfDoc1;
 				{
@@ -303,9 +305,9 @@ namespace iTextSharp.Kernel.Pdf
 			private readonly PdfDocument pdfDoc1;
 		}
 
-		private sealed class _SortedDictionary_226 : SortedDictionary<PdfName, PdfObject>
+		private sealed class _SortedDictionary_224 : SortedDictionary<PdfName, PdfObject>
 		{
-			public _SortedDictionary_226(PdfDocument pdfDoc1)
+			public _SortedDictionary_224(PdfDocument pdfDoc1)
 			{
 				this.pdfDoc1 = pdfDoc1;
 				{
@@ -359,7 +361,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				PdfReader reader = new PdfReader(destinationFolder + "copyObject3_2.pdf");
 				PdfDocument pdfDocument = new PdfDocument(reader);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 				PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
 				PdfArray arr1 = catalog.GetAsArray(new PdfName("arr1"));
 				PdfArray arr2 = arr1.GetAsArray(0);
@@ -384,7 +386,7 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfStream stream1 = ((PdfStream)new PdfStream().MakeIndirect(pdfDoc1));
-			stream1.GetOutputStream().Write(new PdfArray(new _List_341()));
+			stream1.GetOutputStream().Write(new PdfArray(new _List_339()));
 			catalog1.Put(new PdfName("stream"), stream1);
 			pdfDoc1.Close();
 			PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject4_1.pdf"
@@ -403,7 +405,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copyObject4_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
 			PdfStream stream = (PdfStream)catalog.GetAsStream(new PdfName("stream"));
 			byte[] bytes = stream.GetBytes();
@@ -411,9 +413,9 @@ namespace iTextSharp.Kernel.Pdf
 			reader.Close();
 		}
 
-		private sealed class _List_341 : List<PdfObject>
+		private sealed class _List_339 : List<PdfObject>
 		{
-			public _List_341()
+			public _List_339()
 			{
 				{
 					this.Add(new PdfNumber(1));
@@ -456,7 +458,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copyObject5_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			NUnit.Framework.Assert.AreEqual(8, reader.trailer.GetAsNumber(PdfName.Size).IntValue
 				());
 			byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
@@ -498,7 +500,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc1.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copyObject6_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfObject obj1 = pdfDocument.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorldCopy1"
 				));
 			PdfIndirectReference ref1 = obj1.GetIndirectReference();
@@ -647,8 +649,8 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -683,8 +685,8 @@ namespace iTextSharp.Kernel.Pdf
 			//        reader.close();
 			PdfReader reader6 = new PdfReader(filename);
 			document = new PdfDocument(reader6);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader6.HasRebuiltXref());
-			NUnit.Framework.Assert.AreEqual("Fixed", false, reader6.HasFixedXref());
+			NUnit.Framework.Assert.AreEqual(false, reader6.HasRebuiltXref(), "Rebuilt");
+			NUnit.Framework.Assert.AreEqual(false, reader6.HasFixedXref(), "Fixed");
 			PdfStream pdfStream = (PdfStream)document.GetXref().Get(streamIndirectNumber).GetRefersTo
 				();
 			NUnit.Framework.Assert.AreEqual(streamContent.GetBytes(), pdfStream.GetBytes(), "Stream by InputStream"

@@ -70,10 +70,6 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.AddNamedDestination("test2", array3);
 			pdfDoc.AddNamedDestination("test3", array1);
 			PdfOutline root = pdfDoc.GetOutlines(false);
-			if (root == null)
-			{
-				root = new PdfOutline(pdfDoc);
-			}
 			PdfOutline firstOutline = root.AddOutline("Test1");
 			firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")
 				));

@@ -76,7 +76,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc1.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copying1_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary trailer = pdfDocument.GetTrailer();
 			PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
 			PdfName b = info.GetAsName(new PdfName("a"));
@@ -119,7 +119,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc1.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copying2_2.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			for (int i_2 = 0; i_2 < 5; i_2++)
 			{
 				byte[] bytes = pdfDocument.GetPage(i_2 + 1).GetContentBytes();
@@ -150,7 +150,7 @@ namespace iTextSharp.Kernel.Pdf
 				());
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "copying3_1.pdf");
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			pdfDoc = new PdfDocument(reader);
 			PdfDictionary dic0 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName
 				("HelloWorld"));

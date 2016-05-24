@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using Org.Bouncycastle.Jce.Provider;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Utils;
@@ -29,7 +28,6 @@ namespace iTextSharp.Kernel.Pdf
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
-			Java.Security.Security.AddProvider(new BouncyCastleProvider());
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -174,10 +172,10 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage page = document.GetPage(1);
 			NUnit.Framework.Assert.IsTrue(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.
 				GetStreamBytes(0)).Contains(pageContent), "Expected content: \n" + pageContent);
-			NUnit.Framework.Assert.AreEqual("Encrypted author", author, document.GetDocumentInfo
-				().GetAuthor());
-			NUnit.Framework.Assert.AreEqual("Encrypted creator", creator, document.GetDocumentInfo
-				().GetCreator());
+			NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor(), "Encrypted author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, document.GetDocumentInfo().GetCreator(), 
+				"Encrypted creator");
 			document.Close();
 		}
 

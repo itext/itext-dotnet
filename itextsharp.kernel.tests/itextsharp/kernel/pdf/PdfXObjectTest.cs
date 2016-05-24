@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
@@ -66,8 +65,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas_1.Release();
 			page_1.Flush();
 			document.Close();
-			NUnit.Framework.Assert.IsTrue(new File(destinationDocument).Length() < 20 * 1024 
-				* 1024);
+			NUnit.Framework.Assert.IsTrue(new FileInfo(destinationDocument).Length < 20 * 1024
+				 * 1024);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument
 				, sourceFolder + "cmp_documentFromImages1.pdf", destinationFolder, "diff_"));
 		}

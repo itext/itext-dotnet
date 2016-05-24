@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Awt;
 using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Font;
@@ -57,15 +56,15 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "simpleCanvas.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -100,15 +99,15 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + fileName);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -149,15 +148,15 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + fileName);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -184,15 +183,15 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(destinationFolder + "simpleCanvasWithPageFlush.pdf"
 				);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -219,15 +218,15 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(destinationFolder + "simpleCanvasWithFullCompression.pdf"
 				);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -255,15 +254,15 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(destinationFolder + "simpleCanvasWithPageFlushAndFullCompression.pdf"
 				);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", 1, pdfDocument.GetNumberOfPages());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetNumberOfPages(), "Page count");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			reader.Close();
@@ -296,16 +295,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(destinationFolder + "1000PagesDocument.pdf");
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -341,16 +340,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -386,16 +385,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -430,16 +429,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -476,16 +475,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -522,16 +521,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -568,16 +567,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -614,16 +613,16 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc.Close();
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary info = pdfDocument.GetDocumentInfo().GetPdfObject();
-			NUnit.Framework.Assert.AreEqual("Author", author, info.Get(PdfName.Author).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Creator", creator, info.Get(PdfName.Creator).ToString
-				());
-			NUnit.Framework.Assert.AreEqual("Title", title, info.Get(PdfName.Title).ToString(
-				));
-			NUnit.Framework.Assert.AreEqual("Page count", pageCount, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author"
+				);
+			NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator"
+				);
+			NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title"
+				);
+			NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
+				);
 			for (int i_1 = 1; i_1 <= pageCount; i_1++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
@@ -671,7 +670,7 @@ namespace iTextSharp.Kernel.Pdf
 				NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
 			}
 			reader.Close();
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary page_1 = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.IsNotNull(page_1.Get(PdfName.Parent));
 			reader.Close();
@@ -715,7 +714,7 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.Close();
 			PdfReader reader = new PdfReader(file2);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
 			NUnit.Framework.Assert.IsNotNull(page.Get(PdfName.Parent));
 			reader.Close();
@@ -771,11 +770,11 @@ namespace iTextSharp.Kernel.Pdf
 			CompareTool cmpTool = new CompareTool();
 			PdfReader reader1 = new PdfReader(file1);
 			PdfDocument doc1 = new PdfDocument(reader1);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader1.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
 			PdfDictionary p1 = doc1.GetPage(1).GetPdfObject();
 			PdfReader reader2 = new PdfReader(file2);
 			PdfDocument doc2 = new PdfDocument(reader2);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader2.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
 			for (int i_1 = 0; i_1 < 10; i_1++)
 			{
 				PdfDictionary p2 = doc2.GetPage(i_1 + 1).GetPdfObject();
@@ -823,7 +822,7 @@ namespace iTextSharp.Kernel.Pdf
 			CompareTool cmpTool = new CompareTool();
 			PdfReader reader1 = new PdfReader(file1);
 			PdfDocument doc1 = new PdfDocument(reader1);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader1.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
 			for (int i_2 = 0; i_2 < 5; i_2++)
 			{
 				PdfDictionary page1 = doc1.GetPage(i_2 + 1).GetPdfObject();
@@ -887,10 +886,10 @@ namespace iTextSharp.Kernel.Pdf
 				PdfReader reader1 = new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf"
 					, i_3 + 1));
 				PdfDocument doc1 = new PdfDocument(reader1);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader1.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
 				PdfReader reader2 = new PdfReader(destinationFolder + "copyPages5_4.pdf");
 				PdfDocument doc2 = new PdfDocument(reader2);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader2.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
 				PdfDictionary page1 = doc1.GetPage(1).GetPdfObject();
 				PdfDictionary page2 = doc2.GetPage(i_3 + 1).GetPdfObject();
 				NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page2));
@@ -947,16 +946,16 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				PdfReader reader1 = new PdfReader(file1);
 				PdfDocument doc1 = new PdfDocument(reader1);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader1.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
 				PdfReader reader2 = new PdfReader(file2);
 				PdfDocument doc2 = new PdfDocument(reader2);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader2.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
 				PdfReader reader3 = new PdfReader(file3);
 				PdfDocument doc3 = new PdfDocument(reader3);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader3.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
 				PdfReader reader4 = new PdfReader(file1_upd);
 				PdfDocument doc4 = new PdfDocument(reader4);
-				NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader4.HasRebuiltXref());
+				NUnit.Framework.Assert.AreEqual(false, reader4.HasRebuiltXref(), "Rebuilt");
 				NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(doc1.GetPage(1).GetPdfObject
 					(), doc4.GetPage(2).GetPdfObject()));
 				NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(doc4.GetPage(2).GetPdfObject
@@ -1006,8 +1005,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
-			PdfDictionary tag2 = new PdfDictionary(new _Dictionary_1119());
-			PdfDictionary tag3 = new PdfDictionary(new _Dictionary_1122(document));
+			PdfDictionary tag2 = new PdfDictionary(new _Dictionary_1104());
+			PdfDictionary tag3 = new PdfDictionary(new _Dictionary_1107(document));
 			canvas.BeginMarkedContent(new PdfName("Tag1")).EndMarkedContent().BeginMarkedContent
 				(new PdfName("Tag2"), tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"
 				), (PdfDictionary)((PdfDictionary)tag3.MakeIndirect(document))).EndMarkedContent
@@ -1019,9 +1018,9 @@ namespace iTextSharp.Kernel.Pdf
 				, "diff_"));
 		}
 
-		private sealed class _Dictionary_1119 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_1104 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_1119()
+			public _Dictionary_1104()
 			{
 				{
 					this[new PdfName("Tag")] = new PdfNumber(2);
@@ -1029,9 +1028,9 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		private sealed class _Dictionary_1122 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_1107 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_1122(PdfDocument document)
+			public _Dictionary_1107(PdfDocument document)
 			{
 				this.document = document;
 				{
@@ -1260,7 +1259,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new 
-				PdfString(new String(bytes, System.Text.Encoding.GetEncoding("UTF-8"))));
+				PdfString(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes, "UTF-8")));
 			PdfCanvas canvas = new PdfCanvas(page);
 			canvas.SetFillColor(new Indexed(indexed, 85)).Rectangle(50, 500, 50, 50).Fill();
 			canvas.SetFillColor(new Indexed(indexed, 127)).Rectangle(150, 500, 50, 50).Fill();
@@ -1312,7 +1311,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage page = document.AddNewPage();
 			PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 
 				1, 0, 1 }), new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes());
-			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(new _List_1368(), new PdfDeviceCs.Rgb
+			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(new _List_1353(), new PdfDeviceCs.Rgb
 				(), function);
 			PdfCanvas canvas = new PdfCanvas(page);
 			canvas.SetFillColor(new DeviceN(deviceN, new float[] { 0, 0 })).Rectangle(50, 500
@@ -1328,9 +1327,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 		}
 
-		private sealed class _List_1368 : List<String>
+		private sealed class _List_1353 : List<String>
 		{
-			public _List_1368()
+			public _List_1353()
 			{
 				{
 					this.Add("MyRed");
@@ -1638,67 +1637,34 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
-			Stream stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder 
-				+ "Desert.jpg"));
+			Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "Desert.jpg"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 700, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bulb.gif"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bulb.gif"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 600, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "smpl.bmp"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "smpl.bmp"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 500, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "itext.png"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "itext.png"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 460, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "0047478.jpg"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "0047478.jpg"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 300, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 200, 100, true);
-			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"
-				));
+			stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 30, 100, true);
-			document.Close();
-			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
-		}
-
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="System.Exception"/>
-		[Test]
-		public virtual void AwtImagesTest01()
-		{
-			String filename = "awtImagesTest01.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
-				.Create));
-			PdfDocument document = new PdfDocument(writer);
-			PdfPage page = document.AddNewPage();
-			PdfCanvas canvas = new PdfCanvas(page);
-			int x = 36;
-			int y = 700;
-			int width = 100;
-			foreach (String image in RESOURCES)
-			{
-				System.Drawing.Image awtImage = Toolkit.GetDefaultToolkit().CreateImage(sourceFolder
-					 + image);
-				canvas.AddImage(ImageDataFactory.Create(awtImage, null), x, y, width, false);
-				y -= 150;
-			}
 			document.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));

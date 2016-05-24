@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.Utils
 				 + "cmp_mergedResult03.pdf");
 			errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
 			errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
-			if (!errorMessage.IsEmpty())
+			if (!String.IsNullOrEmpty(errorMessage))
 			{
 				NUnit.Framework.Assert.Fail(errorMessage);
 			}
@@ -158,7 +158,7 @@ namespace iTextSharp.Kernel.Utils
 				 + "cmp_mergedResult04.pdf");
 			errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
 			errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
-			if (!errorMessage.IsEmpty())
+			if (!String.IsNullOrEmpty(errorMessage))
 			{
 				NUnit.Framework.Assert.Fail(errorMessage);
 			}

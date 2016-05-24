@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
@@ -22,7 +21,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		[SetUp]
 		public virtual void SetUp()
 		{
-			new File(outputPath).Mkdirs();
+			CreateDestinationFolder(outputPath);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

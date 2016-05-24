@@ -1,12 +1,12 @@
 using System;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
+using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Utils
 {
-	public class TaggedPdfReaderToolTest
+	public class TaggedPdfReaderToolTest : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
@@ -15,16 +15,7 @@ namespace iTextSharp.Kernel.Utils
 		[SetUp]
 		public virtual void SetUp()
 		{
-			File dest = new File(destinationFolder);
-			dest.Mkdirs();
-			File[] files = dest.ListFiles();
-			if (files != null)
-			{
-				foreach (File file in files)
-				{
-					file.Delete();
-				}
-			}
+			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.Exception"/>

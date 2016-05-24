@@ -125,8 +125,8 @@ namespace iTextSharp.Kernel.Pdf
 				() < xrefSize);
 			for (int i_3 = 0; i_3 < pages.Length; i_3++)
 			{
-				NUnit.Framework.Assert.AreEqual("Remove page", true, document.RemovePage(pages[i_3
-					]));
+				NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i_3]), "Remove page"
+					);
 				document.AddPage(i_3 + 1, pages[i_3]);
 			}
 			document.Close();
@@ -254,10 +254,10 @@ namespace iTextSharp.Kernel.Pdf
 				page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
 				page.Flush();
 			}
-			NUnit.Framework.Assert.AreEqual("Remove last page", true, pdfDoc.RemovePage(pdfDoc
-				.GetPage(pageCount)));
-			NUnit.Framework.Assert.AreEqual("Free reference", true, pdfDoc.GetXref().Get(removedPageObjectNumber
-				).CheckState(PdfObject.FREE));
+			NUnit.Framework.Assert.AreEqual(true, pdfDoc.RemovePage(pdfDoc.GetPage(pageCount)
+				), "Remove last page");
+			NUnit.Framework.Assert.AreEqual(true, pdfDoc.GetXref().Get(removedPageObjectNumber
+				).CheckState(PdfObject.FREE), "Free reference");
 			pdfDoc.Close();
 			VerifyPagesOrder(destinationFolder + filename, pageCount - 1);
 		}
@@ -267,16 +267,16 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			PdfReader reader = new PdfReader(filename);
 			PdfDocument pdfDocument = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual("Rebuilt", false, reader.HasRebuiltXref());
+			NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
 			for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++)
 			{
 				PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
 				NUnit.Framework.Assert.IsNotNull(page);
 				PdfNumber number = page.GetAsNumber(PageNum5);
-				NUnit.Framework.Assert.AreEqual("Page number", i, number.IntValue());
+				NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
 			}
-			NUnit.Framework.Assert.AreEqual("Number of pages", numOfPages, pdfDocument.GetNumberOfPages
-				());
+			NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages"
+				);
 			reader.Close();
 		}
 

@@ -19,8 +19,8 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				tok.NextValidToken();
 				//System.out.println(tok.getTokenType() + " -> " + tok.getStringValue());
-				NUnit.Framework.Assert.AreEqual("Position " + i, expectedTypes[i], tok.GetTokenType
-					());
+				NUnit.Framework.Assert.AreEqual(expectedTypes[i], tok.GetTokenType(), "Position "
+					 + i);
 			}
 		}
 

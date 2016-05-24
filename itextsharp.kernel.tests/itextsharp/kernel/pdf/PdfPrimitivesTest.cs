@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
-using Java.IO;
 using NUnit.Framework;
+using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfPrimitivesTest
+	public class PdfPrimitivesTest : ExtendedITextTest
 	{
 		internal const String destinationFolder = "test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
 
@@ -64,7 +64,7 @@ namespace iTextSharp.Kernel.Pdf
 		[SetUp]
 		public virtual void Setup()
 		{
-			new File(destinationFolder).Mkdirs();
+			CreateDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -279,8 +279,8 @@ namespace iTextSharp.Kernel.Pdf
 			Random rnd = new Random();
 			for (int i = 0; i < DefaultArraySize; i++)
 			{
-				array.Add(((PdfNumber)new PdfNumber(rnd.NextInt()).MakeIndirect(indirects ? doc : 
-					null)));
+				array.Add(((PdfNumber)new PdfNumber(rnd.Next()).MakeIndirect(indirects ? doc : null
+					)));
 			}
 			return array;
 		}

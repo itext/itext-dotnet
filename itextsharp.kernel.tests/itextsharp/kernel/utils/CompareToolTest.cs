@@ -1,10 +1,10 @@
 using System;
-using Java.IO;
 using NUnit.Framework;
+using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Utils
 {
-	public class CompareToolTest
+	public class CompareToolTest : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/CompareToolTest/";
 
@@ -13,16 +13,7 @@ namespace iTextSharp.Kernel.Utils
 		[SetUp]
 		public virtual void SetUp()
 		{
-			File dest = new File(destinationFolder);
-			dest.Mkdirs();
-			File[] files = dest.ListFiles();
-			if (files != null)
-			{
-				foreach (File file in files)
-				{
-					file.Delete();
-				}
-			}
+			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.Exception"/>
@@ -40,8 +31,8 @@ namespace iTextSharp.Kernel.Utils
 			String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference"
 				);
 			System.Console.Out.WriteLine(result);
-			NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files"
-				, result);
+			NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files"
+				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report01.xml"
 				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"
@@ -63,8 +54,8 @@ namespace iTextSharp.Kernel.Utils
 			String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference"
 				);
 			System.Console.Out.WriteLine(result);
-			NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files"
-				, result);
+			NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files"
+				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report02.xml"
 				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"
@@ -86,8 +77,8 @@ namespace iTextSharp.Kernel.Utils
 			String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "difference"
 				);
 			System.Console.Out.WriteLine(result);
-			NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files"
-				, result);
+			NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files"
+				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report03.xml"
 				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"

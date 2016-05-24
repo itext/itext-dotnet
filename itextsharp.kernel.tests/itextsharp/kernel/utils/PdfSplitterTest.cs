@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO;
-using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
@@ -33,8 +30,11 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			IList<int?> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
-			IList<PdfDocument> splitDocuments = new _PdfSplitter_45(inputPdfDoc).SplitByPageNumbers
+			int? splitByPage1 = 30;
+			int? splitByPage2 = 100;
+			IList<int?> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(splitByPage1, 
+				splitByPage2);
+			IList<PdfDocument> splitDocuments = new _PdfSplitter_46(inputPdfDoc).SplitByPageNumbers
 				(pageNumbers);
 			foreach (PdfDocument doc in splitDocuments)
 			{
@@ -48,9 +48,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_45 : PdfSplitter
+		private sealed class _PdfSplitter_46 : PdfSplitter
 		{
-			public _PdfSplitter_45(PdfDocument baseArg1)
+			public _PdfSplitter_46(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -58,7 +58,8 @@ namespace iTextSharp.Kernel.Utils
 
 			internal int partNumber;
 
-			protected override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
+			protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
+				)
 			{
 				try
 				{
@@ -81,7 +82,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			new _PdfSplitter_75(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_86
+			new _PdfSplitter_76(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_87
 				());
 			for (int i = 1; i <= 3; i++)
 			{
@@ -91,9 +92,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_75 : PdfSplitter
+		private sealed class _PdfSplitter_76 : PdfSplitter
 		{
-			public _PdfSplitter_75(PdfDocument baseArg1)
+			public _PdfSplitter_76(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -101,7 +102,8 @@ namespace iTextSharp.Kernel.Utils
 
 			internal int partNumber;
 
-			protected override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
+			protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
+				)
 			{
 				try
 				{
@@ -115,26 +117,19 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _IDocumentReadyListener_86 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_87 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_86()
+			public _IDocumentReadyListener_87()
 			{
 			}
 
 			public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange)
 			{
-				try
+				if (new PageRange("61-120").Equals(pageRange))
 				{
-					if (new PageRange("61-120").Equals(pageRange))
-					{
-						pdfDocument.GetDocumentInfo().SetAuthor("Modified Author");
-					}
-					pdfDocument.Close();
+					pdfDocument.GetDocumentInfo().SetAuthor("Modified Author");
 				}
-				catch (PdfException e)
-				{
-					iTextSharp.PrintStackTrace(e);
-				}
+				pdfDocument.Close();
 			}
 		}
 
@@ -151,7 +146,7 @@ namespace iTextSharp.Kernel.Utils
 				(1, 2);
 			PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence
 				(70, 99);
-			IList<PdfDocument> splitDocuments = new _PdfSplitter_118(inputPdfDoc).ExtractPageRanges
+			IList<PdfDocument> splitDocuments = new _PdfSplitter_115(inputPdfDoc).ExtractPageRanges
 				(iTextSharp.IO.Util.JavaUtil.ArraysAsList(pageRange1, pageRange2));
 			foreach (PdfDocument pdfDocument in splitDocuments)
 			{
@@ -165,9 +160,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_118 : PdfSplitter
+		private sealed class _PdfSplitter_115 : PdfSplitter
 		{
-			public _PdfSplitter_118(PdfDocument baseArg1)
+			public _PdfSplitter_115(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -175,7 +170,8 @@ namespace iTextSharp.Kernel.Utils
 
 			internal int partNumber;
 
-			protected override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
+			protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
+				)
 			{
 				try
 				{
@@ -199,7 +195,7 @@ namespace iTextSharp.Kernel.Utils
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
 			PdfSplitter splitter = new PdfSplitter(inputPdfDoc);
-			IList listTitles = new ArrayList();
+			IList<String> listTitles = new List<String>();
 			listTitles.Add("Syncing iPod Content from Your iTunes Library");
 			listTitles.Add("Restoring or Transferring Your iPhone Settings");
 			IList<PdfDocument> list = splitter.SplitByOutlines(listTitles);
@@ -216,7 +212,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "splitBySize.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			PdfSplitter splitter = new _PdfSplitter_164(inputPdfDoc);
+			PdfSplitter splitter = new _PdfSplitter_161(inputPdfDoc);
 			IList<PdfDocument> documents = splitter.SplitBySize(100000);
 			foreach (PdfDocument doc in documents)
 			{
@@ -230,9 +226,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_164 : PdfSplitter
+		private sealed class _PdfSplitter_161 : PdfSplitter
 		{
-			public _PdfSplitter_164(PdfDocument baseArg1)
+			public _PdfSplitter_161(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -240,7 +236,8 @@ namespace iTextSharp.Kernel.Utils
 
 			internal int partNumber;
 
-			protected override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
+			protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
+				)
 			{
 				try
 				{

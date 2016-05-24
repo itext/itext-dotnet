@@ -1,5 +1,4 @@
 using System;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
@@ -15,7 +14,7 @@ namespace iTextSharp.Kernel.Pdf
 		[SetUp]
 		public virtual void Before()
 		{
-			new File(destinationFolder).Mkdirs();
+			CreateDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>

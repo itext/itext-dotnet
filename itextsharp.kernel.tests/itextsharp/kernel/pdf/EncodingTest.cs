@@ -1,15 +1,15 @@
 using System;
 using System.Text;
-using Java.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
+using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class EncodingTest
+	public class EncodingTest : ExtendedITextTest
 	{
 		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/EncodingTest/";
 
@@ -18,7 +18,7 @@ namespace iTextSharp.Kernel.Pdf
 		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
-			new File(outputFolder).Mkdirs();
+			CreateDestinationFolder(outputFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
