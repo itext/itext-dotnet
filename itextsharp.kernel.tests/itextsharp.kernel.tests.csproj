@@ -41,48 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\kernel\geom\MatrixTest.cs" />
-    <Compile Include="itextsharp\kernel\geom\VectorTest.cs" />
-    <Compile Include="itextsharp\kernel\KernelTestsExtension.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\FilteredEventListenerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\FilteredTextEventListenerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\GlyphTextEventListenerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\HighlightItemsTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\IndicTextExtractionTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\PdfCanvasProcessorTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\PdfTextExtractorUnicodeIdentityTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\TextMarginFinderTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\canvas\parser\TextRenderInfoTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\EncodingTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfActionTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfAnnotationTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfCanvasTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfCopyTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfDocumentTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfEncryptionTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfExtGStateTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfFontTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfImageXObjectTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfLayerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfNameTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfObjectTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfOutlineTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfPagesTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfPrimitivesTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfReaderTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfResourcesTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfStampingTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfStringTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfStructElemTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfTokenizerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfWriterTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\PdfXObjectTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\TagTreePointerTest.cs" />
-    <Compile Include="itextsharp\kernel\pdf\XMPMetadataTest.cs" />
-    <Compile Include="itextsharp\kernel\utils\CompareToolTest.cs" />
-    <Compile Include="itextsharp\kernel\utils\PdfMergerTest.cs" />
-    <Compile Include="itextsharp\kernel\utils\PdfSplitterTest.cs" />
-    <Compile Include="itextsharp\kernel\utils\TaggedPdfReaderToolTest.cs" />
+    <Compile Include="itextsharp\kernel\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

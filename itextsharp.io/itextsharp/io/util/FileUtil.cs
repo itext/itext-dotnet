@@ -131,11 +131,6 @@ namespace iTextSharp.IO.Util {
 			return new FileStream(filename, FileMode.Create);
 		}
 
-	    public static long GetFileSize(String filePath) {
-	        return new FileInfo(filePath).Length;
-	    }
-
-
 	    public class FileFilter {
 	        public virtual bool Accept(String pathname) {
 	            return true;
