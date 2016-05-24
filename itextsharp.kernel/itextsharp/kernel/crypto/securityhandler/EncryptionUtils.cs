@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using iTextSharp.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
@@ -48,11 +49,31 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             System.Array.Copy(outp, 0, abyte1, 0, len);
 
             return abyte1;
-		}
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in)
+        // TODO Review this method and it's usages. It is used in bouncy castle sources in itextsharp, so we need to be carefull about it in case we update BouncyCastle.
+        internal static CultureInfo GetStandartEnUsLocale() {
+            CultureInfo locale = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+            //                          en-US                        Invariant
+            //=====================     ==================           ==================
+            //Currency Symbol           $                            
+            //Currency                  $123456.78                   123456.78
+            //Short Date                1/11/2012                    01/11/2012
+            //Time                      10:36:52 PM                  22:36:52
+            //Metric                    No                           Yes
+            //Long Date                 Wednesday, January 11, 2012  Wednesday, 11 January, 2012
+            //Year Month                January, 2012                2012 January
+            locale.NumberFormat.CurrencySymbol = "$";
+            locale.DateTimeFormat.ShortDatePattern = "M/d/yyyy";
+            locale.DateTimeFormat.ShortTimePattern = "h:mm tt";
+            locale.DateTimeFormat.LongDatePattern = "dddd, MMMM dd, yyyy";
+            locale.DateTimeFormat.YearMonthPattern = "MMMM, yyyy";
+            return locale;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in)
 		{
 			String s = "1.2.840.113549.3.2";
 			DERForRecipientParams parameters = new DERForRecipientParams();
