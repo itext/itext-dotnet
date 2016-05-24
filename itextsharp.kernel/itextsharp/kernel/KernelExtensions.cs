@@ -140,5 +140,9 @@ namespace iTextSharp.Kernel {
 		public static bool IsEmpty(this ICollection collection) {
 			return collection.Count == 0;
 		}
+
+		public static void SetCharAt(this StringBuilder builder, int index, char ch) {
+			builder[index] = ch;
+		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -199,5 +200,9 @@ namespace iTextSharp.IO.Util
 
             return stream;
         }
+
+		public static int CharacterDigit(char ch, int radix) {
+			return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
+		}
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,6 +19,10 @@ namespace iTextSharp.IO.Util {
             return new EmptyEnumerator<T>();
         }
 
+		public static IEnumerator EmptyIterator() {
+			return new EmptyEnumerator();
+		}
+
         public static ICollection<T> UnmodifiableCollection<T>(ICollection<T> collection) {
             return new UnmodifiableCollection<T>(collection);
         }
@@ -25,6 +30,10 @@ namespace iTextSharp.IO.Util {
         public static IList<T> UnmodifiableList<T>(IList<T> list) {
             return new ReadOnlyCollection<T>(list);
         }
+
+		public static IList UnmodifiableList(IList list) {
+			return new UnmodifiableList(list);
+		}
 
         public static IDictionary<TKey, TValue> UnmodifiableMap<TKey, TValue>(IDictionary<TKey, TValue> dict) {
             return new UnmodifiableDictionary<TKey, TValue>(dict);
