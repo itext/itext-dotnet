@@ -465,22 +465,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			float? lw = extGState.GetLineWidth();
 			if (lw != null)
 			{
-				lineWidth = lw;
+				lineWidth = (float)lw;
 			}
 			int? lc = extGState.GetLineCapStyle();
 			if (lc != null)
 			{
-				lineCapStyle = lc;
+				lineCapStyle = (int)lc;
 			}
 			int? lj = extGState.GetLineJoinStyle();
 			if (lj != null)
 			{
-				lineJoinStyle = lj;
+				lineJoinStyle = (int)lj;
 			}
 			float? ml = extGState.GetMiterLimit();
 			if (ml != null)
 			{
-				miterLimit = ml;
+				miterLimit = (float)ml;
 			}
 			PdfArray d = extGState.GetDashPattern();
 			if (d != null)
@@ -495,17 +495,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			bool? op = extGState.GetStrokeOverprintFlag();
 			if (op != null)
 			{
-				strokeOverprint = op;
+				strokeOverprint = (bool)op;
 			}
 			op = extGState.GetFillOverprintFlag();
 			if (op != null)
 			{
-				fillOverprint = op;
+				fillOverprint = (bool)op;
 			}
 			int? opm = extGState.GetOverprintMode();
 			if (opm != null)
 			{
-				overprintMode = opm;
+				overprintMode = (int)opm;
 			}
 			PdfArray fnt = extGState.GetFont();
 			if (fnt != null)
@@ -564,7 +564,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			float? fl = extGState.GetFlatnessTolerance();
 			if (fl != null)
 			{
-				flatnessTolerance = fl;
+				flatnessTolerance = (float)fl;
 			}
 			float? sm = extGState.GetSmothnessTolerance();
 			if (sm != null)
@@ -574,7 +574,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			bool? sa = extGState.GetAutomaticStrokeAdjustmentFlag();
 			if (sa != null)
 			{
-				automaticStrokeAdjustment = sa;
+				automaticStrokeAdjustment = (bool)sa;
 			}
 			PdfObject bm = extGState.GetBlendMode();
 			if (bm != null)
@@ -589,22 +589,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			float? ca = extGState.GetStrokeOpacity();
 			if (ca != null)
 			{
-				strokeAlpha = ca;
+				strokeAlpha = (float)ca;
 			}
 			ca = extGState.GetFillOpacity();
 			if (ca != null)
 			{
-				fillAlpha = ca;
+				fillAlpha = (float)ca;
 			}
 			bool? ais = extGState.GetAlphaSourceFlag();
 			if (ais != null)
 			{
-				alphaIsShape = ais;
+				alphaIsShape = (bool)ais;
 			}
 			bool? tk = extGState.GetTextKnockoutFlag();
 			if (tk != null)
 			{
-				textKnockout = tk;
+				textKnockout = (bool)tk;
 			}
 		}
 

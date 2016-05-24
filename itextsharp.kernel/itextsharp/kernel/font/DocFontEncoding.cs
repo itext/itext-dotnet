@@ -164,20 +164,20 @@ namespace iTextSharp.Kernel.Font
 						int? unicode = AdobeGlyphList.NameToUnicode(glyphName);
 						if (unicode != null)
 						{
-							fontEncoding.codeToUnicode[currentNumber] = unicode;
-							fontEncoding.unicodeToCode.Put(unicode, currentNumber);
+							fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
+							fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
 							fontEncoding.differences[currentNumber] = glyphName;
-							fontEncoding.unicodeDifferences.Put(unicode, unicode);
+							fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
 						}
 						else
 						{
 							if (byte2uni.Contains(currentNumber))
 							{
 								unicode = byte2uni.Get(currentNumber);
-								fontEncoding.codeToUnicode[currentNumber] = unicode;
-								fontEncoding.unicodeToCode.Put(unicode, currentNumber);
+								fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
+								fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
 								fontEncoding.differences[currentNumber] = glyphName;
-								fontEncoding.unicodeDifferences.Put(unicode, unicode);
+								fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
 							}
 						}
 						currentNumber++;
@@ -192,11 +192,11 @@ namespace iTextSharp.Kernel.Font
 			IntHashtable byte2uni = toUnicode.CreateDirectMapping();
 			foreach (int? code in byte2uni.GetKeys())
 			{
-				int unicode = byte2uni.Get(code);
+				int unicode = byte2uni.Get((int)code);
 				String glyphName = AdobeGlyphList.UnicodeToName(unicode);
-				fontEncoding.codeToUnicode[code] = unicode;
-				fontEncoding.unicodeToCode.Put(unicode, code);
-				fontEncoding.differences[code] = glyphName;
+				fontEncoding.codeToUnicode[(int)code] = unicode;
+				fontEncoding.unicodeToCode.Put(unicode, (int)code);
+				fontEncoding.differences[(int)code] = glyphName;
 				fontEncoding.unicodeDifferences.Put(unicode, unicode);
 			}
 		}

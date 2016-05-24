@@ -86,19 +86,19 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 		private readonly IList<CanvasTag> canvasTagHierarchy;
 
 		/// <summary>Creates a new TextRenderInfo object</summary>
-		/// <param name="string">the PDF string that should be displayed</param>
+		/// <param name="str">the PDF string that should be displayed</param>
 		/// <param name="gs">the graphics state (note: at this time, this is not immutable, so don't cache it)
 		/// 	</param>
 		/// <param name="textMatrix">the text matrix at the time of the render operation</param>
 		/// <param name="canvasTagHierarchy">the marked content tags sequence, if available</param>
-		public TextRenderInfo(PdfString @string, CanvasGraphicsState gs, Matrix textMatrix
-			, Stack<CanvasTag> canvasTagHierarchy)
+		public TextRenderInfo(PdfString str, CanvasGraphicsState gs, Matrix textMatrix, Stack
+			<CanvasTag> canvasTagHierarchy)
 		{
-			this.@string = @string;
+			this.@string = str;
 			this.textToUserSpaceTransformMatrix = textMatrix.Multiply(gs.GetCtm());
 			this.gs = gs;
-			this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList(new List<CanvasTag
-				>(canvasTagHierarchy));
+			this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List
+				<CanvasTag>(canvasTagHierarchy));
 			this.fontMatrix = gs.GetFont().GetFontMatrix();
 		}
 

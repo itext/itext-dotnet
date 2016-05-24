@@ -43,7 +43,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using iTextSharp.IO.Codec;
@@ -322,13 +321,13 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 					String key = entry.Key;
 					if (value is int?)
 					{
-						dictionary.Put(new PdfName(key), new PdfNumber((int?)value));
+						dictionary.Put(new PdfName(key), new PdfNumber((int)value));
 					}
 					else
 					{
 						if (value is float?)
 						{
-							dictionary.Put(new PdfName(key), new PdfNumber((float?)value));
+							dictionary.Put(new PdfName(key), new PdfNumber((float)value));
 						}
 						else
 						{
@@ -364,7 +363,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 								{
 									if (value is bool?)
 									{
-										dictionary.Put(new PdfName(key), new PdfBoolean((bool?)value));
+										dictionary.Put(new PdfName(key), new PdfBoolean((bool)value));
 									}
 									else
 									{
@@ -393,11 +392,11 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 		private static PdfArray CreateArray(PdfStream stream, Object[] objects)
 		{
 			PdfArray array = new PdfArray();
-			foreach (Object @object in objects)
+			foreach (Object obj in objects)
 			{
-				if (@object is String)
+				if (obj is String)
 				{
-					String str = (String)@object;
+					String str = (String)obj;
 					if (str.IndexOf('/') == 0)
 					{
 						array.Add(new PdfName(str.Substring(1)));
@@ -409,22 +408,20 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 				}
 				else
 				{
-					if (@object is int?)
+					if (obj is int?)
 					{
-						array.Add(new PdfNumber((int?)@object));
+						array.Add(new PdfNumber((int)obj));
 					}
 					else
 					{
-						if (@object is float?)
+						if (obj is float?)
 						{
-							array.Add(new PdfNumber((float?)@object));
+							array.Add(new PdfNumber((float)obj));
 						}
 						else
 						{
-							if (@object is IDictionary)
-							{
-								array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)@object));
-							}
+							//TODO instance of was removed due to autoport
+							array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
 						}
 					}
 				}

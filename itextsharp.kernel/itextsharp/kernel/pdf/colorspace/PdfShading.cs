@@ -160,7 +160,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 		public virtual int GetShadingType()
 		{
-			return GetPdfObject().GetAsInt(PdfName.ShadingType);
+			return (int)GetPdfObject().GetAsInt(PdfName.ShadingType);
 		}
 
 		public virtual PdfObject GetColorSpace()
@@ -462,7 +462,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerCoordinate()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
 			}
 
 			public virtual void SetBitsPerCoordinate(int bitsPerCoordinate)
@@ -473,7 +473,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerComponent()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
 			}
 
 			public virtual void SetBitsPerComponent(int bitsPerComponent)
@@ -484,7 +484,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerFlag()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
 			}
 
 			public virtual void SetBitsPerFlag(int bitsPerFlag)
@@ -536,7 +536,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerCoordinate()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
 			}
 
 			public virtual void SetBitsPerCoordinate(int bitsPerCoordinate)
@@ -547,7 +547,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerComponent()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
 			}
 
 			public virtual void SetBitsPerComponent(int bitsPerComponent)
@@ -558,7 +558,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetVerticesPerRow()
 			{
-				return GetPdfObject().GetAsInt(PdfName.VerticesPerRow);
+				return (int)GetPdfObject().GetAsInt(PdfName.VerticesPerRow);
 			}
 
 			public virtual void SetVerticesPerRow(int verticesPerRow)
@@ -610,7 +610,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerCoordinate()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
 			}
 
 			public virtual void SetBitsPerCoordinate(int bitsPerCoordinate)
@@ -621,7 +621,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerComponent()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
 			}
 
 			public virtual void SetBitsPerComponent(int bitsPerComponent)
@@ -632,7 +632,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerFlag()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
 			}
 
 			public virtual void SetBitsPerFlag(int bitsPerFlag)
@@ -684,7 +684,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerCoordinate()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerCoordinate);
 			}
 
 			public virtual void SetBitsPerCoordinate(int bitsPerCoordinate)
@@ -695,7 +695,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerComponent()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerComponent);
 			}
 
 			public virtual void SetBitsPerComponent(int bitsPerComponent)
@@ -706,7 +706,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public virtual int GetBitsPerFlag()
 			{
-				return GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
+				return (int)GetPdfObject().GetAsInt(PdfName.BitsPerFlag);
 			}
 
 			public virtual void SetBitsPerFlag(int bitsPerFlag)

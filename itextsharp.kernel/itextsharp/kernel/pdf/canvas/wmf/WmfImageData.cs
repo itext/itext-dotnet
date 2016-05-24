@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 			Stream @is = null;
 			try
 			{
-				@is = source.OpenStream();
+				@is = iTextSharp.IO.Util.UrlUtil.OpenStream(source);
 				byte[] bytes = new byte[8];
 				@is.Read(bytes);
 				return bytes;

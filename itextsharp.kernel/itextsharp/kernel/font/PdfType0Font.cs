@@ -755,8 +755,8 @@ namespace iTextSharp.Kernel.Font
 					buf.Append(size).Append(" beginbfrange\n");
 				}
 				--size;
-				String fromTo = CMapContentParser.ToHex(unicodeGlyphs[k]);
-				Glyph glyph = fontProgram.GetGlyphByCode(unicodeGlyphs[k]);
+				String fromTo = CMapContentParser.ToHex((int)unicodeGlyphs[k]);
+				Glyph glyph = fontProgram.GetGlyphByCode((int)unicodeGlyphs[k]);
 				if (glyph.GetChars() != null)
 				{
 					StringBuilder uni = new StringBuilder(glyph.GetChars().Length);
@@ -797,7 +797,7 @@ namespace iTextSharp.Kernel.Font
 					{
 						continue;
 					}
-					int c = e.Key;
+					int c = (int)e.Key;
 					bool skip = true;
 					for (int k = 0; k < rg.Length; k += 2)
 					{
@@ -882,7 +882,7 @@ namespace iTextSharp.Kernel.Font
 			{
 				int m1 = o1[0];
 				int m2 = o2[0];
-				return int.CompareTo(m1, m2);
+				return iTextSharp.IO.Util.JavaUtil.IntegerCompare(m1, m2);
 			}
 		}
 	}

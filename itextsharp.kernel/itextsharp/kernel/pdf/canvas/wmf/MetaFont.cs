@@ -263,9 +263,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 				font = FontProgramFactory.CreateFont(fontName);
 				encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
 			}
-			catch (Exception e)
+			catch (System.IO.IOException e)
 			{
-				throw new Exception(e);
+				throw new Exception(e.Message, e);
 			}
 			return font;
 		}

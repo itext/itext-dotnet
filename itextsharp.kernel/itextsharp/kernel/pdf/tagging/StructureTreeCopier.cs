@@ -367,7 +367,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 									// Some link annotations may be not copied, because their destination page is not copied.
 									return null;
 								}
-								contentItemObject.Put(PdfName.StructParent, new PdfNumber(toDocument.GetNextStructParentIndex
+								contentItemObject.Put(PdfName.StructParent, new PdfNumber((int)toDocument.GetNextStructParentIndex
 									()));
 							}
 							else

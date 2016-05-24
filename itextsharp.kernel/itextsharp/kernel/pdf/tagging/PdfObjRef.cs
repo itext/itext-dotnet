@@ -60,7 +60,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			PdfDictionary parentObject = parent.GetPdfObject();
 			EnsureObjectIsAddedToDocument(parentObject);
 			PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
-			annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber(doc.GetNextStructParentIndex
+			annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber((int)doc.GetNextStructParentIndex
 				()));
 			PdfDictionary dict = (PdfDictionary)GetPdfObject();
 			dict.Put(PdfName.Type, PdfName.OBJR);

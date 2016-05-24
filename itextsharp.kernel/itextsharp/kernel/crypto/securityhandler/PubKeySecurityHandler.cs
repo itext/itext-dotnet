@@ -173,7 +173,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 		{
 			AddAllRecipients(certs, permissions);
 			int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-			int keyLength = keyLen != null ? keyLen : 40;
+			int keyLength = keyLen != null ? (int)keyLen : 40;
 			String digestAlgorithm = GetDigestAlgorithm();
 			byte[] digest = ComputeGlobalKey(digestAlgorithm, encryptMetadata);
 			InitKey(digest, keyLength);
@@ -189,7 +189,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 			byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters
 				)certificateKey, certificate, encryptMetadata, digestAlgorithm);
 			int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-			int keyLength = keyLen != null ? keyLen : 40;
+			int keyLength = keyLen != null ? (int)keyLen : 40;
 			InitKey(encryptionKey, keyLength);
 		}
 

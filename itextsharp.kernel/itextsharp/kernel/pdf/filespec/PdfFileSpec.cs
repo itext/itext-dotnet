@@ -99,7 +99,8 @@ namespace iTextSharp.Kernel.Pdf.Filespec
 			 doc, String filePath, String description, String fileDisplay, PdfName mimeType, 
 			PdfName afRelationshipValue, bool isUnicodeFileName)
 		{
-			PdfStream stream = new PdfStream(doc, UrlUtil.ToURL(filePath).OpenStream());
+			PdfStream stream = new PdfStream(doc, iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil
+				.ToURL(filePath)));
 			return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue
 				, isUnicodeFileName);
 		}

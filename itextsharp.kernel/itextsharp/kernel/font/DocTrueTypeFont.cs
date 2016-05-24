@@ -117,8 +117,8 @@ namespace iTextSharp.Kernel.Font
 			PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor
 				);
 			FillFontDescriptor(fontProgram, fontDescriptor);
-			int dw = fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW) ? fontDescriptor
-				.GetAsInt(PdfName.DW) : 1000;
+			int dw = (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) ? (int
+				)fontDescriptor.GetAsInt(PdfName.DW) : 1000;
 			if (toUnicode != null)
 			{
 				IntHashtable widths = FontUtil.ConvertCompositeWidthsArray(fontDictionary.GetAsArray

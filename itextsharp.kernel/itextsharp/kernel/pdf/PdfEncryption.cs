@@ -69,7 +69,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		private int cryptoMode;
 
-		private long permissions;
+		private long? permissions;
 
 		private bool encryptMetadata;
 
@@ -325,7 +325,7 @@ namespace iTextSharp.Kernel.Pdf
 			return new PdfLiteral(buf.ToByteArray());
 		}
 
-		public virtual long GetPermissions()
+		public virtual long? GetPermissions()
 		{
 			return permissions;
 		}

@@ -143,14 +143,14 @@ namespace iTextSharp.Kernel.Pdf
 
 		public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfVersion o)
 		{
-			int majorResult = int.CompareTo(major, o.major);
+			int majorResult = iTextSharp.IO.Util.JavaUtil.IntegerCompare(major, o.major);
 			if (majorResult != 0)
 			{
 				return majorResult;
 			}
 			else
 			{
-				return int.CompareTo(minor, o.minor);
+				return iTextSharp.IO.Util.JavaUtil.IntegerCompare(minor, o.minor);
 			}
 		}
 

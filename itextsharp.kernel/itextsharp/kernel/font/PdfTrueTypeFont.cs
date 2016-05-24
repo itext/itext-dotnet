@@ -160,7 +160,7 @@ namespace iTextSharp.Kernel.Font
 					{
 						continue;
 					}
-					int c = e.Key;
+					int c = (int)e.Key;
 					bool skip = true;
 					for (int k = 0; k < rg.Length; k += 2)
 					{

@@ -63,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf
 		private Dictionary<PdfWriter.ByteStore, PdfIndirectReference> streamMap = new Dictionary
 			<PdfWriter.ByteStore, PdfIndirectReference>();
 
-		private readonly Dictionary<int?, int?> serialized = new Dictionary<int?, int?>();
+		private readonly IntHashtable serialized = new IntHashtable();
 
 		private PdfOutputStream duplicateStream = null;
 
@@ -578,8 +578,8 @@ namespace iTextSharp.Kernel.Pdf
 
 			private IDigest md5;
 
-			private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, Dictionary
-				<int?, int?> serialized)
+			private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, IntHashtable
+				 serialized)
 			{
 				if (level <= 0)
 				{
@@ -590,15 +590,15 @@ namespace iTextSharp.Kernel.Pdf
 					bb.Append("$Lnull");
 					return;
 				}
-				PdfIndirectReference @ref = null;
+				PdfIndirectReference reference = null;
 				ByteBufferOutputStream savedBb = null;
 				if (obj.IsIndirectReference())
 				{
-					@ref = (PdfIndirectReference)obj;
-					int? key = GetCopyObjectKey(obj);
+					reference = (PdfIndirectReference)obj;
+					int key = GetCopyObjectKey(obj);
 					if (serialized.ContainsKey(key))
 					{
-						bb.Append(serialized[key]);
+						bb.Append((int)serialized.Get(key));
 						return;
 					}
 					else
@@ -651,24 +651,25 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				if (savedBb != null)
 				{
-					int? key = GetCopyObjectKey(@ref);
+					int key = GetCopyObjectKey(reference);
 					if (!serialized.ContainsKey(key))
 					{
-						serialized[key] = CalculateHash(bb.GetBuffer());
+						serialized.Put(key, CalculateHash(bb.GetBuffer()));
 					}
 					savedBb.Append(bb);
 				}
 			}
 
-			private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, Dictionary
-				<int?, int?> serialized)
+			private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, IntHashtable
+				 serialized)
 			{
 				bb.Append("$D");
 				if (level <= 0)
 				{
 					return;
 				}
-				Object[] keys = dic.KeySet().ToArray();
+				PdfName[] keys = new PdfName[dic.KeySet().Count];
+				dic.KeySet().ToArray(keys);
 				System.Array.Sort(keys);
 				foreach (Object key in keys)
 				{
@@ -683,8 +684,8 @@ namespace iTextSharp.Kernel.Pdf
 				}
 			}
 
-			private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, Dictionary
-				<int?, int?> serialized)
+			private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, IntHashtable
+				 serialized)
 			{
 				bb.Append("$A");
 				if (level <= 0)
@@ -697,7 +698,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 			}
 
-			internal ByteStore(PdfStream str, Dictionary<int?, int?> serialized)
+			internal ByteStore(PdfStream str, IntHashtable serialized)
 			{
 				try
 				{
@@ -715,7 +716,7 @@ namespace iTextSharp.Kernel.Pdf
 				md5 = null;
 			}
 
-			internal ByteStore(PdfDictionary dict, Dictionary<int?, int?> serialized)
+			internal ByteStore(PdfDictionary dict, IntHashtable serialized)
 			{
 				try
 				{

@@ -55,9 +55,9 @@ namespace iTextSharp.Kernel.Pdf.Function
 		{
 		}
 
-		public virtual int GetType()
+		public virtual int GetFunctionType()
 		{
-			return ((PdfDictionary)GetPdfObject()).GetAsInt(PdfName.FunctionType);
+			return (int)((PdfDictionary)GetPdfObject()).GetAsInt(PdfName.FunctionType);
 		}
 
 		public virtual bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace

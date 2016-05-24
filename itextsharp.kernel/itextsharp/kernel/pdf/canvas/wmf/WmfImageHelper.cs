@@ -98,7 +98,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 				String errorID;
 				if (wmf.GetData() == null)
 				{
-					@is = wmf.GetUrl().OpenStream();
+					@is = iTextSharp.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
 					errorID = wmf.GetUrl().ToString();
 				}
 				else
@@ -158,7 +158,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 			{
 				if (wmf.GetData() == null)
 				{
-					@is = wmf.GetUrl().OpenStream();
+					@is = iTextSharp.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
 				}
 				else
 				{

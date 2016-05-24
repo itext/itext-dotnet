@@ -264,7 +264,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
 			public override int GetNumberOfComponents()
 			{
-				return ((PdfArray)GetPdfObject()).GetAsStream(1).GetAsInt(PdfName.N);
+				return (int)((PdfArray)GetPdfObject()).GetAsStream(1).GetAsInt(PdfName.N);
 			}
 
 			public static PdfStream GetIccProfileStream(Stream iccStream)

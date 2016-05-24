@@ -953,7 +953,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 			byte[] data;
 			if (image.GetData() == null)
 			{
-				imgIn = image.GetUrl().OpenStream();
+				imgIn = iTextSharp.IO.Util.UrlUtil.OpenStream(image.GetUrl());
 				MemoryStream @out = new MemoryStream();
 				int b = 0;
 				while ((b = imgIn.Read()) != -1)

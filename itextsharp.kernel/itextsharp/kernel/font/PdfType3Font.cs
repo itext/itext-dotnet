@@ -122,11 +122,11 @@ namespace iTextSharp.Kernel.Font
 			foreach (PdfName glyphName in charProcsDic.KeySet())
 			{
 				int? unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
-				if (unicode != null && fontEncoding.CanEncode(unicode))
+				if (unicode != null && fontEncoding.CanEncode((int)unicode))
 				{
-					int code = fontEncoding.ConvertToByte(unicode);
-					((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, 
-						new Type3Glyph(charProcsDic.GetAsStream(glyphName), GetDocument()));
+					int code = fontEncoding.ConvertToByte((int)unicode);
+					((Type3FontProgram)GetFontProgram()).AddGlyph(code, (int)unicode, widths[code], null
+						, new Type3Glyph(charProcsDic.GetAsStream(glyphName), GetDocument()));
 				}
 			}
 		}

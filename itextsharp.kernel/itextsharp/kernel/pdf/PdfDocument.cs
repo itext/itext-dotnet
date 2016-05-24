@@ -834,23 +834,14 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				structTreeRoot = new PdfStructTreeRoot(this);
 				catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-				catalog.GetPdfObject().Put(PdfName.MarkInfo, new PdfDictionary(new _Dictionary_790
-					(this)));
-				structParentIndex = 0;
-			}
-		}
-
-		private sealed class _Dictionary_790 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_790()
-			{
+				PdfDictionary markInfo = new PdfDictionary();
+				markInfo.Put(PdfName.Marked, PdfBoolean.TRUE);
+				if (userProperties)
 				{
-					this[PdfName.Marked] = PdfBoolean.TRUE;
-					if (this._enclosing.userProperties)
-					{
-						this[PdfName.UserProperties] = new PdfBoolean(true);
-					}
+					markInfo.Put(PdfName.UserProperties, new PdfBoolean(true));
 				}
+				catalog.GetPdfObject().Put(PdfName.MarkInfo, markInfo);
+				structParentIndex = 0;
 			}
 		}
 
@@ -1009,7 +1000,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (pagesToCopy.IsEmpty())
 			{
-				return JavaCollectionsUtil.EmptyList();
+				return JavaCollectionsUtil.EmptyList<PdfPage>();
 			}
 			CheckClosingStatus();
 			IList<PdfPage> copiedPages = new List<PdfPage>();
@@ -1018,12 +1009,12 @@ namespace iTextSharp.Kernel.Pdf
 			ICollection<PdfOutline> outlinesToCopy = new HashSet<PdfOutline>();
 			IList<IDictionary<PdfPage, PdfPage>> rangesOfPagesWithIncreasingNumbers = new List
 				<IDictionary<PdfPage, PdfPage>>();
-			int lastCopiedPageNum = pagesToCopy[0];
+			int lastCopiedPageNum = (int)pagesToCopy[0];
 			int pageInsertIndex = insertBeforePage;
 			bool insertInBetween = insertBeforePage < toDocument.GetNumberOfPages() + 1;
 			foreach (int? pageNum in pagesToCopy)
 			{
-				PdfPage page = GetPage(pageNum);
+				PdfPage page = GetPage((int)pageNum);
 				PdfPage newPage = page.CopyTo(toDocument, copier);
 				copiedPages.Add(newPage);
 				if (!page2page.ContainsKey(page))
@@ -1053,7 +1044,7 @@ namespace iTextSharp.Kernel.Pdf
 						outlinesToCopy.AddAll(pageOutlines);
 					}
 				}
-				lastCopiedPageNum = pageNum;
+				lastCopiedPageNum = (int)pageNum;
 			}
 			CopyLinkAnnotations(toDocument, page2page);
 			// It's important to copy tag structure after link annotations were copied, because object content items in tag
@@ -1927,10 +1918,11 @@ namespace iTextSharp.Kernel.Pdf
 			PdfOutline parent = outline.GetParent();
 			//note there's no need to continue recursion if the current outline parent is root (first condition) or
 			// if it is already in the Set of outlines to be copied (second condition)
-			if (parent.GetTitle().Equals("Outlines") || !outlinesToCopy.Add(parent))
+			if (parent.GetTitle().Equals("Outlines") || outlinesToCopy.Contains(parent))
 			{
 				return;
 			}
+			outlinesToCopy.Add(parent);
 			GetAllOutlinesToCopy(parent, outlinesToCopy);
 		}
 

@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			int mcid = -1;
 			if (properties != null)
 			{
-				mcid = properties.GetAsInt(PdfName.MCID);
+				mcid = (int)properties.GetAsInt(PdfName.MCID);
 			}
 			if (mcid == -1)
 			{

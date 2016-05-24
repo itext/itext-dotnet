@@ -124,7 +124,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 			else
 			{
-				int lastKey = System.Linq.Enumerable.Last(pageMcrs).Key;
+				int lastKey = (int)System.Linq.Enumerable.Last(pageMcrs).Key;
 				if (lastKey < 0)
 				{
 					return 0;
@@ -240,7 +240,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			return -structParentIndex - 1;
 		}
 
-		private static int KeyIntoStructParentIndex(int? key)
+		private static int KeyIntoStructParentIndex(int key)
 		{
 			return -key - 1;
 		}
@@ -258,7 +258,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			{
 				if (entry.Key > maxStructParentIndex)
 				{
-					maxStructParentIndex = entry.Key;
+					maxStructParentIndex = (int)entry.Key;
 				}
 				PdfObject entryValue = entry.Value;
 				if (entryValue.IsDictionary())
@@ -307,7 +307,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				PdfMcr mcr = entry.Value;
 				if (mcr is PdfObjRef)
 				{
-					int? structParent = KeyIntoStructParentIndex(entry.Key);
+					int structParent = KeyIntoStructParentIndex((int)entry.Key);
 					parentTree.AddEntry(structParent, ((PdfStructElem)mcr.GetParent()).GetPdfObject()
 						);
 				}

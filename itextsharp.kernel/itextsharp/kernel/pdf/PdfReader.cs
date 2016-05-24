@@ -475,7 +475,7 @@ namespace iTextSharp.Kernel.Pdf
 			long perm = 0;
 			if (encrypted && decrypt.GetPermissions() != null)
 			{
-				perm = decrypt.GetPermissions();
+				perm = (long)decrypt.GetPermissions();
 			}
 			return perm;
 		}

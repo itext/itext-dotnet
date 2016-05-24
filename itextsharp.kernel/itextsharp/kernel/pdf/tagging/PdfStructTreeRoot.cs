@@ -207,7 +207,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				CreateParentTreeEntryForPage(GetDocument().GetPage(i + 1));
 			}
 			GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
-			GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(GetDocument().GetNextStructParentIndex
+			GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex
 				()));
 			FlushAllKids(this);
 			base.Flush();

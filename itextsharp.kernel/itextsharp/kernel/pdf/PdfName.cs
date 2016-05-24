@@ -2496,7 +2496,7 @@ namespace iTextSharp.Kernel.Pdf
 							{
 								buf.Append('0');
 							}
-							buf.Append(iTextSharp.IO.Util.JavaUtil.IntegerToString(c, 16));
+							buf.Append(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c));
 						}
 						break;
 					}

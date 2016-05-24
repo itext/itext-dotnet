@@ -83,10 +83,10 @@ namespace iTextSharp.Kernel.Geom
 		public static iTextSharp.Kernel.Geom.Rectangle GetCommonRectangle(params iTextSharp.Kernel.Geom.Rectangle
 			[] rectangles)
 		{
-			float? ury = -float.MaxValue;
-			float? llx = float.MaxValue;
-			float? lly = float.MaxValue;
-			float? urx = -float.MaxValue;
+			float ury = -float.MaxValue;
+			float llx = float.MaxValue;
+			float lly = float.MaxValue;
+			float urx = -float.MaxValue;
 			foreach (iTextSharp.Kernel.Geom.Rectangle rectangle in rectangles)
 			{
 				if (rectangle == null)
