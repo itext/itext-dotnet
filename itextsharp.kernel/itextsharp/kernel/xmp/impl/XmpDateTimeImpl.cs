@@ -71,7 +71,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// Creates an <code>XmpDateTime</code>-instance with the current time in the default time
 		/// zone.
 		/// </summary>
-		public XmpDateTimeImpl()
+		public XmpDateTimeImpl() : this(new XmpCalendar())
 		{
 		}
 
@@ -123,7 +123,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// 	</exception>
 		public XmpDateTimeImpl(String strValue)
 		{
-			ISO8601Converter.Parse(strValue, this);
+			Iso8601Converter.Parse(strValue, this);
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetYear()"/>
@@ -305,7 +305,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	    /// <seealso cref="iTextSharp.Kernel.Xmp.XmpDateTime.GetISO8601String()"/>
 		public virtual String GetIso8601String()
 		{
-			return ISO8601Converter.Render(this);
+			return Iso8601Converter.Render(this);
 		}
 
 		/// <returns>Returns the ISO string representation.</returns>

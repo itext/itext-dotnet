@@ -116,11 +116,11 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			try
 			{
 				outputStream = new CountOutputStream(@out);
-				writer = new StreamWriter(outputStream, options.GetEncoding());
+				writer = new StreamWriter(outputStream, new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())));
 				this.xmp = (XmpMetaImpl)xmp;
 				this.options = options;
 				this.padding = options.GetPadding();
-				writer = new StreamWriter(outputStream, options.GetEncoding());
+				writer = new StreamWriter(outputStream, new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())));
 				CheckOptionsConsistence();
 				// serializes the whole packet, but don't write the tail yet 
 				// and flush to make sure that the written bytes are calculated correctly

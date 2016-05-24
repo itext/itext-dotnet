@@ -49,16 +49,6 @@ namespace iTextSharp.Kernel.Xmp
 		/// 	</summary>
 		/// <param name="calendar">a <code>Calendar</code>-object.</param>
 		/// <returns>An <code>XmpDateTime</code>-object.</returns>
-		public static XmpDateTime CreateFromDate(XmpDateTime date)
-		{
-			return new XmpDateTimeImpl(date);
-		}
-
-		// EMPTY
-		/// <summary>Creates an <code>XmpDateTime</code> from a <code>Calendar</code>-object.
-		/// 	</summary>
-		/// <param name="calendar">a <code>Calendar</code>-object.</param>
-		/// <returns>An <code>XmpDateTime</code>-object.</returns>
 		public static XmpDateTime CreateFromCalendar(XmpCalendar calendar)
 		{
 			return new XmpDateTimeImpl(calendar);
@@ -135,7 +125,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// </returns>
 		public static XmpDateTime GetCurrentDateTime()
 		{
-			return new XmpDateTimeImpl(new GregorianCalendar());
+			return new XmpDateTimeImpl();
 		}
 
 		/// <summary>
@@ -147,8 +137,8 @@ namespace iTextSharp.Kernel.Xmp
 		/// <returns>Returns an updated <code>XmpDateTime</code>-object.</returns>
 		public static XmpDateTime SetLocalTimeZone(XmpDateTime dateTime)
 		{
-			DateTime cal = dateTime.GetCalendar();
-			cal.SetTimeZone(TimeZone.GetDefault());
+			XmpCalendar cal = dateTime.GetCalendar();
+			cal.SetTimeZone(TimeZone.CurrentTimeZone);
 			return new XmpDateTimeImpl(cal);
 		}
 
@@ -165,8 +155,7 @@ namespace iTextSharp.Kernel.Xmp
 		public static XmpDateTime ConvertToUTCTime(XmpDateTime dateTime)
 		{
 			long timeInMillis = dateTime.GetCalendar().GetTimeInMillis();
-			GregorianCalendar cal = new GregorianCalendar(UTC);
-			cal.SetGregorianChange(new DateTime(long.MinValue));
+			XmpCalendar cal = new XmpCalendar();
 			cal.SetTimeInMillis(timeInMillis);
 			return new XmpDateTimeImpl(cal);
 		}
@@ -183,7 +172,7 @@ namespace iTextSharp.Kernel.Xmp
 		{
 			long timeInMillis = dateTime.GetCalendar().GetTimeInMillis();
 			// has automatically local timezone
-			GregorianCalendar cal = new GregorianCalendar();
+			XmpCalendar cal = new XmpCalendar();
 			cal.SetTimeInMillis(timeInMillis);
 			return new XmpDateTimeImpl(cal);
 		}

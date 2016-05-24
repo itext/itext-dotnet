@@ -182,8 +182,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			int itemEnd;
 			int nextKind = UCK_NORMAL;
 			int charKind = UCK_NORMAL;
-			char ch = 0;
-			char nextChar = 0;
+			char ch = '\0';
+			char nextChar;
 			itemEnd = 0;
 			int endPos = catedStr.Length;
 			while (itemEnd < endPos)
@@ -472,14 +472,19 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					// we don't have to be
 					// concerned with aliases, they are handled implicitly from the
 					// actual properties.
-					for (IEnumerator it = xmpImpl.GetRoot().IterateChildren(); it.MoveNext(); )
-					{
-						XmpNode schema = (XmpNode)it.Current;
-						if (RemoveSchemaChildren(schema, doAllProperties))
-						{
-							it.Remove();
+					ArrayList schemasToRemove = new ArrayList();
+					for (IEnumerator it = xmpImpl.GetRoot().IterateChildren(); it.MoveNext();) {
+						XmpNode schema = (XmpNode) it.Current;
+						if (schema == null)
+							continue;
+						if (RemoveSchemaChildren(schema, doAllProperties)) {
+							schemasToRemove.Add(schema);
 						}
 					}
+					foreach (XmpNode xmpNode in schemasToRemove) {
+						xmpImpl.GetRoot().GetChildren().Remove(xmpNode);
+					}
+					schemasToRemove.Clear();
 				}
 			}
 		}
@@ -550,15 +555,19 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static bool RemoveSchemaChildren(XmpNode schemaNode, bool doAllProperties
 			)
 		{
-			for (IEnumerator it = schemaNode.IterateChildren(); it.MoveNext(); )
-			{
-				XmpNode currProp = (XmpNode)it.Current;
-				if (doAllProperties || !Utils.IsInternalProperty(schemaNode.GetName(), currProp.GetName
-					()))
-				{
-					it.Remove();
+			ArrayList currPropsToRemove = new ArrayList();
+			for (IEnumerator it = schemaNode.IterateChildren(); it.MoveNext();) {
+				XmpNode currProp = (XmpNode) it.Current;
+				if (currProp == null)
+					continue;
+				if (doAllProperties || !Utils.IsInternalProperty(schemaNode.GetName(), currProp.GetName())) {
+					currPropsToRemove.Add(currProp);
 				}
 			}
+			foreach (XmpNode xmpNode in currPropsToRemove) {
+				schemaNode.GetChildren().Remove(xmpNode);
+			}
+			currPropsToRemove.Clear();
 			return !schemaNode.HasChildren();
 		}
 
@@ -928,92 +937,92 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			switch (openQuote)
 			{
-				case 0x0022:
+				case (char)0x0022:
 				{
-					return 0x0022;
+					return (char)0x0022;
 				}
 
-				case 0x00AB:
+				case (char)0x00AB:
 				{
 					// ! U+0022 is both opening and closing.
 					//		Not interpreted as brackets anymore
 					//		case 0x005B: 
 					//			return 0x005D;
-					return 0x00BB;
+					return (char)0x00BB;
 				}
 
-				case 0x00BB:
+				case (char)0x00BB:
 				{
 					// ! U+00AB and U+00BB are reversible.
-					return 0x00AB;
+					return (char)0x00AB;
 				}
 
-				case 0x2015:
+				case (char)0x2015:
 				{
-					return 0x2015;
+					return (char)0x2015;
 				}
 
-				case 0x2018:
+				case (char)0x2018:
 				{
 					// ! U+2015 is both opening and closing.
-					return 0x2019;
+					return (char)0x2019;
 				}
 
-				case 0x201A:
+				case (char)0x201A:
 				{
-					return 0x201B;
+					return (char)0x201B;
 				}
 
-				case 0x201C:
+				case (char)0x201C:
 				{
-					return 0x201D;
+					return (char)0x201D;
 				}
 
-				case 0x201E:
+				case (char)0x201E:
 				{
-					return 0x201F;
+					return (char)0x201F;
 				}
 
-				case 0x2039:
+				case (char)0x2039:
 				{
-					return 0x203A;
+					return (char)0x203A;
 				}
 
-				case 0x203A:
+				case (char)0x203A:
 				{
 					// ! U+2039 and U+203A are reversible.
-					return 0x2039;
+					return (char)0x2039;
 				}
 
-				case 0x3008:
+				case (char)0x3008:
 				{
-					return 0x3009;
+					return (char)0x3009;
 				}
 
-				case 0x300A:
+				case (char)0x300A:
 				{
-					return 0x300B;
+					return (char)0x300B;
 				}
 
-				case 0x300C:
+				case (char)0x300C:
 				{
-					return 0x300D;
+					return (char)0x300D;
 				}
 
-				case 0x300E:
+				case (char)0x300E:
 				{
-					return 0x300F;
+					return (char)0x300F;
 				}
 
-				case 0x301D:
+				case (char)0x301D:
 				{
-					return 0x301F;
+					return (char)0x301F;
 				}
 
 				default:
 				{
 					// ! U+301E also closes U+301D.
-					return 0;
+					return '\0';
 				}
 			}
 		}

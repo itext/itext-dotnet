@@ -46,7 +46,6 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// the byte counter </summary>
 		private int bytesWritten;
 
-
 		/// <summary>
 		/// Constructor with providing the output stream to decorate. </summary>
 		/// <param name="output"> an <code>OutputStream</code> </param>
@@ -56,8 +55,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 
 		/// <returns> the bytesWritten </returns>
-		public int BytesWritten {
-			get { return bytesWritten; }
+		public int GetBytesWritten() {
+			return bytesWritten;
 		}
 
 		public override bool CanRead {
@@ -73,7 +72,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		}
 
 		public override long Length {
-			get { return BytesWritten; }
+			get { return GetBytesWritten(); }
 		}
 
 		public override long Position {

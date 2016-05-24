@@ -337,11 +337,11 @@ namespace iTextSharp.Kernel.Xmp
 				}
 				if (rawValue.StartsWith("0x"))
 				{
-					return long.Parse(rawValue.Substring(2), 16);
+					return System.Convert.ToInt64(rawValue.Substring(2), 16);
 				}
 				else
 				{
-					return long.Parse(rawValue);
+					return System.Convert.ToInt64(rawValue);
 				}
 			}
 			catch (FormatException)

@@ -58,8 +58,8 @@ namespace iTextSharp.Kernel.Xmp {
         public XmpCalendar(DateTime dateTime) : this(dateTime, TimeZone.CurrentTimeZone) {
         }
 
-        public XmpCalendar(TimeZone tz)
-            : this(DateTime.Now, tz) {
+		public XmpCalendar(TimeZone timeZone)
+			: this(DateTime.Now, timeZone) {
         }
 
         public XmpCalendar() : this(DateTime.Now, TimeZone.CurrentTimeZone) {
@@ -69,8 +69,12 @@ namespace iTextSharp.Kernel.Xmp {
             return dateTime;
         }
 
-		public virtual DateTime SetDateTime(DateTime dateTime) {
+		public virtual void SetDateTime(DateTime dateTime) {
 			this.dateTime = dateTime;
+		}
+
+		public virtual void SetTimeZone(TimeZone timeZone) {
+			this.timeZone = timeZone;
 		}
 
 		public virtual TimeZone GetTimeZone() {
@@ -80,5 +84,9 @@ namespace iTextSharp.Kernel.Xmp {
 		public virtual long GetTimeInMillis() {
             return dateTime.Ticks;
         }
+
+		public virtual void SetTimeInMillis(long value) {
+			dateTime = new DateTime(value);
+		}
     }
 }
