@@ -302,55 +302,55 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		protected internal virtual PdfObject CopyObject(PdfObject @object, PdfDocument document
+		protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument document
 			, bool allowDuplicating)
 		{
-			if (@object is PdfIndirectReference)
+			if (obj is PdfIndirectReference)
 			{
-				@object = ((PdfIndirectReference)@object).GetRefersTo();
+				obj = ((PdfIndirectReference)obj).GetRefersTo();
 			}
-			if (@object == null)
+			if (obj == null)
 			{
-				@object = PdfNull.PDF_NULL;
+				obj = PdfNull.PDF_NULL;
 			}
-			if (CheckTypeOfPdfDictionary(@object, PdfName.Catalog))
+			if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog))
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
 				logger.Warn(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
-				@object = PdfNull.PDF_NULL;
+				obj = PdfNull.PDF_NULL;
 			}
-			PdfIndirectReference indirectReference = @object.GetIndirectReference();
+			PdfIndirectReference indirectReference = obj.GetIndirectReference();
 			PdfIndirectReference copiedIndirectReference;
 			int copyObjectKey = 0;
 			if (!allowDuplicating && indirectReference != null)
 			{
-				copyObjectKey = GetCopyObjectKey(@object);
+				copyObjectKey = GetCopyObjectKey(obj);
 				copiedIndirectReference = copiedObjects[copyObjectKey];
 				if (copiedIndirectReference != null)
 				{
 					return copiedIndirectReference.GetRefersTo();
 				}
 			}
-			if (properties.smartMode && !CheckTypeOfPdfDictionary(@object, PdfName.Page))
+			if (properties.smartMode && !CheckTypeOfPdfDictionary(obj, PdfName.Page))
 			{
-				PdfObject copiedObject = SmartCopyObject(@object);
+				PdfObject copiedObject = SmartCopyObject(obj);
 				if (copiedObject != null)
 				{
 					return copiedObjects[GetCopyObjectKey(copiedObject)].GetRefersTo();
 				}
 			}
-			PdfObject newObject = @object.NewInstance();
+			PdfObject newObject = obj.NewInstance();
 			if (indirectReference != null)
 			{
 				if (copyObjectKey == 0)
 				{
-					copyObjectKey = GetCopyObjectKey(@object);
+					copyObjectKey = GetCopyObjectKey(obj);
 				}
-				PdfIndirectReference @in = newObject.MakeIndirect(document).GetIndirectReference(
+				PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference(
 					);
-				copiedObjects[copyObjectKey] = @in;
+				copiedObjects[copyObjectKey] = reference;
 			}
-			newObject.CopyContent(@object, document);
+			newObject.CopyContent(obj, document);
 			return newObject;
 		}
 
@@ -358,16 +358,16 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="object">object to write.</param>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		protected internal virtual void WriteToBody(PdfObject @object)
+		protected internal virtual void WriteToBody(PdfObject obj)
 		{
 			if (crypto != null)
 			{
-				crypto.SetHashKeyForNextObject(@object.GetIndirectReference().GetObjNumber(), @object
+				crypto.SetHashKeyForNextObject(obj.GetIndirectReference().GetObjNumber(), obj
 					.GetIndirectReference().GetGenNumber());
 			}
-			WriteInteger(@object.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger
-				(@object.GetIndirectReference().GetGenNumber()).WriteBytes(obj);
-			Write(@object);
+			WriteInteger(obj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger
+				(obj.GetIndirectReference().GetGenNumber()).WriteBytes(obj);
+			Write(obj);
 			WriteBytes(endobj);
 		}
 
@@ -394,10 +394,10 @@ namespace iTextSharp.Kernel.Pdf
 					if (indirectReference != null && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
 						))
 					{
-						PdfObject @object = indirectReference.GetRefersTo(false);
-						if (@object != null)
+						PdfObject obj = indirectReference.GetRefersTo(false);
+						if (obj != null)
 						{
-							@object.Flush();
+							obj.Flush();
 							needFlush = true;
 						}
 					}
@@ -422,10 +422,10 @@ namespace iTextSharp.Kernel.Pdf
 				PdfIndirectReference indirectReference = xref.Get(i);
 				if (null != indirectReference)
 				{
-					PdfObject @object = indirectReference.GetRefersTo(false);
-					if (@object != null && !@object.Equals(objectStream) && @object.IsModified())
+					PdfObject obj = indirectReference.GetRefersTo(false);
+					if (obj != null && !obj.Equals(objectStream) && obj.IsModified())
 					{
-						@object.Flush();
+						obj.Flush();
 					}
 				}
 			}
@@ -443,19 +443,19 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		/// <param name="object">object to be copied.</param>
 		/// <returns>calculated hash code.</returns>
-		protected internal virtual int GetCopyObjectKey(PdfObject @object)
+		protected internal virtual int GetCopyObjectKey(PdfObject obj)
 		{
-			PdfIndirectReference @in;
-			if (@object.IsIndirectReference())
+			PdfIndirectReference reference;
+			if (obj.IsIndirectReference())
 			{
-				@in = (PdfIndirectReference)@object;
+				reference = (PdfIndirectReference)obj;
 			}
 			else
 			{
-				@in = @object.GetIndirectReference();
+				reference = obj.GetIndirectReference();
 			}
-			int result = @in.GetHashCode();
-			result = 31 * result + @in.GetDocument().GetHashCode();
+			int result = reference.GetHashCode();
+			result = 31 * result + reference.GetDocument().GetHashCode();
 			return result;
 		}
 
@@ -520,30 +520,30 @@ namespace iTextSharp.Kernel.Pdf
 			return this;
 		}
 
-		private PdfObject SmartCopyObject(PdfObject @object)
+		private PdfObject SmartCopyObject(PdfObject obj)
 		{
 			PdfWriter.ByteStore streamKey;
-			if (@object.IsStream())
+			if (obj.IsStream())
 			{
-				streamKey = new PdfWriter.ByteStore((PdfStream)@object, serialized);
+				streamKey = new PdfWriter.ByteStore((PdfStream)obj, serialized);
 				PdfIndirectReference streamRef = streamMap[streamKey];
 				if (streamRef != null)
 				{
 					return streamRef;
 				}
-				streamMap[streamKey] = @object.GetIndirectReference();
+				streamMap[streamKey] = obj.GetIndirectReference();
 			}
 			else
 			{
-				if (@object.IsDictionary())
+				if (obj.IsDictionary())
 				{
-					streamKey = new PdfWriter.ByteStore((PdfDictionary)@object, serialized);
+					streamKey = new PdfWriter.ByteStore((PdfDictionary)obj, serialized);
 					PdfIndirectReference streamRef = streamMap[streamKey];
 					if (streamRef != null)
 					{
 						return streamRef.GetRefersTo();
 					}
-					streamMap[streamKey] = @object.GetIndirectReference();
+					streamMap[streamKey] = obj.GetIndirectReference();
 				}
 			}
 			return null;
@@ -756,19 +756,19 @@ namespace iTextSharp.Kernel.Pdf
 				return hash;
 			}
 
-			protected internal virtual int GetCopyObjectKey(PdfObject @object)
+			protected internal virtual int GetCopyObjectKey(PdfObject obj)
 			{
-				PdfIndirectReference @in;
-				if (@object.IsIndirectReference())
+				PdfIndirectReference reference;
+				if (obj.IsIndirectReference())
 				{
-					@in = (PdfIndirectReference)@object;
+					reference = (PdfIndirectReference)obj;
 				}
 				else
 				{
-					@in = @object.GetIndirectReference();
+					reference = obj.GetIndirectReference();
 				}
-				int result = @in.GetHashCode();
-				result = 31 * result + @in.GetDocument().GetHashCode();
+				int result = reference.GetHashCode();
+				result = 31 * result + reference.GetDocument().GetHashCode();
 				return result;
 			}
 		}
