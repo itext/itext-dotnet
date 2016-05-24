@@ -1638,31 +1638,38 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
-			Stream stream = UrlUtil.ToURL(sourceFolder + "Desert.jpg").OpenStream();
+			Stream stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder 
+				+ "Desert.jpg"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 700, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "bulb.gif").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bulb.gif"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 600, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "smpl.bmp").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "smpl.bmp"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 500, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "itext.png").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "itext.png"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 460, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "0047478.jpg").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "0047478.jpg"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 300, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "map.jp2").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 200, 100, true);
-			stream = UrlUtil.ToURL(sourceFolder + "amb.jb2").OpenStream();
+			stream = iTextSharp.IO.Util.UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"
+				));
 			baos = new ByteArrayOutputStream();
 			StreamUtil.TransferBytes(stream, baos);
 			canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 30, 100, true);

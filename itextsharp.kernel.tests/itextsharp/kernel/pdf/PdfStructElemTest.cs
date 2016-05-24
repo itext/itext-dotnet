@@ -170,7 +170,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfReader reader = new PdfReader(new FileStream(destinationFolder + "structElemTest03.pdf"
 				, FileMode.Open));
 			document = new PdfDocument(reader);
-			NUnit.Framework.Assert.AreEqual(2, document.GetNextStructParentIndex());
+			NUnit.Framework.Assert.AreEqual(2, (int)document.GetNextStructParentIndex());
 			PdfPage page = document.GetPage(1);
 			NUnit.Framework.Assert.AreEqual(0, page.GetStructParentIndex());
 			NUnit.Framework.Assert.AreEqual(2, page.GetNextMcid());

@@ -137,7 +137,8 @@ namespace iTextSharp.Layout.Hyphenation
 			try
 			{
 				Uri url = f.ToURI().ToURL();
-				LoadPatterns(new BufferedInputStream(url.OpenStream()), url.ToExternalForm());
+				LoadPatterns(new BufferedInputStream(iTextSharp.IO.Util.UrlUtil.OpenStream(url)), 
+					url.ToExternalForm());
 			}
 			catch (MalformedURLException e)
 			{

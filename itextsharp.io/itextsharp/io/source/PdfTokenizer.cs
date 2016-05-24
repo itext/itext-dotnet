@@ -644,7 +644,7 @@ namespace iTextSharp.IO.Source
 
 		public virtual long GetLongValue()
 		{
-			return long.Parse(GetStringValue());
+			return System.Convert.ToInt64(GetStringValue());
 		}
 
 		public virtual int GetIntValue()

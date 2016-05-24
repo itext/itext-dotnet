@@ -224,8 +224,8 @@ namespace iTextSharp.Layout.Renderer
 					{
 						continue;
 					}
-					if (tabAnchorCharacter != null && tabAnchorCharacter == text.Get(ind).GetUnicode(
-						))
+					if (tabAnchorCharacter != null && tabAnchorCharacter == (int)text.Get(ind).GetUnicode
+						())
 					{
 						tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
 						tabAnchorCharacter = null;

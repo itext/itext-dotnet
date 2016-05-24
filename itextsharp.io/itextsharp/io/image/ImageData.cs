@@ -102,7 +102,7 @@ namespace iTextSharp.IO.Image
 
 		protected internal IDictionary<String, Object> imageAttributes;
 
-		protected internal long mySerialId = GetSerialId();
+		protected internal long? mySerialId = GetSerialId();
 
 		protected internal ImageData(Uri url, ImageType type)
 		{
@@ -404,12 +404,11 @@ namespace iTextSharp.IO.Image
 
 		/// <summary>Creates a new serial id.</summary>
 		/// <returns>the new serialId</returns>
-		private static long GetSerialId()
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
+		private static long? GetSerialId()
 		{
-			lock (typeof(ImageData))
-			{
-				return ++serialId;
-			}
+			return ++serialId;
 		}
 	}
 }

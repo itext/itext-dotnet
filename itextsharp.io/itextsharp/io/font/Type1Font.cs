@@ -63,7 +63,7 @@ namespace iTextSharp.IO.Font
 		/// Represents the section KernPairs in the AFM file.
 		/// Key is uni1&lt;&lt;32 + uni2. Value is kerning value.
 		/// </remarks>
-		private IDictionary<long, int?> kernPairs = new Dictionary<long, int?>();
+		private IDictionary<long?, int?> kernPairs = new Dictionary<long?, int?>();
 
 		/// <summary>Types of records in a PFB file.</summary>
 		/// <remarks>Types of records in a PFB file. ASCII is 1 and BINARY is 2. They have to appear in the PFB file in this sequence.
@@ -153,7 +153,7 @@ namespace iTextSharp.IO.Font
 		{
 			if (first.HasValidUnicode() && second.HasValidUnicode())
 			{
-				long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
+				long? record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
 				if (kernPairs.ContainsKey(record))
 				{
 					return (int)kernPairs[record];
@@ -179,7 +179,7 @@ namespace iTextSharp.IO.Font
 		/// </returns>
 		public virtual bool SetKerning(int first, int second, int kern)
 		{
-			long record = ((long)first << 32) + second;
+			long? record = ((long)first << 32) + second;
 			kernPairs[record] = kern;
 			return true;
 		}
@@ -570,7 +570,7 @@ namespace iTextSharp.IO.Font
 						int? secondUni = AdobeGlyphList.NameToUnicode(second);
 						if (firstUni != null && secondUni != null)
 						{
-							long record = ((long)firstUni << 32) + (int)secondUni;
+							long? record = ((long)firstUni << 32) + (int)secondUni;
 							kernPairs[record] = width;
 						}
 					}

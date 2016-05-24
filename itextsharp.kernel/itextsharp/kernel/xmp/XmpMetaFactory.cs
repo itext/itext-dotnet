@@ -254,32 +254,31 @@ namespace iTextSharp.Kernel.Xmp
 		/// its requested.
 		/// </remarks>
 		/// <returns>Returns the version information.</returns>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
 		public static XmpVersionInfo GetVersionInfo()
 		{
-			lock (typeof(XmpMetaFactory))
+			if (versionInfo == null)
 			{
-				if (versionInfo == null)
+				try
 				{
-					try
-					{
-						int major = 5;
-						int minor = 1;
-						int micro = 0;
-						int engBuild = 3;
-						bool debug = false;
-						// Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
-						String message = "Adobe XMP Core 5.1.0-jc003";
-						versionInfo = new _XmpVersionInfo_263(major, minor, micro, debug, engBuild, message
-							);
-					}
-					catch (Exception e)
-					{
-						// EMTPY, severe error would be detected during the tests
-						System.Console.Out.WriteLine(e);
-					}
+					int major = 5;
+					int minor = 1;
+					int micro = 0;
+					int engBuild = 3;
+					bool debug = false;
+					// Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
+					String message = "Adobe XMP Core 5.1.0-jc003";
+					versionInfo = new _XmpVersionInfo_263(major, minor, micro, debug, engBuild, message
+						);
 				}
-				return versionInfo;
+				catch (Exception e)
+				{
+					// EMTPY, severe error would be detected during the tests
+					System.Console.Out.WriteLine(e);
+				}
 			}
+			return versionInfo;
 		}
 
 		private sealed class _XmpVersionInfo_263 : XmpVersionInfo

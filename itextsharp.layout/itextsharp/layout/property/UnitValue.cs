@@ -136,8 +136,8 @@ namespace iTextSharp.Layout.Property
 			}
 			iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue
 				)obj;
-			return int.CompareTo(unitType, other.unitType) == 0 && float.CompareTo(value, other
-				.value) == 0;
+			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 
+				&& iTextSharp.IO.Util.JavaUtil.FloatCompare(value, other.value) == 0;
 		}
 
 		public override int GetHashCode()

@@ -89,7 +89,7 @@ namespace iTextSharp.Layout.Hyphenation
 			try
 			{
 				Uri url = new File(filename).ToURI().ToURL();
-				Parse(url.OpenStream(), url.ToExternalForm());
+				Parse(iTextSharp.IO.Util.UrlUtil.OpenStream(url), url.ToExternalForm());
 			}
 			catch (MalformedURLException e)
 			{
@@ -169,7 +169,7 @@ namespace iTextSharp.Layout.Hyphenation
 				// chars.delete(0,i);
 				for (int countr = i; countr < chars.Length; countr++)
 				{
-					iTextSharp.SetCharAt(chars, countr - i, chars[countr]);
+					chars.SetCharAt(countr - i, chars[countr]);
 				}
 				chars.Length = chars.Length - i;
 				if (token.Length > 0)
@@ -192,7 +192,7 @@ namespace iTextSharp.Layout.Hyphenation
 			// chars.delete(0,i);
 			for (int countr_1 = i; countr_1 < chars.Length; countr_1++)
 			{
-				iTextSharp.SetCharAt(chars, countr_1 - i, chars[countr_1]);
+				chars.SetCharAt(countr_1 - i, chars[countr_1]);
 			}
 			chars.Length = chars.Length - i;
 			if (space)

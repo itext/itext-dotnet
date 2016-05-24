@@ -355,8 +355,8 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < crlarray.Size(); i++)
 			{
 				PdfStream stream = crlarray.GetAsStream(i);
-				crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes
-					())));
+				crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes()
+					)));
 			}
 			return crls;
 		}

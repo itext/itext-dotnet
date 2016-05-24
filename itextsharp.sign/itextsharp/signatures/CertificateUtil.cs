@@ -127,8 +127,8 @@ namespace iTextSharp.Signatures
 			{
 				return null;
 			}
-			return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new 
-				Uri(url)));
+			return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri
+				(url)));
 		}
 
 		// Online Certificate Status Protocol
@@ -190,8 +190,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="System.IO.IOException"/>
 		public static String GetTSAURL(X509Certificate certificate)
 		{
-			byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA
-				);
+			byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
 			if (der == null)
 			{
 				return null;

@@ -84,41 +84,38 @@ namespace iTextSharp.Layout.Hyphenation
 
 		/// <summary>Registers additional file directories.</summary>
 		/// <param name="directory">directory to register</param>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
 		public static void RegisterAdditionalHyphenationFileDirectory(String directory)
 		{
-			lock (typeof(Hyphenator))
+			if (additionalHyphenationFileDirectories == null)
 			{
-				if (additionalHyphenationFileDirectories == null)
-				{
-					additionalHyphenationFileDirectories = new List<String>();
-				}
-				additionalHyphenationFileDirectories.Add(directory);
+				additionalHyphenationFileDirectories = new List<String>();
 			}
+			additionalHyphenationFileDirectories.Add(directory);
 		}
 
 		/// <summary>Returns the default hyphenation tree cache.</summary>
 		/// <returns>the default (static) hyphenation tree cache</returns>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
 		public static HyphenationTreeCache GetHyphenationTreeCache()
 		{
-			lock (typeof(Hyphenator))
+			if (hTreeCache == null)
 			{
-				if (hTreeCache == null)
-				{
-					hTreeCache = new HyphenationTreeCache();
-				}
-				return hTreeCache;
+				hTreeCache = new HyphenationTreeCache();
 			}
+			return hTreeCache;
 		}
 
 		/// <summary>Clears the default hyphenation tree cache.</summary>
 		/// <remarks>Clears the default hyphenation tree cache. This method can be used if the underlying data files are changed at runtime.
 		/// 	</remarks>
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
 		public static void ClearHyphenationTreeCache()
 		{
-			lock (typeof(Hyphenator))
-			{
-				hTreeCache = new HyphenationTreeCache();
-			}
+			hTreeCache = new HyphenationTreeCache();
 		}
 
 		/// <summary>

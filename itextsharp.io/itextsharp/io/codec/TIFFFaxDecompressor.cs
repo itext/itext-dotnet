@@ -980,228 +980,227 @@ namespace iTextSharp.IO.Codec
 		}
 
 		// while(lines < height)
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+			.Synchronized)]
 		public virtual void DecodeT6()
 		{
-			lock (this)
+			int height = h;
+			int a0;
+			int a1;
+			int b1;
+			int b2;
+			int entry;
+			int code;
+			int bits;
+			bool isWhite;
+			int currIndex;
+			int[] temp;
+			// Return values from getNextChangingElement
+			int[] b = new int[2];
+			// uncompressedMode - have written some code for this, but this
+			// has not been tested due to lack of test images using this optional
+			// extension. This code is when code == 11. aastha 03/03/1999
+			// Local cached reference
+			int[] cce = currChangingElems;
+			// Assume invisible preceding row of all white pixels and insert
+			// both black and white changing elements beyond the end of this
+			// imaginary scanline.
+			changingElemSize = 0;
+			cce[changingElemSize++] = w;
+			cce[changingElemSize++] = w;
+			int bitOffset;
+			for (int lines = 0; lines < height; lines++)
 			{
-				int height = h;
-				int a0;
-				int a1;
-				int b1;
-				int b2;
-				int entry;
-				int code;
-				int bits;
-				bool isWhite;
-				int currIndex;
-				int[] temp;
-				// Return values from getNextChangingElement
-				int[] b = new int[2];
-				// uncompressedMode - have written some code for this, but this
-				// has not been tested due to lack of test images using this optional
-				// extension. This code is when code == 11. aastha 03/03/1999
-				// Local cached reference
-				int[] cce = currChangingElems;
-				// Assume invisible preceding row of all white pixels and insert
-				// both black and white changing elements beyond the end of this
-				// imaginary scanline.
-				changingElemSize = 0;
-				cce[changingElemSize++] = w;
-				cce[changingElemSize++] = w;
-				int bitOffset;
-				for (int lines = 0; lines < height; lines++)
+				// a0 has to be set just before the start of the scanline.
+				a0 = -1;
+				isWhite = true;
+				// Assign the changing elements of the previous scanline to
+				// prevChangingElems and start putting this new scanline's
+				// changing elements into the currChangingElems.
+				temp = prevChangingElems;
+				prevChangingElems = currChangingElems;
+				cce = currChangingElems = temp;
+				currIndex = 0;
+				// Start decoding the scanline
+				bitOffset = 0;
+				// Reset search start position for getNextChangingElement
+				lastChangingElement = 0;
+				// Till one whole scanline is decoded
+				while (bitOffset < w)
 				{
-					// a0 has to be set just before the start of the scanline.
-					a0 = -1;
-					isWhite = true;
-					// Assign the changing elements of the previous scanline to
-					// prevChangingElems and start putting this new scanline's
-					// changing elements into the currChangingElems.
-					temp = prevChangingElems;
-					prevChangingElems = currChangingElems;
-					cce = currChangingElems = temp;
-					currIndex = 0;
-					// Start decoding the scanline
-					bitOffset = 0;
-					// Reset search start position for getNextChangingElement
-					lastChangingElement = 0;
-					// Till one whole scanline is decoded
-					while (bitOffset < w)
+					// Get the next changing element
+					GetNextChangingElement(a0, isWhite, b);
+					b1 = b[0];
+					b2 = b[1];
+					// Get the next seven bits
+					entry = NextLesserThan8Bits(7);
+					// Run these through the 2DCodes table
+					entry = twoDCodes[entry] & 0xff;
+					// Get the code and the number of bits used up
+					code = (int)(((uint)(entry & 0x78)) >> 3);
+					bits = entry & 0x07;
+					if (code == 0)
 					{
-						// Get the next changing element
-						GetNextChangingElement(a0, isWhite, b);
-						b1 = b[0];
-						b2 = b[1];
-						// Get the next seven bits
-						entry = NextLesserThan8Bits(7);
-						// Run these through the 2DCodes table
-						entry = twoDCodes[entry] & 0xff;
-						// Get the code and the number of bits used up
-						code = (int)(((uint)(entry & 0x78)) >> 3);
-						bits = entry & 0x07;
-						if (code == 0)
+						// Pass
+						// We always assume WhiteIsZero format for fax.
+						if (!isWhite)
 						{
-							// Pass
-							// We always assume WhiteIsZero format for fax.
-							if (!isWhite)
+							if (b2 > w)
 							{
-								if (b2 > w)
-								{
-									b2 = w;
-								}
-								SetToBlack(bitOffset, b2 - bitOffset);
+								b2 = w;
 							}
-							bitOffset = a0 = b2;
+							SetToBlack(bitOffset, b2 - bitOffset);
+						}
+						bitOffset = a0 = b2;
+						// Set pointer to only consume the correct number of bits.
+						UpdatePointer(7 - bits);
+					}
+					else
+					{
+						if (code == 1)
+						{
+							// Horizontal
 							// Set pointer to only consume the correct number of bits.
 							UpdatePointer(7 - bits);
-						}
-						else
-						{
-							if (code == 1)
+							// identify the next 2 alternating color codes.
+							int number;
+							if (isWhite)
 							{
-								// Horizontal
-								// Set pointer to only consume the correct number of bits.
-								UpdatePointer(7 - bits);
-								// identify the next 2 alternating color codes.
-								int number;
-								if (isWhite)
+								// Following are white and black runs
+								number = DecodeWhiteCodeWord();
+								bitOffset += number;
+								cce[currIndex++] = bitOffset;
+								number = DecodeBlackCodeWord();
+								if (number > w - bitOffset)
 								{
-									// Following are white and black runs
-									number = DecodeWhiteCodeWord();
-									bitOffset += number;
-									cce[currIndex++] = bitOffset;
-									number = DecodeBlackCodeWord();
-									if (number > w - bitOffset)
-									{
-										number = w - bitOffset;
-									}
-									SetToBlack(bitOffset, number);
-									bitOffset += number;
-									cce[currIndex++] = bitOffset;
+									number = w - bitOffset;
 								}
-								else
-								{
-									// First a black run and then a white run follows
-									number = DecodeBlackCodeWord();
-									if (number > w - bitOffset)
-									{
-										number = w - bitOffset;
-									}
-									SetToBlack(bitOffset, number);
-									bitOffset += number;
-									cce[currIndex++] = bitOffset;
-									number = DecodeWhiteCodeWord();
-									bitOffset += number;
-									cce[currIndex++] = bitOffset;
-								}
-								a0 = bitOffset;
+								SetToBlack(bitOffset, number);
+								bitOffset += number;
+								cce[currIndex++] = bitOffset;
 							}
 							else
 							{
-								if (code <= 8)
+								// First a black run and then a white run follows
+								number = DecodeBlackCodeWord();
+								if (number > w - bitOffset)
 								{
-									// Vertical
-									a1 = b1 + (code - 5);
-									cce[currIndex++] = a1;
-									// We write the current color till a1 - 1 pos,
-									// since a1 is where the next color starts
-									if (!isWhite)
-									{
-										if (a1 > w)
-										{
-											a1 = w;
-										}
-										SetToBlack(bitOffset, a1 - bitOffset);
-									}
-									bitOffset = a0 = a1;
-									isWhite = !isWhite;
-									UpdatePointer(7 - bits);
+									number = w - bitOffset;
 								}
-								else
+								SetToBlack(bitOffset, number);
+								bitOffset += number;
+								cce[currIndex++] = bitOffset;
+								number = DecodeWhiteCodeWord();
+								bitOffset += number;
+								cce[currIndex++] = bitOffset;
+							}
+							a0 = bitOffset;
+						}
+						else
+						{
+							if (code <= 8)
+							{
+								// Vertical
+								a1 = b1 + (code - 5);
+								cce[currIndex++] = a1;
+								// We write the current color till a1 - 1 pos,
+								// since a1 is where the next color starts
+								if (!isWhite)
 								{
-									if (code == 11)
+									if (a1 > w)
 									{
-										int entranceCode = NextLesserThan8Bits(3);
-										int zeros = 0;
-										bool exit = false;
-										while (!exit)
+										a1 = w;
+									}
+									SetToBlack(bitOffset, a1 - bitOffset);
+								}
+								bitOffset = a0 = a1;
+								isWhite = !isWhite;
+								UpdatePointer(7 - bits);
+							}
+							else
+							{
+								if (code == 11)
+								{
+									int entranceCode = NextLesserThan8Bits(3);
+									int zeros = 0;
+									bool exit = false;
+									while (!exit)
+									{
+										while (NextLesserThan8Bits(1) != 1)
 										{
-											while (NextLesserThan8Bits(1) != 1)
+											zeros++;
+										}
+										if (zeros > 5)
+										{
+											// Exit code
+											// Zeros before exit code
+											zeros = zeros - 6;
+											if (!isWhite && (zeros > 0))
 											{
-												zeros++;
+												cce[currIndex++] = bitOffset;
 											}
-											if (zeros > 5)
+											// Zeros before the exit code
+											bitOffset += zeros;
+											if (zeros > 0)
 											{
-												// Exit code
-												// Zeros before exit code
-												zeros = zeros - 6;
-												if (!isWhite && (zeros > 0))
-												{
-													cce[currIndex++] = bitOffset;
-												}
-												// Zeros before the exit code
-												bitOffset += zeros;
-												if (zeros > 0)
-												{
-													// Some zeros have been written
-													isWhite = true;
-												}
-												// Read in the bit which specifies the color of
-												// the following run
-												if (NextLesserThan8Bits(1) == 0)
-												{
-													if (!isWhite)
-													{
-														cce[currIndex++] = bitOffset;
-													}
-													isWhite = true;
-												}
-												else
-												{
-													if (isWhite)
-													{
-														cce[currIndex++] = bitOffset;
-													}
-													isWhite = false;
-												}
-												exit = true;
+												// Some zeros have been written
+												isWhite = true;
 											}
-											if (zeros == 5)
+											// Read in the bit which specifies the color of
+											// the following run
+											if (NextLesserThan8Bits(1) == 0)
 											{
 												if (!isWhite)
 												{
 													cce[currIndex++] = bitOffset;
 												}
-												bitOffset += zeros;
-												// Last thing written was white
 												isWhite = true;
 											}
 											else
 											{
-												bitOffset += zeros;
-												cce[currIndex++] = bitOffset;
-												SetToBlack(bitOffset, 1);
-												++bitOffset;
-												// Last thing written was black
+												if (isWhite)
+												{
+													cce[currIndex++] = bitOffset;
+												}
 												isWhite = false;
 											}
+											exit = true;
+										}
+										if (zeros == 5)
+										{
+											if (!isWhite)
+											{
+												cce[currIndex++] = bitOffset;
+											}
+											bitOffset += zeros;
+											// Last thing written was white
+											isWhite = true;
+										}
+										else
+										{
+											bitOffset += zeros;
+											cce[currIndex++] = bitOffset;
+											SetToBlack(bitOffset, 1);
+											++bitOffset;
+											// Last thing written was black
+											isWhite = false;
 										}
 									}
 								}
 							}
 						}
 					}
-					// while bitOffset < w
-					// Add the changing element beyond the current scanline for the
-					// other color too, if not already added previously
-					if (currIndex <= w)
-					{
-						cce[currIndex++] = bitOffset;
-					}
-					// Number of changing elements in this scanline.
-					changingElemSize = currIndex;
-					lineBitNum += bitsPerScanline;
 				}
+				// while bitOffset < w
+				// Add the changing element beyond the current scanline for the
+				// other color too, if not already added previously
+				if (currIndex <= w)
+				{
+					cce[currIndex++] = bitOffset;
+				}
+				// Number of changing elements in this scanline.
+				changingElemSize = currIndex;
+				lineBitNum += bitsPerScanline;
 			}
 		}
 
