@@ -165,7 +165,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static void Rdf_NodeElement(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode xmlNode
 			, bool isTopLevel)
 		{
-			int nodeTerm = GetRDFTermKind(xmlNode);
+			int nodeTerm = GetRdfTermKind(xmlNode);
 			if (nodeTerm != RDFTERM_DESCRIPTION && nodeTerm != RDFTERM_OTHER)
 			{
 				throw new XmpException("Node element must be rdf:Description or typed node", XmpError.BADRDF
@@ -229,7 +229,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					continue;
 				}
 
-				int attrTerm = GetRDFTermKind(attribute);
+				int attrTerm = GetRdfTermKind(attribute);
 
 				switch (attrTerm) {
 					case RDFTERM_ID:
@@ -384,7 +384,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static void Rdf_PropertyElement(XmpMetaImpl xmp, XmpNode xmpParent, XmlNode 
 			xmlNode, bool isTopLevel)
 		{
-			int nodeTerm = GetRDFTermKind(xmlNode);
+			int nodeTerm = GetRdfTermKind(xmlNode);
 			if (!IsPropertyElementName(nodeTerm)) {
 				throw new XmpException("Invalid property element name", XmpError.BADRDF);
 			}
@@ -988,7 +988,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 
 			if (isValueNode) {
-				if (isTopLevel || !xmpParent.Options.Struct) {
+				if (isTopLevel || !xmpParent.GetOptions().IsStruct()) {
 					throw new XmpException("Misplaced rdf:value element", XmpError.BADRDF);
 				}
 				xmpParent.SetHasValueChild(true);

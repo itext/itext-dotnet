@@ -163,7 +163,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					{
 						if ('0' <= ch && ch <= '9')
 						{
-							control = char.Digit(ch, 10);
+							control = iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
 							digits = 1;
 							state = STATE_DIG1;
 						}
@@ -179,7 +179,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					if ('0' <= ch && ch <= '9')
 					{
-						control = control * 10 + char.Digit(ch, 10);
+						control = control * 10 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
 						digits++;
 						if (digits <= 5)
 						{
@@ -211,7 +211,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 					if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'
 						))
 					{
-						control = control * 16 + char.Digit(ch, 16);
+						control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
 						digits++;
 						if (digits <= 4)
 						{

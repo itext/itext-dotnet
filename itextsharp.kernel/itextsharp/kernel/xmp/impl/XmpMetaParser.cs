@@ -76,12 +76,12 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			XmlDocument document = ParseXml(input, options);
 
-			bool xmpmetaRequired = options.GetRequireXmpMeta();
+			bool xmpmetaRequired = options.GetRequireXMPMeta();
 			object[] result = new object[3];
 			result = FindRootNode(document, xmpmetaRequired, result);
 
 			if (result != null && result[1] == XMP_RDF) {
-				XmpMetaImpl xmp = ParseRDF.Parse((XmlNode) result[0]);
+				XmpMetaImpl xmp = ParseRdf.Parse((XmlNode) result[0]);
 				xmp.SetPacketHeader((string) result[2]);
 
 				// Check if the XMP object shall be normalized
@@ -171,7 +171,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				if (options.GetFixControlChars()) {
 					try {
 						StreamReader streamReader = new StreamReader(buffer.GetByteStream(), Encoding.GetEncoding(buffer.GetEncoding()));
-						FixASCIIControlsReader fixReader = new FixASCIIControlsReader(streamReader);
+						FixAsciiControlsReader fixReader = new FixAsciiControlsReader(streamReader);
 						doc.Load(GetSecureXmlReader(fixReader));
 						return doc;
 					} catch (Exception) {
@@ -205,7 +205,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			catch (XmpException e) {
 				if (e.GetErrorCode() == XmpError.BADXML && options.GetFixControlChars()) {
 					XmlDocument doc = new XmlDocument();
-					doc.Load(GetSecureXmlReader(new FixASCIIControlsReader(new StringReader(input))));
+					doc.Load(GetSecureXmlReader(new FixAsciiControlsReader(new StringReader(input))));
 					return doc;
 				}
 				throw e;
@@ -262,7 +262,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				else if (XmlNodeType.Text != root.NodeType && XmlNodeType.ProcessingInstruction != root.NodeType) {
 					string rootNs = root.NamespaceURI;
 					string rootLocal = root.LocalName;
-					if ((XmpConst.TAG_XmpMETA.Equals(rootLocal) || XmpConst.TAG_XAPMETA.Equals(rootLocal)) &&
+					if ((XmpConst.TAG_XMPMETA.Equals(rootLocal) || XmpConst.TAG_XAPMETA.Equals(rootLocal)) &&
 						XmpConst.NS_X.Equals(rootNs)) {
 						// by not passing the RequireXmpMeta-option, the rdf-Node will be valid
 						return FindRootNode(root, false, result);

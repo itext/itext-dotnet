@@ -386,25 +386,25 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				if (value is bool?)
 				{
-					strValue = XmpUtils.ConvertFromBoolean(((bool?)value));
+					strValue = XmpUtils.ConvertFromBoolean((bool)value);
 				}
 				else
 				{
 					if (value is int?)
 					{
-						strValue = XmpUtils.ConvertFromInteger(((int?)value));
+						strValue = XmpUtils.ConvertFromInteger((int)value);
 					}
 					else
 					{
-						if (value is long)
+						if (value is long?)
 						{
-							strValue = XmpUtils.ConvertFromLong(((long)value));
+							strValue = XmpUtils.ConvertFromLong((long)value);
 						}
 						else
 						{
 							if (value is double?)
 							{
-								strValue = XmpUtils.ConvertFromDouble(((double?)value));
+								strValue = XmpUtils.ConvertFromDouble((double)value);
 							}
 							else
 							{
@@ -414,9 +414,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 								}
 								else
 								{
-									if (value is GregorianCalendar)
+									if (value is XmpCalendar)
 									{
-										XmpDateTime dt = XmpDateTimeFactory.CreateFromCalendar((GregorianCalendar)value);
+										XmpDateTime dt = XmpDateTimeFactory.CreateFromCalendar((XmpCalendar)value);
 										strValue = XmpUtils.ConvertFromDate(dt);
 									}
 									else

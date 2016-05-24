@@ -512,7 +512,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			{
 				if (IsControlChar(buffer[i]))
 				{
-					iTextSharp.SetCharAt(buffer, i, ' ');
+					buffer.SetCharAt(i, ' ');
 				}
 			}
 			return buffer.ToString();
@@ -557,8 +557,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			xmlNameChars = new bool[0x0100];
 			xmlNameStartChars = new bool[0x0100];
-			for (char ch = 0; ch < xmlNameChars.Length; ch++)
+			for (int i = 0; i < xmlNameChars.Length; i++)
 			{
+				char ch = (char)i;
 				xmlNameStartChars[ch] = ch == ':' || ('A' <= ch && ch <= 'Z') || ch == '_' || ('a'
 					 <= ch && ch <= 'z') || (0xC0 <= ch && ch <= 0xD6) || (0xD8 <= ch && ch <= 0xF6)
 					 || (0xF8 <= ch && ch <= 0xFF);

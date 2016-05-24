@@ -262,6 +262,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				return returnProperty;
 			}
 
+			protected internal virtual void SetReturnProperty(XmpPropertyInfo value) {
+				returnProperty = value;
+			}
+
 			public virtual Object Current {
 				get { return returnProperty; }
 			}
@@ -387,10 +391,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				private readonly string value;
 
 				public XmpPropertyInfoImpl(XmpNode node, string baseNs, string path, string value) {
-					node = node;
-					baseNs = baseNs;
-					path = path;
-					value = value;
+					this.node = node;
+					this.baseNs = baseNs;
+					this.path = path;
+					this.value = value;
 				}
 
 				public virtual string GetNamespace() {
@@ -443,7 +447,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				: base(outerInstance, parentNode, parentPath, 0) {
 				this.outerInstance = outerInstance;
 				if (parentNode.GetOptions().IsSchemaNode()) {
-					outerInstance.BaseNs = parentNode.GetName();
+					outerInstance.SetBaseNS(parentNode.GetName());
 				}
 				this.parentPath = AccumulatePath(parentNode, parentPath, 1);
 				this.childrenIterator = parentNode.IterateChildren();
@@ -473,7 +477,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 						// report next property, skip not-leaf nodes in case options is set
 						if (!outerInstance.GetOptions().IsJustLeafnodes() || !child.HasChildren()) {
-							ReturnProperty = CreatePropertyInfo(child, outerInstance.GetBaseNS(), path);
+							SetReturnProperty(CreatePropertyInfo(child, outerInstance.GetBaseNS(), path));
 							return true;
 						}
 					}

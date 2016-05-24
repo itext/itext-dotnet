@@ -641,36 +641,34 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// render qualifier
 			if (recursive && HasQualifier())
 			{
-				iTextSharp.Kernel.Xmp.Impl.XmpNode[] quals = (iTextSharp.Kernel.Xmp.Impl.XmpNode[]
-					)GetQualifier().ToArray(new iTextSharp.Kernel.Xmp.Impl.XmpNode[GetQualifierLength
-					()]);
-				int i_1 = 0;
-				while (quals.Length > i_1 && (XmpConst.XML_LANG.Equals(quals[i_1].GetName()) || "rdf:type"
-					.Equals(quals[i_1].GetName())))
+				XmpNode[] quals = new XmpNode[GetQualifier().Count];
+				GetQualifier().CopyTo(quals, 0);
+				int i = 0;
+				while (quals.Length > i && (XmpConst.XML_LANG.Equals(quals[i].GetName()) || "rdf:type"
+					.Equals(quals[i].GetName())))
 				{
-					i_1++;
+					i++;
 				}
-				System.Array.Sort(quals, i_1, quals.Length);
-				for (i_1 = 0; i_1 < quals.Length; i_1++)
+				System.Array.Sort(quals, i, quals.Length);
+				for (i = 0; i < quals.Length; i++)
 				{
-					iTextSharp.Kernel.Xmp.Impl.XmpNode qualifier = quals[i_1];
-					qualifier.DumpNode(result, recursive, indent + 2, i_1 + 1);
+					iTextSharp.Kernel.Xmp.Impl.XmpNode qualifier = quals[i];
+					qualifier.DumpNode(result, recursive, indent + 2, i + 1);
 				}
 			}
 			// render children
 			if (recursive && HasChildren())
 			{
-				iTextSharp.Kernel.Xmp.Impl.XmpNode[] children = (iTextSharp.Kernel.Xmp.Impl.XmpNode
-					[])GetChildren().ToArray(new iTextSharp.Kernel.Xmp.Impl.XmpNode[GetChildrenLength
-					()]);
+				XmpNode[] children = new XmpNode[GetChildren().Count];
+				GetChildren().CopyTo(children, 0);
 				if (!GetOptions().IsArray())
 				{
 					System.Array.Sort(children);
 				}
-				for (int i_1 = 0; i_1 < children.Length; i_1++)
+				for (int i = 0; i < children.Length; i++)
 				{
-					iTextSharp.Kernel.Xmp.Impl.XmpNode child = children[i_1];
-					child.DumpNode(result, recursive, indent + 1, i_1 + 1);
+					iTextSharp.Kernel.Xmp.Impl.XmpNode child = children[i];
+					child.DumpNode(result, recursive, indent + 1, i + 1);
 				}
 			}
 		}
@@ -704,7 +702,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <returns>Returns a read-only copy of child nodes list.</returns>
 		public virtual IList GetUnmodifiableChildren()
 		{
-			return JavaCollectionsUtil.UnmodifiableList(new ArrayList(GetChildren()));
+			return JavaCollectionsUtil.UnmodifiableList(GetChildren());
 		}
 
 		/// <returns>Returns list of qualifier that is lazy initialized.</returns>
@@ -760,7 +758,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				null)
 			{
 				throw new XmpException("Duplicate property or field node '" + childName + "'", XmpError
-					.BADXmp);
+					.BADXMP);
 			}
 		}
 
@@ -773,7 +771,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			if (!XmpConst.ARRAY_ITEM_NAME.Equals(qualifierName) && FindQualifierByName(qualifierName
 				) != null)
 			{
-				throw new XmpException("Duplicate '" + qualifierName + "' qualifier", XmpError.BADXmp
+				throw new XmpException("Duplicate '" + qualifierName + "' qualifier", XmpError.BADXMP
 					);
 			}
 		}

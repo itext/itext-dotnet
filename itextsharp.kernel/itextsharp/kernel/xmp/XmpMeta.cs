@@ -869,7 +869,7 @@ namespace iTextSharp.Kernel.Xmp
 		/// especially conversion errors.
 		/// </exception>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		long GetPropertyLong(String schemaNS, String propName);
+		long? GetPropertyLong(String schemaNS, String propName);
 
 		/// <summary>Convenience method to retrieve the literal value of a property.</summary>
 		/// <param name="schemaNS">

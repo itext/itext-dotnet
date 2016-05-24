@@ -360,7 +360,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 			Object[] result = XmpNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
-			int match = ((int?)result[0]);
+			int match = (int)result[0];
 			XmpNode itemNode = (XmpNode)result[1];
 			if (match != XmpNodeUtils.CLT_NO_VALUES)
 			{
@@ -396,7 +396,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 
 			public override String ToString()
 			{
-				return itemNode.GetValue().ToString();
+				return itemNode.GetValue();
 			}
 
 			private readonly XmpNode itemNode;
@@ -441,9 +441,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// Make sure the x-default item, if any, is first.
 			bool haveXDefault = false;
 			XmpNode xdItem = null;
-			for (IEnumerator it = arrayNode.IterateChildren(); it.MoveNext(); )
+			foreach (XmpNode currItem in arrayNode.GetChildren())
 			{
-				XmpNode currItem = (XmpNode)it.Current;
 				if (!currItem.HasQualifier() || !XmpConst.XML_LANG.Equals(currItem.GetQualifier(1
 					).GetName()))
 				{
@@ -470,7 +469,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			// alternative.
 			Object[] result = XmpNodeUtils.ChooseLocalizedText(arrayNode, genericLang, specificLang
 				);
-			int match = ((int?)result[0]);
+			int match = (int)result[0];
 			XmpNode itemNode = (XmpNode)result[1];
 			bool specificXDefault = XmpConst.X_DEFAULT.Equals(specificLang);
 			switch (match)
@@ -781,9 +780,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.GetPropertyLong(System.String, System.String)
 		/// 	"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		public virtual long GetPropertyLong(String schemaNS, String propName)
+		public virtual long? GetPropertyLong(String schemaNS, String propName)
 		{
-			return (long)GetPropertyObject(schemaNS, propName, VALUE_LONG);
+			return (long?) GetPropertyObject(schemaNS, propName, VALUE_LONG);
 		}
 
 		/// <seealso cref="iTextSharp.Kernel.Xmp.XmpMeta.SetPropertyLong(System.String, System.String, long, iTextSharp.Kernel.Xmp.Options.PropertyOptions)

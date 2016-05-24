@@ -48,23 +48,20 @@ namespace iTextSharp.Kernel.Xmp.Impl
 	public sealed class XmpSchemaRegistryImpl : XmpConst, XmpSchemaRegistry
 	{
 		/// <summary>a map from a namespace URI to its registered prefix</summary>
-		private IDictionary<String, String> namespaceToPrefixMap = new Dictionary<String, 
-			String>();
+		private IDictionary namespaceToPrefixMap = new Hashtable();
 
 		/// <summary>a map from a prefix to the associated namespace URI</summary>
-		private IDictionary<String, String> prefixToNamespaceMap = new Dictionary<String, 
-			String>();
+		private IDictionary prefixToNamespaceMap = new Hashtable();
 
 		/// <summary>a map of all registered aliases.</summary>
 		/// <remarks>
 		/// a map of all registered aliases.
 		/// The map is a relationship from a qname to an <code>XMPAliasInfo</code>-object.
 		/// </remarks>
-		private IDictionary<String, XmpAliasInfo> aliasMap = new Dictionary<String, XmpAliasInfo
-			>();
+		private IDictionary aliasMap = new Hashtable();
 
 		/// <summary>The pattern that must not be contained in simple properties</summary>
-		private Regex p = iTextSharp.IO.Util.StringUtil.RegexCompile("[/*?\\[\\]]");
+		private readonly Regex _regex = new Regex("[/*?\\[\\]]");
 
 		/// <summary>
 		/// Performs the initialisation of the registry with the default namespaces, aliases and global
@@ -102,8 +99,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					throw new XmpException("The prefix is a bad XML name", XmpError.BADXML);
 				}
-				String registeredPrefix = namespaceToPrefixMap[namespaceURI];
-				String registeredNS = prefixToNamespaceMap[suggestedPrefix];
+				String registeredPrefix = (String)namespaceToPrefixMap[namespaceURI];
+				String registeredNS = (String)prefixToNamespaceMap[suggestedPrefix];
 				if (registeredPrefix != null)
 				{
 					// Return the actual prefix
@@ -116,7 +113,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// the namespace is new, but the prefix is already engaged,
 						// we generate a new prefix out of the suggested
 						String generatedPrefix = suggestedPrefix;
-						for (int i = 1; prefixToNamespaceMap.ContainsKey(generatedPrefix); i++)
+						for (int i = 1; prefixToNamespaceMap.Contains(generatedPrefix); i++)
 						{
 							generatedPrefix = suggestedPrefix.JSubstring(0, suggestedPrefix.Length - 1) + "_"
 								 + i + "_:";
@@ -140,8 +137,10 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				String prefixToDelete = GetNamespacePrefix(namespaceURI);
 				if (prefixToDelete != null)
 				{
-					namespaceToPrefixMap.JRemove(namespaceURI);
-					prefixToNamespaceMap.JRemove(prefixToDelete);
+					if (namespaceToPrefixMap.Contains(namespaceURI))
+						namespaceToPrefixMap.Remove(namespaceURI);
+					if (prefixToNamespaceMap.Contains(prefixToDelete))
+						prefixToNamespaceMap.Remove(prefixToDelete);
 				}
 			}
 		}
@@ -152,7 +151,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return namespaceToPrefixMap[namespaceURI];
+				return (String)namespaceToPrefixMap[namespaceURI];
 			}
 		}
 
@@ -166,7 +165,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					namespacePrefix += ":";
 				}
-				return prefixToNamespaceMap[namespacePrefix];
+				return (String)prefixToNamespaceMap[namespacePrefix];
 			}
 		}
 
@@ -175,8 +174,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, String>(namespaceToPrefixMap
-					));
+				return ReadOnlyDictionary.ReadOnly(new Hashtable(namespaceToPrefixMap));
 			}
 		}
 
@@ -185,8 +183,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, String>(prefixToNamespaceMap
-					));
+				return ReadOnlyDictionary.ReadOnly(new Hashtable(prefixToNamespaceMap));
 			}
 		}
 
@@ -279,7 +276,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				{
 					return null;
 				}
-				return aliasMap[aliasPrefix + aliasProp];
+				return (XmpAliasInfo)aliasMap[aliasPrefix + aliasProp];
 			}
 		}
 
@@ -289,7 +286,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return aliasMap[qname];
+				return (XmpAliasInfo)aliasMap[qname];
 			}
 		}
 
@@ -303,8 +300,9 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				IList<XmpAliasInfo> result = new List<XmpAliasInfo>();
 				if (prefix != null)
 				{
-					foreach (String qname in aliasMap.Keys)
+					foreach (Object key in aliasMap.Keys)
 					{
+						String qname = (String)key;
 						if (qname.StartsWith(prefix))
 						{
 							result.Add(FindAlias(qname));
@@ -369,11 +367,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				// Fix the alias options
 				AliasOptions aliasOpts = aliasForm != null ? new AliasOptions(XmpNodeUtils.VerifySetOptions
 					(aliasForm.ToPropertyOptions(), null).GetOptions()) : new AliasOptions();
-				if (iTextSharp.IO.Util.StringUtil.Match(p, aliasProp).Find() || iTextSharp.IO.Util.StringUtil.Match
-					(p, actualProp).Find())
-				{
-					throw new XmpException("Alias and actual property names must be simple", XmpError
-						.BADXPATH);
+				if (_regex.IsMatch(aliasProp) || _regex.IsMatch(actualProp)) {
+					throw new XmpException("Alias and actual property names must be simple", XmpError.BADXPATH);
 				}
 				// check if both namespaces are registered
 				String aliasPrefix = GetNamespacePrefix(aliasNS);
@@ -391,27 +386,27 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				}
 				String key = aliasPrefix + aliasProp;
 				// check if alias is already existing
-				if (aliasMap.ContainsKey(key))
+				if (aliasMap.Contains(key))
 				{
 					throw new XmpException("Alias is already existing", XmpError.BADPARAM);
 				}
 				else
 				{
-					if (aliasMap.ContainsKey(actualPrefix + actualProp))
+					if (aliasMap.Contains(actualPrefix + actualProp))
 					{
 						throw new XmpException("Actual property is already an alias, use the base property"
 							, XmpError.BADPARAM);
 					}
 				}
-				XmpAliasInfo aliasInfo = new _XmpAliasInfo_408(actualNS, actualPrefix, actualProp
+				XmpAliasInfo aliasInfo = new _XmpAliasInfo_409(actualNS, actualPrefix, actualProp
 					, aliasOpts);
 				aliasMap[key] = aliasInfo;
 			}
 		}
 
-		private sealed class _XmpAliasInfo_408 : XmpAliasInfo
+		private sealed class _XmpAliasInfo_409 : XmpAliasInfo
 		{
-			public _XmpAliasInfo_408(String actualNS, String actualPrefix, String actualProp, 
+			public _XmpAliasInfo_409(String actualNS, String actualPrefix, String actualProp, 
 				AliasOptions aliasOpts)
 			{
 				this.actualNS = actualNS;
@@ -464,8 +459,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			lock (this)
 			{
-				return JavaCollectionsUtil.UnmodifiableMap(new SortedDictionary<String, XmpAliasInfo
-					>(aliasMap));
+				return ReadOnlyDictionary.ReadOnly(new Hashtable(aliasMap
+					));
 			}
 		}
 
@@ -520,5 +515,102 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			RegisterAlias(NS_PNG, "Software", NS_XMP, "CreatorTool", null);
 			RegisterAlias(NS_PNG, "Title", NS_DC, "title", aliasToArrayAltText);
 		}
+	}
+
+	public class ReadOnlyDictionary : IDictionary {
+		#region ReadOnlyDictionary members
+
+		private readonly IDictionary _originalDictionary;
+
+		private ReadOnlyDictionary(IDictionary original) {
+			_originalDictionary = original;
+		}
+
+		/// <summary>
+		/// Return a read only wrapper to an existing dictionary.
+		/// Any change to the underlying dictionary will be 
+		/// propagated to the read-only wrapper.
+		public static ReadOnlyDictionary ReadOnly(IDictionary dictionary) {
+			return new ReadOnlyDictionary(dictionary);
+		}
+
+		private void ReportNotSupported() {
+			throw new NotSupportedException("Collection is read-only.");
+		}
+
+		#endregion
+
+		#region IDictionary Members
+
+		virtual public bool IsReadOnly {
+			get { return true; }
+		}
+
+		virtual public IDictionaryEnumerator GetEnumerator() {
+			return _originalDictionary.GetEnumerator();
+		}
+
+		public object this[object key] {
+			get { return _originalDictionary[key]; }
+			set { throw new NotSupportedException("Collection is read-only."); }
+		}
+
+		virtual public void Remove(object key) {
+			ReportNotSupported();
+		}
+
+		virtual public bool Contains(object key) {
+			return _originalDictionary.Contains(key);
+		}
+
+		virtual public void Clear() {
+			ReportNotSupported();
+		}
+
+		virtual public ICollection Values {
+			get {
+				// no need to wrap with a read-only thing,
+				// as ICollection is always read-only
+				return _originalDictionary.Values;
+			}
+		}
+
+		virtual public void Add(object key, object value) {
+			ReportNotSupported();
+		}
+
+		virtual public ICollection Keys {
+			get {
+				// no need to wrap with a read-only thing,
+				// as ICollection is always read-only
+				return _originalDictionary.Keys;
+			}
+		}
+
+		virtual public bool IsFixedSize {
+			get { return _originalDictionary.IsFixedSize; }
+		}
+
+		virtual public bool IsSynchronized {
+			get { return _originalDictionary.IsSynchronized; }
+		}
+
+		virtual public int Count {
+			get { return _originalDictionary.Count; }
+		}
+
+		virtual public void CopyTo(Array array, int index) {
+			_originalDictionary.CopyTo(array, index);
+		}
+
+		virtual public object SyncRoot {
+			get { return _originalDictionary.SyncRoot; }
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return _originalDictionary.GetEnumerator();
+		}
+
+		#endregion
 	}
 }

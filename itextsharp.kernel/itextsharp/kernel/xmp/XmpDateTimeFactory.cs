@@ -49,7 +49,17 @@ namespace iTextSharp.Kernel.Xmp
 		/// 	</summary>
 		/// <param name="calendar">a <code>Calendar</code>-object.</param>
 		/// <returns>An <code>XmpDateTime</code>-object.</returns>
-		public static XmpDateTime CreateFromCalendar(XmpDateTime calendar)
+		public static XmpDateTime CreateFromDate(XmpDateTime date)
+		{
+			return new XmpDateTimeImpl(date);
+		}
+
+		// EMPTY
+		/// <summary>Creates an <code>XmpDateTime</code> from a <code>Calendar</code>-object.
+		/// 	</summary>
+		/// <param name="calendar">a <code>Calendar</code>-object.</param>
+		/// <returns>An <code>XmpDateTime</code>-object.</returns>
+		public static XmpDateTime CreateFromCalendar(XmpCalendar calendar)
 		{
 			return new XmpDateTimeImpl(calendar);
 		}

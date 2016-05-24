@@ -99,7 +99,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 				if (Utils.CheckUUIDFormat(nameStr))
 				{
 					// move UUID to xmpMM:InstanceID and remove it from the root node
-					XmpPath path = XmpPathParser.ExpandXPath(XmpConst.NS_Xmp_MM, "InstanceID");
+					XmpPath path = XmpPathParser.ExpandXPath(XmpConst.NS_XMP_MM, "InstanceID");
 					XmpNode idNode = XmpNodeUtils.FindNode(tree, path, true, null);
 					if (idNode != null)
 					{
@@ -164,7 +164,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						}
 						else
 						{
-							if (XmpConst.NS_Xmp_RIGHTS.Equals(currSchema.GetName()))
+							if (XmpConst.NS_XMP_RIGHTS.Equals(currSchema.GetName()))
 							{
 								XmpNode arrayNode = XmpNodeUtils.FindChildNode(currSchema, "xmpRights:UsageTerms"
 									, false);
@@ -394,26 +394,26 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			}
 		}
 
-		/// <summary>Moves an alias node of array form to another schema into an array</summary>
-		/// <param name="propertyIt">the property iterator of the old schema (used to delete the property)
-		/// 	</param>
-		/// <param name="childNode">the node to be moved</param>
-		/// <param name="baseArray">the base array for the array item</param>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">Forwards XMP errors</exception>
-		private static void TransplantArrayItemAlias(IEnumerator propertyIt, XmpNode childNode
-			, XmpNode baseArray)
-		{
+		/// <summary>
+		/// Moves an alias node of array form to another schema into an array </summary>
+		/// <param name="childNode"> the node to be moved </param>
+		/// <param name="baseArray"> the base array for the array item </param>
+		/// <exception cref="XmpException"> Forwards XMP errors </exception>
+		private static void TransplantArrayItemAlias(XmpNode childNode, XmpNode baseArray) {
 			if (baseArray.GetOptions().IsArrayAltText()) {
-				if (childNode.GetOptions().GetsHasLanguage()) {
+				if (childNode.GetOptions().GetHasLanguage()) {
 					throw new XmpException("Alias to x-default already has a language qualifier",
-						XmpError.BADXmp);
+						XmpError.BADXMP);
 				}
+
 				XmpNode langQual = new XmpNode(XmpConst.XML_LANG, XmpConst.X_DEFAULT, null);
 				childNode.AddQualifier(langQual);
 			}
+
 			childNode.SetName(XmpConst.ARRAY_ITEM_NAME);
 			baseArray.AddChild(childNode);
 		}
+
 
 		/// <summary>Fixes the GPS Timestamp in EXIF.</summary>
 		/// <param name="exifSchema">the EXIF schema node</param>
@@ -482,13 +482,13 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		{
 			if (!aliasNode.GetValue().Equals(baseNode.GetValue())
 				|| aliasNode.GetChildrenLength() != baseNode.GetChildrenLength()) {
-				throw new XmpException("Mismatch between alias and base nodes", XmpError.BADXmp);
+				throw new XmpException("Mismatch between alias and base nodes", XmpError.BADXMP);
 			}
 
 			if (!outerCall &&
 				(!aliasNode.GetName().Equals(baseNode.GetName()) || !aliasNode.GetOptions().Equals(baseNode.GetOptions()) ||
 					aliasNode.GetQualifierLength() != baseNode.GetQualifierLength())) {
-				throw new XmpException("Mismatch between alias and base nodes", XmpError.BADXmp);
+				throw new XmpException("Mismatch between alias and base nodes", XmpError.BADXMP);
 			}
 
 			for (IEnumerator an = aliasNode.IterateChildren(), bn = baseNode.IterateChildren();
