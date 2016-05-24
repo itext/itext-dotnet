@@ -148,5 +148,15 @@ namespace iTextSharp.Kernel {
 		public static void SetCharAt(this StringBuilder builder, int index, char ch) {
 			builder[index] = ch;
 		}
+
+        public static float NextFloat(this Random random) {
+            double mantissa = (random.NextDouble() * 2.0) - 1.0;
+            double exponent = Math.Pow(2.0, random.Next(-126, 128));
+            return (float)(mantissa * exponent);
+        }
+
+        public static bool NextBoolean(this Random random) {
+            return random.NextDouble() > 0.5;
+        }
 	}
 }
