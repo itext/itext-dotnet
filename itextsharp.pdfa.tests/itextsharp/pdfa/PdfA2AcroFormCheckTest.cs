@@ -24,7 +24,6 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[NUnit.Framework.ExpectedException(typeof(PdfAConformanceException))]
 		[Test]
 		public virtual void AcroFormCheck01()
 		{
@@ -37,7 +36,14 @@ namespace iTextSharp.Pdfa
 			PdfDictionary acroForm = new PdfDictionary();
 			acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(true));
 			doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
-			doc.Close();
+			try
+			{
+				doc.Close();
+				NUnit.Framework.Assert.Fail("PdfAConformanceException expected");
+			}
+			catch (PdfAConformanceException)
+			{
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>

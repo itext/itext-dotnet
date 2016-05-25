@@ -27,7 +27,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
 		[Test]
-		[Ignore]
+		[Ignore("ignore")]
 		public virtual void FileSpecCheckTest01()
 		{
 			// According to spec, only pdfa-1 or pdfa-2 compliant pdf document are allowed to be added to the

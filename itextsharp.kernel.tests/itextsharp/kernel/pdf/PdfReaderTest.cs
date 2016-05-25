@@ -749,7 +749,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]
-		[Ignore]
+		[Ignore("ignore")]
 		public virtual void CorrectSimpleDoc4()
 		{
 			//test with abnormal object declaration

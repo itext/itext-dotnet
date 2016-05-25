@@ -1489,7 +1489,6 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.ExpectedException(typeof(iTextSharp.IO.IOException))]
 		[Test]
 		public virtual void GifImageTest04()
 		{
@@ -1507,8 +1506,14 @@ namespace iTextSharp.Kernel.Pdf
 				reads = @is.Read();
 			}
 			PdfCanvas canvas = new PdfCanvas(page);
-			ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 3);
-			canvas.AddImage(img, 100, 100, 200, false);
+			try
+			{
+				ImageDataFactory.CreateGifFrame(baos.ToArray(), 3);
+				NUnit.Framework.Assert.Fail("IOException expected");
+			}
+			catch (iTextSharp.IO.IOException)
+			{
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>

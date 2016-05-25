@@ -85,7 +85,7 @@ namespace iTextSharp.Layout
 				text.Append("A very long text is here...");
 			}
 			Paragraph twoColumnParagraph = new Paragraph();
-			twoColumnParagraph.SetNextRenderer(new _T2033342369(this, twoColumnParagraph));
+			twoColumnParagraph.SetNextRenderer(new _T802745355(this, twoColumnParagraph));
 			iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text
 				.ToString());
 			twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants
@@ -104,7 +104,7 @@ namespace iTextSharp.Layout
 					break;
 				}
 			}
-			twoColumnParagraph.SetNextRenderer(new _T2033342369(this, twoColumnParagraph, paragraphLastPageNumber
+			twoColumnParagraph.SetNextRenderer(new _T802745355(this, twoColumnParagraph, paragraphLastPageNumber
 				));
 			document.Relayout();
 			//Close document. Drawing of content is happened on close
@@ -113,17 +113,17 @@ namespace iTextSharp.Layout
 				, destinationFolder, "diff"));
 		}
 
-		internal class _T2033342369 : ParagraphRenderer
+		internal class _T802745355 : ParagraphRenderer
 		{
 			internal int oneColumnPage = -1;
 
-			public _T2033342369(PreLayoutTest _enclosing, Paragraph modelElement)
+			public _T802745355(PreLayoutTest _enclosing, Paragraph modelElement)
 				: base(modelElement)
 			{
 				this._enclosing = _enclosing;
 			}
 
-			public _T2033342369(PreLayoutTest _enclosing, Paragraph modelElement, int oneColumnPage
+			public _T802745355(PreLayoutTest _enclosing, Paragraph modelElement, int oneColumnPage
 				)
 				: this(modelElement)
 			{
@@ -153,7 +153,7 @@ namespace iTextSharp.Layout
 
 			public override IRenderer GetNextRenderer()
 			{
-				return new _T2033342369(this, (Paragraph)this.modelElement, this.oneColumnPage);
+				return new _T802745355(this, (Paragraph)this.modelElement, this.oneColumnPage);
 			}
 
 			private readonly PreLayoutTest _enclosing;

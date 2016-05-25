@@ -405,7 +405,7 @@ namespace iTextSharp.Kernel.Pdf
 								((ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream()).WriteTo(zip
 									);
 							}
-							zip.Close();
+							zip.Finish();
 						}
 						else
 						{
@@ -444,6 +444,7 @@ namespace iTextSharp.Kernel.Pdf
 					this.Write((PdfDictionary)pdfStream);
 					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
 					byteArrayStream.WriteTo(this);
+					byteArrayStream.Close();
 					WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.endstream);
 				}
 			}

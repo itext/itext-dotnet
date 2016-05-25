@@ -62,14 +62,20 @@ namespace iTextSharp.Barcodes
 				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
 		}
 
-		[NUnit.Framework.ExpectedException(typeof(ArgumentException))]
 		[Test]
 		public virtual void Barcode03Test()
 		{
 			PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 			PdfDocument document = new PdfDocument(writer);
 			Barcode39 barcode = new Barcode39(document);
-			Barcode39.GetBarsCode39("9781935*182610");
+			try
+			{
+				Barcode39.GetBarsCode39("9781935*182610");
+				NUnit.Framework.Assert.Fail("IllegalArgumentException expected");
+			}
+			catch (ArgumentException)
+			{
+			}
 		}
 	}
 }
