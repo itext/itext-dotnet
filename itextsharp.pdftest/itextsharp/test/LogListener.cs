@@ -5,6 +5,7 @@ using iTextSharp.Test.Attributes;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace iTextSharp.Test
 {
@@ -16,12 +17,12 @@ namespace iTextSharp.Test
         private Log4NetLogger iLog = new Log4NetLogger();
         private MemoryAppender appender;
 
-        public override void BeforeTest(TestDetails testDetails)
+		public override void BeforeTest(ITest testDetails)
         {
             Init();
         }
 
-        public override void AfterTest(TestDetails testDetails)
+		public override void AfterTest(ITest testDetails)
         {
             CheckLogMessages(testDetails);
         }
@@ -31,14 +32,14 @@ namespace iTextSharp.Test
             get { return ActionTargets.Test; }
         }
 
-        private void CheckLogMessages(TestDetails testDetails)
+        private void CheckLogMessages(ITest testDetails)
         {
-            Object[] attributes = testDetails.Method.GetCustomAttributes(typeof(LogMessageAttribute), true);
+			LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
             if (attributes.Length > 0)
             {
                 for (int i = 0; i < attributes.Length; i++)
                 {
-                    LogMessageAttribute logMessage = (LogMessageAttribute)attributes[i];
+                    LogMessageAttribute logMessage = attributes[i];
                     if (!logMessage.Ignore)
                     {
                         int foundedCount = Contains(logMessage.GetMessageTemplate());
