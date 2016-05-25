@@ -150,13 +150,27 @@ namespace iTextSharp.Kernel {
 		}
 
         public static float NextFloat(this Random random) {
-            double mantissa = (random.NextDouble() * 2.0) - 1.0;
+            double mantissa = random.NextDouble();
             double exponent = Math.Pow(2.0, random.Next(-126, 128));
+            if (mantissa < 0 || exponent < 0) {
+                int a = 5;
+            }
+            float val = (float) (mantissa*exponent);
+            if (val < 0) {
+                int b = 6;
+            }
             return (float)(mantissa * exponent);
         }
 
         public static bool NextBoolean(this Random random) {
             return random.NextDouble() > 0.5;
+        }
+
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
+            TValue value;
+            col.TryGetValue(key, out value);
+
+            return value;
         }
 	}
 }

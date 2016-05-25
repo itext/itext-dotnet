@@ -90,5 +90,12 @@ namespace iTextSharp.IO {
 
             return value;
         }
+
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
+            TValue value;
+            col.TryGetValue(key, out value);
+
+            return value;
+        }
     }
 }
