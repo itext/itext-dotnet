@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{56137079-541A-425A-AB97-43AF63793C97}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>itextsharp.hyph</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resources\af.xml" />
+    <EmbeddedResource Include="resources\as.xml" />
+    <EmbeddedResource Include="resources\bg.xml" />
+    <EmbeddedResource Include="resources\bn.xml" />
+    <EmbeddedResource Include="resources\ca.xml" />
+    <EmbeddedResource Include="resources\cop.xml" />
+    <EmbeddedResource Include="resources\cs.xml" />
+    <EmbeddedResource Include="resources\cy.xml" />
+    <EmbeddedResource Include="resources\da.xml" />
+    <EmbeddedResource Include="resources\de.xml" />
+    <EmbeddedResource Include="resources\de_1901.xml" />
+    <EmbeddedResource Include="resources\de_CH.xml" />
+    <EmbeddedResource Include="resources\de_DR.xml" />
+    <EmbeddedResource Include="resources\el.xml" />
+    <EmbeddedResource Include="resources\el_Polyton.xml" />
+    <EmbeddedResource Include="resources\en.xml" />
+    <EmbeddedResource Include="resources\en_GB.xml" />
+    <EmbeddedResource Include="resources\en_US.xml" />
+    <EmbeddedResource Include="resources\eo.xml" />
+    <EmbeddedResource Include="resources\es.xml" />
+    <EmbeddedResource Include="resources\et.xml" />
+    <EmbeddedResource Include="resources\eu.xml" />
+    <EmbeddedResource Include="resources\fi.xml" />
+    <EmbeddedResource Include="resources\fr.xml" />
+    <EmbeddedResource Include="resources\ga.xml" />
+    <EmbeddedResource Include="resources\gl.xml" />
+    <EmbeddedResource Include="resources\grc.xml" />
+    <EmbeddedResource Include="resources\gu.xml" />
+    <EmbeddedResource Include="resources\hi.xml" />
+    <EmbeddedResource Include="resources\hr.xml" />
+    <EmbeddedResource Include="resources\hsb.xml" />
+    <EmbeddedResource Include="resources\hu.xml" />
+    <EmbeddedResource Include="resources\hy.xml" />
+    <EmbeddedResource Include="resources\ia.xml" />
+    <EmbeddedResource Include="resources\id.xml" />
+    <EmbeddedResource Include="resources\is.xml" />
+    <EmbeddedResource Include="resources\it.xml" />
+    <EmbeddedResource Include="resources\kmr.xml" />
+    <EmbeddedResource Include="resources\kn.xml" />
+    <EmbeddedResource Include="resources\la.xml" />
+    <EmbeddedResource Include="resources\lo.xml" />
+    <EmbeddedResource Include="resources\lt.xml" />
+    <EmbeddedResource Include="resources\lv.xml" />
+    <EmbeddedResource Include="resources\ml.xml" />
+    <EmbeddedResource Include="resources\mn.xml" />
+    <EmbeddedResource Include="resources\mr.xml" />
+    <EmbeddedResource Include="resources\nb.xml" />
+    <EmbeddedResource Include="resources\nl.xml" />
+    <EmbeddedResource Include="resources\nn.xml" />
+    <EmbeddedResource Include="resources\no.xml" />
+    <EmbeddedResource Include="resources\or.xml" />
+    <EmbeddedResource Include="resources\pa.xml" />
+    <EmbeddedResource Include="resources\pl.xml" />
+    <EmbeddedResource Include="resources\pt.xml" />
+    <EmbeddedResource Include="resources\readme.txt" />
+    <EmbeddedResource Include="resources\ro.xml" />
+    <EmbeddedResource Include="resources\ru.xml" />
+    <EmbeddedResource Include="resources\sa.xml" />
+    <EmbeddedResource Include="resources\sk.xml" />
+    <EmbeddedResource Include="resources\sl.xml" />
+    <EmbeddedResource Include="resources\sr_Cyrl.xml" />
+    <EmbeddedResource Include="resources\sr_Latn.xml" />
+    <EmbeddedResource Include="resources\sv.xml" />
+    <EmbeddedResource Include="resources\ta.xml" />
+    <EmbeddedResource Include="resources\te.xml" />
+    <EmbeddedResource Include="resources\tk.xml" />
+    <EmbeddedResource Include="resources\tr.xml" />
+    <EmbeddedResource Include="resources\uk.xml" />
+    <EmbeddedResource Include="resources\zh_Latn.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

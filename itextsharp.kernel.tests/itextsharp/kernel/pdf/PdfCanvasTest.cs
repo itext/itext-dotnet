@@ -1005,8 +1005,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
-			PdfDictionary tag2 = new PdfDictionary(new _Dictionary_1104());
-			PdfDictionary tag3 = new PdfDictionary(new _Dictionary_1107(document));
+			PdfDictionary tag2 = new PdfDictionary(new _Dictionary_1117());
+			PdfDictionary tag3 = new PdfDictionary(new _Dictionary_1120(document));
 			canvas.BeginMarkedContent(new PdfName("Tag1")).EndMarkedContent().BeginMarkedContent
 				(new PdfName("Tag2"), tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"
 				), (PdfDictionary)((PdfDictionary)tag3.MakeIndirect(document))).EndMarkedContent
@@ -1018,9 +1018,9 @@ namespace iTextSharp.Kernel.Pdf
 				, "diff_"));
 		}
 
-		private sealed class _Dictionary_1104 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_1117 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_1104()
+			public _Dictionary_1117()
 			{
 				{
 					this[new PdfName("Tag")] = new PdfNumber(2);
@@ -1028,9 +1028,9 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		private sealed class _Dictionary_1107 : Dictionary<PdfName, PdfObject>
+		private sealed class _Dictionary_1120 : Dictionary<PdfName, PdfObject>
 		{
-			public _Dictionary_1107(PdfDocument document)
+			public _Dictionary_1120(PdfDocument document)
 			{
 				this.document = document;
 				{
@@ -1311,7 +1311,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage page = document.AddNewPage();
 			PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 
 				1, 0, 1 }), new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes());
-			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(new _List_1353(), new PdfDeviceCs.Rgb
+			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(new _List_1366(), new PdfDeviceCs.Rgb
 				(), function);
 			PdfCanvas canvas = new PdfCanvas(page);
 			canvas.SetFillColor(new DeviceN(deviceN, new float[] { 0, 0 })).Rectangle(50, 500
@@ -1327,9 +1327,9 @@ namespace iTextSharp.Kernel.Pdf
 				));
 		}
 
-		private sealed class _List_1353 : List<String>
+		private sealed class _List_1366 : List<String>
 		{
-			public _List_1353()
+			public _List_1366()
 			{
 				{
 					this.Add("MyRed");
@@ -1493,7 +1493,7 @@ namespace iTextSharp.Kernel.Pdf
 		[Test]
 		public virtual void GifImageTest04()
 		{
-			FileStream fos = new FileStream(destinationFolder + "gifImageTest03.pdf", FileMode
+			FileStream fos = new FileStream(destinationFolder + "gifImageTest04.pdf", FileMode
 				.Create);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
