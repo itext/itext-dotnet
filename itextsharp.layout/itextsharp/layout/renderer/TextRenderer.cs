@@ -1062,10 +1062,10 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float CalculateLineWidth()
 		{
-			return GetGlyphLineWidth(line, (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.FONT_SIZE), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				, 1f), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
-				), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
+			return GetGlyphLineWidth(line, GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.FONT_SIZE), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, 1f), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING)
+				, GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
 		}
 
 		/// <summary>This method return a LinkedHashMap with glyphlines as its keys.</summary>

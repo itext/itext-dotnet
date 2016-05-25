@@ -286,7 +286,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual float? GetPropertyAsFloat(int property)
 		{
 			Number value = this.GetProperty<Number>(property);
-			return value != null ? (float?)value : (float?)(Object)null;
+			return value != null ? value : null;
 		}
 
 		/// <summary>Returns a property with a certain key, as a floating point value.</summary>
@@ -302,7 +302,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual float? GetPropertyAsFloat(int property, float? defaultValue)
 		{
 			Number value = this.GetProperty<Number>(property, defaultValue);
-			return value != null ? (float?)value : (float?)(Object)null;
+			return value != null ? value : null;
 		}
 
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>

@@ -112,7 +112,7 @@ namespace iTextSharp.Layout
 				case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
 				case iTextSharp.Layout.Property.Property.PADDING_LEFT:
 				{
-					return (T1)(Object)(float?)0f;
+					return (T1)(Object)0f;
 				}
 
 				default:

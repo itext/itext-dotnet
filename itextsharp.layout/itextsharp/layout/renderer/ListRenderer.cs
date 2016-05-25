@@ -123,7 +123,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
 			splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
-				, bool?.ValueOf(true));
+				, true);
 			return splitRenderer;
 		}
 
@@ -132,7 +132,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
 			overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED
-				, bool?.ValueOf(true));
+				, true);
 			return overflowRenderer;
 		}
 
