@@ -13,9 +13,11 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfAFlushingTest : ITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
-		public const String destinationFolder = "test/itextsharp/pdfa/PdfAFlushingTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/pdfa/PdfAFlushingTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

@@ -9,11 +9,13 @@ namespace iTextSharp.Forms.Xfa
 {
 	public class XFAFormTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/xfa/XFAFormTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/xfa/XFAFormTest/";
 
-		public const String destinationFolder = "test/itextsharp/forms/xfa/XFAFormTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/forms/xfa/XFAFormTest/";
 
-		public const String XML = sourceFolder + "xfa.xml";
+		public static readonly String XML = sourceFolder + "xfa.xml";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

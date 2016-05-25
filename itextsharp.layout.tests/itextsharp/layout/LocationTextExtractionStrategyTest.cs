@@ -16,7 +16,8 @@ namespace iTextSharp.Layout
 {
 	public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
 
 		public override ITextExtractionStrategy CreateRenderListenerForTest()
 		{

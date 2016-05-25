@@ -16,7 +16,8 @@ namespace iTextSharp.Layout
 {
 	public class SimpleTextExtractionStrategyTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
 
 		internal String TEXT1 = "TEXT1 TEXT1";
 

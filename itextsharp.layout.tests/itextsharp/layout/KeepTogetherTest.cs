@@ -14,9 +14,11 @@ namespace iTextSharp.Layout
 {
 	public class KeepTogetherTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/KeepTogetherTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/KeepTogetherTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/KeepTogetherTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/KeepTogetherTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

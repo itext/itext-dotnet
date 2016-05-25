@@ -15,9 +15,11 @@ namespace iTextSharp.Layout
 {
 	public class TabsTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/TabTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/TabTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/TabTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/TabTest/";
 
 		private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
 			 + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"

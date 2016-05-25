@@ -9,9 +9,11 @@ namespace iTextSharp.Layout
 {
 	public class DestinationTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/DestinationTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/DestinationTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/DestinationTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/DestinationTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

@@ -12,9 +12,11 @@ namespace iTextSharp.Forms
 {
 	public class PdfFormCopyTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/PdfFormFieldsCopyTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/PdfFormFieldsCopyTest/";
 
-		public const String destinationFolder = "test/itextsharp/forms/PdfFormFieldsCopyTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/forms/PdfFormFieldsCopyTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

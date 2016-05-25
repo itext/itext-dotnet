@@ -10,7 +10,8 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA1ActionCheckTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>

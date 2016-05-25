@@ -11,9 +11,11 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA2ActionCheckTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
-		public const String destinationFolder = "test/itextsharp/pdfa/PdfA2ActionCheckTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/pdfa/PdfA2ActionCheckTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

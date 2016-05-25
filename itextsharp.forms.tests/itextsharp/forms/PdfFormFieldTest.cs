@@ -12,9 +12,11 @@ namespace iTextSharp.Forms
 {
 	public class PdfFormFieldTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/PdfFormFieldTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/PdfFormFieldTest/";
 
-		public const String destinationFolder = "test/itextsharp/forms/PdfFormFieldTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/forms/PdfFormFieldTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

@@ -12,9 +12,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfReaderTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfReaderTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfReaderTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfReaderTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfReaderTest/";
 
 		internal const String author = "Alexander Chingarev";
 

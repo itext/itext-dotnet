@@ -11,9 +11,11 @@ namespace iTextSharp.Layout
 {
 	public class LargeElementTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/LargeElementTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/LargeElementTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/LargeElementTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/LargeElementTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

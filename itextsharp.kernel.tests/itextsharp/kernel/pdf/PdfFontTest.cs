@@ -19,11 +19,14 @@ namespace iTextSharp.Kernel.Pdf
 	{
 		public const int PageCount = 1;
 
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfFontTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfFontTest/";
 
-		public const String fontsFolder = "../../resources/itextsharp/kernel/pdf/fonts/";
+		public static readonly String fontsFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/fonts/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfFontTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfFontTest/";
 
 		internal const String author = "Alexander Chingarev";
 
@@ -923,7 +926,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				message = e.Message;
 			}
-			NUnit.Framework.Assert.AreEqual("../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
+			NUnit.Framework.Assert.AreEqual(TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
 				, message);
 		}
 

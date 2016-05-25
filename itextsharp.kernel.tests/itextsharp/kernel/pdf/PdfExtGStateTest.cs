@@ -12,9 +12,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfExtGStateTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfExtGStateTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfExtGStateTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/PdfExtGStateTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/PdfExtGStateTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

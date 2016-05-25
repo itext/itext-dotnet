@@ -5,7 +5,8 @@ namespace iTextSharp.IO.Image
 {
 	public class TiffTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/io/image/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/io/image/";
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]

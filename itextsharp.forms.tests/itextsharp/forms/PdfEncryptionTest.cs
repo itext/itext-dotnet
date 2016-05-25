@@ -7,7 +7,8 @@ namespace iTextSharp.Forms
 {
 	public class PdfEncryptionTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/PdfEncryptionTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/PdfEncryptionTest/";
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]

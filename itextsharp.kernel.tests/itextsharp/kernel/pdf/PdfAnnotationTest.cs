@@ -18,9 +18,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfAnnotationTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfAnnotationTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

@@ -14,11 +14,13 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA1GraphicsTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
-		public const String cmpFolder = sourceFolder + "cmp/PdfA1GraphicsTest/";
+		public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1GraphicsTest/";
 
-		public const String destinationFolder = "test/itextsharp/pdfa/PdfA1GraphicsTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/pdfa/PdfA1GraphicsTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

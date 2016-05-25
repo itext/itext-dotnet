@@ -15,11 +15,14 @@ namespace iTextSharp.Signatures
 {
 	public class SigningTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/signatures/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/signatures/";
 
-		public const String destinationFolder = "test/itextsharp/signatures/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/signatures/";
 
-		public const String keystorePath = "../../resources/itextsharp/signatures/ks";
+		public static readonly String keystorePath = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/signatures/ks";
 
 		public static readonly char[] password = "password".ToCharArray();
 

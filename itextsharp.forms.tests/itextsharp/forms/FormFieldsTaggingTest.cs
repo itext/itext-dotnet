@@ -11,9 +11,11 @@ namespace iTextSharp.Forms
 {
 	public class FormFieldsTaggingTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/FormFieldsTaggingTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/FormFieldsTaggingTest/";
 
-		public const String destinationFolder = "test/itextsharp/forms/FormFieldsTaggingTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/forms/FormFieldsTaggingTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

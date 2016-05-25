@@ -12,9 +12,11 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfAFontTest : ExtendedITextTest
 	{
-		internal const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		internal static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
-		internal const String outputDir = "test/itextsharp/pdfa/PdfAFontTest/";
+		internal static readonly String outputDir = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/pdfa/PdfAFontTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

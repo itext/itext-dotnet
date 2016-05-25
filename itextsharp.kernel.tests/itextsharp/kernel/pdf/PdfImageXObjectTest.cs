@@ -7,7 +7,8 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfImageXObjectTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/PdfImageXObjectTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/PdfImageXObjectTest/";
 
 		/// <exception cref="System.Exception"/>
 		private void TestFile(String filename, int page, String objectid)

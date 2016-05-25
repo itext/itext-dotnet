@@ -12,9 +12,11 @@ namespace iTextSharp.Layout
 {
 	public class BorderTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/BorderTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/BorderTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/BorderTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/BorderTest/";
 
 		public const String cmpPrefix = "cmp_";
 

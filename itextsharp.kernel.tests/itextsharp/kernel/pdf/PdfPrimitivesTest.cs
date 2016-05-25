@@ -8,7 +8,8 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfPrimitivesTest : ExtendedITextTest
 	{
-		internal const String destinationFolder = "test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
+		internal static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
 
 		internal static readonly PdfName TestArray = new PdfName("TestArray");
 

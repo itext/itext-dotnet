@@ -11,9 +11,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfPagesTest : ExtendedITextTest
 	{
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfPagesTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfPagesTest/";
 
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfPagesTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfPagesTest/";
 
 		internal static readonly PdfName PageNum = new PdfName("PageNum");
 

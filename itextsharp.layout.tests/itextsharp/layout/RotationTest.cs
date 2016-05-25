@@ -16,9 +16,11 @@ namespace iTextSharp.Layout
 {
 	public class RotationTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/layout/RotationTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/RotationTest/";
 
-		public const String destinationFolder = "test/itextsharp/layout/RotationTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/layout/RotationTest/";
 
 		public const String cmpPrefix = "cmp_";
 

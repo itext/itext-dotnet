@@ -12,7 +12,8 @@ namespace iTextSharp.Layout
 {
 	public class PdfTextExtractorEncodingsTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
 
 		/// <summary>Basic Latin characters, with Unicode values less than 128</summary>
 		private const String TEXT1 = "AZaz09*!";

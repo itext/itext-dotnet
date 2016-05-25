@@ -9,9 +9,11 @@ namespace iTextSharp.Forms
 {
 	public class FormFieldFlatteningTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/forms/FormFieldFlatteningTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/forms/FormFieldFlatteningTest/";
 
-		public const String destinationFolder = "test/itextsharp/forms/FormFieldFlatteningTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/forms/FormFieldFlatteningTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

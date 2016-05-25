@@ -11,11 +11,13 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA3EmbeddedFilesCheckTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/pdfa/";
 
-		public const String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
+		public static readonly String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
 
-		public const String destinationFolder = "test/itextsharp/pdfa/PdfA3EmbeddedFilesCheckTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/pdfa/PdfA3EmbeddedFilesCheckTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

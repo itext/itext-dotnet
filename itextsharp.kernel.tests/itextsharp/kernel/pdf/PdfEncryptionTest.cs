@@ -20,9 +20,11 @@ namespace iTextSharp.Kernel.Pdf
 
 		internal const String creator = "iText 6";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfEncryptionTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfEncryptionTest/";
 
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfEncryptionTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfEncryptionTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

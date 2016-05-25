@@ -11,9 +11,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class EncodingTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/EncodingTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/EncodingTest/";
 
-		public const String outputFolder = "test/itextsharp/kernel/pdf/EncodingTest/";
+		public static readonly String outputFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/EncodingTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

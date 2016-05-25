@@ -9,9 +9,11 @@ namespace iTextSharp.Barcodes
 {
 	public class BarcodePDF417Test : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/barcodes/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/barcodes/";
 
-		public const String destinationFolder = "test/itextsharp/barcodes/BarcodePDF417/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/barcodes/BarcodePDF417/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()
