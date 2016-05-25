@@ -8,7 +8,7 @@
     <ProjectGuid>{52A93D37-60D7-4607-8BB2-724D9C46671B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>io.tests</AssemblyName>
+    <AssemblyName>itextsharp.io.tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
