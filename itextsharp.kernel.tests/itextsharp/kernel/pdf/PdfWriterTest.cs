@@ -596,7 +596,6 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[NUnit.Framework.ExpectedException(typeof(System.IO.IOException))]
 		[Test]
 		public virtual void CloseStream1()
 		{
@@ -606,7 +605,11 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.AddNewPage();
 			pdfDoc.Close();
-			fos.Write(1);
+			try {
+				fos.Write(1);
+				NUnit.Framework.Assert.Fail("IllegalArgumentException expected");
+			} catch (System.IO.IOException ignored) {
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
