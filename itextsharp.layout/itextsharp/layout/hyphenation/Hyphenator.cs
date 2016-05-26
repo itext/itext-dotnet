@@ -251,7 +251,7 @@ namespace iTextSharp.Layout.Hyphenation
 			{
 				if (log.IsDebugEnabled())
 				{
-					log.Debug("I/O problem while trying to load " + name, ioe);
+					log.Debug("I/O problem while trying to load " + name + ": " + ioe.Message);
 				}
 				return null;
 			}

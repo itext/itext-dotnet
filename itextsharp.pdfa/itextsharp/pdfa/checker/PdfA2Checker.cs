@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -148,16 +147,16 @@ namespace iTextSharp.Pdfa.Checker
 						, true);
 					PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary
 						(PdfName.ExtGState);
-					CanvasGraphicsState gState = new _CanvasGraphicsState_138(extGStateDict);
+					CanvasGraphicsState gState = new _CanvasGraphicsState_137(extGStateDict);
 					CheckExtGState(gState);
 				}
 			}
 			CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
 		}
 
-		private sealed class _CanvasGraphicsState_138 : CanvasGraphicsState
+		private sealed class _CanvasGraphicsState_137 : CanvasGraphicsState
 		{
-			public _CanvasGraphicsState_138(PdfDictionary extGStateDict)
+			public _CanvasGraphicsState_137(PdfDictionary extGStateDict)
 			{
 				this.extGStateDict = extGStateDict;
 				{

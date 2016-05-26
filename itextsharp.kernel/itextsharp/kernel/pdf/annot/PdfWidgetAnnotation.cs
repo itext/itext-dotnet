@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,9 +59,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
 		{
 		}
 
-		private sealed class _HashSet_67 : HashSet<PdfName>
+		private sealed class _HashSet_66 : HashSet<PdfName>
 		{
-			public _HashSet_67()
+			public _HashSet_66()
 			{
 				{
 					this.Add(PdfName.Subtype);
@@ -88,7 +87,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
 			}
 		}
 
-		private HashSet<PdfName> widgetEntries = new _HashSet_67();
+		private HashSet<PdfName> widgetEntries = new _HashSet_66();
 
 		public override PdfName GetSubtype()
 		{

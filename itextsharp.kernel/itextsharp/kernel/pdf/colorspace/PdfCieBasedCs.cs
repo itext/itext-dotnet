@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -70,7 +69,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			}
 
 			public CalGray(float[] whitePoint)
-				: this(new PdfArray(new _List_81()))
+				: this(new PdfArray(new _List_80()))
 			{
 				if (whitePoint == null || whitePoint.Length != 3)
 				{
@@ -80,9 +79,9 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 				d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
 			}
 
-			private sealed class _List_81 : List<PdfObject>
+			private sealed class _List_80 : List<PdfObject>
 			{
-				public _List_81()
+				public _List_80()
 				{
 					{
 						this.Add(PdfName.CalGray);
@@ -119,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			}
 
 			public CalRgb(float[] whitePoint)
-				: this(new PdfArray(new _List_115()))
+				: this(new PdfArray(new _List_114()))
 			{
 				if (whitePoint == null || whitePoint.Length != 3)
 				{
@@ -129,9 +128,9 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 				d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
 			}
 
-			private sealed class _List_115 : List<PdfObject>
+			private sealed class _List_114 : List<PdfObject>
 			{
-				public _List_115()
+				public _List_114()
 				{
 					{
 						this.Add(PdfName.CalRGB);
@@ -173,7 +172,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			}
 
 			public Lab(float[] whitePoint)
-				: this(new PdfArray(new _List_151()))
+				: this(new PdfArray(new _List_150()))
 			{
 				if (whitePoint == null || whitePoint.Length != 3)
 				{
@@ -183,9 +182,9 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 				d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
 			}
 
-			private sealed class _List_151 : List<PdfObject>
+			private sealed class _List_150 : List<PdfObject>
 			{
-				public _List_151()
+				public _List_150()
 				{
 					{
 						this.Add(PdfName.Lab);
@@ -222,13 +221,13 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			}
 
 			public IccBased(Stream iccStream)
-				: this(new PdfArray(new _List_185(iccStream)))
+				: this(new PdfArray(new _List_184(iccStream)))
 			{
 			}
 
-			private sealed class _List_185 : List<PdfObject>
+			private sealed class _List_184 : List<PdfObject>
 			{
-				public _List_185(Stream iccStream)
+				public _List_184(Stream iccStream)
 				{
 					this.iccStream = iccStream;
 					{
@@ -241,13 +240,13 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 			}
 
 			public IccBased(Stream iccStream, float[] range)
-				: this(new PdfArray(new _List_192(iccStream, range)))
+				: this(new PdfArray(new _List_191(iccStream, range)))
 			{
 			}
 
-			private sealed class _List_192 : List<PdfObject>
+			private sealed class _List_191 : List<PdfObject>
 			{
-				public _List_192(Stream iccStream, float[] range)
+				public _List_191(Stream iccStream, float[] range)
 				{
 					this.iccStream = iccStream;
 					this.range = range;

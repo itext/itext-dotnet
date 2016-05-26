@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -244,7 +243,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType
 								 == ListNumberingType.GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-							textRenderer = new _TextRenderer_187(constantFont, textElement);
+							textRenderer = new _TextRenderer_186(constantFont, textElement);
 							try
 							{
 								textRenderer.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory
@@ -268,9 +267,9 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		private sealed class _TextRenderer_187 : TextRenderer
+		private sealed class _TextRenderer_186 : TextRenderer
 		{
-			public _TextRenderer_187(String constantFont, Text baseArg1)
+			public _TextRenderer_186(String constantFont, Text baseArg1)
 				: base(baseArg1)
 			{
 				this.constantFont = constantFont;

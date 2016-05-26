@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -659,7 +658,7 @@ namespace iTextSharp.Layout.Renderer
 				{
 					canvas.SetHorizontalScaling((float)horizontalScaling * 100);
 				}
-				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_547();
+				GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_546();
 				if (HasOwnProperty(iTextSharp.Layout.Property.Property.REVERSED))
 				{
 					//We should mark a RTL written text
@@ -723,9 +722,9 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		private sealed class _IGlyphLineFilter_547 : GlyphLine.IGlyphLineFilter
+		private sealed class _IGlyphLineFilter_546 : GlyphLine.IGlyphLineFilter
 		{
-			public _IGlyphLineFilter_547()
+			public _IGlyphLineFilter_546()
 			{
 			}
 

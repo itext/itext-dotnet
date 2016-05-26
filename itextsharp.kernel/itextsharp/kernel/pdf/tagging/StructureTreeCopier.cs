@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -52,9 +51,9 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 	/// 	</summary>
 	internal class StructureTreeCopier
 	{
-		private sealed class _List_69 : List<PdfName>
+		private sealed class _List_68 : List<PdfName>
 		{
-			public _List_69()
+			public _List_68()
 			{
 				{
 					this.Add(PdfName.K);
@@ -65,11 +64,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		private static IList<PdfName> ignoreKeysForCopy = new _List_69();
+		private static IList<PdfName> ignoreKeysForCopy = new _List_68();
 
-		private sealed class _List_76 : List<PdfName>
+		private sealed class _List_75 : List<PdfName>
 		{
-			public _List_76()
+			public _List_75()
 			{
 				{
 					this.Add(PdfName.K);
@@ -78,7 +77,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		private static IList<PdfName> ignoreKeysForClone = new _List_76();
+		private static IList<PdfName> ignoreKeysForClone = new _List_75();
 
 		/// <summary>
 		/// Copies structure to a

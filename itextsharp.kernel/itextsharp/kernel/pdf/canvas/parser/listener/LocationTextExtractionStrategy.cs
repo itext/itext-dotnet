@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -70,13 +69,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 
 		/// <summary>Creates a new text extraction renderer.</summary>
 		public LocationTextExtractionStrategy()
-			: this(new _ITextChunkLocationStrategy_81())
+			: this(new _ITextChunkLocationStrategy_80())
 		{
 		}
 
-		private sealed class _ITextChunkLocationStrategy_81 : LocationTextExtractionStrategy.ITextChunkLocationStrategy
+		private sealed class _ITextChunkLocationStrategy_80 : LocationTextExtractionStrategy.ITextChunkLocationStrategy
 		{
-			public _ITextChunkLocationStrategy_81()
+			public _ITextChunkLocationStrategy_80()
 			{
 			}
 

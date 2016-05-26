@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -64,9 +63,9 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 	/// </summary>
 	public class TagStructureContext
 	{
-		private sealed class _HashSet_82 : HashSet<PdfName>
+		private sealed class _HashSet_81 : HashSet<PdfName>
 		{
-			public _HashSet_82()
+			public _HashSet_81()
 			{
 				{
 					this.Add(PdfName.Book);
@@ -79,7 +78,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 			}
 		}
 
-		private static readonly ICollection<PdfName> allowedRootTagRoles = new _HashSet_82
+		private static readonly ICollection<PdfName> allowedRootTagRoles = new _HashSet_81
 			();
 
 		private PdfDocument document;

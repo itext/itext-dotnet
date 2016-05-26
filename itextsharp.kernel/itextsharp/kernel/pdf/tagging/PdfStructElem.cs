@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -69,9 +68,9 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		public static int Illustration = 4;
 
-		private sealed class _HashSet_80 : HashSet<PdfName>
+		private sealed class _HashSet_79 : HashSet<PdfName>
 		{
-			public _HashSet_80()
+			public _HashSet_79()
 			{
 				{
 					this.Add(PdfName.Document);
@@ -91,11 +90,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		public static ICollection<PdfName> groupingRoles = new _HashSet_80();
+		public static ICollection<PdfName> groupingRoles = new _HashSet_79();
 
-		private sealed class _HashSet_96 : HashSet<PdfName>
+		private sealed class _HashSet_95 : HashSet<PdfName>
 		{
-			public _HashSet_96()
+			public _HashSet_95()
 			{
 				{
 					this.Add(PdfName.P);
@@ -121,11 +120,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		public static ICollection<PdfName> blockLevelRoles = new _HashSet_96();
+		public static ICollection<PdfName> blockLevelRoles = new _HashSet_95();
 
-		private sealed class _HashSet_119 : HashSet<PdfName>
+		private sealed class _HashSet_118 : HashSet<PdfName>
 		{
-			public _HashSet_119()
+			public _HashSet_118()
 			{
 				{
 					this.Add(PdfName.Span);
@@ -147,11 +146,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		public static ICollection<PdfName> inlineLevelRoles = new _HashSet_119();
+		public static ICollection<PdfName> inlineLevelRoles = new _HashSet_118();
 
-		private sealed class _HashSet_137 : HashSet<PdfName>
+		private sealed class _HashSet_136 : HashSet<PdfName>
 		{
-			public _HashSet_137()
+			public _HashSet_136()
 			{
 				{
 					this.Add(PdfName.Figure);
@@ -161,7 +160,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		public static ICollection<PdfName> illustrationRoles = new _HashSet_137();
+		public static ICollection<PdfName> illustrationRoles = new _HashSet_136();
 
 		protected internal int type = Unknown;
 

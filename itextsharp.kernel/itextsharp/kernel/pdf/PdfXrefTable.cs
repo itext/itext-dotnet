@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -272,7 +271,7 @@ namespace iTextSharp.Kernel.Pdf
 					xrefStream.Put(PdfName.Encrypt, crypto);
 				}
 				xrefStream.Put(PdfName.Size, new PdfNumber(this.Size()));
-				xrefStream.Put(PdfName.W, new PdfArray(new _List_243()));
+				xrefStream.Put(PdfName.W, new PdfArray(new _List_242()));
 				xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
 				xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
 				PdfArray index = new PdfArray();
@@ -376,9 +375,9 @@ namespace iTextSharp.Kernel.Pdf
 			xref = null;
 		}
 
-		private sealed class _List_243 : List<PdfObject>
+		private sealed class _List_242 : List<PdfObject>
 		{
-			public _List_243()
+			public _List_242()
 			{
 				{
 					this.Add(new PdfNumber(1));

@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -158,13 +157,13 @@ namespace iTextSharp.Kernel.Utils
 		public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers)
 		{
 			IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-			SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_158(splitDocuments));
+			SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_157(splitDocuments));
 			return splitDocuments;
 		}
 
-		private sealed class _IDocumentReadyListener_158 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_157 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_158(IList<PdfDocument> splitDocuments)
+			public _IDocumentReadyListener_157(IList<PdfDocument> splitDocuments)
 			{
 				this.splitDocuments = splitDocuments;
 			}
@@ -209,13 +208,13 @@ namespace iTextSharp.Kernel.Utils
 		public virtual IList<PdfDocument> SplitByPageCount(int pageCount)
 		{
 			IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-			SplitByPageCount(pageCount, new _IDocumentReadyListener_197(splitDocuments));
+			SplitByPageCount(pageCount, new _IDocumentReadyListener_196(splitDocuments));
 			return splitDocuments;
 		}
 
-		private sealed class _IDocumentReadyListener_197 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_196 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_197(IList<PdfDocument> splitDocuments)
+			public _IDocumentReadyListener_196(IList<PdfDocument> splitDocuments)
 			{
 				this.splitDocuments = splitDocuments;
 			}

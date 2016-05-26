@@ -19,8 +19,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Java.IO;
-using Java.Net;
 using iTextSharp.IO.Util;
 
 namespace iTextSharp.Layout.Hyphenation
@@ -41,7 +39,7 @@ namespace iTextSharp.Layout.Hyphenation
 		protected internal ByteVector vspace;
 
 		/// <summary>This map stores hyphenation exceptions</summary>
-		protected internal IDictionary stoplist;
+		protected internal IDictionary<String, IList> stoplist;
 
 		/// <summary>This map stores the character classes</summary>
 		protected internal TernaryTree classmap;
@@ -53,8 +51,7 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <summary>Default constructor.</summary>
 		public HyphenationTree()
 		{
-			stoplist = new Hashtable(23);
-			// usually a small table
+			stoplist = new Dictionary<String, IList>(23);
 			classmap = new TernaryTree();
 			vspace = new ByteVector();
 			vspace.Alloc(1);
@@ -131,24 +128,10 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <param name="filename">the filename</param>
 		/// <exception cref="HyphenationException">In case the parsing fails</exception>
 		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		public virtual void LoadPatterns(String filename)
 		{
-			FileInfo f = new FileInfo(filename);
-			try
-			{
-				Uri url = f.ToURI().ToURL();
-				LoadPatterns(new BufferedInputStream(iTextSharp.IO.Util.UrlUtil.OpenStream(url)), 
-					url.ToExternalForm());
-			}
-			catch (MalformedURLException e)
-			{
-				throw new HyphenationException("Error converting the File '" + f + "' to a URL: "
-					 + e.Message);
-			}
-			catch (System.IO.IOException)
-			{
-				throw new HyphenationException("Error opening the File '" + f + "'");
-			}
+			LoadPatterns(new FileStream(filename, FileMode.Open), filename);
 		}
 
 		/// <summary>Read hyphenation patterns from an XML file.</summary>
@@ -402,7 +385,7 @@ namespace iTextSharp.Layout.Hyphenation
 			IList<int> breakPoints = GetNonLetterBreaks(word);
 			if (breakPoints.Count == 0)
 			{
-				return JavaCollectionsUtil.EmptyList();
+				return JavaCollectionsUtil.EmptyList<char[]>();
 			}
 			IList<char[]> words = new List<char[]>();
 			for (int ibreak = 0; ibreak < breakPoints.Count; ibreak++)
