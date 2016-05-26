@@ -106,11 +106,17 @@ namespace iTextSharp.Layout.Hyphenation
 			cur = -1;
 			ns = new Stack();
 			ks = new StringBuilder();
-			Rewind();
+			Reset();
 		}
 
 		/// <summary>rewind iterator</summary>
+		[System.ObsoleteAttribute(@"will be removed in 7.1. Use reset() instead")]
 		public virtual void Rewind()
+		{
+			Reset();
+		}
+
+		public virtual void Reset()
 		{
 			ns.Clear();
 			ks.Length = 0;
