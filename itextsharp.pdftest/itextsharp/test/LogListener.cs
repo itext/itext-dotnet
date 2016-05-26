@@ -9,7 +9,7 @@ using NUnit.Framework.Interfaces;
 
 namespace iTextSharp.Test
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute
     {
         private static string LEFT_CURLY_BRACES = "{";
@@ -123,7 +123,6 @@ namespace iTextSharp.Test
         private int GetSize()
         {
             return appender.GetEvents().Length;
-
         }
     }
 }
