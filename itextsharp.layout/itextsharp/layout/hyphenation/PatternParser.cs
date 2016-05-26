@@ -18,9 +18,8 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using Javax.Xml.Parsers;
-using Org.Xml.Sax;
-using Org.Xml.Sax.Helpers;
+using System.Xml;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Layout.Hyphenation
 {
@@ -29,10 +28,8 @@ namespace iTextSharp.Layout.Hyphenation
 	/// from a XML file.</p>
 	/// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
 	/// </summary>
-	public class PatternParser : DefaultHandler
+	public class PatternParser
 	{
-		private XMLReader parser;
-
 		private int currElement;
 
 		private IPatternConsumer consumer;
@@ -42,8 +39,6 @@ namespace iTextSharp.Layout.Hyphenation
 		private ArrayList exception;
 
 		private char hyphenChar;
-
-		private String errMsg;
 
 		private bool hasClasses;
 
@@ -61,9 +56,6 @@ namespace iTextSharp.Layout.Hyphenation
 		private PatternParser()
 		{
 			token = new StringBuilder();
-			parser = CreateParser();
-			parser.SetContentHandler(this);
-			parser.SetErrorHandler(this);
 			hyphenChar = '-';
 		}
 
@@ -95,44 +87,40 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
 		public virtual void Parse(Stream stream, String name)
 		{
-			InputSource source = new InputSource(stream);
-			source.SetSystemId(name);
-			try
-			{
-				parser.Parse(source);
-			}
-			catch (FileNotFoundException fnfe)
-			{
-				throw new HyphenationException("File not found: " + fnfe.Message);
-			}
-			catch (System.IO.IOException ioe)
-			{
-				throw new HyphenationException(ioe.Message);
-			}
-			catch (SAXException)
-			{
-				throw new HyphenationException(errMsg);
-			}
-		}
-
-		/// <summary>Creates a SAX parser using JAXP</summary>
-		/// <returns>the created SAX parser</returns>
-		internal static XMLReader CreateParser()
-		{
-			try
-			{
-				SAXParserFactory factory = SAXParserFactory.NewInstance();
-				factory.SetNamespaceAware(true);
-				factory.SetValidating(false);
-				factory.SetFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd"
-					, false);
-				return factory.NewSAXParser().GetXMLReader();
-			}
-			catch (Exception e)
-			{
-				throw new Exception("Couldn't create XMLReader: " + e.Message);
-			}
-		}
+            XmlTextReader reader = new XmlTextReader(stream);
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element: {
+                        Hashtable attributes = new Hashtable();
+                        string strURI = reader.NamespaceURI;
+                        string strName = reader.Name;
+                        if (reader.HasAttributes) {
+                            for (int i = 0; i < reader.AttributeCount; i++) {
+                                reader.MoveToAttribute(i);
+                                attributes.Add(reader.Name, reader.Value);
+                            }
+                        }
+                        StartElement(strURI, strName, strName, attributes);
+                    }
+                        break;
+                    case XmlNodeType.EndElement: {
+                        string strURI = reader.NamespaceURI;
+                        string strName = reader.Name;
+                        EndElement(strURI, strName, strName);
+                    }
+                        break;
+                    case XmlNodeType.Text:
+                        String text = reader.Value;
+                        char[] chars = text.ToCharArray();
+                        Characters(chars, 0, chars.Length);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
 		private String ReadToken(StringBuilder chars)
 		{
@@ -290,40 +278,18 @@ namespace iTextSharp.Layout.Hyphenation
 		}
 
 		/// <exception cref="Org.Xml.Sax.SAXException">if not caught</exception>
-		protected internal virtual void GetExternalClasses()
-		{
-			XMLReader mainParser = parser;
-			parser = CreateParser();
-			parser.SetContentHandler(this);
-			parser.SetErrorHandler(this);
-			Stream stream = typeof(iTextSharp.Layout.Hyphenation.PatternParser).GetResourceAsStream
-				("classes.xml");
-			InputSource source = new InputSource(stream);
-			try
-			{
-				parser.Parse(source);
-			}
-			catch (System.IO.IOException ioe)
-			{
-				throw new SAXException(ioe.Message);
-			}
-			finally
-			{
-				parser = mainParser;
-			}
+		protected internal virtual void GetExternalClasses() {
+		    Parse("classes.xml");
 		}
 
 		//
 		// ContentHandler methods
 		//
-		/// <summary><inheritDoc/></summary>
-		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		public override void StartElement(String uri, String local, String raw, Attributes
-			 attrs)
+		public virtual void StartElement(String uri, String local, String raw, Hashtable attrs)
 		{
 			if (local.Equals("hyphen-char"))
 			{
-				String h = attrs.GetValue("value");
+				String h = (String)attrs["value"];
 				if (h != null && h.Length == 1)
 				{
 					hyphenChar = h[0];
@@ -364,8 +330,7 @@ namespace iTextSharp.Layout.Hyphenation
 								{
 									exception.Add(token.ToString());
 								}
-								exception.Add(new Hyphen(attrs.GetValue("pre"), attrs.GetValue("no"), attrs.GetValue
-									("post")));
+								exception.Add(new Hyphen((string)attrs["pre"], (string)attrs["no"], (string)attrs["post"]));
 								currElement = ELEM_HYPHEN;
 							}
 						}
@@ -374,9 +339,8 @@ namespace iTextSharp.Layout.Hyphenation
 			}
 			token.Length = 0;
 		}
-
-		/// <summary><inheritDoc/></summary>
-		public override void EndElement(String uri, String local, String raw)
+        
+		public virtual void EndElement(String uri, String local, String raw)
 		{
 			if (token.Length > 0)
 			{
@@ -432,9 +396,8 @@ namespace iTextSharp.Layout.Hyphenation
 				currElement = 0;
 			}
 		}
-
-		/// <summary><inheritDoc/></summary>
-		public override void Characters(char[] ch, int start, int length)
+        
+		public virtual void Characters(char[] ch, int start, int length)
 		{
 			StringBuilder chars = new StringBuilder(length);
 			chars.Append(ch, start, length);
@@ -473,50 +436,5 @@ namespace iTextSharp.Layout.Hyphenation
 				word = ReadToken(chars);
 			}
 		}
-
-		//
-		// ErrorHandler methods
-		//
-		/// <summary><inheritDoc/></summary>
-		public override void Warning(SAXParseException ex)
-		{
-			errMsg = "[Warning] " + GetLocationString(ex) + ": " + ex.Message;
-		}
-
-		/// <summary><inheritDoc/></summary>
-		public override void Error(SAXParseException ex)
-		{
-			errMsg = "[Error] " + GetLocationString(ex) + ": " + ex.Message;
-		}
-
-		/// <summary><inheritDoc/></summary>
-		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		public override void FatalError(SAXParseException ex)
-		{
-			errMsg = "[Fatal Error] " + GetLocationString(ex) + ": " + ex.Message;
-			throw ex;
-		}
-
-		/// <summary>Returns a string of the location.</summary>
-		private String GetLocationString(SAXParseException ex)
-		{
-			StringBuilder str = new StringBuilder();
-			String systemId = ex.GetSystemId();
-			if (systemId != null)
-			{
-				int index = systemId.LastIndexOf('/');
-				if (index != -1)
-				{
-					systemId = systemId.Substring(index + 1);
-				}
-				str.Append(systemId);
-			}
-			str.Append(':');
-			str.Append(ex.GetLineNumber());
-			str.Append(':');
-			str.Append(ex.GetColumnNumber());
-			return str.ToString();
-		}
-		// getLocationString(SAXParseException):String
 	}
 }
