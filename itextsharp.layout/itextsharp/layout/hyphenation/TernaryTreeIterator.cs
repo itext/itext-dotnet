@@ -138,7 +138,7 @@ namespace iTextSharp.Layout.Hyphenation
 			{
 				return tt.eq[cur];
 			}
-			return 0;
+			return (char)0;
 		}
 
 		/// <returns>true if more elements</returns>
@@ -152,7 +152,7 @@ namespace iTextSharp.Layout.Hyphenation
 		{
 			TernaryTreeIterator.Item i = new TernaryTreeIterator.Item(this);
 			int res = 0;
-			if (ns.Empty())
+			if (ns.Count == 0)
 			{
 				return -1;
 			}
@@ -167,7 +167,7 @@ namespace iTextSharp.Layout.Hyphenation
 				i.child++;
 				switch (i.child)
 				{
-					case 1:
+					case (char)1:
 					{
 						if (tt.sc[i.parent] != 0)
 						{
@@ -185,7 +185,7 @@ namespace iTextSharp.Layout.Hyphenation
 						break;
 					}
 
-					case 2:
+					case (char)2:
 					{
 						res = tt.hi[i.parent];
 						ns.Push(new TernaryTreeIterator.Item(this, i));
@@ -200,7 +200,7 @@ namespace iTextSharp.Layout.Hyphenation
 
 					default:
 					{
-						if (ns.Empty())
+						if (ns.Count == 0)
 						{
 							return -1;
 						}

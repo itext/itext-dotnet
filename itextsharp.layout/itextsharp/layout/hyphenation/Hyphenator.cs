@@ -243,8 +243,8 @@ namespace iTextSharp.Layout.Hyphenation
 			String name = key + ".xml";
 			try
 			{
-				Stream fis = new FileStream(new FileInfo(new FileInfo(searchDirectory), name), FileMode
-					.Open);
+				Stream fis = new FileStream(searchDirectory + Path.DirectorySeparatorChar + name, 
+					FileMode.Open);
 				return GetHyphenationTree(fis, name);
 			}
 			catch (System.IO.IOException ioe)
