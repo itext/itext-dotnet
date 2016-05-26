@@ -72,7 +72,7 @@ namespace iTextSharp.IO.Util
             if (a.Length != a2.Length) return false;
 
             for (int i = 0; i < a.Length; i++)
-                if (a[i].CompareTo(a2) != 0)
+                if (a[i].CompareTo(a2[i]) != 0)
                     return false;
 
             return true;

@@ -1,5 +1,5 @@
 /*
-$Id: 746528e20729876ef85a6011c04a63f5983eace0 $
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -75,7 +75,7 @@ namespace iTextSharp.IO.Util {
             Stream isp;
             if (url.IsFile)
             {
-                isp = new FileStream(url.AbsolutePath, FileMode.Open);
+                isp = new FileStream(url.AbsolutePath, FileMode.Open, FileAccess.Read);
             }
             else
             {

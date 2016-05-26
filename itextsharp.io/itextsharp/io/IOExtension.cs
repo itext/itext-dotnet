@@ -32,6 +32,12 @@ namespace iTextSharp.IO {
             return size == 0 ? -1 : size;
         }
 
+        public static int JRead(this Stream stream, byte[] buffer, int offset, int count)
+        {
+            int result = stream.Read(buffer, offset, count);
+            return result == 0 ? -1 : result;
+        }
+
         public static void Write(this Stream stream, byte[] buffer)
         {
             stream.Write(buffer, 0, buffer.Length);
@@ -92,8 +98,22 @@ namespace iTextSharp.IO {
         }
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
-            TValue value;
-            col.TryGetValue(key, out value);
+            TValue value = default(TValue);
+            if (key != null) {
+                col.TryGetValue(key, out value);    
+            }
+
+            return value;
+        }
+
+        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary.Remove(key);
+            }
+
+            dictionary.Add(key, value);
 
             return value;
         }

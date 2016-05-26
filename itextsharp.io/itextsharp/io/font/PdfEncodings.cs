@@ -1,4 +1,5 @@
 /*
+$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -59,7 +60,7 @@ namespace iTextSharp.IO.Font
 		public const String CP1250 = "Cp1250";
 
 		/// <summary>A possible encoding.</summary>
-		public const String CP1252 = "Cp1252";
+        public const String CP1252 = "Windows-1252";
 
 		/// <summary>A possible encoding.</summary>
 		public const String CP1253 = "Cp1253";
@@ -68,7 +69,7 @@ namespace iTextSharp.IO.Font
 		public const String CP1257 = "Cp1257";
 
 		/// <summary>A possible encoding.</summary>
-		public const String WINANSI = "Cp1252";
+        public const String WINANSI = "Windows-1252";
 
 		/// <summary>A possible encoding.</summary>
 		public const String MACROMAN = "MacRoman";
@@ -253,7 +254,7 @@ namespace iTextSharp.IO.Font
 				}
 				return b;
 			}
-			IExtraEncoding extra = extraEncodings[encoding.ToLower()];
+			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower());
 			if (extra != null)
 			{
 				byte[] b = extra.CharToByte(text, encoding);
@@ -411,7 +412,7 @@ namespace iTextSharp.IO.Font
 				}
 				return new String(c);
 			}
-			IExtraEncoding extra = extraEncodings[encoding.ToLower()];
+			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower());
 			if (extra != null)
 			{
 				String text = extra.ByteToChar(bytes, encoding);
