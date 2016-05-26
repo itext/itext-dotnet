@@ -53,7 +53,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		private PdfCatalog catalog;
 
-		private IDictionary<int, PdfObject> items = new Dictionary<int, PdfObject>();
+		private IDictionary<int?, PdfObject> items = new Dictionary<int?, PdfObject>();
 
 		private PdfName treeType;
 
@@ -66,7 +66,7 @@ namespace iTextSharp.Kernel.Pdf
 			this.catalog = catalog;
 		}
 
-		public virtual IDictionary<int, PdfObject> GetNumbers()
+		public virtual IDictionary<int?, PdfObject> GetNumbers()
 		{
 			if (items.Count > 0)
 			{

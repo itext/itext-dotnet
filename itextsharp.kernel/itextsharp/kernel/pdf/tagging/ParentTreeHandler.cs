@@ -235,7 +235,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			}
 		}
 
-		private static int? StructParentIndexIntoKey(int structParentIndex)
+		private static int StructParentIndexIntoKey(int structParentIndex)
 		{
 			return -structParentIndex - 1;
 		}
@@ -250,11 +250,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			pageToPageMcrs = new Dictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr
 				>>();
 			// we create new number tree and not using parentTree, because we want parentTree to be empty
-			IDictionary<int, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument
+			IDictionary<int?, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument
 				().GetCatalog(), PdfName.ParentTree).GetNumbers();
 			ICollection<PdfStructElem> mcrParents = new HashSet<PdfStructElem>();
 			int maxStructParentIndex = -1;
-			foreach (KeyValuePair<int, PdfObject> entry in parentTreeEntries)
+			foreach (KeyValuePair<int?, PdfObject> entry in parentTreeEntries)
 			{
 				if (entry.Key > maxStructParentIndex)
 				{

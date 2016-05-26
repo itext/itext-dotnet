@@ -1271,7 +1271,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				return null;
 			}
-			IDictionary<int, PdfObject> pageLabels = catalog.GetPageLabelsTree(false).GetNumbers
+			IDictionary<int?, PdfObject> pageLabels = catalog.GetPageLabelsTree(false).GetNumbers
 				();
 			if (pageLabels.Count == 0)
 			{
