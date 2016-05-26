@@ -110,7 +110,7 @@ namespace iTextSharp.IO.Font
 					{
 						continue;
 					}
-					int? num = System.Convert.ToInt32(hex, 16);
+					int num = System.Convert.ToInt32(hex, 16);
 					unicode2names[num] = name;
 					names2unicode[name] = num;
 				}

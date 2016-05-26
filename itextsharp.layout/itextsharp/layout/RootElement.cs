@@ -350,8 +350,8 @@ namespace iTextSharp.Layout
 				pageNumber = 1;
 			}
 			div.SetFixedPosition(pageNumber, divX, divY, divWidth).SetHeight(divHeight);
-			if (((float?)p.GetProperty<float?>(iTextSharp.Layout.Property.Property.LEADING)) 
-				== null)
+			if (((float?)p.GetProperty<float>(iTextSharp.Layout.Property.Property.LEADING)) ==
+				 null)
 			{
 				p.SetMultipliedLeading(1);
 			}

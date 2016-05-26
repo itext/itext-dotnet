@@ -116,8 +116,8 @@ namespace iTextSharp.Layout.Renderer
 							{
 								if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
 								{
-									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>
-										(iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
+									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool>(
+										iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
 									{
 										result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
 											.KEEP_TOGETHER, false);
@@ -180,7 +180,7 @@ namespace iTextSharp.Layout.Renderer
 				if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
 					 - 1] == renderer)
 				{
-					int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
+					int? positionedPageNumber = renderer.GetProperty<int>(iTextSharp.Layout.Property.Property
 						.PAGE_NUMBER);
 					if (positionedPageNumber == null)
 					{

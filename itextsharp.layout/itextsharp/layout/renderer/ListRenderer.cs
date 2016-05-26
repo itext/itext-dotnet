@@ -67,8 +67,8 @@ namespace iTextSharp.Layout.Renderer
 			if (!HasOwnProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED))
 			{
 				IList<IRenderer> symbolRenderers = new List<IRenderer>();
-				int listItemNum = (int)this.GetProperty<int?>(iTextSharp.Layout.Property.Property
-					.LIST_START, 1);
+				int listItemNum = (int)this.GetProperty<int>(iTextSharp.Layout.Property.Property.
+					LIST_START, 1);
 				for (int i = 0; i < childRenderers.Count; i++)
 				{
 					if (childRenderers[i].GetModelElement() is ListItem)
@@ -93,14 +93,14 @@ namespace iTextSharp.Layout.Renderer
 					maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox
 						().GetWidth());
 				}
-				float? symbolIndent = modelElement.GetProperty<float?>(iTextSharp.Layout.Property.Property
+				float? symbolIndent = modelElement.GetProperty<float>(iTextSharp.Layout.Property.Property
 					.LIST_SYMBOL_INDENT);
 				listItemNum = 0;
 				foreach (IRenderer childRenderer in childRenderers)
 				{
 					childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
 					childRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, childRenderer
-						.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0f) + maxSymbolWidth
+						.GetProperty<float>(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0f) + maxSymbolWidth
 						 + (symbolIndent != null ? symbolIndent : 0f));
 					if (childRenderer.GetModelElement() is ListItem)
 					{

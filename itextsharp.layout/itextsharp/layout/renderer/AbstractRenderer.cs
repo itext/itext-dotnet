@@ -123,8 +123,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			// https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
 			// "The rules can be summarized as follows:"...
-			int? positioning = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
-				.POSITION);
+			int? positioning = renderer.GetProperty<int>(iTextSharp.Layout.Property.Property.
+				POSITION);
 			if (positioning == null || positioning == LayoutPosition.RELATIVE || positioning 
 				== LayoutPosition.STATIC)
 			{
@@ -316,7 +316,7 @@ namespace iTextSharp.Layout.Renderer
 		/// </returns>
 		public virtual bool? GetPropertyAsBoolean(int property)
 		{
-			return this.GetProperty<bool?>(property);
+			return this.GetProperty<bool>(property);
 		}
 
 		/// <summary>Returns a property with a certain key, as an integer value.</summary>
@@ -587,7 +587,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float? RetrieveHeight()
 		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HEIGHT);
+			return this.GetProperty<float>(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
 
 		protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property

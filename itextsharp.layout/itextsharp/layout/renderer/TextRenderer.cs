@@ -153,7 +153,7 @@ namespace iTextSharp.Layout.Renderer
 			float? wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
 				);
 			PdfFont font = this.GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
-			float? hScale = this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+			float? hScale = this.GetProperty<float>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
 				, 1f);
 			ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(iTextSharp.Layout.Property.Property
 				.SPLIT_CHARACTERS);
@@ -562,7 +562,7 @@ namespace iTextSharp.Layout.Renderer
 					);
 				iTextSharp.Kernel.Color.Color fontColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
 					.FONT_COLOR);
-				int? textRenderingMode = this.GetProperty<int?>(iTextSharp.Layout.Property.Property
+				int? textRenderingMode = this.GetProperty<int>(iTextSharp.Layout.Property.Property
 					.TEXT_RENDERING_MODE);
 				float? textRise = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
 					);
@@ -570,7 +570,7 @@ namespace iTextSharp.Layout.Renderer
 					CHARACTER_SPACING);
 				float? wordSpacing = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING
 					);
-				float? horizontalScaling = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
+				float? horizontalScaling = this.GetProperty<float>(iTextSharp.Layout.Property.Property
 					.HORIZONTAL_SCALING);
 				float?[] skew = this.GetProperty<float?[]>(iTextSharp.Layout.Property.Property.SKEW
 					);

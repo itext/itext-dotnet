@@ -172,7 +172,7 @@ namespace iTextSharp.Layout
 		/// <returns>the height of the element, as a floating point value.</returns>
 		public virtual float? GetHeight()
 		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HEIGHT);
+			return this.GetProperty<float>(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
 
 		/// <summary>Sets the height property of the Element.</summary>
@@ -542,7 +542,7 @@ namespace iTextSharp.Layout
 		/// 	/>
 		public virtual int? GetTextRenderingMode()
 		{
-			return this.GetProperty<int?>(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
+			return this.GetProperty<int>(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
 				);
 		}
 
@@ -595,7 +595,7 @@ namespace iTextSharp.Layout
 		/// <returns>the current stroke width</returns>
 		public virtual float? GetStrokeWidth()
 		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
+			return this.GetProperty<float>(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
 		}
 
 		/// <summary>Sets the stroke width for the current element.</summary>

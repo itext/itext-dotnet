@@ -213,7 +213,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				attributes.Put(PdfName.EndIndent, new PdfNumber((float)endIndent));
 			}
-			float? firstLineIndent = renderer.GetProperty<float?>(iTextSharp.Layout.Property.Property
+			float? firstLineIndent = renderer.GetProperty<float>(iTextSharp.Layout.Property.Property
 				.FIRST_LINE_INDENT);
 			if (firstLineIndent != null && firstLineIndent != 0)
 			{

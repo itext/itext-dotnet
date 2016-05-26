@@ -61,7 +61,7 @@ namespace iTextSharp.IO.Font.Cmap
 
 		private CMapToUnicode(bool emptyCMap)
 		{
-			byteMappings = JavaCollectionsUtil.EmptyMap<int?, char[]>();
+			byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
 		}
 
 		/// <summary>Creates a new instance of CMap.</summary>

@@ -68,8 +68,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
-				!= null)
+			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
+				 null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -313,8 +313,8 @@ namespace iTextSharp.Layout.Renderer
 			}
 			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 			ApplyMargins(occupiedArea.GetBBox(), margins, true);
-			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
-				!= null)
+			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
+				 null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))
