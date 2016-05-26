@@ -916,7 +916,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage, IPdfPageExtraCopier copier)
 		{
-			IList<int?> pages = new List<int?>();
+			IList<int> pages = new List<int>();
 			for (int i = pageFrom; i <= pageTo; i++)
 			{
 				pages.Add(i);
@@ -975,7 +975,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="insertBeforePage">a position where to insert copied pages.</param>
 		/// <returns>list of copied pages</returns>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int?> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, insertBeforePage, null);
@@ -995,7 +995,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
 		/// <returns>list of copied pages</returns>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int?> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, int insertBeforePage, IPdfPageExtraCopier copier)
 		{
 			if (pagesToCopy.IsEmpty())
@@ -1088,7 +1088,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="toDocument">a document to copy pages to.</param>
 		/// <returns>list of copied pages</returns>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int?> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, null);
@@ -1107,7 +1107,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="copier">a copier which bears a special copy logic</param>
 		/// <returns>list of copied pages</returns>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		public virtual IList<PdfPage> CopyPagesTo(IList<int?> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
+		public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iTextSharp.Kernel.Pdf.PdfDocument
 			 toDocument, IPdfPageExtraCopier copier)
 		{
 			return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier
@@ -1271,7 +1271,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				return null;
 			}
-			IDictionary<int?, PdfObject> pageLabels = catalog.GetPageLabelsTree(false).GetNumbers
+			IDictionary<int, PdfObject> pageLabels = catalog.GetPageLabelsTree(false).GetNumbers
 				();
 			if (pageLabels.Count == 0)
 			{

@@ -66,7 +66,7 @@ namespace iTextSharp.Layout
 	public abstract class ElementPropertyContainer<T> : IPropertyContainer
 		where T : IPropertyContainer
 	{
-		protected internal IDictionary<int?, Object> properties = new Dictionary<int?, Object
+		protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
 			>();
 
 		public virtual void SetProperty(int property, Object value)

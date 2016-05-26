@@ -51,7 +51,7 @@ namespace iTextSharp.IO.Font.Cmap
 	/// <author>psoares</author>
 	public class CMapCidByte : AbstractCMap
 	{
-		private IDictionary<int?, byte[]> map = new Dictionary<int?, byte[]>();
+		private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
 
 		private readonly byte[] EMPTY = new byte[] {  };
 

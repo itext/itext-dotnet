@@ -76,11 +76,11 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
 		public class SubstRuleFormat3 : ContextualSubstRule
 		{
-			internal IList<ICollection<int?>> coverages;
+			internal IList<ICollection<int>> coverages;
 
 			internal SubstLookupRecord[] substLookupRecords;
 
-			public SubstRuleFormat3(IList<ICollection<int?>> coverages, SubstLookupRecord[] substLookupRecords
+			public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords
 				)
 			{
 				this.coverages = coverages;

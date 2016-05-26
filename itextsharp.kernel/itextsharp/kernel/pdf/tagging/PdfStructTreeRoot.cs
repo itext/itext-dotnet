@@ -177,7 +177,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		/// </remarks>
 		public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page)
 		{
-			IDictionary<int?, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences
+			IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences
 				(page);
 			return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values
 				) : null;

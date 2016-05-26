@@ -50,14 +50,14 @@ namespace iTextSharp.IO.Font.Otf
 	/// <summary>LookupType 2: Multiple Substitution Subtable</summary>
 	public class GsubLookupType2 : OpenTableLookup
 	{
-		private IDictionary<int?, int[]> substMap;
+		private IDictionary<int, int[]> substMap;
 
 		/// <exception cref="System.IO.IOException"/>
 		public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
 			subTableLocations)
 			: base(openReader, lookupFlag, subTableLocations)
 		{
-			substMap = new Dictionary<int?, int[]>();
+			substMap = new Dictionary<int, int[]>();
 			ReadSubTables();
 		}
 
@@ -93,7 +93,7 @@ namespace iTextSharp.IO.Font.Otf
 				int sequenceCount = openReader.rf.ReadUnsignedShort();
 				int[] sequenceLocations = openReader.ReadUShortArray(sequenceCount, subTableLocation
 					);
-				IList<int?> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
+				IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
 					);
 				for (int i = 0; i < sequenceCount; ++i)
 				{

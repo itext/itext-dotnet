@@ -63,7 +63,7 @@ namespace iTextSharp.IO.Font
 		/// Represents the section KernPairs in the AFM file.
 		/// Key is uni1&lt;&lt;32 + uni2. Value is kerning value.
 		/// </remarks>
-		private IDictionary<long?, int?> kernPairs = new Dictionary<long?, int?>();
+		private IDictionary<long, int?> kernPairs = new Dictionary<long, int?>();
 
 		/// <summary>Types of records in a PFB file.</summary>
 		/// <remarks>Types of records in a PFB file. ASCII is 1 and BINARY is 2. They have to appear in the PFB file in this sequence.

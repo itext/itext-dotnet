@@ -311,7 +311,7 @@ namespace iTextSharp.Layout.Hyphenation
 			{
 				log.Warn("Soft hyphen unicode symbols will be used as hints for hyphenation");
 				char softHyphen = '\u00ad';
-				IList<int?> softHyphens = new List<int?>();
+				IList<int> softHyphens = new List<int>();
 				int lastSoftHyphenIndex = -1;
 				int curSoftHyphenIndex;
 				while ((curSoftHyphenIndex = word.IndexOf(softHyphen, lastSoftHyphenIndex + 1)) >

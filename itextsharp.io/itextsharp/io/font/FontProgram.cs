@@ -55,11 +55,11 @@ namespace iTextSharp.IO.Font
 
 		public const int UNITS_NORMALIZATION = 1000;
 
-		protected internal IDictionary<int?, Glyph> codeToGlyph = new Dictionary<int?, Glyph
+		protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph
 			>();
 
-		protected internal IDictionary<int?, Glyph> unicodeToGlyph = new Dictionary<int?, 
-			Glyph>();
+		protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph
+			>();
 
 		protected internal bool isFontSpecific;
 

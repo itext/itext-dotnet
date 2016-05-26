@@ -227,7 +227,7 @@ namespace iTextSharp.Kernel.Pdf
 				, FileMode.Create));
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfDocument pdfDoc1 = new PdfDocument(writer);
-			IList<int?> pages = new List<int?>();
+			IList<int> pages = new List<int>();
 			pages.Add(1);
 			pages.Add(2);
 			pages.Add(3);

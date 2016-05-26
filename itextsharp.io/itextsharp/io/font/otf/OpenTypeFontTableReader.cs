@@ -62,7 +62,7 @@ namespace iTextSharp.IO.Font.Otf
 
 		protected internal OpenTypeFeature featuresType;
 
-		private readonly IDictionary<int?, Glyph> indexGlyphMap;
+		private readonly IDictionary<int, Glyph> indexGlyphMap;
 
 		private readonly OpenTypeGdefTableReader gdef;
 
@@ -70,7 +70,7 @@ namespace iTextSharp.IO.Font.Otf
 
 		/// <exception cref="System.IO.IOException"/>
 		protected internal OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation
-			, OpenTypeGdefTableReader gdef, IDictionary<int?, Glyph> indexGlyphMap, int unitsPerEm
+			, OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm
 			)
 		{
 			this.rf = rf;
@@ -235,13 +235,13 @@ namespace iTextSharp.IO.Font.Otf
 
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<
-			int?>> coverage)
+			int>> coverage)
 		{
 			OtfReadCommon.ReadCoverages(rf, locations, coverage);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		protected internal IList<int?> ReadCoverageFormat(int coverageLocation)
+		protected internal IList<int> ReadCoverageFormat(int coverageLocation)
 		{
 			return OtfReadCommon.ReadCoverageFormat(rf, coverageLocation);
 		}

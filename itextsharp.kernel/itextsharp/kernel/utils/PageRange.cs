@@ -50,9 +50,9 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class PageRange
 	{
-		private IList<int?> sequenceStarts = new List<int?>();
+		private IList<int> sequenceStarts = new List<int>();
 
-		private IList<int?> sequenceEnds = new List<int?>();
+		private IList<int> sequenceEnds = new List<int>();
 
 		public PageRange()
 		{
@@ -107,9 +107,9 @@ namespace iTextSharp.Kernel.Utils
 			return this;
 		}
 
-		public virtual IList<int?> GetAllPages()
+		public virtual IList<int> GetAllPages()
 		{
-			IList<int?> allPages = new List<int?>();
+			IList<int> allPages = new List<int>();
 			for (int ind = 0; ind < sequenceStarts.Count; ind++)
 			{
 				for (int pageInRange = (int)sequenceStarts[ind]; pageInRange <= sequenceEnds[ind]

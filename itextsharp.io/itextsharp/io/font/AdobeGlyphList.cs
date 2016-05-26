@@ -51,7 +51,7 @@ namespace iTextSharp.IO.Font
 {
 	public class AdobeGlyphList
 	{
-		private static IDictionary<int?, String> unicode2names = new Dictionary<int?, String
+		private static IDictionary<int, String> unicode2names = new Dictionary<int, String
 			>();
 
 		private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?

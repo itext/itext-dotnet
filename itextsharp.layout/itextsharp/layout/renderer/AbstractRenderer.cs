@@ -87,7 +87,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal IRenderer parent;
 
-		protected internal IDictionary<int?, Object> properties = new Dictionary<int?, Object
+		protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
 			>();
 
 		protected internal bool isLastRendererForModelElement = true;
@@ -619,12 +619,12 @@ namespace iTextSharp.Layout.Renderer
 		}
 
 		//TODO is behavior of copying all properties in split case common to all renderers?
-		protected internal virtual IDictionary<int?, Object> GetOwnProperties()
+		protected internal virtual IDictionary<int, Object> GetOwnProperties()
 		{
 			return properties;
 		}
 
-		protected internal virtual void AddAllProperties(IDictionary<int?, Object> properties
+		protected internal virtual void AddAllProperties(IDictionary<int, Object> properties
 			)
 		{
 			this.properties.AddAll(properties);

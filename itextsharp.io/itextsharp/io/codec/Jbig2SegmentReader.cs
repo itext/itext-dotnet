@@ -109,11 +109,11 @@ namespace iTextSharp.IO.Codec
 
 		public const int EXTENSION = 62;
 
-		private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Segment> segments = new 
-			SortedDictionary<int?, Jbig2SegmentReader.Jbig2Segment>();
+		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new 
+			SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment>();
 
-		private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
-			<int?, Jbig2SegmentReader.Jbig2Page>();
+		private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
+			<int, Jbig2SegmentReader.Jbig2Page>();
 
 		private readonly ICollection<Jbig2SegmentReader.Jbig2Segment> globals = new SortedSet
 			<Jbig2SegmentReader.Jbig2Segment>();
@@ -194,8 +194,8 @@ namespace iTextSharp.IO.Codec
 
 			private readonly Jbig2SegmentReader sr;
 
-			private readonly IDictionary<int?, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
-				<int?, Jbig2SegmentReader.Jbig2Segment>();
+			private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
+				<int, Jbig2SegmentReader.Jbig2Segment>();
 
 			public int pageBitmapWidth = -1;
 
@@ -309,7 +309,7 @@ namespace iTextSharp.IO.Codec
 					segments[tmp.segmentNumber] = tmp;
 				}
 				while (tmp.type != END_OF_FILE);
-				IEnumerator<int?> segs = segments.Keys.GetEnumerator();
+				IEnumerator<int> segs = segments.Keys.GetEnumerator();
 				while (segs.MoveNext())
 				{
 					ReadSegment(segments[segs.Current]);

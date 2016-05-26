@@ -134,7 +134,7 @@ namespace iTextSharp.IO.Font
 			return fontParser.IsCff();
 		}
 
-		public virtual IDictionary<int?, int[]> GetActiveCmap()
+		public virtual IDictionary<int, int[]> GetActiveCmap()
 		{
 			OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
 			if (cmaps.cmapExt != null)
@@ -232,7 +232,7 @@ namespace iTextSharp.IO.Font
 			return gposTable;
 		}
 
-		public virtual byte[] GetSubset(ICollection<int?> glyphs, bool subset)
+		public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset)
 		{
 			try
 			{
@@ -365,10 +365,10 @@ namespace iTextSharp.IO.Font
 				fontIdentification.SetTtfVersion(ttfUniqueId[0][3]);
 			}
 			fontIdentification.SetPanose(os_2.panose);
-			IDictionary<int?, int[]> cmap = GetActiveCmap();
+			IDictionary<int, int[]> cmap = GetActiveCmap();
 			int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
-			unicodeToGlyph = new LinkedDictionary<int?, Glyph>(cmap.Count);
-			codeToGlyph = new LinkedDictionary<int?, Glyph>(glyphWidths.Length);
+			unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
+			codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
 			avgWidth = 0;
 			foreach (int? charCode in cmap.Keys)
 			{

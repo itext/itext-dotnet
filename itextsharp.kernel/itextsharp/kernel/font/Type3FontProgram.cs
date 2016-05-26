@@ -50,8 +50,8 @@ namespace iTextSharp.Kernel.Font
 {
 	public class Type3FontProgram : FontProgram
 	{
-		private readonly IDictionary<int?, Type3Glyph> type3Glyphs = new Dictionary<int?, 
-			Type3Glyph>();
+		private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph
+			>();
 
 		private bool colorized = false;
 

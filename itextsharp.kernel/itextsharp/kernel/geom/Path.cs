@@ -243,9 +243,9 @@ namespace iTextSharp.Kernel.Geom
 		/// The line connects the last and the first points of the subpaths.
 		/// </remarks>
 		/// <returns>Indices of modified subpaths.</returns>
-		public virtual IList<int?> ReplaceCloseWithLine()
+		public virtual IList<int> ReplaceCloseWithLine()
 		{
-			IList<int?> modifiedSubpathsIndices = new List<int?>();
+			IList<int> modifiedSubpathsIndices = new List<int>();
 			int i = 0;
 			/* It could be replaced with "for" cycle, because IList in C# provides effective
 			* access by index. In Java List interface has at least one implementation (LinkedList)

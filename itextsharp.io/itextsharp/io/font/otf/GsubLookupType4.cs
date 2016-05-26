@@ -55,14 +55,14 @@ namespace iTextSharp.IO.Font.Otf
 		/// The key is the first character. The first element in the int array is the
 		/// output ligature
 		/// </remarks>
-		private IDictionary<int?, IList<int[]>> ligatures;
+		private IDictionary<int, IList<int[]>> ligatures;
 
 		/// <exception cref="System.IO.IOException"/>
 		public GsubLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
 			subTableLocations)
 			: base(openReader, lookupFlag, subTableLocations)
 		{
-			ligatures = new Dictionary<int?, IList<int[]>>();
+			ligatures = new Dictionary<int, IList<int[]>>();
 			ReadSubTables();
 		}
 
@@ -123,7 +123,7 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				ligatureSet[k] = openReader.rf.ReadUnsignedShort() + subTableLocation;
 			}
-			IList<int?> coverageGlyphIds = openReader.ReadCoverageFormat(coverage);
+			IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(coverage);
 			for (int k_1 = 0; k_1 < ligSetCount; ++k_1)
 			{
 				openReader.rf.Seek(ligatureSet[k_1]);

@@ -76,8 +76,8 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		internal PdfObjectStream objectStream = null;
 
-		protected internal IDictionary<int?, PdfIndirectReference> copiedObjects = new Dictionary
-			<int?, PdfIndirectReference>();
+		protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary
+			<int, PdfIndirectReference>();
 
 		protected internal bool isUserWarnedAboutAcroFormCopying;
 

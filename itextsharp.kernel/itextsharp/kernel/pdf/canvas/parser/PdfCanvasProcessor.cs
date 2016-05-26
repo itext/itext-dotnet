@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		private IDictionary<PdfName, IXObjectDoHandler> xobjectDoHandlers;
 
 		/// <summary>The font cache</summary>
-		private IDictionary<int?, PdfFont> cachedFonts = new Dictionary<int?, PdfFont>();
+		private IDictionary<int, PdfFont> cachedFonts = new Dictionary<int, PdfFont>();
 
 		/// <summary>A stack containing marked content info.</summary>
 		private Stack<CanvasTag> markedContentStack = new Stack<CanvasTag>();

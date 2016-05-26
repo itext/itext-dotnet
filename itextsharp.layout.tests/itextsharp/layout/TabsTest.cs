@@ -264,7 +264,7 @@ namespace iTextSharp.Layout
 			return new Document(pdfDoc);
 		}
 
-		private void DrawTabStopsPositions(IList<float?> positions, Document doc, int pageNum
+		private void DrawTabStopsPositions(IList<float> positions, Document doc, int pageNum
 			, int yStart, int dy)
 		{
 			PdfCanvas canvas = new PdfCanvas(doc.GetPdfDocument().GetPage(pageNum));

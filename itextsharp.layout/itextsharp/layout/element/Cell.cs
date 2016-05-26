@@ -217,7 +217,7 @@ namespace iTextSharp.Layout.Element
 				, colspan);
 			newCell.row = row;
 			newCell.col = col;
-			newCell.properties = new Dictionary<int?, Object>(properties);
+			newCell.properties = new Dictionary<int, Object>(properties);
 			if (includeContent)
 			{
 				newCell.childElements = new List<IElement>(childElements);

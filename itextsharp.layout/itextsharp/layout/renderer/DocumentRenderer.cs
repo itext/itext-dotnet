@@ -58,7 +58,7 @@ namespace iTextSharp.Layout.Renderer
 	{
 		protected internal Document document;
 
-		protected internal IList<int?> wrappedContentPage = new List<int?>();
+		protected internal IList<int> wrappedContentPage = new List<int>();
 
 		public DocumentRenderer(Document document)
 			: this(document, true)

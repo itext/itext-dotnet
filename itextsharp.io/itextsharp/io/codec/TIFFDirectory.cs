@@ -86,7 +86,7 @@ namespace iTextSharp.IO.Codec
 		internal TIFFField[] fields;
 
 		/// <summary>A Hashtable indexing the fields by tag number.</summary>
-		internal IDictionary<int?, int?> fieldIndex = new Dictionary<int?, int?>();
+		internal IDictionary<int, int?> fieldIndex = new Dictionary<int, int?>();
 
 		/// <summary>The offset of this IFD.</summary>
 		internal long IFDOffset = 8;
@@ -457,7 +457,7 @@ namespace iTextSharp.IO.Codec
 		public virtual int[] GetTags()
 		{
 			int[] tags = new int[fieldIndex.Count];
-			IEnumerator<int?> e = fieldIndex.Keys.GetEnumerator();
+			IEnumerator<int> e = fieldIndex.Keys.GetEnumerator();
 			int i = 0;
 			while (e.MoveNext())
 			{

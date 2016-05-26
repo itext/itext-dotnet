@@ -188,8 +188,8 @@ namespace iTextSharp.Layout.Element
 		public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition
 			)
 		{
-			IDictionary<float?, TabStop> tabStops = ((IDictionary<float?, TabStop>)this.GetProperty
-				<IDictionary<float?, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS));
+			IDictionary<float, TabStop> tabStops = ((IDictionary<float, TabStop>)this.GetProperty
+				<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS));
 			if (tabStops != null)
 			{
 				tabStops.JRemove(tabStopPosition);
@@ -285,11 +285,11 @@ namespace iTextSharp.Layout.Element
 
 		private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
 		{
-			IDictionary<float?, TabStop> tabStops = ((IDictionary<float?, TabStop>)this.GetProperty
-				<IDictionary<float?, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS));
+			IDictionary<float, TabStop> tabStops = ((IDictionary<float, TabStop>)this.GetProperty
+				<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS));
 			if (tabStops == null)
 			{
-				tabStops = new SortedDictionary<float?, TabStop>();
+				tabStops = new SortedDictionary<float, TabStop>();
 				SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, tabStops);
 			}
 			foreach (TabStop tabStop in newTabStops)

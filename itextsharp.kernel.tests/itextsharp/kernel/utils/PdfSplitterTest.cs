@@ -32,8 +32,8 @@ namespace iTextSharp.Kernel.Utils
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
 			int? splitByPage1 = 30;
 			int? splitByPage2 = 100;
-			IList<int?> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(splitByPage1, 
-				splitByPage2);
+			IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(splitByPage1, splitByPage2
+				);
 			IList<PdfDocument> splitDocuments = new _PdfSplitter_46(inputPdfDoc).SplitByPageNumbers
 				(pageNumbers);
 			foreach (PdfDocument doc in splitDocuments)

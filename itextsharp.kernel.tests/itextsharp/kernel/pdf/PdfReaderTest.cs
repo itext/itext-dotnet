@@ -679,7 +679,7 @@ namespace iTextSharp.Kernel.Pdf
 					(0).GetBytes());
 				NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
 			}
-			IList<int?> pageNums = new List<int?>(1000);
+			IList<int> pageNums = new List<int>(1000);
 			for (int i_1 = 0; i_1 < 1000; i_1++)
 			{
 				pageNums.Add(i_1 + 1);

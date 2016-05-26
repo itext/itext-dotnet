@@ -64,7 +64,7 @@ namespace iTextSharp.IO.Image
 			public byte[] bpcBoxData;
 		}
 
-		public class ColorSpecBox : List<int?>
+		public class ColorSpecBox : List<int>
 		{
 			private byte[] colorProfile;
 

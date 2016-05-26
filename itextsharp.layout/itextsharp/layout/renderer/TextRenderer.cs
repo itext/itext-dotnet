@@ -461,7 +461,7 @@ namespace iTextSharp.Layout.Renderer
 					ICollection<Character.UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts
 						();
 					IDictionary<Character.UnicodeScript, int?> scriptFrequency = new EnumMap<Character.UnicodeScript
-						, int?>(typeof(Character.UnicodeScript));
+						, int>(typeof(Character.UnicodeScript));
 					for (int i = text.start; i < text.end; i++)
 					{
 						int unicode = text.Get(i).GetUnicode();
@@ -481,7 +481,7 @@ namespace iTextSharp.Layout.Renderer
 					}
 					int max = 0;
 					Character.UnicodeScript selectScript = null;
-					foreach (KeyValuePair<Character.UnicodeScript, int?> entry in scriptFrequency)
+					foreach (KeyValuePair<Character.UnicodeScript, int> entry in scriptFrequency)
 					{
 						Character.UnicodeScript entryScript = entry.Key;
 						if (entry.Value > max && !Character.UnicodeScript.COMMON.Equals(entryScript) && !
@@ -664,7 +664,7 @@ namespace iTextSharp.Layout.Renderer
 				{
 					//We should mark a RTL written text
 					IDictionary<GlyphLine, bool?> outputs = GetOutputChunks();
-					foreach (KeyValuePair<GlyphLine, bool?> output in outputs)
+					foreach (KeyValuePair<GlyphLine, bool> output in outputs)
 					{
 						GlyphLine o = output.Key.Filter(filter);
 						if (output.Value)

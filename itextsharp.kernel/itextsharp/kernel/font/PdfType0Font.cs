@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Font
 
 		protected internal CMapEncoding cmapEncoding;
 
-		protected internal IDictionary<int?, int[]> longTag;
+		protected internal IDictionary<int, int[]> longTag;
 
 		protected internal int cidFontType;
 
@@ -93,7 +93,7 @@ namespace iTextSharp.Kernel.Font
 			this.embedded = true;
 			vertical = cmap.EndsWith("V");
 			cmapEncoding = new CMapEncoding(cmap);
-			longTag = new LinkedDictionary<int?, int[]>();
+			longTag = new LinkedDictionary<int, int[]>();
 			cidFontType = CID_FONT_TYPE_2;
 			if (ttf.IsFontSpecific())
 			{
@@ -125,7 +125,7 @@ namespace iTextSharp.Kernel.Font
 			vertical = cmap.EndsWith("V");
 			String uniMap = GetCompatibleUniMap(fontProgram.GetRegistry());
 			cmapEncoding = new CMapEncoding(cmap, uniMap);
-			longTag = new LinkedDictionary<int?, int[]>();
+			longTag = new LinkedDictionary<int, int[]>();
 			cidFontType = CID_FONT_TYPE_0;
 		}
 
@@ -194,7 +194,7 @@ namespace iTextSharp.Kernel.Font
 				}
 				cidFontType = CID_FONT_TYPE_0;
 			}
-			longTag = new LinkedDictionary<int?, int[]>();
+			longTag = new LinkedDictionary<int, int[]>();
 			subset = false;
 		}
 
@@ -603,7 +603,7 @@ namespace iTextSharp.Kernel.Font
 						byte[] ttfBytes;
 						if (subset || ttf.GetDirectoryOffset() != 0)
 						{
-							ttfBytes = ttf.GetSubset(new LinkedHashSet<int?>(longTag.Keys), true);
+							ttfBytes = ttf.GetSubset(new LinkedHashSet<int>(longTag.Keys), true);
 						}
 						else
 						{
@@ -724,7 +724,7 @@ namespace iTextSharp.Kernel.Font
 		/// <returns>the stream representing this CMap or <CODE>null</CODE></returns>
 		public virtual PdfStream GetToUnicode(Object[] metrics)
 		{
-			List<int?> unicodeGlyphs = new List<int?>(metrics.Length);
+			List<int> unicodeGlyphs = new List<int>(metrics.Length);
 			for (int i = 0; i < metrics.Length; i++)
 			{
 				int[] metric = (int[])metrics[i];
@@ -780,16 +780,16 @@ namespace iTextSharp.Kernel.Font
 			return s.Substring(s.Length - 4);
 		}
 
-		protected internal virtual void AddRangeUni(TrueTypeFont ttf, IDictionary<int?, int
+		protected internal virtual void AddRangeUni(TrueTypeFont ttf, IDictionary<int, int
 			[]> longTag, bool includeMetrics)
 		{
 			if (!subset && (subsetRanges != null || ttf.GetDirectoryOffset() > 0))
 			{
 				int[] rg = subsetRanges == null && ttf.GetDirectoryOffset() > 0 ? new int[] { 0, 
 					0xffff } : CompactRanges(subsetRanges);
-				IDictionary<int?, int[]> usemap = ttf.GetActiveCmap();
+				IDictionary<int, int[]> usemap = ttf.GetActiveCmap();
 				System.Diagnostics.Debug.Assert(usemap != null);
-				foreach (KeyValuePair<int?, int[]> e in usemap)
+				foreach (KeyValuePair<int, int[]> e in usemap)
 				{
 					int[] v = e.Value;
 					int? gi = v[0];

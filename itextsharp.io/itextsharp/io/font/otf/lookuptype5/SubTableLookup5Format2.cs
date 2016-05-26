@@ -52,14 +52,14 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 	/// 	</summary>
 	public class SubTableLookup5Format2 : ContextualSubTable
 	{
-		private ICollection<int?> substCoverageGlyphIds;
+		private ICollection<int> substCoverageGlyphIds;
 
 		private IList<IList<ContextualSubstRule>> subClassSets;
 
 		private OtfClass classDefinition;
 
 		public SubTableLookup5Format2(OpenTypeFontTableReader openReader, int lookupFlag, 
-			ICollection<int?> substCoverageGlyphIds, OtfClass classDefinition)
+			ICollection<int> substCoverageGlyphIds, OtfClass classDefinition)
 			: base(openReader, lookupFlag)
 		{
 			this.substCoverageGlyphIds = substCoverageGlyphIds;

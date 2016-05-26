@@ -64,8 +64,8 @@ namespace iTextSharp.Kernel.Utils
 
 		protected internal String rootTag;
 
-		protected internal IDictionary<PdfDictionary, IDictionary<int?, String>> parsedTags
-			 = new Dictionary<PdfDictionary, IDictionary<int?, String>>();
+		protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags
+			 = new Dictionary<PdfDictionary, IDictionary<int, String>>();
 
 		public TaggedPdfReaderTool(PdfDocument document)
 		{
@@ -339,12 +339,12 @@ namespace iTextSharp.Kernel.Utils
 
 		private class MarkedContentEventListener : IEventListener
 		{
-			private IDictionary<int?, ITextExtractionStrategy> contentByMcid = new Dictionary
-				<int?, ITextExtractionStrategy>();
+			private IDictionary<int, ITextExtractionStrategy> contentByMcid = new Dictionary<
+				int, ITextExtractionStrategy>();
 
-			public virtual IDictionary<int?, String> GetMcidContent()
+			public virtual IDictionary<int, String> GetMcidContent()
 			{
-				IDictionary<int?, String> content = new Dictionary<int?, String>();
+				IDictionary<int, String> content = new Dictionary<int, String>();
 				foreach (int id in this.contentByMcid.Keys)
 				{
 					content[id] = this.contentByMcid[id].GetResultantText();

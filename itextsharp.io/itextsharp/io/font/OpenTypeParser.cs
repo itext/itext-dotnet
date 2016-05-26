@@ -189,7 +189,7 @@ namespace iTextSharp.IO.Font
 			/// <seealso>TrueTypeFont.UNITS_NORMALIZATION</seealso>
 			/// .
 			/// </remarks>
-			internal IDictionary<int?, int[]> cmap10;
+			internal IDictionary<int, int[]> cmap10;
 
 			/// <summary>The map containing the code information for the table 'cmap', encoding 3.1 in Unicode.
 			/// 	</summary>
@@ -202,9 +202,9 @@ namespace iTextSharp.IO.Font
 			/// <seealso>TrueTypeFont.UNITS_NORMALIZATION</seealso>
 			/// .
 			/// </remarks>
-			internal IDictionary<int?, int[]> cmap31;
+			internal IDictionary<int, int[]> cmap31;
 
-			internal IDictionary<int?, int[]> cmapExt;
+			internal IDictionary<int, int[]> cmapExt;
 
 			internal bool fontSpecific = false;
 		}
@@ -236,7 +236,7 @@ namespace iTextSharp.IO.Font
 		protected internal String fontName;
 
 		/// <summary>All the names of the Names-Table.</summary>
-		protected internal IDictionary<int?, IList<String[]>> allNameEntries;
+		protected internal IDictionary<int, IList<String[]>> allNameEntries;
 
 		/// <summary>Indicate, that the font contains 'CFF ' table.</summary>
 		protected internal bool cff = false;
@@ -327,7 +327,7 @@ namespace iTextSharp.IO.Font
 			return fontName;
 		}
 
-		public virtual IDictionary<int?, IList<String[]>> GetAllNameEntries()
+		public virtual IDictionary<int, IList<String[]>> GetAllNameEntries()
 		{
 			return allNameEntries;
 		}
@@ -435,7 +435,7 @@ namespace iTextSharp.IO.Font
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		public virtual byte[] GetSubset(ICollection<int?> glyphs, bool subset)
+		public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset)
 		{
 			TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs
 				, directoryOffset, true, !subset);
@@ -773,7 +773,7 @@ namespace iTextSharp.IO.Font
 						);
 				}
 			}
-			allNameEntries = new LinkedDictionary<int?, IList<String[]>>();
+			allNameEntries = new LinkedDictionary<int, IList<String[]>>();
 			raf.Seek(table_location[0] + 2);
 			int numRecords = raf.ReadUnsignedShort();
 			int startOfStorage = raf.ReadUnsignedShort();
@@ -1184,9 +1184,9 @@ namespace iTextSharp.IO.Font
 		/// </remarks>
 		/// <returns>a <CODE>HashMap</CODE> representing this map</returns>
 		/// <exception cref="System.IO.IOException">the font file could not be read</exception>
-		private IDictionary<int?, int[]> ReadFormat0()
+		private IDictionary<int, int[]> ReadFormat0()
 		{
-			IDictionary<int?, int[]> h = new LinkedDictionary<int?, int[]>();
+			IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
 			raf.SkipBytes(4);
 			for (int k = 0; k < 256; ++k)
 			{
@@ -1206,9 +1206,9 @@ namespace iTextSharp.IO.Font
 		/// </remarks>
 		/// <returns>a <CODE>HashMap</CODE> representing this map</returns>
 		/// <exception cref="System.IO.IOException">the font file could not be read</exception>
-		private IDictionary<int?, int[]> ReadFormat4(bool fontSpecific)
+		private IDictionary<int, int[]> ReadFormat4(bool fontSpecific)
 		{
-			IDictionary<int?, int[]> h = new LinkedDictionary<int?, int[]>();
+			IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
 			int table_lenght = raf.ReadUnsignedShort();
 			raf.SkipBytes(2);
 			int segCount = raf.ReadUnsignedShort() / 2;
@@ -1282,9 +1282,9 @@ namespace iTextSharp.IO.Font
 		/// </remarks>
 		/// <returns>a <CODE>HashMap</CODE> representing this map</returns>
 		/// <exception cref="System.IO.IOException">the font file could not be read</exception>
-		private IDictionary<int?, int[]> ReadFormat6()
+		private IDictionary<int, int[]> ReadFormat6()
 		{
-			IDictionary<int?, int[]> h = new LinkedDictionary<int?, int[]>();
+			IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
 			raf.SkipBytes(4);
 			int start_code = raf.ReadUnsignedShort();
 			int code_count = raf.ReadUnsignedShort();
@@ -1299,9 +1299,9 @@ namespace iTextSharp.IO.Font
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		private IDictionary<int?, int[]> ReadFormat12()
+		private IDictionary<int, int[]> ReadFormat12()
 		{
-			IDictionary<int?, int[]> h = new LinkedDictionary<int?, int[]>();
+			IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
 			raf.SkipBytes(2);
 			int table_length = raf.ReadInt();
 			raf.SkipBytes(4);

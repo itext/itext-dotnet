@@ -78,7 +78,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		/// <c>#keyIntoStructParentIndex</c>
 		/// . With this we simply store struct parent indexes as negative numbers.
 		/// </remarks>
-		private IDictionary<PdfIndirectReference, SortedDictionary<int?, PdfMcr>> pageToPageMcrs;
+		private IDictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr>> pageToPageMcrs;
 
 		/// <summary>Init ParentTreeHandler.</summary>
 		/// <remarks>Init ParentTreeHandler. On init the parent tree is read and stored in this instance.
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		}
 
 		/// <summary>Gets a list of marked content references on page.</summary>
-		public virtual IDictionary<int?, PdfMcr> GetPageMarkedContentReferences(PdfPage page
+		public virtual IDictionary<int, PdfMcr> GetPageMarkedContentReferences(PdfPage page
 			)
 		{
 			return pageToPageMcrs[page.GetPdfObject().GetIndirectReference()];
@@ -100,23 +100,23 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid)
 		{
-			IDictionary<int?, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference
-				()];
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
+				)];
 			return pageMcrs != null ? pageMcrs[mcid] : null;
 		}
 
 		public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int
 			 structParentIndex)
 		{
-			IDictionary<int?, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference
-				()];
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
+				)];
 			return pageMcrs != null ? (PdfObjRef)pageMcrs[StructParentIndexIntoKey(structParentIndex
 				)] : null;
 		}
 
 		public virtual int GetNextMcidForPage(PdfPage page)
 		{
-			SortedDictionary<int?, PdfMcr> pageMcrs = pageToPageMcrs[page.GetPdfObject().GetIndirectReference
+			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[page.GetPdfObject().GetIndirectReference
 				()];
 			if (pageMcrs == null || pageMcrs.Count == 0)
 			{
@@ -145,7 +145,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		/// </param>
 		public virtual void CreateParentTreeEntryForPage(PdfPage page)
 		{
-			IDictionary<int?, PdfMcr> mcrs = GetPageMarkedContentReferences(page);
+			IDictionary<int, PdfMcr> mcrs = GetPageMarkedContentReferences(page);
 			if (mcrs == null)
 			{
 				return;
@@ -162,11 +162,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		public virtual void RegisterMcr(PdfMcr mcr)
 		{
-			SortedDictionary<int?, PdfMcr> pageMcrs = pageToPageMcrs[mcr.GetPageObject().GetIndirectReference
+			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[mcr.GetPageObject().GetIndirectReference
 				()];
 			if (pageMcrs == null)
 			{
-				pageMcrs = new SortedDictionary<int?, PdfMcr>();
+				pageMcrs = new SortedDictionary<int, PdfMcr>();
 				pageToPageMcrs[mcr.GetPageObject().GetIndirectReference()] = pageMcrs;
 			}
 			if (mcr is PdfObjRef)
@@ -202,8 +202,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				throw new PdfException(PdfException.CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed
 					);
 			}
-			IDictionary<int?, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference
-				()];
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
+				)];
 			if (pageMcrs != null)
 			{
 				if (mcrToUnregister is PdfObjRef)
@@ -219,7 +219,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 							return;
 						}
 					}
-					foreach (KeyValuePair<int?, PdfMcr> entry in pageMcrs)
+					foreach (KeyValuePair<int, PdfMcr> entry in pageMcrs)
 					{
 						if (entry.Value.GetPdfObject() == mcrToUnregister.GetPdfObject())
 						{
@@ -247,14 +247,14 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		private void RegisterAllMcrs()
 		{
-			pageToPageMcrs = new Dictionary<PdfIndirectReference, SortedDictionary<int?, PdfMcr
+			pageToPageMcrs = new Dictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr
 				>>();
 			// we create new number tree and not using parentTree, because we want parentTree to be empty
-			IDictionary<int?, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument
+			IDictionary<int, PdfObject> parentTreeEntries = new PdfNumTree(structTreeRoot.GetDocument
 				().GetCatalog(), PdfName.ParentTree).GetNumbers();
 			ICollection<PdfStructElem> mcrParents = new HashSet<PdfStructElem>();
 			int maxStructParentIndex = -1;
-			foreach (KeyValuePair<int?, PdfObject> entry in parentTreeEntries)
+			foreach (KeyValuePair<int, PdfObject> entry in parentTreeEntries)
 			{
 				if (entry.Key > maxStructParentIndex)
 				{
@@ -296,13 +296,13 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		}
 
 		private void UpdateStructParentTreeEntries(int? pageStructParentIndex, IDictionary
-			<int?, PdfMcr> mcrs)
+			<int, PdfMcr> mcrs)
 		{
 			// element indexes in parentsOfPageMcrs shall be the same as mcid of one of their kids.
 			// See "Finding Structure Elements from Content Items" in pdf spec.
 			PdfArray parentsOfPageMcrs = new PdfArray();
 			int currentMcid = 0;
-			foreach (KeyValuePair<int?, PdfMcr> entry in mcrs)
+			foreach (KeyValuePair<int, PdfMcr> entry in mcrs)
 			{
 				PdfMcr mcr = entry.Value;
 				if (mcr is PdfObjRef)

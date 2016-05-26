@@ -142,7 +142,7 @@ namespace iTextSharp.IO.Util
 			{
 				return null;
 			}
-			IList<int?> charCodes = new List<int?>(text.Length);
+			IList<int> charCodes = new List<int>(text.Length);
 			int pos = 0;
 			while (pos < text.Length)
 			{

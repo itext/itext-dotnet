@@ -107,9 +107,9 @@ namespace iTextSharp.IO.Font
 
 		protected internal int[] locaTable;
 
-		protected internal ICollection<int?> glyphsUsed;
+		protected internal ICollection<int> glyphsUsed;
 
-		protected internal IList<int?> glyphsInList;
+		protected internal IList<int> glyphsInList;
 
 		protected internal int tableGlyphOffset;
 
@@ -140,7 +140,7 @@ namespace iTextSharp.IO.Font
 		/// if the table cmap is to be included in the generated font
 		/// </param>
 		internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection
-			<int?> glyphsUsed, int directoryOffset, bool includeCmap, bool includeExtras)
+			<int> glyphsUsed, int directoryOffset, bool includeCmap, bool includeExtras)
 		{
 			this.fileName = fileName;
 			this.rf = rf;
@@ -148,7 +148,7 @@ namespace iTextSharp.IO.Font
 			this.includeCmap = includeCmap;
 			this.includeExtras = includeExtras;
 			this.directoryOffset = directoryOffset;
-			glyphsInList = new List<int?>(glyphsUsed);
+			glyphsInList = new List<int>(glyphsUsed);
 		}
 
 		/// <summary>Does the actual work of subsetting the font.</summary>

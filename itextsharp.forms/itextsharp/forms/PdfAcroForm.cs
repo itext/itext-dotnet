@@ -727,8 +727,8 @@ namespace iTextSharp.Forms
 			// xObject, so that circular reference is avoided.
 			// We copy beforehand firstly not to produce a copy every time, and secondly not to copy all the
 			// xObjects that have already been added to the page resources.
-			IDictionary<int?, PdfObject> initialPageResourceClones = new LinkedDictionary<int?
-				, PdfObject>();
+			IDictionary<int, PdfObject> initialPageResourceClones = new LinkedDictionary<int, 
+				PdfObject>();
 			for (int i = 1; i <= document.GetNumberOfPages(); i++)
 			{
 				PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.

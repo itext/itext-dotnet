@@ -50,14 +50,14 @@ namespace iTextSharp.IO.Font.Otf
 	/// <author>psoares</author>
 	public class GsubLookupType3 : OpenTableLookup
 	{
-		private IDictionary<int?, int[]> substMap;
+		private IDictionary<int, int[]> substMap;
 
 		/// <exception cref="System.IO.IOException"/>
 		public GsubLookupType3(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
 			subTableLocations)
 			: base(openReader, lookupFlag, subTableLocations)
 		{
-			substMap = new Dictionary<int?, int[]>();
+			substMap = new Dictionary<int, int[]>();
 			ReadSubTables();
 		}
 
@@ -99,7 +99,7 @@ namespace iTextSharp.IO.Font.Otf
 				int glyphCount = openReader.rf.ReadUnsignedShort();
 				substitute[k] = openReader.ReadUShortArray(glyphCount);
 			}
-			IList<int?> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
+			IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
 				);
 			for (int k_1 = 0; k_1 < alternateSetCount; ++k_1)
 			{

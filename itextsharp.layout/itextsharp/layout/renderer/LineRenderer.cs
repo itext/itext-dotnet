@@ -89,7 +89,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI)
 			{
-				IList<int?> unicodeIdsLst = new List<int?>();
+				IList<int> unicodeIdsLst = new List<int>();
 				foreach (IRenderer child in childRenderers)
 				{
 					if (child is TextRenderer)
@@ -637,9 +637,9 @@ namespace iTextSharp.Layout.Renderer
 
 		private TabStop GetNextTabStop(float curWidth)
 		{
-			NavigableMap<float?, TabStop> tabStops = this.GetProperty<NavigableMap<float?, TabStop
+			NavigableMap<float, TabStop> tabStops = this.GetProperty<NavigableMap<float, TabStop
 				>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
-			KeyValuePair<float?, TabStop> nextTabStopEntry = null;
+			KeyValuePair<float, TabStop> nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
 			{

@@ -228,7 +228,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 		protected internal int mcDepth;
 
 		/// <summary>The list where we save/restore the layer depth.</summary>
-		protected internal IList<int?> layerDepth;
+		protected internal IList<int> layerDepth;
 
 		/// <summary>Creates PdfCanvas from content stream of page, form XObject, pattern etc.
 		/// 	</summary>
@@ -1719,7 +1719,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			}
 			if (layerDepth == null)
 			{
-				layerDepth = new List<int?>();
+				layerDepth = new List<int>();
 			}
 			if (layer is PdfLayerMembership)
 			{

@@ -60,7 +60,7 @@ namespace iTextSharp.IO.Codec
 	/// be removed or changed in future releases of JAI.</b>
 	/// </remarks>
 	/// <seealso cref="TIFFDirectory"/>
-	public class TIFFField : IComparable<iTextSharp.IO.Codec.TIFFField>
+	public class TIFFField : Object, IComparable<iTextSharp.IO.Codec.TIFFField>
 	{
 		/// <summary>Flag for 8 bit unsigned integers.</summary>
 		public const int TIFF_BYTE = 1;

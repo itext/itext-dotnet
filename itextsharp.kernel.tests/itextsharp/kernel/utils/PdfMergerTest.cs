@@ -138,12 +138,12 @@ namespace iTextSharp.Kernel.Utils
 			PdfDocument pdfDoc3 = new PdfDocument(writer1);
 			pdfDoc3.SetTagged();
 			PdfMerger merger = new PdfMerger(pdfDoc3).SetCloseSourceDocuments(true);
-			IList<int?> pages = new List<int?>();
+			IList<int> pages = new List<int>();
 			pages.Add(3);
 			pages.Add(2);
 			pages.Add(1);
 			merger.Merge(pdfDoc, pages);
-			IList<int?> pages1 = new List<int?>();
+			IList<int> pages1 = new List<int>();
 			pages1.Add(5);
 			pages1.Add(9);
 			pages1.Add(4);

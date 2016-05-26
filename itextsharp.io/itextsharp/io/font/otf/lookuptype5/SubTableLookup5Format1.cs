@@ -51,10 +51,10 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 	/// <summary>Contextual Substitution Subtable: Simple context glyph substitution</summary>
 	public class SubTableLookup5Format1 : ContextualSubTable
 	{
-		private IDictionary<int?, IList<ContextualSubstRule>> substMap;
+		private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
 		public SubTableLookup5Format1(OpenTypeFontTableReader openReader, int lookupFlag, 
-			IDictionary<int?, IList<ContextualSubstRule>> substMap)
+			IDictionary<int, IList<ContextualSubstRule>> substMap)
 			: base(openReader, lookupFlag)
 		{
 			this.substMap = substMap;

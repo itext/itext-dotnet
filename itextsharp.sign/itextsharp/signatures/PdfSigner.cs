@@ -818,7 +818,7 @@ namespace iTextSharp.Signatures
 			PdfLiteral lit = new PdfLiteral(80);
 			exclusionLocations[PdfName.ByteRange] = lit;
 			cryptoDictionary.Put(PdfName.ByteRange, lit);
-			foreach (KeyValuePair<PdfName, int?> entry in exclusionSizes)
+			foreach (KeyValuePair<PdfName, int> entry in exclusionSizes)
 			{
 				PdfName key = entry.Key;
 				lit = new PdfLiteral(entry.Value);

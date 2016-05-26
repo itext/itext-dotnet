@@ -68,7 +68,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		private int count = 0;
 
-		private readonly SortedSet<int?> freeReferences;
+		private readonly SortedSet<int> freeReferences;
 
 		public PdfXrefTable()
 			: this(INITIAL_CAPACITY)
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf
 				capacity = INITIAL_CAPACITY;
 			}
 			xref = new PdfIndirectReference[capacity];
-			freeReferences = new SortedSet<int?>();
+			freeReferences = new SortedSet<int>();
 			Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState
 				(PdfObject.FREE)));
 		}
@@ -207,7 +207,7 @@ namespace iTextSharp.Kernel.Pdf
 					break;
 				}
 			}
-			IList<int?> sections = new List<int?>();
+			IList<int> sections = new List<int>();
 			int first = 0;
 			int len = 1;
 			if (document.IsAppendMode())

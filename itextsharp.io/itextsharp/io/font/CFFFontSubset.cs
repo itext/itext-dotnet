@@ -89,32 +89,31 @@ namespace iTextSharp.IO.Font
 		/// A Map containing the glyphs used in the text after being converted
 		/// to glyph number by the CMap
 		/// </summary>
-		internal IDictionary<int?, int[]> GlyphsUsed;
+		internal IDictionary<int, int[]> GlyphsUsed;
 
 		/// <summary>The GlyphsUsed keys as an list</summary>
-		internal IList<int?> glyphsInList;
+		internal IList<int> glyphsInList;
 
 		/// <summary>A Set for keeping the FDArrays being used by the font</summary>
-		internal ICollection<int?> FDArrayUsed = new HashSet<int?>();
+		internal ICollection<int> FDArrayUsed = new HashSet<int>();
 
 		/// <summary>A Maps array for keeping the subroutines used in each FontDict</summary>
-		internal GenericArray<Dictionary<int?, int[]>> hSubrsUsed;
+		internal GenericArray<Dictionary<int, int[]>> hSubrsUsed;
 
 		/// <summary>The SubroutinesUsed Maps as lists</summary>
-		internal GenericArray<IList<int?>> lSubrsUsed;
+		internal GenericArray<IList<int>> lSubrsUsed;
 
 		/// <summary>A Map for keeping the Global subroutines used in the font</summary>
-		internal IDictionary<int?, int[]> hGSubrsUsed = new Dictionary<int?, int[]>();
+		internal IDictionary<int, int[]> hGSubrsUsed = new Dictionary<int, int[]>();
 
 		/// <summary>The Global SubroutinesUsed Maps as lists</summary>
-		internal IList<int?> lGSubrsUsed = new List<int?>();
+		internal IList<int> lGSubrsUsed = new List<int>();
 
 		/// <summary>A Map for keeping the subroutines used in a non-cid font</summary>
-		internal IDictionary<int?, int[]> hSubrsUsedNonCID = new Dictionary<int?, int[]>(
-			);
+		internal IDictionary<int, int[]> hSubrsUsedNonCID = new Dictionary<int, int[]>();
 
 		/// <summary>The SubroutinesUsed Map as list</summary>
-		internal IList<int?> lSubrsUsedNonCID = new List<int?>();
+		internal IList<int> lSubrsUsedNonCID = new List<int>();
 
 		/// <summary>An array of the new Indexes for the local Subr.</summary>
 		/// <remarks>An array of the new Indexes for the local Subr. One index for each FontDict
@@ -143,13 +142,13 @@ namespace iTextSharp.IO.Font
 		/// <summary>C'tor for CFFFontSubset</summary>
 		/// <param name="cff">- The font file</param>
 		/// <param name="GlyphsUsed">- a Map that contains the glyph used in the subset</param>
-		public CFFFontSubset(byte[] cff, IDictionary<int?, int[]> GlyphsUsed)
+		public CFFFontSubset(byte[] cff, IDictionary<int, int[]> GlyphsUsed)
 			: base(cff)
 		{
 			// Use CFFFont c'tor in order to parse the font file.
 			this.GlyphsUsed = GlyphsUsed;
 			//Put the glyphs into a list
-			glyphsInList = new List<int?>(GlyphsUsed.Keys);
+			glyphsInList = new List<int>(GlyphsUsed.Keys);
 			for (int i = 0; i < fonts.Length; ++i)
 			{
 				// Read the number of glyphs in the font
@@ -458,9 +457,9 @@ namespace iTextSharp.IO.Font
 			{
 				// Init the Map-array and the list-array to hold the subrs used
 				// in each private dict.
-				hSubrsUsed = new GenericArray<Dictionary<int?, int[]>>(fonts[Font].fdprivateOffsets
+				hSubrsUsed = new GenericArray<Dictionary<int, int[]>>(fonts[Font].fdprivateOffsets
 					.Length);
-				lSubrsUsed = new GenericArray<IList<int?>>(fonts[Font].fdprivateOffsets.Length);
+				lSubrsUsed = new GenericArray<IList<int>>(fonts[Font].fdprivateOffsets.Length);
 				// A [][] which will store the byte array for each new FD Array lsubs index
 				NewLSubrsIndex = new byte[fonts[Font].fdprivateOffsets.Length][];
 				// An array to hold the offset for each Lsubr index
@@ -469,14 +468,14 @@ namespace iTextSharp.IO.Font
 				fonts[Font].PrivateSubrsOffsetsArray = new int[fonts[Font].fdprivateOffsets.Length
 					][];
 				// Put the FDarrayUsed into a list
-				IList<int?> FDInList = new List<int?>(FDArrayUsed);
+				IList<int> FDInList = new List<int>(FDArrayUsed);
 				// For each FD array which is used subset the lsubr
 				for (int j = 0; j < FDInList.Count; j++)
 				{
 					// The FDArray index,  Map, List to work on
 					int FD = (int)FDInList[j];
-					hSubrsUsed.Set(FD, new Dictionary<int?, int[]>());
-					lSubrsUsed.Set(FD, new List<int?>());
+					hSubrsUsed.Set(FD, new Dictionary<int, int[]>());
+					lSubrsUsed.Set(FD, new List<int>());
 					//Reads the private dicts looking for the subr operator and
 					// store both the offset for the index and its offset array
 					BuildFDSubrsOffsets(Font, FD);
@@ -566,7 +565,7 @@ namespace iTextSharp.IO.Font
 		/// <param name="hSubr">Map of the subrs used</param>
 		/// <param name="lSubr">list of the subrs used</param>
 		protected internal virtual void BuildSubrUsed(int Font, int FD, int SubrOffset, int
-			[] SubrsOffsets, IDictionary<int?, int[]> hSubr, IList<int?> lSubr)
+			[] SubrsOffsets, IDictionary<int, int[]> hSubr, IList<int> lSubr)
 		{
 			// Calc the Bias for the subr index
 			int LBias = CalcBias(SubrOffset, Font);
@@ -680,7 +679,7 @@ namespace iTextSharp.IO.Font
 		/// <param name="hSubr">the Map for the lSubrs</param>
 		/// <param name="lSubr">the list for the lSubrs</param>
 		protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias
-			, IDictionary<int?, int[]> hSubr, IList<int?> lSubr, int[] LSubrsOffsets)
+			, IDictionary<int, int[]> hSubr, IList<int> lSubr, int[] LSubrsOffsets)
 		{
 			// Clear the stack for the subrs
 			EmptyStack();
@@ -1074,8 +1073,8 @@ namespace iTextSharp.IO.Font
 		/// 	</param>
 		/// <returns>the new index subset version</returns>
 		/// <exception cref="System.IO.IOException"/>
-		protected internal virtual byte[] BuildNewIndex(int[] Offsets, IDictionary<int?, 
-			int[]> Used, byte OperatorForUnusedEntries)
+		protected internal virtual byte[] BuildNewIndex(int[] Offsets, IDictionary<int, int
+			[]> Used, byte OperatorForUnusedEntries)
 		{
 			int unusedCount = 0;
 			int Offset = 0;

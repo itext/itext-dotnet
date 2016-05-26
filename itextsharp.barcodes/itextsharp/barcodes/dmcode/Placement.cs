@@ -54,7 +54,7 @@ namespace iTextSharp.Barcodes.Dmcode
 
 		private short[] array;
 
-		private static readonly IDictionary<int?, short[]> cache = new Dictionary<int?, short
+		private static readonly IDictionary<int, short[]> cache = new Dictionary<int, short
 			[]>();
 
 		private Placement()

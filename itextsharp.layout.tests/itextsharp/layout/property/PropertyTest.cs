@@ -12,7 +12,7 @@ namespace iTextSharp.Layout.Property
 		[Test]
 		public virtual void PropertyUniquenessTest()
 		{
-			ICollection<int?> fieldValues = new HashSet<int?>();
+			ICollection<int> fieldValues = new HashSet<int>();
 			int maxFieldValue = 1;
 			foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields
 				())
