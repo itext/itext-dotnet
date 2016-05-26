@@ -160,7 +160,7 @@ namespace iTextSharp.Layout.Hyphenation
 				RedimNodeArrays(eq.Length + BLOCK_SIZE);
 			}
 			char[] strkey = new char[len--];
-			iTextSharp.GetCharsForString(key, 0, len, strkey, 0);
+			key.JGetChars(0, len, strkey, 0);
 			strkey[len] = (char)0;
 			root = Insert(root, strkey, 0, val);
 		}
@@ -363,7 +363,7 @@ namespace iTextSharp.Layout.Hyphenation
 		{
 			int len = key.Length;
 			char[] strkey = new char[len + 1];
-			iTextSharp.GetCharsForString(key, 0, len, strkey, 0);
+			key.JGetChars(0, len, strkey, 0);
 			strkey[len] = (char)0;
 			return Find(strkey, 0);
 		}
