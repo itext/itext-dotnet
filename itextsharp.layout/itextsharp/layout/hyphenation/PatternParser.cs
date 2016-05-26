@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using Java.Net;
 using Javax.Xml.Parsers;
 using Org.Xml.Sax;
 using Org.Xml.Sax.Helpers;
@@ -83,22 +82,10 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <param name="filename">the filename</param>
 		/// <exception cref="HyphenationException">In case of an exception while parsing</exception>
 		/// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		public virtual void Parse(String filename)
 		{
-			try
-			{
-				Uri url = new FileInfo(filename).ToURI().ToURL();
-				Parse(iTextSharp.IO.Util.UrlUtil.OpenStream(url), url.ToExternalForm());
-			}
-			catch (MalformedURLException e)
-			{
-				throw new HyphenationException("Error converting the File '" + filename + "' to a URL: "
-					 + e.Message);
-			}
-			catch (System.IO.IOException)
-			{
-				throw new HyphenationException("Error opening the File '" + filename + "'");
-			}
+			Parse(new FileStream(filename, FileMode.Open), filename);
 		}
 
 		/// <summary>Parses a hyphenation pattern file.</summary>

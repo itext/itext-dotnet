@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace iTextSharp.Layout {
     internal static class LayoutExtensions {
@@ -8,6 +9,10 @@ namespace iTextSharp.Layout {
 
         public static void JGetChars(this String str, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
             str.CopyTo(srcBegin, dst, dstBegin, srcEnd - srcBegin);
+        }
+
+        public static void SetCharAt(this StringBuilder sb, int ind, char ch) {
+            sb[ind] = ch;
         }
     }
 }
