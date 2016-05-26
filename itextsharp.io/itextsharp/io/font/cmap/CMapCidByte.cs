@@ -80,7 +80,7 @@ namespace iTextSharp.IO.Font.Cmap
 		public virtual IntHashtable GetReversMap()
 		{
 			IntHashtable code2cid = new IntHashtable(map.Count);
-			foreach (int? cid in map.Keys)
+			foreach (int cid in map.Keys)
 			{
 				byte[] bytes = map[cid];
 				int byteCode = 0;
@@ -89,7 +89,7 @@ namespace iTextSharp.IO.Font.Cmap
 					byteCode <<= 8;
 					byteCode += b & 0xff;
 				}
-				code2cid.Put(byteCode, (int)cid);
+				code2cid.Put(byteCode, cid);
 			}
 			return code2cid;
 		}

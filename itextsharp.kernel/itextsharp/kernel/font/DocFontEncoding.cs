@@ -161,8 +161,8 @@ namespace iTextSharp.Kernel.Font
 					else
 					{
 						String glyphName = ((PdfName)obj).GetValue();
-						int? unicode = AdobeGlyphList.NameToUnicode(glyphName);
-						if (unicode != null)
+						int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName);
+						if (unicode != -1)
 						{
 							fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
 							fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);

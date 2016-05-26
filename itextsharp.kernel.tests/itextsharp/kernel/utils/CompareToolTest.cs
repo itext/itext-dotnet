@@ -6,9 +6,11 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class CompareToolTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/CompareToolTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/utils/CompareToolTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/utils/CompareToolTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/utils/CompareToolTest/";
 
 		[SetUp]
 		public virtual void SetUp()

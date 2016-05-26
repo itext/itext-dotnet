@@ -11,9 +11,11 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class PdfSplitterTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/utils/PdfSplitterTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()
@@ -30,11 +32,8 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			int? splitByPage1 = 30;
-			int? splitByPage2 = 100;
-			IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(splitByPage1, splitByPage2
-				);
-			IList<PdfDocument> splitDocuments = new _PdfSplitter_46(inputPdfDoc).SplitByPageNumbers
+			IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
+			IList<PdfDocument> splitDocuments = new _PdfSplitter_44(inputPdfDoc).SplitByPageNumbers
 				(pageNumbers);
 			foreach (PdfDocument doc in splitDocuments)
 			{
@@ -48,9 +47,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_46 : PdfSplitter
+		private sealed class _PdfSplitter_44 : PdfSplitter
 		{
-			public _PdfSplitter_46(PdfDocument baseArg1)
+			public _PdfSplitter_44(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -82,7 +81,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "iphone_user_guide.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			new _PdfSplitter_76(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_87
+			new _PdfSplitter_74(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_85
 				());
 			for (int i = 1; i <= 3; i++)
 			{
@@ -92,9 +91,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_76 : PdfSplitter
+		private sealed class _PdfSplitter_74 : PdfSplitter
 		{
-			public _PdfSplitter_76(PdfDocument baseArg1)
+			public _PdfSplitter_74(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -117,9 +116,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _IDocumentReadyListener_87 : PdfSplitter.IDocumentReadyListener
+		private sealed class _IDocumentReadyListener_85 : PdfSplitter.IDocumentReadyListener
 		{
-			public _IDocumentReadyListener_87()
+			public _IDocumentReadyListener_85()
 			{
 			}
 
@@ -146,7 +145,7 @@ namespace iTextSharp.Kernel.Utils
 				(1, 2);
 			PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence
 				(70, 99);
-			IList<PdfDocument> splitDocuments = new _PdfSplitter_115(inputPdfDoc).ExtractPageRanges
+			IList<PdfDocument> splitDocuments = new _PdfSplitter_113(inputPdfDoc).ExtractPageRanges
 				(iTextSharp.IO.Util.JavaUtil.ArraysAsList(pageRange1, pageRange2));
 			foreach (PdfDocument pdfDocument in splitDocuments)
 			{
@@ -160,9 +159,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_115 : PdfSplitter
+		private sealed class _PdfSplitter_113 : PdfSplitter
 		{
-			public _PdfSplitter_115(PdfDocument baseArg1)
+			public _PdfSplitter_113(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;
@@ -212,7 +211,7 @@ namespace iTextSharp.Kernel.Utils
 		{
 			String inputFileName = sourceFolder + "splitBySize.pdf";
 			PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-			PdfSplitter splitter = new _PdfSplitter_161(inputPdfDoc);
+			PdfSplitter splitter = new _PdfSplitter_159(inputPdfDoc);
 			IList<PdfDocument> documents = splitter.SplitBySize(100000);
 			foreach (PdfDocument doc in documents)
 			{
@@ -226,9 +225,9 @@ namespace iTextSharp.Kernel.Utils
 			}
 		}
 
-		private sealed class _PdfSplitter_161 : PdfSplitter
+		private sealed class _PdfSplitter_159 : PdfSplitter
 		{
-			public _PdfSplitter_161(PdfDocument baseArg1)
+			public _PdfSplitter_159(PdfDocument baseArg1)
 				: base(baseArg1)
 			{
 				this.partNumber = 1;

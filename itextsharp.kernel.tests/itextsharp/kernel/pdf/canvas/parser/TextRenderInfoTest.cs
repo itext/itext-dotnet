@@ -13,7 +13,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class TextRenderInfoTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
 
 		public const int FIRST_PAGE = 1;
 

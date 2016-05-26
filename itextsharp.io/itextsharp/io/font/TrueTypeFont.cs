@@ -370,7 +370,7 @@ namespace iTextSharp.IO.Font
 			unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
 			codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
 			avgWidth = 0;
-			foreach (int? charCode in cmap.Keys)
+			foreach (int charCode in cmap.Keys)
 			{
 				int index = cmap[charCode][0];
 				if (index >= glyphWidths.Length)
@@ -380,8 +380,8 @@ namespace iTextSharp.IO.Font
 						().GetFontName(), index));
 					continue;
 				}
-				Glyph glyph = new Glyph(index, glyphWidths[index], (int)charCode, bBoxes != null ? 
-					bBoxes[index] : null);
+				Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes
+					[index] : null);
 				unicodeToGlyph[charCode] = glyph;
 				codeToGlyph[index] = glyph;
 				avgWidth += glyph.GetWidth();

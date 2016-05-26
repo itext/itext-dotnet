@@ -14,9 +14,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class HighlightItemsTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/HighlightItemsTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/HighlightItemsTest/";
 
-		private const String outputPath = "test/itextsharp/kernel/parser/HighlightItemsTest/";
+		private static readonly String outputPath = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/parser/HighlightItemsTest/";
 
 		[SetUp]
 		public virtual void SetUp()

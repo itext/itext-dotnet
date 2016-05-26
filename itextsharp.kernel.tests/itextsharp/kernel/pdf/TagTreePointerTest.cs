@@ -15,9 +15,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class TagTreePointerTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/TagTreePointerTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/TagTreePointerTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

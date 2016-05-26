@@ -240,7 +240,7 @@ namespace iTextSharp.Barcodes
 					{
 						break;
 					}
-					int? subcode = System.Convert.ToInt32(code.JSubstring(0, k));
+					int subcode = System.Convert.ToInt32(code.JSubstring(0, k));
 					n = ais.ContainsKey(subcode) ? (int)ais[subcode] : 0;
 					if (n != 0)
 					{

@@ -96,7 +96,7 @@ namespace iTextSharp.IO.Font.Cmap
 		public virtual char[] Lookup(byte[] code, int offset, int length)
 		{
 			char[] result = null;
-			int? key;
+			int key;
 			if (length == 1)
 			{
 				key = code[offset] & 0xff;

@@ -11,7 +11,8 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfWriterTest : ExtendedITextTest
 	{
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfWriterTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfWriterTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()
@@ -605,10 +606,13 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.AddNewPage();
 			pdfDoc.Close();
-			try {
+			try
+			{
 				fos.Write(1);
-				NUnit.Framework.Assert.Fail("IllegalArgumentException expected");
-			} catch (System.IO.IOException ignored) {
+				NUnit.Framework.Assert.Fail("IOException expected");
+			}
+			catch (System.IO.IOException)
+			{
 			}
 		}
 

@@ -792,12 +792,12 @@ namespace iTextSharp.Kernel.Font
 				foreach (KeyValuePair<int, int[]> e in usemap)
 				{
 					int[] v = e.Value;
-					int? gi = v[0];
+					int gi = v[0];
 					if (longTag.ContainsKey(v[0]))
 					{
 						continue;
 					}
-					int c = (int)e.Key;
+					int c = e.Key;
 					bool skip = true;
 					for (int k = 0; k < rg.Length; k += 2)
 					{

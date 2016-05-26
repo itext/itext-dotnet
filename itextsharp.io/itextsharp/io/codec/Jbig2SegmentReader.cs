@@ -222,7 +222,7 @@ namespace iTextSharp.IO.Codec
 			public virtual byte[] GetData(bool for_embedding)
 			{
 				MemoryStream os = new MemoryStream();
-				foreach (int? sn in segs.Keys)
+				foreach (int sn in segs.Keys)
 				{
 					Jbig2SegmentReader.Jbig2Segment s = segs[sn];
 					// pdf reference 1.4, section 3.3.6 Jbig2Decode Filter

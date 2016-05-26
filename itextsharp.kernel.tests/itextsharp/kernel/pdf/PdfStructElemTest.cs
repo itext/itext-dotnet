@@ -17,9 +17,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfStructElemTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfStructElemTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfStructElemTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfStructElemTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfStructElemTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()
@@ -333,25 +335,17 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument destination = new PdfDocument(writer);
 			destination.SetTagged();
 			destination.InitializeOutlines();
-			source.CopyPagesTo(new _List_334(), destination);
+			List<int> pagesToCopy = new List<int>();
+			pagesToCopy.Add(3);
+			pagesToCopy.Add(4);
+			pagesToCopy.Add(10);
+			pagesToCopy.Add(11);
+			source.CopyPagesTo(pagesToCopy, destination);
 			source.CopyPagesTo(50, 52, destination);
 			destination.Close();
 			source.Close();
 			CompareResult("structTreeCopyingTest01.pdf", "cmp_structTreeCopyingTest01.pdf", "diff_copying_01_"
 				);
-		}
-
-		private sealed class _List_334 : List<int?>
-		{
-			public _List_334()
-			{
-				{
-					this.Add(3);
-					this.Add(4);
-					this.Add(10);
-					this.Add(11);
-				}
-			}
 		}
 
 		/// <exception cref="System.Exception"/>

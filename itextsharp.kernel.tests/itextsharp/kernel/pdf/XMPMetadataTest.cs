@@ -7,9 +7,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class XMPMetadataTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/XmpWriterTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/XmpWriterTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/XmpWriterTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/XmpWriterTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

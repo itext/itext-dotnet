@@ -6,7 +6,8 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfTokenizerTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
 
 		/// <exception cref="System.Exception"/>
 		private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes

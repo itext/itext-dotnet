@@ -10,7 +10,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class FilteredTextEventListenerTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/FilteredTextEventListenerTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/FilteredTextEventListenerTest/";
 
 		/// <exception cref="System.Exception"/>
 		[Test]

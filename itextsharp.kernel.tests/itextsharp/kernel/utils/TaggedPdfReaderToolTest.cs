@@ -8,9 +8,11 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class TaggedPdfReaderToolTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
 		[SetUp]
 		public virtual void SetUp()

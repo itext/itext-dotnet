@@ -154,7 +154,7 @@ namespace iTextSharp.Kernel.Font
 				foreach (KeyValuePair<int, int[]> e in usemap)
 				{
 					int[] v = e.Value;
-					int? gi = v[0];
+					int gi = v[0];
 					if (longTag.Contains(gi))
 					{
 						continue;

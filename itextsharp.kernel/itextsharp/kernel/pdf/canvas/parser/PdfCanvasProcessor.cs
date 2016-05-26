@@ -476,7 +476,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		/// <returns>the font</returns>
 		protected internal virtual PdfFont GetFont(PdfDictionary fontDict)
 		{
-			int? n = fontDict.GetIndirectReference().GetObjNumber();
+			int n = fontDict.GetIndirectReference().GetObjNumber();
 			PdfFont font = cachedFonts[n];
 			if (font == null)
 			{

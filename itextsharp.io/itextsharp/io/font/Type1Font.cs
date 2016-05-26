@@ -153,7 +153,7 @@ namespace iTextSharp.IO.Font
 		{
 			if (first.HasValidUnicode() && second.HasValidUnicode())
 			{
-				long? record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
+				long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
 				if (kernPairs.ContainsKey(record))
 				{
 					return (int)kernPairs[record];
@@ -179,7 +179,7 @@ namespace iTextSharp.IO.Font
 		/// </returns>
 		public virtual bool SetKerning(int first, int second, int kern)
 		{
-			long? record = ((long)first << 32) + second;
+			long record = ((long)first << 32) + second;
 			kernPairs[record] = kern;
 			return true;
 		}
@@ -189,14 +189,14 @@ namespace iTextSharp.IO.Font
 		/// <returns>Glyph instance if found, otherwise null.</returns>
 		public virtual Glyph GetGlyph(String name)
 		{
-			int? unicode = AdobeGlyphList.NameToUnicode(name);
-			if (unicode == null)
+			int unicode = (int)AdobeGlyphList.NameToUnicode(name);
+			if (unicode != -1)
 			{
-				return null;
+				return GetGlyph((int)unicode);
 			}
 			else
 			{
-				return GetGlyph((int)unicode);
+				return null;
 			}
 		}
 
@@ -440,8 +440,8 @@ namespace iTextSharp.IO.Font
 					startKernPairs = false;
 					break;
 				}
-				int? C = -1;
-				int? WX = 250;
+				int C = -1;
+				int WX = 250;
 				String N = "";
 				int[] B = null;
 				tok = new StringTokenizer(line, ";");
@@ -482,17 +482,17 @@ namespace iTextSharp.IO.Font
 						}
 					}
 				}
-				int? unicode = AdobeGlyphList.NameToUnicode(N);
-				Glyph glyph = new Glyph((int)C, (int)WX, unicode != null ? (int)unicode : -1, B);
+				int unicode = (int)AdobeGlyphList.NameToUnicode(N);
+				Glyph glyph = new Glyph(C, WX, unicode, B);
 				if (C >= 0)
 				{
 					codeToGlyph[C] = glyph;
 				}
-				if (unicode != null)
+				if (unicode != -1)
 				{
 					unicodeToGlyph[unicode] = glyph;
 				}
-				avgWidth += (int)WX;
+				avgWidth += WX;
 				widthCount++;
 			}
 			if (widthCount != 0)
@@ -566,11 +566,11 @@ namespace iTextSharp.IO.Font
 						String first = tok.NextToken();
 						String second = tok.NextToken();
 						int? width = (int)float.Parse(tok.NextToken());
-						int? firstUni = AdobeGlyphList.NameToUnicode(first);
-						int? secondUni = AdobeGlyphList.NameToUnicode(second);
-						if (firstUni != null && secondUni != null)
+						int firstUni = (int)AdobeGlyphList.NameToUnicode(first);
+						int secondUni = (int)AdobeGlyphList.NameToUnicode(second);
+						if (firstUni != -1 && secondUni != -1)
 						{
-							long? record = ((long)firstUni << 32) + (int)secondUni;
+							long record = ((long)firstUni << 32) + secondUni;
 							kernPairs[record] = width;
 						}
 					}

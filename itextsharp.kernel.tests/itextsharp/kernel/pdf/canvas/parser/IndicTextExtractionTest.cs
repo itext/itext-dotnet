@@ -10,7 +10,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class IndicTextExtractionTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/IndicTextExtractionTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/IndicTextExtractionTest/";
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]

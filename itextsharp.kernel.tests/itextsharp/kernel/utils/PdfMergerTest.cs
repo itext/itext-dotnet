@@ -11,9 +11,11 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class PdfMergerTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/utils/PdfMergerTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/utils/PdfMergerTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/utils/PdfMergerTest/";
 
 		[TestFixtureSetUp]
 		public static void BeforeClass()

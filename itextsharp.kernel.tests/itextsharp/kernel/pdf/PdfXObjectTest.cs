@@ -15,9 +15,11 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfXObjectTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
 
-		public const String destinationFolder = "test/itextsharp/kernel/pdf/PdfXObjectTest/";
+		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
+			 + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
 
 		public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp"
 			, sourceFolder + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder

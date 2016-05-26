@@ -13,7 +13,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class PdfCanvasProcessorTest : ExtendedITextTest
 	{
-		public const String sourceFolder = "../../resources/itextsharp/kernel/parser/PdfCanvasProcessorTest/";
+		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/PdfCanvasProcessorTest/";
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]

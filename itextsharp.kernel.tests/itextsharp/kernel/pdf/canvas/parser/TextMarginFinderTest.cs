@@ -9,7 +9,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class TextMarginFinderTest : ExtendedITextTest
 	{
-		private const String sourceFolder = "../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
+		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
+			 + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
 
 		/// <exception cref="System.Exception"/>
 		[Test]

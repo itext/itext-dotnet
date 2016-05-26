@@ -432,7 +432,7 @@ namespace iTextSharp.IO.Font
 				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams
 					("glyf", fileName);
 			}
-			int? glyph0 = 0;
+			int glyph0 = 0;
 			if (!glyphsUsed.Contains(glyph0))
 			{
 				glyphsUsed.Add(glyph0);
@@ -466,7 +466,7 @@ namespace iTextSharp.IO.Font
 			for (; ; )
 			{
 				int flags = rf.ReadUnsignedShort();
-				int? cGlyph = rf.ReadUnsignedShort();
+				int cGlyph = rf.ReadUnsignedShort();
 				if (!glyphsUsed.Contains(cGlyph))
 				{
 					glyphsUsed.Add(cGlyph);
