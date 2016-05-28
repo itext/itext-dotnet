@@ -7,8 +7,7 @@
     <ProjectGuid>{56137079-541A-425A-AB97-43AF63793C97}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace>iTextSharp.Hyph</RootNamespace>
     <AssemblyName>itextsharp.hyph</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,75 +42,75 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="resources\af.xml" />
-    <EmbeddedResource Include="resources\as.xml" />
-    <EmbeddedResource Include="resources\bg.xml" />
-    <EmbeddedResource Include="resources\bn.xml" />
-    <EmbeddedResource Include="resources\ca.xml" />
-    <EmbeddedResource Include="resources\cop.xml" />
-    <EmbeddedResource Include="resources\cs.xml" />
-    <EmbeddedResource Include="resources\cy.xml" />
-    <EmbeddedResource Include="resources\da.xml" />
-    <EmbeddedResource Include="resources\de.xml" />
-    <EmbeddedResource Include="resources\de_1901.xml" />
-    <EmbeddedResource Include="resources\de_CH.xml" />
-    <EmbeddedResource Include="resources\de_DR.xml" />
-    <EmbeddedResource Include="resources\el.xml" />
-    <EmbeddedResource Include="resources\el_Polyton.xml" />
-    <EmbeddedResource Include="resources\en.xml" />
-    <EmbeddedResource Include="resources\en_GB.xml" />
-    <EmbeddedResource Include="resources\en_US.xml" />
-    <EmbeddedResource Include="resources\eo.xml" />
-    <EmbeddedResource Include="resources\es.xml" />
-    <EmbeddedResource Include="resources\et.xml" />
-    <EmbeddedResource Include="resources\eu.xml" />
-    <EmbeddedResource Include="resources\fi.xml" />
-    <EmbeddedResource Include="resources\fr.xml" />
-    <EmbeddedResource Include="resources\ga.xml" />
-    <EmbeddedResource Include="resources\gl.xml" />
-    <EmbeddedResource Include="resources\grc.xml" />
-    <EmbeddedResource Include="resources\gu.xml" />
-    <EmbeddedResource Include="resources\hi.xml" />
-    <EmbeddedResource Include="resources\hr.xml" />
-    <EmbeddedResource Include="resources\hsb.xml" />
-    <EmbeddedResource Include="resources\hu.xml" />
-    <EmbeddedResource Include="resources\hy.xml" />
-    <EmbeddedResource Include="resources\ia.xml" />
-    <EmbeddedResource Include="resources\id.xml" />
-    <EmbeddedResource Include="resources\is.xml" />
-    <EmbeddedResource Include="resources\it.xml" />
-    <EmbeddedResource Include="resources\kmr.xml" />
-    <EmbeddedResource Include="resources\kn.xml" />
-    <EmbeddedResource Include="resources\la.xml" />
-    <EmbeddedResource Include="resources\lo.xml" />
-    <EmbeddedResource Include="resources\lt.xml" />
-    <EmbeddedResource Include="resources\lv.xml" />
-    <EmbeddedResource Include="resources\ml.xml" />
-    <EmbeddedResource Include="resources\mn.xml" />
-    <EmbeddedResource Include="resources\mr.xml" />
-    <EmbeddedResource Include="resources\nb.xml" />
-    <EmbeddedResource Include="resources\nl.xml" />
-    <EmbeddedResource Include="resources\nn.xml" />
-    <EmbeddedResource Include="resources\no.xml" />
-    <EmbeddedResource Include="resources\or.xml" />
-    <EmbeddedResource Include="resources\pa.xml" />
-    <EmbeddedResource Include="resources\pl.xml" />
-    <EmbeddedResource Include="resources\pt.xml" />
-    <EmbeddedResource Include="resources\readme.txt" />
-    <EmbeddedResource Include="resources\ro.xml" />
-    <EmbeddedResource Include="resources\ru.xml" />
-    <EmbeddedResource Include="resources\sa.xml" />
-    <EmbeddedResource Include="resources\sk.xml" />
-    <EmbeddedResource Include="resources\sl.xml" />
-    <EmbeddedResource Include="resources\sr_Cyrl.xml" />
-    <EmbeddedResource Include="resources\sr_Latn.xml" />
-    <EmbeddedResource Include="resources\sv.xml" />
-    <EmbeddedResource Include="resources\ta.xml" />
-    <EmbeddedResource Include="resources\te.xml" />
-    <EmbeddedResource Include="resources\tk.xml" />
-    <EmbeddedResource Include="resources\tr.xml" />
-    <EmbeddedResource Include="resources\uk.xml" />
-    <EmbeddedResource Include="resources\zh_Latn.xml" />
+    <EmbeddedResource Include="af.xml" />
+    <EmbeddedResource Include="as.xml" />
+    <EmbeddedResource Include="bg.xml" />
+    <EmbeddedResource Include="bn.xml" />
+    <EmbeddedResource Include="ca.xml" />
+    <EmbeddedResource Include="cop.xml" />
+    <EmbeddedResource Include="cs.xml" />
+    <EmbeddedResource Include="cy.xml" />
+    <EmbeddedResource Include="da.xml" />
+    <EmbeddedResource Include="de.xml" />
+    <EmbeddedResource Include="de_1901.xml" />
+    <EmbeddedResource Include="de_CH.xml" />
+    <EmbeddedResource Include="de_DR.xml" />
+    <EmbeddedResource Include="el.xml" />
+    <EmbeddedResource Include="el_Polyton.xml" />
+    <EmbeddedResource Include="en.xml" />
+    <EmbeddedResource Include="en_GB.xml" />
+    <EmbeddedResource Include="en_US.xml" />
+    <EmbeddedResource Include="eo.xml" />
+    <EmbeddedResource Include="es.xml" />
+    <EmbeddedResource Include="et.xml" />
+    <EmbeddedResource Include="eu.xml" />
+    <EmbeddedResource Include="fi.xml" />
+    <EmbeddedResource Include="fr.xml" />
+    <EmbeddedResource Include="ga.xml" />
+    <EmbeddedResource Include="gl.xml" />
+    <EmbeddedResource Include="grc.xml" />
+    <EmbeddedResource Include="gu.xml" />
+    <EmbeddedResource Include="hi.xml" />
+    <EmbeddedResource Include="hr.xml" />
+    <EmbeddedResource Include="hsb.xml" />
+    <EmbeddedResource Include="hu.xml" />
+    <EmbeddedResource Include="hy.xml" />
+    <EmbeddedResource Include="ia.xml" />
+    <EmbeddedResource Include="id.xml" />
+    <EmbeddedResource Include="is.xml" />
+    <EmbeddedResource Include="it.xml" />
+    <EmbeddedResource Include="kmr.xml" />
+    <EmbeddedResource Include="kn.xml" />
+    <EmbeddedResource Include="la.xml" />
+    <EmbeddedResource Include="lo.xml" />
+    <EmbeddedResource Include="lt.xml" />
+    <EmbeddedResource Include="lv.xml" />
+    <EmbeddedResource Include="ml.xml" />
+    <EmbeddedResource Include="mn.xml" />
+    <EmbeddedResource Include="mr.xml" />
+    <EmbeddedResource Include="nb.xml" />
+    <EmbeddedResource Include="nl.xml" />
+    <EmbeddedResource Include="nn.xml" />
+    <EmbeddedResource Include="no.xml" />
+    <EmbeddedResource Include="or.xml" />
+    <EmbeddedResource Include="pa.xml" />
+    <EmbeddedResource Include="pl.xml" />
+    <EmbeddedResource Include="pt.xml" />
+    <EmbeddedResource Include="readme.txt" />
+    <EmbeddedResource Include="ro.xml" />
+    <EmbeddedResource Include="ru.xml" />
+    <EmbeddedResource Include="sa.xml" />
+    <EmbeddedResource Include="sk.xml" />
+    <EmbeddedResource Include="sl.xml" />
+    <EmbeddedResource Include="sr_Cyrl.xml" />
+    <EmbeddedResource Include="sr_Latn.xml" />
+    <EmbeddedResource Include="sv.xml" />
+    <EmbeddedResource Include="ta.xml" />
+    <EmbeddedResource Include="te.xml" />
+    <EmbeddedResource Include="tk.xml" />
+    <EmbeddedResource Include="tr.xml" />
+    <EmbeddedResource Include="uk.xml" />
+    <EmbeddedResource Include="zh_Latn.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

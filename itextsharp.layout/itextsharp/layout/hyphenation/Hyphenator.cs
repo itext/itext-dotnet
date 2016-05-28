@@ -30,7 +30,7 @@ namespace iTextSharp.Layout.Hyphenation
 	/// </remarks>
 	public sealed class Hyphenator
 	{
-		private const String HYPHENATION_DEFAULT_RESOURCE = "com/itextpdf/hyph/";
+		private const String HYPHENATION_DEFAULT_RESOURCE = "iTextSharp.Hyph.";
 
 		/// <summary>Logging instance.</summary>
 		private static ILogger log = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Hyphenation.Hyphenator
