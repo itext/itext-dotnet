@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.2.1\lib\net40\nunit.framework.dll</HintPath>
     </Reference>
@@ -49,10 +44,6 @@
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itextsharp.io</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\itextsharp.pdftest\itextsharp.pdftest.csproj">
-      <Project>{F9880DC4-F015-4413-AF86-66D0E9512774}</Project>
-      <Name>itextsharp.pdftest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
