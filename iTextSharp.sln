@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.sign.tests", "it
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.hyph", "itextsharp.hyph\itextsharp.hyph.csproj", "{56137079-541A-425A-AB97-43AF63793C97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.font-asian", "itextsharp.font-asian\itextsharp.font-asian.csproj", "{0F10190C-7611-4378-A157-03BF2ED78E30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{56137079-541A-425A-AB97-43AF63793C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56137079-541A-425A-AB97-43AF63793C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56137079-541A-425A-AB97-43AF63793C97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F10190C-7611-4378-A157-03BF2ED78E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F10190C-7611-4378-A157-03BF2ED78E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F10190C-7611-4378-A157-03BF2ED78E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F10190C-7611-4378-A157-03BF2ED78E30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
