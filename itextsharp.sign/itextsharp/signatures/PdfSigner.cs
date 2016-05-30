@@ -846,7 +846,7 @@ namespace iTextSharp.Signatures
 			// TODO: setModified?
 			document.Close();
 			range = new long[exclusionLocations.Count * 2];
-			long byteRangePosition = exclusionLocations[PdfName.ByteRange].GetPosition();
+			long byteRangePosition = exclusionLocations.Get(PdfName.ByteRange).GetPosition();
 			exclusionLocations.JRemove(PdfName.ByteRange);
 			int idx = 1;
 			foreach (PdfLiteral lit1 in exclusionLocations.Values)
@@ -966,7 +966,7 @@ namespace iTextSharp.Signatures
 				foreach (PdfName key in update.KeySet())
 				{
 					PdfObject obj = update.Get(key);
-					PdfLiteral lit = exclusionLocations[key];
+					PdfLiteral lit = exclusionLocations.Get(key);
 					if (lit == null)
 					{
 						throw new ArgumentException("The key didn't reserve space in preclose");

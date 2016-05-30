@@ -62,7 +62,7 @@ namespace iTextSharp.Kernel.Font
 
 		public virtual Type3Glyph GetType3Glyph(int unicode)
 		{
-			return type3Glyphs[unicode];
+			return type3Glyphs.Get(unicode);
 		}
 
 		public override int GetPdfFontFlags()

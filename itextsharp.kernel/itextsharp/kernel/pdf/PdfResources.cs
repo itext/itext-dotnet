@@ -257,15 +257,15 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual PdfName GetResourceName<T>(PdfObjectWrapper<T> resource)
 			where T : PdfObject
 		{
-			return resourceToName[resource.GetPdfObject()];
+			return resourceToName.Get(resource.GetPdfObject());
 		}
 
 		public virtual PdfName GetResourceName(PdfObject resource)
 		{
-			PdfName resName = resourceToName[resource];
+			PdfName resName = resourceToName.Get(resource);
 			if (resName == null)
 			{
-				resName = resourceToName[resource.GetIndirectReference()];
+				resName = resourceToName.Get(resource.GetIndirectReference());
 			}
 			return resName;
 		}
@@ -399,7 +399,6 @@ namespace iTextSharp.Kernel.Pdf
 				{
 					PdfObject resource = resources.Get(resourceName, false);
 					resourceToName[resource] = resourceName;
-					GetPdfObject().GetAsDictionary(resourceType).Put(resourceName, resource);
 				}
 			}
 		}

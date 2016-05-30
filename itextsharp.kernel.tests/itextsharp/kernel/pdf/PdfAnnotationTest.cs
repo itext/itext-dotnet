@@ -124,7 +124,7 @@ namespace iTextSharp.Kernel.Pdf
 				 + "linkAnnotation03.pdf", sourceFolder + "cmp_linkAnnotation03.pdf", destinationFolder
 				, "diff_"));
 			document = new PdfDocument(new PdfReader(new FileStream(destinationFolder + "linkAnnotation03.pdf"
-				, FileMode.Open)));
+				, FileMode.Open, FileAccess.Read)));
 			page = document.GetPage(1);
 			NUnit.Framework.Assert.AreEqual(3, page.GetAnnotsSize());
 			IList<PdfAnnotation> annotations = page.GetAnnotations();
@@ -618,7 +618,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
-			Stream @is = new FileStream(audioFile, FileMode.Open);
+			Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			String @string = "";
 			for (int i = 0; i < 4; i++)
 			{
@@ -626,12 +626,12 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (@string.Equals("RIFF"))
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 				@is.Read();
 			}
 			else
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			}
 			PdfStream sound1 = new PdfStream(pdfDoc1, @is);
 			sound1.Put(PdfName.R, new PdfNumber(32117));
@@ -663,7 +663,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
-			Stream @is = new FileStream(audioFile, FileMode.Open);
+			Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			String @string = "";
 			for (int i = 0; i < 4; i++)
 			{
@@ -671,12 +671,12 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (@string.Equals("RIFF"))
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 				@is.Read();
 			}
 			else
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			}
 			PdfStream sound1 = new PdfStream(pdfDoc1, @is);
 			sound1.Put(PdfName.R, new PdfNumber(44100));
@@ -709,7 +709,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
-			Stream @is = new FileStream(audioFile, FileMode.Open);
+			Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100
 				, 100, 100), @is, 44100, PdfName.Signed, 2, 16);
 			page1.AddAnnotation(sound);
@@ -736,7 +736,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
-			Stream @is = new FileStream(audioFile, FileMode.Open);
+			Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100
 				, 100, 100), @is, 48000, PdfName.Signed, 2, 16);
 			page1.AddAnnotation(sound);
@@ -763,7 +763,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
-			Stream @is = new FileStream(audioFile, FileMode.Open);
+			Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			String header = "";
 			for (int i = 0; i < 4; i++)
 			{
@@ -771,12 +771,12 @@ namespace iTextSharp.Kernel.Pdf
 			}
 			if (header.Equals("RIFF"))
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 				@is.Read();
 			}
 			else
 			{
-				@is = new FileStream(audioFile, FileMode.Open);
+				@is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
 			}
 			PdfStream soundStream = new PdfStream(pdfDoc1, @is);
 			soundStream.Put(PdfName.R, new PdfNumber(48000));
@@ -873,7 +873,8 @@ namespace iTextSharp.Kernel.Pdf
 				).EndText().RestoreState();
 			PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
 			PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, new FileStream(sourceFolder
-				 + "sample.wav", FileMode.Open), null, "sample.wav", null, null, true);
+				 + "sample.wav", FileMode.Open, FileAccess.Read), null, "sample.wav", null, null
+				, true);
 			PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav"
 				, screen);
 			screen.SetAction(action);
@@ -902,7 +903,8 @@ namespace iTextSharp.Kernel.Pdf
 				(FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
 				).EndText().RestoreState();
 			PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-			Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open);
+			Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess
+				.Read);
 			MemoryStream baos = new MemoryStream();
 			int reads = @is.Read();
 			while (reads != -1)

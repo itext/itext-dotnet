@@ -167,7 +167,7 @@ namespace iTextSharp.IO.Font
 		/// </returns>
 		public virtual String[][] GetNames(int id)
 		{
-			IList<String[]> names = allNames[id];
+			IList<String[]> names = allNames.Get(id);
 			return names != null && names.Count > 0 ? ListToArray(names) : null;
 		}
 

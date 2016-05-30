@@ -235,10 +235,10 @@ namespace iTextSharp.Kernel.Xmp.Options
 		/// <returns>Returns the option name or undefined.</returns>
 		private String GetOptionName(int option)
 		{
-			IDictionary optionsNames = ProcureOptionNames();
+			Hashtable optionsNames = ProcureOptionNames();
 			int? key = option;
-			String result = (String)optionsNames[key];
-			if (result == null)
+			String result = null;
+			if (optionsNames.ContainsKey(key))
 			{
 				result = DefineOptionName(option);
 				if (result != null)
@@ -254,13 +254,13 @@ namespace iTextSharp.Kernel.Xmp.Options
 		}
 
 		/// <returns>Returns the optionNames map and creates it if required.</returns>
-		private IDictionary ProcureOptionNames()
+		private Hashtable ProcureOptionNames()
 		{
 			if (optionNames == null)
 			{
 				optionNames = new Hashtable();
 			}
-			return optionNames;
+			return (Hashtable)optionNames;
 		}
 	}
 }

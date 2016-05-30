@@ -410,7 +410,7 @@ namespace iTextSharp.Kernel.Pdf
 			for (int j = 0; j < filters.Size(); ++j)
 			{
 				PdfName filterName = (PdfName)filters.Get(j);
-				IFilterHandler filterHandler = filterHandlers[filterName];
+				IFilterHandler filterHandler = filterHandlers.Get(filterName);
 				if (filterHandler == null)
 				{
 					throw new PdfException(PdfException.Filter1IsNotSupported).SetMessageParams(filterName
@@ -821,7 +821,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (readAsDirect)
 			{
-				PdfName cachedName = PdfName.staticNames[tokens.GetStringValue()];
+				PdfName cachedName = PdfName.staticNames.Get(tokens.GetStringValue());
 				if (cachedName != null)
 				{
 					return cachedName;

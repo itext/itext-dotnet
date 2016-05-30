@@ -32,7 +32,7 @@ namespace iTextSharp.Forms
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
 			IDictionary<String, PdfFormField> fields = form.GetFormFields();
-			PdfFormField field = fields["Text1"];
+			PdfFormField field = fields.Get("Text1");
 			NUnit.Framework.Assert.IsTrue(fields.Count == 6);
 			NUnit.Framework.Assert.IsTrue(field.GetFieldName().ToUnicodeString().Equals("Text1"
 				));

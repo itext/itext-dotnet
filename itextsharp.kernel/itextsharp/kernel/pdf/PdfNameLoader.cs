@@ -15,7 +15,7 @@ namespace iTextSharp.Kernel.Pdf
 					FieldInfo curFld = fields[fldIdx];
 					if (curFld.FieldType.Equals(typeof(PdfName))) {
 						PdfName name = (PdfName)curFld.GetValue(null);
-						staticNames.Add(name.GetValue(), name);
+						staticNames.Put(name.GetValue(), name);
 					}
 				}
 			} catch {

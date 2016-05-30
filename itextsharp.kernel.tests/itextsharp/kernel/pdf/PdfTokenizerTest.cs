@@ -137,89 +137,98 @@ namespace iTextSharp.Kernel.Pdf
 			PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource
 				(data.GetBytes())));
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.StartDic
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.StartDic
 				);
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			PdfName name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Size", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			PdfNumber num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("70.", num.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Value ", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreNotSame("0.1", num.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Root", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Ref);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Ref);
 			PdfIndirectReference @ref = new PdfIndirectReference(null, tok.GetObjNr(), tok.GetGenNr
 				());
 			NUnit.Framework.Assert.AreEqual("46 0 R", @ref.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Info", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Ref);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Ref);
 			@ref = new PdfIndirectReference(null, tok.GetObjNr(), tok.GetGenNr());
 			NUnit.Framework.Assert.AreEqual("44 0 R", @ref.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("ID", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.StartArray
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.StartArray
 				);
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-			NUnit.Framework.Assert.AreSame(tok.IsHexString(), true);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String
+				);
+			NUnit.Framework.Assert.AreEqual(tok.IsHexString(), true);
 			PdfString str = new PdfString(tok.GetByteContent(), tok.IsHexString());
 			NUnit.Framework.Assert.AreEqual("some hex string ", str.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-			NUnit.Framework.Assert.AreSame(tok.IsHexString(), false);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String
+				);
+			NUnit.Framework.Assert.AreEqual(tok.IsHexString(), false);
 			str = new PdfString(tok.GetByteContent(), tok.IsHexString());
 			NUnit.Framework.Assert.AreEqual("some simple string ", str.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-			NUnit.Framework.Assert.AreSame(tok.IsHexString(), true);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String
+				);
+			NUnit.Framework.Assert.AreEqual(tok.IsHexString(), true);
 			str = new PdfString(tok.GetByteContent(), tok.IsHexString());
 			NUnit.Framework.Assert.AreEqual("\u008C%G\u00D5\u008DK\u00D2\u00C6\u00F3\u00D3+\u0083\u000B\u00E3%\u009D "
 				, str.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("-70.1", num.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("-0.2", num.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.EndArray
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.EndArray
 				);
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Name1", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("0", num.ToString());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Name);
 			name = new PdfName(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("Prev", name.GetValue());
 			tok.NextValidToken();
-			NUnit.Framework.Assert.AreSame(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
+			NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number
+				);
 			num = new PdfNumber(tok.GetByteContent());
 			NUnit.Framework.Assert.AreEqual("-116.23", num.ToString());
 		}

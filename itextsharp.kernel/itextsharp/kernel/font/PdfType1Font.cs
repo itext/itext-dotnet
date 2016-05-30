@@ -125,7 +125,7 @@ namespace iTextSharp.Kernel.Font
 				{
 					glyph = ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(
 						unicode));
-					if (glyph == null && (glyph = notdefGlyphs[unicode]) == null)
+					if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
 					{
 						// Handle special layout characters like sfthyphen (00AD).
 						// This glyphs will be skipped while converting to bytes

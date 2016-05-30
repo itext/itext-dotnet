@@ -652,7 +652,7 @@ namespace iTextSharp.Forms
 		/// </returns>
 		public virtual PdfFormField GetField(String fieldName)
 		{
-			return fields[fieldName];
+			return fields.Get(fieldName);
 		}
 
 		/// <summary>
@@ -802,8 +802,8 @@ namespace iTextSharp.Forms
 						PdfObject pageResources = page.GetResources().GetPdfObject();
 						if (xObjectResources != null && pageResources != null && xObjectResources == pageResources)
 						{
-							xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones[document.
-								GetPageNumber(page)]);
+							xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document
+								.GetPageNumber(page)));
 						}
 						if (tagPointer != null)
 						{
@@ -902,7 +902,7 @@ namespace iTextSharp.Forms
 		/// </param>
 		public virtual void PartialFormFlattening(String fieldName)
 		{
-			PdfFormField field = GetFormFields()[fieldName];
+			PdfFormField field = GetFormFields().Get(fieldName);
 			if (field != null)
 			{
 				fieldsForFlattening.Add(field);
@@ -923,7 +923,7 @@ namespace iTextSharp.Forms
 			{
 				return;
 			}
-			PdfFormField field = fields[oldName];
+			PdfFormField field = fields.Get(oldName);
 			if (field != null)
 			{
 				field.SetFieldName(newName);

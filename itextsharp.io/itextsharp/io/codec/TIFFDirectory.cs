@@ -432,7 +432,7 @@ namespace iTextSharp.IO.Codec
 			int i = -1;
 			if (fieldIndex.ContainsKey(tag))
 			{
-				i = (int)fieldIndex[tag];
+				i = (int)fieldIndex.Get(tag);
 			}
 			if (i == -1)
 			{
@@ -487,7 +487,7 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual byte GetFieldAsByte(int tag, int index)
 		{
-			int? i = fieldIndex[tag];
+			int? i = fieldIndex.Get(tag);
 			byte[] b = fields[(int)i].GetAsBytes();
 			return b[index];
 		}
@@ -519,7 +519,7 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual long GetFieldAsLong(int tag, int index)
 		{
-			int? i = fieldIndex[tag];
+			int? i = fieldIndex.Get(tag);
 			return fields[(int)i].GetAsLong(index);
 		}
 
@@ -550,7 +550,7 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual float GetFieldAsFloat(int tag, int index)
 		{
-			int? i = fieldIndex[tag];
+			int? i = fieldIndex.Get(tag);
 			return fields[(int)i].GetAsFloat(index);
 		}
 
@@ -577,7 +577,7 @@ namespace iTextSharp.IO.Codec
 		/// </remarks>
 		public virtual double GetFieldAsDouble(int tag, int index)
 		{
-			int? i = fieldIndex[tag];
+			int? i = fieldIndex.Get(tag);
 			return fields[(int)i].GetAsDouble(index);
 		}
 

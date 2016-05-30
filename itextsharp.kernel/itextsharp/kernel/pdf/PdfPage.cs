@@ -749,7 +749,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual IList<PdfOutline> GetOutlines(bool updateOutlines)
 		{
 			GetDocument().GetOutlines(updateOutlines);
-			return GetDocument().GetCatalog().GetPagesWithOutlines()[GetPdfObject()];
+			return GetDocument().GetCatalog().GetPagesWithOutlines().Get(GetPdfObject());
 		}
 
 		/// <returns>

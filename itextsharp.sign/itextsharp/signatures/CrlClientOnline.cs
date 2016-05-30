@@ -194,7 +194,7 @@ namespace iTextSharp.Signatures
 					MemoryStream bout = new MemoryStream();
 					while (true)
 					{
-						int n = inp.Read(buf, 0, buf.Length);
+						int n = inp.JRead(buf, 0, buf.Length);
 						if (n <= 0)
 						{
 							break;

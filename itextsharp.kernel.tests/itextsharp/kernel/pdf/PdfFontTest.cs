@@ -160,7 +160,8 @@ namespace iTextSharp.Kernel.Pdf
 			//                .restoreState()
 			//                .release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess
+				.Read));
 			type0Font = PdfFontFactory.CreateFont(ttf, "Identity-H");
 			NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "PdfType0Font expected");
 			NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected"
@@ -363,9 +364,9 @@ namespace iTextSharp.Kernel.Pdf
 				(pdfType1Font, 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState
 				().Rectangle(100, 500, 100, 100).Fill();
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
 				pfb), FontEncoding.FONT_SPECIFIC, true);
 			NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected"
@@ -429,7 +430,8 @@ namespace iTextSharp.Kernel.Pdf
 				, 72).ShowText("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 
 				100).Fill().Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess
+				.Read));
 			pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
 			NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
 				);
@@ -468,7 +470,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess
+				.Read));
 			pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
 			NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
 				);
@@ -508,7 +511,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
+			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess
+				.Read));
 			pdfFont = PdfFontFactory.CreateFont(ttf, "Identity-H");
 			NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font, "PdfTrueTypeFont expected"
 				);
@@ -902,7 +906,7 @@ namespace iTextSharp.Kernel.Pdf
 			try
 			{
 				byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-					, FileMode.Open));
+					, FileMode.Open, FileAccess.Read));
 				FontProgramFactory.CreateType1Font(null, pfb);
 			}
 			catch (iTextSharp.IO.IOException e)
@@ -937,7 +941,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CreateWrongPfb()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
 				afm), null);
 			byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes
@@ -952,7 +956,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect1()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected"
 				);
 		}
@@ -963,9 +967,9 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect2()
 		{
 			byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateType1Font(afm, pfb) is Type1Font
 				, "Type1 font expected");
 		}
@@ -976,7 +980,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect3()
 		{
 			byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, 
 				"TrueType (OTF) font expected");
 		}
@@ -987,7 +991,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect4()
 		{
 			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
 				"TrueType (TTF) expected");
 		}
@@ -998,7 +1002,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AutoDetect5()
 		{
 			byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
 				"TrueType (TTF) expected");
 		}
@@ -1028,7 +1032,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Rectangle(100, 500, 100, 100).Fill();
 			canvas.Release();
 			page.Flush();
-			byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open));
+			byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess
+				.Read));
 			pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true
 				, false);
 			pdfTrueTypeFont.SetSubset(true);

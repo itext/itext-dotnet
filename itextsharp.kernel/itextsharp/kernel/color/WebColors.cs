@@ -306,7 +306,7 @@ namespace iTextSharp.Kernel.Color
 			{
 				throw new PdfException(PdfException.ColorNotFound).SetMessageParams(colorName);
 			}
-			color = NAMES[colorName];
+			color = NAMES.Get(colorName);
 			return new DeviceRgb(color[0], color[1], color[2]);
 		}
 

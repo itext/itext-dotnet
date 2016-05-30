@@ -203,7 +203,7 @@ namespace iTextSharp.IO.Font
 				{
 					continue;
 				}
-				tableLocation = tableDirectory[name];
+				tableLocation = tableDirectory.Get(name);
 				if (tableLocation == null)
 				{
 					continue;
@@ -226,7 +226,7 @@ namespace iTextSharp.IO.Font
 			foreach (String name_1 in tableNames)
 			{
 				int len;
-				tableLocation = tableDirectory[name_1];
+				tableLocation = tableDirectory.Get(name_1);
 				if (tableLocation == null)
 				{
 					continue;
@@ -261,7 +261,7 @@ namespace iTextSharp.IO.Font
 			}
 			foreach (String name_2 in tableNames)
 			{
-				tableLocation = tableDirectory[name_2];
+				tableLocation = tableDirectory.Get(name_2);
 				if (tableLocation == null)
 				{
 					continue;
@@ -322,7 +322,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ReadLoca()
 		{
-			int[] tableLocation = tableDirectory["head"];
+			int[] tableLocation = tableDirectory.Get("head");
 			if (tableLocation == null)
 			{
 				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams
@@ -330,7 +330,7 @@ namespace iTextSharp.IO.Font
 			}
 			rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
 			locaShortTable = rf.ReadUnsignedShort() == 0;
-			tableLocation = tableDirectory["loca"];
+			tableLocation = tableDirectory.Get("loca");
 			if (tableLocation == null)
 			{
 				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams
@@ -425,7 +425,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void FlatGlyphs()
 		{
-			int[] tableLocation = tableDirectory["glyf"];
+			int[] tableLocation = tableDirectory.Get("glyf");
 			if (tableLocation == null)
 			{
 				throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams

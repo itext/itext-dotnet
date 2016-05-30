@@ -654,7 +654,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Release();
 			page1.Flush();
 			pdfDoc1.Close();
-			PdfReader reader1 = new PdfReader(new FileStream(file1, FileMode.Open));
+			PdfReader reader1 = new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read));
 			pdfDoc1 = new PdfDocument(reader1);
 			page1 = pdfDoc1.GetPage(1);
 			FileStream fos2 = new FileStream(file2, FileMode.Create);
@@ -704,7 +705,8 @@ namespace iTextSharp.Kernel.Pdf
 				page1.Flush();
 			}
 			pdfDoc1.Close();
-			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
+			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read)));
 			PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			for (int i_1 = 9; i_1 >= 0; i_1--)
@@ -754,7 +756,8 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.Release();
 			page1.Flush();
 			pdfDoc1.Close();
-			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
+			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read)));
 			page1 = pdfDoc1.GetPage(1);
 			PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
@@ -809,7 +812,8 @@ namespace iTextSharp.Kernel.Pdf
 				canvas.Release();
 			}
 			pdfDoc1.Close();
-			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
+			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read)));
 			for (int i_1 = 0; i_1 < 5; i_1++)
 			{
 				FileStream fos2 = new FileStream(destinationFolder + String.Format("copyPages4_{0}.pdf"
@@ -865,7 +869,7 @@ namespace iTextSharp.Kernel.Pdf
 			for (int i_1 = 0; i_1 < documentCount; i_1++)
 			{
 				FileStream fos1 = new FileStream(destinationFolder + String.Format("copyPages5_{0}.pdf"
-					, i_1 + 1), FileMode.Open);
+					, i_1 + 1), FileMode.Open, FileAccess.Read);
 				PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(fos1));
 				docs.Add(pdfDoc1);
 			}
@@ -923,22 +927,25 @@ namespace iTextSharp.Kernel.Pdf
 			canvas.EndText();
 			canvas.Release();
 			pdfDoc1.Close();
-			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)));
+			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read)));
 			FileStream fos2 = new FileStream(file2, FileMode.Create);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			pdfDoc2.AddPage(pdfDoc1.GetPage(1).CopyTo(pdfDoc2));
 			pdfDoc2.Close();
-			pdfDoc2 = new PdfDocument(new PdfReader(new FileStream(file2, FileMode.Open)));
+			pdfDoc2 = new PdfDocument(new PdfReader(new FileStream(file2, FileMode.Open, FileAccess
+				.Read)));
 			FileStream fos3 = new FileStream(file3, FileMode.Create);
 			PdfWriter writer3 = new PdfWriter(fos3);
 			PdfDocument pdfDoc3 = new PdfDocument(writer3);
 			pdfDoc3.AddPage(pdfDoc2.GetPage(1).CopyTo(pdfDoc3));
 			pdfDoc3.Close();
-			pdfDoc3 = new PdfDocument(new PdfReader(new FileStream(file3, FileMode.Open)));
+			pdfDoc3 = new PdfDocument(new PdfReader(new FileStream(file3, FileMode.Open, FileAccess
+				.Read)));
 			pdfDoc1.Close();
-			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open)), new 
-				PdfWriter(new FileStream(file1_upd, FileMode.Create)));
+			pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess
+				.Read)), new PdfWriter(new FileStream(file1_upd, FileMode.Create)));
 			pdfDoc1.AddPage(pdfDoc3.GetPage(1).CopyTo(pdfDoc1));
 			pdfDoc1.Close();
 			pdfDoc2.Close();
@@ -1178,10 +1185,11 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
 			FileStream streamGray = new FileStream(sourceFolder + "BlackWhite.icc", FileMode.
-				Open);
-			FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open);
+				Open, FileAccess.Read);
+			FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open, 
+				FileAccess.Read);
 			FileStream streamCmyk = new FileStream(sourceFolder + "USWebUncoated.icc", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			IccBased gray = new IccBased(streamGray, new float[] { 0.5f });
 			IccBased rgb = new IccBased(streamRgb, new float[] { 1.0f, 0.5f, 0f });
 			IccBased cmyk = new IccBased(streamCmyk, new float[] { 1.0f, 0.5f, 0f, 0f });
@@ -1217,10 +1225,11 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			FileStream streamGray = new FileStream(sourceFolder + "BlackWhite.icc", FileMode.
-				Open);
-			FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open);
+				Open, FileAccess.Read);
+			FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open, 
+				FileAccess.Read);
 			FileStream streamCmyk = new FileStream(sourceFolder + "USWebUncoated.icc", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfCieBasedCs.IccBased gray = (PdfCieBasedCs.IccBased)new IccBased(streamGray).GetColorSpace
 				();
 			PdfCieBasedCs.IccBased rgb = (PdfCieBasedCs.IccBased)new IccBased(streamRgb).GetColorSpace
@@ -1445,7 +1454,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
-			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open);
+			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess
+				.Read);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int reads = @is.Read();
 			while (reads != -1)
@@ -1472,7 +1482,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
-			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open);
+			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess
+				.Read);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int reads = @is.Read();
 			while (reads != -1)
@@ -1499,7 +1510,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
-			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open);
+			Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess
+				.Read);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int reads = @is.Read();
 			while (reads != -1)
@@ -1528,7 +1540,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
-			Stream @is = new FileStream(sourceFolder + "animated_fox_dog.gif", FileMode.Open);
+			Stream @is = new FileStream(sourceFolder + "animated_fox_dog.gif", FileMode.Open, 
+				FileAccess.Read);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int reads = @is.Read();
 			while (reads != -1)

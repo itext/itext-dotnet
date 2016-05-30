@@ -134,7 +134,7 @@ namespace iTextSharp.Barcodes.Qrcode
 			{
 				Initialize();
 			}
-			return NAME_TO_ECI[name];
+			return NAME_TO_ECI.Get(name);
 		}
 	}
 }

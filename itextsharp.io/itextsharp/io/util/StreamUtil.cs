@@ -246,7 +246,7 @@ namespace iTextSharp.IO.Util
 			byte[] buffer = new byte[TRANSFER_SIZE];
 			for (; ; )
 			{
-				int len = input.Read(buffer, 0, TRANSFER_SIZE);
+				int len = input.JRead(buffer, 0, TRANSFER_SIZE);
 				if (len > 0)
 				{
 					output.Write(buffer, 0, len);
@@ -366,7 +366,7 @@ namespace iTextSharp.IO.Util
 			int n = 0;
 			while (n < len)
 			{
-				int count = input.Read(b, off + n, len - n);
+				int count = input.JRead(b, off + n, len - n);
 				if (count < 0)
 				{
 					throw new EndOfStreamException();

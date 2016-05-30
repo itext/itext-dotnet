@@ -1284,7 +1284,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				if (pageLabels.ContainsKey(i))
 				{
-					PdfDictionary labelDictionary = (PdfDictionary)pageLabels[i];
+					PdfDictionary labelDictionary = (PdfDictionary)pageLabels.Get(i);
 					PdfNumber pageRange = labelDictionary.GetAsNumber(PdfName.St);
 					if (pageRange != null)
 					{
@@ -1394,7 +1394,7 @@ namespace iTextSharp.Kernel.Pdf
 		protected internal virtual void StoreLinkAnnotation(PdfPage page, PdfLinkAnnotation
 			 annotation)
 		{
-			IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations[page];
+			IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations.Get(page);
 			if (pageAnnotations == null)
 			{
 				pageAnnotations = new List<PdfLinkAnnotation>();
@@ -1878,7 +1878,7 @@ namespace iTextSharp.Kernel.Pdf
 						{
 							newAnnot.SetAction(copiedAction);
 						}
-						page2page[entry.Key].AddAnnotation(-1, newAnnot, false);
+						page2page.Get(entry.Key).AddAnnotation(-1, newAnnot, false);
 					}
 				}
 			}
@@ -1953,12 +1953,12 @@ namespace iTextSharp.Kernel.Pdf
 						if (!names.Contains(name))
 						{
 							PdfArray array = new PdfArray();
-							array.AddAll((PdfArray)srcNamedDestinations[name]);
+							array.AddAll((PdfArray)srcNamedDestinations.Get(name));
 							PdfObject pageObject = array.Get(0);
 							if (!pageObject.IsNumber())
 							{
 								PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-								PdfPage newPage = page2page[oldPage];
+								PdfPage newPage = page2page.Get(oldPage);
 								if (oldPage == null || newPage == null)
 								{
 									dest = null;
@@ -1984,7 +1984,7 @@ namespace iTextSharp.Kernel.Pdf
 							if (!pageObject.IsNumber())
 							{
 								PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-								PdfPage newPage = page2page[oldPage];
+								PdfPage newPage = page2page.Get(oldPage);
 								if (oldPage == null || newPage == null)
 								{
 									dest = null;

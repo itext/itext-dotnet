@@ -212,7 +212,7 @@ namespace iTextSharp.Kernel.Font
 		{
 			// TODO handle unicode value with cmap and use only glyphByCode
 			Glyph glyph = GetFontProgram().GetGlyph(unicode);
-			if (glyph == null && (glyph = notdefGlyphs[unicode]) == null)
+			if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
 			{
 				// Handle special layout characters like sfthyphen (00AD).
 				// This glyphs will be skipped while converting to bytes
@@ -298,7 +298,7 @@ namespace iTextSharp.Kernel.Font
 					Glyph glyph = glyphLine.Get(i);
 					glyphs[i] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
 					int code = glyph.GetCode();
-					if (longTag[code] == null)
+					if (longTag.Get(code) == null)
 					{
 						longTag[code] = new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
 							.GetUnicode() : 0 };
@@ -323,7 +323,7 @@ namespace iTextSharp.Kernel.Font
 		public override byte[] ConvertToBytes(Glyph glyph)
 		{
 			int code = glyph.GetCode();
-			if (longTag[code] == null)
+			if (longTag.Get(code) == null)
 			{
 				longTag[code] = new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
 					.GetUnicode() : 0 };
@@ -348,7 +348,7 @@ namespace iTextSharp.Kernel.Font
 				Glyph glyph = text.Get(i);
 				int code = glyph.GetCode();
 				bytes.Append((char)cmapEncoding.GetCmapCode(glyph.GetCode()));
-				if (longTag[code] == null)
+				if (longTag.Get(code) == null)
 				{
 					longTag[code] = new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
 						.GetUnicode() : 0 };
@@ -817,7 +817,8 @@ namespace iTextSharp.Kernel.Font
 		private String GetCompatibleUniMap(String registry)
 		{
 			String uniMap = "";
-			foreach (String name in CidFontProperties.GetRegistryNames()[registry + "_Uni"])
+			foreach (String name in CidFontProperties.GetRegistryNames().Get(registry + "_Uni"
+				))
 			{
 				uniMap = name;
 				if (name.EndsWith("V") && vertical)

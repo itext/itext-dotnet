@@ -409,7 +409,7 @@ namespace iTextSharp.Kernel.Pdf
 				>();
 			foreach (PdfName key in excludeKeys)
 			{
-				PdfObject obj = map[key];
+				PdfObject obj = map.Get(key);
 				if (obj != null)
 				{
 					excluded[key] = map.JRemove(key);
@@ -489,7 +489,7 @@ namespace iTextSharp.Kernel.Pdf
 				>();
 			foreach (PdfName key in excludeKeys)
 			{
-				PdfObject obj = map[key];
+				PdfObject obj = map.Get(key);
 				if (obj != null)
 				{
 					excluded[key] = map.JRemove(key);
@@ -507,11 +507,11 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (!asDirect)
 			{
-				return map[key];
+				return map.Get(key);
 			}
 			else
 			{
-				PdfObject obj = map[key];
+				PdfObject obj = map.Get(key);
 				if (obj != null && obj.GetObjectType() == INDIRECT_REFERENCE)
 				{
 					return ((PdfIndirectReference)obj).GetRefersTo(true);

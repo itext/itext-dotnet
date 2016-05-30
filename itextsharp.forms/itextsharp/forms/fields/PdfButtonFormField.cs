@@ -220,7 +220,7 @@ namespace iTextSharp.Forms.Fields
 		/// <exception cref="System.IO.IOException"/>
 		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image)
 		{
-			Stream @is = new FileStream(image, FileMode.Open);
+			Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int r = @is.Read();
 			while (r != -1)

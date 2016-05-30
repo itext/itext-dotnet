@@ -59,8 +59,8 @@ namespace iTextSharp.IO.Font
 		{
 			compatibleCmaps = cmaps;
 			InitializeCidFontNameAndStyle(fontName);
-			IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts()[fontNames.
-				GetFontName()];
+			IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames
+				.GetFontName());
 			if (fontDesc == null)
 			{
 				throw new iTextSharp.IO.IOException("no.such.predefined.font.1").SetMessageParams
@@ -120,26 +120,29 @@ namespace iTextSharp.IO.Font
 
 		private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc)
 		{
-			fontIdentification.SetPanose((String)fontDesc["Panose"]);
-			fontMetrics.SetItalicAngle(System.Convert.ToInt32((String)fontDesc["ItalicAngle"]
+			fontIdentification.SetPanose((String)fontDesc.Get("Panose"));
+			fontMetrics.SetItalicAngle(System.Convert.ToInt32((String)fontDesc.Get("ItalicAngle"
+				)));
+			fontMetrics.SetCapHeight(System.Convert.ToInt32((String)fontDesc.Get("CapHeight")
 				));
-			fontMetrics.SetCapHeight(System.Convert.ToInt32((String)fontDesc["CapHeight"]));
-			fontMetrics.SetTypoAscender(System.Convert.ToInt32((String)fontDesc["Ascent"]));
-			fontMetrics.SetTypoDescender(System.Convert.ToInt32((String)fontDesc["Descent"]));
-			fontMetrics.SetStemV(System.Convert.ToInt32((String)fontDesc["StemV"]));
-			pdfFontFlags = System.Convert.ToInt32((String)fontDesc["Flags"]);
-			String fontBBox = (String)fontDesc["FontBBox"];
+			fontMetrics.SetTypoAscender(System.Convert.ToInt32((String)fontDesc.Get("Ascent")
+				));
+			fontMetrics.SetTypoDescender(System.Convert.ToInt32((String)fontDesc.Get("Descent"
+				)));
+			fontMetrics.SetStemV(System.Convert.ToInt32((String)fontDesc.Get("StemV")));
+			pdfFontFlags = System.Convert.ToInt32((String)fontDesc.Get("Flags"));
+			String fontBBox = (String)fontDesc.Get("FontBBox");
 			StringTokenizer tk = new StringTokenizer(fontBBox, " []\r\n\t\f");
 			int? llx = System.Convert.ToInt32(tk.NextToken());
 			int? lly = System.Convert.ToInt32(tk.NextToken());
 			int? urx = System.Convert.ToInt32(tk.NextToken());
 			int? ury = System.Convert.ToInt32(tk.NextToken());
 			fontMetrics.UpdateBbox((int)llx, (int)lly, (int)urx, (int)ury);
-			registry = (String)fontDesc["Registry"];
+			registry = (String)fontDesc.Get("Registry");
 			String uniMap = GetCompatibleUniMap(registry);
 			if (uniMap != null)
 			{
-				IntHashtable metrics = (IntHashtable)fontDesc["W"];
+				IntHashtable metrics = (IntHashtable)fontDesc.Get("W");
 				CMapCidUni cid2Uni = FontCache.GetCid2UniCmap(uniMap);
 				avgWidth = 0;
 				foreach (int cid in cid2Uni.GetCids())
@@ -162,7 +165,8 @@ namespace iTextSharp.IO.Font
 		private static String GetCompatibleUniMap(String registry)
 		{
 			String uniMap = "";
-			foreach (String name in CidFontProperties.GetRegistryNames()[registry + "_Uni"])
+			foreach (String name in CidFontProperties.GetRegistryNames().Get(registry + "_Uni"
+				))
 			{
 				uniMap = name;
 				if (name.EndsWith("H"))

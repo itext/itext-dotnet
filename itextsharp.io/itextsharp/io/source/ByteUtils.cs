@@ -314,7 +314,7 @@ namespace iTextSharp.IO.Source
 					buf = buffer == null ? new ByteBuffer(intLen + (negative ? 1 : 0)) : buffer;
 					for (int i = 0; i < intLen; i++)
 					{
-						buf.Prepend(bytes[(int)(v % 10)]);
+						buf.Prepend(bytes[(int)Math.Abs(v % 10)]);
 						v /= 10;
 					}
 					if (negative)

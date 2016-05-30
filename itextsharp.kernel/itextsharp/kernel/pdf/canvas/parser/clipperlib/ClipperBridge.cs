@@ -309,12 +309,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 		public static void AddContour(Path path, IList<IntPoint> contour, bool? close)
 		{
 			IList<Point> floatContour = ConvertToFloatPoints(contour);
-			IEnumerator<Point> iter = floatContour.GetEnumerator();
-			Point point = iter.Current;
+			Point point = floatContour[0];
 			path.MoveTo((float)point.GetX(), (float)point.GetY());
-			while (iter.MoveNext())
+			for (int i = 1; i < floatContour.Count; i++)
 			{
-				point = iter.Current;
+				point = floatContour[i];
 				path.LineTo((float)point.GetX(), (float)point.GetY());
 			}
 			if ((bool)close)

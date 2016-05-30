@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.Pdf
 				for (int k = 0; k < numbers.Length; ++k)
 				{
 					ar.Add(new PdfNumber((int)numbers[k]));
-					ar.Add(items[numbers[k]]);
+					ar.Add(items.Get(numbers[k]));
 				}
 				dic.Put(PdfName.Nums, ar);
 				return dic;
@@ -133,7 +133,7 @@ namespace iTextSharp.Kernel.Pdf
 				for (; offset < end; ++offset)
 				{
 					arr.Add(new PdfNumber((int)numbers[offset]));
-					arr.Add(items[numbers[offset]]);
+					arr.Add(items.Get(numbers[offset]));
 				}
 				dic.Put(PdfName.Nums, arr);
 				dic.MakeIndirect(catalog.GetDocument());

@@ -274,7 +274,7 @@ namespace iTextSharp.Pdfa.Checker
 			PdfColorSpace colorSpace = null;
 			if (IsAlreadyChecked(image))
 			{
-				colorSpace = checkedObjectsColorspace[image];
+				colorSpace = checkedObjectsColorspace.Get(image);
 				CheckColorSpace(colorSpace, currentColorSpaces, true, null);
 				return;
 			}

@@ -139,13 +139,13 @@ namespace iTextSharp.IO.Font
 
 		public virtual Glyph GetGlyph(int unicode)
 		{
-			return unicodeToGlyph[unicode];
+			return unicodeToGlyph.Get(unicode);
 		}
 
 		// char code in case Type1 or index in case OpenType
 		public virtual Glyph GetGlyphByCode(int charCode)
 		{
-			return codeToGlyph[charCode];
+			return codeToGlyph.Get(charCode);
 		}
 
 		public virtual bool HasKernPairs()
@@ -159,7 +159,7 @@ namespace iTextSharp.IO.Font
 		/// <returns>the kerning to be applied</returns>
 		public virtual int GetKerning(int first, int second)
 		{
-			return GetKerning(unicodeToGlyph[first], unicodeToGlyph[second]);
+			return GetKerning(unicodeToGlyph.Get(first), unicodeToGlyph.Get(second));
 		}
 
 		/// <summary>Gets the kerning between two glyphs.</summary>
@@ -353,7 +353,7 @@ namespace iTextSharp.IO.Font
 
 		protected internal virtual void FixSpaceIssue()
 		{
-			Glyph space = unicodeToGlyph[32];
+			Glyph space = unicodeToGlyph.Get(32);
 			if (space != null)
 			{
 				codeToGlyph[space.GetCode()] = space;

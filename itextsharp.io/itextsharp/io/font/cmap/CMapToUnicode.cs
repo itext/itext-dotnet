@@ -99,7 +99,7 @@ namespace iTextSharp.IO.Font.Cmap
 			if (length == 1)
 			{
 				key = code[offset] & 0xff;
-				result = byteMappings[key];
+				result = byteMappings.Get(key);
 			}
 			else
 			{
@@ -109,7 +109,7 @@ namespace iTextSharp.IO.Font.Cmap
 					intKey <<= 8;
 					intKey += code[offset + 1] & 0xff;
 					key = intKey;
-					result = byteMappings[key];
+					result = byteMappings.Get(key);
 				}
 			}
 			return result;
@@ -122,7 +122,7 @@ namespace iTextSharp.IO.Font.Cmap
 
 		public virtual char[] Lookup(int code)
 		{
-			return byteMappings[code];
+			return byteMappings.Get(code);
 		}
 
 		public virtual ICollection<int> GetCodes()

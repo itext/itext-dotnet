@@ -157,7 +157,7 @@ namespace iTextSharp.Kernel.Utils
 					continue;
 				}
 				PdfOutputStream os = new PdfOutputStream(new IdelOutputStream());
-				os.Write(resources[@ref].Clone());
+				os.Write(resources.Get(@ref).Clone());
 				length += os.GetCurrentPos() - 1;
 			}
 			return length;

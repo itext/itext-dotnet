@@ -139,7 +139,7 @@ namespace iTextSharp.IO.Font
 			int v = -1;
 			if (names2unicode.ContainsKey(name))
 			{
-				v = (int)names2unicode[name];
+				v = (int)names2unicode.Get(name);
 			}
 			if (v == -1 && name.Length == 7 && name.ToLower().StartsWith("uni"))
 			{
@@ -156,7 +156,7 @@ namespace iTextSharp.IO.Font
 
 		public static String UnicodeToName(int num)
 		{
-			return unicode2names[num];
+			return unicode2names.Get(num);
 		}
 
 		public static int GetNameToUnicodeLength()

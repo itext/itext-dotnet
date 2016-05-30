@@ -338,8 +338,8 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		public virtual bool CompareXmls(String xmlFilePath1, String xmlFilePath2)
 		{
-			return CompareXmls(new FileStream(xmlFilePath1, FileMode.Open), new FileStream(xmlFilePath2
-				, FileMode.Open));
+			return CompareXmls(new FileStream(xmlFilePath1, FileMode.Open, FileAccess.Read), new FileStream(xmlFilePath2
+				, FileMode.Open, FileAccess.Read));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -546,8 +546,8 @@ namespace iTextSharp.Kernel.Utils
 				}
 				System.Console.Out.Write("Comparing page " + iTextSharp.IO.Util.JavaUtil.IntegerToString
 					(i + 1) + " (" + imageFiles[i] + ")...");
-				FileStream is1 = new FileStream(imageFiles[i], FileMode.Open);
-				FileStream is2 = new FileStream(cmpImageFiles[i], FileMode.Open);
+				FileStream is1 = new FileStream(imageFiles[i], FileMode.Open, FileAccess.Read);
+                FileStream is2 = new FileStream(cmpImageFiles[i], FileMode.Open, FileAccess.Read);
 				bool cmpResult = CompareStreams(is1, is2);
 				is1.Close();
 				is2.Close();
@@ -710,7 +710,13 @@ namespace iTextSharp.Kernel.Utils
 			{
 				cmdArray[i] = st.NextToken();
 			}
-		    Process p = Process.Start(execPath, @params);
+		    Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(execPath, @params);
+		    p.StartInfo.RedirectStandardOutput = true;
+		    p.StartInfo.RedirectStandardError = true;
+		    p.StartInfo.UseShellExecute = false;
+		    p.Start();
+		    
 			PrintProcessOutput(p);
 		    p.WaitForExit();
 			return true;
@@ -718,19 +724,14 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		private void PrintProcessOutput(Process p) {
-		    StreamReader bri = p.StandardOutput;
-		    StreamReader bre = p.StandardError;
-			String line;
-			while ((line = bri.ReadLine()) != null)
-			{
-				System.Console.Out.WriteLine(line);
-			}
-			bri.Close();
-			while ((line = bre.ReadLine()) != null)
-			{
-				System.Console.Out.WriteLine(line);
-			}
-			bre.Close();
+            StringBuilder bri = new StringBuilder();
+            StringBuilder bre = new StringBuilder();
+		    while (!p.HasExited) {
+		        bri.Append(p.StandardOutput.ReadToEnd());
+                bre.Append(p.StandardError.ReadToEnd());
+		    }
+            System.Console.Out.WriteLine(bri.ToString());
+            System.Console.Out.WriteLine(bre.ToString());
 		}
 
 		/// <exception cref="System.Exception"/>

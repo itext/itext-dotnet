@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Java.Lang;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Layout.Hyphenation;
@@ -95,7 +95,7 @@ namespace iTextSharp.Layout
 
 		public virtual T1 GetOwnProperty<T1>(int property)
 		{
-			return (T1)properties[property];
+			return (T1)properties.Get(property);
 		}
 
 		public virtual T1 GetDefaultProperty<T1>(int property)
@@ -758,7 +758,7 @@ namespace iTextSharp.Layout
 		/// <summary>Sets the writing system for this text element.</summary>
 		/// <param name="script">a new script type</param>
 		/// <returns>this Element.</returns>
-		public virtual T SetFontScript(Character.UnicodeScript script)
+		public virtual T SetFontScript(UnicodeScript? script)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.FONT_SCRIPT, script);
 			return (T)(Object)this;

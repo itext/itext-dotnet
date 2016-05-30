@@ -205,9 +205,9 @@ namespace iTextSharp.Kernel.Utils
 					processor.ProcessContent(page.GetContentBytes(), page.GetResources());
 					parsedTags[pageDic] = listener.GetMcidContent();
 				}
-				if (parsedTags[pageDic].ContainsKey(mcid))
+				if (parsedTags.Get(pageDic).ContainsKey(mcid))
 				{
-					tagContent = parsedTags[pageDic][mcid];
+					tagContent = parsedTags.Get(pageDic).Get(mcid);
 				}
 			}
 			else
@@ -346,7 +346,7 @@ namespace iTextSharp.Kernel.Utils
 				IDictionary<int, String> content = new Dictionary<int, String>();
 				foreach (int id in this.contentByMcid.Keys)
 				{
-					content[id] = this.contentByMcid[id].GetResultantText();
+					content[id] = this.contentByMcid.Get(id).GetResultantText();
 				}
 				return content;
 			}
@@ -361,7 +361,7 @@ namespace iTextSharp.Kernel.Utils
 						int mcid = textInfo.GetMcid();
 						if (mcid != -1)
 						{
-							ITextExtractionStrategy textExtractionStrategy = this.contentByMcid[mcid];
+							ITextExtractionStrategy textExtractionStrategy = this.contentByMcid.Get(mcid);
 							if (textExtractionStrategy == null)
 							{
 								textExtractionStrategy = new LocationTextExtractionStrategy();

@@ -339,7 +339,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag
 			(IAccessibleElement element, TagTreePointer tagPointer)
 		{
-			PdfStructElem connectedStructElem = connectedModelToStruct[element];
+			PdfStructElem connectedStructElem = connectedModelToStruct.Get(element);
 			if (connectedStructElem == null)
 			{
 				throw new PdfException(PdfException.GivenAccessibleElementIsNotConnectedToAnyTag);
@@ -500,13 +500,13 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 		internal virtual PdfStructElem GetStructConnectedToModel(IAccessibleElement element
 			)
 		{
-			return connectedModelToStruct[element];
+			return connectedModelToStruct.Get(element);
 		}
 
 		internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct
 			)
 		{
-			return connectedStructToModel[@struct.GetPdfObject()];
+			return connectedStructToModel.Get(@struct.GetPdfObject());
 		}
 
 		internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role)

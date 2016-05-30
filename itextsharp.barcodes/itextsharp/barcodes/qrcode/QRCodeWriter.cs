@@ -75,8 +75,8 @@ namespace iTextSharp.Barcodes.Qrcode
 			ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
 			if (hints != null)
 			{
-				ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel)hints[EncodeHintType
-					.ERROR_CORRECTION];
+				ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel)hints.Get(EncodeHintType
+					.ERROR_CORRECTION);
 				if (requestedECLevel != null)
 				{
 					errorCorrectionLevel = requestedECLevel;

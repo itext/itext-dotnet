@@ -65,7 +65,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 			if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag
 				))
 			{
-				return substMap[startGlyphId];
+				return substMap.Get(startGlyphId);
 			}
 			return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
 		}

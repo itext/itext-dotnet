@@ -108,13 +108,7 @@ namespace iTextSharp.IO {
 
         public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
-            if (dictionary.ContainsKey(key))
-            {
-                dictionary.Remove(key);
-            }
-
-            dictionary.Add(key, value);
-
+            dictionary[key] = value;
             return value;
         }
     }

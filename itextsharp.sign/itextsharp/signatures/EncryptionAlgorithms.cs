@@ -79,7 +79,7 @@ namespace iTextSharp.Signatures
 		/// <returns>an algorithm name (for instance "RSA")</returns>
 		public static String GetAlgorithm(String oid)
 		{
-			String ret = algorithmNames[oid];
+			String ret = algorithmNames.Get(oid);
 			if (ret == null)
 			{
 				return oid;

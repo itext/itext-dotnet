@@ -70,7 +70,7 @@ namespace iTextSharp.IO.Font.Otf
 			bool changed = false;
 			if (!openReader.IsSkip(g.GetCode(), lookupFlag))
 			{
-				int[] substSequence = substMap[g.GetCode()];
+				int[] substSequence = substMap.Get(g.GetCode());
 				if (substSequence != null)
 				{
 					line.SubstituteOneToMany(openReader, substSequence);

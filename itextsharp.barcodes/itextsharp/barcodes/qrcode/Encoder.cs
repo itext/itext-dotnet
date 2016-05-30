@@ -103,8 +103,8 @@ namespace iTextSharp.Barcodes.Qrcode
 		public static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary
 			<EncodeHintType, Object> hints, QRCode qrCode)
 		{
-			String encoding = hints == null ? null : (String)hints[EncodeHintType.CHARACTER_SET
-				];
+			String encoding = hints == null ? null : (String)hints.Get(EncodeHintType.CHARACTER_SET
+				);
 			if (encoding == null)
 			{
 				encoding = DEFAULT_BYTE_MODE_ENCODING;

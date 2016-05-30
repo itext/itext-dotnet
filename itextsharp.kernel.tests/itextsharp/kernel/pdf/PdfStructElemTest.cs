@@ -170,7 +170,7 @@ namespace iTextSharp.Kernel.Pdf
 			page2.Flush();
 			document.Close();
 			PdfReader reader = new PdfReader(new FileStream(destinationFolder + "structElemTest03.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			document = new PdfDocument(reader);
 			NUnit.Framework.Assert.AreEqual(2, (int)document.GetNextStructParentIndex());
 			PdfPage page = document.GetPage(1);
@@ -327,7 +327,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest01()
 		{
 			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open);
+				Open, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest01.pdf"
@@ -354,7 +354,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest02()
 		{
 			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open);
+				Open, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest02.pdf"
@@ -376,7 +376,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest03()
 		{
 			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open);
+				Open, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest03.pdf"
@@ -399,7 +399,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest04()
 		{
 			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open);
+				Open, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest04.pdf"
@@ -422,16 +422,16 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest05()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest05.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.CopyPagesTo(1, 1, document, 2);
 			PdfReader reader2 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document2 = new PdfDocument(reader2);
 			document2.CopyPagesTo(1, 3, document, 4);
 			document.Close();
@@ -447,7 +447,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest06()
 		{
 			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open);
+				Open, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest06.pdf"
@@ -467,7 +467,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest07()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest07.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(writer);
@@ -504,12 +504,12 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest08()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest08.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 1, document, 2);
@@ -524,12 +524,12 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest09()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest09.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 1, document, 2);
@@ -545,17 +545,17 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StructTreeCopyingTest10()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "88th_Academy_Awards.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest10.pdf"
 				, FileMode.Create));
 			PdfDocument document = new PdfDocument(reader, writer);
 			PdfReader reader1 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document1 = new PdfDocument(reader1);
 			document1.InitializeOutlines();
 			document1.CopyPagesTo(1, 3, document, 2);
 			PdfReader reader2 = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			PdfDocument document2 = new PdfDocument(reader2);
 			document2.InitializeOutlines();
 			document2.CopyPagesTo(1, 1, document, 4);

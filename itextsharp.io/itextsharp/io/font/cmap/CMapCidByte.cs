@@ -65,7 +65,7 @@ namespace iTextSharp.IO.Font.Cmap
 
 		public virtual byte[] Lookup(int cid)
 		{
-			byte[] ser = map[cid];
+			byte[] ser = map.Get(cid);
 			if (ser == null)
 			{
 				return EMPTY;
@@ -81,7 +81,7 @@ namespace iTextSharp.IO.Font.Cmap
 			IntHashtable code2cid = new IntHashtable(map.Count);
 			foreach (int cid in map.Keys)
 			{
-				byte[] bytes = map[cid];
+				byte[] bytes = map.Get(cid);
 				int byteCode = 0;
 				foreach (byte b in bytes)
 				{

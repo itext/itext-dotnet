@@ -335,7 +335,7 @@ namespace iTextSharp.IO.Image
 					decodeparms["Colors"] = (png.colorType == 3 || (png.colorType & 2) == 0) ? 1 : 3;
 					png.image.decodeParms = decodeparms;
 				}
-				if (png.additional["ColorSpace"] == null)
+				if (png.additional.Get("ColorSpace") == null)
 				{
 					png.additional["ColorSpace"] = GetColorspace(png);
 				}
@@ -492,7 +492,7 @@ namespace iTextSharp.IO.Image
 					int size;
 					while (len != 0)
 					{
-						size = pngStream.Read(buffer, 0, Math.Min(len, TRANSFERSIZE));
+						size = pngStream.JRead(buffer, 0, Math.Min(len, TRANSFERSIZE));
 						if (size < 0)
 						{
 							return;
@@ -691,7 +691,7 @@ namespace iTextSharp.IO.Image
 													int p = 0;
 													while (len > 0)
 													{
-														int r = pngStream.Read(icccom, p, len);
+														int r = pngStream.JRead(icccom, p, len);
 														if (r < 0)
 														{
 															throw new System.IO.IOException("premature.end.of.file");

@@ -80,7 +80,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 			this.length = 0;
 			this.buffer = new byte[chunk];
 			int read;
-			while ((read = @in.Read(this.buffer, this.length, chunk)) > 0)
+			while ((read = @in.JRead(this.buffer, this.length, chunk)) > 0)
 			{
 				this.length += read;
 				if (read == chunk)

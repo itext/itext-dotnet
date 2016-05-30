@@ -81,7 +81,7 @@ namespace iTextSharp.IO.Font.Otf
 			OpenTableLookup.GlyphIndexer gi = null;
 			foreach (GposLookupType5.MarkToLigature mb in marksligatures)
 			{
-				OtfMarkRecord omr = mb.marks[line.Get(line.idx).GetCode()];
+				OtfMarkRecord omr = mb.marks.Get(line.Get(line.idx).GetCode());
 				if (omr == null)
 				{
 					continue;
@@ -109,7 +109,7 @@ namespace iTextSharp.IO.Font.Otf
 						break;
 					}
 				}
-				IList<GposAnchor[]> gpas = mb.ligatures[gi.glyph.GetCode()];
+				IList<GposAnchor[]> gpas = mb.ligatures.Get(gi.glyph.GetCode());
 				if (gpas == null)
 				{
 					continue;

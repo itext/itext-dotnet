@@ -166,7 +166,7 @@ namespace iTextSharp.IO.Image
 					if (box.type == JP2_BPCC)
 					{
 						jp2.parameters.bpcBoxData = new byte[box.length - 8];
-						jpeg2000Stream.Read(jp2.parameters.bpcBoxData, 0, box.length - 8);
+						jpeg2000Stream.JRead(jp2.parameters.bpcBoxData, 0, box.length - 8);
 					}
 					else
 					{
@@ -245,7 +245,7 @@ namespace iTextSharp.IO.Image
 			if (box.length - readBytes > 0)
 			{
 				byte[] colorProfile = new byte[box.length - readBytes];
-				jpeg2000Stream.Read(colorProfile, 0, box.length - readBytes);
+				jpeg2000Stream.JRead(colorProfile, 0, box.length - readBytes);
 				colorSpecBox.SetColorProfile(colorProfile);
 			}
 			return colorSpecBox;

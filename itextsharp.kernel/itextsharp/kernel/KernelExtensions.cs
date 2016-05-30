@@ -29,7 +29,14 @@ namespace iTextSharp.Kernel {
         }
 
         public static int Read(this Stream stream, byte[] buffer) {
-            return stream.Read(buffer, 0, buffer.Length);
+            int size = stream.Read(buffer, 0, buffer.Length);
+            return size == 0 ? -1 : size;
+        }
+
+        public static int JRead(this Stream stream, byte[] buffer, int offset, int count)
+        {
+            int result = stream.Read(buffer, offset, count);
+            return result == 0 ? -1 : result;
         }
 
         public static void Write(this Stream stream, byte[] buffer) {
@@ -164,9 +171,18 @@ namespace iTextSharp.Kernel {
         }
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
-            TValue value;
-            col.TryGetValue(key, out value);
+            TValue value = default(TValue);
+            if (key != null)
+            {
+                col.TryGetValue(key, out value);
+            }
 
+            return value;
+        }
+
+        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            dictionary[key] = value;
             return value;
         }
 	}

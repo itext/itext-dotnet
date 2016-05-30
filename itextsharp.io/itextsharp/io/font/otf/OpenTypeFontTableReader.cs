@@ -81,7 +81,7 @@ namespace iTextSharp.IO.Font.Otf
 
 		public virtual Glyph GetGlyph(int index)
 		{
-			return indexGlyphMap[index];
+			return indexGlyphMap.Get(index);
 		}
 
 		public virtual OpenTableLookup GetLookupTable(int idx)

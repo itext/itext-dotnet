@@ -134,7 +134,7 @@ namespace iTextSharp.Forms
 										());
 									if (fieldsTo.ContainsKey(annotNameString))
 									{
-										field = MergeFieldsWithTheSameName(field, fieldsTo[annotNameString]);
+										field = MergeFieldsWithTheSameName(field, fieldsTo.Get(annotNameString));
 										ILogger logger = LoggerFactory.GetLogger(typeof(PdfPageFormCopier));
 										logger.Warn(String.Format(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString
 											));

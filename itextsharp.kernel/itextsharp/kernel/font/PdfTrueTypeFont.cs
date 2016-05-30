@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel.Font
 				Glyph glyph = ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
 					(unicode));
 				//TODO TrueType what if font is specific?
-				if (glyph == null && (glyph = notdefGlyphs[unicode]) == null)
+				if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
 				{
 					Glyph notdef = ((TrueTypeFont)GetFontProgram()).GetGlyphByCode(0);
 					if (notdef != null)

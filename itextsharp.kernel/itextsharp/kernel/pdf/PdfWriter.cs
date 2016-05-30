@@ -324,7 +324,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (!allowDuplicating && indirectReference != null)
 			{
 				copyObjectKey = GetCopyObjectKey(obj);
-				copiedIndirectReference = copiedObjects[copyObjectKey];
+				copiedIndirectReference = copiedObjects.Get(copyObjectKey);
 				if (copiedIndirectReference != null)
 				{
 					return copiedIndirectReference.GetRefersTo();
@@ -335,7 +335,7 @@ namespace iTextSharp.Kernel.Pdf
 				PdfObject copiedObject = SmartCopyObject(obj);
 				if (copiedObject != null)
 				{
-					return copiedObjects[GetCopyObjectKey(copiedObject)].GetRefersTo();
+					return copiedObjects.Get(GetCopyObjectKey(copiedObject)).GetRefersTo();
 				}
 			}
 			PdfObject newObject = obj.NewInstance();
@@ -525,7 +525,7 @@ namespace iTextSharp.Kernel.Pdf
 			if (obj.IsStream())
 			{
 				streamKey = new PdfWriter.ByteStore((PdfStream)obj, serialized);
-				PdfIndirectReference streamRef = streamMap[streamKey];
+				PdfIndirectReference streamRef = streamMap.Get(streamKey);
 				if (streamRef != null)
 				{
 					return streamRef;
@@ -537,7 +537,7 @@ namespace iTextSharp.Kernel.Pdf
 				if (obj.IsDictionary())
 				{
 					streamKey = new PdfWriter.ByteStore((PdfDictionary)obj, serialized);
-					PdfIndirectReference streamRef = streamMap[streamKey];
+					PdfIndirectReference streamRef = streamMap.Get(streamKey);
 					if (streamRef != null)
 					{
 						return streamRef.GetRefersTo();

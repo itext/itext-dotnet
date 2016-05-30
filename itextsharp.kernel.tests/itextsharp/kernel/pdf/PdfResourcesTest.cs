@@ -49,8 +49,10 @@ namespace iTextSharp.Kernel.Pdf
 			ICollection<PdfName> names = resources.GetResourceNames();
 			NUnit.Framework.Assert.AreEqual(2, names.Count);
 			IEnumerator<PdfName> iterator = names.GetEnumerator();
+			iterator.MoveNext();
 			PdfName n1 = iterator.Current;
 			NUnit.Framework.Assert.AreEqual("Gs1", n1.GetValue());
+			iterator.MoveNext();
 			PdfName n2 = iterator.Current;
 			NUnit.Framework.Assert.AreEqual("Gs2", n2.GetValue());
 			PdfExtGState egs3 = new PdfExtGState();

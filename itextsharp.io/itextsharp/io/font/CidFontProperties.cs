@@ -64,7 +64,7 @@ namespace iTextSharp.IO.Font
 			try
 			{
 				LoadRegistry();
-				foreach (String font in registryNames["fonts"])
+				foreach (String font in registryNames.Get("fonts"))
 				{
 					allFonts[font] = ReadFontProperties(font);
 				}
@@ -88,7 +88,7 @@ namespace iTextSharp.IO.Font
 			{
 				return false;
 			}
-			if (!registryNames["fonts"].Contains(fontName))
+			if (!registryNames.Get("fonts").Contains(fontName))
 			{
 				return false;
 			}
@@ -96,8 +96,8 @@ namespace iTextSharp.IO.Font
 			{
 				return true;
 			}
-			String registry = (String)allFonts[fontName]["Registry"];
-			ICollection<String> encodings = registryNames[registry];
+			String registry = (String)allFonts.Get(fontName).Get("Registry");
+			ICollection<String> encodings = registryNames.Get(registry);
 			return encodings != null && encodings.Contains(enc);
 		}
 
@@ -110,7 +110,7 @@ namespace iTextSharp.IO.Font
 					String registry = e.Key;
 					foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts)
 					{
-						if (registry.Equals(e1.Value["Registry"]))
+						if (registry.Equals(e1.Value.Get("Registry")))
 						{
 							return e1.Key;
 						}

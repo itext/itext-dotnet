@@ -45,7 +45,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddOutlinesWithNamedDestinations01()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-				, FileMode.Open));
+				, FileMode.Open, FileAccess.Read));
 			String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
 			FileStream fos = new FileStream(filename, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);
@@ -291,7 +291,7 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void ReadEncryptedDocumentWithFullCompression()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode
-				.Open), new ReaderProperties().SetPassword("123".GetBytes()));
+				.Open, FileAccess.Read), new ReaderProperties().SetPassword("123".GetBytes()));
 			PdfDocument pdfDocument = new PdfDocument(reader);
 			PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
 				.AcroForm);

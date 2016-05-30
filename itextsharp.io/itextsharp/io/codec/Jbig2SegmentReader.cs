@@ -223,7 +223,7 @@ namespace iTextSharp.IO.Codec
 				MemoryStream os = new MemoryStream();
 				foreach (int sn in segs.Keys)
 				{
-					Jbig2SegmentReader.Jbig2Segment s = segs[sn];
+					Jbig2SegmentReader.Jbig2Segment s = segs.Get(sn);
 					// pdf reference 1.4, section 3.3.6 Jbig2Decode Filter
 					// D.3 Embedded organisation
 					if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE))
@@ -311,7 +311,7 @@ namespace iTextSharp.IO.Codec
 				IEnumerator<int> segs = segments.Keys.GetEnumerator();
 				while (segs.MoveNext())
 				{
-					ReadSegment(segments[segs.Current]);
+					ReadSegment(segments.Get(segs.Current));
 				}
 			}
 		}
@@ -335,7 +335,7 @@ namespace iTextSharp.IO.Codec
 				int page_bitmap_width = ra.ReadInt();
 				int page_bitmap_height = ra.ReadInt();
 				ra.Seek(last);
-				Jbig2SegmentReader.Jbig2Page p = pages[s.page];
+				Jbig2SegmentReader.Jbig2Page p = pages.Get(s.page);
 				if (p == null)
 				{
 					throw new iTextSharp.IO.IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1"
@@ -458,7 +458,7 @@ namespace iTextSharp.IO.Codec
 			}
 			if (segment_page_association > 0)
 			{
-				pages[segment_page_association].AddSegment(s);
+				pages.Get(segment_page_association).AddSegment(s);
 			}
 			else
 			{
@@ -512,17 +512,17 @@ namespace iTextSharp.IO.Codec
 
 		public virtual int GetPageHeight(int i)
 		{
-			return pages[i].pageBitmapHeight;
+			return pages.Get(i).pageBitmapHeight;
 		}
 
 		public virtual int GetPageWidth(int i)
 		{
-			return pages[i].pageBitmapWidth;
+			return pages.Get(i).pageBitmapWidth;
 		}
 
 		public virtual Jbig2SegmentReader.Jbig2Page GetPage(int page)
 		{
-			return pages[page];
+			return pages.Get(page);
 		}
 
 		public virtual byte[] GetGlobal(bool for_embedding)

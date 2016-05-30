@@ -258,7 +258,7 @@ namespace iTextSharp.Signatures
 			MemoryStream baos = new MemoryStream();
 			byte[] buffer = new byte[1024];
 			int bytesRead = 0;
-			while ((bytesRead = inp.Read(buffer, 0, buffer.Length)) >= 0)
+			while ((bytesRead = inp.JRead(buffer, 0, buffer.Length)) >= 0)
 			{
 				baos.Write(buffer, 0, bytesRead);
 			}

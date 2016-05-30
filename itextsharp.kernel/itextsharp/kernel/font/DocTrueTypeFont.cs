@@ -139,7 +139,7 @@ namespace iTextSharp.Kernel.Font
 					fontProgram.avgWidth /= fontProgram.codeToGlyph.Count;
 				}
 			}
-			if (fontProgram.codeToGlyph[0] == null)
+			if (fontProgram.codeToGlyph.Get(0) == null)
 			{
 				fontProgram.codeToGlyph[0] = new Glyph(0, dw, -1);
 			}

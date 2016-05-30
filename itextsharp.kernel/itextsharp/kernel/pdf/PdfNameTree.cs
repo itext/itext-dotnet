@@ -83,18 +83,21 @@ namespace iTextSharp.Kernel.Pdf
 				if (dictionary != null)
 				{
 					items = ReadTree(dictionary);
-					for (IEnumerator<KeyValuePair<String, PdfObject>> it = items.GetEnumerator(); it.
-						MoveNext(); )
+					//@TODO It's done for auto porting to itextsharp, cuz u cannot change collection which you iterate
+					// in for loop (even if you change only value of a Map entry) in .NET. Java doesn't have such a problem.
+					// We should find a better solution in the future.
+					ICollection<String> keys = new HashSet<String>();
+					keys.AddAll(items.Keys);
+					foreach (String key in keys)
 					{
-						KeyValuePair<String, PdfObject> entry = it.Current;
-						PdfArray arr = GetNameArray(entry.Value);
+						PdfArray arr = GetNameArray(items.Get(key));
 						if (arr != null)
 						{
-							items[entry.Key] = arr;
+							items[key] = arr;
 						}
 						else
 						{
-							items.JRemove(entry.Key);
+							items.JRemove(key);
 						}
 					}
 				}
@@ -147,7 +150,7 @@ namespace iTextSharp.Kernel.Pdf
 				foreach (String name in names)
 				{
 					ar.Add(new PdfString(name, null));
-					ar.Add(items[name]);
+					ar.Add(items.Get(name));
 				}
 				dic.Put(PdfName.Names, ar);
 				return dic;
@@ -168,7 +171,7 @@ namespace iTextSharp.Kernel.Pdf
 				for (; offset < end; ++offset)
 				{
 					arr.Add(new PdfString(names[offset], null));
-					arr.Add(items[names[offset]]);
+					arr.Add(items.Get(names[offset]));
 				}
 				dic.Put(PdfName.Names, arr);
 				dic.MakeIndirect(catalog.GetDocument());

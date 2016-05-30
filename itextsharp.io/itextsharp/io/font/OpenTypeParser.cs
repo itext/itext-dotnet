@@ -313,7 +313,7 @@ namespace iTextSharp.IO.Font
 		{
 			if (fontName == null)
 			{
-				IList<String[]> names = allNameEntries[6];
+				IList<String[]> names = allNameEntries.Get(6);
 				if (names != null && names.Count > 0)
 				{
 					fontName = names[0][3];
@@ -555,7 +555,7 @@ namespace iTextSharp.IO.Font
 		protected internal virtual void CheckCff()
 		{
 			int[] table_location;
-			table_location = tables["CFF "];
+			table_location = tables.Get("CFF ");
 			if (table_location != null)
 			{
 				cff = true;
@@ -584,7 +584,7 @@ namespace iTextSharp.IO.Font
 			int numberOfHMetrics = hhea.numberOfHMetrics;
 			int unitsPerEm = head.unitsPerEm;
 			int[] table_location;
-			table_location = tables["hmtx"];
+			table_location = tables.Get("hmtx");
 			if (table_location == null)
 			{
 				if (fileName != null)
@@ -620,7 +620,7 @@ namespace iTextSharp.IO.Font
 		protected internal virtual IntHashtable ReadKerning(int unitsPerEm)
 		{
 			int[] table_location;
-			table_location = tables["kern"];
+			table_location = tables.Get("kern");
 			IntHashtable kerning = new IntHashtable();
 			if (table_location == null)
 			{
@@ -665,7 +665,7 @@ namespace iTextSharp.IO.Font
 		protected internal virtual int[][] ReadBbox(int unitsPerEm)
 		{
 			int[] tableLocation;
-			tableLocation = tables["head"];
+			tableLocation = tables.Get("head");
 			if (tableLocation == null)
 			{
 				if (fileName != null)
@@ -681,7 +681,7 @@ namespace iTextSharp.IO.Font
 			}
 			raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
 			bool locaShortTable = raf.ReadUnsignedShort() == 0;
-			tableLocation = tables["loca"];
+			tableLocation = tables.Get("loca");
 			if (tableLocation == null)
 			{
 				return null;
@@ -706,7 +706,7 @@ namespace iTextSharp.IO.Font
 					locaTable[k] = raf.ReadInt();
 				}
 			}
-			tableLocation = tables["glyf"];
+			tableLocation = tables.Get("glyf");
 			if (tableLocation == null)
 			{
 				if (fileName != null)
@@ -740,7 +740,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual int ReadMaxGlyphId()
 		{
-			int[] table_location = tables["maxp"];
+			int[] table_location = tables.Get("maxp");
 			if (table_location == null)
 			{
 				return 65536;
@@ -758,7 +758,7 @@ namespace iTextSharp.IO.Font
 		private void ReadNameTable()
 		{
 			int[] table_location;
-			table_location = tables["name"];
+			table_location = tables.Get("name");
 			if (table_location == null)
 			{
 				if (fileName != null)
@@ -787,7 +787,7 @@ namespace iTextSharp.IO.Font
 				IList<String[]> names;
 				if (allNameEntries.ContainsKey(nameID))
 				{
-					names = allNameEntries[nameID];
+					names = allNameEntries.Get(nameID);
 				}
 				else
 				{
@@ -818,7 +818,7 @@ namespace iTextSharp.IO.Font
 		private void ReadHheaTable()
 		{
 			int[] table_location;
-			table_location = tables["hhea"];
+			table_location = tables.Get("hhea");
 			if (table_location == null)
 			{
 				if (fileName != null)
@@ -853,7 +853,7 @@ namespace iTextSharp.IO.Font
 		private void ReadHeadTable()
 		{
 			int[] table_location;
-			table_location = tables["head"];
+			table_location = tables.Get("head");
 			if (table_location == null)
 			{
 				if (fileName != null)
@@ -893,7 +893,7 @@ namespace iTextSharp.IO.Font
 		private void ReadOs_2Table()
 		{
 			int[] table_location;
-			table_location = tables["OS/2"];
+			table_location = tables.Get("OS/2");
 			if (table_location == null)
 			{
 				if (fileName != null)
@@ -966,7 +966,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		private void ReadPostTable()
 		{
-			int[] table_location = tables["post"];
+			int[] table_location = tables.Get("post");
 			if (table_location != null)
 			{
 				raf.Seek(table_location[0] + 4);
@@ -998,7 +998,7 @@ namespace iTextSharp.IO.Font
 		private void ReadCmapTable()
 		{
 			int[] table_location;
-			table_location = tables["cmap"];
+			table_location = tables.Get("cmap");
 			if (table_location == null)
 			{
 				if (fileName != null)

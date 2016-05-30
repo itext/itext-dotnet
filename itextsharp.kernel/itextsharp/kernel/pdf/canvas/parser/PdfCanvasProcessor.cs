@@ -436,10 +436,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		protected internal virtual void InvokeOperator(PdfLiteral @operator, IList<PdfObject
 			> operands)
 		{
-			IContentOperator op = operators[@operator.ToString()];
+			IContentOperator op = operators.Get(@operator.ToString());
 			if (op == null)
 			{
-				op = operators[DEFAULT_OPERATOR];
+				op = operators.Get(DEFAULT_OPERATOR);
 			}
 			op.Invoke(this, @operator, operands);
 		}
@@ -476,7 +476,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		protected internal virtual PdfFont GetFont(PdfDictionary fontDict)
 		{
 			int n = fontDict.GetIndirectReference().GetObjNumber();
-			PdfFont font = cachedFonts[n];
+			PdfFont font = cachedFonts.Get(n);
 			if (font == null)
 			{
 				font = PdfFontFactory.CreateFont(fontDict);
@@ -544,10 +544,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		{
 			PdfStream xobjectStream = GetXObjectStream(xobjectName);
 			PdfName subType = xobjectStream.GetAsName(PdfName.Subtype);
-			IXObjectDoHandler handler = xobjectDoHandlers[subType];
+			IXObjectDoHandler handler = xobjectDoHandlers.Get(subType);
 			if (handler == null)
 			{
-				handler = xobjectDoHandlers[PdfName.Default];
+				handler = xobjectDoHandlers.Get(PdfName.Default);
 			}
 			handler.HandleXObject(this, xobjectStream);
 		}

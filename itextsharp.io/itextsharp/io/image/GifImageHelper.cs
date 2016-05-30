@@ -248,7 +248,7 @@ namespace iTextSharp.IO.Image
 			{
 				return gif.blockSize = 0;
 			}
-			gif.blockSize = gif.input.Read(gif.block, 0, gif.blockSize);
+			gif.blockSize = gif.input.JRead(gif.block, 0, gif.blockSize);
 			return gif.blockSize;
 		}
 

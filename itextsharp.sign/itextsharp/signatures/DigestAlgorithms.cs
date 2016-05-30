@@ -203,7 +203,7 @@ namespace iTextSharp.Signatures
 		/// <returns>a digest name (for instance "MD5")</returns>
 		public static String GetDigest(String oid)
 		{
-			String ret = digestNames[oid];
+			String ret = digestNames.Get(oid);
 			if (ret == null)
 			{
 				return oid;
@@ -221,7 +221,7 @@ namespace iTextSharp.Signatures
 		{
 			if (fixNames.ContainsKey(algo))
 			{
-				return fixNames[algo];
+				return fixNames.Get(algo);
 			}
 			return algo;
 		}
@@ -234,7 +234,7 @@ namespace iTextSharp.Signatures
 		/// <returns>An oid.</returns>
 		public static String GetAllowedDigest(String name)
 		{
-			return allowedDigests[name.ToUpper()];
+			return allowedDigests.Get(name.ToUpper());
 		}
 	}
 }

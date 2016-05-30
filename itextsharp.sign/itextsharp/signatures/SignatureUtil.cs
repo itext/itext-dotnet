@@ -200,7 +200,7 @@ namespace iTextSharp.Signatures
 					(), AsLongArray(b)));
 				byte[] buf = new byte[8192];
 				int rd;
-				while ((rd = rg.Read(buf, 0, buf.Length)) > 0)
+				while ((rd = rg.JRead(buf, 0, buf.Length)) > 0)
 				{
 					pkcs7.Update(buf, 0, rd);
 				}
@@ -338,7 +338,7 @@ namespace iTextSharp.Signatures
 			{
 				return 0;
 			}
-			return sigNames[field][1];
+			return sigNames.Get(field)[1];
 		}
 
 		public virtual String GetTranslatedFieldName(String name)
@@ -366,7 +366,7 @@ namespace iTextSharp.Signatures
 			{
 				return null;
 			}
-			int length = sigNames[field][0];
+			int length = sigNames.Get(field)[0];
 			RandomAccessFileOrArray raf = document.GetReader().GetSafeFile();
 			return new RASInputStream(new WindowRandomAccessSource(raf.CreateSourceView(), 0, 
 				length));
@@ -384,7 +384,7 @@ namespace iTextSharp.Signatures
 			}
 			try
 			{
-				return sigNames[name][0] == document.GetReader().GetFileLength();
+				return sigNames.Get(name)[0] == document.GetReader().GetFileLength();
 			}
 			catch (System.IO.IOException e)
 			{

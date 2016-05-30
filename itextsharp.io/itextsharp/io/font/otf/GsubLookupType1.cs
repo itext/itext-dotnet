@@ -71,7 +71,7 @@ namespace iTextSharp.IO.Font.Otf
 			bool changed = false;
 			if (!openReader.IsSkip(g.GetCode(), lookupFlag))
 			{
-				int? substCode = substMap[g.GetCode()];
+				int? substCode = substMap.Get(g.GetCode());
 				if (substCode != null)
 				{
 					line.SubstituteOneToOne(openReader, (int)substCode);

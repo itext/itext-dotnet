@@ -62,14 +62,14 @@ namespace iTextSharp.Kernel.Pdf.Navigation
 		public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
 			)
 		{
-			PdfArray array = (PdfArray)names[((PdfName)GetPdfObject()).GetValue()];
+			PdfArray array = (PdfArray)names.Get(((PdfName)GetPdfObject()).GetValue());
 			return array != null ? array.Get(0) : null;
 		}
 
 		public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
 			> names)
 		{
-			PdfArray array = (PdfArray)names[GetPdfObject()];
+			PdfArray array = (PdfArray)names.Get(GetPdfObject());
 			if (array != null)
 			{
 				return PdfDestination.MakeDestination(array);

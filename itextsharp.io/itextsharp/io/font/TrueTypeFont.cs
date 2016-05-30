@@ -246,7 +246,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ReadGdefTable()
 		{
-			int[] gdef = fontParser.tables["GDEF"];
+			int[] gdef = fontParser.tables.Get("GDEF");
 			if (gdef != null)
 			{
 				gdefTable = new OpenTypeGdefTableReader(fontParser.raf, gdef[0]);
@@ -260,7 +260,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ReadGsubTable()
 		{
-			int[] gsub = fontParser.tables["GSUB"];
+			int[] gsub = fontParser.tables.Get("GSUB");
 			if (gsub != null)
 			{
 				gsubTable = new GlyphSubstitutionTableReader(fontParser.raf, gsub[0], gdefTable, 
@@ -271,7 +271,7 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void ReadGposTable()
 		{
-			int[] gpos = fontParser.tables["GPOS"];
+			int[] gpos = fontParser.tables.Get("GPOS");
 			if (gpos != null)
 			{
 				gposTable = new GlyphPositioningTableReader(fontParser.raf, gpos[0], gdefTable, codeToGlyph
@@ -371,7 +371,7 @@ namespace iTextSharp.IO.Font
 			avgWidth = 0;
 			foreach (int charCode in cmap.Keys)
 			{
-				int index = cmap[charCode][0];
+				int index = cmap.Get(charCode)[0];
 				if (index >= glyphWidths.Length)
 				{
 					ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));

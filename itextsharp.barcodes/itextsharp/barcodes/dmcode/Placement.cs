@@ -63,7 +63,7 @@ namespace iTextSharp.Barcodes.Dmcode
 		public static short[] DoPlacement(int nrow, int ncol)
 		{
 			int key = nrow * 1000 + ncol;
-			short[] pc = cache[key];
+			short[] pc = cache.Get(key);
 			if (pc != null)
 			{
 				return pc;

@@ -155,7 +155,7 @@ namespace iTextSharp.IO.Font
 				long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
 				if (kernPairs.ContainsKey(record))
 				{
-					return (int)kernPairs[record];
+					return (int)kernPairs.Get(record);
 				}
 				else
 				{
@@ -519,7 +519,7 @@ namespace iTextSharp.IO.Font
 				Glyph space = null;
 				if (unicodeToGlyph.ContainsKey(0x0020))
 				{
-					space = unicodeToGlyph[0x0020];
+					space = unicodeToGlyph.Get(0x0020);
 				}
 				if (space != null)
 				{

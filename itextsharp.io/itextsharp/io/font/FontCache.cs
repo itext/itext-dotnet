@@ -79,7 +79,7 @@ namespace iTextSharp.IO.Font
 			try
 			{
 				LoadRegistry();
-				foreach (String font in registryNames[FONTS_PROP])
+				foreach (String font in registryNames.Get(FONTS_PROP))
 				{
 					allFonts[font] = ReadFontProperties(font);
 				}
@@ -107,7 +107,7 @@ namespace iTextSharp.IO.Font
 			}
 			else
 			{
-				if (!registryNames[FONTS_PROP].Contains(fontName))
+				if (!registryNames.Get(FONTS_PROP).Contains(fontName))
 				{
 					return false;
 				}
@@ -124,7 +124,7 @@ namespace iTextSharp.IO.Font
 					String registry = e.Key;
 					foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts)
 					{
-						if (registry.Equals(e1.Value[REGISTRY_PROP]))
+						if (registry.Equals(e1.Value.Get(REGISTRY_PROP)))
 						{
 							return e1.Key;
 						}
@@ -136,8 +136,9 @@ namespace iTextSharp.IO.Font
 
 		public static ICollection<String> GetCompatibleCmaps(String fontName)
 		{
-			String registry = (String)FontCache.GetAllFonts()[fontName][REGISTRY_PROP];
-			return registryNames[registry];
+			String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP
+				);
+			return registryNames.Get(registry);
 		}
 
 		public static IDictionary<String, IDictionary<String, Object>> GetAllFonts()
@@ -180,7 +181,7 @@ namespace iTextSharp.IO.Font
 			FontProgram font = null;
 			if (fontCache.ContainsKey(key))
 			{
-				font = fontCache[key];
+				font = fontCache.Get(key);
 			}
 			return font;
 		}
@@ -244,8 +245,8 @@ namespace iTextSharp.IO.Font
 				{
 					fontProperties[(String)entry.Key] = entry.Value;
 				}
-				fontProperties[W_PROP] = CreateMetric((String)fontProperties[W_PROP]);
-				fontProperties[W2_PROP] = CreateMetric((String)fontProperties[W2_PROP]);
+				fontProperties[W_PROP] = CreateMetric((String)fontProperties.Get(W_PROP));
+				fontProperties[W2_PROP] = CreateMetric((String)fontProperties.Get(W2_PROP));
 				return fontProperties;
 			}
 			finally

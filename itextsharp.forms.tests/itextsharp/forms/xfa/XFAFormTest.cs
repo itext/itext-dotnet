@@ -66,7 +66,7 @@ namespace iTextSharp.Forms.Xfa
 			String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
 			PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
 				.Create)));
-			XfaForm xfa = new XfaForm(new FileStream(XML, FileMode.Open));
+			XfaForm xfa = new XfaForm(new FileStream(XML, FileMode.Open, FileAccess.Read));
 			xfa.Write(doc);
 			doc.AddNewPage();
 			doc.Close();

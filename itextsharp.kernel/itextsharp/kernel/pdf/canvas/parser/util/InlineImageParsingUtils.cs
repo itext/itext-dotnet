@@ -165,7 +165,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
 				; key = ps.ReadObject())
 			{
 				PdfObject value = ps.ReadObject();
-				PdfName resolvedKey = inlineImageEntryAbbreviationMap[(PdfName)key];
+				PdfName resolvedKey = inlineImageEntryAbbreviationMap.Get((PdfName)key);
 				if (resolvedKey == null)
 				{
 					resolvedKey = (PdfName)key;
@@ -192,7 +192,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
 			{
 				if (value is PdfName)
 				{
-					PdfName altValue = inlineImageFilterAbbreviationMap[(PdfName)value];
+					PdfName altValue = inlineImageFilterAbbreviationMap.Get((PdfName)value);
 					if (altValue != null)
 					{
 						return altValue;
@@ -217,7 +217,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
 			{
 				if (key == PdfName.ColorSpace && value is PdfName)
 				{
-					PdfName altValue = inlineImageColorSpaceAbbreviationMap[(PdfName)value];
+					PdfName altValue = inlineImageColorSpaceAbbreviationMap.Get((PdfName)value);
 					if (altValue != null)
 					{
 						return altValue;

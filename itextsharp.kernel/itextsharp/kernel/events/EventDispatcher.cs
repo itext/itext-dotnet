@@ -59,7 +59,7 @@ namespace iTextSharp.Kernel.Events
 		public virtual void AddEventHandler(String type, IEventHandler handler)
 		{
 			RemoveEventHandler(type, handler);
-			IList<IEventHandler> handlers = eventHandlers[type];
+			IList<IEventHandler> handlers = eventHandlers.Get(type);
 			if (handlers == null)
 			{
 				handlers = new List<IEventHandler>();
@@ -75,7 +75,7 @@ namespace iTextSharp.Kernel.Events
 
 		public virtual void DispatchEvent(Event @event, bool delayed)
 		{
-			IList<IEventHandler> handlers = eventHandlers[@event.GetType()];
+			IList<IEventHandler> handlers = eventHandlers.Get(@event.GetType());
 			if (handlers != null)
 			{
 				foreach (IEventHandler handler in handlers)
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Events
 
 		public virtual void RemoveEventHandler(String type, IEventHandler handler)
 		{
-			IList<IEventHandler> handlers = eventHandlers[type];
+			IList<IEventHandler> handlers = eventHandlers.Get(type);
 			if (handlers == null)
 			{
 				return;

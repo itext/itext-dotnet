@@ -97,7 +97,7 @@ namespace iTextSharp.Kernel.Font
 			{
 				if (uniMaps.ContainsKey(uniMap))
 				{
-					return uniMaps[uniMap];
+					return uniMaps.Get(uniMap);
 				}
 				CMapToUnicode toUnicode;
 				if (PdfEncodings.IDENTITY_H.Equals(uniMap))

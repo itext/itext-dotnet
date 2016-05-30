@@ -94,29 +94,29 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		public virtual IDictionary<int, PdfMcr> GetPageMarkedContentReferences(PdfPage page
 			)
 		{
-			return pageToPageMcrs[page.GetPdfObject().GetIndirectReference()];
+			return pageToPageMcrs.Get(page.GetPdfObject().GetIndirectReference());
 		}
 
 		public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid)
 		{
-			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
-				)];
-			return pageMcrs != null ? pageMcrs[mcid] : null;
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference
+				());
+			return pageMcrs != null ? pageMcrs.Get(mcid) : null;
 		}
 
 		public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int
 			 structParentIndex)
 		{
-			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
-				)];
-			return pageMcrs != null ? (PdfObjRef)pageMcrs[StructParentIndexIntoKey(structParentIndex
-				)] : null;
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference
+				());
+			return pageMcrs != null ? (PdfObjRef)pageMcrs.Get(StructParentIndexIntoKey(structParentIndex
+				)) : null;
 		}
 
 		public virtual int GetNextMcidForPage(PdfPage page)
 		{
-			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[page.GetPdfObject().GetIndirectReference
-				()];
+			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(page.GetPdfObject().GetIndirectReference
+				());
 			if (pageMcrs == null || pageMcrs.Count == 0)
 			{
 				return 0;
@@ -161,8 +161,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		public virtual void RegisterMcr(PdfMcr mcr)
 		{
-			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[mcr.GetPageObject().GetIndirectReference
-				()];
+			SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(mcr.GetPageObject().GetIndirectReference
+				());
 			if (pageMcrs == null)
 			{
 				pageMcrs = new SortedDictionary<int, PdfMcr>();
@@ -201,8 +201,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				throw new PdfException(PdfException.CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed
 					);
 			}
-			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs[pageDict.GetIndirectReference(
-				)];
+			IDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference
+				());
 			if (pageMcrs != null)
 			{
 				if (mcrToUnregister is PdfObjRef)

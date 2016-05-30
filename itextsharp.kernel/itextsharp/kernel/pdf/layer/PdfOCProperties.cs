@@ -359,7 +359,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				{
 					foreach (PdfObject offLayer in off)
 					{
-						layerMap[(PdfIndirectReference)offLayer].on = false;
+						layerMap.Get((PdfIndirectReference)offLayer).on = false;
 					}
 				}
 				PdfArray locked = d.GetAsArray(PdfName.Locked);
@@ -367,7 +367,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				{
 					foreach (PdfObject lockedLayer in locked)
 					{
-						layerMap[(PdfIndirectReference)lockedLayer].locked = true;
+						layerMap.Get((PdfIndirectReference)lockedLayer).locked = true;
 					}
 				}
 				PdfArray orderArray = d.GetAsArray(PdfName.Order);
@@ -397,7 +397,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 				PdfObject item = orderArray.Get(i);
 				if (item.GetObjectType() == PdfObject.DICTIONARY)
 				{
-					PdfLayer layer = layerMap[item.GetIndirectReference()];
+					PdfLayer layer = layerMap.Get(item.GetIndirectReference());
 					if (layer != null)
 					{
 						layers.Add(layer);

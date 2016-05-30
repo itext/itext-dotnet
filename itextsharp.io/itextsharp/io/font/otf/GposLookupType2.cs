@@ -129,7 +129,7 @@ namespace iTextSharp.IO.Font.Otf
 				}
 				bool changed = false;
 				Glyph g1 = line.Get(line.idx);
-				IDictionary<int, GposLookupType2.PairValueFormat> m = gposMap[g1.GetCode()];
+				IDictionary<int, GposLookupType2.PairValueFormat> m = gposMap.Get(g1.GetCode());
 				if (m != null)
 				{
 					OpenTableLookup.GlyphIndexer gi = new OpenTableLookup.GlyphIndexer();
@@ -138,7 +138,7 @@ namespace iTextSharp.IO.Font.Otf
 					gi.NextGlyph(openReader, lookupFlag);
 					if (gi.glyph != null)
 					{
-						GposLookupType2.PairValueFormat pv = m[gi.glyph.GetCode()];
+						GposLookupType2.PairValueFormat pv = m.Get(gi.glyph.GetCode());
 						if (pv != null)
 						{
 							Glyph g2 = gi.glyph;
@@ -217,7 +217,7 @@ namespace iTextSharp.IO.Font.Otf
 					return false;
 				}
 				int c1 = classDef1.GetOtfClass(g1.GetCode());
-				GposLookupType2.PairValueFormat[] pvs = posSubs[c1];
+				GposLookupType2.PairValueFormat[] pvs = posSubs.Get(c1);
 				if (pvs == null)
 				{
 					return false;

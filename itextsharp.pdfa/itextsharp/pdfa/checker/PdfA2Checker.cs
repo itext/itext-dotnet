@@ -859,7 +859,7 @@ namespace iTextSharp.Pdfa.Checker
 			PdfColorSpace colorSpace = null;
 			if (IsAlreadyChecked(image))
 			{
-				colorSpace = checkedObjectsColorspace[image];
+				colorSpace = checkedObjectsColorspace.Get(image);
 				CheckColorSpace(colorSpace, currentColorSpaces, true, null);
 				return;
 			}
@@ -1063,7 +1063,7 @@ namespace iTextSharp.Pdfa.Checker
 			{
 				bool altCSIsTheSame = false;
 				bool tintTransformIsTheSame = false;
-				PdfArray sameNameSeparation = separationColorSpaces[separation.GetAsName(0)];
+				PdfArray sameNameSeparation = separationColorSpaces.Get(separation.GetAsName(0));
 				PdfObject cs1 = separation.Get(2);
 				PdfObject cs2 = sameNameSeparation.Get(2);
 				altCSIsTheSame = IsAltCSIsTheSame(cs1, cs2);

@@ -80,7 +80,7 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
 				gidx.line = line;
-				IList<int[]> ligs = ligatures[g.GetCode()];
+				IList<int[]> ligs = ligatures.Get(g.GetCode());
 				foreach (int[] lig in ligs)
 				{
 					match = true;

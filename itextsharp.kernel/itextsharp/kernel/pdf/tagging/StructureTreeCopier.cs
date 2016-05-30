@@ -294,7 +294,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 				//TODO It is possible, that pg will not be present in the page2page map. Consider the situation,
 				// that we want to copy structElem because it has marked content dictionary reference, which belongs to the page from page2page,
 				// but the structElem itself has /Pg which value could be arbitrary page.
-				copied.Put(PdfName.Pg, page2page[pg]);
+				copied.Put(PdfName.Pg, page2page.Get(pg));
 			}
 			PdfObject k = source.Get(PdfName.K);
 			if (k != null)

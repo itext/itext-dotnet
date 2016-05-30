@@ -168,12 +168,12 @@ namespace iTextSharp.Signatures
 					for (int i = 0; i < set.Count; i++)
 					{
 						Asn1Sequence s = (Asn1Sequence)set.GetObjectAt(i);
-						String id = DefaultSymbols[(DerObjectIdentifier)s.GetObjectAt(0)];
+						String id = DefaultSymbols.Get((DerObjectIdentifier)s.GetObjectAt(0));
 						if (id == null)
 						{
 							continue;
 						}
-						IList<String> vs = values[id];
+						IList<String> vs = values.Get(id);
 						if (vs == null)
 						{
 							vs = new List<String>();
@@ -201,7 +201,7 @@ namespace iTextSharp.Signatures
 					/*MessageLocalization.getComposedMessage("badly.formated.directory.string")*/
 					String id = token.JSubstring(0, index).ToUpper();
 					String value = token.Substring(index + 1);
-					IList<String> vs = values[id];
+					IList<String> vs = values.Get(id);
 					if (vs == null)
 					{
 						vs = new List<String>();
@@ -217,7 +217,7 @@ namespace iTextSharp.Signatures
 			/// <returns>the (first) field value</returns>
 			public virtual String GetField(String name)
 			{
-				IList<String> vs = values[name];
+				IList<String> vs = values.Get(name);
 				return vs == null ? null : (String)vs[0];
 			}
 
@@ -226,7 +226,7 @@ namespace iTextSharp.Signatures
 			/// <returns>List</returns>
 			public virtual IList<String> GetFieldArray(String name)
 			{
-				return values[name];
+				return values.Get(name);
 			}
 
 			/// <summary>Getter for values.</summary>

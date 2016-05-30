@@ -29,7 +29,8 @@ namespace iTextSharp.Forms
 			String srcFilename = sourceFolder + "formFlatteningSource.pdf";
 			String filename = destinationFolder + "formFlatteningTest01.pdf";
 			PdfDocument doc = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode
-				.Open)), new PdfWriter(new FileStream(filename, FileMode.Create)));
+				.Open, FileAccess.Read)), new PdfWriter(new FileStream(filename, FileMode.Create
+				)));
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
 			form.FlattenFields();
 			doc.Close();

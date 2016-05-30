@@ -263,7 +263,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </returns>
 		public virtual PdfNameTree GetNameTree(PdfName treeType)
 		{
-			PdfNameTree tree = nameTrees[treeType];
+			PdfNameTree tree = nameTrees.Get(treeType);
 			if (tree == null)
 			{
 				tree = new PdfNameTree(this, treeType);
@@ -484,7 +484,7 @@ namespace iTextSharp.Kernel.Pdf
 				GetOutlines(false);
 				if (pagesWithOutlines.Count > 0)
 				{
-					foreach (PdfOutline outline in pagesWithOutlines[page.GetPdfObject()])
+					foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject()))
 					{
 						outline.RemoveOutline();
 					}
@@ -519,7 +519,7 @@ namespace iTextSharp.Kernel.Pdf
 					if (oldPage.GetPdfObject() == pageObject)
 					{
 						PdfArray array = new PdfArray((PdfArray)dest);
-						array.Set(0, page2page[oldPage].GetPdfObject());
+						array.Set(0, page2page.Get(oldPage).GetPdfObject());
 						d = new PdfExplicitDestination(array);
 					}
 				}
@@ -531,7 +531,7 @@ namespace iTextSharp.Kernel.Pdf
 					PdfNameTree destsTree = GetNameTree(PdfName.Dests);
 					IDictionary<String, PdfObject> dests = destsTree.GetNames();
 					String name = ((PdfString)dest).ToUnicodeString();
-					PdfArray array = (PdfArray)dests[name];
+					PdfArray array = (PdfArray)dests.Get(name);
 					if (array != null)
 					{
 						PdfObject pageObject = array.Get(0);
@@ -539,7 +539,7 @@ namespace iTextSharp.Kernel.Pdf
 						{
 							if (oldPage.GetPdfObject() == pageObject)
 							{
-								array.Set(0, page2page[oldPage].GetPdfObject());
+								array.Set(0, page2page.Get(oldPage).GetPdfObject());
 								d = new PdfStringDestination(name);
 								toDocument.AddNamedDestination(name, array);
 							}
@@ -556,7 +556,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
 			if (pageObj != null)
 			{
-				IList<PdfOutline> outs = pagesWithOutlines[pageObj];
+				IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);
 				if (outs == null)
 				{
 					outs = new List<PdfOutline>();

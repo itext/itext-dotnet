@@ -426,7 +426,7 @@ namespace iTextSharp.Signatures
 				PdfArray crl = new PdfArray();
 				PdfArray cert = new PdfArray();
 				PdfDictionary vri = new PdfDictionary();
-				foreach (byte[] b in validated[vkey].crls)
+				foreach (byte[] b in validated.Get(vkey).crls)
 				{
 					PdfStream ps = new PdfStream(b);
 					ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
@@ -434,14 +434,14 @@ namespace iTextSharp.Signatures
 					crl.Add(ps);
 					crls.Add(ps);
 				}
-				foreach (byte[] b_1 in validated[vkey].ocsps)
+				foreach (byte[] b_1 in validated.Get(vkey).ocsps)
 				{
 					PdfStream ps = new PdfStream(b_1);
 					ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
 					ocsp.Add(ps);
 					ocsps.Add(ps);
 				}
-				foreach (byte[] b_2 in validated[vkey].certs)
+				foreach (byte[] b_2 in validated.Get(vkey).certs)
 				{
 					PdfStream ps = new PdfStream(b_2);
 					ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);

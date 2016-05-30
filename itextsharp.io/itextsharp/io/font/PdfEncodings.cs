@@ -1,5 +1,4 @@
 /*
-$Id$
 
 This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
@@ -60,7 +59,7 @@ namespace iTextSharp.IO.Font
 		public const String CP1250 = "Cp1250";
 
 		/// <summary>A possible encoding.</summary>
-        public const String CP1252 = "Windows-1252";
+		public const String CP1252 = "Windows-1252";
 
 		/// <summary>A possible encoding.</summary>
 		public const String CP1253 = "Cp1253";
@@ -69,10 +68,10 @@ namespace iTextSharp.IO.Font
 		public const String CP1257 = "Cp1257";
 
 		/// <summary>A possible encoding.</summary>
-        public const String WINANSI = "Windows-1252";
+		public const String WINANSI = "Windows-1252";
 
 		/// <summary>A possible encoding.</summary>
-		public const String MACROMAN = "MacRoman";
+		public const String MACROMAN = "x-mac-romanian";
 
 		/// <summary>A possible encoding.</summary>
 		public const String SYMBOL = "Symbol";

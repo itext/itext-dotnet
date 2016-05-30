@@ -204,7 +204,7 @@ namespace iTextSharp.IO.Color
 
 		public static int? GetIccNumberOfComponents(byte[] data)
 		{
-			return cstags[GetIccColorSpaceName(data)];
+			return cstags.Get(GetIccColorSpaceName(data));
 		}
 
 		public virtual byte[] GetData()

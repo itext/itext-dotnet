@@ -984,7 +984,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < sizeOfPalette)
 			{
-				int r = bmp.inputStream.Read(bmp.palette, bytesRead, sizeOfPalette - bytesRead);
+				int r = bmp.inputStream.JRead(bmp.palette, bytesRead, sizeOfPalette - bytesRead);
 				if (r < 0)
 				{
 					throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IncompletePalette);
@@ -1013,7 +1013,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				bytesRead += bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				bytesRead += bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 			}
 			if (bmp.isBottomUp)
 			{
@@ -1056,7 +1056,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				bytesRead += bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				bytesRead += bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 			}
 			if (bmp.isBottomUp)
 			{
@@ -1100,7 +1100,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				bytesRead += bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				bytesRead += bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 			}
 			if (bmp.isBottomUp)
 			{
@@ -1142,7 +1142,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				int r = bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				int r = bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 				if (r < 0)
 				{
 					break;
@@ -1318,7 +1318,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				bytesRead += bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				bytesRead += bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 			}
 			// Since data is compressed, decompress it
 			byte[] val = DecodeRLE(true, values, bmp);
@@ -1355,7 +1355,7 @@ namespace iTextSharp.IO.Image
 			int bytesRead = 0;
 			while (bytesRead < imSize)
 			{
-				bytesRead += bmp.inputStream.Read(values, bytesRead, imSize - bytesRead);
+				bytesRead += bmp.inputStream.JRead(values, bytesRead, imSize - bytesRead);
 			}
 			// Decompress the RLE4 compressed data.
 			byte[] val = DecodeRLE(false, values, bmp);

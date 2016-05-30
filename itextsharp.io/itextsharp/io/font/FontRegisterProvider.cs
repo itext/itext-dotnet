@@ -141,7 +141,7 @@ namespace iTextSharp.IO.Font
 				return null;
 			}
 			String lowerCaseFontName = fontName.ToLower();
-			IList<String> family = fontFamilies[lowerCaseFontName];
+			IList<String> family = fontFamilies.Get(lowerCaseFontName);
 			if (family != null)
 			{
 				lock (family)
@@ -183,7 +183,7 @@ namespace iTextSharp.IO.Font
 			)
 		{
 			FontProgram fontProgram = null;
-			fontName = fontNames[fontName.ToLower()];
+			fontName = fontNames.Get(fontName.ToLower());
 			// the font is not registered as truetype font
 			if (fontName != null)
 			{
@@ -217,7 +217,7 @@ namespace iTextSharp.IO.Font
 			IList<String> tmp;
 			lock (fontFamilies)
 			{
-				tmp = fontFamilies[familyName];
+				tmp = fontFamilies.Get(familyName);
 				if (tmp == null)
 				{
 					tmp = new List<String>();
