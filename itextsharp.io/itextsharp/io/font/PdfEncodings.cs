@@ -56,16 +56,16 @@ namespace iTextSharp.IO.Font
 		public const String IDENTITY_V = "Identity-V";
 
 		/// <summary>A possible encoding.</summary>
-		public const String CP1250 = "Cp1250";
+		public const String CP1250 = "Windows-1250";
 
 		/// <summary>A possible encoding.</summary>
 		public const String CP1252 = "Windows-1252";
 
 		/// <summary>A possible encoding.</summary>
-		public const String CP1253 = "Cp1253";
+		public const String CP1253 = "Windows-1253";
 
 		/// <summary>A possible encoding.</summary>
-		public const String CP1257 = "Cp1257";
+		public const String CP1257 = "Windows-1257";
 
 		/// <summary>A possible encoding.</summary>
 		public const String WINANSI = "Windows-1252";
@@ -80,10 +80,10 @@ namespace iTextSharp.IO.Font
 		public const String ZAPFDINGBATS = "ZapfDingbats";
 
 		/// <summary>This is the encoding to be used to output text in Unicode.</summary>
-		public const String UNICODE_BIG = "UnicodeBig";
+		public const String UNICODE_BIG = "UTF-16";
 
 		/// <summary>This is the encoding to be used to output text for Identity-H/V CMaps.</summary>
-		public const String UNICODE_BIG_UNMARKED = "UnicodeBigUnmarked";
+		public const String UNICODE_BIG_UNMARKED = "UTF-16BE";
 
 		/// <summary>
 		/// This is the default encoding to be used for converting Strings into

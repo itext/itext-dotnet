@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.Kernel.Pdf
@@ -71,7 +72,8 @@ namespace iTextSharp.Kernel.Pdf
 			pdfString = new PdfString(tok.GetByteContent(), tok.IsHexString());
 			NUnit.Framework.Assert.AreEqual("\r\n\tUser\u0090s Guide", pdfString.GetValue());
 			String testUnicodeString = "ΑΒΓΗ€•♣⋅";
-			pdfString = new PdfString(testUnicodeString.GetBytes("UnicodeBig"), false);
+			pdfString = new PdfString(testUnicodeString.GetBytes(PdfEncodings.UNICODE_BIG), false
+				);
 			NUnit.Framework.Assert.AreEqual(testUnicodeString, pdfString.ToUnicodeString());
 			pdfString = new PdfString("FEFF041F04400438043204350442".GetBytes(), true);
 			NUnit.Framework.Assert.AreEqual("\u041F\u0440\u0438\u0432\u0435\u0442", pdfString

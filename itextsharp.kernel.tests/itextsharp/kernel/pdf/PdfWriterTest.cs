@@ -609,9 +609,9 @@ namespace iTextSharp.Kernel.Pdf
 			try
 			{
 				fos.Write(1);
-				NUnit.Framework.Assert.Fail("IOException expected");
+				NUnit.Framework.Assert.Fail("Exception expected");
 			}
-			catch (System.IO.IOException)
+			catch (Exception)
 			{
 			}
 		}
