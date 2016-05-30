@@ -93,7 +93,7 @@ namespace iTextSharp.IO.Font
 				Stream resource = null;
 				try
 				{
-					String resourcePath = FontConstants.RESOURCE_PATH + "afm/" + afmPath + ".afm";
+					String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
 					resource = ResourceUtil.GetResourceStream(resourcePath);
 					if (resource == null)
 					{

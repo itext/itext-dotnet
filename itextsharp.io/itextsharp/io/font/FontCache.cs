@@ -53,6 +53,7 @@ namespace iTextSharp.IO.Font
 	public class FontCache
 	{
 		/// <summary>The path to the font resources.</summary>
+		[Obsolete]
 		public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
 
 		private static readonly IDictionary<String, IDictionary<String, Object>> allFonts
@@ -201,8 +202,8 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		private static void LoadRegistry()
 		{
-			Stream resource = ResourceUtil.GetResourceStream(CMAP_RESOURCE_PATH + CJK_REGISTRY_FILENAME
-				);
+			Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
+				 + CJK_REGISTRY_FILENAME);
 			try
 			{
 				Properties p = new Properties();
@@ -234,8 +235,8 @@ namespace iTextSharp.IO.Font
 		/// <exception cref="System.IO.IOException"/>
 		private static IDictionary<String, Object> ReadFontProperties(String name)
 		{
-			Stream resource = ResourceUtil.GetResourceStream(CMAP_RESOURCE_PATH + name + ".properties"
-				);
+			Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
+				 + name + ".properties");
 			try
 			{
 				Properties p = new Properties();

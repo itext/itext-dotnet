@@ -55,7 +55,7 @@ namespace iTextSharp.IO.Font.Cmap
 		/// <exception cref="System.IO.IOException"/>
 		public virtual PdfTokenizer GetLocation(String location)
 		{
-			String fullName = FontConstants.RESOURCE_PATH + "cmap/" + location;
+			String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
 			Stream inp = ResourceUtil.GetResourceStream(fullName);
 			if (inp == null)
 			{
