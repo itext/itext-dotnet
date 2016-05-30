@@ -418,15 +418,15 @@ namespace iTextSharp.Barcodes.Qrcode
 		}
 
 		// Check if "value" is empty.
-		private static bool IsEmpty(int value)
+		private static bool IsEmpty(byte value)
 		{
-			return value == -1;
+			return value == (byte)0xff;
 		}
 
 		// Check if "value" is valid.
-		private static bool IsValidValue(int value)
+		private static bool IsValidValue(byte value)
 		{
-			return (value == -1 || value == 0 || value == 1);
+			return (value == (byte)0xff || value == 0 || value == 1);
 		}
 
 		// Empty.
