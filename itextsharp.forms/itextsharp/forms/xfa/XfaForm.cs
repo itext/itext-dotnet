@@ -300,7 +300,7 @@ namespace iTextSharp.Forms.Xfa
 			{
 				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName
-					()[name] : acroFieldsSom.InverseSearchGlobal(Xml2Som.SplitParts(name));
+					().Get(name) : acroFieldsSom.InverseSearchGlobal(Xml2Som.SplitParts(name));
 			}
 			return null;
 		}
@@ -334,7 +334,7 @@ namespace iTextSharp.Forms.Xfa
 			{
 				return null;
 			}
-			return datasetsSom.GetName2Node()[name];
+			return datasetsSom.GetName2Node().Get(name);
 		}
 
 		/// <summary>Gets all the text contained in the child nodes of this node.</summary>
@@ -435,7 +435,7 @@ namespace iTextSharp.Forms.Xfa
 		/// </exception>
 		public virtual void FillXfaForm(FileInfo file, bool readOnly)
 		{
-			FillXfaForm(new FileStream(file, FileMode.Open), readOnly);
+			FillXfaForm(new FileStream(file, FileMode.Open, FileAccess.Read), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -695,11 +695,11 @@ namespace iTextSharp.Forms.Xfa
 			IDictionary<String, Node> xfaNodes = ExtractXFANodes(domDocument);
 			if (xfaNodes.ContainsKey("template"))
 			{
-				templateNode = xfaNodes["template"];
+				templateNode = xfaNodes.Get("template");
 			}
 			if (xfaNodes.ContainsKey("datasets"))
 			{
-				datasetsNode = xfaNodes["datasets"];
+				datasetsNode = xfaNodes.Get("datasets");
 				datasetsSom = new Xml2SomDatasets(datasetsNode.GetFirstChild());
 			}
 			if (datasetsNode == null)

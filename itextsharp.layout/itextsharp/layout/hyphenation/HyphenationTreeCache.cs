@@ -45,13 +45,13 @@ namespace iTextSharp.Layout.Hyphenation
 			// first try to find it in the cache
 			if (hyphenTrees.ContainsKey(key))
 			{
-				return hyphenTrees[key];
+				return hyphenTrees.Get(key);
 			}
 			else
 			{
 				if (hyphenTrees.ContainsKey(lang))
 				{
-					return hyphenTrees[lang];
+					return hyphenTrees.Get(lang);
 				}
 				else
 				{
@@ -96,7 +96,7 @@ namespace iTextSharp.Layout.Hyphenation
 			{
 				String key = ConstructLlccKey(lang, country);
 				key = key.Replace('_', '-');
-				userKey = hyphPatNames[key];
+				userKey = hyphPatNames.Get(key);
 			}
 			return userKey;
 		}

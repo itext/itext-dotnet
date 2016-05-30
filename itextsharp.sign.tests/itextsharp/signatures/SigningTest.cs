@@ -43,7 +43,7 @@ namespace iTextSharp.Signatures
 		{
 			provider = new BouncyCastleProvider();
 			KeyStore ks = KeyStore.GetInstance(KeyStore.GetDefaultType());
-			ks.Load(new FileStream(keystorePath, FileMode.Open), password);
+			ks.Load(new FileStream(keystorePath, FileMode.Open, FileAccess.Read), password);
 			String alias = ks.Aliases().Current;
 			pk = (ICipherParameters)ks.GetKey(alias, password);
 			chain = ks.GetCertificateChain(alias);

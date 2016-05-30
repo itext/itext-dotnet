@@ -200,7 +200,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual T1 GetProperty<T1>(int key)
 		{
 			Object property;
-			if ((property = properties[key]) != null || properties.ContainsKey(key))
+			if ((property = properties.Get(key)) != null || properties.ContainsKey(key))
 			{
 				return (T1)property;
 			}
@@ -226,7 +226,7 @@ namespace iTextSharp.Layout.Renderer
 
 		public virtual T1 GetOwnProperty<T1>(int property)
 		{
-			return (T1)properties[property];
+			return (T1)properties.Get(property);
 		}
 
 		public virtual T1 GetProperty<T1>(int property, T1 defaultValue)

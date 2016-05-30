@@ -244,7 +244,7 @@ namespace iTextSharp.Layout.Hyphenation
 			try
 			{
 				Stream fis = new FileStream(searchDirectory + Path.DirectorySeparatorChar + name, 
-					FileMode.Open);
+					FileMode.Open, FileAccess.Read);
 				return GetHyphenationTree(fis, name);
 			}
 			catch (System.IO.IOException ioe)

@@ -38,7 +38,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -61,7 +61,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest02.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfPage page = doc.AddNewPage();
@@ -82,7 +82,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest03.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfPage page = doc.AddNewPage();
@@ -104,7 +104,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -128,7 +128,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -151,7 +151,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -174,7 +174,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -201,7 +201,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -228,7 +228,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				PdfPage page = doc.AddNewPage();
@@ -254,7 +254,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest10.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfPage page = doc.AddNewPage();
@@ -279,7 +279,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest11.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfPage page = doc.AddNewPage();
@@ -304,7 +304,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				doc.SetTagged();
@@ -329,7 +329,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
 					("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 				doc.SetTagged();
@@ -356,7 +356,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2a_annotationCheckTest14.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			doc.SetTagged();

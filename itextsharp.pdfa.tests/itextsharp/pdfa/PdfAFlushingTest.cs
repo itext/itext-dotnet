@@ -35,7 +35,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_flushingTest01.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -62,7 +62,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA2b_flushingTest02.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -90,7 +90,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA3b_flushingTest03.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, new PdfOutputIntent
 				("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
 			PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -118,7 +118,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_docWithUnusedObjects_3.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
 				, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", 
 				@is));

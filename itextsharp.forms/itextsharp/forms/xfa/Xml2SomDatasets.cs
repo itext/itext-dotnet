@@ -164,7 +164,7 @@ namespace iTextSharp.Forms.Xfa
 					if (n2.GetNodeType() == Node.ELEMENT_NODE)
 					{
 						String s = EscapeSom(n2.GetLocalName());
-						int? i = ss[s];
+						int? i = ss.Get(s);
 						if (i == null)
 						{
 							i = 0;

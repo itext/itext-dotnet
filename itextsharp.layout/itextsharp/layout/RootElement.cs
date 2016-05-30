@@ -114,7 +114,7 @@ namespace iTextSharp.Layout
 
 		public override T1 GetOwnProperty<T1>(int property)
 		{
-			return (T1)properties[property];
+			return (T1)properties.Get(property);
 		}
 
 		public override T1 GetDefaultProperty<T1>(int property)

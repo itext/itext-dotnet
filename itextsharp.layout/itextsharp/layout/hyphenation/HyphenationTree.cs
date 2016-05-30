@@ -131,7 +131,7 @@ namespace iTextSharp.Layout.Hyphenation
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		public virtual void LoadPatterns(String filename)
 		{
-			LoadPatterns(new FileStream(filename, FileMode.Open), filename);
+			LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
 		}
 
 		/// <summary>Read hyphenation patterns from an XML file.</summary>
@@ -549,7 +549,7 @@ namespace iTextSharp.Layout.Hyphenation
 			if (stoplist.ContainsKey(sw))
 			{
 				// assume only simple hyphens (Hyphen.pre="-", Hyphen.post = Hyphen.no = null)
-				ArrayList hw = (ArrayList)stoplist[sw];
+				ArrayList hw = (ArrayList)stoplist.Get(sw);
 				int j = 0;
 				for (i = 0; i < hw.Count; i++)
 				{

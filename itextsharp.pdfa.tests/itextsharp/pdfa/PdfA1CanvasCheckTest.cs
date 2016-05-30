@@ -33,7 +33,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 					, "sRGB IEC61966-2.1", @is);
 				PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
@@ -64,7 +64,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA1b_canvasCheckTest2.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 				, "sRGB IEC61966-2.1", @is);
 			PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
@@ -97,7 +97,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 					, "sRGB IEC61966-2.1", @is);
 				PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B

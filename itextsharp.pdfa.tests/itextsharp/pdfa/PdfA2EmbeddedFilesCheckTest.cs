@@ -39,7 +39,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecCheckTest01.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 				, "sRGB IEC61966-2.1", @is);
 			PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B
@@ -67,7 +67,7 @@ namespace iTextSharp.Pdfa
 			String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecCheckTest02.pdf";
 			PdfWriter writer = new PdfWriter(outPdf);
 			Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-				.Open);
+				.Open, FileAccess.Read);
 			PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 				, "sRGB IEC61966-2.1", @is);
 			PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B
@@ -78,11 +78,12 @@ namespace iTextSharp.Pdfa
 			PdfCanvas canvas = new PdfCanvas(page);
 			canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText
 				("Hello World!").EndText().RestoreState();
-			FileStream fis = new FileStream(sourceFolder + "pdfa.pdf", FileMode.Open);
+			FileStream fis = new FileStream(sourceFolder + "pdfa.pdf", FileMode.Open, FileAccess
+				.Read);
 			MemoryStream os = new MemoryStream();
 			byte[] buffer = new byte[1024];
 			int length;
-			while ((length = fis.Read(buffer, 0, buffer.Length)) > 0)
+			while ((length = fis.JRead(buffer, 0, buffer.Length)) > 0)
 			{
 				os.Write(buffer, 0, length);
 			}
@@ -101,7 +102,7 @@ namespace iTextSharp.Pdfa
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
-					.Open);
+					.Open, FileAccess.Read);
 				PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
 					, "sRGB IEC61966-2.1", @is);
 				PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B

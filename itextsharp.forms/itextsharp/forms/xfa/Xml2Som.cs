@@ -176,7 +176,7 @@ namespace iTextSharp.Forms.Xfa
 			, Stack<String> stack, String unstack)
 		{
 			String last = stack.Peek();
-			InverseStore store = inverseSearch[last];
+			InverseStore store = inverseSearch.Get(last);
 			if (store == null)
 			{
 				store = new InverseStore();
@@ -212,7 +212,7 @@ namespace iTextSharp.Forms.Xfa
 			{
 				return null;
 			}
-			InverseStore store = inverseSearch[parts[parts.Count - 1]];
+			InverseStore store = inverseSearch.Get(parts[parts.Count - 1]);
 			if (store == null)
 			{
 				return null;

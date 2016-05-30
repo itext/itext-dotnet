@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Java.Lang;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Layout.Property;
 
@@ -60,7 +60,7 @@ namespace iTextSharp.Layout.Renderer
 
 		private const String TYPOGRAPHY_PACKAGE = "com.itextpdf.typography.";
 
-		private static readonly ICollection<Character.UnicodeScript> SUPPORTED_SCRIPTS;
+		private static readonly ICollection<UnicodeScript> SUPPORTED_SCRIPTS;
 
 		private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
 
@@ -86,7 +86,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, Character.UnicodeScript
+		internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript?
 			 script)
 		{
 			if (!TYPOGRAPHY_MODULE_INITIALIZED)
@@ -97,8 +97,8 @@ namespace iTextSharp.Layout.Renderer
 			else
 			{
 				CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyOtfScript", new Type[] { 
-					typeof(TrueTypeFont), typeof(GlyphLine), typeof(Character.UnicodeScript) }, fontProgram
-					, text, script);
+					typeof(TrueTypeFont), typeof(GlyphLine), typeof(UnicodeScript?) }, fontProgram, 
+					text, script);
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace iTextSharp.Layout.Renderer
 			return null;
 		}
 
-		internal static ICollection<Character.UnicodeScript> GetSupportedScripts()
+		internal static ICollection<UnicodeScript> GetSupportedScripts()
 		{
 			if (!TYPOGRAPHY_MODULE_INITIALIZED)
 			{
@@ -233,7 +233,7 @@ namespace iTextSharp.Layout.Renderer
 				}
 				else
 				{
-					return (ICollection<Character.UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper"
+					return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper"
 						, "getSupportedScripts", new Type[] {  });
 				}
 			}
@@ -286,7 +286,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				ConstructorInfo constructor = System.Type.GetType(className).GetConstructor(parameterTypes
 					);
-				return constructor.NewInstance(args);
+				return System.Reflection.ConstructorInfo.Invoke(constructor, args);
 			}
 			catch (MissingMethodException)
 			{

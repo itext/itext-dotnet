@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Java.Lang;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
@@ -450,27 +449,27 @@ namespace iTextSharp.Layout.Renderer
 		public virtual void ApplyOtf()
 		{
 			ConvertWaitingStringToGlyphLine();
-			Character.UnicodeScript script = GetProperty(iTextSharp.Layout.Property.Property.
-				FONT_SCRIPT);
+			UnicodeScript? script = GetProperty(iTextSharp.Layout.Property.Property.FONT_SCRIPT
+				);
 			if (!otfFeaturesApplied)
 			{
 				if (script == null && TypographyUtils.IsTypographyModuleInitialized())
 				{
 					// Try to autodetect complex script.
-					ICollection<Character.UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts
+					ICollection<UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts
 						();
-					IDictionary<Character.UnicodeScript, int?> scriptFrequency = new EnumMap<Character.UnicodeScript
-						, int>(typeof(Character.UnicodeScript));
+					IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, 
+						int?>(typeof(UnicodeScript?));
 					for (int i = text.start; i < text.end; i++)
 					{
 						int unicode = text.Get(i).GetUnicode();
-						Character.UnicodeScript glyphScript = unicode > -1 ? Character.UnicodeScript.Of(unicode
-							) : null;
+						UnicodeScript? glyphScript = unicode > -1 ? iTextSharp.IO.Util.UnicodeScriptUtil.Of
+							(unicode) : null;
 						if (glyphScript != null)
 						{
 							if (scriptFrequency.ContainsKey(glyphScript))
 							{
-								scriptFrequency[glyphScript] = scriptFrequency[glyphScript] + 1;
+								scriptFrequency[glyphScript] = scriptFrequency.Get(glyphScript) + 1;
 							}
 							else
 							{
@@ -479,19 +478,19 @@ namespace iTextSharp.Layout.Renderer
 						}
 					}
 					int max = 0;
-					Character.UnicodeScript selectScript = null;
-					foreach (KeyValuePair<Character.UnicodeScript, int> entry in scriptFrequency)
+					UnicodeScript? selectScript = null;
+					foreach (KeyValuePair<UnicodeScript, int> entry in scriptFrequency)
 					{
-						Character.UnicodeScript entryScript = entry.Key;
-						if (entry.Value > max && !Character.UnicodeScript.COMMON.Equals(entryScript) && !
-							Character.UnicodeScript.UNKNOWN.Equals(entryScript))
+						UnicodeScript? entryScript = entry.Key;
+						if (entry.Value > max && !UnicodeScript?.COMMON.Equals(entryScript) && !UnicodeScript?
+							.UNKNOWN.Equals(entryScript))
 						{
 							max = entry.Value;
 							selectScript = entryScript;
 						}
 					}
-					if (selectScript == Character.UnicodeScript.ARABIC || selectScript == Character.UnicodeScript
-						.HEBREW && parent is LineRenderer)
+					if (selectScript == UnicodeScript?.ARABIC || selectScript == UnicodeScript?.HEBREW
+						 && parent is LineRenderer)
 					{
 						SetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI
 							);
