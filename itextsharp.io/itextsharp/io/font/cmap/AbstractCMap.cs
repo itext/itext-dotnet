@@ -168,11 +168,11 @@ namespace iTextSharp.IO.Font.Cmap
 			byte[] bytes = DecodeStringToByte(value);
 			if (isHexWriting)
 			{
-				return PdfEncodings.ConvertToString(bytes, "UnicodeBigUnmarked");
+				return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG_UNMARKED);
 			}
 			else
 			{
-				if (bytes.Length >= 2 && bytes[0] == (byte)254 && bytes[1] == (byte)255)
+				if (bytes.Length >= 2 && bytes[0] == (byte)0xfe && bytes[1] == (byte)0xff)
 				{
 					return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG);
 				}
