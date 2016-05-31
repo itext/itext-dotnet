@@ -87,7 +87,7 @@
     <EmbeddedResource Include="pa.xml" />
     <EmbeddedResource Include="pl.xml" />
     <EmbeddedResource Include="pt.xml" />
-    <EmbeddedResource Include="readme.txt" />
+    <None Include="readme.txt" />
     <EmbeddedResource Include="ro.xml" />
     <EmbeddedResource Include="ru.xml" />
     <EmbeddedResource Include="sa.xml" />

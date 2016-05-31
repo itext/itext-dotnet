@@ -41,51 +41,51 @@
     <EmbeddedResource Include="resources\AdobeGlyphList.txt">
       <LogicalName>iTextSharp.IO.Font.AdobeGlyphList.txt</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="resources\cmap_info.txt" />
-    <EmbeddedResource Include="resources\mustRead.html" />
+    <None Include="resources\cmap_info.txt" />
+    <None Include="resources\mustRead.html" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="resources\afm\Courier-Bold.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Courier-Bold.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Courier-Bold.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Courier-BoldOblique.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Courier-BoldOblique.a</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Courier-BoldOblique.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Courier-Oblique.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Courier-Oblique.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Courier-Oblique.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Courier.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Courier.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Courier.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Helvetica-Bold.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Helvetica-Bold.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Helvetica-Bold.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Helvetica-BoldOblique.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Helvetica-BoldOblique.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Helvetica-BoldOblique.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Helvetica-Oblique.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Helvetica-Oblique.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Helvetica-Oblique.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Helvetica.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Helvetica.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Helvetica.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Symbol.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Symbol.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Symbol.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Times-Bold.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Times-Bold.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Times-Bold.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Times-BoldItalic.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Times-BoldItalic.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Times-BoldItalic.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Times-Italic.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Times-Italic.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Times-Italic.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\Times-Roman.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.Times-Roman.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.Times-Roman.afm</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="resources\afm\ZapfDingbats.afm">
-      <LogicalName>iTextSharp.IO.Font.afm.ZapfDingbats.afm</LogicalName>
+      <LogicalName>iTextSharp.IO.Font.Afm.ZapfDingbats.afm</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
