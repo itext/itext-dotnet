@@ -105,7 +105,7 @@ namespace iTextSharp.Layout.Element
 
 				default:
 				{
-					return base.GetDefaultProperty(property);
+					return base.GetDefaultProperty<T1>(property);
 				}
 			}
 		}

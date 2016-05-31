@@ -113,14 +113,14 @@ namespace iTextSharp.Layout.Element
 
 		public override T1 GetProperty<T1>(int property)
 		{
-			Object result = base.GetProperty(property);
+			Object result = base.GetProperty<T1>(property);
 			if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property
 				))
 			{
 				foreach (Style style in styles)
 				{
 					result = style.GetProperty<T1>(property);
-					if (result != null || base.HasProperty(property))
+					if (result != null || base.HasProperty<T1>(property))
 					{
 						break;
 					}
