@@ -42,7 +42,6 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		[Test]
 		public virtual void TestUnicodeEmptyString()
 		{
-			//    @Ignore("Seems to be a problem with decode")
 			StringBuilder sb = new StringBuilder();
 			String inFile = "japanese_text.pdf";
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
