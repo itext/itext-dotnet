@@ -201,7 +201,7 @@ namespace iTextSharp.Forms.Fields
 			PdfArray indices = new PdfArray();
 			PdfArray values = new PdfArray();
 			PdfArray options = GetOptions();
-			foreach (int? number in optionNumbers)
+			foreach (int number in optionNumbers)
 			{
 				if (number >= 0 && number < options.Size())
 				{

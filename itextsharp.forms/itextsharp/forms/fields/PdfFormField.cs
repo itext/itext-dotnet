@@ -2974,7 +2974,7 @@ namespace iTextSharp.Forms.Fields
 			{
 				bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
 					.FULL);
-				if (isFull != null && isFull)
+				if (true.Equals(isFull))
 				{
 					break;
 				}

@@ -22,5 +22,25 @@ namespace iTextSharp.Forms {
             T[] r = col.ToArray();
             return r;
         }
+
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key)
+        {
+            TValue value = default(TValue);
+            if (key != null)
+            {
+                col.TryGetValue(key, out value);
+            }
+
+            return value;
+        }
+
+        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            dictionary.TryGetValue(key, out value);
+            dictionary.Remove(key);
+
+            return value;
+        }
     }
 }

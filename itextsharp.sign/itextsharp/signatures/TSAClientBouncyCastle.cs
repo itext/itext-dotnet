@@ -247,8 +247,8 @@ namespace iTextSharp.Signatures
 			if ((tsaUsername != null) && !tsaUsername.Equals(""))
 			{
 				String userPassword = tsaUsername + ":" + tsaPassword;
-				tsaConnection.SetRequestProperty("Authorization", "Basic " + Base64.EncodeBytes(userPassword
-					.GetBytes(), Base64.DONT_BREAK_LINES));
+				tsaConnection.SetRequestProperty("Authorization", "Basic " + System.Convert.ToBase64String
+					(userPassword.GetBytes(), Base64.DONT_BREAK_LINES));
 			}
 			Stream @out = tsaConnection.GetOutputStream();
 			@out.Write(requestBytes);

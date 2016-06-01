@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iTextSharp.IO.Codec;
-using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Xobject;
@@ -221,14 +221,7 @@ namespace iTextSharp.Forms.Fields
 		public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image)
 		{
 			Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int r = @is.Read();
-			while (r != -1)
-			{
-				baos.Write(r);
-				r = @is.Read();
-			}
-			String str = Base64.EncodeBytes(baos.ToArray());
+			String str = System.Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
 			return (iTextSharp.Forms.Fields.PdfButtonFormField)SetValue(str);
 		}
 
