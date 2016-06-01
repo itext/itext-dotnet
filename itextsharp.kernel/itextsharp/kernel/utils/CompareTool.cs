@@ -715,7 +715,8 @@ namespace iTextSharp.Kernel.Utils
 		    p.StartInfo.RedirectStandardOutput = true;
 		    p.StartInfo.RedirectStandardError = true;
 		    p.StartInfo.UseShellExecute = false;
-		    p.Start();
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
 		    
 			PrintProcessOutput(p);
 		    p.WaitForExit();
