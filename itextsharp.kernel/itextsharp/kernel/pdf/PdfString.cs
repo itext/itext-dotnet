@@ -277,8 +277,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			if (value == null)
 			{
-				return EncodingUtil.ConvertToString(content, System.Text.Encoding.GetEncoding(defaultCharset
-					));
+				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent
+					(content, hexWriting));
 			}
 			else
 			{
@@ -290,8 +290,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value"
 				);
-			value = ConvertBytesToString(PdfTokenizer.DecodeStringContent(content, hexWriting
-				));
+			value = PdfEncodings.ConvertToString(PdfTokenizer.DecodeStringContent(content, hexWriting
+				), null);
 		}
 
 		protected internal override void GenerateContent()
@@ -314,10 +314,9 @@ namespace iTextSharp.Kernel.Pdf
 				byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
 				content = null;
 				decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-				value = EncodingUtil.ConvertToString(decrypt.DecryptByteArray(decodedContent), System.Text.Encoding.GetEncoding
-					(defaultCharset));
+				value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null
+					);
 			}
-			//value = new String(decrypt.decryptByteArray(decodedContent), Charset.forName(defaultCharset));
 			return this;
 		}
 
@@ -394,16 +393,6 @@ namespace iTextSharp.Kernel.Pdf
 		internal virtual void SetDecryptInfoGen(int decryptInfoGen)
 		{
 			this.decryptInfoGen = decryptInfoGen;
-		}
-
-		private String ConvertBytesToString(byte[] bytes)
-		{
-			StringBuilder buffer = new StringBuilder(bytes.Length);
-			foreach (byte b in bytes)
-			{
-				buffer.Append((char)(b & 0xff));
-			}
-			return buffer.ToString();
 		}
 	}
 }

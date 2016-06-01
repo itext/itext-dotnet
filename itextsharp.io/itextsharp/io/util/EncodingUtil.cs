@@ -27,8 +27,39 @@ namespace iTextSharp.IO.Util {
 		    }
 		}
 
-	    public static String ConvertToString(byte[] bytes, Encoding encoding) {
-	        return encoding.GetString(bytes);
+	    public static String ConvertToString(byte[] bytes, String encoding) {
+            String nameU = encoding.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            Encoding enc = null;
+            if (nameU.Equals("UNICODEBIGUNMARKED"))
+                enc = new UnicodeEncoding(true, false);
+            else if (nameU.Equals("UNICODELITTLEUNMARKED"))
+                enc = new UnicodeEncoding(false, false);
+            if (enc != null)
+                return enc.GetString(bytes);
+            bool marker = false;
+            bool big = false;
+            int offset = 0;
+            if (bytes.Length >= 2)
+            {
+                if (bytes[0] == 0xFE && bytes[1] == 0xFF)
+                {
+                    marker = true;
+                    big = true;
+                    offset = 2;
+                }
+                else if (bytes[0] == 0xFF && bytes[1] == 0xFE)
+                {
+                    marker = true;
+                    offset = 2;
+                }
+            }
+            if (nameU.Equals("UNICODEBIG"))
+                enc = new UnicodeEncoding(!marker || big, false);
+            else if (nameU.Equals("UNICODELITTLE"))
+                enc = new UnicodeEncoding(marker && big, false);
+            if (enc != null)
+                return enc.GetString(bytes, offset, bytes.Length - offset);
+            return IanaEncodings.GetEncodingEncoding(encoding).GetString(bytes);
 	    }
 	}
 }

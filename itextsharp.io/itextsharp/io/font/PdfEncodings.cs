@@ -444,7 +444,7 @@ namespace iTextSharp.IO.Font
 			}
 			try
 			{
-				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes, encoding);
+				return EncodingUtil.ConvertToString(bytes, encoding);
 			}
 			catch (ArgumentException e)
 			{
