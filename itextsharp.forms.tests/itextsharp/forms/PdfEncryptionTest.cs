@@ -12,7 +12,6 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		[Test]
-		[Ignore]
 		public virtual void EncryptedDocumentWithFormFields()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "encryptedDocumentWithFormFields.pdf"
@@ -20,7 +19,7 @@ namespace iTextSharp.Forms
 				()));
 			PdfDocument pdfDocument = new PdfDocument(reader);
 			PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
-			acroForm.GetField("name").GetPdfObject();
+			acroForm.GetField("personal.name").GetPdfObject();
 			pdfDocument.Close();
 		}
 	}
