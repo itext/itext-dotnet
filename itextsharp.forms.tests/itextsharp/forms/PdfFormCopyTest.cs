@@ -96,7 +96,7 @@ namespace iTextSharp.Forms
 			String srcFilename1 = sourceFolder + "frontpage.pdf";
 			String srcFilename2 = sourceFolder + "largeFile.pdf";
 			String filename = destinationFolder + "copyLargeFile.pdf";
-			long timeStart = iTextSharp.NanoTime();
+			long timeStart = System.DateTime.Now.Ticks;
 			PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename1, FileMode
 				.Open, FileAccess.Read)));
 			PdfDocument doc2 = new PdfDocument(new PdfReader(new FileStream(srcFilename2, FileMode
@@ -107,7 +107,8 @@ namespace iTextSharp.Forms
 			doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
 			pdfDoc.Close();
-			System.Console.Out.WriteLine(((iTextSharp.NanoTime() - timeStart) / 1000 / 1000));
+			System.Console.Out.WriteLine(((System.DateTime.Now.Ticks - timeStart) / 1000 / 1000
+				));
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
 				 + "cmp_copyLargeFile.pdf", destinationFolder, "diff_"));
 		}
