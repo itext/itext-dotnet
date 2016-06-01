@@ -205,13 +205,13 @@ namespace iTextSharp.IO.Util
 
 					default:
 					{
-						if (((sbyte)b) < 8 && b >= 0)
+						if (b < 8 && b >= 0)
 						{
 							buf.Append("\\00").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
 						}
 						else
 						{
-							if (b >= 8 && ((sbyte)b) < 32)
+							if (b >= 8 && b < 32)
 							{
 								buf.Append("\\0").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
 							}

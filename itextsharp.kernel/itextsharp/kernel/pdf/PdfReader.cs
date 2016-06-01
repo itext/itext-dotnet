@@ -1224,7 +1224,7 @@ namespace iTextSharp.Kernel.Pdf
 					// added boolean because of mailing list issue (17 Feb. 2014)
 					break;
 				}
-				if (buffer.Get(0) >= '0' && ((sbyte)buffer.Get(0)) <= '9')
+				if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9')
 				{
 					int[] obj = PdfTokenizer.CheckObjectStart(lineTokeniser);
 					if (obj == null)
@@ -1292,7 +1292,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				else
 				{
-					if (buffer.Get(0) >= '0' && ((sbyte)buffer.Get(0)) <= '9')
+					if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9')
 					{
 						int[] obj = PdfTokenizer.CheckObjectStart(lineTokeniser);
 						if (obj == null)

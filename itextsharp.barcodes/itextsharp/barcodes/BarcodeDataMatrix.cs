@@ -676,7 +676,7 @@ namespace iTextSharp.Barcodes
 				{
 					break;
 				}
-				if (((sbyte)c) < 40)
+				if (c < 40)
 				{
 					if (ptrIn == 0 || ptrIn > 0 && x[ptrIn - 1] > 40)
 					{
@@ -693,7 +693,7 @@ namespace iTextSharp.Barcodes
 				}
 				else
 				{
-					if (ptrIn > 0 && ((sbyte)x[ptrIn - 1]) < 40)
+					if (ptrIn > 0 && x[ptrIn - 1] < 40)
 					{
 						data[dataOffset + ptrOut++] = (byte)254;
 					}
@@ -715,11 +715,11 @@ namespace iTextSharp.Barcodes
 			{
 				c = x[textLength - 1];
 			}
-			if (ptrIn != textLength || ((sbyte)c) < 40 && ptrOut >= dataLength)
+			if (ptrIn != textLength || c < 40 && ptrOut >= dataLength)
 			{
 				return -1;
 			}
-			if (((sbyte)c) < 40)
+			if (c < 40)
 			{
 				data[dataOffset + ptrOut++] = (byte)254;
 			}

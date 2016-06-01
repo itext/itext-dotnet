@@ -138,7 +138,7 @@ namespace iTextSharp.Kernel.Pdf
 				{
 					return 1;
 				}
-				if (((sbyte)content[i]) < o.content[i])
+				if (content[i] < o.content[i])
 				{
 					return -1;
 				}

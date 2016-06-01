@@ -927,7 +927,7 @@ namespace iTextSharp.IO.Image
 					}
 					else
 					{
-						if (((sbyte)b) <= -1 && b >= -127)
+						if ((b & 0x80) != 0 && b != (byte)0x80)
 						{
 							// 2 byte encoded run packet
 							repeat = data[srcCount++];
