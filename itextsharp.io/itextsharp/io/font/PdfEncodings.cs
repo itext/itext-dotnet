@@ -80,10 +80,10 @@ namespace iTextSharp.IO.Font
 		public const String ZAPFDINGBATS = "ZapfDingbats";
 
 		/// <summary>This is the encoding to be used to output text in Unicode.</summary>
-		public const String UNICODE_BIG = "UTF-16BE";
+		public const String UNICODE_BIG = "UnicodeBig";
 
 		/// <summary>This is the encoding to be used to output text for Identity-H/V CMaps.</summary>
-		public const String UNICODE_BIG_UNMARKED = "UTF-16BE";
+		public const String UNICODE_BIG_UNMARKED = "UnicodeBigUnmarked";
 
 		/// <summary>
 		/// This is the default encoding to be used for converting Strings into

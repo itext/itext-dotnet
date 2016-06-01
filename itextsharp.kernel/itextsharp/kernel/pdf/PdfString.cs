@@ -197,7 +197,7 @@ namespace iTextSharp.Kernel.Pdf
 				GenerateContent();
 			}
 			byte[] b = PdfTokenizer.DecodeStringContent(content, hexWriting);
-			if (b.Length >= 2 && b[0] == (byte)0xfe && b[1] == (byte)0xff)
+			if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF)
 			{
 				return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
 			}
