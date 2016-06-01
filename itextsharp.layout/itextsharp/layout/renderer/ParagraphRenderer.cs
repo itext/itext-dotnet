@@ -339,7 +339,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				return (T1)(Object)0f;
 			}
-			return base.GetDefaultProperty(property);
+			return base.GetDefaultProperty<T1>(property);
 		}
 
 		protected internal virtual iTextSharp.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer

@@ -260,8 +260,9 @@ namespace iTextSharp.Layout.Renderer
 						break;
 					}
 					if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters
-						.IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace(text.Get(ind + 1).GetUnicode
-						()) || char.IsSpaceChar(text.Get(ind + 1).GetUnicode())))
+						.IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace((char)(int)text.Get(ind +
+						 1).GetUnicode()) || char.IsSpaceChar((char)(int)text.Get(ind + 1).GetUnicode())
+						))
 					{
 						nonBreakablePartEnd = ind;
 						break;
@@ -449,8 +450,8 @@ namespace iTextSharp.Layout.Renderer
 		public virtual void ApplyOtf()
 		{
 			ConvertWaitingStringToGlyphLine();
-			UnicodeScript? script = GetProperty(iTextSharp.Layout.Property.Property.FONT_SCRIPT
-				);
+			UnicodeScript? script = this.GetProperty<UnicodeScript>(iTextSharp.Layout.Property.Property
+				.FONT_SCRIPT);
 			if (!otfFeaturesApplied)
 			{
 				if (script == null && TypographyUtils.IsTypographyModuleInitialized())
@@ -665,12 +666,12 @@ namespace iTextSharp.Layout.Renderer
 					foreach (KeyValuePair<GlyphLine, bool> output in outputs)
 					{
 						GlyphLine o = output.Key.Filter(filter);
-						if (output.Value)
+						if ((bool)output.Value)
 						{
 							canvas.OpenTag(new CanvasTag(PdfName.ReversedChars));
 						}
 						canvas.ShowText(o);
-						if (output.Value)
+						if ((bool)output.Value)
 						{
 							canvas.CloseTag();
 						}
@@ -750,10 +751,10 @@ namespace iTextSharp.Layout.Renderer
 					canvas.OpenTag(new CanvasArtifact());
 				}
 				canvas.SaveState().SetFillColor(background.GetColor());
-				canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), (float)bottomBBoxY + textRise
+				canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise
 					 - background.GetExtraBottom(), occupiedArea.GetBBox().GetWidth() + background.GetExtraLeft
-					() + background.GetExtraRight(), occupiedArea.GetBBox().GetHeight() - textRise +
-					 background.GetExtraTop() + background.GetExtraBottom());
+					() + background.GetExtraRight(), occupiedArea.GetBBox().GetHeight() - (float)textRise
+					 + background.GetExtraTop() + background.GetExtraBottom());
 				canvas.Fill().RestoreState();
 				if (isTagged)
 				{
@@ -774,7 +775,8 @@ namespace iTextSharp.Layout.Renderer
 			{
 				Glyph glyph;
 				while (text.start < text.end && (glyph = text.Get(text.start)).HasValidUnicode() 
-					&& char.IsWhiteSpace(glyph.GetUnicode()) && !IsNewLine(text, text.start))
+					&& char.IsWhiteSpace((char)(int)glyph.GetUnicode()) && !IsNewLine(text, text.start
+					))
 				{
 					text.start++;
 				}
@@ -807,8 +809,8 @@ namespace iTextSharp.Layout.Renderer
 			while (firstNonSpaceCharIndex >= line.start)
 			{
 				Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-				if (!currentGlyph.HasValidUnicode() || !char.IsWhiteSpace(currentGlyph.GetUnicode
-					()))
+				if (!currentGlyph.HasValidUnicode() || !char.IsWhiteSpace((char)(int)currentGlyph
+					.GetUnicode()))
 				{
 					break;
 				}
@@ -1060,7 +1062,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float CalculateLineWidth()
 		{
-			return GetGlyphLineWidth(line, GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			return GetGlyphLineWidth(line, (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 				.FONT_SIZE), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
 				, 1f), GetPropertyAsFloat(iTextSharp.Layout.Property.Property.CHARACTER_SPACING)
 				, GetPropertyAsFloat(iTextSharp.Layout.Property.Property.WORD_SPACING));
@@ -1124,11 +1126,11 @@ namespace iTextSharp.Layout.Renderer
 			float resultWidth = g.GetWidth() * fontSize * (float)hScale;
 			if (characterSpacing != null)
 			{
-				resultWidth += (float)characterSpacing * hScale * TEXT_SPACE_COEFF;
+				resultWidth += (float)characterSpacing * (float)hScale * TEXT_SPACE_COEFF;
 			}
 			if (wordSpacing != null && g.HasValidUnicode() && g.GetUnicode() == ' ')
 			{
-				resultWidth += (float)wordSpacing * hScale * TEXT_SPACE_COEFF;
+				resultWidth += (float)wordSpacing * (float)hScale * TEXT_SPACE_COEFF;
 			}
 			return resultWidth;
 		}
@@ -1184,8 +1186,8 @@ namespace iTextSharp.Layout.Renderer
 
 		private bool IsGlyphPartOfWordForHyphenation(Glyph g)
 		{
-			return g.HasValidUnicode() && (char.IsLetter(g.GetUnicode()) || char.IsDigit(g.GetUnicode
-				()) || '\u00ad' == g.GetUnicode());
+			return g.HasValidUnicode() && (char.IsLetter((char)(int)g.GetUnicode()) || char.IsDigit
+				((char)(int)g.GetUnicode()) || '\u00ad' == g.GetUnicode());
 		}
 
 		private bool IsWhitespaceGlyph(Glyph g)

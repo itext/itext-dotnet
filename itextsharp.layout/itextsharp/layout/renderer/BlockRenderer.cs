@@ -414,7 +414,7 @@ namespace iTextSharp.Layout.Renderer
 			if (!IsPositioned())
 			{
 				IList<Point> rotatedPoints = new List<Point>();
-				GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, rotationPointY
+				GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, (float)rotationPointY
 					);
 				Point clipLineBeg = new Point(layoutBox.GetRight(), layoutBox.GetTop());
 				Point clipLineEnd = new Point(layoutBox.GetRight(), layoutBox.GetBottom());

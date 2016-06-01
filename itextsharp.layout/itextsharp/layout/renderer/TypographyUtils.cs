@@ -247,7 +247,7 @@ namespace iTextSharp.Layout.Renderer
 		private static Object CallMethod(String className, String methodName, Type[] parameterTypes
 			, params Object[] args)
 		{
-			return CallMethod(className, methodName, null, parameterTypes, args);
+			return CallMethod(className, methodName, (Object)null, parameterTypes, args);
 		}
 
 		private static Object CallMethod(String className, String methodName, Object target
@@ -268,13 +268,9 @@ namespace iTextSharp.Layout.Renderer
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (TargetInvocationException e)
+			catch (Exception e)
 			{
-				throw new Exception(e.InnerException != null ? e.InnerException : null);
-			}
-			catch (Exception exc)
-			{
-				throw new Exception(exc);
+				throw new Exception(e.ToString(), e);
 			}
 			return null;
 		}
@@ -286,7 +282,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				ConstructorInfo constructor = System.Type.GetType(className).GetConstructor(parameterTypes
 					);
-				return System.Reflection.ConstructorInfo.Invoke(constructor, args);
+				return constructor.Invoke(args);
 			}
 			catch (MissingMethodException)
 			{
@@ -296,13 +292,9 @@ namespace iTextSharp.Layout.Renderer
 			{
 				logger.Warn(String.Format("Cannot find class {0}", className));
 			}
-			catch (TargetInvocationException e)
-			{
-				throw new Exception(e.InnerException != null ? e.InnerException : null);
-			}
 			catch (Exception exc)
 			{
-				throw new Exception(exc);
+				throw new Exception(exc.ToString(), exc);
 			}
 			return null;
 		}

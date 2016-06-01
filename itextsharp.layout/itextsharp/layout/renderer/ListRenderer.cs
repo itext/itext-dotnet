@@ -202,25 +202,25 @@ namespace iTextSharp.Layout.Renderer
 
 							case ListNumberingType.ZAPF_DINGBATS_1:
 							{
-								numberText = (char)(index + 171).ToString();
+								numberText = ((char)(char)(index + 171)).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_2:
 							{
-								numberText = (char)(index + 181).ToString();
+								numberText = ((char)(char)(index + 181)).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_3:
 							{
-								numberText = (char)(index + 191).ToString();
+								numberText = ((char)(char)(index + 191)).ToString();
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_4:
 							{
-								numberText = (char)(index + 201).ToString();
+								numberText = ((char)(char)(index + 201)).ToString();
 								break;
 							}
 

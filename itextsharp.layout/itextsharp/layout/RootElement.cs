@@ -169,7 +169,7 @@ namespace iTextSharp.Layout
 			}
 			catch (System.IO.IOException exc)
 			{
-				throw new Exception(exc);
+				throw new Exception(exc.ToString(), exc);
 			}
 		}
 

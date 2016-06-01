@@ -636,8 +636,8 @@ namespace iTextSharp.Layout.Renderer
 
 		private TabStop GetNextTabStop(float curWidth)
 		{
-			NavigableMap<float, TabStop> tabStops = this.GetProperty<NavigableMap<float, TabStop
-				>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+			SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float
+				, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
 			KeyValuePair<float, TabStop> nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)

@@ -227,19 +227,19 @@ namespace iTextSharp.Layout.Renderer
 				bool cellWithBigRowspanAdded = false;
 				IList<CellRenderer> currChildRenderers = new List<CellRenderer>();
 				// Process in a queue, because we might need to add a cell from the future, i.e. having big rowspan in case of split.
-				Queue<TableRenderer.CellRendererInfo> cellProcessingQueue = new LinkedList<TableRenderer.CellRendererInfo
+				Queue<TableRenderer.CellRendererInfo> cellProcessingQueue = new Queue<TableRenderer.CellRendererInfo
 					>();
 				for (int col = 0; col < currentRow.Length; col++)
 				{
 					if (currentRow[col] != null)
 					{
-						cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(currentRow[col], col, 
-							row));
+						cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[col], col
+							, row));
 					}
 				}
 				while (!cellProcessingQueue.IsEmpty())
 				{
-					TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.Poll();
+					TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.Dequeue();
 					int col_1 = currentCellInfo.column;
 					CellRenderer cell = currentCellInfo.cellRenderer;
 					if (cell != null)
@@ -338,8 +338,8 @@ namespace iTextSharp.Layout.Renderer
 										{
 											if (currentRow[addCol] != null)
 											{
-												cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(currentRow[addCol], addCol
-													, row));
+												cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[addCol]
+													, addCol, row));
 											}
 										}
 										footerRenderer = null;
@@ -367,8 +367,8 @@ namespace iTextSharp.Layout.Renderer
 													if (row + addRenderer.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
 														) - 1 < addRow)
 													{
-														cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, 
-															addRow));
+														cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1
+															, addRow));
 														cellWithBigRowspanAdded = true;
 													}
 													else
@@ -406,8 +406,8 @@ namespace iTextSharp.Layout.Renderer
 													if (row + addRenderer.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
 														) - 1 >= addRow)
 													{
-														cellProcessingQueue.Add(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, 
-															addRow));
+														cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1
+															, addRow));
 														cellWithBigRowspanAdded = true;
 													}
 												}
@@ -443,11 +443,11 @@ namespace iTextSharp.Layout.Renderer
 							continue;
 						}
 						float height = 0;
-						int rowspan = cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.ROWSPAN
-							);
+						int rowspan = (int)cell.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+							ROWSPAN);
 						for (int i = row; i > targetOverflowRowIndex[col_1] - rowspan && i >= 0; i--)
 						{
-							height += heights[i];
+							height += (float)heights[i];
 						}
 						int rowN = row + 1;
 						if (!hasContent)
@@ -1211,9 +1211,9 @@ namespace iTextSharp.Layout.Renderer
 			if (rowspan > 1)
 			{
 				int numOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
-				for (int i = row - rowspan + 1; i_1 <= row; i_1++)
+				for (int k = row - rowspan + 1; k <= row; k++)
 				{
-					List<iTextSharp.Layout.Border.Border> borders = horizontalBorders[i_1];
+					List<iTextSharp.Layout.Border.Border> borders = horizontalBorders[k];
 					if (borders.Count < numOfColumns)
 					{
 						for (int j = borders.Count; j < numOfColumns; j++)
@@ -1225,11 +1225,11 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (colN != 0)
 			{
-				for (int i = row - rowspan + 1; i_1 <= row; i_1++)
+				for (int j = row - rowspan + 1; j <= row; j++)
 				{
-					if (CheckAndReplaceBorderInArray(verticalBorders, colN, i_1, cellBorders[3]))
+					if (CheckAndReplaceBorderInArray(verticalBorders, colN, j, cellBorders[3]))
 					{
-						CellRenderer rend = rows[i_1][colN - 1];
+						CellRenderer rend = rows[j][colN - 1];
 						if (rend != null)
 						{
 							rend.SetBorders(cellBorders[3], 1);
@@ -1237,7 +1237,7 @@ namespace iTextSharp.Layout.Renderer
 					}
 					else
 					{
-						CellRenderer rend = rows[i_1][colN];
+						CellRenderer rend = rows[j][colN];
 						if (rend != null)
 						{
 							rend.SetBorders(verticalBorders[colN][row], 3);
@@ -1247,19 +1247,19 @@ namespace iTextSharp.Layout.Renderer
 			}
 			else
 			{
-				for (int i = row - rowspan + 1; i_1 <= row; i_1++)
+				for (int j = row - rowspan + 1; j <= row; j++)
 				{
 					if (verticalBorders.IsEmpty())
 					{
 						verticalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 					}
-					if (verticalBorders[0].Count <= i_1)
+					if (verticalBorders[0].Count <= j)
 					{
 						verticalBorders[0].Add(cellBorders[3]);
 					}
 					else
 					{
-						verticalBorders[0][i_1] = cellBorders[3];
+						verticalBorders[0][j] = cellBorders[3];
 					}
 				}
 			}
@@ -1270,9 +1270,9 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (colspan > 1)
 			{
-				for (int i = colN; i_2 <= colspan + colN; i_2++)
+				for (int k = colN; k <= colspan + colN; k++)
 				{
-					List<iTextSharp.Layout.Border.Border> borders = verticalBorders[i_2];
+					List<iTextSharp.Layout.Border.Border> borders = verticalBorders[k];
 					if (borders.Count < row + rowspan)
 					{
 						for (int j = borders.Count; j < row + rowspan; j++)

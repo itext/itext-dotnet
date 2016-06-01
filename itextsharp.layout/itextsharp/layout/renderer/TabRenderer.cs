@@ -62,8 +62,8 @@ namespace iTextSharp.Layout.Renderer
 			float? width = RetrieveWidth(area.GetBBox().GetWidth());
 			float? height = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT);
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().
-				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), (float)width, height
-				));
+				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), (float)width, (float
+				)height));
 			return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
 		}
 

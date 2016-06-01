@@ -117,7 +117,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				if (xObject is PdfFormXObject)
 				{
-					t.Scale(1, verticalScaling);
+					t.Scale(1, (float)verticalScaling);
 				}
 				height *= (float)verticalScaling;
 			}
@@ -254,11 +254,11 @@ namespace iTextSharp.Layout.Renderer
 					().GetHeight())
 				{
 					SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-						((float)area.GetBBox().GetHeight() / GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+						(area.GetBBox().GetHeight() / (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 						.HEIGHT) * (this.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property.WIDTH
 						)).GetValue()));
 					SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, UnitValue.CreatePointValue
-						((float)area.GetBBox().GetHeight()));
+						(area.GetBBox().GetHeight()));
 				}
 			}
 			return this;

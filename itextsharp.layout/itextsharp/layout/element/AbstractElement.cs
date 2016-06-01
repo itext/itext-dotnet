@@ -120,7 +120,7 @@ namespace iTextSharp.Layout.Element
 				foreach (Style style in styles)
 				{
 					result = style.GetProperty<T1>(property);
-					if (result != null || base.HasProperty<T1>(property))
+					if (result != null || base.HasProperty(property))
 					{
 						break;
 					}
