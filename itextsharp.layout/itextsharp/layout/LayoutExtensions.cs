@@ -52,10 +52,27 @@ namespace iTextSharp.Layout
             return 0 == list.Count();
         }
 
-        public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex)
+        public static bool IsEmpty<T>(this Queue<T> queue)
         {
-            return ((List<T>)list).GetRange(fromIndex, toIndex - fromIndex);
+            return 0 == queue.Count();
         }
+
+        public static KeyValuePair<K, V> HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key)
+        {
+            List<K> list = dict.Keys.ToList();
+            int index = list.BinarySearch(key, dict.Comparer);
+            if (index < 0) {
+                index = ~index;
+            } 
+            if (index == list.Count) 
+            {
+                return default(KeyValuePair<K, V>);
+            }
+            else 
+            {
+                return new KeyValuePair<K, V>(list[index], dict[list[index]]);
+            }
+        } 
 
         public static T JRemoveAt<T>(this IList<T> list, int index)
         {
@@ -63,6 +80,21 @@ namespace iTextSharp.Layout
             list.RemoveAt(index);
 
             return value;
+        }
+
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key)
+        {
+            TValue value = default(TValue);
+            if (key != null)
+            {
+                col.TryGetValue(key, out value);
+            }
+
+            return value;
+        }
+
+        public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
+            return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
         }
     }
 }
