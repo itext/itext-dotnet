@@ -25,7 +25,11 @@ namespace iTextSharp.IO.Font.Otf
 
 		public bool MoveNext()
 		{
-			return pos < glyphLine.end;
+		    if (!HasNext())
+                return false;
+
+            Current = Next();
+		    return true;
 		}
 
 	    public void Reset()
@@ -33,48 +37,43 @@ namespace iTextSharp.IO.Font.Otf
 	        pos = -1;
 	    }
 
-	    object IEnumerator.Current
+	    public GlyphLine.GlyphLinePart Next() {
+            if (glyphLine.actualText == null) {
+                GlyphLine.GlyphLinePart result = new GlyphLine.GlyphLinePart(pos, glyphLine.end,
+                    null);
+                pos = glyphLine.end;
+                return result;
+            } else {
+                GlyphLine.GlyphLinePart currentResult = NextGlyphLinePart(pos);
+                if (currentResult == null) {
+                    return null;
+                }
+                pos = currentResult.end;
+                while (pos < glyphLine.end && !GlyphLinePartNeedsActualText(currentResult)) {
+                    currentResult.actualText = null;
+                    GlyphLine.GlyphLinePart nextResult = NextGlyphLinePart(pos);
+                    if (nextResult != null && !GlyphLinePartNeedsActualText(nextResult)) {
+                        currentResult.end = nextResult.end;
+                        pos = nextResult.end;
+                    } else {
+                        break;
+                    }
+                }
+                return currentResult;
+            }
+        }
+
+	    public bool HasNext() {
+            return pos < glyphLine.end;
+        }
+
+
+        object IEnumerator.Current
 	    {
 	        get { return Current; }
 	    }
 
-	    public GlyphLine.GlyphLinePart Current
-		{
-			get
-			{
-				if (glyphLine.actualText == null)
-				{
-					GlyphLine.GlyphLinePart result = new GlyphLine.GlyphLinePart(pos, glyphLine.end, 
-						null);
-					pos = glyphLine.end;
-					return result;
-				}
-				else
-				{
-					GlyphLine.GlyphLinePart currentResult = NextGlyphLinePart(pos);
-					if (currentResult == null)
-					{
-						return null;
-					}
-					pos = currentResult.end;
-					while (pos < glyphLine.end && !GlyphLinePartNeedsActualText(currentResult))
-					{
-						currentResult.actualText = null;
-						GlyphLine.GlyphLinePart nextResult = NextGlyphLinePart(pos);
-						if (nextResult != null && !GlyphLinePartNeedsActualText(nextResult))
-						{
-							currentResult.end = nextResult.end;
-							pos = nextResult.end;
-						}
-						else
-						{
-							break;
-						}
-					}
-					return currentResult;
-				}
-			}
-		}
+	    public GlyphLine.GlyphLinePart Current { get; private set; }
 
 		private GlyphLine.GlyphLinePart NextGlyphLinePart(int pos)
 		{

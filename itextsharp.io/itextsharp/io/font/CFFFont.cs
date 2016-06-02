@@ -1089,25 +1089,19 @@ namespace iTextSharp.IO.Font
 			// now create the new CFF font
 			int[] currentOffset = new int[1];
 			currentOffset[0] = 0;
-			IEnumerator<CFFFont.Item> listIter = l.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item in l)
 			{
-				CFFFont.Item item = listIter.Current;
 				item.Increment(currentOffset);
 			}
-			listIter = l.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item_1 in l)
 			{
-				CFFFont.Item item = listIter.Current;
-				item.Xref();
+				item_1.Xref();
 			}
 			int size = currentOffset[0];
 			byte[] b = new byte[size];
-			listIter = l.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item_2 in l)
 			{
-				CFFFont.Item item = listIter.Current;
-				item.Emit(b);
+				item_2.Emit(b);
 			}
 			return b;
 		}

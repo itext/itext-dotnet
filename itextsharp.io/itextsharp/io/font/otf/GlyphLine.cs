@@ -109,12 +109,11 @@ namespace iTextSharp.IO.Font.Otf
 
 		public virtual String ToUnicodeString(int start, int end)
 		{
-			IEnumerator<GlyphLine.GlyphLinePart> iter = new ActualTextIterator(this, start, end
-				);
+			ActualTextIterator iter = new ActualTextIterator(this, start, end);
 			StringBuilder str = new StringBuilder();
-			while (iter.MoveNext())
+			while (iter.HasNext())
 			{
-				GlyphLine.GlyphLinePart part = iter.Current;
+				GlyphLine.GlyphLinePart part = iter.Next();
 				if (part.actualText != null)
 				{
 					str.Append(part.actualText);

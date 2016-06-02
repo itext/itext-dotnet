@@ -308,10 +308,9 @@ namespace iTextSharp.IO.Codec
 					segments[tmp.segmentNumber] = tmp;
 				}
 				while (tmp.type != END_OF_FILE);
-				IEnumerator<int> segs = segments.Keys.GetEnumerator();
-				while (segs.MoveNext())
+				foreach (int integer in segments.Keys)
 				{
-					ReadSegment(segments.Get(segs.Current));
+					ReadSegment(segments.Get(integer));
 				}
 			}
 		}

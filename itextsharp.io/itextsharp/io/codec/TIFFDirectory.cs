@@ -457,11 +457,10 @@ namespace iTextSharp.IO.Codec
 		public virtual int[] GetTags()
 		{
 			int[] tags = new int[fieldIndex.Count];
-			IEnumerator<int> e = fieldIndex.Keys.GetEnumerator();
 			int i = 0;
-			while (e.MoveNext())
+			foreach (int? integer in fieldIndex.Keys)
 			{
-				tags[i++] = (int)e.Current;
+				tags[i++] = (int)integer;
 			}
 			return tags;
 		}

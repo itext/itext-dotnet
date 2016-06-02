@@ -1347,27 +1347,21 @@ namespace iTextSharp.IO.Font
 			int[] currentOffset = new int[1];
 			currentOffset[0] = 0;
 			// Count and save the offset for each item
-			IEnumerator<CFFFont.Item> listIter = OutputList.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item in OutputList)
 			{
-				CFFFont.Item item = listIter.Current;
 				item.Increment(currentOffset);
 			}
 			// Compute the Xref for each of the offset items
-			listIter = OutputList.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item_1 in OutputList)
 			{
-				CFFFont.Item item = listIter.Current;
-				item.Xref();
+				item_1.Xref();
 			}
 			int size = currentOffset[0];
 			byte[] b = new byte[size];
 			// Emit all the items into the new byte array
-			listIter = OutputList.GetEnumerator();
-			while (listIter.MoveNext())
+			foreach (CFFFont.Item item_2 in OutputList)
 			{
-				CFFFont.Item item = listIter.Current;
-				item.Emit(b);
+				item_2.Emit(b);
 			}
 			// Return the new stream
 			return b;

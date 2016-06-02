@@ -669,10 +669,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 			float fontSize = currentGs.GetFontSize() / 1000f;
 			float charSpacing = currentGs.GetCharSpacing();
 			float scaling = currentGs.GetHorizontalScaling() / 100f;
-			for (IEnumerator<GlyphLine.GlyphLinePart> iterator = text.Iterator(); iterator.MoveNext
+			for (ActualTextIterator iterator = new ActualTextIterator(text); iterator.HasNext
 				(); )
 			{
-				GlyphLine.GlyphLinePart glyphLinePart = iterator.Current;
+				GlyphLine.GlyphLinePart glyphLinePart = iterator.Next();
 				if (glyphLinePart.actualText != null)
 				{
 					PdfDictionary properties = new PdfDictionary();
@@ -729,7 +729,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 				{
 					EndMarkedContent();
 				}
-				if (glyphLinePart.end > sub && iterator.MoveNext())
+				if (glyphLinePart.end > sub && iterator.HasNext())
 				{
 					contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart
 						.end - 1), true).WriteSpace().WriteFloat(0).WriteSpace().WriteBytes(Td);
