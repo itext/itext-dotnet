@@ -71,7 +71,7 @@ namespace iTextSharp.IO {
 
         public static String[] Split(this String str, String regex)
         {
-            return str.Split(str.ToCharArray());
+            return str.Split(regex.ToCharArray());
         }
 
         public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd)
