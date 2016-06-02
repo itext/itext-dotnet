@@ -164,7 +164,7 @@ namespace iTextSharp.Signatures
 				cr.EngineInit(new MemoryStream(certsKey));
 				certs = cr.EngineReadAll();
 				signCerts = certs;
-				signCert = (X509Certificate)certs.GetEnumerator().Current;
+				signCert = (X509Certificate)certs.Iterator().Next();
 				crls = new List<X509Crl>();
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(contentsKey));
 				digest = ((Asn1OctetString)@in.ReadObject()).GetOctets();

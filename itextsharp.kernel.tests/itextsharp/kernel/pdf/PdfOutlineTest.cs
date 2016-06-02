@@ -332,13 +332,8 @@ namespace iTextSharp.Kernel.Pdf
 			thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")
 				));
 			pdfDoc.Close();
-			CompareTool compareTool = new CompareTool();
-			String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations01.pdf"
-				, destinationFolder, "diff_");
-			if (errorMessage != null)
-			{
-				NUnit.Framework.Assert.Fail(errorMessage);
-			}
+			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
+				 + "cmp_outlinesWithNamedDestinations01.pdf", destinationFolder, "diff_"));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
