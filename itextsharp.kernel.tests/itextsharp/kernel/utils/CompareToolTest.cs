@@ -37,7 +37,7 @@ namespace iTextSharp.Kernel.Utils
 				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report01.xml"
-				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"
+				, destinationFolder + "simple_pdf.report.xml"), "CompareTool report differs from the reference one"
 				);
 		}
 
@@ -60,7 +60,7 @@ namespace iTextSharp.Kernel.Utils
 				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report02.xml"
-				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"
+				, destinationFolder + "tagged_pdf.report.xml"), "CompareTool report differs from the reference one"
 				);
 		}
 
@@ -83,7 +83,7 @@ namespace iTextSharp.Kernel.Utils
 				);
 			// Comparing the report to the reference one.
 			NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(sourceFolder + "cmp_report03.xml"
-				, destinationFolder + "report.xml"), "CompareTool report differs from the reference one"
+				, destinationFolder + "screenAnnotation.report.xml"), "CompareTool report differs from the reference one"
 				);
 		}
 	}

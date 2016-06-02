@@ -809,8 +809,12 @@ namespace iTextSharp.Kernel.Utils
 			{
 				try
 				{
-					compareResult.WriteReportToXml(new FileStream(outPath + "/report.xml", FileMode.Create
-						));
+				    String filename = Path.GetFileName(outPdf);
+				    FileStream xml = new FileStream(outPath + "/" + filename.Substring(0, filename.Length - 3) + "report.xml",
+				        FileMode.Create
+				        );
+					compareResult.WriteReportToXml(xml);
+                    xml.Close();
 				}
 				catch (Exception)
 				{
