@@ -42,16 +42,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Javax.Xml.Parsers;
-using Org.W3c.Dom;
-using Org.Xml.Sax;
-using iTextSharp.Forms;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Xmp;
+using iTextSharp.Layout;
 
 namespace iTextSharp.Forms.Xfa
 {
@@ -60,17 +61,17 @@ namespace iTextSharp.Forms.Xfa
 	{
 		private const String DEFAULT_XFA = "com/itextpdf/forms/xfa/default.xml";
 
-		private Node templateNode;
+		private XElement templateNode;
 
 		private Xml2SomDatasets datasetsSom;
 
-		private Node datasetsNode;
+		private XElement datasetsNode;
 
 		private AcroFieldsSearch acroFieldsSom;
 
 		private bool xfaPresent = false;
 
-		private Document domDocument;
+		private XDocument domDocument;
 
 		/// <summary>The URI for the XFA Data schema.</summary>
 		public const String XFA_DATA_SCHEMA = "http://www.xfa.org/schema/xfa-data/1.0/";
@@ -96,10 +97,10 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>
 		/// Creates an XFA form by the
-		/// <see cref="Org.W3c.Dom.Document"/>
+		/// <see cref="Document"/>
 		/// containing all xml information
 		/// </summary>
-		public XfaForm(Document domDocument)
+		public XfaForm(XDocument domDocument)
 		{
 			SetDomDocument(domDocument);
 		}
@@ -206,7 +207,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <summary>Extracts DOM nodes from an XFA document.</summary>
 		/// <param name="domDocument">
 		/// an XFA file as a
-		/// <see cref="Org.W3c.Dom.Document">
+		/// <see cref="Document">
 		/// DOM
 		/// document
 		/// </see>
@@ -217,23 +218,23 @@ namespace iTextSharp.Forms.Xfa
 		/// of XFA packet names and their associated
 		/// <see cref="Org.W3c.Dom.Node">DOM nodes</see>
 		/// </returns>
-		public static IDictionary<String, Node> ExtractXFANodes(Document domDocument)
+		public static IDictionary<String, XNode> ExtractXFANodes(XDocument domDocument)
 		{
-			IDictionary<String, Node> xfaNodes = new Dictionary<String, Node>();
-			Node n = domDocument.GetFirstChild();
-			while (n.GetChildNodes().GetLength() == 0)
+			IDictionary<String, XNode> xfaNodes = new Dictionary<String, XNode>();
+		    XNode n = domDocument.FirstNode;
+			while (((XElement)n).Nodes().Count() == 0)
 			{
-				n = n.GetNextSibling();
+				n = n.NextNode;
 			}
-			n = n.GetFirstChild();
+			n = ((XElement)n).FirstNode;
 			while (n != null)
 			{
-				if (n.GetNodeType() == Node.ELEMENT_NODE)
+				if (n is XElement)
 				{
-					String s = n.GetLocalName();
+					String s = ((XElement)n).Name.LocalName;
 					xfaNodes[s] = n;
 				}
-				n = n.GetNextSibling();
+				n = n.NextNode;
 			}
 			return xfaNodes;
 		}
@@ -257,7 +258,7 @@ namespace iTextSharp.Forms.Xfa
 				if (name != null)
 				{
 					String shortName = Xml2Som.GetShortName(name);
-					Node xn = FindDatasetsNode(shortName);
+					XNode xn = FindDatasetsNode(shortName);
 					if (xn == null)
 					{
 						xn = datasetsSom.InsertNode(GetDatasetsNode(), shortName);
@@ -300,7 +301,7 @@ namespace iTextSharp.Forms.Xfa
 			{
 				acroFieldsSom = new AcroFieldsSearch(datasetsSom.GetName2Node().Keys);
 				return acroFieldsSom.GetAcroShort2LongName().ContainsKey(name) ? acroFieldsSom.GetAcroShort2LongName
-					().Get(name) : acroFieldsSom.InverseSearchGlobal(Xml2Som.SplitParts(name));
+					().Get(name) : acroFieldsSom.InverseSearchGlobal(new List<string>(new Stack<string>(Xml2Som.SplitParts(name))));
 			}
 			return null;
 		}
@@ -314,7 +315,7 @@ namespace iTextSharp.Forms.Xfa
 		public virtual String FindDatasetsName(String name)
 		{
 			return datasetsSom.GetName2Node().ContainsKey(name) ? name : datasetsSom.InverseSearchGlobal
-				(Xml2Som.SplitParts(name));
+				(new List<string>(new Stack<string>(Xml2Som.SplitParts(name))));
 		}
 
 		/// <summary>
@@ -323,7 +324,7 @@ namespace iTextSharp.Forms.Xfa
 		/// </summary>
 		/// <param name="name">the complete or partial name</param>
 		/// <returns>the <CODE>Node</CODE> or <CODE>null</CODE> if not found</returns>
-		public virtual Node FindDatasetsNode(String name)
+		public virtual XNode FindDatasetsNode(String name)
 		{
 			if (name == null)
 			{
@@ -340,7 +341,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <summary>Gets all the text contained in the child nodes of this node.</summary>
 		/// <param name="n">the <CODE>Node</CODE></param>
 		/// <returns>the text found or "" if no text was found</returns>
-		public static String GetNodeText(Node n)
+		public static String GetNodeText(XNode n)
 		{
 			return n == null ? "" : GetNodeText(n, "");
 		}
@@ -352,34 +353,35 @@ namespace iTextSharp.Forms.Xfa
 		/// </remarks>
 		/// <param name="n">the <CODE>Node</CODE> to add the text to</param>
 		/// <param name="text">the text to add</param>
-		public virtual void SetNodeText(Node n, String text)
+		public virtual void SetNodeText(XNode n, String text)
 		{
 			if (n == null)
 			{
 				return;
 			}
-			Node nc = null;
-			while ((nc = n.GetFirstChild()) != null)
+			XNode nc = null;
+			while ((nc = ((XElement)n).FirstNode) != null)
 			{
-				n.RemoveChild(nc);
+                nc.Remove();
 			}
-			if (n.GetAttributes().GetNamedItemNS(XFA_DATA_SCHEMA, "dataNode") != null)
-			{
-				n.GetAttributes().RemoveNamedItemNS(XFA_DATA_SCHEMA, "dataNode");
-			}
-			n.AppendChild(domDocument.CreateTextNode(text));
+		    XAttribute attr = ((XElement) n).Attribute((XNamespace) XFA_DATA_SCHEMA + "dataNode");
+		    if (attr != null) {
+		        attr.Remove();
+		    }
+            
+			((XElement)n).Add(new XText(text));
 		}
 
 		/// <summary>Gets the top level DOM document.</summary>
 		/// <returns>the top level DOM document</returns>
-		public virtual Document GetDomDocument()
+		public virtual XDocument GetDomDocument()
 		{
 			return domDocument;
 		}
 
 		/// <summary>Sets the top DOM document.</summary>
 		/// <param name="domDocument">the top DOM document</param>
-		public virtual void SetDomDocument(Document domDocument)
+		public virtual void SetDomDocument(XDocument domDocument)
 		{
 			this.domDocument = domDocument;
 			ExtractNodes();
@@ -387,7 +389,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>Gets the <CODE>Node</CODE> that corresponds to the datasets part.</summary>
 		/// <returns>the <CODE>Node</CODE> that corresponds to the datasets part</returns>
-		public virtual Node GetDatasetsNode()
+		public virtual XNode GetDatasetsNode()
 		{
 			return datasetsNode;
 		}
@@ -435,7 +437,7 @@ namespace iTextSharp.Forms.Xfa
 		/// </exception>
 		public virtual void FillXfaForm(FileInfo file, bool readOnly)
 		{
-			FillXfaForm(new FileStream(file, FileMode.Open, FileAccess.Read), readOnly);
+			FillXfaForm(new FileStream(file.FullName, FileMode.Open, FileAccess.Read), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -475,7 +477,7 @@ namespace iTextSharp.Forms.Xfa
 		/// </exception>
 		public virtual void FillXfaForm(Stream @is, bool readOnly)
 		{
-			FillXfaForm(new InputSource(@is), readOnly);
+			FillXfaForm(XmlReader.Create(@is), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -493,7 +495,7 @@ namespace iTextSharp.Forms.Xfa
 		/// on IO error on the
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
-		public virtual void FillXfaForm(InputSource @is)
+		public virtual void FillXfaForm(XmlReader @is)
 		{
 			FillXfaForm(@is, false);
 		}
@@ -513,24 +515,8 @@ namespace iTextSharp.Forms.Xfa
 		/// on IO error on the
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
-		public virtual void FillXfaForm(InputSource @is, bool readOnly)
-		{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.NewInstance();
-			DocumentBuilder db;
-			try
-			{
-				db = dbf.NewDocumentBuilder();
-				Document newdoc = db.Parse(@is);
-				FillXfaForm(newdoc.GetDocumentElement(), readOnly);
-			}
-			catch (ParserConfigurationException e)
-			{
-				throw new PdfException(e);
-			}
-			catch (SAXException e)
-			{
-				throw new PdfException(e);
-			}
+		public virtual void FillXfaForm(XmlReader @is, bool readOnly) {
+		    FillXfaForm(XDocument.Load(@is), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -538,7 +524,7 @@ namespace iTextSharp.Forms.Xfa
 		/// the input
 		/// <see cref="Org.W3c.Dom.Node"/>
 		/// </param>
-		public virtual void FillXfaForm(Node node)
+		public virtual void FillXfaForm(XNode node)
 		{
 			FillXfaForm(node, false);
 		}
@@ -549,24 +535,23 @@ namespace iTextSharp.Forms.Xfa
 		/// <see cref="Org.W3c.Dom.Node"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
-		public virtual void FillXfaForm(Node node, bool readOnly)
+		public virtual void FillXfaForm(XNode node, bool readOnly)
 		{
 			if (readOnly)
 			{
-				NodeList nodeList = domDocument.GetElementsByTagName("field");
-				for (int i = 0; i < nodeList.GetLength(); i++)
+				IEnumerable<XElement> nodeList = domDocument.Elements("field");
+				for (int i = 0; i < nodeList.Count(); i++)
 				{
-					((Element)nodeList.Item(i)).SetAttribute("access", "readOnly");
+					nodeList.ElementAt(i).SetAttributeValue("access", "readOnly");
 				}
 			}
-			NodeList allChilds = datasetsNode.GetChildNodes();
-			int len = allChilds.GetLength();
-			Node data = null;
-			for (int k = 0; k < len; ++k)
-			{
-				Node n = allChilds.Item(k);
-				if (n.GetNodeType() == Node.ELEMENT_NODE && n.GetLocalName().Equals("data") && XFA_DATA_SCHEMA
-					.Equals(n.GetNamespaceURI()))
+		    IEnumerable<XNode> allChilds = ((XElement) datasetsNode).Nodes();
+		    int len = allChilds.Count();
+			XNode data = null;
+			for (int k = 0; k < len; ++k) {
+			    XNode n = allChilds.ElementAt(k);
+				if (n is XElement && ((XElement)n).Name.LocalName.Equals("data") && XFA_DATA_SCHEMA
+					.Equals(((XElement)n).Name.NamespaceName))
 				{
 					data = n;
 					break;
@@ -574,45 +559,41 @@ namespace iTextSharp.Forms.Xfa
 			}
 			if (data == null)
 			{
-				data = datasetsNode.GetOwnerDocument().CreateElementNS(XFA_DATA_SCHEMA, "xfa:data"
-					);
-				datasetsNode.AppendChild(data);
+				datasetsNode.Add(new XElement((XNamespace)XFA_DATA_SCHEMA + "xfa:data"));
 			}
-			NodeList list = data.GetChildNodes();
-			if (list.GetLength() == 0)
+		    IEnumerable<XNode> list = ((XElement) data).Nodes();
+			if (list.Count() == 0)
 			{
-				data.AppendChild(domDocument.ImportNode(node, true));
+				((XElement)data).Add(node);
 			}
 			else
 			{
 				// There's a possibility that first child node of XFA data is not an ELEMENT but simply a TEXT. In this case data will be duplicated.
 				// data.replaceChild(domDocument.importNode(node, true), data.getFirstChild());
-				Node firstNode = GetFirstElementNode(data);
+				XNode firstNode = GetFirstElementNode(data);
 				if (firstNode != null)
 				{
-					data.ReplaceChild(domDocument.ImportNode(node, true), firstNode);
+					firstNode.ReplaceWith(node);
 				}
 			}
 			ExtractNodes();
 		}
 
-		private static String GetNodeText(Node n, String name)
-		{
-			Node n2 = n.GetFirstChild();
+		private static String GetNodeText(XNode n, String name) {
+		    XNode n2 = ((XElement) n).FirstNode;
 			while (n2 != null)
 			{
-				if (n2.GetNodeType() == Node.ELEMENT_NODE)
+				if (n2 is XElement)
 				{
 					name = GetNodeText(n2, name);
 				}
 				else
 				{
-					if (n2.GetNodeType() == Node.TEXT_NODE)
-					{
-						name += n2.GetNodeValue();
+					if (n2 is XText) {
+					    name += ((XText) n2).Value;
 					}
 				}
-				n2 = n2.GetNextSibling();
+			    n2 = ((XElement) n2).NextNode;
 			}
 			return name;
 		}
@@ -635,14 +616,10 @@ namespace iTextSharp.Forms.Xfa
 		/// <param name="n">the XML document</param>
 		/// <returns>the serialized XML document</returns>
 		/// <exception cref="System.IO.IOException">on error</exception>
-		private static byte[] SerializeDocument(Node n)
+		private static byte[] SerializeDocument(XNode n)
 		{
-			XmlDomWriter xw = new XmlDomWriter();
-			MemoryStream fout = new MemoryStream();
-			xw.SetOutput(fout, null);
-			xw.SetCanonical(false);
-			xw.Write(n);
-			fout.Close();
+            MemoryStream fout = new MemoryStream();
+            n.WriteTo(new XmlTextWriter(fout, Encoding.UTF8));
 			return fout.ToArray();
 		}
 
@@ -682,29 +659,26 @@ namespace iTextSharp.Forms.Xfa
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(Stream inputStream)
 		{
-			DocumentBuilderFactory fact = DocumentBuilderFactory.NewInstance();
-			fact.SetNamespaceAware(true);
-			DocumentBuilder db = fact.NewDocumentBuilder();
-			SetDomDocument(db.Parse(inputStream));
+			SetDomDocument(XDocument.Load(inputStream));
 			xfaPresent = true;
 		}
 
 		/// <summary>Extracts the nodes from the domDocument.</summary>
 		private void ExtractNodes()
 		{
-			IDictionary<String, Node> xfaNodes = ExtractXFANodes(domDocument);
+			IDictionary<String, XNode> xfaNodes = ExtractXFANodes(domDocument);
 			if (xfaNodes.ContainsKey("template"))
 			{
-				templateNode = xfaNodes.Get("template");
+				templateNode = ((XElement)xfaNodes).Descendants("template").First();
 			}
 			if (xfaNodes.ContainsKey("datasets"))
 			{
-				datasetsNode = xfaNodes.Get("datasets");
-				datasetsSom = new Xml2SomDatasets(datasetsNode.GetFirstChild());
+				datasetsNode = ((XElement)xfaNodes).Descendants("datasets").First();
+				datasetsSom = new Xml2SomDatasets(((XElement)datasetsNode).FirstNode);
 			}
 			if (datasetsNode == null)
 			{
-				CreateDatasetsNode(domDocument.GetFirstChild());
+				CreateDatasetsNode(domDocument.FirstNode);
 			}
 		}
 
@@ -713,30 +687,29 @@ namespace iTextSharp.Forms.Xfa
 		/// Some XFA forms don't have a datasets node.
 		/// If this is the case, we have to add one.
 		/// </remarks>
-		private void CreateDatasetsNode(Node n)
+		private void CreateDatasetsNode(XNode n)
 		{
-			while (n.GetChildNodes().GetLength() == 0)
-			{
-				n = n.GetNextSibling();
+			while (((XElement)n).Nodes().Count() == 0) {
+			    n = n.NextNode;
 			}
 			if (n != null)
 			{
-				Element e = n.GetOwnerDocument().CreateElement("xfa:datasets");
-				e.SetAttribute("xmlns:xfa", XFA_DATA_SCHEMA);
+				XElement e = new XElement("xfa:datasets");
+				e.SetAttributeValue("xmlns:xfa", XFA_DATA_SCHEMA);
 				datasetsNode = e;
-				n.AppendChild(datasetsNode);
+				((XElement)n).Add(datasetsNode);
 			}
 		}
 
-		private Node GetFirstElementNode(Node src)
+		private XNode GetFirstElementNode(XNode src)
 		{
-			Node result = null;
-			NodeList list = src.GetChildNodes();
-			for (int i = 0; i < list.GetLength(); i++)
+			XNode result = null;
+		    IEnumerable<XNode> list = ((XElement) src).Nodes();
+			for (int i = 0; i < list.Count(); i++)
 			{
-				if (list.Item(i).GetNodeType() == Node.ELEMENT_NODE)
+				if (list.ElementAt(i) is XElement)
 				{
-					result = list.Item(i);
+					result = list.ElementAt(i);
 					break;
 				}
 			}

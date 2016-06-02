@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Org.W3c.Dom;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace iTextSharp.Forms.Xfa
 {
@@ -56,10 +57,10 @@ namespace iTextSharp.Forms.Xfa
 		/// not the datasets but the data node that comes below.
 		/// </remarks>
 		/// <param name="n">the datasets node</param>
-		public Xml2SomDatasets(Node n)
+		public Xml2SomDatasets(XNode n)
 		{
 			order = new List<String>();
-			name2Node = new Dictionary<String, Node>();
+			name2Node = new Dictionary<String, XNode>();
 			stack = new Stack<String>();
 			anform = 0;
 			inverseSearch = new Dictionary<String, InverseStore>();
@@ -70,28 +71,27 @@ namespace iTextSharp.Forms.Xfa
 		/// <param name="n">the datasets top <CODE>Node</CODE></param>
 		/// <param name="shortName">the short name</param>
 		/// <returns>the new <CODE>Node</CODE> of the inserted name</returns>
-		public virtual Node InsertNode(Node n, String shortName)
+		public virtual XNode InsertNode(XNode n, String shortName)
 		{
 			Stack<String> localStack = SplitParts(shortName);
-			Document doc = n.GetOwnerDocument();
-			Node n2 = null;
-			n = n.GetFirstChild();
-			while (n.GetNodeType() != Node.ELEMENT_NODE)
-			{
-				n = n.GetNextSibling();
+			XDocument doc = n.Document;
+			XNode n2 = null;
+		    n = ((XElement) n).FirstNode;
+			while (n is XElement) {
+			    n = ((XElement) n).NextNode;
 			}
 			for (int k = 0; k < localStack.Count; ++k)
 			{
-				String part = localStack[k];
+				String part = localStack.ElementAt(k);
 				int idx = part.LastIndexOf('[');
 				String name = part.JSubstring(0, idx);
 				idx = System.Convert.ToInt32(part.JSubstring(idx + 1, part.Length - 1));
 				int found = -1;
-				for (n2 = n.GetFirstChild(); n2 != null; n2 = n2.GetNextSibling())
+				for (n2 = ((XElement)n).FirstNode; n2 != null; n2 = ((XNode)n2).NextNode)
 				{
-					if (n2.GetNodeType() == Node.ELEMENT_NODE)
+					if (n2 is XElement)
 					{
-						String s = EscapeSom(n2.GetLocalName());
+						String s = EscapeSom(((XElement)n2).Name.LocalName);
 						if (s.Equals(name))
 						{
 							++found;
@@ -102,13 +102,10 @@ namespace iTextSharp.Forms.Xfa
 						}
 					}
 				}
-				for (; found < idx; ++found)
-				{
-					n2 = doc.CreateElementNS(null, name);
-					n2 = n.AppendChild(n2);
-					Node attr = doc.CreateAttributeNS(XfaForm.XFA_DATA_SCHEMA, "dataNode");
-					attr.SetNodeValue("dataGroup");
-					n2.GetAttributes().SetNamedItemNS(attr);
+				for (; found < idx; ++found) {
+				    n2 = new XElement(name);
+                    ((XElement) n).Add(n2);
+				    ((XElement) n2).SetAttributeValue((XNamespace) XfaForm.XFA_DATA_SCHEMA + "dataNode", "dataGroup");
 				}
 				n = n2;
 			}
@@ -118,13 +115,12 @@ namespace iTextSharp.Forms.Xfa
 			return n2;
 		}
 
-		private static bool HasChildren(Node n)
+		private static bool HasChildren(XNode n)
 		{
-			Node dataNodeN = n.GetAttributes().GetNamedItemNS(XfaForm.XFA_DATA_SCHEMA, "dataNode"
-				);
+			XAttribute dataNodeN = ((XElement)n).Attribute((XNamespace)XfaForm.XFA_DATA_SCHEMA + "dataNode");
 			if (dataNodeN != null)
 			{
-				String dataNode = dataNodeN.GetNodeValue();
+				String dataNode = dataNodeN.Value;
 				if ("dataGroup".Equals(dataNode))
 				{
 					return true;
@@ -137,33 +133,32 @@ namespace iTextSharp.Forms.Xfa
 					}
 				}
 			}
-			if (!n.HasChildNodes())
+			if (!((XElement)n).Nodes().Any())
 			{
 				return false;
 			}
-			Node n2 = n.GetFirstChild();
+		    XNode n2 = ((XElement) n).FirstNode;
 			while (n2 != null)
 			{
-				if (n2.GetNodeType() == Node.ELEMENT_NODE)
+				if (n2 is XElement)
 				{
 					return true;
 				}
-				n2 = n2.GetNextSibling();
+			    n2 = ((XElement) n2).NextNode;
 			}
 			return false;
 		}
 
-		private void ProcessDatasetsInternal(Node n)
+		private void ProcessDatasetsInternal(XNode n)
 		{
 			if (n != null)
 			{
 				IDictionary<String, int?> ss = new Dictionary<String, int?>();
-				Node n2 = n.GetFirstChild();
+				XNode n2 = ((XElement)n).FirstNode;
 				while (n2 != null)
 				{
-					if (n2.GetNodeType() == Node.ELEMENT_NODE)
-					{
-						String s = EscapeSom(n2.GetLocalName());
+					if (n2 is XElement) {
+					    String s = EscapeSom(((XElement) n2).Name.LocalName);
 						int? i = ss.Get(s);
 						if (i == null)
 						{
@@ -190,7 +185,7 @@ namespace iTextSharp.Forms.Xfa
 							stack.Pop();
 						}
 					}
-					n2 = n2.GetNextSibling();
+				    n2 = ((XElement) n2).NextNode;
 				}
 			}
 		}

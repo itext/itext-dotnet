@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace iTextSharp.Forms {
     internal static class FormsExtensions {
@@ -41,6 +42,11 @@ namespace iTextSharp.Forms {
             dictionary.Remove(key);
 
             return value;
+        }
+
+        public static void Write(this Stream stream, byte[] buffer)
+        {
+            stream.Write(buffer, 0, buffer.Length);
         }
     }
 }

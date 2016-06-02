@@ -43,8 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Org.W3c.Dom;
+using System.Xml.Linq;
 
 namespace iTextSharp.Forms.Xfa
 {
@@ -55,7 +56,7 @@ namespace iTextSharp.Forms.Xfa
 		protected internal IList<String> order;
 
 		/// <summary>The mapping of full names to nodes.</summary>
-		protected internal IDictionary<String, Node> name2Node;
+		protected internal IDictionary<String, XNode> name2Node;
 
 		/// <summary>The data to do a search from the bottom hierarchy.</summary>
 		protected internal IDictionary<String, InverseStore> inverseSearch;
@@ -122,16 +123,16 @@ namespace iTextSharp.Forms.Xfa
 		/// <returns>the stack as the sequence of elements separated by '.'</returns>
 		protected internal virtual String PrintStack()
 		{
-			if (stack.Empty())
+			if (stack.Count == 0)
 			{
 				return "";
 			}
 			StringBuilder s = new StringBuilder();
 			for (int k = 0; k < stack.Count; ++k)
 			{
-				s.Append('.').Append(stack[k]);
+				s.Append('.').Append(stack.ElementAt(k));
 			}
-			return s.Substring(1);
+			return s.ToString().Substring(1);
 		}
 
 		/// <summary>Gets the name with the <CODE>#subform</CODE> removed.</summary>
@@ -184,7 +185,7 @@ namespace iTextSharp.Forms.Xfa
 			}
 			for (int k = stack.Count - 2; k >= 0; --k)
 			{
-				last = stack[k];
+				last = stack.ElementAt(k);
 				InverseStore store2;
 				int idx = store.part.IndexOf(last);
 				if (idx < 0)
@@ -208,7 +209,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <returns>the full name or <CODE>null</CODE> if not found</returns>
 		public virtual String InverseSearchGlobal(IList<String> parts)
 		{
-			if (parts.IsEmpty())
+			if (parts.Count == 0)
 			{
 				return null;
 			}
@@ -275,7 +276,7 @@ namespace iTextSharp.Forms.Xfa
 				{
 					part += "[0]";
 				}
-				parts.Add(part);
+				parts.Push(part);
 				last = pos + 1;
 			}
 			part = name.Substring(last);
@@ -283,7 +284,7 @@ namespace iTextSharp.Forms.Xfa
 			{
 				part += "[0]";
 			}
-			parts.Add(part);
+			parts.Push(part);
 			return parts;
 		}
 
@@ -303,14 +304,14 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>Gets the mapping of full names to nodes.</summary>
 		/// <returns>the mapping of full names to nodes</returns>
-		public virtual IDictionary<String, Node> GetName2Node()
+		public virtual IDictionary<String, XNode> GetName2Node()
 		{
 			return name2Node;
 		}
 
 		/// <summary>Sets the mapping of full names to nodes.</summary>
 		/// <param name="name2Node">the mapping of full names to nodes</param>
-		public virtual void SetName2Node(IDictionary<String, Node> name2Node)
+		public virtual void SetName2Node(IDictionary<String, XNode> name2Node)
 		{
 			this.name2Node = name2Node;
 		}
