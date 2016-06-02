@@ -26,7 +26,7 @@ namespace iTextSharp.Test {
         }
 
         public void Trace(string message) {
-            iLog.Warn(message);
+            System.Diagnostics.Trace.WriteLine(message);
         }
 
         public bool IsTraceEnabled() {
