@@ -1488,13 +1488,10 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				if (writer != null)
 				{
-					if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression)
+					if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression 
+						== null)
 					{
 						writer.properties.isFullCompression = true;
-					}
-					else
-					{
-						writer.properties.isFullCompression = false;
 					}
 					if (reader != null && !reader.IsOpenedWithFullPermission())
 					{

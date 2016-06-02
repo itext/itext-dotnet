@@ -664,18 +664,20 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float[] GetMargins()
 		{
-			return new float[] { (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.MARGIN_TOP), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_RIGHT
-				), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM), 
-				(float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_LEFT) };
+			return new float[] { (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_TOP), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_RIGHT), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_LEFT) };
 		}
 
 		protected internal virtual float[] GetPaddings()
 		{
-			return new float[] { (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.PADDING_TOP), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_RIGHT
-				), (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_BOTTOM)
-				, (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.PADDING_LEFT) };
+			return new float[] { (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_TOP), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_RIGHT), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_BOTTOM), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.PADDING_LEFT) };
 		}
 
 		protected internal virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse)
@@ -709,12 +711,14 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyAbsolutePositioningTranslation(bool reverse)
 		{
-			float top = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TOP);
-			float bottom = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.BOTTOM
+			float top = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TOP
 				);
-			float left = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.LEFT);
-			float right = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.RIGHT
+			float bottom = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.BOTTOM);
+			float left = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.LEFT
 				);
+			float right = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+				RIGHT);
 			int reverseMultiplier = reverse ? -1 : 1;
 			float dxRight = left != 0 ? left * reverseMultiplier : -right * reverseMultiplier;
 			float dyUp = top != 0 ? -top * reverseMultiplier : bottom * reverseMultiplier;

@@ -458,8 +458,8 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void Justify(float width)
 		{
-			float ratio = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.SPACING_RATIO
-				);
+			float ratio = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+				SPACING_RATIO);
 			float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().
 				GetOccupiedArea().GetBBox().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox
 				().GetWidth();
@@ -743,7 +743,7 @@ namespace iTextSharp.Layout.Renderer
 		private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth
 			)
 		{
-			float? tabDefault = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT
+			float? tabDefault = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT
 				);
 			float? tabWidth = tabDefault - curWidth % tabDefault;
 			if (curWidth + tabWidth > lineWidth)

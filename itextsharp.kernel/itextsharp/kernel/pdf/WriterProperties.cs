@@ -50,7 +50,7 @@ namespace iTextSharp.Kernel.Pdf
 		protected internal int compressionLevel;
 
 		/// <summary>Indicates if to use full compression (using object streams).</summary>
-		protected internal bool isFullCompression;
+		protected internal bool? isFullCompression;
 
 		/// <summary>Indicates if the writer copy objects in a smart mode.</summary>
 		/// <remarks>
@@ -72,7 +72,7 @@ namespace iTextSharp.Kernel.Pdf
 			smartMode = false;
 			debugMode = false;
 			compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
-			isFullCompression = true;
+			isFullCompression = null;
 			encryptionProperties = new EncryptionProperties();
 		}
 

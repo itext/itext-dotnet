@@ -152,7 +152,7 @@ namespace iTextSharp.Layout.Renderer
 			ApplyBorderBox(layoutBox, false);
 			if (IsPositioned())
 			{
-				float x = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+				float x = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
 				layoutBox.SetX(relativeX + x);
 			}
@@ -611,7 +611,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (IsPositioned())
 			{
-				float y = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+				float y = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}

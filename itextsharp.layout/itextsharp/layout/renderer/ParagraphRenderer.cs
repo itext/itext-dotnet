@@ -80,7 +80,7 @@ namespace iTextSharp.Layout.Renderer
 			bool isPositioned = IsPositioned();
 			if (isPositioned)
 			{
-				float x = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+				float x = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
 				float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
 				parentBBox.SetX(relativeX + x);
 			}
@@ -138,11 +138,11 @@ namespace iTextSharp.Layout.Renderer
 			float lastLineHeight = 0;
 			while (currentRenderer != null)
 			{
-				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_DEFAULT, GetPropertyAsFloat
-					(iTextSharp.Layout.Property.Property.TAB_DEFAULT));
+				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_DEFAULT, this
+					.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT));
 				currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, this.GetProperty
 					<Object>(iTextSharp.Layout.Property.Property.TAB_STOPS));
-				float lineIndent = anythingPlaced ? 0 : (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				float lineIndent = anythingPlaced ? 0 : (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 					.FIRST_LINE_INDENT);
 				float availableWidth = layoutBox.GetWidth() - lineIndent;
 				Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox
@@ -295,8 +295,8 @@ namespace iTextSharp.Layout.Renderer
 				occupiedArea.GetBBox().MoveDown(moveDown);
 				occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
 			}
-			float? blockHeight = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
-				);
+			float? blockHeight = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+				HEIGHT);
 			ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
 			if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
 			{
@@ -306,7 +306,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (isPositioned)
 			{
-				float y = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+				float y = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
 				float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
 				Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
 			}
@@ -348,7 +348,7 @@ namespace iTextSharp.Layout.Renderer
 			iTextSharp.Layout.Renderer.ParagraphRenderer overflowRenderer = (iTextSharp.Layout.Renderer.ParagraphRenderer
 				)GetNextRenderer();
 			// Reset first line indent in case of overflow.
-			float firstLineIndent = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			float firstLineIndent = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 				.FIRST_LINE_INDENT);
 			if (firstLineIndent != 0)
 			{

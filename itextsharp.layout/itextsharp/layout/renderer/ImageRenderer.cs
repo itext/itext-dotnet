@@ -86,19 +86,19 @@ namespace iTextSharp.Layout.Renderer
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), 0, 0));
 			width = RetrieveWidth(layoutBox.GetWidth());
-			float? angle = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
+			float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
 				);
 			PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
 			imageWidth = xObject.GetWidth();
 			imageHeight = xObject.GetHeight();
 			width = width == null ? imageWidth : width;
 			height = (float)width / imageWidth * imageHeight;
-			fixedXPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
-			fixedYPosition = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
-			float? horizontalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			fixedXPosition = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+			fixedYPosition = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+			float? horizontalScaling = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 				.HORIZONTAL_SCALING, 1f);
-			float? verticalScaling = GetPropertyAsFloat(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
-				, 1f);
+			float? verticalScaling = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.VERTICAL_SCALING, 1f);
 			AffineTransform t = new AffineTransform();
 			if (xObject is PdfFormXObject && width != imageWidth)
 			{
@@ -146,10 +146,10 @@ namespace iTextSharp.Layout.Renderer
 			occupiedArea.GetBBox().MoveDown(height);
 			occupiedArea.GetBBox().SetHeight(height);
 			occupiedArea.GetBBox().SetWidth((float)width);
-			float leftMargin = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-				MARGIN_LEFT);
-			float topMargin = (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property.MARGIN_TOP
-				);
+			float leftMargin = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_LEFT);
+			float topMargin = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+				.MARGIN_TOP);
 			if (leftMargin != 0 || topMargin != 0)
 			{
 				TranslateImage(leftMargin, topMargin, t);
@@ -250,11 +250,11 @@ namespace iTextSharp.Layout.Renderer
 				SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
 					(area.GetBBox().GetWidth()));
 				// if still image is not scaled properly
-				if (GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT) > area.GetBBox
+				if (this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT) > area.GetBBox
 					().GetHeight())
 				{
 					SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-						(area.GetBBox().GetHeight() / (float)GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+						(area.GetBBox().GetHeight() / (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
 						.HEIGHT) * (this.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property.WIDTH
 						)).GetValue()));
 					SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, UnitValue.CreatePointValue

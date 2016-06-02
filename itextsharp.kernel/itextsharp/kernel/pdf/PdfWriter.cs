@@ -128,7 +128,8 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>true if to use full compression, false otherwise.</returns>
 		public virtual bool IsFullCompression()
 		{
-			return properties.isFullCompression;
+			return properties.isFullCompression != null ? (bool)properties.isFullCompression : 
+				false;
 		}
 
 		/// <summary>Gets default compression level for @see PdfStream.</summary>

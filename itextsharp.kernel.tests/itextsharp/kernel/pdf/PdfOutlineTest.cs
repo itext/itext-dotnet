@@ -18,10 +18,24 @@ namespace iTextSharp.Kernel.Pdf
 		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
 			 + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
 
+		/// <exception cref="System.IO.FileNotFoundException"/>
 		[TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
+			FileStream fos = new FileStream(destinationFolder + "documentWithOutlines.pdf", FileMode
+				.Create);
+			PdfWriter writer = new PdfWriter(fos);
+			PdfDocument pdfDoc = new PdfDocument(writer);
+			pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
+			PdfPage firstPage = pdfDoc.AddNewPage();
+			PdfPage secondPage = pdfDoc.AddNewPage();
+			PdfOutline rootOutline = pdfDoc.GetOutlines(false);
+			PdfOutline firstOutline = rootOutline.AddOutline("First Page");
+			PdfOutline secondOutline = rootOutline.AddOutline("Second Page");
+			firstOutline.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
+			secondOutline.AddDestination(PdfExplicitDestination.CreateFit(secondPage));
+			pdfDoc.Close();
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -224,27 +238,6 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				pdfDoc.Close();
 			}
-		}
-
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="System.Exception"/>
-		[SetUp]
-		public virtual void SetupCreateDocWithOutlines()
-		{
-			FileStream fos = new FileStream(destinationFolder + "documentWithOutlines.pdf", FileMode
-				.Create);
-			PdfWriter writer = new PdfWriter(fos);
-			PdfDocument pdfDoc = new PdfDocument(writer);
-			pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
-			PdfPage firstPage = pdfDoc.AddNewPage();
-			PdfPage secondPage = pdfDoc.AddNewPage();
-			PdfOutline rootOutline = pdfDoc.GetOutlines(false);
-			PdfOutline firstOutline = rootOutline.AddOutline("First Page");
-			PdfOutline secondOutline = rootOutline.AddOutline("Second Page");
-			firstOutline.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
-			secondOutline.AddDestination(PdfExplicitDestination.CreateFit(secondPage));
-			pdfDoc.Close();
-			fos.Close();
 		}
 
 		/// <exception cref="System.IO.IOException"/>
