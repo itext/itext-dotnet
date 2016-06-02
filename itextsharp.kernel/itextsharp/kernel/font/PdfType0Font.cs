@@ -277,15 +277,8 @@ namespace iTextSharp.Kernel.Font
 					glyphs[i++] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
 				}
 			}
-			String s = new String(glyphs, 0, i);
-			try
-			{
-				return s.GetBytes(PdfEncodings.UNICODE_BIG_UNMARKED);
-			}
-			catch (ArgumentException e)
-			{
-				throw new PdfException("TrueTypeFont", e);
-			}
+			return PdfEncodings.ConvertToBytes(new String(glyphs, 0, i), PdfEncodings.UNICODE_BIG_UNMARKED
+				);
 		}
 
 		public override byte[] ConvertToBytes(GlyphLine glyphLine)
@@ -304,15 +297,8 @@ namespace iTextSharp.Kernel.Font
 							.GetUnicode() : 0 };
 					}
 				}
-				String s = new String(glyphs, 0, glyphs.Length);
-				try
-				{
-					return s.GetBytes(PdfEncodings.UNICODE_BIG_UNMARKED);
-				}
-				catch (ArgumentException e)
-				{
-					throw new PdfException("TrueTypeFont", e);
-				}
+				return PdfEncodings.ConvertToBytes(new String(glyphs, 0, glyphs.Length), PdfEncodings
+					.UNICODE_BIG_UNMARKED);
 			}
 			else
 			{
@@ -328,15 +314,8 @@ namespace iTextSharp.Kernel.Font
 				longTag[code] = new int[] { code, glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
 					.GetUnicode() : 0 };
 			}
-			String s = new String(new char[] { (char)glyph.GetCode() }, 0, 1);
-			try
-			{
-				return s.GetBytes(PdfEncodings.UNICODE_BIG_UNMARKED);
-			}
-			catch (ArgumentException e)
-			{
-				throw new PdfException("PdfType0Font", e);
-			}
+			return PdfEncodings.ConvertToBytes(new String(new char[] { (char)glyph.GetCode() }
+				, 0, 1), PdfEncodings.UNICODE_BIG_UNMARKED);
 		}
 
 		public override void WriteText(GlyphLine text, int from, int to, PdfOutputStream 
@@ -355,15 +334,8 @@ namespace iTextSharp.Kernel.Font
 				}
 			}
 			//TODO improve converting chars to hexed string
-			try
-			{
-				StreamUtil.WriteHexedString(stream, bytes.ToString().GetBytes(PdfEncodings.UNICODE_BIG_UNMARKED
-					));
-			}
-			catch (ArgumentException e)
-			{
-				throw new PdfException("PdfType0Font", e);
-			}
+			StreamUtil.WriteHexedString(stream, PdfEncodings.ConvertToBytes(bytes.ToString(), 
+				PdfEncodings.UNICODE_BIG_UNMARKED));
 		}
 
 		public override void WriteText(String text, PdfOutputStream stream)
