@@ -691,9 +691,8 @@ namespace iTextSharp.Layout.Element
 				(); )
 			{
 				IElement cell = iterator.Current;
-				if (((Cell)cell).GetRow() >= firstRow && ((Cell)cell).GetRow() <= lastRow)
-				{
-					iterator.Remove();
+				if (((Cell)cell).GetRow() >= firstRow && ((Cell)cell).GetRow() <= lastRow) {
+				    childElements.Remove(cell);
 				}
 			}
 			for (int i = 0; i <= lastRow - firstRow; i++)

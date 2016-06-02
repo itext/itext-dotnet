@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Java.Lang;
 using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
@@ -273,37 +272,6 @@ namespace iTextSharp.Layout.Renderer
 			return this.GetProperty<iTextSharp.Kernel.Color.Color>(property);
 		}
 
-		/// <summary>Returns a property with a certain key, as a floating point value.</summary>
-		/// <param name="property">
-		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
-		/// </param>
-		/// <returns>
-		/// a
-		/// <see cref="float?"/>
-		/// </returns>
-		public virtual float? GetPropertyAsFloat(int property)
-		{
-			Number value = this.GetProperty<Number>(property);
-			return value != null ? value : null;
-		}
-
-		/// <summary>Returns a property with a certain key, as a floating point value.</summary>
-		/// <param name="property">
-		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
-		/// </param>
-		/// <param name="defaultValue">default value to be returned if property is not found</param>
-		/// <returns>
-		/// a
-		/// <see cref="float?"/>
-		/// </returns>
-		public virtual float? GetPropertyAsFloat(int property, float? defaultValue)
-		{
-			Number value = this.GetProperty<Number>(property, defaultValue);
-			return value != null ? value : null;
-		}
-
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>
 		/// <param name="property">
 		/// an
@@ -316,21 +284,6 @@ namespace iTextSharp.Layout.Renderer
 		public virtual bool? GetPropertyAsBoolean(int property)
 		{
 			return this.GetProperty<bool>(property);
-		}
-
-		/// <summary>Returns a property with a certain key, as an integer value.</summary>
-		/// <param name="property">
-		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
-		/// </param>
-		/// <returns>
-		/// a
-		/// <see cref="int?"/>
-		/// </returns>
-		public virtual int? GetPropertyAsInteger(int property)
-		{
-			Number value = GetProperty(property);
-			return value != null ? value : null;
 		}
 
 		public override String ToString()
@@ -792,8 +745,8 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual bool IsRelativePosition()
 		{
-			int? positioning = GetPropertyAsInteger(iTextSharp.Layout.Property.Property.POSITION
-				);
+			int? positioning = this.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+				POSITION);
 			return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
 		}
 

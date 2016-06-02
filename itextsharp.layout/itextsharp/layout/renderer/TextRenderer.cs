@@ -261,7 +261,7 @@ namespace iTextSharp.Layout.Renderer
 					}
 					if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters
 						.IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace((char)(int)text.Get(ind +
-						 1).GetUnicode()) || char.IsSpaceChar((char)(int)text.Get(ind + 1).GetUnicode())
+						 1).GetUnicode()) || char.IsSeparator((char)(int)text.Get(ind + 1).GetUnicode())
 						))
 					{
 						nonBreakablePartEnd = ind;
@@ -450,7 +450,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual void ApplyOtf()
 		{
 			ConvertWaitingStringToGlyphLine();
-			UnicodeScript? script = this.GetProperty<UnicodeScript>(iTextSharp.Layout.Property.Property
+			UnicodeScript? script = this.GetProperty<UnicodeScript?>(iTextSharp.Layout.Property.Property
 				.FONT_SCRIPT);
 			if (!otfFeaturesApplied)
 			{
@@ -460,44 +460,44 @@ namespace iTextSharp.Layout.Renderer
 					ICollection<UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts
 						();
 					IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, 
-						int?>(typeof(UnicodeScript?));
+						int?>();
 					for (int i = text.start; i < text.end; i++)
 					{
 						int unicode = text.Get(i).GetUnicode();
 						UnicodeScript? glyphScript = unicode > -1 ? iTextSharp.IO.Util.UnicodeScriptUtil.Of
-							(unicode) : null;
+							(unicode) : (UnicodeScript?) null;
 						if (glyphScript != null)
 						{
-							if (scriptFrequency.ContainsKey(glyphScript))
+							if (scriptFrequency.ContainsKey((UnicodeScript)glyphScript))
 							{
-								scriptFrequency[glyphScript] = scriptFrequency.Get(glyphScript) + 1;
+								scriptFrequency[(UnicodeScript)glyphScript] = scriptFrequency.Get((UnicodeScript)glyphScript) + 1;
 							}
 							else
 							{
-								scriptFrequency[glyphScript] = 1;
+								scriptFrequency[(UnicodeScript)glyphScript] = 1;
 							}
 						}
 					}
-					int max = 0;
+					int? max = 0;
 					UnicodeScript? selectScript = null;
-					foreach (KeyValuePair<UnicodeScript, int> entry in scriptFrequency)
+					foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency)
 					{
 						UnicodeScript? entryScript = entry.Key;
-						if (entry.Value > max && !UnicodeScript?.COMMON.Equals(entryScript) && !UnicodeScript?
+						if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript
 							.UNKNOWN.Equals(entryScript))
 						{
 							max = entry.Value;
 							selectScript = entryScript;
 						}
 					}
-					if (selectScript == UnicodeScript?.ARABIC || selectScript == UnicodeScript?.HEBREW
+					if (selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW
 						 && parent is LineRenderer)
 					{
 						SetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI
 							);
 					}
 					if (selectScript != null && supportedScripts != null && supportedScripts.Contains
-						(selectScript))
+                        ((UnicodeScript)selectScript))
 					{
 						script = selectScript;
 					}
@@ -663,7 +663,7 @@ namespace iTextSharp.Layout.Renderer
 				{
 					//We should mark a RTL written text
 					IDictionary<GlyphLine, bool?> outputs = GetOutputChunks();
-					foreach (KeyValuePair<GlyphLine, bool> output in outputs)
+					foreach (KeyValuePair<GlyphLine, bool?> output in outputs)
 					{
 						GlyphLine o = output.Key.Filter(filter);
 						if ((bool)output.Value)

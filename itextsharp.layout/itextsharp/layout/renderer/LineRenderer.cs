@@ -638,7 +638,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float
 				, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
-			KeyValuePair<float, TabStop> nextTabStopEntry = null;
+			KeyValuePair<float, TabStop>? nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
 			{
@@ -646,7 +646,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (nextTabStopEntry != null)
 			{
-				nextTabStop = nextTabStopEntry.Value;
+				nextTabStop = ((KeyValuePair<float, TabStop>)nextTabStopEntry).Value;
 			}
 			return nextTabStop;
 		}
