@@ -48,9 +48,16 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfPage page = pdfDoc.GetPage(52);
 			IList<PdfOutline> pageOutlines = page.GetOutlines(true);
-			NUnit.Framework.Assert.AreEqual(3, pageOutlines.Count);
-			NUnit.Framework.Assert.IsTrue(pageOutlines[0].GetTitle().Equals("Safari"));
-			NUnit.Framework.Assert.AreEqual(pageOutlines[0].GetAllChildren().Count, 4);
+			try
+			{
+				NUnit.Framework.Assert.AreEqual(3, pageOutlines.Count);
+				NUnit.Framework.Assert.IsTrue(pageOutlines[0].GetTitle().Equals("Safari"));
+				NUnit.Framework.Assert.AreEqual(pageOutlines[0].GetAllChildren().Count, 4);
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -92,9 +99,16 @@ namespace iTextSharp.Kernel.Pdf
 				.Read));
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfOutline outlines = pdfDoc.GetOutlines(false);
-			NUnit.Framework.Assert.AreEqual(3, outlines.GetAllChildren().Count);
-			NUnit.Framework.Assert.AreEqual("firstPageChild", outlines.GetAllChildren()[1].GetAllChildren
-				()[0].GetTitle());
+			try
+			{
+				NUnit.Framework.Assert.AreEqual(3, outlines.GetAllChildren().Count);
+				NUnit.Framework.Assert.AreEqual("firstPageChild", outlines.GetAllChildren()[1].GetAllChildren
+					()[0].GetTitle());
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -122,7 +136,14 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfPage page = pdfDoc.GetPage(102);
 			IList<PdfOutline> pageOutlines = page.GetOutlines(false);
-			NUnit.Framework.Assert.AreEqual(4, pageOutlines.Count);
+			try
+			{
+				NUnit.Framework.Assert.AreEqual(4, pageOutlines.Count);
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -151,7 +172,14 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfOutline outlines = pdfDoc.GetOutlines(false);
 			PdfOutline outline = outlines.GetAllChildren()[0].GetAllChildren()[1];
-			NUnit.Framework.Assert.AreEqual("New Title", outline.GetTitle());
+			try
+			{
+				NUnit.Framework.Assert.AreEqual("New Title", outline.GetTitle());
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -188,7 +216,14 @@ namespace iTextSharp.Kernel.Pdf
 				.Read));
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			IList<PdfOutline> pageOutlines = pdfDoc.GetPage(102).GetOutlines(true);
-			NUnit.Framework.Assert.AreEqual(5, pageOutlines.Count);
+			try
+			{
+				NUnit.Framework.Assert.AreEqual(5, pageOutlines.Count);
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -222,9 +257,16 @@ namespace iTextSharp.Kernel.Pdf
 				.Read));
 			PdfDocument pdfDoc = new PdfDocument(reader);
 			PdfOutline outlines = pdfDoc.GetOutlines(false);
-			NUnit.Framework.Assert.AreEqual(2, outlines.GetAllChildren().Count);
-			NUnit.Framework.Assert.AreEqual("First Page", outlines.GetAllChildren()[0].GetTitle
-				());
+			try
+			{
+				NUnit.Framework.Assert.AreEqual(2, outlines.GetAllChildren().Count);
+				NUnit.Framework.Assert.AreEqual("First Page", outlines.GetAllChildren()[0].GetTitle
+					());
+			}
+			finally
+			{
+				pdfDoc.Close();
+			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>
