@@ -12,8 +12,8 @@ namespace iTextSharp.Kernel.Utils
 		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
 			 + "/test/itextsharp/kernel/utils/CompareToolTest/";
 
-		[SetUp]
-		public virtual void SetUp()
+		[TestFixtureSetUp]
+		public static void SetUp()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
 		}

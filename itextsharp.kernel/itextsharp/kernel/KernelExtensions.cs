@@ -82,6 +82,13 @@ namespace iTextSharp.Kernel {
             }
         }
 
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
+        {
+            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {
+                c[pair.Key] = pair.Value;
+            }
+        }
+
         public static void GetChars(this StringBuilder sb, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
             sb.CopyTo(srcBegin, dst, dstBegin, srcEnd - srcBegin);
         }

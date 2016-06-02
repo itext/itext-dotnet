@@ -1767,6 +1767,7 @@ namespace iTextSharp.Kernel.Utils
                 doc.AppendChild(root);
                 XmlWriter writer = new XmlTextWriter(stream, Encoding.Default);
                 doc.WriteTo(writer);
+                writer.Flush();
 			}
 
 			protected internal virtual bool IsMessageLimitReached()
@@ -1925,7 +1926,7 @@ namespace iTextSharp.Kernel.Utils
 			{
 				return obj is CompareTool.ObjectPath && this.baseCmpObject.Equals(((CompareTool.ObjectPath
 					)obj).baseCmpObject) && this.baseOutObject.Equals(((CompareTool.ObjectPath)obj).
-					baseOutObject) && this.path.Equals(((CompareTool.ObjectPath)obj).path);
+					baseOutObject) && this.path.Equals(path);
 			}
 
 			protected internal virtual Object Clone()

@@ -528,6 +528,7 @@ namespace iTextSharp.IO.Codec
 		public virtual byte[] GetGlobal(bool for_embedding)
 		{
 			MemoryStream os = new MemoryStream();
+			byte[] streamBytes = null;
 			try
 			{
 				foreach (Object element in globals)
@@ -540,6 +541,10 @@ namespace iTextSharp.IO.Codec
 					os.Write(s.headerData);
 					os.Write(s.data);
 				}
+				if (os.Length > 0)
+				{
+					streamBytes = os.ToArray();
+				}
 				os.Close();
 			}
 			catch (System.IO.IOException e)
@@ -547,11 +552,7 @@ namespace iTextSharp.IO.Codec
 				ILogger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));
 				logger.Debug(e.Message);
 			}
-			if (os.Length <= 0)
-			{
-				return null;
-			}
-			return os.ToArray();
+			return streamBytes;
 		}
 
 		public override String ToString()

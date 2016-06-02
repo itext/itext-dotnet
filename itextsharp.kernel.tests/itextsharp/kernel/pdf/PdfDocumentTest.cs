@@ -240,12 +240,12 @@ namespace iTextSharp.Kernel.Pdf
 			MemoryStream byteArrayStream1 = new ByteArrayOutputStream();
 			DeflaterOutputStream zip = new DeflaterOutputStream(byteArrayStream1, 9);
 			image.WriteTo(zip);
-			zip.Close();
 			MemoryStream byteArrayStream2 = new ByteArrayOutputStream();
 			DeflaterOutputStream zip2 = new DeflaterOutputStream(byteArrayStream2, -1);
 			image.WriteTo(zip2);
-			zip2.Close();
 			NUnit.Framework.Assert.IsTrue(byteArrayStream1.Length == byteArrayStream2.Length);
+			zip.Close();
+			zip2.Close();
 		}
 
 		/// <exception cref="System.IO.IOException"/>
