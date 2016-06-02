@@ -291,7 +291,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		private static XmlReaderSettings GetSecureReaderSettings()
 		{
 			XmlReaderSettings settings = new XmlReaderSettings();
-			settings.ProhibitDtd = true;
+			settings.DtdProcessing = DtdProcessing.Prohibit;
 			return settings;
 		}
 

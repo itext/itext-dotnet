@@ -107,16 +107,15 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		// UTF-8
 		/// <summary>The actual serialization.</summary>
 		/// <param name="xmp">the metadata object to be serialized</param>
-		/// <param name="out">outputStream the output stream to serialize to</param>
+		/// <param name="output">outputStream the output stream to serialize to</param>
 		/// <param name="options">the serialization options</param>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException">If case of wrong options or any other serialization error.
 		/// 	</exception>
-		public virtual void Serialize(XmpMeta xmp, Stream @out, SerializeOptions options)
+		public virtual void Serialize(XmpMeta xmp, Stream output, SerializeOptions options)
 		{
 			try
 			{
-				outputStream = new CountOutputStream(@out);
-				writer = new StreamWriter(outputStream, new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())));
+				outputStream = new CountOutputStream(output);
 				this.xmp = (XmpMetaImpl)xmp;
 				this.options = options;
 				this.padding = options.GetPadding();
@@ -1248,7 +1247,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		/// <summary>Writes a char to the output.</summary>
 		/// <param name="c">a char</param>
 		/// <exception cref="System.IO.IOException">forwards writer exceptions</exception>
-		private void Write(int c)
+		private void Write(char c)
 		{
 			writer.Write(c);
 		}
