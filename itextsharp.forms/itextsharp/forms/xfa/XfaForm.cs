@@ -59,7 +59,7 @@ namespace iTextSharp.Forms.Xfa
 	/// <summary>Processes XFA forms.</summary>
 	public class XfaForm
 	{
-		private const String DEFAULT_XFA = "com/itextpdf/forms/xfa/default.xml";
+		private const String DEFAULT_XFA = "iTextSharp.Forms.Xfa.default.xml";
 
 		private XElement templateNode;
 
@@ -78,7 +78,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>An empty constructor to build on.</summary>
 		public XfaForm()
-			: this(ResourceUtil.GetResourceStream(DEFAULT_XFA))
+			: this(new MemoryStream(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?><xdp:xdp xmlns:xdp=\"http://ns.adobe.com/xdp/\"><template xmlns=\"http://www.xfa.org/schema/xfa-template/3.3/\"></template><xfa:datasets xmlns:xfa=\"http://www.xfa.org/schema/xfa-data/1.0/\"><xfa:data></xfa:data></xfa:datasets></xdp:xdp>")))
 		{
 		}
 
@@ -619,8 +619,10 @@ namespace iTextSharp.Forms.Xfa
 		private static byte[] SerializeDocument(XNode n)
 		{
             MemoryStream fout = new MemoryStream();
-            n.WriteTo(new XmlTextWriter(fout, Encoding.UTF8));
-			return fout.ToArray();
+		    if (n != null) {
+		        n.WriteTo(new XmlTextWriter(fout, Encoding.UTF8));
+		    }
+		    return fout.ToArray();
 		}
 
 		/// <exception cref="System.IO.IOException"/>
