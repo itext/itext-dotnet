@@ -8,7 +8,7 @@
     <ProjectGuid>{42173642-DB52-44D3-9883-3E34C65C53BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>layout</AssemblyName>
+    <AssemblyName>itextsharp.layout</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
