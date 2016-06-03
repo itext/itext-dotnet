@@ -309,12 +309,21 @@ namespace iTextSharp.IO.Source
 				else
 				{
 					d += 0.5;
-					long v = (long)d;
+					long v;
+					if (d > long.MaxValue)
+					{
+						//by default cast logic do the same, but not in .NET
+						v = long.MaxValue;
+					}
+					else
+					{
+						v = (long)d;
+					}
 					int intLen = LongSize(v);
 					buf = buffer == null ? new ByteBuffer(intLen + (negative ? 1 : 0)) : buffer;
 					for (int i = 0; i < intLen; i++)
 					{
-						buf.Prepend(bytes[(int)Math.Abs(v % 10)]);
+						buf.Prepend(bytes[(int)(v % 10)]);
 						v /= 10;
 					}
 					if (negative)
