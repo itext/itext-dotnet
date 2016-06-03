@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using iTextSharp.IO.Font;
 using iTextSharp.IO.Util;
 using NUnit.Framework;
 
@@ -41,19 +43,17 @@ namespace iTextSharp.Test {
             return File.ReadAllBytes(filename);
         }
 
-        protected virtual String CreateStringByEscaped(byte[] bytes) {
-            throw new NotImplementedException();
-//            // TODO
-//    String[] chars = (new String(bytes)).substring(1).split("#");
-//    StringBuilder buf = new StringBuilder(chars.length);
-//    for (String ch : chars)
-//    {
-//        if (ch.length() == 0) continue;
-//        Integer b = Integer.parseInt(ch, 16);
-//        buf.append((char)b.intValue());
-//    }
-//    return buf.toString();
-//}
+        protected virtual String CreateStringByEscaped(byte[] bytes)
+        {
+            String[] chars = PdfEncodings.ConvertToString(bytes, null).Substring(1).Split('#');
+            StringBuilder buf = new StringBuilder(chars.Length);
+            foreach (String ch in chars)
+            {
+                if (ch.Length == 0) continue;
+                int b = Convert.ToInt32(ch, 16);
+                buf.Append((char) b);
+            }
+            return buf.ToString();
         }
     }
 }
