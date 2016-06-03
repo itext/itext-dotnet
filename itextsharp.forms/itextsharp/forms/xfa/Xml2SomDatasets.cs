@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace iTextSharp.Forms.Xfa
@@ -144,7 +145,7 @@ namespace iTextSharp.Forms.Xfa
 				{
 					return true;
 				}
-			    n2 = ((XElement) n2).NextNode;
+			    n2 = (n2 is XmlElement ? ((XElement) n2).NextNode : null);
 			}
 			return false;
 		}

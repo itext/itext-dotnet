@@ -668,15 +668,14 @@ namespace iTextSharp.Forms.Xfa
 		/// <summary>Extracts the nodes from the domDocument.</summary>
 		private void ExtractNodes()
 		{
-			IDictionary<String, XNode> xfaNodes = ExtractXFANodes(domDocument);
-			if (xfaNodes.ContainsKey("template"))
-			{
-				templateNode = ((XElement)xfaNodes).Descendants("template").First();
+			 IDictionary<String, XNode> xfaNodes = ExtractXFANodes(domDocument);
+			if (xfaNodes.ContainsKey("template")) {
+			    templateNode = (XElement)xfaNodes["template"];
 			}
 			if (xfaNodes.ContainsKey("datasets"))
 			{
-				datasetsNode = ((XElement)xfaNodes).Descendants("datasets").First();
-				datasetsSom = new Xml2SomDatasets(((XElement)datasetsNode).FirstNode);
+				datasetsNode = (XElement)xfaNodes["datasets"];
+				datasetsSom = new Xml2SomDatasets(datasetsNode.FirstNode);
 			}
 			if (datasetsNode == null)
 			{
