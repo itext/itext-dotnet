@@ -427,7 +427,7 @@ namespace iTextSharp.Layout.Renderer
 
 		public virtual float GetLeadingValue(Leading leading)
 		{
-			switch (leading.GetType())
+			switch (leading.GetLeadingType())
 			{
 				case Leading.FIXED:
 				{
