@@ -11,6 +11,14 @@ namespace iTextSharp.Forms {
             }
         }
 
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
+        {
+            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd)
+            {
+                c[pair.Key] = pair.Value;
+            }
+        }
+
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);
         }

@@ -19,6 +19,14 @@ namespace iTextSharp.Signatures
             }
         }
 
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
+        {
+            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd)
+            {
+                c[pair.Key] = pair.Value;
+            }
+        }
+
         public static T JRemoveAt<T>(this IList<T> list, int index) {
             T value = list[index];
             list.RemoveAt(index);
