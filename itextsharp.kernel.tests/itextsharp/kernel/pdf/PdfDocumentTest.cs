@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using iTextSharp.IO.Image;
 using iTextSharp.IO.Source;
+using iTextSharp.Kernel.Pdf.Navigation;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
@@ -36,6 +37,55 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument assertPdfDoc = new PdfDocument(new PdfReader(@out));
 			NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, assertPdfDoc.GetPdfVersion());
 			assertPdfDoc.Close();
+		}
+
+		//We have this test in PdfOutlineTest as well, because we had some issues with outlines before. One test worked
+		// fine, while another one failed.
+		/// <exception cref="System.IO.IOException"/>
+		/// <exception cref="System.Exception"/>
+		[Test]
+		public virtual void AddOutlinesWithNamedDestinations01()
+		{
+			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
+				, FileMode.Open, FileAccess.Read));
+			String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
+			FileStream fos = new FileStream(filename, FileMode.Create);
+			PdfWriter writer = new PdfWriter(fos);
+			PdfDocument pdfDoc = new PdfDocument(reader, writer);
+			PdfArray array1 = new PdfArray();
+			array1.Add(pdfDoc.GetPage(2).GetPdfObject());
+			array1.Add(PdfName.XYZ);
+			array1.Add(new PdfNumber(36));
+			array1.Add(new PdfNumber(806));
+			array1.Add(new PdfNumber(0));
+			PdfArray array2 = new PdfArray();
+			array2.Add(pdfDoc.GetPage(3).GetPdfObject());
+			array2.Add(PdfName.XYZ);
+			array2.Add(new PdfNumber(36));
+			array2.Add(new PdfNumber(806));
+			array2.Add(new PdfNumber(1.25));
+			PdfArray array3 = new PdfArray();
+			array3.Add(pdfDoc.GetPage(4).GetPdfObject());
+			array3.Add(PdfName.XYZ);
+			array3.Add(new PdfNumber(36));
+			array3.Add(new PdfNumber(806));
+			array3.Add(new PdfNumber(1));
+			pdfDoc.AddNamedDestination("test1", array2);
+			pdfDoc.AddNamedDestination("test2", array3);
+			pdfDoc.AddNamedDestination("test3", array1);
+			PdfOutline root = pdfDoc.GetOutlines(false);
+			PdfOutline firstOutline = root.AddOutline("Test1");
+			firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")
+				));
+			PdfOutline secondOutline = root.AddOutline("Test2");
+			secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test2"
+				)));
+			PdfOutline thirdOutline = root.AddOutline("Test3");
+			thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")
+				));
+			pdfDoc.Close();
+			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
+				 + "cmp_outlinesWithNamedDestinations01.pdf", destinationFolder, "diff_"));
 		}
 
 		/// <exception cref="System.IO.IOException"/>
