@@ -88,6 +88,8 @@ namespace iTextSharp.Kernel
 		/// <summary>The license key.</summary>
 		private String key = null;
 
+		private static bool expired;
+
 		/// <summary>Gets an instance of the iText version that is currently used.</summary>
 		/// <remarks>
 		/// Gets an instance of the iText version that is currently used.
@@ -103,8 +105,8 @@ namespace iTextSharp.Kernel
 				{
 					try
 					{
-						Type klass = System.Type.GetType("com.itextpdf.licensekey.LicenseKey");
-						MethodInfo m = klass.GetMethod("getLicenseeInfo");
+                        Type klass = System.Type.GetType("iTextSharp.license.LicenseKey, itextsharp.LicenseKey");
+						MethodInfo m = klass.GetMethod("GetLicenseeInfo");
 						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
 						if (info[3] != null && info[3].Trim().Length > 0)
 						{
@@ -120,6 +122,17 @@ namespace iTextSharp.Kernel
 							else
 							{
 								version.key += info[5];
+							}
+						}
+						if (info.Length > 6)
+						{
+							if (info[6] != null && info[6].Trim().Length > 0)
+							{
+								String versionToCheck = release.JSubstring(0, release.LastIndexOf("."));
+								if (!info[6].EqualsIgnoreCase(versionToCheck))
+								{
+									throw new Exception("Your license key version doesn't match the iText version.");
+								}
 							}
 						}
 						if (info[4] != null && info[4].Trim().Length > 0)
@@ -164,7 +177,7 @@ namespace iTextSharp.Kernel
 							}
 						}
 					}
-					catch (Exception)
+					catch (Exception e)
 					{
 						version.iTextVersion += AGPL;
 					}
@@ -178,6 +191,13 @@ namespace iTextSharp.Kernel
 		public static bool IsAGPLVersion()
 		{
 			return GetInstance().GetVersion().IndexOf(AGPL) > 0;
+		}
+
+		/// <summary>Is the license expired?</summary>
+		/// <returns>true if expired</returns>
+		public static bool IsExpired()
+		{
+			return expired;
 		}
 
 		/// <summary>Gets the product name.</summary>

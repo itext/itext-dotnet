@@ -16,6 +16,11 @@ namespace iTextSharp.Kernel {
             return sb.ToString(beginIndex, endIndex - beginIndex);
         }
 
+        public static bool EqualsIgnoreCase(this String str, String anotherString)
+        {
+            return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static void JReset(this MemoryStream stream) {
             stream.Position = 0;
         }
