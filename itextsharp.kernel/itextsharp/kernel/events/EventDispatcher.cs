@@ -75,7 +75,7 @@ namespace iTextSharp.Kernel.Events
 
 		public virtual void DispatchEvent(Event @event, bool delayed)
 		{
-			IList<IEventHandler> handlers = eventHandlers.Get(@event.GetType());
+			IList<IEventHandler> handlers = eventHandlers.Get(@event.GetEventType());
 			if (handlers != null)
 			{
 				foreach (IEventHandler handler in handlers)

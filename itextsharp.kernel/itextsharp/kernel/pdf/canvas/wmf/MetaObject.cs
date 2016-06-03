@@ -72,7 +72,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 
 		/// <summary>Get the type of this MetaObject.</summary>
 		/// <returns>type of MetaObject</returns>
-		public virtual int GetType()
+		public virtual int GetObjectType()
 		{
 			return type;
 		}

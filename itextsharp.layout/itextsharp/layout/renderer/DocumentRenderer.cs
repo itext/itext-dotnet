@@ -87,8 +87,8 @@ namespace iTextSharp.Layout.Renderer
 			AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != 
 				null ? overflowResult.GetAreaBreak() : null;
 			MoveToNextPage();
-			while (areaBreak != null && areaBreak.GetType() == AreaBreakType.LAST_PAGE && currentPageNumber
-				 < document.GetPdfDocument().GetNumberOfPages())
+			while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE &&
+				 currentPageNumber < document.GetPdfDocument().GetNumberOfPages())
 			{
 				MoveToNextPage();
 			}

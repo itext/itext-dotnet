@@ -887,7 +887,7 @@ namespace iTextSharp.IO.Image
 				return null;
 			}
 			long[] offset;
-			if (field.GetType() == TIFFField.TIFF_LONG)
+			if (field.GetFieldType() == TIFFField.TIFF_LONG)
 			{
 				offset = field.GetAsLongs();
 			}

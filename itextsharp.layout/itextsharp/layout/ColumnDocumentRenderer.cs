@@ -72,7 +72,7 @@ namespace iTextSharp.Layout
 			)
 		{
 			if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult
-				.GetAreaBreak().GetType() != AreaBreakType.NEXT_AREA)
+				.GetAreaBreak().GetAreaType() != AreaBreakType.NEXT_AREA)
 			{
 				nextAreaNumber = 0;
 			}

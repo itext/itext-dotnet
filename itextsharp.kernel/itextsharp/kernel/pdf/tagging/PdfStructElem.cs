@@ -289,7 +289,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 		public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem AddKid(int index, iTextSharp.Kernel.Pdf.Tagging.PdfStructElem
 			 kid)
 		{
-			if (GetType() == InlineLevel || GetType() == Illustration)
+			if (GetStructElementType() == InlineLevel || GetStructElementType() == Illustration)
 			{
 				throw new PdfException(PdfException.InlineLevelOrIllustrationElementCannotContainKids
 					, GetPdfObject());
@@ -472,7 +472,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 			base.Flush();
 		}
 
-		protected internal virtual int GetType()
+		protected internal virtual int GetStructElementType()
 		{
 			if (type == Unknown)
 			{

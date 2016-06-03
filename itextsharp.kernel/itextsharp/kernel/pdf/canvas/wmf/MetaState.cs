@@ -205,7 +205,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 				return;
 			}
 			int style;
-			switch (obj.GetType())
+			switch (obj.GetObjectType())
 			{
 				case MetaObject.META_BRUSH:
 				{

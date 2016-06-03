@@ -121,7 +121,7 @@ namespace iTextSharp.Layout.Element
 		/// the current
 		/// <see cref="iTextSharp.Layout.Property.AreaBreakType">area break type</see>
 		/// </returns>
-		public virtual AreaBreakType GetType()
+		public virtual AreaBreakType GetAreaType()
 		{
 			return ((AreaBreakType)this.GetProperty<AreaBreakType>(iTextSharp.Layout.Property.Property
 				.AREA_BREAK_TYPE));

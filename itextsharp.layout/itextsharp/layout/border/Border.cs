@@ -128,7 +128,7 @@ namespace iTextSharp.Layout.Border
 		public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
 			, float y2);
 
-		public abstract int GetType();
+		public abstract int GetBorderType();
 
 		public virtual iTextSharp.Kernel.Color.Color GetColor()
 		{
@@ -150,8 +150,8 @@ namespace iTextSharp.Layout.Border
 			{
 				iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)
 					anObject;
-				if (anotherBorder.GetType() != GetType() || anotherBorder.GetColor() != GetColor(
-					) || anotherBorder.GetWidth() != GetWidth())
+				if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() 
+					!= GetColor() || anotherBorder.GetWidth() != GetWidth())
 				{
 					return false;
 				}

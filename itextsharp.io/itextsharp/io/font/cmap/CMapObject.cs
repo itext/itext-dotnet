@@ -79,7 +79,7 @@ namespace iTextSharp.IO.Font.Cmap
 			return value;
 		}
 
-		public virtual int GetType()
+		public virtual int GetObjectType()
 		{
 			return type;
 		}

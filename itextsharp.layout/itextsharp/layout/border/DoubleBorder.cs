@@ -80,7 +80,7 @@ namespace iTextSharp.Layout.Border
 		{
 		}
 
-		public override int GetType()
+		public override int GetBorderType()
 		{
 			return iTextSharp.Layout.Border.Border.DOUBLE;
 		}

@@ -94,7 +94,7 @@ namespace iTextSharp.Layout.Property
 		/// or
 		/// <see cref="MULTIPLIED"/>
 		/// </returns>
-		public virtual int GetType()
+		public virtual int GetLeadingType()
 		{
 			return type;
 		}

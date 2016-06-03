@@ -391,7 +391,7 @@ namespace iTextSharp.Layout.Renderer
 				iTextSharp.Layout.Border.Border generalBorder = renderer.GetProperty<iTextSharp.Layout.Border.Border
 					>(iTextSharp.Layout.Property.Property.BORDER);
 				iTextSharp.Kernel.Color.Color generalBorderColor = generalBorder.GetColor();
-				int borderType = generalBorder.GetType();
+				int borderType = generalBorder.GetBorderType();
 				float borderWidth = generalBorder.GetWidth();
 				if (generalBorderColor is DeviceRgb)
 				{
@@ -424,7 +424,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							allWidthsEqual = false;
 						}
-						if (border.GetType() != borders[0].GetType())
+						if (border.GetBorderType() != borders[0].GetBorderType())
 						{
 							allTypesEqual = false;
 						}
@@ -445,7 +445,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							borderColors.Add(PdfNull.PDF_NULL);
 						}
-						borderTypes.Add(TransformBorderTypeToName(borders[i_1].GetType()));
+						borderTypes.Add(TransformBorderTypeToName(borders[i_1].GetBorderType()));
 						borderWidths.Add(new PdfNumber(borders[i_1].GetWidth()));
 					}
 					else

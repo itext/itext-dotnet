@@ -60,7 +60,7 @@ namespace iTextSharp.Kernel.Events
 
 		/// <summary>Returns the type of this event.</summary>
 		/// <returns>type of this event</returns>
-		public virtual String GetType()
+		public virtual String GetEventType()
 		{
 			return type;
 		}

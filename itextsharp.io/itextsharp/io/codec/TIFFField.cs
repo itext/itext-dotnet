@@ -172,7 +172,7 @@ namespace iTextSharp.IO.Codec
 		/// TIFF_ constants defined in this class.  For future
 		/// revisions of TIFF, higher values are possible.
 		/// </remarks>
-		public virtual int GetType()
+		public virtual int GetFieldType()
 		{
 			return type;
 		}

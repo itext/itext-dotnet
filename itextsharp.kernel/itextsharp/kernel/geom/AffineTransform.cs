@@ -169,7 +169,7 @@ namespace iTextSharp.Kernel.Geom
 		*   TYPE_GENERAL_ROTATION - new basis is rotated by arbitrary angle
 		*   TYPE_GENERAL_TRANSFORM - transformation can't be inversed
 		*/
-		public virtual int GetType()
+		public virtual int GetTransformType()
 		{
 			if (this.type != TYPE_UNKNOWN)
 			{
@@ -257,7 +257,7 @@ namespace iTextSharp.Kernel.Geom
 
 		public virtual bool IsIdentity()
 		{
-			return GetType() == TYPE_IDENTITY;
+			return GetTransformType() == TYPE_IDENTITY;
 		}
 
 		public virtual void GetMatrix(float[] matrix)
