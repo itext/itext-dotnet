@@ -756,9 +756,10 @@ namespace iTextSharp.Kernel.Pdf
 			doc = new PdfDocument(new PdfReader(filenameOut));
 			stream = (PdfStream)doc.GetPdfObject(6);
 			int lengthAfter = stream.GetLength();
-			NUnit.Framework.Assert.IsTrue(lengthBefore == lengthAfter);
 			NUnit.Framework.Assert.AreEqual(5731884, lengthBefore);
-			NUnit.Framework.Assert.AreEqual(5731884, lengthAfter);
+			float expected = 5731884;
+			float coef = Math.Abs((expected - lengthAfter) / expected);
+			NUnit.Framework.Assert.IsTrue(coef < 0.01);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -778,9 +779,10 @@ namespace iTextSharp.Kernel.Pdf
 			doc = new PdfDocument(new PdfReader(filenameOut));
 			stream = (PdfStream)doc.GetPdfObject(6);
 			int lengthAfter = stream.GetLength();
-			NUnit.Framework.Assert.IsTrue(lengthBefore < lengthAfter);
 			NUnit.Framework.Assert.AreEqual(5731884, lengthBefore);
-			NUnit.Framework.Assert.AreEqual(11321910, lengthAfter);
+			float expected = 11321910;
+			float coef = Math.Abs((expected - lengthAfter) / expected);
+			NUnit.Framework.Assert.IsTrue(coef < 0.01);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -800,9 +802,10 @@ namespace iTextSharp.Kernel.Pdf
 			doc = new PdfDocument(new PdfReader(filenameOut));
 			stream = (PdfStream)doc.GetPdfObject(6);
 			int lengthAfter = stream.GetLength();
-			NUnit.Framework.Assert.IsTrue(lengthBefore > lengthAfter);
 			NUnit.Framework.Assert.AreEqual(5731884, lengthBefore);
-			NUnit.Framework.Assert.AreEqual(5729270, lengthAfter);
+			float expected = 5729270;
+			float coef = Math.Abs((expected - lengthAfter) / expected);
+			NUnit.Framework.Assert.IsTrue(coef < 0.01);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -1459,9 +1462,12 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression01.pdf"
 				));
 			pdfDoc.Close();
-			NUnit.Framework.Assert.AreEqual(new FileInfo(destinationFolder + "stampingTestWithFullCompression01.pdf"
-				).Length, new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression01.pdf"
-				).Length);
+			float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression01.pdf"
+				).Length;
+			float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression01.pdf"
+				).Length;
+			float coef = Math.Abs((expected - result) / expected);
+			NUnit.Framework.Assert.IsTrue(coef < 0.01);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
@@ -1473,9 +1479,12 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression02.pdf"
 				, new WriterProperties().SetFullCompressionMode(false)));
 			pdfDoc.Close();
-			NUnit.Framework.Assert.AreEqual(new FileInfo(destinationFolder + "stampingTestWithFullCompression02.pdf"
-				).Length, new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression02.pdf"
-				).Length);
+			float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression02.pdf"
+				).Length;
+			float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression02.pdf"
+				).Length;
+			float coef = Math.Abs((expected - result) / expected);
+			NUnit.Framework.Assert.IsTrue(coef < 0.01);
 		}
 
 		internal static void VerifyPdfPagesCount(PdfObject root)
