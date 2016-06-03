@@ -670,7 +670,7 @@ namespace iTextSharp.Kernel.Pdf
 				}
 				PdfName[] keys = new PdfName[dic.KeySet().Count];
 				dic.KeySet().ToArray(keys);
-				System.Array.Sort(keys);
+				iTextSharp.IO.Util.JavaUtil.Sort(keys);
 				foreach (Object key in keys)
 				{
 					if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.

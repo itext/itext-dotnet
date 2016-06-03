@@ -855,7 +855,7 @@ namespace iTextSharp.Signatures
 				range[idx++] = n;
 				range[idx++] = lit1.GetBytesCount() + n;
 			}
-			System.Array.Sort(range, 1, range.Length - 1);
+			iTextSharp.IO.Util.JavaUtil.Sort(range, 1, range.Length - 1);
 			for (int k = 3; k < range.Length - 2; k += 2)
 			{
 				range[k] -= range[k - 1];

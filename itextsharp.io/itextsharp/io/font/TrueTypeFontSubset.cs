@@ -366,7 +366,7 @@ namespace iTextSharp.IO.Font
 			{
 				activeGlyphs[k] = (int)glyphsInList[k];
 			}
-			System.Array.Sort(activeGlyphs);
+			iTextSharp.IO.Util.JavaUtil.Sort(activeGlyphs);
 			int glyfSize = 0;
 			foreach (int glyph in activeGlyphs)
 			{

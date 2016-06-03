@@ -532,7 +532,7 @@ namespace iTextSharp.Kernel.Font
 				GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
 				PdfDictionary fontDescriptor = GetFontDescriptor(name);
 				int[][] metrics = longTag.Values.ToArray(new int[0][]);
-				System.Array.Sort(metrics, new PdfType0Font.MetricComparator());
+				iTextSharp.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
 				PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames
 					().GetFontName(), metrics);
 				GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
@@ -546,7 +546,7 @@ namespace iTextSharp.Kernel.Font
 					TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
 					AddRangeUni(ttf, longTag, true);
 					int[][] metrics = longTag.Values.ToArray(new int[0][]);
-					System.Array.Sort(metrics, new PdfType0Font.MetricComparator());
+					iTextSharp.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
 					PdfStream fontStream;
 					String fontName = ttf.GetFontNames().GetFontName();
 					if (subset)

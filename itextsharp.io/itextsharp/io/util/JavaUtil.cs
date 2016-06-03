@@ -167,7 +167,23 @@ namespace iTextSharp.IO.Util
                 a[i] = val;
         }
 
-		public static int IntegerCompare(int a, int b) {
+        public static void Sort<T>(T[] array) {
+            Sort(array, null);
+        }
+
+        public static void Sort<T>(T[] array, IComparer<T> comparer) {
+            SortUtil.MergeSort(array, comparer);
+        }
+
+        public static void Sort(String[] array) {
+            Sort(array, null);
+        }
+
+        public static void Sort(String[] array, IComparer<String> comparer) {
+            SortUtil.MergeSort(array, comparer);
+        }
+
+        public static int IntegerCompare(int a, int b) {
 			return a.CompareTo(b);
 		}
 

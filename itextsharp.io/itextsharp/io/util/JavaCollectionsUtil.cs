@@ -47,11 +47,15 @@ namespace iTextSharp.IO.Util {
             return new SingletonList<T>(o);
         }
 
-        public static void Sort<T>(IList<T> list) where T : IComparable<T> {
+        public static void Sort<T>(IList<T> list) {
+            Sort(list, null);
+        }
+
+        public static void Sort<T>(IList<T> list, IComparer<T> comparer) {
             if (list is List<T>) {
-                SortUtil.MergeSort((List<T>) list);
+                SortUtil.MergeSort((List<T>) list, comparer);
             } else {
-                IEnumerable<T> sorted = list.ToArray().OrderBy(x => x);
+                IEnumerable<T> sorted = list.ToArray().OrderBy(x => x, comparer ?? Comparer<T>.Default);
                 list.Clear();
                 list.AddAll(sorted);
             }

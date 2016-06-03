@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			int?[] numbers = new int?[items.Count];
 			numbers = items.Keys.ToArray(numbers);
-			System.Array.Sort(numbers);
+			iTextSharp.IO.Util.JavaUtil.Sort(numbers);
 			if (numbers.Length <= NODE_SIZE)
 			{
 				PdfDictionary dic = new PdfDictionary();

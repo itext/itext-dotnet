@@ -279,7 +279,7 @@ namespace iTextSharp.IO.Image
 			if (ImageTypeIs(imageType, gif))
 			{
 				GifImageData image = new GifImageData(bytes);
-				System.Array.Sort(frameNumbers);
+				iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
 				GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
 				IList<ImageData> frames = new List<ImageData>();
 				foreach (int frame in frameNumbers)
@@ -301,7 +301,7 @@ namespace iTextSharp.IO.Image
 			if (ImageTypeIs(imageType, gif))
 			{
 				GifImageData image = new GifImageData(url);
-				System.Array.Sort(frameNumbers);
+				iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
 				GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
 				IList<ImageData> frames = new List<ImageData>();
 				foreach (int frame in frameNumbers)

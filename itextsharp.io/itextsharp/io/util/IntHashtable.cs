@@ -427,7 +427,7 @@ namespace iTextSharp.IO.Util
 		public virtual int[] ToOrderedKeys()
 		{
 			int[] res = GetKeys();
-			System.Array.Sort(res);
+			iTextSharp.IO.Util.JavaUtil.Sort(res);
 			return res;
 		}
 
