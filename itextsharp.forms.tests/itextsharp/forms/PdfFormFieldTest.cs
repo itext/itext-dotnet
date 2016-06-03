@@ -155,7 +155,7 @@ namespace iTextSharp.Forms
 		public virtual void ButtonFieldTest02()
 		{
 			String filename = destinationFolder + "buttonFieldTest02.pdf";
-			PdfDocument pdfDoc = new PdfDocument(new PdfReader(destinationFolder + "buttonFieldTest01.pdf"
+			PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "buttonFieldTest02_input.pdf"
 				), new PdfWriter(new FileStream(filename, FileMode.Create)));
 			PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
 			((PdfButtonFormField)form.GetField("push")).SetImage(sourceFolder + "Desert.jpg");
