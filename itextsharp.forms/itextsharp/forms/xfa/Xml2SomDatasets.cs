@@ -155,7 +155,7 @@ namespace iTextSharp.Forms.Xfa
 			if (n != null)
 			{
 				IDictionary<String, int?> ss = new Dictionary<String, int?>();
-				XNode n2 = ((XElement)n).FirstNode;
+				XNode n2 = n is XElement ? ((XElement)n).FirstNode : null;
 				while (n2 != null)
 				{
 					if (n2 is XElement) {
