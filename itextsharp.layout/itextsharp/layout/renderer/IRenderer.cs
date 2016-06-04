@@ -127,7 +127,7 @@ namespace iTextSharp.Layout.Renderer
 		/// <paramref name="defaultValue"/>
 		/// will be returned.
 		/// </remarks>
-		/// <?/>
+		/// 
 		/// <param name="property">the property to be retrieved</param>
 		/// <param name="defaultValue">a fallback value</param>
 		/// <returns>the value of the given property</returns>

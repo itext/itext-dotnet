@@ -58,7 +58,7 @@ namespace iTextSharp.Layout.Element
 	/// implementations
 	/// share.
 	/// </summary>
-	/// <?/>
+	/// 
 	public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
 		where T : IElement
 	{

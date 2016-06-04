@@ -54,7 +54,7 @@ using iTextSharp.Layout.Splitting;
 namespace iTextSharp.Layout
 {
 	/// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
-	/// <?/>
+	/// 
 	public abstract class RootElement<T> : ElementPropertyContainer<T>
 		where T : IPropertyContainer
 	{

@@ -61,7 +61,7 @@ namespace iTextSharp.Layout
 	/// <see cref="iTextSharp.Layout.Element.IElement">layout object</see>
 	/// implementations.
 	/// </remarks>
-	/// <?/>
+	/// 
 	public abstract class ElementPropertyContainer<T> : IPropertyContainer
 		where T : IPropertyContainer
 	{

@@ -90,7 +90,7 @@ namespace iTextSharp.Layout
 		/// ,
 		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
 		/// </remarks>
-		/// <?/>
+		/// 
 		/// <param name="property">the property to be retrieved</param>
 		/// <returns>
 		/// the value of the given property.
@@ -106,7 +106,7 @@ namespace iTextSharp.Layout
 		/// <see langword="null"/>
 		/// will be returned.
 		/// </remarks>
-		/// <?/>
+		/// 
 		/// <param name="property">the property to be retrieved</param>
 		/// <returns>
 		/// the value of the given own property.
@@ -116,7 +116,7 @@ namespace iTextSharp.Layout
 		T1 GetOwnProperty<T1>(int property);
 
 		/// <summary>Gets the default property from this entity.</summary>
-		/// <?/>
+		/// 
 		/// <param name="property">the property to be retrieved</param>
 		/// <returns>
 		/// the default property value. If the default property is not defined,

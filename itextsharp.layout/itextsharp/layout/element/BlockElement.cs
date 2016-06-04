@@ -56,7 +56,7 @@ namespace iTextSharp.Layout.Element
 	/// element in HTML. Also like in HTML, the visual representation of the object
 	/// can be delimited by padding, a border, and/or a margin.
 	/// </summary>
-	/// <?/>
+	/// 
 	public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement
 		where T : IElement
 	{
