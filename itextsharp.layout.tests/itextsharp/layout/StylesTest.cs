@@ -13,7 +13,8 @@ namespace iTextSharp.Layout
 			Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(iTextSharp.Kernel.Color.Color
 				.GREEN);
 			NUnit.Framework.Assert.AreEqual(iTextSharp.Kernel.Color.Color.GREEN, p.GetRenderer
-				().GetProperty(iTextSharp.Layout.Property.Property.FONT_COLOR));
+				().GetProperty<iTextSharp.Kernel.Color.Color>(iTextSharp.Layout.Property.Property
+				.FONT_COLOR));
 		}
 
 		[NUnit.Framework.Test]
@@ -23,7 +24,8 @@ namespace iTextSharp.Layout
 			myStyle.SetFontColor(iTextSharp.Kernel.Color.Color.RED);
 			Paragraph p = new Paragraph("text").AddStyle(myStyle);
 			NUnit.Framework.Assert.AreEqual(iTextSharp.Kernel.Color.Color.RED, p.GetRenderer(
-				).GetProperty(iTextSharp.Layout.Property.Property.FONT_COLOR));
+				).GetProperty<iTextSharp.Kernel.Color.Color>(iTextSharp.Layout.Property.Property
+				.FONT_COLOR));
 		}
 	}
 }
