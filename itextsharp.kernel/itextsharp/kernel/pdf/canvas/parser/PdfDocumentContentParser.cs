@@ -68,7 +68,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		/// Processes content from the specified page number using the specified listener.
 		/// Also allows registration of custom ContentOperators
 		/// </remarks>
-		/// <?/>
+		/// 
 		/// <param name="pageNumber">the page number to process</param>
 		/// <param name="renderListener">the listener that will receive render callbacks</param>
 		/// <param name="additionalContentOperators">an optional map of custom ContentOperators for rendering instructions
@@ -89,7 +89,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
 		/// <summary>Processes content from the specified page number using the specified listener
 		/// 	</summary>
-		/// <?/>
+		/// 
 		/// <param name="pageNumber">the page number to process</param>
 		/// <param name="renderListener">the listener that will receive render callbacks</param>
 		/// <returns>the provided renderListener</returns>

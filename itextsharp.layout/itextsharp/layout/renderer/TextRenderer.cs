@@ -1046,6 +1046,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				canvas.SetStrokeColor(underlineColor);
 			}
+            canvas.SetLineCapStyle(underline.GetLineCapStyle());
 			float underlineThickness = underline.GetThickness(fontSize);
 			if (underlineThickness != 0)
 			{

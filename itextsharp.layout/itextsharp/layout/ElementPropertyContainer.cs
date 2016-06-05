@@ -356,7 +356,7 @@ namespace iTextSharp.Layout
 			return (T)(Object)this;
 		}
 
-		/// <summary>Sets the font size of this Element.</summary>
+		/// <summary>Sets the text alignment of this Element.</summary>
 		/// <param name="alignment">
 		/// an enum value of type
 		/// <see cref="iTextSharp.Layout.Property.TextAlignment"/>

@@ -87,5 +87,10 @@ namespace iTextSharp.Layout.Property
 		{
 			return yPositionMul;
 		}
+
+		public virtual int GetLineCapStyle()
+		{
+			return lineCapStyle;
+		}
 	}
 }
