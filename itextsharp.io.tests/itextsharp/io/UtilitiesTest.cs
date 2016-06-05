@@ -1,11 +1,10 @@
-using NUnit.Framework;
 using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO
 {
 	public class UtilitiesTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestShortener()
 		{
 			byte[] src = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };

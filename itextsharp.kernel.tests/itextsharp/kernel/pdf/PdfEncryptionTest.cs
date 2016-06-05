@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Utils;
@@ -20,13 +19,13 @@ namespace iTextSharp.Kernel.Pdf
 
 		internal const String creator = "iText 6";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfEncryptionTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfEncryptionTest/";
 
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfEncryptionTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfEncryptionTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -35,7 +34,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard128()
 		{
 			String filename = "encryptWithPasswordStandard128.pdf";
@@ -47,7 +46,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard40()
 		{
 			String filename = "encryptWithPasswordStandard40.pdf";
@@ -59,7 +58,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard128NoCompression()
 		{
 			String filename = "encryptWithPasswordStandard128NoCompression.pdf";
@@ -71,7 +70,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard40NoCompression()
 		{
 			String filename = "encryptWithPasswordStandard40NoCompression.pdf";
@@ -83,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes128()
 		{
 			String filename = "encryptWithPasswordAes128.pdf";
@@ -95,7 +94,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes256()
 		{
 			String filename = "encryptWithPasswordAes256.pdf";
@@ -107,7 +106,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes128NoCompression()
 		{
 			String filename = "encryptWithPasswordAes128NoCompression.pdf";
@@ -119,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes256NoCompression()
 		{
 			String filename = "encryptWithPasswordAes256NoCompression.pdf";

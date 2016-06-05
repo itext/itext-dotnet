@@ -1,15 +1,14 @@
 using System;
-using NUnit.Framework;
 
 namespace iTextSharp.IO.Image
 {
 	public class Jpeg2000Test
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/io/image/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/io/image/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void OpenJpeg2000_1()
 		{
 			try
@@ -25,7 +24,7 @@ namespace iTextSharp.IO.Image
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void OpenJpeg2000_2()
 		{
 			ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JPC");

@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
@@ -6,7 +5,7 @@ namespace iTextSharp.Layout
 {
 	public class StylesTest : ExtendedITextTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StylesTest01()
 		{
 			Style myStyle = new Style();
@@ -17,7 +16,7 @@ namespace iTextSharp.Layout
 				().GetProperty(iTextSharp.Layout.Property.Property.FONT_COLOR));
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StylesTest02()
 		{
 			Style myStyle = new Style();

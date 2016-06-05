@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Geom;
@@ -17,11 +16,11 @@ namespace iTextSharp.Layout
 {
 	public class TableTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/TableTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/TableTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/TableTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/TableTest/";
 
 		internal const String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
 			 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -31,7 +30,7 @@ namespace iTextSharp.Layout
 		internal const String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
 			 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -39,7 +38,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest01()
 		{
 			String testName = "tableTest01.pdf";
@@ -59,7 +58,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest02()
 		{
 			String testName = "tableTest02.pdf";
@@ -81,7 +80,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest03()
 		{
 			String testName = "tableTest03.pdf";
@@ -108,7 +107,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest04()
 		{
 			String testName = "tableTest04.pdf";
@@ -134,7 +133,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest05()
 		{
 			String testName = "tableTest05.pdf";
@@ -159,7 +158,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest06()
 		{
 			String testName = "tableTest06.pdf";
@@ -184,7 +183,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest07()
 		{
 			String testName = "tableTest07.pdf";
@@ -209,7 +208,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest08()
 		{
 			String testName = "tableTest08.pdf";
@@ -239,7 +238,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest09()
 		{
 			String testName = "tableTest09.pdf";
@@ -272,7 +271,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest10()
 		{
 			String testName = "tableTest10.pdf";
@@ -308,7 +307,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest11()
 		{
 			String testName = "tableTest11.pdf";
@@ -344,7 +343,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest12()
 		{
 			String testName = "tableTest12.pdf";
@@ -386,7 +385,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest13()
 		{
 			String testName = "tableTest13.pdf";
@@ -420,7 +419,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest14()
 		{
 			String testName = "tableTest14.pdf";
@@ -455,7 +454,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest15()
 		{
 			String testName = "tableTest15.pdf";
@@ -493,7 +492,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTableTest16()
 		{
 			String testName = "tableTest16.pdf";
@@ -524,7 +523,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
 		public virtual void SimpleTableTest17()
 		{
@@ -555,7 +554,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
 		public virtual void SimpleTableTest18()
 		{
@@ -587,7 +586,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
 		public virtual void SimpleTableTest19()
 		{
@@ -619,7 +618,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
 		public virtual void SimpleTableTest20()
 		{
@@ -647,7 +646,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
 		public virtual void SimpleTableTest21()
 		{
@@ -681,7 +680,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BigRowspanTest01()
 		{
 			String testName = "bigRowspanTest01.pdf";
@@ -712,7 +711,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BigRowspanTest02()
 		{
 			String testName = "bigRowspanTest02.pdf";
@@ -743,7 +742,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BigRowspanTest03()
 		{
 			String testName = "bigRowspanTest03.pdf";
@@ -771,7 +770,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BigRowspanTest04()
 		{
 			String testName = "bigRowspanTest04.pdf";
@@ -802,7 +801,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void DifferentPageOrientationTest01()
 		{
 			String testName = "differentPageOrientationTest01.pdf";
@@ -854,7 +853,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01()
 		{
 			String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
@@ -884,7 +883,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ToLargeElementInTableTest01()
 		{
 			String testName = "toLargeElementInTableTest01.pdf";
@@ -906,7 +905,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void NestedTableSkipHeaderFooterTest()
 		{
 			String testName = "nestedTableSkipHeaderFooter.pdf";
@@ -937,7 +936,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SplitTableOnLowPage()
 		{
 			String testName = "splitTableOnLowPage.pdf";

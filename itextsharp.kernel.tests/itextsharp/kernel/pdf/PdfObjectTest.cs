@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 
 namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfObjectTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void IndirectsChain1()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -33,7 +32,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void IndirectsChain2()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -64,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void IndirectsChain3()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -96,7 +95,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void IndirectsChain4()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -130,7 +129,7 @@ namespace iTextSharp.Kernel.Pdf
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PdfIndirectReferenceFlags()
 		{
 			PdfIndirectReference reference = new PdfIndirectReference(null, 1);
@@ -178,7 +177,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PdtIndirectReferenceLateInitializing1()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -204,7 +203,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PdtIndirectReferenceLateInitializing2()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -231,7 +230,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PdtIndirectReferenceLateInitializing3()
 		{
 			MemoryStream baos = new MemoryStream();

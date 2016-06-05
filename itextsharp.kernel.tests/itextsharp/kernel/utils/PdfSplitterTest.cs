@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
@@ -11,13 +10,13 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class PdfSplitterTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -25,7 +24,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
 			)]
 		public virtual void SplitDocumentTest01()
@@ -74,7 +73,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
 			)]
 		public virtual void SplitDocumentTest02()
@@ -134,7 +133,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
 			)]
 		public virtual void SplitDocumentTest03()
@@ -186,7 +185,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
 			)]
 		public virtual void SplitDocumentByOutlineTest()
@@ -206,7 +205,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SplitDocumentBySize()
 		{
 			String inputFileName = sourceFolder + "splitBySize.pdf";

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Geom;
@@ -18,20 +17,20 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfAnnotationTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddLinkAnnotation01()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -66,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddLinkAnnotation02()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -91,7 +90,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddAndGetLinkAnnotations()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -135,7 +134,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddTextAnnotation01()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -161,7 +160,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CaretTest()
 		{
 			String filename = destinationFolder + "caretAnnotation.pdf";
@@ -198,7 +197,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddFreeTextAnnotation01()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -223,7 +222,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddSquareAndCircleAnnotations01()
 		{
 			PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
@@ -248,7 +247,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FileAttachmentTest()
 		{
 			String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
@@ -276,7 +275,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RubberStampTest()
 		{
 			String filename = destinationFolder + "rubberStampAnnotation01.pdf";
@@ -351,7 +350,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RubberStampWrongStampTest()
 		{
 			String filename = destinationFolder + "rubberStampAnnotation02.pdf";
@@ -375,7 +374,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void InkTest()
 		{
 			String filename = destinationFolder + "inkAnnotation01.pdf";
@@ -410,7 +409,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextMarkupTest01()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation01.pdf";
@@ -443,7 +442,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextMarkupTest02()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation02.pdf";
@@ -476,7 +475,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextMarkupTest03()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation03.pdf";
@@ -509,7 +508,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextMarkupTest04()
 		{
 			String filename = destinationFolder + "textMarkupAnnotation04.pdf";
@@ -542,7 +541,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PrinterMarkText()
 		{
 			String filename = destinationFolder + "printerMarkAnnotation01.pdf";
@@ -575,7 +574,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TrapNetworkText()
 		{
 			String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
@@ -609,7 +608,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SoundTestAif()
 		{
 			String filename = destinationFolder + "soundAnnotation02.pdf";
@@ -654,7 +653,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SoundTestAiff()
 		{
 			String filename = destinationFolder + "soundAnnotation03.pdf";
@@ -700,7 +699,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SoundTestSnd()
 		{
 			String filename = destinationFolder + "soundAnnotation04.pdf";
@@ -727,7 +726,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SoundTestWav()
 		{
 			String filename = destinationFolder + "soundAnnotation01.pdf";
@@ -754,7 +753,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SoundTestWav01()
 		{
 			String filename = destinationFolder + "soundAnnotation05.pdf";
@@ -799,7 +798,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ScreenTestExternalWavFile()
 		{
 			String filename = destinationFolder + "screenAnnotation01.pdf";
@@ -829,7 +828,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        }
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ScreenTestEmbeddedWavFile01()
 		{
 			String filename = destinationFolder + "screenAnnotation02.pdf";
@@ -859,7 +858,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        }
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ScreenTestEmbeddedWavFile02()
 		{
 			String filename = destinationFolder + "screenAnnotation03.pdf";
@@ -890,7 +889,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        }
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ScreenTestEmbeddedWavFile03()
 		{
 			String filename = destinationFolder + "screenAnnotation04.pdf";
@@ -929,7 +928,7 @@ namespace iTextSharp.Kernel.Pdf
 		//        }
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WaterMarkTest()
 		{
 			String filename = destinationFolder + "waterMarkAnnotation01.pdf";
@@ -966,7 +965,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RedactionTest()
 		{
 			String filename = destinationFolder + "redactionAnnotation01.pdf";

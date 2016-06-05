@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
@@ -11,13 +10,13 @@ namespace iTextSharp.Layout
 {
 	public class LargeElementTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/LargeElementTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/LargeElementTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/LargeElementTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/LargeElementTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -25,7 +24,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableTest01()
 		{
 			String testName = "largeTableTest01.pdf";
@@ -59,7 +58,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableTest02()
 		{
 			String testName = "largeTableTest02.pdf";
@@ -87,7 +86,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableWithHeaderFooterTest01A()
 		{
 			String testName = "largeTableWithHeaderFooterTest01A.pdf";
@@ -118,7 +117,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableWithHeaderFooterTest01B()
 		{
 			String testName = "largeTableWithHeaderFooterTest01B.pdf";
@@ -152,7 +151,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableWithHeaderFooterTest02()
 		{
 			String testName = "largeTableWithHeaderFooterTest02.pdf";
@@ -188,7 +187,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableWithHeaderFooterTest03()
 		{
 			String testName = "largeTableWithHeaderFooterTest03.pdf";
@@ -224,7 +223,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeTableWithHeaderFooterTest04()
 		{
 			String testName = "largeTableWithHeaderFooterTest04.pdf";

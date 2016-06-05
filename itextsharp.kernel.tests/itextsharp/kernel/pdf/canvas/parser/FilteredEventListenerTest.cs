@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
@@ -11,11 +10,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class FilteredEventListenerTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/FilteredEventListenerTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/FilteredEventListenerTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder
@@ -53,7 +52,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void MultipleFiltersForOneRegionTest()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder

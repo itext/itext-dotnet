@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
@@ -10,11 +9,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class PdfTextExtractorUnicodeIdentityTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/PdfTextExtractorUnicodeIdentityTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfTextExtractorUnicodeIdentityTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "user10.pdf"

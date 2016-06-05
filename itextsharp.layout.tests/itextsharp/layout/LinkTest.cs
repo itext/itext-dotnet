@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Action;
 using iTextSharp.Kernel.Pdf.Navigation;
@@ -12,13 +11,13 @@ namespace iTextSharp.Layout
 {
 	public class LinkTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/LinkTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/LinkTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/LinkTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/LinkTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -26,7 +25,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LinkTest01()
 		{
 			String outFileName = destinationFolder + "linkTest01.pdf";
@@ -45,7 +44,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LinkTest02()
 		{
 			String outFileName = destinationFolder + "linkTest02.pdf";

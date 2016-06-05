@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Geom
@@ -6,7 +5,7 @@ namespace iTextSharp.Kernel.Geom
 	public class MatrixTest : ExtendedITextTest
 	{
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestMultiply()
 		{
 			Matrix m1 = new Matrix(2, 3, 4, 5, 6, 7);
@@ -16,7 +15,7 @@ namespace iTextSharp.Kernel.Geom
 			NUnit.Framework.Assert.AreEqual(shouldBe, rslt);
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestDeterminant()
 		{
 			Matrix m = new Matrix(2, 3, 4, 5, 6, 7);

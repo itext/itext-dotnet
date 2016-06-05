@@ -1,11 +1,10 @@
-using NUnit.Framework;
 using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Geom
 {
 	public class VectorTest : ExtendedITextTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestCrossVector()
 		{
 			Vector v = new Vector(2, 3, 4);

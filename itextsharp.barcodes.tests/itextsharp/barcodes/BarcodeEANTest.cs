@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
@@ -9,13 +8,13 @@ namespace iTextSharp.Barcodes
 {
 	public class BarcodeEANTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/barcodes/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/barcodes/BarcodeEAN/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/barcodes/BarcodeEAN/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -24,7 +23,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode01Test()
 		{
 			String filename = "barcodeEAN_01.pdf";
@@ -46,7 +45,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode02Test()
 		{
 			String filename = "barcodeEAN_02.pdf";
@@ -68,7 +67,7 @@ namespace iTextSharp.Barcodes
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.PdfException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Barcode03Test()
 		{
 			String filename = "barcodeEANSUP.pdf";

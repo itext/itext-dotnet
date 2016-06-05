@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
@@ -9,12 +8,12 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA2PageCheckTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck01()
 		{
 			Assert.That(() => 

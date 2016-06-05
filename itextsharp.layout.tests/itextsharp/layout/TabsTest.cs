@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
@@ -15,11 +14,11 @@ namespace iTextSharp.Layout
 {
 	public class TabsTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/TabTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/TabTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/TabTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/TabTest/";
 
 		private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
 			 + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"
@@ -41,7 +40,7 @@ namespace iTextSharp.Layout
 			 + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
 			 + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292\n";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -49,7 +48,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void DefaultTabsTest()
 		{
 			String outFileName = destinationFolder + "defaultTabTest.pdf";
@@ -75,7 +74,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleTabStopsTest()
 		{
 			String fileName = "simpleTabStopsTest.pdf";
@@ -131,7 +130,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AnchorTabStopsTest()
 		{
 			String fileName = "anchorTabStopsTest.pdf";
@@ -159,7 +158,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SeveralTabsInRowTest()
 		{
 			String fileName = "severalTabsInRowTest.pdf";
@@ -200,7 +199,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void OutOfPageBoundsTest()
 		{
 			String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Pdf;
@@ -14,13 +13,13 @@ namespace iTextSharp.Layout
 {
 	public class ImageTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/ImageTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/ImageTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/ImageTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/ImageTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -28,7 +27,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest01()
 		{
 			String outFileName = destinationFolder + "imageTest01.pdf";
@@ -53,7 +52,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest02()
 		{
 			String outFileName = destinationFolder + "imageTest02.pdf";
@@ -78,7 +77,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest03()
 		{
 			String outFileName = destinationFolder + "imageTest03.pdf";
@@ -104,7 +103,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest04()
 		{
 			String outFileName = destinationFolder + "imageTest04.pdf";
@@ -130,7 +129,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest05()
 		{
 			String outFileName = destinationFolder + "imageTest05.pdf";
@@ -156,7 +155,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageTest06()
 		{
 			String outFileName = destinationFolder + "imageTest06.pdf";
@@ -182,7 +181,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void ImageTest07()
 		{
@@ -204,7 +203,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
 		public virtual void ImageTest08()
 		{
@@ -229,7 +228,7 @@ namespace iTextSharp.Layout
 		/// 	</summary>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FlushOnDrawTest()
 		{
 			String outFileName = destinationFolder + "flushOnDrawTest.pdf";
@@ -271,7 +270,7 @@ namespace iTextSharp.Layout
 		/// </remarks>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FlushOnDrawCheckCircularReferencesTest()
 		{
 			String outFileName = destinationFolder + "flushOnDrawCheckCircularReferencesTest.pdf";

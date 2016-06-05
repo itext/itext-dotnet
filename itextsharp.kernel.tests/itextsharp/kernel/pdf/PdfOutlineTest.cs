@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf.Navigation;
 using iTextSharp.Kernel.Utils;
@@ -12,14 +11,14 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfOutlineTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfOutlineTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfOutlineTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -39,7 +38,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void OutlinesTest()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
@@ -54,7 +53,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void OutlinesWithPagesTest()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
@@ -75,7 +74,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void SetupAddOutlinesToDocumentTest()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
@@ -105,7 +104,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddOutlinesToDocumentTest()
 		{
 			String filename = destinationFolder + "addOutlinesResult.pdf";
@@ -126,7 +125,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void SetupRemovePageWithOutlinesTest()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
@@ -141,7 +140,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RemovePageWithOutlinesTest()
 		{
 			String filename = destinationFolder + "removePagesWithOutlinesResult.pdf";
@@ -161,7 +160,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void SetupUpdateOutlineTitle()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
@@ -177,7 +176,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void UpdateOutlineTitle()
 		{
 			String filename = destinationFolder + "updateOutlineTitleResult.pdf";
@@ -197,7 +196,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void SetupAddOutlineInNotOutlineMode()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
@@ -222,7 +221,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddOutlineInNotOutlineMode()
 		{
 			String filename = destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf";
@@ -242,7 +241,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CreateDocWithOutlines()
 		{
 			String filename = destinationFolder + "documentWithOutlines.pdf";
@@ -263,7 +262,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void CopyPagesWithOutlines()
 		{
@@ -291,7 +290,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddOutlinesWithNamedDestinations01()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
@@ -338,7 +337,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddOutlinesWithNamedDestinations02()
 		{
 			String filename = destinationFolder + "outlinesWithNamedDestinations02.pdf";

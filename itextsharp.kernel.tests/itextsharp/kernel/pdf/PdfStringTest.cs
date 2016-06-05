@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
@@ -7,13 +6,13 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfStringTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfStringTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStringTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfStringTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfStringTest/";
 
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void Before()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -21,7 +20,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestPdfDocumentInfoStringEncoding01()
 		{
 			String fileName = "testPdfDocumentInfoStringEncoding01.pdf";

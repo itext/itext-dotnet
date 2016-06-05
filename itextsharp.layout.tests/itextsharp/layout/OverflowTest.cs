@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf;
@@ -13,13 +12,13 @@ namespace iTextSharp.Layout
 {
 	public class OverflowTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/OverflowTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/OverflowTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/OverflowTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/OverflowTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -27,7 +26,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextOverflowTest01()
 		{
 			String outFileName = destinationFolder + "textOverflowTest01.pdf";
@@ -50,7 +49,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextOverflowTest02()
 		{
 			String outFileName = destinationFolder + "textOverflowTest02.pdf";
@@ -71,7 +70,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextOverflowTest03()
 		{
 			String outFileName = destinationFolder + "textOverflowTest03.pdf";
@@ -92,7 +91,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextOverflowTest04()
 		{
 			String outFileName = destinationFolder + "textOverflowTest04.pdf";

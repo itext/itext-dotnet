@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Geom;
@@ -16,8 +15,8 @@ namespace iTextSharp.Layout
 {
 	public class SimpleTextExtractionStrategyTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
 
 		internal String TEXT1 = "TEXT1 TEXT1";
 
@@ -29,7 +28,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestCoLinnearText()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 0);
@@ -39,7 +38,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestCoLinnearTextWithSpace()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 2);
@@ -50,7 +49,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestCoLinnearTextEndingWithSpaceCharacter()
 		{
 			// in this case, we shouldn't be inserting an extra space
@@ -63,7 +62,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestUnRotatedText()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, true, -20);
@@ -73,7 +72,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestRotatedText()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, -90, true, -20);
@@ -83,7 +82,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestRotatedText2()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 90, true, -20);
@@ -94,7 +93,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestPartiallyRotatedText()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 33, true, -20);
@@ -104,7 +103,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestWordSpacingCausedByExplicitGlyphPositioning()
 		{
 			byte[] bytes = CreatePdfWithArrayText(TEXT1, TEXT2, 250);
@@ -114,7 +113,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestWordSpacingCausedByExplicitGlyphPositioning2()
 		{
 			PdfTextArray textArray = new PdfTextArray();
@@ -148,7 +147,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestTrailingSpace()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1 + " ", TEXT2, 0, false, 6);
@@ -158,7 +157,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestLeadingSpace()
 		{
 			byte[] bytes = CreatePdfWithRotatedText(TEXT1, " " + TEXT2, 0, false, 6);
@@ -168,7 +167,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestExtractXObjectText()
 		{
 			String text1 = "X";
@@ -180,7 +179,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ExtractFromPage229()
 		{
 			if (this.GetType() != typeof(SimpleTextExtractionStrategyTest))
@@ -198,7 +197,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ExtractFromIsoTc171()
 		{
 			if (this.GetType() != typeof(SimpleTextExtractionStrategyTest))

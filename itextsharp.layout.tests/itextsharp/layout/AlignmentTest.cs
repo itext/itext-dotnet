@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Pdf;
@@ -15,13 +14,13 @@ namespace iTextSharp.Layout
 {
 	public class AlignmentTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/AlignmentTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/AlignmentTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/AlignmentTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/AlignmentTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -29,7 +28,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAlignmentTest01()
 		{
 			String outFileName = destinationFolder + "justifyAlignmentTest01.pdf";
@@ -51,7 +50,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAlignmentTest02()
 		{
 			String outFileName = destinationFolder + "justifyAlignmentTest02.pdf";
@@ -70,7 +69,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAlignmentTest03()
 		{
 			String outFileName = destinationFolder + "justifyAlignmentTest03.pdf";
@@ -93,7 +92,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAlignmentTest04()
 		{
 			String outFileName = destinationFolder + "justifyAlignmentTest04.pdf";
@@ -115,7 +114,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAlignmentForcedNewlinesTest01()
 		{
 			String outFileName = destinationFolder + "justifyAlignmentForcedNewlinesTest01.pdf";
@@ -138,7 +137,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void JustifyAllTest01()
 		{
 			String outFileName = destinationFolder + "justifyAllTest01.pdf";
@@ -162,7 +161,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BlockAlignmentTest01()
 		{
 			String outFileName = destinationFolder + "blockAlignmentTest01.pdf";
@@ -190,7 +189,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BlockAlignmentTest02()
 		{
 			String outFileName = destinationFolder + "blockAlignmentTest02.pdf";
@@ -216,7 +215,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ImageAlignmentTest01()
 		{
 			String outFileName = destinationFolder + "imageAlignmentTest01.pdf";

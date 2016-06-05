@@ -1,11 +1,9 @@
-using NUnit.Framework;
-
 namespace iTextSharp.IO.Font
 {
 	public class FontProgramTest
 	{
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ExceptionMessageTest()
 		{
 			try
@@ -19,7 +17,7 @@ namespace iTextSharp.IO.Font
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void BoldTest()
 		{
 			FontProgram fp = FontProgramFactory.CreateFont(FontConstants.HELVETICA);

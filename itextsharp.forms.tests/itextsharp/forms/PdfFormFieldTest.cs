@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Forms.Fields;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -12,20 +11,20 @@ namespace iTextSharp.Forms
 {
 	public class PdfFormFieldTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/forms/PdfFormFieldTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/forms/PdfFormFieldTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/forms/PdfFormFieldTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/forms/PdfFormFieldTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FormFieldTest01()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
@@ -41,7 +40,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FormFieldTest02()
 		{
 			String filename = destinationFolder + "formFieldTest02.pdf";
@@ -64,7 +63,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FormFieldTest03()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
@@ -89,7 +88,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ChoiceFieldTest01()
 		{
 			String filename = destinationFolder + "choiceFieldTest01.pdf";
@@ -119,7 +118,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ButtonFieldTest01()
 		{
 			String filename = destinationFolder + "buttonFieldTest01.pdf";
@@ -151,7 +150,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ButtonFieldTest02()
 		{
 			String filename = destinationFolder + "buttonFieldTest02.pdf";

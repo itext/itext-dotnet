@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -14,13 +13,13 @@ namespace iTextSharp.Layout
 {
 	public class DefaultLayoutTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/DefaultLayoutTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/DefaultLayoutTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/DefaultLayoutTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/DefaultLayoutTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -28,7 +27,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void MultipleAdditionsOfSameModelElementTest()
 		{
 			String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
@@ -46,7 +45,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RendererTest01()
 		{
 			String outFileName = destinationFolder + "rendererTest01.pdf";
@@ -65,7 +64,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
 		public virtual void EmptyParagraphsTest01()
 		{
@@ -92,7 +91,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EmptyParagraphsTest02()
 		{
 			String outFileName = destinationFolder + "emptyParagraphsTest02.pdf";

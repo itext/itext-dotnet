@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
@@ -17,20 +16,20 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfStructElemTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfStructElemTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStructElemTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfStructElemTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfStructElemTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest01()
 		{
 			FileStream fos = new FileStream(destinationFolder + "structElemTest01.pdf", FileMode
@@ -82,7 +81,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest02()
 		{
 			FileStream fos = new FileStream(destinationFolder + "structElemTest02.pdf", FileMode
@@ -119,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest03()
 		{
 			FileStream fos = new FileStream(destinationFolder + "structElemTest03.pdf", FileMode
@@ -180,7 +179,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest04()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -243,7 +242,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest05()
 		{
 			FileStream fos = new FileStream(destinationFolder + "structElemTest05.pdf", FileMode
@@ -290,7 +289,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructElemTest06()
 		{
 			FileStream fos = new FileStream(destinationFolder + "structElemTest06.pdf", FileMode
@@ -322,7 +321,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest01()
 		{
@@ -349,7 +348,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest02()
 		{
@@ -371,7 +370,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest03()
 		{
@@ -394,7 +393,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest04()
 		{
@@ -418,7 +417,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructTreeCopyingTest05()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
@@ -442,7 +441,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest06()
 		{
@@ -463,7 +462,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructTreeCopyingTest07()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox.pdf"
@@ -500,7 +499,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructTreeCopyingTest08()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
@@ -520,7 +519,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructTreeCopyingTest09()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "quick-brown-fox-table.pdf"
@@ -541,7 +540,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StructTreeCopyingTest10()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "88th_Academy_Awards.pdf"

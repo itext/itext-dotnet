@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Font;
@@ -15,20 +14,20 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class TagTreePointerTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/TagTreePointerTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/TagTreePointerTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest01()
 		{
 			FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest01.pdf", FileMode
@@ -68,7 +67,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest02()
 		{
 			FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest02.pdf", FileMode
@@ -100,7 +99,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest03()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -152,7 +151,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest04()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -171,7 +170,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest05()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -194,7 +193,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagTreePointerTest06()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -225,7 +224,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureFlushingTest01()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -257,7 +256,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureFlushingTest02()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -283,7 +282,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureFlushingTest03()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -306,7 +305,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureFlushingTest04()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -334,7 +333,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureFlushingTest05()
 		{
 			PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest05.pdf"
@@ -391,7 +390,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureRemovingTest01()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -409,7 +408,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureRemovingTest02()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -442,7 +441,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureRemovingTest03()
 		{
 			PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest03.pdf"
@@ -480,7 +479,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TagStructureRemovingTest04()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAnnots.pdf");

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Java.Security;
-using NUnit.Framework;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
@@ -15,14 +14,14 @@ namespace iTextSharp.Signatures
 {
 	public class SigningTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/signatures/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/signatures/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/signatures/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/signatures/";
 
-		public static readonly String keystorePath = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/signatures/ks";
+		public static readonly String keystorePath = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/signatures/ks";
 
 		public static readonly char[] password = "password".ToCharArray();
 
@@ -38,7 +37,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Java.Security.Cert.CertificateException"/>
 		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
 		/// <exception cref="Java.Security.UnrecoverableKeyException"/>
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void Init()
 		{
 			provider = new BouncyCastleProvider();
@@ -53,7 +52,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SimpleSigningTest()
 		{
 			String src = sourceFolder + "simpleDocument.pdf";
@@ -85,7 +84,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SigningIntoExistingFieldTest01()
 		{
 			String src = sourceFolder + "emptySignature01.pdf";
@@ -113,7 +112,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SigningIntoExistingFieldTest02()
 		{
 			String src = sourceFolder + "emptySignature02.pdf";
@@ -140,7 +139,7 @@ namespace iTextSharp.Signatures
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SigningIntoExistingReuseAppearanceTest()
 		{
 			String src = sourceFolder + "emptySigWithAppearance.pdf";

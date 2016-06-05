@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 
@@ -7,8 +6,8 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfTokenizerTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
 
 		/// <exception cref="System.Exception"/>
 		private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes
@@ -27,7 +26,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestOneNumber()
 		{
 			CheckTokenTypes("/Name1 70", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.
@@ -35,7 +34,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestTwoNumbers()
 		{
 			CheckTokenTypes("/Name1 70/Name 2", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType
@@ -44,7 +43,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TokenTypesTest()
 		{
 			CheckTokenTypes("<</Size 70/Root 46 0 R/Info 44 0 R/ID[<8C2547D58D4BD2C6F3D32B830BE3259D><8F69587888569A458EB681A4285D5879>]/Prev 116 >>"
@@ -57,7 +56,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void EncodingTest()
 		{
 			RandomAccessSourceFactory factory;
@@ -108,7 +107,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ReadPdfStringTest()
 		{
 			String author = "This string9078 contains \u00A5two octal characters\u00C7";
@@ -129,7 +128,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PrimitivesTest()
 		{
 			String data = "<</Size 70." + "/Value#20 .1" + "/Root 46 0 R" + "/Info 44 0 R" + 
@@ -236,7 +235,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TokenValueEqualsToTest()
 		{
 			String data = "SomeString";

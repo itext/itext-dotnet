@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Font;
@@ -14,13 +13,13 @@ namespace iTextSharp.Layout
 {
 	public class TextWritingTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/TextWritingTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/TextWritingTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/TextWritingTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/TextWritingTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -28,7 +27,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextRiseTest01()
 		{
 			// CountryChunks example
@@ -54,7 +53,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TextRenderingModeTest01()
 		{
 			String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
@@ -81,7 +80,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LeadingTest01()
 		{
 			String outFileName = destinationFolder + "leadingTest01.pdf";
@@ -103,7 +102,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FirstLineIndentTest01()
 		{
 			String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
@@ -142,7 +141,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CharSpacingTest01()
 		{
 			String outFileName = destinationFolder + "charSpacingTest01.pdf";
@@ -167,7 +166,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WordSpacingTest01()
 		{
 			String outFileName = destinationFolder + "wordSpacingTest01.pdf";
@@ -194,7 +193,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FontStyleSimulationTest01()
 		{
 			String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";

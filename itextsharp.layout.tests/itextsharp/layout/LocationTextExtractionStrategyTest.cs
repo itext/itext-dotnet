@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Geom;
@@ -16,8 +15,8 @@ namespace iTextSharp.Layout
 {
 	public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
 
 		public override ITextExtractionStrategy CreateRenderListenerForTest()
 		{
@@ -25,7 +24,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestYPosition()
 		{
 			PdfDocument doc = CreatePdfWithOverlappingTextVertical(new String[] { "A", "B", "C"
@@ -36,7 +35,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestXPosition()
 		{
 			byte[] content = CreatePdfWithOverlappingTextHorizontal(new String[] { "A", "B", 
@@ -51,7 +50,7 @@ namespace iTextSharp.Layout
 
 		//        Assert.assertEquals("A\tAA\tB\tBB\tC\tCC\tD\tDD", text);
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestRotatedPage()
 		{
 			byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -62,7 +61,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestRotatedPage2()
 		{
 			byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -74,7 +73,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestRotatedPage3()
 		{
 			byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -86,7 +85,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestExtractXObjectTextWithRotation()
 		{
 			//LocationAwareTextExtractingPdfContentRenderListener.DUMP_STATE = true;
@@ -101,7 +100,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestNegativeCharacterSpacing()
 		{
 			byte[] content = CreatePdfWithNegativeCharSpacing("W", 200, "A");
@@ -113,7 +112,7 @@ namespace iTextSharp.Layout
 			NUnit.Framework.Assert.AreEqual("WA", text);
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestSanityCheckOnVectorMath()
 		{
 			Vector start = new Vector(0, 0, 1);
@@ -129,7 +128,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestSuperscript()
 		{
 			byte[] content = CreatePdfWithSupescript("Hel", "lo");
@@ -142,7 +141,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"

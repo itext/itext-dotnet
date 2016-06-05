@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
 
@@ -8,13 +7,13 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class TaggedPdfReaderToolTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
-		[SetUp]
+		[NUnit.Framework.SetUp]
 		public virtual void SetUp()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -24,7 +23,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TaggedPdfReaderToolTest01()
 		{
 			String filename = "iphone_user_guide.pdf";

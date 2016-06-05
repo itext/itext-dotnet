@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
@@ -13,11 +12,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class PdfCanvasProcessorTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/PdfCanvasProcessorTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfCanvasProcessorTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
 		public virtual void ContentStreamProcessorTest()
 		{

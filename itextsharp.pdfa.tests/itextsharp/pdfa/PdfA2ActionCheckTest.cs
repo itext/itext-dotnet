@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Action;
@@ -11,13 +10,13 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA2ActionCheckTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/pdfa/PdfA2ActionCheckTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/pdfa/PdfA2ActionCheckTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -25,7 +24,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck01()
 		{
 			Assert.That(() => 
@@ -47,7 +46,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck02()
 		{
 			Assert.That(() => 
@@ -69,7 +68,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck03()
 		{
 			Assert.That(() => 
@@ -91,7 +90,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck04()
 		{
 			Assert.That(() => 
@@ -113,7 +112,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck05()
 		{
 			Assert.That(() => 
@@ -135,7 +134,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck06()
 		{
 			Assert.That(() => 
@@ -157,7 +156,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck07()
 		{
 			Assert.That(() => 
@@ -179,7 +178,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck08()
 		{
 			Assert.That(() => 
@@ -202,7 +201,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck09()
 		{
 			Assert.That(() => 
@@ -224,7 +223,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck10()
 		{
 			Assert.That(() => 
@@ -246,7 +245,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck11()
 		{
 			Assert.That(() => 
@@ -268,7 +267,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck12()
 		{
 			Assert.That(() => 
@@ -290,7 +289,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck13()
 		{
 			Assert.That(() => 
@@ -310,7 +309,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck14()
 		{
 			Assert.That(() => 
@@ -331,7 +330,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ActionCheck15()
 		{
 			String outPdf = destinationFolder + "pdfA2b_actionCheck15.pdf";

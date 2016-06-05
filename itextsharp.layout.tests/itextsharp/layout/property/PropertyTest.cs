@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework;
 using iTextSharp.Test;
 
 namespace iTextSharp.Layout.Property
@@ -9,7 +8,7 @@ namespace iTextSharp.Layout.Property
 	public class PropertyTest : ExtendedITextTest
 	{
 		/// <exception cref="System.MemberAccessException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void PropertyUniquenessTest()
 		{
 			ICollection<int> fieldValues = new HashSet<int>();

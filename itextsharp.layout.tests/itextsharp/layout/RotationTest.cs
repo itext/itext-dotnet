@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -16,11 +15,11 @@ namespace iTextSharp.Layout
 {
 	public class RotationTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/layout/RotationTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/layout/RotationTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/layout/RotationTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/layout/RotationTest/";
 
 		public const String cmpPrefix = "cmp_";
 
@@ -38,7 +37,7 @@ namespace iTextSharp.Layout
 		private const String para3Text = "From the 1890s to the 1900s (decade) in New York City, the Sicilian Mafia developed into the Five Points Gang and were very powerful in the"
 			 + " Little Italy of the Lower East Side. They were often in conflict with the Jewish Eastmans of the same area.";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -46,7 +45,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FixedTextRotationTest01()
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
@@ -77,7 +76,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FixedTextRotationTest02()
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
@@ -97,7 +96,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FixedTextRotationTest03()
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
@@ -121,7 +120,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FixedTextRotationTest04()
 		{
 			String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
@@ -144,7 +143,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StaticTextRotationTest01()
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
@@ -168,7 +167,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StaticTextRotationTest02()
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
@@ -189,7 +188,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StaticTextRotationTest03()
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
@@ -209,7 +208,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StaticTextRotationTest04()
 		{
 			String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
@@ -228,7 +227,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SplitTextRotationTest01()
 		{
 			String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
@@ -248,7 +247,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SplitTextRotationTest02()
 		{
 			String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
@@ -273,7 +272,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RotationInfiniteLoopTest01()
 		{
 			String fileName = "rotationInfiniteLoopTest01.pdf";
@@ -292,7 +291,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RotationInfiniteLoopTest02()
 		{
 			String fileName = "rotationInfiniteLoopTest02.pdf";
@@ -310,7 +309,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TableRotationTest02()
 		{
 			String outFileName = destinationFolder + "tableRotationTest02.pdf";
@@ -332,7 +331,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void DivRotationTest01()
 		{
 			String outFileName = destinationFolder + "divRotationTest01.pdf";
@@ -356,7 +355,7 @@ namespace iTextSharp.Layout
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void DivRotationTest02()
 		{
 			String outFileName = destinationFolder + "divRotationTest02.pdf";
@@ -384,7 +383,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ListRotationTest01()
 		{
 			String outFileName = destinationFolder + "listRotationTest01.pdf";
@@ -408,7 +407,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ListRotationTest02()
 		{
 			String outFileName = destinationFolder + "listRotationTest02.pdf";
@@ -436,7 +435,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AlignedTextRotationTest01()
 		{
 			String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
@@ -459,7 +458,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void InnerRotationTest01()
 		{
 			String outFileName = destinationFolder + "innerRotationTest01.pdf";
@@ -479,7 +478,7 @@ namespace iTextSharp.Layout
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void InnerRotationTest02()
 		{
 			String outFileName = destinationFolder + "innerRotationTest02.pdf";

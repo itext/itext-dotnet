@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using NUnit.Framework;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Pdf.Canvas;
@@ -11,13 +10,13 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class EncodingTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/EncodingTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/EncodingTest/";
 
-		public static readonly String outputFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/EncodingTest/";
+		public static readonly String outputFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/EncodingTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(outputFolder);
@@ -25,7 +24,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SurrogatePairTest()
 		{
 			String fileName = "surrogatePairTest.pdf";
@@ -45,7 +44,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CustomSimpleEncodingTimesRomanTest()
 		{
 			String fileName = "customSimpleEncodingTimesRomanTest.pdf";
@@ -64,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CustomFullEncodingTimesRomanTest()
 		{
 			String fileName = "customFullEncodingTimesRomanTest.pdf";
@@ -82,7 +81,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void NotdefInStandardFontTest()
 		{
 			String fileName = "notdefInStandardFontTest.pdf";
@@ -103,7 +102,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void NotdefInTrueTypeFontTest()
 		{
 			String fileName = "notdefInTrueTypeFontTest.pdf";
@@ -125,7 +124,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void NotdefInType0Test()
 		{
 			String fileName = "notdefInType0Test.pdf";
@@ -143,8 +142,8 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
-		[Ignore("Should we update built-in font's descriptor in case not standard font encoding?"
+		[NUnit.Framework.Test]
+		[NUnit.Framework.Ignore("Should we update built-in font's descriptor in case not standard font encoding?"
 			)]
 		public virtual void SymbolDefaultFontTest()
 		{
@@ -181,7 +180,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SymbolTrueTypeFontWinAnsiTest()
 		{
 			String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
@@ -217,7 +216,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SymbolTrueTypeFontIdentityTest()
 		{
 			String fileName = "symbolTrueTypeFontIdentityTest.pdf";

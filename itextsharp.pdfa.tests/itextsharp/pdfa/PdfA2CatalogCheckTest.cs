@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
@@ -10,15 +9,15 @@ namespace iTextSharp.Pdfa
 {
 	public class PdfA2CatalogCheckTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/pdfa/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
 		public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2CatalogCheckTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/pdfa/PdfA2CatalogCheckTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/pdfa/PdfA2CatalogCheckTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -26,7 +25,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck01()
 		{
 			Assert.That(() => 
@@ -55,7 +54,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck02()
 		{
 			Assert.That(() => 
@@ -88,7 +87,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck03()
 		{
 			String outPdf = destinationFolder + "pdfA2b_catalogCheck03.pdf";
@@ -118,7 +117,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck04()
 		{
 			Assert.That(() => 
@@ -150,7 +149,7 @@ namespace iTextSharp.Pdfa
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck05()
 		{
 			String outPdf = destinationFolder + "pdfA2b_catalogCheck05.pdf";
@@ -189,7 +188,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck06()
 		{
 			Assert.That(() => 
@@ -229,7 +228,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck07()
 		{
 			Assert.That(() => 
@@ -269,7 +268,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck08()
 		{
 			Assert.That(() => 
@@ -314,7 +313,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck09()
 		{
 			Assert.That(() => 
@@ -336,7 +335,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CatalogCheck10()
 		{
 			Assert.That(() => 

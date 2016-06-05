@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
@@ -12,13 +11,13 @@ namespace iTextSharp.Forms
 {
 	public class PdfFormCopyTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/forms/PdfFormFieldsCopyTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/forms/PdfFormFieldsCopyTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/forms/PdfFormFieldsCopyTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/forms/PdfFormFieldsCopyTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -26,7 +25,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
 		public virtual void CopyFieldsTest01()
 		{
@@ -53,7 +52,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CopyFieldsTest02()
 		{
 			String srcFilename = sourceFolder + "hello_with_comments.pdf";
@@ -71,7 +70,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CopyFieldsTest03()
 		{
 			String srcFilename = sourceFolder + "hello2_with_comments.pdf";
@@ -90,7 +89,7 @@ namespace iTextSharp.Forms
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Timeout(60000)]
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void LargeFilePerformanceTest()
 		{
 			String srcFilename1 = sourceFolder + "frontpage.pdf";
@@ -115,7 +114,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
 		public virtual void CopyFieldsTest04()
 		{
@@ -136,7 +135,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CopyFieldsTest05()
 		{
 			String srcFilename = sourceFolder + "srcFile1.pdf";
@@ -153,7 +152,7 @@ namespace iTextSharp.Forms
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CopyPagesWithInheritedResources()
 		{
 			String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";

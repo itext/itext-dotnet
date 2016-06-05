@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
@@ -13,15 +12,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class TextRenderInfoTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
 
 		public const int FIRST_PAGE = 1;
 
 		public const int FIRST_ELEMENT_INDEX = 0;
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestCharacterRenderInfos()
 		{
 			PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener
@@ -39,7 +38,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		/// Japanese. TextRenderInfo threw an AIOOBE for some characters.
 		/// </remarks>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestUnicodeEmptyString()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -55,7 +54,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestType3FontWidth()
 		{
 			String inFile = "type3font_text.pdf";

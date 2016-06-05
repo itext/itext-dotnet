@@ -1,12 +1,11 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfNameTest : ITextTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void SpecialCharactersTest()
 		{
 			String str1 = " %()<>";

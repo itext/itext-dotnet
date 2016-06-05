@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Image;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf.Navigation;
@@ -11,20 +10,20 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfDocumentTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WritingVersionTest01()
 		{
 			// There is a possibility to override version in stamping mode
@@ -43,7 +42,7 @@ namespace iTextSharp.Kernel.Pdf
 		// fine, while another one failed.
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddOutlinesWithNamedDestinations01()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
@@ -89,7 +88,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void FreeReferencesInObjectStream()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "styledLineArts_Redacted.pdf");
@@ -103,7 +102,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RemoveUnusedObjectsInWriterModeTest()
 		{
 			String filename = "removeUnusedObjectsInWriter.pdf";
@@ -127,7 +126,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void RemoveUnusedObjectsInStampingModeTest()
 		{
 			String filenameIn = "docWithUnusedObjects_1.pdf";
@@ -156,7 +155,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddUnusedObjectsInWriterModeTest()
 		{
 			String filename = "addUnusedObjectsInWriter.pdf";
@@ -180,7 +179,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddUnusedObjectsInStampingModeTest()
 		{
 			String filenameIn = "docWithUnusedObjects_2.pdf";
@@ -209,7 +208,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void AddUnusedStreamObjectsTest()
 		{
 			String filenameIn = "docWithUnusedObjects_3.pdf";
@@ -233,7 +232,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestImageCompressLevel()
 		{
 			byte[] b = ImageDataFactory.Create(sourceFolder + "berlin2013.jpg").GetData();
@@ -252,7 +251,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestFreeReference()
 		{
 			PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties
@@ -274,7 +273,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CheckAndResolveCircularReferences()
 		{
 			PdfReader pdfReader = new PdfReader(sourceFolder + "datasheet.pdf");
@@ -289,7 +288,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ReadEncryptedDocumentWithFullCompression()
 		{
 			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode

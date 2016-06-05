@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
@@ -9,11 +8,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class TextMarginFinderTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test()
 		{
 			TextMarginFinder finder = new TextMarginFinder();

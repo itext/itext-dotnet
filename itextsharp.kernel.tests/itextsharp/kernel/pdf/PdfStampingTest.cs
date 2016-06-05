@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Xmp;
@@ -10,20 +9,20 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfStampingTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping1()
 		{
 			String filename1 = destinationFolder + "stamping1_1.pdf";
@@ -79,7 +78,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping2()
 		{
 			String filename1 = destinationFolder + "stamping2_1.pdf";
@@ -126,7 +125,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping3()
 		{
 			String filename1 = destinationFolder + "stamping3_1.pdf";
@@ -175,7 +174,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping4()
 		{
 			String filename1 = destinationFolder + "stamping4_1.pdf";
@@ -228,7 +227,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping5()
 		{
 			String filename1 = destinationFolder + "stamping5_1.pdf";
@@ -282,7 +281,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping6()
 		{
 			String filename1 = destinationFolder + "stamping6_1.pdf";
@@ -330,7 +329,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping7()
 		{
 			String filename1 = destinationFolder + "stamping7_1.pdf";
@@ -378,7 +377,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping8()
 		{
 			String filename1 = destinationFolder + "stamping8_1.pdf";
@@ -428,7 +427,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping9()
 		{
 			String filename1 = destinationFolder + "stamping9_1.pdf";
@@ -478,7 +477,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping10()
 		{
 			String filename1 = destinationFolder + "stamping10_1.pdf";
@@ -528,7 +527,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping11()
 		{
 			String filename1 = destinationFolder + "stamping11_1.pdf";
@@ -578,7 +577,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping12()
 		{
 			String filename1 = destinationFolder + "stamping12_1.pdf";
@@ -635,7 +634,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Stamping13()
 		{
 			String filename1 = destinationFolder + "stamping13_1.pdf";
@@ -698,8 +697,8 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
-		[Ignore("ignore")]
+		[NUnit.Framework.Test]
+		[NUnit.Framework.Ignore("ignore")]
 		public virtual void Stamping14()
 		{
 			String filename1 = sourceFolder + "20000PagesDocument.pdf";
@@ -740,7 +739,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingStreamsCompression01()
 		{
 			// by default, old streams should not be recompressed
@@ -763,7 +762,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingStreamsCompression02()
 		{
 			// if user specified, stream may be uncompressed
@@ -786,7 +785,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingStreamsCompression03()
 		{
 			// if user specified, stream may be recompressed
@@ -810,7 +809,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingXmp1()
 		{
 			String filename1 = destinationFolder + "stampingXmp1_1.pdf";
@@ -864,7 +863,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingXmp2()
 		{
 			String filename1 = destinationFolder + "stampingXmp2_1.pdf";
@@ -917,7 +916,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend1()
 		{
 			String filename1 = destinationFolder + "stampingAppend1_1.pdf";
@@ -975,7 +974,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend2()
 		{
 			String filename1 = destinationFolder + "stampingAppend2_1.pdf";
@@ -1024,7 +1023,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend3()
 		{
 			String filename1 = destinationFolder + "stampingAppend3_1.pdf";
@@ -1073,7 +1072,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend4()
 		{
 			String filename1 = destinationFolder + "stampingAppend4_1.pdf";
@@ -1127,7 +1126,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend5()
 		{
 			String filename1 = destinationFolder + "stampingAppend5_1.pdf";
@@ -1182,7 +1181,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend8()
 		{
 			String filename1 = destinationFolder + "stampingAppend8_1.pdf";
@@ -1232,7 +1231,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend9()
 		{
 			String filename1 = destinationFolder + "stampingAppend9_1.pdf";
@@ -1283,7 +1282,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend10()
 		{
 			String filename1 = destinationFolder + "stampingAppend10_1.pdf";
@@ -1334,7 +1333,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppend11()
 		{
 			String filename1 = destinationFolder + "stampingAppend11_1.pdf";
@@ -1385,7 +1384,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingVersionTest01()
 		{
 			// By default the version of the output file should be the same as the original one
@@ -1402,7 +1401,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingVersionTest02()
 		{
 			// There is a possibility to override version in stamping mode
@@ -1420,7 +1419,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingAppendVersionTest01()
 		{
 			// There is a possibility to override version in stamping mode
@@ -1440,7 +1439,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingTestWithTaggedStructure()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
@@ -1455,7 +1454,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingTestWithFullCompression01()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "fullCompressedDocument.pdf");
@@ -1472,7 +1471,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void StampingTestWithFullCompression02()
 		{
 			PdfReader reader = new PdfReader(sourceFolder + "fullCompressedDocument.pdf");

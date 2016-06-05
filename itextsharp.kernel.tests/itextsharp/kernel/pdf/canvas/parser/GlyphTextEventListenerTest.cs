@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
@@ -10,11 +9,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
 	public class GlyphTextEventListenerTest : ExtendedITextTest
 	{
-		private static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/parser/GlyphTextEventListenerTest/";
+		private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/parser/GlyphTextEventListenerTest/";
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test01()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"
@@ -34,7 +33,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void Test02()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "Sample.pdf"
@@ -46,7 +45,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void TestWithMultiFilteredRenderListener()
 		{
 			PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"

@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Source
@@ -11,7 +10,7 @@ namespace iTextSharp.IO.Source
 			return Math.Round(value * Math.Pow(10, places)) / Math.Pow(10, places);
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WriteNumber1Test()
 		{
 			Random rnd = new Random();
@@ -33,7 +32,7 @@ namespace iTextSharp.IO.Source
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WriteNumber2Test()
 		{
 			Random rnd = new Random();
@@ -54,7 +53,7 @@ namespace iTextSharp.IO.Source
 			}
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WriteNumber3Test()
 		{
 			Random rnd = new Random();

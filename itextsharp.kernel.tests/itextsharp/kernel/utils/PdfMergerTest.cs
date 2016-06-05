@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
@@ -11,13 +10,13 @@ namespace iTextSharp.Kernel.Utils
 {
 	public class PdfMergerTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/utils/PdfMergerTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/utils/PdfMergerTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -25,7 +24,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void MergeDocumentTest01()
 		{
 			String filename = sourceFolder + "courierTest.pdf";
@@ -60,7 +59,7 @@ namespace iTextSharp.Kernel.Utils
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void MergeDocumentTest02()
 		{
 			String filename = sourceFolder + "doc1.pdf";
@@ -94,7 +93,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest03()
 		{
@@ -132,7 +131,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void MergeDocumentTest04()
 		{

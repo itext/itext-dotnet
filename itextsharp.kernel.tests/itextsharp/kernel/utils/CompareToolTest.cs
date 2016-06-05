@@ -1,18 +1,17 @@
 using System;
-using NUnit.Framework;
 using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Utils
 {
 	public class CompareToolTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/utils/CompareToolTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/utils/CompareToolTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/utils/CompareToolTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/utils/CompareToolTest/";
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void SetUp()
 		{
 			CreateOrClearDestinationFolder(destinationFolder);
@@ -22,7 +21,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CompareToolErrorReportTest01()
 		{
 			CompareTool compareTool = new CompareTool();
@@ -45,7 +44,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CompareToolErrorReportTest02()
 		{
 			CompareTool compareTool = new CompareTool();
@@ -68,7 +67,7 @@ namespace iTextSharp.Kernel.Utils
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
 		/// <exception cref="Org.Xml.Sax.SAXException"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CompareToolErrorReportTest03()
 		{
 			CompareTool compareTool = new CompareTool();

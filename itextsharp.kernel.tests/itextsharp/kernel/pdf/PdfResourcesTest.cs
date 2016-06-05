@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf.Extgstate;
 
@@ -10,7 +9,7 @@ namespace iTextSharp.Kernel.Pdf
 	public class PdfResourcesTest
 	{
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ResourcesTest1()
 		{
 			MemoryStream baos = new MemoryStream();
@@ -30,7 +29,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void ResourcesTest2()
 		{
 			MemoryStream baos = new MemoryStream();

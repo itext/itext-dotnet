@@ -1,11 +1,10 @@
 using System;
-using NUnit.Framework;
 
 namespace iTextSharp.IO.Source
 {
 	public class WriteStringsTest
 	{
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WriteStringTest()
 		{
 			String str = "SomeString";
@@ -13,7 +12,7 @@ namespace iTextSharp.IO.Source
 			NUnit.Framework.Assert.AreEqual(str.GetBytes(), content);
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WriteNameTest()
 		{
 			String str = "SomeName";
@@ -21,7 +20,7 @@ namespace iTextSharp.IO.Source
 			NUnit.Framework.Assert.AreEqual(("/" + str).GetBytes(), content);
 		}
 
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void WritePdfStringTest()
 		{
 			String str = "Some PdfString";

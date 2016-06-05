@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
 using iTextSharp.Kernel.Geom;
@@ -15,17 +14,17 @@ namespace iTextSharp.Kernel.Pdf
 {
 	public class PdfXObjectTest : ExtendedITextTest
 	{
-		public static readonly String sourceFolder = TestContext.CurrentContext.TestDirectory
-			 + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
+		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
 
-		public static readonly String destinationFolder = TestContext.CurrentContext.TestDirectory
-			 + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
+		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+			.TestDirectory + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
 
 		public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp"
 			, sourceFolder + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder
 			 + "WP_20140410_001.tif" };
 
-		[TestFixtureSetUp]
+		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()
 		{
 			CreateDestinationFolder(destinationFolder);
@@ -33,7 +32,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CreateDocumentFromImages1()
 		{
 			String destinationDocument = destinationFolder + "documentFromImages1.pdf";
@@ -75,7 +74,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		[LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
 		public virtual void CreateDocumentFromImages2()
 		{
@@ -97,7 +96,7 @@ namespace iTextSharp.Kernel.Pdf
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		[Test]
+		[NUnit.Framework.Test]
 		public virtual void CreateDocumentWithForms()
 		{
 			String destinationDocument = destinationFolder + "documentWithForms1.pdf";
