@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
@@ -61,8 +62,8 @@ namespace iTextSharp.Layout
 			PdfWriter writer = new PdfWriter(file);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			Document doc = new Document(pdfDoc);
-			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(new FileInfo
-				(sourceFolder + "Desert.jpg").ToURI().ToURL()));
+			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil
+				.ToURL(sourceFolder + "Desert.jpg")));
 			iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
 				, 100);
 			Paragraph p = new Paragraph();
@@ -275,7 +276,7 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "flushOnDrawCheckCircularReferencesTest.pdf";
 			String cmpFileName = sourceFolder + "cmp_flushOnDrawCheckCircularReferencesTest.pdf";
-			PdfDocument pdf = pdf = new PdfDocument(new PdfWriter(outFileName));
+			PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
 			//Initialize document
 			Document document = new Document(pdf);
 			iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory

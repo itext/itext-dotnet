@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.IO;
 using iTextSharp.IO.Image;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Xobject;
@@ -292,8 +293,8 @@ namespace iTextSharp.Layout
 				(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph("2, 2")));
 			doc.Add(table2);
 			doc.Add(new Paragraph("Table 3"));
-			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(new FileInfo
-				(sourceFolder + "itext.png").ToURI().ToURL()));
+			PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.
+				ToURL(sourceFolder + "itext.png")));
 			iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
 				, 50);
 			Table table3 = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph
@@ -824,16 +825,16 @@ namespace iTextSharp.Layout
 					)).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new 
 					Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3)));
 			}
-			doc.SetRenderer(new _DocumentRenderer_862(pdfDoc, doc));
+			doc.SetRenderer(new _DocumentRenderer_863(pdfDoc, doc));
 			doc.Add(table);
 			doc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
 				, destinationFolder, testName + "_diff"));
 		}
 
-		private sealed class _DocumentRenderer_862 : DocumentRenderer
+		private sealed class _DocumentRenderer_863 : DocumentRenderer
 		{
-			public _DocumentRenderer_862(PdfDocument pdfDoc, Document baseArg1)
+			public _DocumentRenderer_863(PdfDocument pdfDoc, Document baseArg1)
 				: base(baseArg1)
 			{
 				this.pdfDoc = pdfDoc;
