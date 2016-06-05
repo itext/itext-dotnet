@@ -52,7 +52,7 @@ namespace iTextSharp.Layout.Element
 
 		private TabAlignment tabAlignment;
 
-		private char tabAnchor;
+		private char? tabAnchor;
 
 		private ILineDrawer tabLeader;
 
@@ -90,12 +90,12 @@ namespace iTextSharp.Layout.Element
 			this.tabAlignment = tabAlignment;
 		}
 
-		public virtual char GetTabAnchor()
+		public virtual char? GetTabAnchor()
 		{
 			return tabAnchor;
 		}
 
-		public virtual void SetTabAnchor(char tabAnchor)
+		public virtual void SetTabAnchor(char? tabAnchor)
 		{
 			this.tabAnchor = tabAnchor;
 		}

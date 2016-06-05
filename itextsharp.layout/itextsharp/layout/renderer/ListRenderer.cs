@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Font;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Numbering;
 using iTextSharp.Layout.Element;
@@ -202,25 +203,25 @@ namespace iTextSharp.Layout.Renderer
 
 							case ListNumberingType.ZAPF_DINGBATS_1:
 							{
-								numberText = ((char)(char)(index + 171)).ToString();
+								numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 171));
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_2:
 							{
-								numberText = ((char)(char)(index + 181)).ToString();
+								numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 181));
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_3:
 							{
-								numberText = ((char)(char)(index + 191)).ToString();
+								numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 191));
 								break;
 							}
 
 							case ListNumberingType.ZAPF_DINGBATS_4:
 							{
-								numberText = ((char)(char)(index + 201)).ToString();
+								numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 201));
 								break;
 							}
 
@@ -243,7 +244,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType
 								 == ListNumberingType.GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-							textRenderer = new _TextRenderer_186(constantFont, textElement);
+							textRenderer = new _TextRenderer_187(constantFont, textElement);
 							try
 							{
 								textRenderer.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory
@@ -267,9 +268,9 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		private sealed class _TextRenderer_186 : TextRenderer
+		private sealed class _TextRenderer_187 : TextRenderer
 		{
-			public _TextRenderer_186(String constantFont, Text baseArg1)
+			public _TextRenderer_187(String constantFont, Text baseArg1)
 				: base(baseArg1)
 			{
 				this.constantFont = constantFont;

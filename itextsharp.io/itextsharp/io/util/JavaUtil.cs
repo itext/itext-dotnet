@@ -220,5 +220,10 @@ namespace iTextSharp.IO.Util
 		public static int CharacterDigit(char ch, int radix) {
 			return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
 		}
+
+        public static String CharToString(char ch)
+        {
+            return ch.ToString();
+        }
     }
 }

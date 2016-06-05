@@ -87,7 +87,7 @@ namespace iTextSharp.Layout
 			TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.LEFT, TabAlignment
 				.LEFT, TabAlignment.LEFT };
 			ILineDrawer[] leaders1 = new ILineDrawer[] { null, null, null };
-			char[] anchors1 = new char[] { null, null, null };
+			char?[] anchors1 = new char?[] { null, null, null };
 			Paragraph p = new Paragraph();
 			p.SetFontSize(8);
 			AddTabbedTextToParagraph(p, text1, positions1, alignments1, leaders1, anchors1);
@@ -99,7 +99,7 @@ namespace iTextSharp.Layout
 			TabAlignment[] alignments2 = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment
 				.RIGHT, TabAlignment.RIGHT };
 			ILineDrawer[] leaders2 = new ILineDrawer[] { null, null, null };
-			char[] anchors2 = new char[] { null, null, null };
+			char?[] anchors2 = new char?[] { null, null, null };
 			p = new Paragraph();
 			p.SetFontSize(8);
 			AddTabbedTextToParagraph(p, text1, positions2, alignments2, leaders2, anchors2);
@@ -111,7 +111,7 @@ namespace iTextSharp.Layout
 			TabAlignment[] alignments3 = new TabAlignment[] { TabAlignment.CENTER, TabAlignment
 				.CENTER, TabAlignment.CENTER };
 			ILineDrawer[] leaders3 = new ILineDrawer[] { null, null, null };
-			char[] anchors3 = new char[] { null, null, null };
+			char?[] anchors3 = new char?[] { null, null, null };
 			p = new Paragraph();
 			p.SetFontSize(8);
 			AddTabbedTextToParagraph(p, text1, positions3, alignments3, leaders3, anchors3);
@@ -140,7 +140,7 @@ namespace iTextSharp.Layout
 				.CENTER, TabAlignment.ANCHOR, TabAlignment.RIGHT, TabAlignment.ANCHOR };
 			ILineDrawer[] leaders1 = new ILineDrawer[] { new DottedLine(), null, new DashedLine
 				(.5f), null, new SolidLine(.5f) };
-			char[] anchors1 = new char[] { ' ', null, '\\', null, '.' };
+			char?[] anchors1 = new char?[] { ' ', null, '\\', null, '.' };
 			Paragraph p = new Paragraph();
 			p.SetFontSize(8);
 			AddTabbedTextToParagraph(p, text2, positions1, alignments1, leaders1, anchors1);
@@ -278,7 +278,7 @@ namespace iTextSharp.Layout
 		}
 
 		private void AddTabbedTextToParagraph(Paragraph p, String text, float[] positions
-			, TabAlignment[] alignments, ILineDrawer[] tabLeadings, char[] tabAnchorCharacters
+			, TabAlignment[] alignments, ILineDrawer[] tabLeadings, char?[] tabAnchorCharacters
 			)
 		{
 			IList<TabStop> tabStops = new List<TabStop>();

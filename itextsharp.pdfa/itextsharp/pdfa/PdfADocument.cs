@@ -174,7 +174,7 @@ namespace iTextSharp.Pdfa
 			{
 				case IsoKey.CANVAS_STACK:
 				{
-					checker.CheckCanvasStack((char)(char)obj);
+					checker.CheckCanvasStack((char)obj);
 					break;
 				}
 
