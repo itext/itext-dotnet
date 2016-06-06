@@ -375,7 +375,7 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>Gets the <CODE>Node</CODE> that corresponds to the datasets part.</summary>
 		/// <returns>the <CODE>Node</CODE> that corresponds to the datasets part</returns>
-		public virtual XNode GetDatasetsNode()
+		public virtual XElement GetDatasetsNode()
 		{
 			return datasetsNode;
 		}

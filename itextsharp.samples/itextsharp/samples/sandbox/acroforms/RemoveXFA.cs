@@ -6,9 +6,8 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Samples.Sandbox.Acroforms {
     public class RemoveXFA : GenericTest {
-        public static readonly String SRC = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/reportcardinitial.pdf";
-
         public static readonly String DEST = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/sandbox/acroforms/remove_xfa.pdf";
+        public static readonly String SRC = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/reportcardinitial.pdf";
 
         protected override void ManipulatePdf(String dest)
         {

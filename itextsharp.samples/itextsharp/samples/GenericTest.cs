@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using iTextSharp.Forms;
-using iTextSharp.Forms.Fields;
-using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using NUnit.Framework;
@@ -13,9 +9,10 @@ namespace iTextSharp.Samples {
     [LogListener]
     [TestFixture]
     public class GenericTest {
-
-
+        
         protected bool compareRenders = false;
+
+        protected bool compareXml = false;
 
         /// <summary>
         /// An error message
@@ -116,19 +113,25 @@ namespace iTextSharp.Samples {
         /// <param name="dest">the PDF that resulted from the test</param>
         /// <param name="cmp">the reference PDF</param>
         protected void ComparePdf(string dest, string cmp) {
-            if (string.IsNullOrEmpty(cmp))
+            if (string.IsNullOrEmpty(cmp)) {
                 return;
+            }
             CompareTool compareTool = new CompareTool();
             string outPath = "./target/" + new DirectoryInfo(dest).Parent;
             new DirectoryInfo(outPath).Create();
-            if (compareRenders) {
-                AddError(compareTool.CompareVisually(dest, cmp, outPath, differenceImagePrefix));
-                AddError(compareTool.CompareLinkAnnotations(dest, cmp));
+            if (compareXml) {
+                if (!compareTool.CompareXmls(dest, cmp)) {
+                    AddError("The XML structures are different.");
+                }
             } else {
-                AddError(compareTool.CompareByContent(dest, cmp, outPath, differenceImagePrefix));
+                if (compareRenders) {
+                    AddError(compareTool.CompareVisually(dest, cmp, outPath, differenceImagePrefix));
+                    AddError(compareTool.CompareLinkAnnotations(dest, cmp));
+                } else {
+                    AddError(compareTool.CompareByContent(dest, cmp, outPath, differenceImagePrefix));
+                }
+                AddError(compareTool.CompareDocumentInfo(dest, cmp));
             }
-            AddError(compareTool.CompareDocumentInfo(dest, cmp));
-
 
             if (errorMessage != null)
                 Assert.Fail(errorMessage);
