@@ -636,13 +636,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 				PdfNumber ac = (PdfNumber)operands[1];
 				PdfString @string = (PdfString)operands[2];
 				IList<PdfObject> twOperands = new List<PdfObject>(1);
-				twOperands.Insert(0, aw);
+				twOperands.Add(0, aw);
 				setTextWordSpacing.Invoke(processor, null, twOperands);
 				IList<PdfObject> tcOperands = new List<PdfObject>(1);
-				tcOperands.Insert(0, ac);
+				tcOperands.Add(0, ac);
 				setTextCharacterSpacing.Invoke(processor, null, tcOperands);
 				IList<PdfObject> tickOperands = new List<PdfObject>(1);
-				tickOperands.Insert(0, @string);
+				tickOperands.Add(0, @string);
 				moveNextLineAndShowText.Invoke(processor, null, tickOperands);
 			}
 		}
@@ -695,8 +695,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 				<PdfObject> operands)
 			{
 				IList<PdfObject> tdoperands = new List<PdfObject>(2);
-				tdoperands.Insert(0, new PdfNumber(0));
-				tdoperands.Insert(1, new PdfNumber(-processor.GetGraphicsState().GetLeading()));
+				tdoperands.Add(0, new PdfNumber(0));
+				tdoperands.Add(1, new PdfNumber(-processor.GetGraphicsState().GetLeading()));
 				moveStartNextLine.Invoke(processor, null, tdoperands);
 			}
 		}
@@ -737,7 +737,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 			{
 				float ty = ((PdfNumber)operands[1]).FloatValue();
 				IList<PdfObject> tlOperands = new List<PdfObject>(1);
-				tlOperands.Insert(0, new PdfNumber(-ty));
+				tlOperands.Add(0, new PdfNumber(-ty));
 				setTextLeading.Invoke(processor, null, tlOperands);
 				moveStartNextLine.Invoke(processor, null, operands);
 			}

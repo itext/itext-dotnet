@@ -55,6 +55,10 @@ namespace iTextSharp.Layout
             }
         }
 
+        public static void Add<T>(this IList<T> list, int index, T elem) {
+            list.Insert(index, elem);
+        }
+
         public static bool IsEmpty<T>(this IList<T> list)
         {
             return 0 == list.Count();

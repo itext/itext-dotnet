@@ -172,10 +172,10 @@ namespace iTextSharp.IO.Font.Otf
 
 		public virtual void Add(int index, Glyph glyph)
 		{
-			glyphs.Insert(index, glyph);
+			glyphs.Add(index, glyph);
 			if (actualText != null)
 			{
-				actualText.Insert(index, null);
+				actualText.Add(index, null);
 			}
 		}
 
@@ -375,7 +375,7 @@ namespace iTextSharp.IO.Font.Otf
 			{
 				for (int i = 0; i < additionalGlyphs.Count; i++)
 				{
-					this.actualText.Insert(index, null);
+					this.actualText.Add(index, null);
 				}
 			}
 		}

@@ -79,6 +79,10 @@ namespace iTextSharp.Kernel {
             }
         }
 
+        public static void Add<T>(this IList<T> list, int index, T elem) {
+            list.Insert(index, elem);
+        }
+
         public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd)
         {
             foreach (T o in collectionToAdd)
@@ -197,5 +201,9 @@ namespace iTextSharp.Kernel {
             dictionary[key] = value;
             return value;
         }
-	}
+
+        public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
+            return dictionary.ContainsKey(key);
+        }
+    }
 }

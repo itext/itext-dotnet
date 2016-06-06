@@ -207,7 +207,7 @@ namespace iTextSharp.Signatures
 				//     (the certificates and crls are taken out by other means)
 				//     last - signerInfos
 				// the version
-				version = ((DerInteger)content.GetObjectAt(0)).Value;
+				version = ((DerInteger)content.GetObjectAt(0)).Value.IntValue;
 				// the digestAlgorithms
 				digestalgos = new HashSet<String>();
 				IEnumerator<Asn1Sequence> e_1 = (IEnumerator<Asn1Sequence>)((Asn1Set)content.GetObjectAt
@@ -283,7 +283,7 @@ namespace iTextSharp.Signatures
 				//     2 - the digest algorithm
 				//     3 or 4 - digestEncryptionAlgorithm
 				//     4 or 5 - encryptedDigest
-				signerversion = ((DerInteger)signerInfo.GetObjectAt(0)).Value;
+				signerversion = ((DerInteger)signerInfo.GetObjectAt(0)).Value.IntValue;
 				// Get the signing certificate
 				Asn1Sequence issuerAndSerialNumber = (Asn1Sequence)signerInfo.GetObjectAt(1);
 				X509Name issuer = SignUtils.GetIssuerX509Name(issuerAndSerialNumber);

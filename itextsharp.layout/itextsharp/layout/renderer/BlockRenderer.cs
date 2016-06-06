@@ -136,7 +136,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							childRenderers[childPos] = result.GetSplitRenderer();
 							// TODO linkedList would make it faster
-							childRenderers.Insert(childPos + 1, result.GetOverflowRenderer());
+							childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
 						}
 						else
 						{
@@ -174,7 +174,7 @@ namespace iTextSharp.Layout.Renderer
 							else
 							{
 								childRenderers[childPos] = result.GetSplitRenderer();
-								childRenderers.Insert(childPos + 1, result.GetOverflowRenderer());
+								childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
 								layoutBox = areas[++currentAreaPos].Clone();
 								break;
 							}

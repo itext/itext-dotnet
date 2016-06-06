@@ -98,6 +98,11 @@ namespace iTextSharp.IO {
             }
         }
 
+        public static void Add<T>(this IList<T> list, int index, T elem)
+        {
+            list.Insert(index, elem);
+        }
+
         public static T JRemoveAt<T>(this IList<T> list, int index) {
             T value = list[index];
             list.RemoveAt(index);
@@ -118,6 +123,10 @@ namespace iTextSharp.IO {
         {
             dictionary[key] = value;
             return value;
+        }
+
+        public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
+            return dictionary.ContainsKey(key);
         }
     }
 }
