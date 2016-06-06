@@ -16,7 +16,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck01()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -27,7 +27,7 @@ namespace iTextSharp.Pdfa
 				page.GetPdfObject().Put(PdfName.PresSteps, new PdfDictionary());
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PageDictionaryShallNotContainPressstepsEntry));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PageDictionaryShallNotContainPressstepsEntry));
 ;
 		}
 	}

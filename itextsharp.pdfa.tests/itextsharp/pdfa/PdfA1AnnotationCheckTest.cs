@@ -30,7 +30,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest01()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -43,7 +43,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnnotationType1IsNotPermitted));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnnotationType1IsNotPermitted));
 ;
 		}
 
@@ -52,7 +52,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest02()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -67,7 +67,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnAnnotationDictionaryShallNotContainTheCaKeyWithAValueOtherThan1));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnAnnotationDictionaryShallNotContainTheCaKeyWithAValueOtherThan1));
 ;
 		}
 
@@ -76,7 +76,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest03()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -90,7 +90,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleAndNoviewFlagBitsShallBeSetTo0));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleAndNoviewFlagBitsShallBeSetTo0));
 ;
 		}
 
@@ -99,7 +99,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest04()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -114,7 +114,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleAndNoviewFlagBitsShallBeSetTo0));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleAndNoviewFlagBitsShallBeSetTo0));
 ;
 		}
 
@@ -123,7 +123,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest05()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -140,7 +140,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue));
 ;
 		}
 
@@ -149,7 +149,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest06()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -164,7 +164,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue));
 ;
 		}
 
@@ -196,7 +196,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AnnotationCheckTest08()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -212,7 +212,7 @@ namespace iTextSharp.Pdfa
 				page.AddAnnotation(annot);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnnotationOfType1ShouldHaveContentsKey));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnnotationOfType1ShouldHaveContentsKey));
 ;
 		}
 

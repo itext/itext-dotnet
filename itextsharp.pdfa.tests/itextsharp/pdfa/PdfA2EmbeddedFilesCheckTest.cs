@@ -97,7 +97,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest03()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -120,7 +120,7 @@ namespace iTextSharp.Pdfa
 					, null, PdfName.Source);
 				pdfDocument.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType));
 ;
 		}
 

@@ -33,7 +33,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ColorCheckTest1()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -60,7 +60,7 @@ namespace iTextSharp.Pdfa
 				canvas.Fill();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ColorSpace1ShallHave2Components));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ColorSpace1ShallHave2Components));
 ;
 		}
 
@@ -99,7 +99,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ColorCheckTest3()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -119,7 +119,7 @@ namespace iTextSharp.Pdfa
 				canvas.Fill();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
 ;
 		}
 
@@ -165,7 +165,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ColorCheckTest5()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -188,7 +188,7 @@ namespace iTextSharp.Pdfa
 				canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.DevicecmykMayBeUsedOnlyIfTheFileHasACmykPdfAOutputIntentOrDefaultCmykInUsageContext));
 ;
 		}
 
@@ -255,7 +255,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void EgsCheckTest1()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -270,7 +270,7 @@ namespace iTextSharp.Pdfa
 				canvas.Rectangle(30, 30, 100, 100).Fill();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheHTPKey));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheHTPKey));
 ;
 		}
 
@@ -279,7 +279,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void EgsCheckTest2()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -297,7 +297,7 @@ namespace iTextSharp.Pdfa
 				canvas.Rectangle(30, 30, 100, 100).Fill();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.HalftonesShallNotContainHalftonename));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.HalftonesShallNotContainHalftonename));
 ;
 		}
 
@@ -307,7 +307,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ImageCheckTest1()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -322,7 +322,7 @@ namespace iTextSharp.Pdfa
 					, 300, false);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyJpxBaselineSetOfFeaturesShallBeUsed));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyJpxBaselineSetOfFeaturesShallBeUsed));
 ;
 		}
 
@@ -332,7 +332,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ImageCheckTest2()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -347,7 +347,7 @@ namespace iTextSharp.Pdfa
 					, 300, false);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
 ;
 		}
 
@@ -357,7 +357,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void ImageCheckTest3()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -372,7 +372,7 @@ namespace iTextSharp.Pdfa
 					, 300, false);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ExactlyOneColourSpaceSpecificationShallHaveTheValue0x01InTheApproxField));
 ;
 		}
 
@@ -427,7 +427,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void TransparencyCheckTest1()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, null);
@@ -444,7 +444,7 @@ namespace iTextSharp.Pdfa
 				canvas.RestoreState();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.IfTheDocumentDoesNotContainAPdfAOutputIntentTransparencyIsForbidden));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.IfTheDocumentDoesNotContainAPdfAOutputIntentTransparencyIsForbidden));
 ;
 		}
 
@@ -483,7 +483,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void TransparencyCheckTest3()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -506,7 +506,7 @@ namespace iTextSharp.Pdfa
 				canvas.RestoreState();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyStandardBlendModesShallBeusedForTheValueOfTheBMKeyOnAnExtendedGraphicStateDictionary));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OnlyStandardBlendModesShallBeusedForTheValueOfTheBMKeyOnAnExtendedGraphicStateDictionary));
 ;
 		}
 

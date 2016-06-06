@@ -51,7 +51,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_02()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -66,7 +66,7 @@ namespace iTextSharp.Pdfa
 					(font, 36).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
 ;
 		}
 
@@ -99,7 +99,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_04()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -113,7 +113,7 @@ namespace iTextSharp.Pdfa
 					(font, 36).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
 ;
 		}
 

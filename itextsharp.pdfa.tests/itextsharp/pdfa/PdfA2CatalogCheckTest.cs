@@ -28,7 +28,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck01()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -48,7 +48,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
 ;
 		}
 
@@ -57,7 +57,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck02()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -80,7 +80,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries));
 ;
 		}
 
@@ -120,7 +120,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck04()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -142,7 +142,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OptionalContentConfigurationDictionaryShallContainNameEntry));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OptionalContentConfigurationDictionaryShallContainNameEntry));
 ;
 		}
 
@@ -191,7 +191,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck06()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -222,7 +222,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
 ;
 		}
 
@@ -231,7 +231,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck07()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -262,7 +262,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
 ;
 		}
 
@@ -271,7 +271,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck08()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -307,7 +307,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs));
 ;
 		}
 
@@ -316,7 +316,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck09()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -329,7 +329,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.Names, names);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainAlternatepresentationsNamesEntry));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainAlternatepresentationsNamesEntry));
 ;
 		}
 
@@ -338,7 +338,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck10()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -349,7 +349,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.Requirements, new PdfArray());
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainRequirementsEntry));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.CatalogDictionaryShallNotContainRequirementsEntry));
 ;
 		}
 

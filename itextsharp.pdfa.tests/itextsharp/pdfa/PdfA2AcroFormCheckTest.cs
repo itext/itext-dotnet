@@ -93,7 +93,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck04()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -106,7 +106,7 @@ namespace iTextSharp.Pdfa
 				doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
 				doc.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheInteractiveFormDictionaryShallNotContainTheXfaKey));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.TheInteractiveFormDictionaryShallNotContainTheXfaKey));
 ;
 		}
 

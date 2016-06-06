@@ -16,7 +16,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest01()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -38,7 +38,7 @@ namespace iTextSharp.Pdfa
 				pdfDocument.AddNewPage();
 				pdfDocument.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.NameDictionaryShallNotContainTheEmbeddedFilesKey));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.NameDictionaryShallNotContainTheEmbeddedFilesKey));
 ;
 		}
 
@@ -47,7 +47,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest02()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -64,7 +64,7 @@ namespace iTextSharp.Pdfa
 				pdfDocument.AddNewPage();
 				pdfDocument.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.StreamObjDictShallNotContainForFFilterOrFDecodeParams));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.StreamObjDictShallNotContainForFFilterOrFDecodeParams));
 ;
 		}
 
@@ -73,7 +73,7 @@ namespace iTextSharp.Pdfa
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest03()
 		{
-			Assert.That(() => 
+			NUnit.Framework.Assert.That(() => 
 			{
 				PdfWriter writer = new PdfWriter(new MemoryStream());
 				Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode
@@ -90,7 +90,7 @@ namespace iTextSharp.Pdfa
 				pdfDocument.AddNewPage();
 				pdfDocument.Close();
 			}
-			, Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.FileSpecificationDictionaryShallNotContainTheEFKey));
+			, NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.FileSpecificationDictionaryShallNotContainTheEFKey));
 ;
 		}
 	}
