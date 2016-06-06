@@ -124,7 +124,7 @@ namespace iTextSharp.Signatures
 						cert = v.GetAsArray(PdfName.Cert).GetAsString(0);
 					}
 					pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), cert.GetValueBytes
-						(), provider);
+						());
 				}
 				else
 				{

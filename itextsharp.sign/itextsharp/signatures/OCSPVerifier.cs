@@ -42,19 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using Java.Security;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1.Ocsp;
-using Org.Bouncycastle.Cert;
-using Org.Bouncycastle.Cert.Jcajce;
-using Org.Bouncycastle.Cert.Ocsp;
-using Org.Bouncycastle.Operator;
-using Org.Bouncycastle.Operator.BC;
-using Org.Bouncycastle.Operator.Jcajce;
 using iTextSharp.IO.Log;
 
 namespace iTextSharp.Signatures
@@ -164,7 +157,7 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < resp.Length; i++)
 			{
 				// check if the serial number corresponds
-				if (!signCert.GetSerialNumber().Equals(resp[i].GetCertID().GetSerialNumber()))
+				if (!signCert.SerialNumber.Equals(resp[i].GetCertID().SerialNumber))
 				{
 					continue;
 				}
@@ -175,8 +168,7 @@ namespace iTextSharp.Signatures
 					{
 						issuerCert = signCert;
 					}
-					if (!resp[i].GetCertID().MatchesIssuer(new X509CertificateHolder(issuerCert.GetEncoded
-						()), new BcDigestCalculatorProvider()))
+					if (!SignUtils.CheckIfIssuersMatch(resp[i].GetCertID(), issuerCert))
 					{
 						LOGGER.Info("OCSP: Issuers doesn't match.");
 						continue;
@@ -187,18 +179,26 @@ namespace iTextSharp.Signatures
 					continue;
 				}
 				// check if the OCSP response was valid at the time of signing
-				DateTime nextUpdate = resp[i].GetNextUpdate();
-				if (nextUpdate == null)
+				if (resp[i].NextUpdate == null)
 				{
-					nextUpdate = new DateTime(resp[i].GetThisUpdate().GetTime() + 180000l);
+					DateTime nextUpdate = SignUtils.Add180Sec(resp[i].ThisUpdate);
 					LOGGER.Info(String.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate
 						));
+					if (signDate.After(nextUpdate))
+					{
+						LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate
+							));
+						continue;
+					}
 				}
-				if (signDate.After(nextUpdate))
+				else
 				{
-					LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate
-						));
-					continue;
+					if (signDate.After(resp[i].NextUpdate))
+					{
+						LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i
+							].NextUpdate));
+						continue;
+					}
 				}
 				// check the status of the certificate
 				Object status = resp[i].GetCertStatus();
@@ -240,26 +240,17 @@ namespace iTextSharp.Signatures
 				if (ocspResp.GetCerts() != null)
 				{
 					//look for existence of Authorized OCSP responder inside the cert chain in ocsp response
-					X509CertificateHolder[] certs = ocspResp.GetCerts();
-					foreach (X509CertificateHolder cert in certs)
+					IEnumerable<X509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
+					foreach (X509Certificate cert in certs)
 					{
-						X509Certificate tempCert;
+						IList keyPurposes = null;
 						try
 						{
-							tempCert = new JcaX509CertificateConverter().GetCertificate(cert);
-						}
-						catch (Exception)
-						{
-							continue;
-						}
-						IList<String> keyPurposes = null;
-						try
-						{
-							keyPurposes = tempCert.GetExtendedKeyUsage();
+							keyPurposes = cert.GetExtendedKeyUsage();
 							if ((keyPurposes != null) && keyPurposes.Contains(id_kp_OCSPSigning) && IsSignatureValid
-								(ocspResp, tempCert))
+								(ocspResp, cert))
 							{
-								responderCert = tempCert;
+								responderCert = cert;
 								break;
 							}
 						}
@@ -283,28 +274,16 @@ namespace iTextSharp.Signatures
 					{
 						try
 						{
-							for (IEnumerator<String> aliases = rootStore.Aliases(); aliases.MoveNext(); )
+							foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore))
 							{
-								String alias = aliases.Current;
-								try
+								if (IsSignatureValid(ocspResp, anchor))
 								{
-									if (!rootStore.IsCertificateEntry(alias))
-									{
-										continue;
-									}
-									X509Certificate anchor = (X509Certificate)rootStore.GetCertificate(alias);
-									if (IsSignatureValid(ocspResp, anchor))
-									{
-										responderCert = anchor;
-										break;
-									}
-								}
-								catch (GeneralSecurityException)
-								{
+									responderCert = anchor;
+									break;
 								}
 							}
 						}
-						catch (KeyStoreException)
+						catch (Exception)
 						{
 							responderCert = (X509Certificate)null;
 						}
@@ -323,8 +302,8 @@ namespace iTextSharp.Signatures
 			// validating ocsp signers certificate
 			// Check if responders certificate has id-pkix-ocsp-nocheck extension,
 			// in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
-			if (responderCert.GetExtensionValue(OCSPObjectIdentifiers.id_pkix_ocsp_nocheck.Id
-				) == null)
+			if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == 
+				null)
 			{
 				X509Crl crl;
 				try
@@ -340,7 +319,8 @@ namespace iTextSharp.Signatures
 					CRLVerifier crlVerifier = new CRLVerifier(null, null);
 					crlVerifier.SetRootStore(rootStore);
 					crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-					crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, new DateTime());
+					crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentTime
+						());
 					return;
 				}
 			}
@@ -384,15 +364,9 @@ namespace iTextSharp.Signatures
 		{
 			try
 			{
-				ContentVerifierProvider verifierProvider = new JcaContentVerifierProviderBuilder(
-					).SetProvider("BC").Build(responderCert.GetPublicKey());
-				return ocspResp.IsSignatureValid(verifierProvider);
+				return SignUtils.IsSignatureValid(ocspResp, responderCert);
 			}
-			catch (OperatorCreationException)
-			{
-				return false;
-			}
-			catch (OcspException)
+			catch (Exception)
 			{
 				return false;
 			}

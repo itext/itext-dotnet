@@ -7,22 +7,21 @@ namespace iTextSharp.IO.Util {
             if (comparer == null) {
                 comparer = Comparer<T>.Default;
             }
-            MergeSort(list, 0, list.Count - 1, comparer);
+            MergeSort(list, comparer, 0, list.Count - 1);
         }
 
-        public static void MergeSort<T>(List<T> list) {
-            MergeSort(list, null);
+        public static void MergeSort(List<String> list, IComparer<String> comparer) {
+            if (comparer == null) {
+                comparer = new StringOrdinalComparator();
+            }
+            MergeSort(list, comparer, 0, list.Count - 1);
         }
 
-        public static void MergeSort<T>(List<String> list) {
-            MergeSort(list, new StringOrdinalComparator());
-        }
-
-        private static void MergeSort<T>(List<T> list, int left, int right, IComparer<T> comparer) {
+        private static void MergeSort<T>(List<T> list, IComparer<T> comparer, int left, int right) {
             if (right > left) {
                 int mid = (right + left) / 2;
-                MergeSort(list, left, mid, comparer);
-                MergeSort(list, (mid + 1), right, comparer);
+                MergeSort(list, comparer, left, mid);
+                MergeSort(list, comparer, (mid + 1), right);
 
                 Merge(list, left, (mid + 1), right, comparer);
             }
@@ -51,38 +50,33 @@ namespace iTextSharp.IO.Util {
             }
         }
 
-        public static void MergeSort<T>(T[] array, IComparer<T> comparer)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="from">the index of the first element, inclusive, to be sorted</param>
+        /// <param name="to">the index of the last element, exclusive, to be sorted</param>
+        public static void MergeSort<T>(T[] array, int from, int to, IComparer<T> comparer)
         {
             if (comparer == null) {
                 comparer = Comparer<T>.Default;
             }
-            MergeSort(array, 0, array.Length - 1, comparer);
-        }
-
-        public static void MergeSort<T>(T[] array) 
-        {
-            MergeSort(array, null);
-        }
-
-        public static void MergeSort(String[] array) 
-        {
-            MergeSort(array, null);
+            MergeSort(array, comparer, from, to - 1);
         }
 
         public static void MergeSort(String[] array, IComparer<String> comparer) {
             if (comparer == null) {
                 comparer = new StringOrdinalComparator();
             }
-            MergeSort(array, 0, array.Length - 1, comparer);
+            MergeSort(array, comparer, 0, array.Length - 1);
         }
 
-        private static void MergeSort<T>(T[] array, int left, int right, IComparer<T> comparer)
+        private static void MergeSort<T>(T[] array, IComparer<T> comparer, int left, int right)
         {
             if (right > left)
             {
                 int mid = (right + left) / 2;
-                MergeSort(array, left, mid, comparer);
-                MergeSort(array, (mid + 1), right, comparer);
+                MergeSort(array, comparer, left, mid);
+                MergeSort(array, comparer, (mid + 1), right);
 
                 Merge(array, left, (mid + 1), right, comparer);
             }
@@ -114,7 +108,7 @@ namespace iTextSharp.IO.Util {
             }
         }
 
-        private class StringOrdinalComparator : IComparer<String> {
+        internal class StringOrdinalComparator : IComparer<String> {
             public int Compare(String x, String y) {
                 return String.CompareOrdinal(x, y);
             }

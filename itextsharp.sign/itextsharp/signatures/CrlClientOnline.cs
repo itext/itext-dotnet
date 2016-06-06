@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Net;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
-using iTextSharp.Kernel;
 
 namespace iTextSharp.Signatures
 {
@@ -182,14 +180,7 @@ namespace iTextSharp.Signatures
 				try
 				{
 					LOGGER.Info("Checking CRL: " + urlt);
-					HttpURLConnection con = (HttpURLConnection)urlt.OpenConnection();
-					if (con.GetResponseCode() / 100 != 2)
-					{
-						throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(con.GetResponseCode
-							());
-					}
-					//Get Response
-					Stream inp = (Stream)con.GetContent();
+					Stream inp = SignUtils.GetHttpResponse(urlt);
 					byte[] buf = new byte[1024];
 					MemoryStream bout = new MemoryStream();
 					while (true)

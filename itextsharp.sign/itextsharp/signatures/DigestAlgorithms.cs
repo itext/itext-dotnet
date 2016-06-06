@@ -140,32 +140,22 @@ namespace iTextSharp.Signatures
 		/// <param name="digestOid">oid of the digest algorithm</param>
 		/// <param name="provider">the provider you want to use to create the hash</param>
 		/// <returns>MessageDigest object</returns>
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="Java.Security.NoSuchProviderException"/>
-		public static IDigest GetMessageDigestFromOid(String digestOid, String provider)
+		public static IDigest GetMessageDigestFromOid(String digestOid)
 		{
-			return GetMessageDigest(GetDigest(digestOid), provider);
+			return GetMessageDigest(GetDigest(digestOid));
 		}
 
 		/// <summary>Creates a MessageDigest object that can be used to create a hash.</summary>
 		/// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
 		/// <param name="provider">the provider you want to use to create the hash</param>
 		/// <returns>a MessageDigest object</returns>
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="Java.Security.NoSuchProviderException"/>
-		public static IDigest GetMessageDigest(String hashAlgorithm, String provider)
+		public static IDigest GetMessageDigest(String hashAlgorithm)
 		{
-			if (provider == null || provider.StartsWith("SunPKCS11") || provider.StartsWith("SunMSCAPI"
-				))
-			{
-				return Org.BouncyCastle.Security.DigestUtilities.GetDigest(DigestAlgorithms.NormalizeDigestName
-					(hashAlgorithm));
-			}
-			else
-			{
-				return Org.BouncyCastle.Security.DigestUtilities.GetDigest(hashAlgorithm, provider
-					);
-			}
+			return SignUtils.GetMessageDigest(hashAlgorithm);
 		}
 
 		/// <summary>Creates a hash using a specific digest algorithm and a provider.</summary>
@@ -175,9 +165,9 @@ namespace iTextSharp.Signatures
 		/// <returns>the hash</returns>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public static byte[] Digest(Stream data, String hashAlgorithm, String provider)
+		public static byte[] Digest(Stream data, String hashAlgorithm)
 		{
-			IDigest messageDigest = GetMessageDigest(hashAlgorithm, provider);
+			IDigest messageDigest = GetMessageDigest(hashAlgorithm);
 			return Digest(data, messageDigest);
 		}
 
@@ -212,18 +202,6 @@ namespace iTextSharp.Signatures
 			{
 				return ret;
 			}
-		}
-
-		/// <summary>Normalize the digest name.</summary>
-		/// <param name="algo">the name to be normalized</param>
-		/// <returns>normalized name</returns>
-		public static String NormalizeDigestName(String algo)
-		{
-			if (fixNames.ContainsKey(algo))
-			{
-				return fixNames.Get(algo);
-			}
-			return algo;
 		}
 
 		/// <summary>

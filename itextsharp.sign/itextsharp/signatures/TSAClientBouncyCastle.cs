@@ -43,17 +43,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.Math;
-using Java.Net;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
-using Org.Bouncycastle.Asn1.Cmp;
-using Org.Bouncycastle.Tsp;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Log;
 using iTextSharp.Kernel;
+using iTextSharp.Kernel.Crypto;
 
 namespace iTextSharp.Signatures
 {
@@ -162,7 +160,7 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual IDigest GetMessageDigest()
 		{
-			return new DigestUtilities().GetDigest(digestAlgorithm);
+			return SignUtils.GetMessageDigest(digestAlgorithm);
 		}
 
 		/// <summary>Get RFC 3161 timeStampToken.</summary>
@@ -181,7 +179,7 @@ namespace iTextSharp.Signatures
 			TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
 			tsqGenerator.SetCertReq(true);
 			// tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-			BigInteger nonce = BigInteger.ValueOf(iTextSharp.CurrentTimeMillis());
+			BigInteger nonce = BigInteger.ValueOf(SystemUtility.GetCurrentTimeMillis());
 			TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms
 				.GetAllowedDigest(digestAlgorithm)), imprint, nonce);
 			byte[] requestBytes = request.GetEncoded();
@@ -191,8 +189,8 @@ namespace iTextSharp.Signatures
 			TimeStampResponse response = new TimeStampResponse(respBytes);
 			// validate communication level attributes (RFC 3161 PKIStatus)
 			response.Validate(request);
-			PKIFailureInfo failure = response.GetFailInfo();
-			int value = (failure == null) ? 0 : failure.IntValue();
+			PkiFailureInfo failure = response.GetFailInfo();
+			int value = (failure == null) ? 0 : failure.IntValue;
 			if (value != 0)
 			{
 				// @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
@@ -202,16 +200,16 @@ namespace iTextSharp.Signatures
 			// @todo: validate the time stap certificate chain (if we want
 			//        assure we do not sign using an invalid timestamp).
 			// extract just the time stamp token (removes communication status info)
-			TimeStampToken tsToken = response.GetTimeStampToken();
+			TimeStampToken tsToken = response.TimeStampToken;
 			if (tsToken == null)
 			{
 				throw new PdfException(PdfException.Tsa1FailedToReturnTimeStampToken2).SetMessageParams
 					(tsaURL, response.GetStatusString());
 			}
-			TimeStampTokenInfo tsTokenInfo = tsToken.GetTimeStampInfo();
+			TimeStampTokenInfo tsTokenInfo = tsToken.TimeStampInfo;
 			// to view details
 			byte[] encoded = tsToken.GetEncoded();
-			LOGGER.Info("Timestamp generated: " + tsTokenInfo.GetGenTime());
+			LOGGER.Info("Timestamp generated: " + tsTokenInfo.GenTime);
 			if (tsaInfo != null)
 			{
 				tsaInfo.InspectTimeStampTokenInfo(tsTokenInfo);
@@ -227,34 +225,10 @@ namespace iTextSharp.Signatures
 		protected internal virtual byte[] GetTSAResponse(byte[] requestBytes)
 		{
 			// Setup the TSA connection
-			Uri url = new Uri(tsaURL);
-			URLConnection tsaConnection;
-			try
-			{
-				tsaConnection = (URLConnection)url.OpenConnection();
-			}
-			catch (System.IO.IOException)
-			{
-				throw new PdfException(PdfException.FailedToGetTsaResponseFrom1).SetMessageParams
-					(tsaURL);
-			}
-			tsaConnection.SetDoInput(true);
-			tsaConnection.SetDoOutput(true);
-			tsaConnection.SetUseCaches(false);
-			tsaConnection.SetRequestProperty("Content-Type", "application/timestamp-query");
-			//tsaConnection.setRequestProperty("Content-Transfer-Encoding", "base64");
-			tsaConnection.SetRequestProperty("Content-Transfer-Encoding", "binary");
-			if ((tsaUsername != null) && !tsaUsername.Equals(""))
-			{
-				String userPassword = tsaUsername + ":" + tsaPassword;
-				tsaConnection.SetRequestProperty("Authorization", "Basic " + System.Convert.ToBase64String
-					(userPassword.GetBytes(), Base64.DONT_BREAK_LINES));
-			}
-			Stream @out = tsaConnection.GetOutputStream();
-			@out.Write(requestBytes);
-			@out.Close();
+			SignUtils.TsaResponse response = SignUtils.GetTsaResponseForUserRequest(tsaURL, requestBytes
+				, tsaUsername, tsaPassword);
 			// Get TSA response as a byte array
-			Stream inp = tsaConnection.GetInputStream();
+			Stream inp = response.tsaResponseStream;
 			MemoryStream baos = new MemoryStream();
 			byte[] buffer = new byte[1024];
 			int bytesRead = 0;
@@ -263,11 +237,11 @@ namespace iTextSharp.Signatures
 				baos.Write(buffer, 0, bytesRead);
 			}
 			byte[] respBytes = baos.ToArray();
-			String encoding = tsaConnection.GetContentEncoding();
-			if (encoding != null && encoding.ToLower().Equals("base64".ToLower()))
+			if (response.encoding != null && response.encoding.ToLower().Equals("base64".ToLower
+				()))
 			{
 				respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-					(respBytes));
+					(respBytes, "US-ASCII"));
 			}
 			return respBytes;
 		}

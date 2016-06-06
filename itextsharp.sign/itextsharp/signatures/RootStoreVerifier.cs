@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Java.Security;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
@@ -56,7 +55,7 @@ namespace iTextSharp.Signatures
 	public class RootStoreVerifier : CertificateVerifier
 	{
 		/// <summary>A key store against which certificates can be verified.</summary>
-		protected internal KeyStore rootStore = null;
+		protected internal List<X509Certificate> rootStore = null;
 
 		/// <summary>Creates a RootStoreVerifier in a chain of verifiers.</summary>
 		/// <param name="verifier">the next verifier in the chain</param>
@@ -67,7 +66,7 @@ namespace iTextSharp.Signatures
 
 		/// <summary>Sets the Key Store against which a certificate can be checked.</summary>
 		/// <param name="keyStore">a root store</param>
-		public virtual void SetRootStore(KeyStore keyStore)
+		public virtual void SetRootStore(List<X509Certificate> keyStore)
 		{
 			this.rootStore = keyStore;
 		}
@@ -94,16 +93,10 @@ namespace iTextSharp.Signatures
 			{
 				IList<VerificationOK> result = new List<VerificationOK>();
 				// loop over the trusted anchors in the root store
-				for (IEnumerator<String> aliases = rootStore.Aliases(); aliases.MoveNext(); )
+				foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore))
 				{
-					String alias = aliases.Current;
 					try
 					{
-						if (!rootStore.IsCertificateEntry(alias))
-						{
-							continue;
-						}
-						X509Certificate anchor = (X509Certificate)rootStore.GetCertificate(alias);
 						signCert.Verify(anchor.GetPublicKey());
 						result.Add(new VerificationOK(signCert, this.GetType(), "Certificate verified against root store."
 							));

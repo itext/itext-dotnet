@@ -61,6 +61,20 @@ namespace iTextSharp.IO.Util {
             }
         }
 
+        public static void Sort(IList<String> list) {
+            Sort(list, null);
+        }
+
+        public static void Sort(IList<String> list, IComparer<String> comparer) {
+            if (list is List<String>) {
+                SortUtil.MergeSort((List<String>) list, comparer);
+            } else {
+                IEnumerable<String> sorted = list.ToArray().OrderBy(x => x, comparer ?? new SortUtil.StringOrdinalComparator());
+                list.Clear();
+                list.AddAll(sorted);
+            }
+        }
+
         public static void Reverse<T>(IList<T> list) {
             if (list is List<T>) {
                 ((List<T>) list).Reverse();

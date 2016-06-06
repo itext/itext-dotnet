@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Security;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
@@ -35,13 +34,14 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Java.Security.KeyStoreException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Java.Security.Cert.CertificateException"/>
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="Java.Security.UnrecoverableKeyException"/>
 		[NUnit.Framework.SetUp]
 		public virtual void Init()
 		{
 			provider = new BouncyCastleProvider();
-			KeyStore ks = KeyStore.GetInstance(KeyStore.GetDefaultType());
+			List<X509Certificate> ks = List<X509Certificate>.GetInstance(List<X509Certificate>
+				.GetDefaultType());
 			ks.Load(new FileStream(keystorePath, FileMode.Open, FileAccess.Read), password);
 			String alias = ks.Aliases().Current;
 			pk = (ICipherParameters)ks.GetKey(alias, password);
@@ -168,9 +168,9 @@ namespace iTextSharp.Signatures
 			}
 			signer.SetFieldName(name);
 			// Creating the signature
-			IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
+			IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
 			IExternalDigest digest = new DigestUtilities();
-			signer.SignDetached(digest, pks, chain, null, null, null, 0, subfilter);
+			signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
 		}
 	}
 }

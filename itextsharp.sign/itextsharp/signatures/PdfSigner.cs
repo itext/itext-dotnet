@@ -168,32 +168,23 @@ namespace iTextSharp.Signatures
 		public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
 		{
 			StampingProperties properties = new StampingProperties().PreserveEncryption();
-			FileInfo tempFile = null;
-			if (path != null)
-			{
-				tempFile = new FileInfo(path);
-			}
 			if (append)
 			{
 				properties.UseAppendMode();
 			}
-			if (tempFile == null)
+			if (path == null)
 			{
 				temporaryOS = new MemoryStream();
 				document = new PdfDocument(reader, new PdfWriter(temporaryOS), properties);
 			}
 			else
 			{
-				if (tempFile.IsDirectory())
-				{
-					tempFile = FileInfo.CreateTempFile("pdf", null, tempFile);
-				}
-				Stream os = new FileStream(tempFile, FileMode.Create);
-				this.tempFile = tempFile;
-				document = new PdfDocument(reader, new PdfWriter(os), properties);
+				this.tempFile = FileUtil.CreateTempFile(path);
+				document = new PdfDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile
+					)), properties);
 			}
 			originalOS = outputStream;
-			signDate = new GregorianCalendar();
+			signDate = SignUtils.GetCurrentTime();
 			fieldName = GetNewSigFieldName();
 			appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
 			appearance.SetSignDate(signDate);
@@ -425,10 +416,9 @@ namespace iTextSharp.Signatures
 		/// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature
-			 externalSignature, X509Certificate[] chain, ICollection<ICrlClient> crlList, IOcspClient
-			 ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard sigtype
-			)
+		public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate
+			[] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient
+			, int estimatedSize, PdfSigner.CryptoStandard sigtype)
 		{
 			if (closed)
 			{
@@ -478,10 +468,9 @@ namespace iTextSharp.Signatures
 			exc[PdfName.Contents] = estimatedSize * 2 + 2;
 			PreClose(exc);
 			String hashAlgorithm = externalSignature.GetHashAlgorithm();
-			PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, null, 
-				externalDigest, false);
+			PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
 			Stream data = GetRangeStream();
-			byte[] hash = DigestAlgorithms.Digest(data, externalDigest.GetDigest(hashAlgorithm
+			byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm
 				));
 			byte[] ocsp = null;
 			if (chain.Length >= 2 && ocspClient != null)
@@ -598,7 +587,7 @@ namespace iTextSharp.Signatures
 			}
 			catch (Exception e)
 			{
-				throw new GeneralSecurityException(e);
+				throw new GeneralSecurityException(e.Message, e);
 			}
 			if (contentEstimated + 2 < tsToken.Length)
 			{
@@ -817,10 +806,10 @@ namespace iTextSharp.Signatures
 			PdfLiteral lit = new PdfLiteral(80);
 			exclusionLocations[PdfName.ByteRange] = lit;
 			cryptoDictionary.Put(PdfName.ByteRange, lit);
-			foreach (KeyValuePair<PdfName, int> entry in exclusionSizes)
+			foreach (KeyValuePair<PdfName, int?> entry in exclusionSizes)
 			{
 				PdfName key = entry.Key;
-				lit = new PdfLiteral(entry.Value);
+				lit = new PdfLiteral((int)entry.Value);
 				exclusionLocations[key] = lit;
 				cryptoDictionary.Put(key, lit);
 			}
@@ -878,7 +867,7 @@ namespace iTextSharp.Signatures
 			{
 				try
 				{
-					raf = new FileStream(tempFile, "rw");
+					raf = FileUtil.GetRandomAccessFile(tempFile);
 					long len = raf.Length;
 					range[range.Length - 1] = len - range[range.Length - 2];
 					MemoryStream bos = new MemoryStream();
@@ -890,7 +879,7 @@ namespace iTextSharp.Signatures
 					}
 					os.Write(']');
 					raf.Seek(byteRangePosition);
-					raf.Write(bos.ToArray(), 0, bos.Length);
+					raf.Write(bos.ToArray(), 0, (int)bos.Length);
 				}
 				catch (System.IO.IOException e)
 				{

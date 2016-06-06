@@ -43,24 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.IO;
-using Java.Math;
-using Java.Net;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1.Ocsp;
-using Org.Bouncycastle.Asn1.X509;
-using Org.Bouncycastle.Cert.Jcajce;
-using Org.Bouncycastle.Cert.Ocsp;
-using Org.Bouncycastle.Ocsp;
-using Org.Bouncycastle.Operator.Jcajce;
 using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
@@ -178,23 +166,17 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
-		/// <exception cref="Java.Security.Cert.CertificateEncodingException"/>
-		private static OCSPReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger
+		/// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException
+		/// 	"/>
+		private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger
 			 serialNumber)
 		{
 			//Add provider BC
 			// Generate the id for the certificate we are looking for
-			CertificateID id = new CertificateID(new JcaDigestCalculatorProviderBuilder().Build
-				().Get(CertificateID.HASH_SHA1), new JcaX509CertificateHolder(issuerCert), serialNumber
+			CertificateID id = SignUtils.GenerateCertificateId(issuerCert, serialNumber, Org.BouncyCastle.Ocsp.CertificateID.HashSha1
 				);
 			// basic request generation with nonce
-			OCSPReqBuilder gen = new OCSPReqBuilder();
-			gen.AddRequest(id);
-			X509Extensions ext = new X509Extensions(OCSPObjectIdentifiers.id_pkix_ocsp_nonce, 
-				false, new DerOctetString(new DerOctetString(PdfEncryption.GenerateNewDocumentId
-				()).GetEncoded()));
-			gen.SetRequestExtensions(new Extensions(new X509Extensions[] { ext }));
-			return gen.Build();
+			return SignUtils.GenerateOcspRequestWithNonce(id);
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -217,25 +199,10 @@ namespace iTextSharp.Signatures
 				return null;
 			}
 			LOGGER.Info("Getting OCSP from " + url);
-			OCSPReq request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
+			OcspReq request = GenerateOCSPRequest(rootCert, checkCert.SerialNumber);
 			byte[] array = request.GetEncoded();
 			Uri urlt = new Uri(url);
-			HttpURLConnection con = (HttpURLConnection)urlt.OpenConnection();
-			con.SetRequestProperty("Content-Type", "application/ocsp-request");
-			con.SetRequestProperty("Accept", "application/ocsp-response");
-			con.SetDoOutput(true);
-			Stream @out = con.GetOutputStream();
-			DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(@out));
-			dataOut.Write(array);
-			dataOut.Flush();
-			dataOut.Close();
-			if (con.GetResponseCode() / 100 != 2)
-			{
-				throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(con.GetResponseCode
-					());
-			}
-			//Get Response
-			Stream @in = (Stream)con.GetContent();
+			Stream @in = SignUtils.GetHttpResponseForOcspRequest(array, urlt);
 			return new OcspResp(StreamUtil.InputStreamToArray(@in));
 		}
 	}

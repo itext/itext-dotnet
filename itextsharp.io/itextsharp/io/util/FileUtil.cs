@@ -45,10 +45,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace iTextSharp.IO.Util {
-	public sealed class FileUtil
-	{
+	public sealed class FileUtil {
+	    private static int tempFileCounter = 0;
+
 		private FileUtil()
 		{
 		}
@@ -131,7 +133,22 @@ namespace iTextSharp.IO.Util {
 			return new FileStream(filename, FileMode.Create);
 		}
 
-	    public class FileFilter {
+	    public static FileInfo CreateTempFile(String path) {
+	        if (DirectoryExists(path)) {
+                return new FileInfo(path + Path.DirectorySeparatorChar + "pdf_" + Interlocked.Increment(ref tempFileCounter));
+	        }
+            return new FileInfo(path);
+	    }
+
+	    public static FileStream GetFileOutputStream(FileInfo file) {
+	        return file.Open(FileMode.Create);
+	    }
+
+	    public static FileStream GetRandomAccessFile(FileInfo file) {
+	        return file.Open(FileMode.Open);
+	    }
+
+        public class FileFilter {
 	        public virtual bool Accept(String pathname) {
 	            return true;
 	        }

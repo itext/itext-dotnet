@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using Java.Text;
 using Org.BouncyCastle.X509;
 using iTextSharp.Forms;
 using iTextSharp.Forms.Fields;
@@ -535,8 +534,7 @@ namespace iTextSharp.Signatures
 						name = "";
 					}
 					buf.Append(name).Append('\n');
-					SimpleDateFormat sd = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
-					buf.Append("Date: ").Append(sd.Format(signDate.GetTime()));
+					buf.Append("Date: ").Append(SignUtils.DateToString(signDate));
 					if (reason != null)
 					{
 						buf.Append('\n').Append(reasonCaption).Append(reason);

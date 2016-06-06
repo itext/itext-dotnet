@@ -103,7 +103,7 @@ namespace iTextSharp.Signatures
 			this.sgnUtil = new SignatureUtil(document);
 			IList<String> names = sgnUtil.GetSignatureNames();
 			signatureName = names[names.Count - 1];
-			this.signDate = new DateTime();
+			this.signDate = SignUtils.GetCurrentTime();
 			pkcs7 = CoversWholeDocument();
 			LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
 				 : "", signatureName));
@@ -310,12 +310,12 @@ namespace iTextSharp.Signatures
 			latestRevision = false;
 			dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
 			DateTime cal = pkcs7.GetTimeStampDate();
-			if (cal == null)
+			if (cal == SignUtils.UNDEFINED_TIMESTAMP_DATE)
 			{
 				cal = pkcs7.GetSignDate();
 			}
 			// TODO: get date from signature
-			signDate = cal.GetTime();
+			signDate = cal.ToUniversalTime();
 			IList<String> names = sgnUtil.GetSignatureNames();
 			if (names.Count > 1)
 			{

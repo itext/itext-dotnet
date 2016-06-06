@@ -42,7 +42,6 @@ Copyright (c) 1998-2016 iText Group NV
 * address: sales@itextpdf.com
 */
 using System;
-using Java.Security;
 using Org.BouncyCastle.Crypto;
 
 namespace iTextSharp.Signatures
@@ -67,9 +66,6 @@ namespace iTextSharp.Signatures
 		/// <summary>The encryption algorithm (obtained from the private key)</summary>
 		private String encryptionAlgorithm;
 
-		/// <summary>The security provider</summary>
-		private String provider;
-
 		/// <summary>
 		/// Creates a
 		/// <see cref="PrivateKeySignature"/>
@@ -82,11 +78,9 @@ namespace iTextSharp.Signatures
 		/// </param>
 		/// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
 		/// <param name="provider">A security provider (e.g. "BC").</param>
-		public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm, String provider
-			)
+		public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm)
 		{
 			this.pk = pk;
-			this.provider = provider;
 			this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest
 				(hashAlgorithm));
 			encryptionAlgorithm = pk.GetAlgorithm();
@@ -112,12 +106,11 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public virtual byte[] Sign(byte[] message)
 		{
-			String signMode = hashAlgorithm + "with" + encryptionAlgorithm;
-			Signature sig = provider == null ? Signature.GetInstance(signMode) : Signature.GetInstance
-				(signMode, provider);
+			String algorithm = hashAlgorithm + "with" + encryptionAlgorithm;
+			ISigner sig = SignUtils.GetSignatureHelper(algorithm);
 			sig.InitSign(pk);
 			sig.Update(message);
-			return sig.Sign();
+			return sig.GenerateSignature();
 		}
 	}
 }

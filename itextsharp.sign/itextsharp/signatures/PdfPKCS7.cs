@@ -44,30 +44,18 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Java.Math;
-using Java.Security;
-using Java.Security.Cert;
+using  Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.Ess;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1;
-using Org.Bouncycastle.Asn1.Cms;
-using Org.Bouncycastle.Asn1.Ess;
-using Org.Bouncycastle.Asn1.Ocsp;
-using Org.Bouncycastle.Asn1.Pkcs;
-using Org.Bouncycastle.Asn1.Tsp;
-using Org.Bouncycastle.Cert.Jcajce;
-using Org.Bouncycastle.Cert.Ocsp;
-using Org.Bouncycastle.Jce;
-using Org.Bouncycastle.Jce.Provider;
-using Org.Bouncycastle.Operator;
-using Org.Bouncycastle.Operator.Jcajce;
-using Org.Bouncycastle.Tsp;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
@@ -88,15 +76,13 @@ namespace iTextSharp.Signatures
 		/// <param name="provider">the provider or <code>null</code> for the default provider
 		/// 	</param>
 		/// <param name="hasRSAdata"><CODE>true</CODE> if the sub-filter is adbe.pkcs7.sha1</param>
-		/// <exception cref="Java.Security.InvalidKeyException">on error</exception>
+		/// <exception cref="Org.BouncyCastle.Security.InvalidKeyException">on error</exception>
 		/// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
-		/// <exception cref="Java.Security.NoSuchAlgorithmException">on error</exception>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
 		public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm
-			, String provider, IExternalDigest interfaceDigest, bool hasRSAdata)
+			, bool hasRSAdata)
 		{
 			// Constructors for creating new signatures
-			this.provider = provider;
-			this.interfaceDigest = interfaceDigest;
 			// message digest
 			digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
 			if (digestAlgorithmOid == null)
@@ -139,7 +125,7 @@ namespace iTextSharp.Signatures
 			if (hasRSAdata)
 			{
 				RSAdata = new byte[0];
-				messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm(), provider);
+				messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
 			}
 			// initialize the Signature object
 			if (privKey != null)
@@ -154,28 +140,18 @@ namespace iTextSharp.Signatures
 		/// <param name="certsKey">the /Cert key</param>
 		/// <param name="provider">the provider or <code>null</code> for the default provider
 		/// 	</param>
-		public PdfPKCS7(byte[] contentsKey, byte[] certsKey, String provider)
+		public PdfPKCS7(byte[] contentsKey, byte[] certsKey)
 		{
 			// Constructors for validating existing signatures
 			try
 			{
-				this.provider = provider;
-				X509CertParser cr = new X509CertParser();
-				cr.EngineInit(new MemoryStream(certsKey));
-				certs = cr.EngineReadAll();
+				certs = SignUtils.ReadAllCerts(certsKey);
 				signCerts = certs;
-				signCert = (X509Certificate)certs.Iterator().Next();
+				signCert = (X509Certificate)SignUtils.GetFirstElement(certs);
 				crls = new List<X509Crl>();
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(contentsKey));
 				digest = ((Asn1OctetString)@in.ReadObject()).GetOctets();
-				if (provider == null)
-				{
-					sig = Signature.GetInstance("SHA1withRSA");
-				}
-				else
-				{
-					sig = Signature.GetInstance("SHA1withRSA", provider);
-				}
+				sig = SignUtils.GetSignatureHelper("SHA1withRSA");
 				sig.InitVerify(signCert.GetPublicKey());
 				// setting the oid to SHA1withRSA
 				digestAlgorithmOid = "1.2.840.10040.4.3";
@@ -199,7 +175,6 @@ namespace iTextSharp.Signatures
 			isCades = PdfName.ETSI_CAdES_DETACHED.Equals(filterSubtype);
 			try
 			{
-				this.provider = provider;
 				Asn1InputStream din = new Asn1InputStream(new MemoryStream(contentsKey));
 				//
 				// Basic checks to make sure it's a PKCS#7 SignedData Object
@@ -232,10 +207,11 @@ namespace iTextSharp.Signatures
 				//     (the certificates and crls are taken out by other means)
 				//     last - signerInfos
 				// the version
-				version = ((ASN1Integer)content.GetObjectAt(0)).Value;
+				version = ((DerInteger)content.GetObjectAt(0)).Value;
 				// the digestAlgorithms
 				digestalgos = new HashSet<String>();
-				IEnumerator<Asn1Sequence> e_1 = ((Asn1Set)content.GetObjectAt(1)).GetObjects();
+				IEnumerator<Asn1Sequence> e_1 = (IEnumerator<Asn1Sequence>)((Asn1Set)content.GetObjectAt
+					(1)).GetObjects();
 				while (e_1.MoveNext())
 				{
 					Asn1Sequence s = e_1.Current;
@@ -259,9 +235,7 @@ namespace iTextSharp.Signatures
 				/*
 				This should work, but that's not always the case because of a bug in BouncyCastle:
 				*/
-				X509CertParser cr = new X509CertParser();
-				cr.EngineInit(new MemoryStream(contentsKey));
-				certs = cr.EngineReadAll();
+				certs = SignUtils.ReadAllCerts(contentsKey);
 				/*
 				The following workaround was provided by Alfonso Massa, but it doesn't always work either.
 				
@@ -309,17 +283,15 @@ namespace iTextSharp.Signatures
 				//     2 - the digest algorithm
 				//     3 or 4 - digestEncryptionAlgorithm
 				//     4 or 5 - encryptedDigest
-				signerversion = ((ASN1Integer)signerInfo.GetObjectAt(0)).Value;
+				signerversion = ((DerInteger)signerInfo.GetObjectAt(0)).Value;
 				// Get the signing certificate
 				Asn1Sequence issuerAndSerialNumber = (Asn1Sequence)signerInfo.GetObjectAt(1);
-				X509Principal issuer = new X509Principal(issuerAndSerialNumber.GetObjectAt(0).ToAsn1Object
-					().GetEncoded());
-				BigInteger serialNumber = ((ASN1Integer)issuerAndSerialNumber.GetObjectAt(1)).Value;
+				X509Name issuer = SignUtils.GetIssuerX509Name(issuerAndSerialNumber);
+				BigInteger serialNumber = ((DerInteger)issuerAndSerialNumber.GetObjectAt(1)).Value;
 				foreach (Object element in certs)
 				{
 					X509Certificate cert = (X509Certificate)element;
-					if (cert.GetIssuerDN().Equals(issuer) && serialNumber.Equals(cert.GetSerialNumber
-						()))
+					if (cert.IssuerDN.Equals(issuer) && serialNumber.Equals(cert.SerialNumber))
 					{
 						signCert = cert;
 						break;
@@ -341,7 +313,7 @@ namespace iTextSharp.Signatures
 					Asn1Set sseq = Asn1Set.GetInstance(tagsig, false);
 					sigAttr = sseq.GetEncoded();
 					// maybe not necessary, but we use the following line as fallback:
-					sigAttrDer = sseq.GetEncoded(ASN1Encoding.DER);
+					sigAttrDer = sseq.GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der);
 					for (int k = 0; k < sseq.Count; ++k)
 					{
 						Asn1Sequence seq2 = (Asn1Sequence)sseq.GetObjectAt(k);
@@ -360,12 +332,12 @@ namespace iTextSharp.Signatures
 								for (int j = 0; j < seqout.Count; ++j)
 								{
 									Asn1TaggedObject tg = (Asn1TaggedObject)seqout.GetObjectAt(j);
-									if (tg.GetTagNo() == 0)
+									if (tg.TagNo == 0)
 									{
 										Asn1Sequence seqin = (Asn1Sequence)tg.GetObject();
 										FindCRL(seqin);
 									}
-									if (tg.GetTagNo() == 1)
+									if (tg.TagNo == 1)
 									{
 										Asn1Sequence seqin = (Asn1Sequence)tg.GetObject();
 										FindOcsp(seqin);
@@ -379,10 +351,10 @@ namespace iTextSharp.Signatures
 									Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 									Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
 									SigningCertificate sv2 = SigningCertificate.GetInstance(seqout);
-									ESSCertID[] cerv2m = sv2.GetCerts();
-									ESSCertID cerv2 = cerv2m[0];
+									EssCertID[] cerv2m = sv2.GetCerts();
+									EssCertID cerv2 = cerv2m[0];
 									byte[] enc2 = signCert.GetEncoded();
-									IDigest m2 = new DigestUtilities().GetDigest("SHA-1");
+									IDigest m2 = SignUtils.GetMessageDigest("SHA-1");
 									byte[] signCertHash = m2.Digest(enc2);
 									byte[] hs2 = cerv2.GetCertHash();
 									if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2))
@@ -399,12 +371,12 @@ namespace iTextSharp.Signatures
 										Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
 										Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
 										SigningCertificateV2 sv2 = SigningCertificateV2.GetInstance(seqout);
-										ESSCertIDv2[] cerv2m = sv2.GetCerts();
-										ESSCertIDv2 cerv2 = cerv2m[0];
-										AlgorithmIdentifier ai2 = cerv2.GetHashAlgorithm();
+										EssCertIDv2[] cerv2m = sv2.GetCerts();
+										EssCertIDv2 cerv2 = cerv2m[0];
+										AlgorithmIdentifier ai2 = cerv2.HashAlgorithm;
 										byte[] enc2 = signCert.GetEncoded();
-										IDigest m2 = new DigestUtilities().GetDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm
-											().Id));
+										IDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.ObjectID.Id
+											));
 										byte[] signCertHash = m2.Digest(enc2);
 										byte[] hs2 = cerv2.GetCertHash();
 										if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2))
@@ -436,24 +408,26 @@ namespace iTextSharp.Signatures
 				{
 					Asn1TaggedObject taggedObject = (Asn1TaggedObject)signerInfo.GetObjectAt(next);
 					Asn1Set unat = Asn1Set.GetInstance(taggedObject, false);
-					AttributeTable attble = new AttributeTable(unat);
-					Attribute ts = attble.Get(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken);
-					if (ts != null && ts.GetAttrValues().Count > 0)
+					Org.BouncyCastle.Asn1.Cms.AttributeTable attble = new Org.BouncyCastle.Asn1.Cms.AttributeTable
+						(unat);
+					Org.BouncyCastle.Asn1.Cms.Attribute ts = attble.Get(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdAASignatureTimeStampToken
+						);
+					if (ts != null && ts.AttrValues.Count > 0)
 					{
-						Asn1Set attributeValues = ts.GetAttrValues();
+						Asn1Set attributeValues = ts.AttrValues;
 						Asn1Sequence tokenSequence = Asn1Sequence.GetInstance(attributeValues.GetObjectAt
 							(0));
-						ContentInfo contentInfo = new ContentInfo(tokenSequence);
+						ContentInfo contentInfo = ContentInfo.GetInstance(tokenSequence);
 						this.timeStampToken = new TimeStampToken(contentInfo);
 					}
 				}
 				if (isTsp)
 				{
-					ContentInfo contentInfoTsp = new ContentInfo(signedData);
+					ContentInfo contentInfoTsp = ContentInfo.GetInstance(signedData);
 					this.timeStampToken = new TimeStampToken(contentInfoTsp);
-					TimeStampTokenInfo info = timeStampToken.GetTimeStampInfo();
-					String algOID = info.GetMessageImprintAlgOID().Id;
-					messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID, null);
+					TimeStampTokenInfo info = timeStampToken.TimeStampInfo;
+					String algOID = info.HashAlgorithm.ObjectID.Id;
+					messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID);
 				}
 				else
 				{
@@ -461,13 +435,13 @@ namespace iTextSharp.Signatures
 					{
 						if (PdfName.Adbe_pkcs7_sha1.Equals(GetFilterSubtype()))
 						{
-							messageDigest = DigestAlgorithms.GetMessageDigest("SHA1", provider);
+							messageDigest = DigestAlgorithms.GetMessageDigest("SHA1");
 						}
 						else
 						{
-							messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm(), provider);
+							messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
 						}
-						encContDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm(), provider);
+						encContDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
 					}
 					sig = InitSignature(signCert.GetPublicKey());
 				}
@@ -477,10 +451,6 @@ namespace iTextSharp.Signatures
 				throw new PdfException(e);
 			}
 		}
-
-		/// <summary>The encryption provider, e.g.</summary>
-		/// <remarks>The encryption provider, e.g. "BC" if you use BouncyCastle.</remarks>
-		private String provider;
 
 		/// <summary>Holds value of property signName.</summary>
 		private String signName;
@@ -632,8 +602,6 @@ namespace iTextSharp.Signatures
 			return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
 		}
 
-		private IExternalDigest interfaceDigest;
-
 		/// <summary>The signed digest if created outside this class</summary>
 		private byte[] externalDigest;
 
@@ -687,7 +655,7 @@ namespace iTextSharp.Signatures
 
 		/// <summary>Class from the Java SDK that provides the functionality of a digital signature algorithm.
 		/// 	</summary>
-		private Signature sig;
+		private ISigner sig;
 
 		/// <summary>The signed digest as calculated by this class (or extracted from an existing PDF)
 		/// 	</summary>
@@ -698,43 +666,27 @@ namespace iTextSharp.Signatures
 
 		// The signature is created internally
 		// Signing functionality.
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="Java.Security.NoSuchProviderException"/>
-		/// <exception cref="Java.Security.InvalidKeyException"/>
-		private Signature InitSignature(ICipherParameters key)
+		/// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
+		private ISigner InitSignature(ICipherParameters key)
 		{
-			Signature signature;
-			if (provider == null)
-			{
-				signature = Signature.GetInstance(GetDigestAlgorithm());
-			}
-			else
-			{
-				signature = Signature.GetInstance(GetDigestAlgorithm(), provider);
-			}
+			ISigner signature = SignUtils.GetSignatureHelper(GetDigestAlgorithm());
 			signature.InitSign(key);
 			return signature;
 		}
 
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="Java.Security.NoSuchProviderException"/>
-		/// <exception cref="Java.Security.InvalidKeyException"/>
-		private Signature InitSignature(PublicKey key)
+		/// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
+		private ISigner InitSignature(AsymmetricKeyParameter key)
 		{
 			String digestAlgorithm = GetDigestAlgorithm();
 			if (PdfName.Adbe_x509_rsa_sha1.Equals(GetFilterSubtype()))
 			{
 				digestAlgorithm = "SHA1withRSA";
 			}
-			Signature signature;
-			if (provider == null)
-			{
-				signature = Signature.GetInstance(digestAlgorithm);
-			}
-			else
-			{
-				signature = Signature.GetInstance(digestAlgorithm, provider);
-			}
+			ISigner signature = SignUtils.GetSignatureHelper(digestAlgorithm);
 			signature.InitVerify(key);
 			return signature;
 		}
@@ -773,10 +725,10 @@ namespace iTextSharp.Signatures
 				}
 				else
 				{
-					digest = sig.Sign();
+					digest = sig.GenerateSignature();
 				}
 				MemoryStream bOut = new MemoryStream();
-				ASN1OutputStream dout = new ASN1OutputStream(bOut);
+				Asn1OutputStream dout = new Asn1OutputStream(bOut);
 				dout.WriteObject(new DerOctetString(digest));
 				dout.Close();
 				return bOut.ToArray();
@@ -837,7 +789,7 @@ namespace iTextSharp.Signatures
 					{
 						RSAdata = externalRSAdata;
 						sig.Update(RSAdata);
-						digest = sig.Sign();
+						digest = sig.GenerateSignature();
 					}
 					else
 					{
@@ -846,29 +798,29 @@ namespace iTextSharp.Signatures
 							RSAdata = messageDigest.Digest();
 							sig.Update(RSAdata);
 						}
-						digest = sig.Sign();
+						digest = sig.GenerateSignature();
 					}
 				}
 				// Create the set of Hash algorithms
-				ASN1EncodableVector digestAlgorithms = new ASN1EncodableVector();
+				Asn1EncodableVector digestAlgorithms = new Asn1EncodableVector();
 				foreach (Object element in digestalgos)
 				{
-					ASN1EncodableVector algos = new ASN1EncodableVector();
+					Asn1EncodableVector algos = new Asn1EncodableVector();
 					algos.Add(new DerObjectIdentifier((String)element));
-					algos.Add(DERNull.INSTANCE);
-					digestAlgorithms.Add(new DERSequence(algos));
+					algos.Add(Org.BouncyCastle.Asn1.DerNull.Instance);
+					digestAlgorithms.Add(new DerSequence(algos));
 				}
 				// Create the contentInfo.
-				ASN1EncodableVector v = new ASN1EncodableVector();
+				Asn1EncodableVector v = new Asn1EncodableVector();
 				v.Add(new DerObjectIdentifier(SecurityIDs.ID_PKCS7_DATA));
 				if (RSAdata != null)
 				{
-					v.Add(new DERTaggedObject(0, new DerOctetString(RSAdata)));
+					v.Add(new DerTaggedObject(0, new DerOctetString(RSAdata)));
 				}
-				DERSequence contentinfo = new DERSequence(v);
+				DerSequence contentinfo = new DerSequence(v);
 				// Get all the certificates
 				//
-				v = new ASN1EncodableVector();
+				v = new Asn1EncodableVector();
 				foreach (Object element_1 in certs)
 				{
 					Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate
@@ -878,30 +830,30 @@ namespace iTextSharp.Signatures
 				DerSet dercertificates = new DerSet(v);
 				// Create signerinfo structure.
 				//
-				ASN1EncodableVector signerinfo = new ASN1EncodableVector();
+				Asn1EncodableVector signerinfo = new Asn1EncodableVector();
 				// Add the signerInfo version
 				//
-				signerinfo.Add(new ASN1Integer(signerversion));
-				v = new ASN1EncodableVector();
+				signerinfo.Add(new DerInteger(signerversion));
+				v = new Asn1EncodableVector();
 				v.Add(CertificateInfo.GetIssuer(signCert.GetTbsCertificate()));
-				v.Add(new ASN1Integer(signCert.GetSerialNumber()));
-				signerinfo.Add(new DERSequence(v));
+				v.Add(new DerInteger(signCert.SerialNumber));
+				signerinfo.Add(new DerSequence(v));
 				// Add the digestAlgorithm
-				v = new ASN1EncodableVector();
+				v = new Asn1EncodableVector();
 				v.Add(new DerObjectIdentifier(digestAlgorithmOid));
-				v.Add(new DERNull());
-				signerinfo.Add(new DERSequence(v));
+				v.Add(Org.BouncyCastle.Asn1.DerNull.Instance);
+				signerinfo.Add(new DerSequence(v));
 				// add the authenticated attribute if present
 				if (secondDigest != null)
 				{
-					signerinfo.Add(new DERTaggedObject(false, 0, GetAuthenticatedAttributeSet(secondDigest
+					signerinfo.Add(new DerTaggedObject(false, 0, GetAuthenticatedAttributeSet(secondDigest
 						, ocsp, crlBytes, sigtype)));
 				}
 				// Add the digestEncryptionAlgorithm
-				v = new ASN1EncodableVector();
+				v = new Asn1EncodableVector();
 				v.Add(new DerObjectIdentifier(digestEncryptionAlgorithmOid));
-				v.Add(new DERNull());
-				signerinfo.Add(new DERSequence(v));
+				v.Add(Org.BouncyCastle.Asn1.DerNull.Instance);
+				signerinfo.Add(new DerSequence(v));
 				// Add the digest
 				signerinfo.Add(new DerOctetString(digest));
 				// When requested, go get and add the timestamp. May throw an exception.
@@ -913,30 +865,30 @@ namespace iTextSharp.Signatures
 					byte[] tsToken = tsaClient.GetTimeStampToken(tsImprint);
 					if (tsToken != null)
 					{
-						ASN1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
+						Asn1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
 						if (unauthAttributes != null)
 						{
-							signerinfo.Add(new DERTaggedObject(false, 1, new DerSet(unauthAttributes)));
+							signerinfo.Add(new DerTaggedObject(false, 1, new DerSet(unauthAttributes)));
 						}
 					}
 				}
 				// Finally build the body out of all the components above
-				ASN1EncodableVector body = new ASN1EncodableVector();
-				body.Add(new ASN1Integer(version));
+				Asn1EncodableVector body = new Asn1EncodableVector();
+				body.Add(new DerInteger(version));
 				body.Add(new DerSet(digestAlgorithms));
 				body.Add(contentinfo);
-				body.Add(new DERTaggedObject(false, 0, dercertificates));
+				body.Add(new DerTaggedObject(false, 0, dercertificates));
 				// Only allow one signerInfo
-				body.Add(new DerSet(new DERSequence(signerinfo)));
+				body.Add(new DerSet(new DerSequence(signerinfo)));
 				// Now we have the body, wrap it in it's PKCS7Signed shell
 				// and return it
 				//
-				ASN1EncodableVector whole = new ASN1EncodableVector();
+				Asn1EncodableVector whole = new Asn1EncodableVector();
 				whole.Add(new DerObjectIdentifier(SecurityIDs.ID_PKCS7_SIGNED_DATA));
-				whole.Add(new DERTaggedObject(0, new DERSequence(body)));
+				whole.Add(new DerTaggedObject(0, new DerSequence(body)));
 				MemoryStream bOut = new MemoryStream();
-				ASN1OutputStream dout = new ASN1OutputStream(bOut);
-				dout.WriteObject(new DERSequence(whole));
+				Asn1OutputStream dout = new Asn1OutputStream(bOut);
+				dout.WriteObject(new DerSequence(whole));
 				dout.Close();
 				return bOut.ToArray();
 			}
@@ -959,7 +911,7 @@ namespace iTextSharp.Signatures
 		/// <param name="timeStampToken">byte[] - time stamp token, DER encoded signedData</param>
 		/// <returns>ASN1EncodableVector</returns>
 		/// <exception cref="System.IO.IOException"/>
-		private ASN1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken)
+		private Asn1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken)
 		{
 			if (timeStampToken == null)
 			{
@@ -970,13 +922,13 @@ namespace iTextSharp.Signatures
 			// RFC 3161 id-aa-timeStampToken
 			Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(timeStampToken)
 				);
-			ASN1EncodableVector unauthAttributes = new ASN1EncodableVector();
-			ASN1EncodableVector v = new ASN1EncodableVector();
+			Asn1EncodableVector unauthAttributes = new Asn1EncodableVector();
+			Asn1EncodableVector v = new Asn1EncodableVector();
 			v.Add(new DerObjectIdentifier(ID_TIME_STAMP_TOKEN));
 			// id-aa-timeStampToken
 			Asn1Sequence seq = (Asn1Sequence)tempstream.ReadObject();
 			v.Add(new DerSet(seq));
-			unauthAttributes.Add(new DERSequence(v));
+			unauthAttributes.Add(new DerSequence(v));
 			return unauthAttributes;
 		}
 
@@ -1018,7 +970,7 @@ namespace iTextSharp.Signatures
 			try
 			{
 				return GetAuthenticatedAttributeSet(secondDigest, ocsp, crlBytes, sigtype).GetEncoded
-					(ASN1Encoding.DER);
+					(Org.BouncyCastle.Asn1.Asn1Encodable.Der);
 			}
 			catch (Exception e)
 			{
@@ -1040,15 +992,15 @@ namespace iTextSharp.Signatures
 		{
 			try
 			{
-				ASN1EncodableVector attribute = new ASN1EncodableVector();
-				ASN1EncodableVector v = new ASN1EncodableVector();
+				Asn1EncodableVector attribute = new Asn1EncodableVector();
+				Asn1EncodableVector v = new Asn1EncodableVector();
 				v.Add(new DerObjectIdentifier(SecurityIDs.ID_CONTENT_TYPE));
 				v.Add(new DerSet(new DerObjectIdentifier(SecurityIDs.ID_PKCS7_DATA)));
-				attribute.Add(new DERSequence(v));
-				v = new ASN1EncodableVector();
+				attribute.Add(new DerSequence(v));
+				v = new Asn1EncodableVector();
 				v.Add(new DerObjectIdentifier(SecurityIDs.ID_MESSAGE_DIGEST));
 				v.Add(new DerSet(new DerOctetString(secondDigest)));
-				attribute.Add(new DERSequence(v));
+				attribute.Add(new DerSequence(v));
 				bool haveCrl = false;
 				if (crlBytes != null)
 				{
@@ -1063,12 +1015,12 @@ namespace iTextSharp.Signatures
 				}
 				if (ocsp != null || haveCrl)
 				{
-					v = new ASN1EncodableVector();
+					v = new Asn1EncodableVector();
 					v.Add(new DerObjectIdentifier(SecurityIDs.ID_ADBE_REVOCATION));
-					ASN1EncodableVector revocationV = new ASN1EncodableVector();
+					Asn1EncodableVector revocationV = new Asn1EncodableVector();
 					if (haveCrl)
 					{
-						ASN1EncodableVector v2 = new ASN1EncodableVector();
+						Asn1EncodableVector v2 = new Asn1EncodableVector();
 						foreach (byte[] bCrl in crlBytes)
 						{
 							if (bCrl == null)
@@ -1078,38 +1030,38 @@ namespace iTextSharp.Signatures
 							Asn1InputStream t = new Asn1InputStream(new MemoryStream(bCrl));
 							v2.Add(t.ReadObject());
 						}
-						revocationV.Add(new DERTaggedObject(true, 0, new DERSequence(v2)));
+						revocationV.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
 					}
 					if (ocsp != null)
 					{
 						DerOctetString doctet = new DerOctetString(ocsp);
-						ASN1EncodableVector vo1 = new ASN1EncodableVector();
-						ASN1EncodableVector v2 = new ASN1EncodableVector();
-						v2.Add(OCSPObjectIdentifiers.id_pkix_ocsp_basic);
+						Asn1EncodableVector vo1 = new Asn1EncodableVector();
+						Asn1EncodableVector v2 = new Asn1EncodableVector();
+						v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
 						v2.Add(doctet);
-						ASN1Enumerated den = new ASN1Enumerated(0);
-						ASN1EncodableVector v3 = new ASN1EncodableVector();
+						DerEnumerated den = new DerEnumerated(0);
+						Asn1EncodableVector v3 = new Asn1EncodableVector();
 						v3.Add(den);
-						v3.Add(new DERTaggedObject(true, 0, new DERSequence(v2)));
-						vo1.Add(new DERSequence(v3));
-						revocationV.Add(new DERTaggedObject(true, 1, new DERSequence(vo1)));
+						v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
+						vo1.Add(new DerSequence(v3));
+						revocationV.Add(new DerTaggedObject(true, 1, new DerSequence(vo1)));
 					}
-					v.Add(new DerSet(new DERSequence(revocationV)));
-					attribute.Add(new DERSequence(v));
+					v.Add(new DerSet(new DerSequence(revocationV)));
+					attribute.Add(new DerSequence(v));
 				}
 				if (sigtype == PdfSigner.CryptoStandard.CADES)
 				{
-					v = new ASN1EncodableVector();
+					v = new Asn1EncodableVector();
 					v.Add(new DerObjectIdentifier(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2));
-					ASN1EncodableVector aaV2 = new ASN1EncodableVector();
+					Asn1EncodableVector aaV2 = new Asn1EncodableVector();
 					AlgorithmIdentifier algoId = new AlgorithmIdentifier(new DerObjectIdentifier(digestAlgorithmOid
 						), null);
 					aaV2.Add(algoId);
-					IDigest md = interfaceDigest.GetDigest(GetHashAlgorithm());
+					IDigest md = SignUtils.GetMessageDigest(GetHashAlgorithm());
 					byte[] dig = md.Digest(signCert.GetEncoded());
 					aaV2.Add(new DerOctetString(dig));
-					v.Add(new DerSet(new DERSequence(new DERSequence(new DERSequence(aaV2)))));
-					attribute.Add(new DERSequence(v));
+					v.Add(new DerSet(new DerSequence(new DerSequence(new DerSequence(aaV2)))));
+					attribute.Add(new DerSequence(v));
 				}
 				return new DerSet(attribute);
 			}
@@ -1152,8 +1104,8 @@ namespace iTextSharp.Signatures
 			}
 			if (isTsp)
 			{
-				TimeStampTokenInfo info = timeStampToken.GetTimeStampInfo();
-				MessageImprint imprint = info.ToASN1Structure().GetMessageImprint();
+				TimeStampTokenInfo info = timeStampToken.TimeStampInfo;
+				MessageImprint imprint = info.TstInfo.MessageImprint;
 				byte[] md = messageDigest.Digest();
 				byte[] imphashed = imprint.GetHashedMessage();
 				verifyResult = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
@@ -1185,7 +1137,7 @@ namespace iTextSharp.Signatures
 					{
 						sig.Update(messageDigest.Digest());
 					}
-					verifyResult = sig.Verify(digest);
+					verifyResult = sig.VerifySignature(digest);
 				}
 			}
 			verified = true;
@@ -1195,9 +1147,9 @@ namespace iTextSharp.Signatures
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		private bool VerifySigAttributes(byte[] attr)
 		{
-			Signature signature = InitSignature(signCert.GetPublicKey());
+			ISigner signature = InitSignature(signCert.GetPublicKey());
 			signature.Update(attr);
-			return signature.Verify(digest);
+			return signature.VerifySignature(digest);
 		}
 
 		/// <summary>Checks if the timestamp refers to this document.</summary>
@@ -1209,10 +1161,10 @@ namespace iTextSharp.Signatures
 			{
 				return false;
 			}
-			TimeStampTokenInfo info = timeStampToken.GetTimeStampInfo();
-			MessageImprint imprint = info.ToASN1Structure().GetMessageImprint();
-			String algOID = info.GetMessageImprintAlgOID().Id;
-			byte[] md = new DigestUtilities().GetDigest(DigestAlgorithms.GetDigest(algOID)).Digest
+			TimeStampTokenInfo info = timeStampToken.TimeStampInfo;
+			MessageImprint imprint = info.TstInfo.MessageImprint;
+			String algOID = info.HashAlgorithm.ObjectID.Id;
+			byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest
 				(digest);
 			byte[] imphashed = imprint.GetHashedMessage();
 			bool res = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
@@ -1290,14 +1242,7 @@ namespace iTextSharp.Signatures
 					X509Certificate issuer = (X509Certificate)oc[k_1];
 					try
 					{
-						if (provider == null)
-						{
-							v.Verify(issuer.GetPublicKey());
-						}
-						else
-						{
-							v.Verify(issuer.GetPublicKey(), provider);
-						}
+						v.Verify(issuer.GetPublicKey());
 						found = true;
 						cc.Add(oc[k_1]);
 						oc.JRemoveAt(k_1);
@@ -1331,10 +1276,9 @@ namespace iTextSharp.Signatures
 				crls = new List<X509Crl>();
 				for (int k = 0; k < seq.Count; ++k)
 				{
-					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToAsn1Object().GetEncoded(ASN1Encoding
-						.DER));
-					CertificateFactory cf = CertificateFactory.GetInstance("X.509");
-					X509Crl crl = (X509Crl)cf.GenerateCRL(ar);
+					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToAsn1Object().GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der
+						));
+					X509Crl crl = (X509Crl)SignUtils.ParseCrlFromStream(ar);
 					crls.Add(crl);
 				}
 			}
@@ -1372,12 +1316,10 @@ namespace iTextSharp.Signatures
 				X509Certificate[] cs = (X509Certificate[])GetSignCertificateChain();
 				SingleResp sr = basicResp.Responses[0];
 				CertificateID cid = sr.GetCertID();
-				DigestCalculator digestalg = new JcaDigestCalculatorProviderBuilder().Build().Get
-					(new AlgorithmIdentifier(cid.GetHashAlgOID(), DERNull.INSTANCE));
 				X509Certificate sigcer = GetSigningCertificate();
 				X509Certificate isscer = cs[1];
-				CertificateID tis = new CertificateID(digestalg, new JcaX509CertificateHolder(isscer
-					), sigcer.GetSerialNumber());
+				CertificateID tis = SignUtils.GenerateCertificateId(isscer, sigcer.SerialNumber, 
+					cid.HashAlgOid);
 				return tis.Equals(cid);
 			}
 			catch (Exception)
@@ -1396,7 +1338,7 @@ namespace iTextSharp.Signatures
 			while (true)
 			{
 				if (seq.GetObjectAt(0) is DerObjectIdentifier && ((DerObjectIdentifier)seq.GetObjectAt
-					(0)).Id.Equals(OCSPObjectIdentifiers.id_pkix_ocsp_basic.Id))
+					(0)).Id.Equals(OcspObjectIdentifiers.PkixOcspBasic.Id))
 				{
 					break;
 				}
@@ -1431,7 +1373,7 @@ namespace iTextSharp.Signatures
 			}
 			Asn1OctetString os = (Asn1OctetString)seq.GetObjectAt(1);
 			Asn1InputStream inp = new Asn1InputStream(os.GetOctets());
-			BasicOCSPResponse resp = BasicOCSPResponse.GetInstance(inp.ReadObject());
+			BasicOcspResponse resp = BasicOcspResponse.GetInstance(inp.ReadObject());
 			basicResp = new BasicOcspResp(resp);
 		}
 
@@ -1465,12 +1407,9 @@ namespace iTextSharp.Signatures
 		{
 			if (timeStampToken == null)
 			{
-				return null;
+				return (DateTime)SignUtils.UNDEFINED_TIMESTAMP_DATE;
 			}
-			DateTime cal = new GregorianCalendar();
-			DateTime date = timeStampToken.GetTimeStampInfo().GetGenTime();
-			cal.SetTime(date);
-			return cal;
+			return SignUtils.GetTimeStampDate(timeStampToken);
 		}
 
 		/// <summary>Returns the filter subtype.</summary>

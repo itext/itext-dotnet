@@ -172,7 +172,15 @@ namespace iTextSharp.IO.Util
         }
 
         public static void Sort<T>(T[] array, IComparer<T> comparer) {
-            SortUtil.MergeSort(array, comparer);
+            Sort(array, 0, array.Length, comparer);
+        }
+
+        public static void Sort<T>(T[] array, int from, int to) {
+            Sort(array, from, to, null);
+        }
+
+        public static void Sort<T>(T[] array, int from, int to, IComparer<T> comparer) {
+            SortUtil.MergeSort(array, from, to, comparer);
         }
 
         public static void Sort(String[] array) {

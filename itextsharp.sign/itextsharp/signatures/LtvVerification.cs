@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using  Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Asn1;
-using Org.Bouncycastle.Asn1.Ocsp;
 using iTextSharp.Forms;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Log;
@@ -212,7 +212,7 @@ namespace iTextSharp.Signatures
 			for (int i = 0; i < certs.Length; i++)
 			{
 				parent = (X509Certificate)certs[i];
-				if (!cert.GetIssuerDN().Equals(parent.SubjectDN))
+				if (!cert.IssuerDN.Equals(parent.SubjectDN))
 				{
 					continue;
 				}
@@ -274,18 +274,18 @@ namespace iTextSharp.Signatures
 		private static byte[] BuildOCSPResponse(byte[] BasicOCSPResponse)
 		{
 			DerOctetString doctet = new DerOctetString(BasicOCSPResponse);
-			ASN1EncodableVector v2 = new ASN1EncodableVector();
-			v2.Add(OCSPObjectIdentifiers.id_pkix_ocsp_basic);
+			Asn1EncodableVector v2 = new Asn1EncodableVector();
+			v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
 			v2.Add(doctet);
-			ASN1Enumerated den = new ASN1Enumerated(0);
-			ASN1EncodableVector v3 = new ASN1EncodableVector();
+			DerEnumerated den = new DerEnumerated(0);
+			Asn1EncodableVector v3 = new Asn1EncodableVector();
 			v3.Add(den);
-			v3.Add(new DERTaggedObject(true, 0, new DERSequence(v2)));
-			DERSequence seq = new DERSequence(v3);
+			v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
+			DerSequence seq = new DerSequence(v3);
 			return seq.GetEncoded();
 		}
 
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		private PdfName GetSignatureHashKey(String signatureName)
 		{
@@ -303,7 +303,7 @@ namespace iTextSharp.Signatures
 			return new PdfName(ConvertToHex(bt));
 		}
 
-		/// <exception cref="Java.Security.NoSuchAlgorithmException"/>
+		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
 		private static byte[] HashBytesSha1(byte[] b)
 		{
 			IDigest sh = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA1");

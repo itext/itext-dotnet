@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using Java.Security.Cert;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
@@ -139,13 +138,13 @@ namespace iTextSharp.Signatures
 		public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate
 			 issuerCert, DateTime signDate)
 		{
-			if (crl == null || signDate == null)
+			if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE)
 			{
 				return false;
 			}
 			// We only check CRLs valid on the signing date for which the issuer matches
-			if (crl.GetIssuerX500Principal().Equals(signCert.GetIssuerX500Principal()) && signDate
-				.After(crl.GetThisUpdate()) && signDate.Before(crl.GetNextUpdate()))
+			if (crl.IssuerDN.Equals(signCert.IssuerDN) && signDate.After(crl.ThisUpdate) && signDate
+				.Before(crl.NextUpdate))
 			{
 				// the signing certificate may not be revoked
 				if (IsSignatureValid(crl, issuerCert) && crl.IsRevoked(signCert))
@@ -178,10 +177,8 @@ namespace iTextSharp.Signatures
 					return null;
 				}
 				LOGGER.Info("Getting CRL from " + crlurl);
-				CertificateFactory cf = CertificateFactory.GetInstance("X.509");
-				// Creates the CRL
-				return (X509Crl)cf.GenerateCRL(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(crlurl
-					)));
+				return (X509Crl)SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream
+					(new Uri(crlurl)));
 			}
 			catch (System.IO.IOException)
 			{
@@ -222,17 +219,11 @@ namespace iTextSharp.Signatures
 			try
 			{
 				// loop over the certificate in the key store
-				for (IEnumerator<String> aliases = rootStore.Aliases(); aliases.MoveNext(); )
+				foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore))
 				{
-					String alias = aliases.Current;
 					try
 					{
-						if (!rootStore.IsCertificateEntry(alias))
-						{
-							continue;
-						}
 						// check if the crl was signed by a trusted party (indirect CRLs)
-						X509Certificate anchor = (X509Certificate)rootStore.GetCertificate(alias);
 						crl.Verify(anchor.GetPublicKey());
 						return true;
 					}
