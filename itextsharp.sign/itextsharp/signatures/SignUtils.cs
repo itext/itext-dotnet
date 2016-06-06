@@ -40,10 +40,11 @@ namespace iTextSharp.Signatures
         }
 
         internal static byte[] GetExtensionValueByOid(X509Certificate certificate, String oid) {
-            return certificate.GetExtensionValue(oid)?.GetOctets();
+            Asn1OctetString extensionValue = certificate.GetExtensionValue(oid);
+            return extensionValue != null ? extensionValue.GetOctets() : null;
         }
 
-        internal static IDigest GetMessageDigest(String hashAlgorithm) {
+	    internal static IDigest GetMessageDigest(String hashAlgorithm) {
             return DigestUtilities.GetDigest(hashAlgorithm);
         }
 
