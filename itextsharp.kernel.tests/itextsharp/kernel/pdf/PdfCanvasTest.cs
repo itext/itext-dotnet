@@ -1013,8 +1013,12 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			PdfPage page = document.AddNewPage();
 			PdfCanvas canvas = new PdfCanvas(page);
-			PdfDictionary tag2 = new PdfDictionary(new _Dictionary_1117());
-			PdfDictionary tag3 = new PdfDictionary(new _Dictionary_1120(document));
+			Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
+			tmpMap[new PdfName("Tag")] = new PdfNumber(2);
+			PdfDictionary tag2 = new PdfDictionary(tmpMap);
+			tmpMap = new Dictionary<PdfName, PdfObject>();
+			tmpMap[new PdfName("Tag")] = ((PdfNumber)new PdfNumber(3).MakeIndirect(document));
+			PdfDictionary tag3 = new PdfDictionary(tmpMap);
 			canvas.BeginMarkedContent(new PdfName("Tag1")).EndMarkedContent().BeginMarkedContent
 				(new PdfName("Tag2"), tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"
 				), (PdfDictionary)((PdfDictionary)tag3.MakeIndirect(document))).EndMarkedContent
@@ -1024,29 +1028,6 @@ namespace iTextSharp.Kernel.Pdf
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + "markedContentTest2.pdf", sourceFolder + "cmp_markedContentTest2.pdf", destinationFolder
 				, "diff_"));
-		}
-
-		private sealed class _Dictionary_1117 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_1117()
-			{
-				{
-					this[new PdfName("Tag")] = new PdfNumber(2);
-				}
-			}
-		}
-
-		private sealed class _Dictionary_1120 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_1120(PdfDocument document)
-			{
-				this.document = document;
-				{
-					this[new PdfName("Tag")] = ((PdfNumber)new PdfNumber(3).MakeIndirect(document));
-				}
-			}
-
-			private readonly PdfDocument document;
 		}
 
 		/// <exception cref="System.Exception"/>
@@ -1321,7 +1302,10 @@ namespace iTextSharp.Kernel.Pdf
 			PdfPage page = document.AddNewPage();
 			PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(new float[] { 0, 
 				1, 0, 1 }), new PdfArray(new float[] { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes());
-			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(new _List_1366(), new PdfDeviceCs.Rgb
+			List<String> tmpArray = new List<String>(2);
+			tmpArray.Add("MyRed");
+			tmpArray.Add("MyGreen");
+			PdfSpecialCs.DeviceN deviceN = new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb
 				(), function);
 			PdfCanvas canvas = new PdfCanvas(page);
 			canvas.SetFillColor(new DeviceN(deviceN, new float[] { 0, 0 })).Rectangle(50, 500
@@ -1335,17 +1319,6 @@ namespace iTextSharp.Kernel.Pdf
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
 				 + "colorTest08.pdf", sourceFolder + "cmp_colorTest08.pdf", destinationFolder, "diff_"
 				));
-		}
-
-		private sealed class _List_1366 : List<String>
-		{
-			public _List_1366()
-			{
-				{
-					this.Add("MyRed");
-					this.Add("MyGreen");
-				}
-			}
 		}
 
 		/// <exception cref="System.IO.IOException"/>

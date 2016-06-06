@@ -68,99 +68,67 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
 		public static int Illustration = 4;
 
-		private sealed class _HashSet_79 : HashSet<PdfName>
+		public static ICollection<PdfName> groupingRoles = new HashSet<PdfName>();
+
+		public static ICollection<PdfName> blockLevelRoles = new HashSet<PdfName>();
+
+		public static ICollection<PdfName> inlineLevelRoles = new HashSet<PdfName>();
+
+		public static ICollection<PdfName> illustrationRoles = new HashSet<PdfName>();
+
+		static PdfStructElem()
 		{
-			public _HashSet_79()
-			{
-				{
-					this.Add(PdfName.Document);
-					this.Add(PdfName.Part);
-					this.Add(PdfName.Art);
-					this.Add(PdfName.Sect);
-					this.Add(PdfName.Div);
-					this.Add(PdfName.BlockQuote);
-					this.Add(PdfName.Caption);
-					this.Add(PdfName.Caption);
-					this.Add(PdfName.TOC);
-					this.Add(PdfName.TOCI);
-					this.Add(PdfName.Index);
-					this.Add(PdfName.NonStruct);
-					this.Add(PdfName.Private);
-				}
-			}
+			groupingRoles.Add(PdfName.Document);
+			groupingRoles.Add(PdfName.Part);
+			groupingRoles.Add(PdfName.Art);
+			groupingRoles.Add(PdfName.Sect);
+			groupingRoles.Add(PdfName.Div);
+			groupingRoles.Add(PdfName.BlockQuote);
+			groupingRoles.Add(PdfName.Caption);
+			groupingRoles.Add(PdfName.Caption);
+			groupingRoles.Add(PdfName.TOC);
+			groupingRoles.Add(PdfName.TOCI);
+			groupingRoles.Add(PdfName.Index);
+			groupingRoles.Add(PdfName.NonStruct);
+			groupingRoles.Add(PdfName.Private);
+			blockLevelRoles.Add(PdfName.P);
+			blockLevelRoles.Add(PdfName.H);
+			blockLevelRoles.Add(PdfName.H1);
+			blockLevelRoles.Add(PdfName.H2);
+			blockLevelRoles.Add(PdfName.H3);
+			blockLevelRoles.Add(PdfName.H4);
+			blockLevelRoles.Add(PdfName.H5);
+			blockLevelRoles.Add(PdfName.H6);
+			blockLevelRoles.Add(PdfName.L);
+			blockLevelRoles.Add(PdfName.Lbl);
+			blockLevelRoles.Add(PdfName.LI);
+			blockLevelRoles.Add(PdfName.LBody);
+			blockLevelRoles.Add(PdfName.Table);
+			blockLevelRoles.Add(PdfName.TR);
+			blockLevelRoles.Add(PdfName.TH);
+			blockLevelRoles.Add(PdfName.TD);
+			blockLevelRoles.Add(PdfName.THead);
+			blockLevelRoles.Add(PdfName.TBody);
+			blockLevelRoles.Add(PdfName.TFoot);
+			inlineLevelRoles.Add(PdfName.Span);
+			inlineLevelRoles.Add(PdfName.Quote);
+			inlineLevelRoles.Add(PdfName.Note);
+			inlineLevelRoles.Add(PdfName.Reference);
+			inlineLevelRoles.Add(PdfName.BibEntry);
+			inlineLevelRoles.Add(PdfName.Code);
+			inlineLevelRoles.Add(PdfName.Link);
+			inlineLevelRoles.Add(PdfName.Annot);
+			inlineLevelRoles.Add(PdfName.Ruby);
+			inlineLevelRoles.Add(PdfName.Warichu);
+			inlineLevelRoles.Add(PdfName.RB);
+			inlineLevelRoles.Add(PdfName.RT);
+			inlineLevelRoles.Add(PdfName.RP);
+			inlineLevelRoles.Add(PdfName.WT);
+			inlineLevelRoles.Add(PdfName.WP);
+			illustrationRoles.Add(PdfName.Figure);
+			illustrationRoles.Add(PdfName.Formula);
+			illustrationRoles.Add(PdfName.Form);
 		}
-
-		public static ICollection<PdfName> groupingRoles = new _HashSet_79();
-
-		private sealed class _HashSet_95 : HashSet<PdfName>
-		{
-			public _HashSet_95()
-			{
-				{
-					this.Add(PdfName.P);
-					this.Add(PdfName.H);
-					this.Add(PdfName.H1);
-					this.Add(PdfName.H2);
-					this.Add(PdfName.H3);
-					this.Add(PdfName.H4);
-					this.Add(PdfName.H5);
-					this.Add(PdfName.H6);
-					this.Add(PdfName.L);
-					this.Add(PdfName.Lbl);
-					this.Add(PdfName.LI);
-					this.Add(PdfName.LBody);
-					this.Add(PdfName.Table);
-					this.Add(PdfName.TR);
-					this.Add(PdfName.TH);
-					this.Add(PdfName.TD);
-					this.Add(PdfName.THead);
-					this.Add(PdfName.TBody);
-					this.Add(PdfName.TFoot);
-				}
-			}
-		}
-
-		public static ICollection<PdfName> blockLevelRoles = new _HashSet_95();
-
-		private sealed class _HashSet_118 : HashSet<PdfName>
-		{
-			public _HashSet_118()
-			{
-				{
-					this.Add(PdfName.Span);
-					this.Add(PdfName.Quote);
-					this.Add(PdfName.Note);
-					this.Add(PdfName.Reference);
-					this.Add(PdfName.BibEntry);
-					this.Add(PdfName.Code);
-					this.Add(PdfName.Link);
-					this.Add(PdfName.Annot);
-					this.Add(PdfName.Ruby);
-					this.Add(PdfName.Warichu);
-					this.Add(PdfName.RB);
-					this.Add(PdfName.RT);
-					this.Add(PdfName.RP);
-					this.Add(PdfName.WT);
-					this.Add(PdfName.WP);
-				}
-			}
-		}
-
-		public static ICollection<PdfName> inlineLevelRoles = new _HashSet_118();
-
-		private sealed class _HashSet_136 : HashSet<PdfName>
-		{
-			public _HashSet_136()
-			{
-				{
-					this.Add(PdfName.Figure);
-					this.Add(PdfName.Formula);
-					this.Add(PdfName.Form);
-				}
-			}
-		}
-
-		public static ICollection<PdfName> illustrationRoles = new _HashSet_136();
 
 		protected internal int type = Unknown;
 

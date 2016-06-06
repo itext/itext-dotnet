@@ -63,23 +63,18 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 	/// </summary>
 	public class TagStructureContext
 	{
-		private sealed class _HashSet_81 : HashSet<PdfName>
-		{
-			public _HashSet_81()
-			{
-				{
-					this.Add(PdfName.Book);
-					this.Add(PdfName.Document);
-					this.Add(PdfName.Part);
-					this.Add(PdfName.Art);
-					this.Add(PdfName.Sect);
-					this.Add(PdfName.Div);
-				}
-			}
-		}
+		private static readonly ICollection<PdfName> allowedRootTagRoles = new HashSet<PdfName
+			>();
 
-		private static readonly ICollection<PdfName> allowedRootTagRoles = new _HashSet_81
-			();
+		static TagStructureContext()
+		{
+			allowedRootTagRoles.Add(PdfName.Book);
+			allowedRootTagRoles.Add(PdfName.Document);
+			allowedRootTagRoles.Add(PdfName.Part);
+			allowedRootTagRoles.Add(PdfName.Art);
+			allowedRootTagRoles.Add(PdfName.Sect);
+			allowedRootTagRoles.Add(PdfName.Div);
+		}
 
 		private PdfDocument document;
 

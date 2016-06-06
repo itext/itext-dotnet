@@ -51,33 +51,19 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 	/// 	</summary>
 	internal class StructureTreeCopier
 	{
-		private sealed class _List_68 : List<PdfName>
+		private static IList<PdfName> ignoreKeysForCopy = new List<PdfName>();
+
+		private static IList<PdfName> ignoreKeysForClone = new List<PdfName>();
+
+		static StructureTreeCopier()
 		{
-			public _List_68()
-			{
-				{
-					this.Add(PdfName.K);
-					this.Add(PdfName.P);
-					this.Add(PdfName.Pg);
-					this.Add(PdfName.Obj);
-				}
-			}
+			ignoreKeysForCopy.Add(PdfName.K);
+			ignoreKeysForCopy.Add(PdfName.P);
+			ignoreKeysForCopy.Add(PdfName.Pg);
+			ignoreKeysForCopy.Add(PdfName.Obj);
+			ignoreKeysForClone.Add(PdfName.K);
+			ignoreKeysForClone.Add(PdfName.P);
 		}
-
-		private static IList<PdfName> ignoreKeysForCopy = new _List_68();
-
-		private sealed class _List_75 : List<PdfName>
-		{
-			public _List_75()
-			{
-				{
-					this.Add(PdfName.K);
-					this.Add(PdfName.P);
-				}
-			}
-		}
-
-		private static IList<PdfName> ignoreKeysForClone = new _List_75();
 
 		/// <summary>
 		/// Copies structure to a

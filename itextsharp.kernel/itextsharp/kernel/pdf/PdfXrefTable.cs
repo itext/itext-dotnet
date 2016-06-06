@@ -271,7 +271,11 @@ namespace iTextSharp.Kernel.Pdf
 					xrefStream.Put(PdfName.Encrypt, crypto);
 				}
 				xrefStream.Put(PdfName.Size, new PdfNumber(this.Size()));
-				xrefStream.Put(PdfName.W, new PdfArray(new _List_242()));
+				List<PdfObject> tmpArray = new List<PdfObject>(3);
+				tmpArray.Add(new PdfNumber(1));
+				tmpArray.Add(new PdfNumber(4));
+				tmpArray.Add(new PdfNumber(2));
+				xrefStream.Put(PdfName.W, new PdfArray(tmpArray));
 				xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
 				xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
 				PdfArray index = new PdfArray();
@@ -373,18 +377,6 @@ namespace iTextSharp.Kernel.Pdf
 			WriteKeyInfo(writer);
 			writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
 			xref = null;
-		}
-
-		private sealed class _List_242 : List<PdfObject>
-		{
-			public _List_242()
-			{
-				{
-					this.Add(new PdfNumber(1));
-					this.Add(new PdfNumber(4));
-					this.Add(new PdfNumber(2));
-				}
-			}
 		}
 
 		internal virtual void Clear()

@@ -13,23 +13,13 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
 			PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-			catalog.Put(new PdfName("a"), ((PdfDictionary)new PdfDictionary(new _Dictionary_24
-				()).MakeIndirect(document)).GetIndirectReference().MakeIndirect(document).GetIndirectReference
-				().MakeIndirect(document));
+			catalog.Put(new PdfName("a"), ((PdfDictionary)GetTestPdfDictionary().MakeIndirect
+				(document)).GetIndirectReference().MakeIndirect(document).GetIndirectReference()
+				.MakeIndirect(document));
 			PdfObject @object = ((PdfIndirectReference)catalog.Get(new PdfName("a"), false)).
 				GetRefersTo(true);
 			NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
 			document.Close();
-		}
-
-		private sealed class _Dictionary_24 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_24()
-			{
-				{
-					this[new PdfName("b")] = new PdfName("c");
-				}
-			}
 		}
 
 		[NUnit.Framework.Test]
@@ -40,7 +30,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
 			PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-			PdfDictionary dictionary = new PdfDictionary(new _Dictionary_39());
+			PdfDictionary dictionary = GetTestPdfDictionary();
 			PdfObject @object = dictionary;
 			for (int i = 0; i < 200; i++)
 			{
@@ -53,16 +43,6 @@ namespace iTextSharp.Kernel.Pdf
 			document.Close();
 		}
 
-		private sealed class _Dictionary_39 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_39()
-			{
-				{
-					this[new PdfName("b")] = new PdfName("c");
-				}
-			}
-		}
-
 		[NUnit.Framework.Test]
 		public virtual void IndirectsChain3()
 		{
@@ -71,7 +51,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
 			PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-			PdfDictionary dictionary = new PdfDictionary(new _Dictionary_59());
+			PdfDictionary dictionary = GetTestPdfDictionary();
 			PdfObject @object = dictionary;
 			for (int i = 0; i < 31; i++)
 			{
@@ -85,16 +65,6 @@ namespace iTextSharp.Kernel.Pdf
 			document.Close();
 		}
 
-		private sealed class _Dictionary_59 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_59()
-			{
-				{
-					this[new PdfName("b")] = new PdfName("c");
-				}
-			}
-		}
-
 		[NUnit.Framework.Test]
 		public virtual void IndirectsChain4()
 		{
@@ -103,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument document = new PdfDocument(writer);
 			document.AddNewPage();
 			PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-			PdfDictionary dictionary = new PdfDictionary(new _Dictionary_80());
+			PdfDictionary dictionary = GetTestPdfDictionary();
 			PdfObject @object = dictionary;
 			for (int i = 0; i < 31; i++)
 			{
@@ -117,16 +87,6 @@ namespace iTextSharp.Kernel.Pdf
 			NUnit.Framework.Assert.AreEqual(new PdfName("c").ToString(), ((PdfDictionary)@object
 				).Get(new PdfName("b")).ToString());
 			document.Close();
-		}
-
-		private sealed class _Dictionary_80 : Dictionary<PdfName, PdfObject>
-		{
-			public _Dictionary_80()
-			{
-				{
-					this[new PdfName("b")] = new PdfName("c");
-				}
-			}
 		}
 
 		[NUnit.Framework.Test]
@@ -265,6 +225,13 @@ namespace iTextSharp.Kernel.Pdf
 				.GetIndirectReference().GetGenNumber());
 			NUnit.Framework.Assert.IsTrue(dict1 == dict);
 			document.Close();
+		}
+
+		private static PdfDictionary GetTestPdfDictionary()
+		{
+			Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
+			tmpMap[new PdfName("b")] = new PdfName("c");
+			return new PdfDictionary(tmpMap);
 		}
 	}
 }

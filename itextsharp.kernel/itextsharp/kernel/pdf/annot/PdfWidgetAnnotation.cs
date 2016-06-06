@@ -52,42 +52,56 @@ namespace iTextSharp.Kernel.Pdf.Annot
 		public PdfWidgetAnnotation(Rectangle rect)
 			: base(rect)
 		{
+			{
+				widgetEntries.Add(PdfName.Subtype);
+				widgetEntries.Add(PdfName.Type);
+				widgetEntries.Add(PdfName.Rect);
+				widgetEntries.Add(PdfName.Contents);
+				widgetEntries.Add(PdfName.P);
+				widgetEntries.Add(PdfName.NM);
+				widgetEntries.Add(PdfName.M);
+				widgetEntries.Add(PdfName.F);
+				widgetEntries.Add(PdfName.AP);
+				widgetEntries.Add(PdfName.AS);
+				widgetEntries.Add(PdfName.Border);
+				widgetEntries.Add(PdfName.C);
+				widgetEntries.Add(PdfName.StructParent);
+				widgetEntries.Add(PdfName.OC);
+				widgetEntries.Add(PdfName.H);
+				widgetEntries.Add(PdfName.MK);
+				widgetEntries.Add(PdfName.A);
+				widgetEntries.Add(PdfName.AA);
+				widgetEntries.Add(PdfName.BS);
+			}
 		}
 
 		public PdfWidgetAnnotation(PdfDictionary pdfObject)
 			: base(pdfObject)
 		{
-		}
-
-		private sealed class _HashSet_66 : HashSet<PdfName>
-		{
-			public _HashSet_66()
 			{
-				{
-					this.Add(PdfName.Subtype);
-					this.Add(PdfName.Type);
-					this.Add(PdfName.Rect);
-					this.Add(PdfName.Contents);
-					this.Add(PdfName.P);
-					this.Add(PdfName.NM);
-					this.Add(PdfName.M);
-					this.Add(PdfName.F);
-					this.Add(PdfName.AP);
-					this.Add(PdfName.AS);
-					this.Add(PdfName.Border);
-					this.Add(PdfName.C);
-					this.Add(PdfName.StructParent);
-					this.Add(PdfName.OC);
-					this.Add(PdfName.H);
-					this.Add(PdfName.MK);
-					this.Add(PdfName.A);
-					this.Add(PdfName.AA);
-					this.Add(PdfName.BS);
-				}
+				widgetEntries.Add(PdfName.Subtype);
+				widgetEntries.Add(PdfName.Type);
+				widgetEntries.Add(PdfName.Rect);
+				widgetEntries.Add(PdfName.Contents);
+				widgetEntries.Add(PdfName.P);
+				widgetEntries.Add(PdfName.NM);
+				widgetEntries.Add(PdfName.M);
+				widgetEntries.Add(PdfName.F);
+				widgetEntries.Add(PdfName.AP);
+				widgetEntries.Add(PdfName.AS);
+				widgetEntries.Add(PdfName.Border);
+				widgetEntries.Add(PdfName.C);
+				widgetEntries.Add(PdfName.StructParent);
+				widgetEntries.Add(PdfName.OC);
+				widgetEntries.Add(PdfName.H);
+				widgetEntries.Add(PdfName.MK);
+				widgetEntries.Add(PdfName.A);
+				widgetEntries.Add(PdfName.AA);
+				widgetEntries.Add(PdfName.BS);
 			}
 		}
 
-		private HashSet<PdfName> widgetEntries = new _HashSet_66();
+		private HashSet<PdfName> widgetEntries = new HashSet<PdfName>();
 
 		public override PdfName GetSubtype()
 		{

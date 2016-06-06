@@ -166,9 +166,16 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfArray aDirect = new PdfArray();
-			aDirect.Add(new PdfArray(new _List_158()));
+			List<PdfObject> tmpArray = new List<PdfObject>(2);
+			tmpArray.Add(new PdfNumber(1));
+			tmpArray.Add(new PdfNumber(2));
+			aDirect.Add(new PdfArray(tmpArray));
 			aDirect.Add(new PdfBoolean(true));
-			aDirect.Add(new PdfDictionary(new _SortedDictionary_163()));
+			SortedDictionary<PdfName, PdfObject> tmpMap = new SortedDictionary<PdfName, PdfObject
+				>();
+			tmpMap[new PdfName("one")] = new PdfNumber(1);
+			tmpMap[new PdfName("two")] = new PdfNumber(2);
+			aDirect.Add(new PdfDictionary(tmpMap));
 			aDirect.Add(new PdfName("name"));
 			aDirect.Add(new PdfNull());
 			aDirect.Add(new PdfNumber(100));
@@ -207,28 +214,6 @@ namespace iTextSharp.Kernel.Pdf
 			reader.Close();
 		}
 
-		private sealed class _List_158 : List<PdfObject>
-		{
-			public _List_158()
-			{
-				{
-					this.Add(new PdfNumber(1));
-					this.Add(new PdfNumber(2));
-				}
-			}
-		}
-
-		private sealed class _SortedDictionary_163 : SortedDictionary<PdfName, PdfObject>
-		{
-			public _SortedDictionary_163()
-			{
-				{
-					this[new PdfName("one")] = new PdfNumber(1);
-					this[new PdfName("two")] = new PdfNumber(2);
-				}
-			}
-		}
-
 		/// <summary>Copying objects, some of those are indirect.</summary>
 		/// <remarks>Copying objects, some of those are indirect. Objects of all types are added into document catalog.
 		/// 	</remarks>
@@ -246,9 +231,16 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfName aDirectName = new PdfName("aDirect");
 			PdfArray aDirect = ((PdfArray)new PdfArray().MakeIndirect(pdfDoc1));
-			aDirect.Add(new PdfArray(new _List_219(pdfDoc1)));
+			List<PdfObject> tmpArray = new List<PdfObject>(2);
+			tmpArray.Add(new PdfNumber(1));
+			tmpArray.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1)));
+			aDirect.Add(new PdfArray(tmpArray));
 			aDirect.Add(new PdfBoolean(true));
-			aDirect.Add(new PdfDictionary(new _SortedDictionary_224(pdfDoc1)));
+			SortedDictionary<PdfName, PdfObject> tmpMap = new SortedDictionary<PdfName, PdfObject
+				>();
+			tmpMap[new PdfName("one")] = new PdfNumber(1);
+			tmpMap[new PdfName("two")] = ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1));
+			aDirect.Add(new PdfDictionary(tmpMap));
 			aDirect.Add(new PdfName("name"));
 			aDirect.Add(((PdfNull)new PdfNull().MakeIndirect(pdfDoc1)));
 			aDirect.Add(new PdfNumber(100));
@@ -289,34 +281,6 @@ namespace iTextSharp.Kernel.Pdf
 			NUnit.Framework.Assert.AreEqual("string", ((PdfString)a.Get(6)).ToUnicodeString()
 				);
 			reader.Close();
-		}
-
-		private sealed class _List_219 : List<PdfObject>
-		{
-			public _List_219(PdfDocument pdfDoc1)
-			{
-				this.pdfDoc1 = pdfDoc1;
-				{
-					this.Add(new PdfNumber(1));
-					this.Add(((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1)));
-				}
-			}
-
-			private readonly PdfDocument pdfDoc1;
-		}
-
-		private sealed class _SortedDictionary_224 : SortedDictionary<PdfName, PdfObject>
-		{
-			public _SortedDictionary_224(PdfDocument pdfDoc1)
-			{
-				this.pdfDoc1 = pdfDoc1;
-				{
-					this[new PdfName("one")] = new PdfNumber(1);
-					this[new PdfName("two")] = ((PdfNumber)new PdfNumber(2).MakeIndirect(pdfDoc1));
-				}
-			}
-
-			private readonly PdfDocument pdfDoc1;
 		}
 
 		/// <summary>Copy objects recursively.</summary>
@@ -386,7 +350,11 @@ namespace iTextSharp.Kernel.Pdf
 			page1.Flush();
 			PdfDictionary catalog1 = pdfDoc1.GetCatalog().GetPdfObject();
 			PdfStream stream1 = ((PdfStream)new PdfStream().MakeIndirect(pdfDoc1));
-			stream1.GetOutputStream().Write(new PdfArray(new _List_339()));
+			List<PdfObject> tmpArray = new List<PdfObject>(3);
+			tmpArray.Add(new PdfNumber(1));
+			tmpArray.Add(new PdfNumber(2));
+			tmpArray.Add(new PdfNumber(3));
+			stream1.GetOutputStream().Write(new PdfArray(tmpArray));
 			catalog1.Put(new PdfName("stream"), stream1);
 			pdfDoc1.Close();
 			PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject4_1.pdf"
@@ -411,18 +379,6 @@ namespace iTextSharp.Kernel.Pdf
 			byte[] bytes = stream.GetBytes();
 			NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes("[1 2 3]"), bytes);
 			reader.Close();
-		}
-
-		private sealed class _List_339 : List<PdfObject>
-		{
-			public _List_339()
-			{
-				{
-					this.Add(new PdfNumber(1));
-					this.Add(new PdfNumber(2));
-					this.Add(new PdfNumber(3));
-				}
-			}
 		}
 
 		/// <summary>Copies page.</summary>
