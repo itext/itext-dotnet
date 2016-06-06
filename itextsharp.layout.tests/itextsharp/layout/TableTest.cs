@@ -825,30 +825,30 @@ namespace iTextSharp.Layout
 					)).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new 
 					Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3)));
 			}
-			doc.SetRenderer(new _DocumentRenderer_863(pdfDoc, doc));
+			doc.SetRenderer(new TableTest.RotatedDocumentRenderer(doc, pdfDoc));
 			doc.Add(table);
 			doc.Close();
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
 				, destinationFolder, testName + "_diff"));
 		}
 
-		private sealed class _DocumentRenderer_863 : DocumentRenderer
+		private class RotatedDocumentRenderer : DocumentRenderer
 		{
-			public _DocumentRenderer_863(PdfDocument pdfDoc, Document baseArg1)
-				: base(baseArg1)
+			private readonly PdfDocument pdfDoc;
+
+			public RotatedDocumentRenderer(Document doc, PdfDocument pdfDoc)
+				: base(doc)
 			{
 				this.pdfDoc = pdfDoc;
 			}
 
-			protected override PageSize AddNewPage(PageSize customPageSize)
+			protected internal override PageSize AddNewPage(PageSize customPageSize)
 			{
-				PageSize pageSize = this.currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate
+				PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate
 					();
 				pdfDoc.AddNewPage(pageSize);
 				return pageSize;
 			}
-
-			private readonly PdfDocument pdfDoc;
 		}
 
 		/// <exception cref="System.IO.IOException"/>
