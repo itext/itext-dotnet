@@ -47,6 +47,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -1467,10 +1468,32 @@ namespace iTextSharp.Kernel.Utils
             XElement el1 = XElement.Load(xml1);
             XElement el2 = XElement.Load(xml2);
 
-            return XElement.DeepEquals(el1, el2);
+            return XNode.DeepEquals(Normalize(el1), Normalize(el2));
 		}
 
-		private IList<PdfLinkAnnotation> GetLinkAnnotations(int pageNum, PdfDocument document
+        private static XElement Normalize(XElement element)
+        {
+            if (element.HasElements)
+            {
+                return new XElement(
+                    element.Name,
+                    element.Attributes().Where(a => a.Name.Namespace == XNamespace.Xmlns)
+                    .OrderBy(a => a.Name.ToString()),
+                    element.Elements().OrderBy(a => a.Name.ToString())
+                    .Select(e => Normalize(e)));
+            }
+
+            if (element.IsEmpty)
+            {
+                return new XElement(element.Name, element.Attributes()
+                    .OrderBy(a => a.Name.ToString()));
+            }
+
+            return new XElement(element.Name, element.Attributes()
+                .OrderBy(a => a.Name.ToString()), element.Value);
+        }
+
+        private IList<PdfLinkAnnotation> GetLinkAnnotations(int pageNum, PdfDocument document
 			)
 		{
 			IList<PdfLinkAnnotation> linkAnnotations = new List<PdfLinkAnnotation>();
