@@ -86,7 +86,8 @@ namespace iTextSharp.Layout
 				text.Append("A very long text is here...");
 			}
 			Paragraph twoColumnParagraph = new Paragraph();
-			twoColumnParagraph.SetNextRenderer(new _T95695584(this, twoColumnParagraph));
+			twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph
+				));
 			iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text
 				.ToString());
 			twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants
@@ -105,8 +106,8 @@ namespace iTextSharp.Layout
 					break;
 				}
 			}
-			twoColumnParagraph.SetNextRenderer(new _T95695584(this, twoColumnParagraph, paragraphLastPageNumber
-				));
+			twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph
+				, paragraphLastPageNumber));
 			document.Relayout();
 			//Close document. Drawing of content is happened on close
 			document.Close();
@@ -114,28 +115,25 @@ namespace iTextSharp.Layout
 				, destinationFolder, "diff"));
 		}
 
-		internal class _T95695584 : ParagraphRenderer
+		internal class TwoColumnParagraphRenderer : ParagraphRenderer
 		{
 			internal int oneColumnPage = -1;
 
-			public _T95695584(PreLayoutTest _enclosing, Paragraph modelElement)
+			public TwoColumnParagraphRenderer(Paragraph modelElement)
 				: base(modelElement)
 			{
-				this._enclosing = _enclosing;
 			}
 
-			public _T95695584(PreLayoutTest _enclosing, Paragraph modelElement, int oneColumnPage
-				)
+			public TwoColumnParagraphRenderer(Paragraph modelElement, int oneColumnPage)
 				: this(modelElement)
 			{
-				this._enclosing = _enclosing;
 				this.oneColumnPage = oneColumnPage;
 			}
 
 			public override IList<Rectangle> InitElementAreas(LayoutArea area)
 			{
 				IList<Rectangle> areas = new List<Rectangle>();
-				if (area.GetPageNumber() != this.oneColumnPage)
+				if (area.GetPageNumber() != oneColumnPage)
 				{
 					Rectangle firstArea = area.GetBBox().Clone();
 					Rectangle secondArea = area.GetBBox().Clone();
@@ -154,10 +152,9 @@ namespace iTextSharp.Layout
 
 			public override IRenderer GetNextRenderer()
 			{
-				return new _T95695584(this, (Paragraph)this.modelElement, this.oneColumnPage);
+				return new PreLayoutTest.TwoColumnParagraphRenderer((Paragraph)modelElement, oneColumnPage
+					);
 			}
-
-			private readonly PreLayoutTest _enclosing;
 		}
 	}
 }
