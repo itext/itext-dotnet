@@ -1,17 +1,18 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using Org.Bouncycastle.Jce.Provider;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
+using iTextSharp.Test;
+using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Signatures
 {
-	public class SigningTest
+	public class SigningTest : ExtendedITextTest
 	{
 		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
 			.TestDirectory + "/../../resources/itextsharp/signatures/";
@@ -20,34 +21,37 @@ namespace iTextSharp.Signatures
 			.TestDirectory + "/test/itextsharp/signatures/";
 
 		public static readonly String keystorePath = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/../../resources/itextsharp/signatures/ks";
+			.TestDirectory + "/../../resources/itextsharp/signatures/ks.p12";
 
 		public static readonly char[] password = "password".ToCharArray();
-
-		private BouncyCastleProvider provider;
 
 		private X509Certificate[] chain;
 
 		private ICipherParameters pk;
 
 		//TODO: add some validation of results in future
-		/// <exception cref="Java.Security.KeyStoreException"/>
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="Java.Security.Cert.CertificateException"/>
 		/// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-		/// <exception cref="Java.Security.UnrecoverableKeyException"/>
-		[NUnit.Framework.SetUp]
-		public virtual void Init()
-		{
-			provider = new BouncyCastleProvider();
-			List<X509Certificate> ks = List<X509Certificate>.GetInstance(List<X509Certificate>
-				.GetDefaultType());
-			ks.Load(new FileStream(keystorePath, FileMode.Open, FileAccess.Read), password);
-			String alias = ks.Aliases().Current;
-			pk = (ICipherParameters)ks.GetKey(alias, password);
-			chain = ks.GetCertificateChain(alias);
-			new FileInfo(destinationFolder).Mkdirs();
-		}
+		[NUnit.Framework.OneTimeSetUp]
+		public virtual void Init() {
+            CreateOrClearDestinationFolder(destinationFolder);
+
+            string alias = null;
+            Pkcs12Store pk12;
+
+            pk12 = new Pkcs12Store(new FileStream(keystorePath, FileMode.Open, FileAccess.Read), password);
+
+		    foreach (var a in pk12.Aliases) {
+                alias = ((string)a);
+                if (pk12.IsKeyEntry(alias))
+                    break;
+            }
+            pk = pk12.GetKey(alias).Key;
+            X509CertificateEntry[] ce = pk12.GetCertificateChain(alias);
+            chain = new X509Certificate[ce.Length];
+            for (int k = 0; k < ce.Length; ++k)
+                chain[k] = ce[k].Certificate;
+        }
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
@@ -64,8 +68,8 @@ namespace iTextSharp.Signatures
 			int h = 100;
 			Rectangle rect = new Rectangle(x, y, w, h);
 			String fieldName = "Signature1";
-			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, provider.GetName()
-				, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", rect, false);
+			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+				.CADES, "Test 1", "TestCity", rect, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
 				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_75()));
 		}
@@ -92,8 +96,8 @@ namespace iTextSharp.Signatures
 			String fileName = "filledSignatureFields01.pdf";
 			String dest = destinationFolder + fileName;
 			String fieldName = "Signature1";
-			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, provider.GetName()
-				, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", null, false);
+			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
 				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_92()));
 		}
@@ -120,8 +124,8 @@ namespace iTextSharp.Signatures
 			String fileName = "filledSignatureFields02.pdf";
 			String dest = destinationFolder + fileName;
 			String fieldName = "Signature1";
-			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, provider.GetName()
-				, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", null, false);
+			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
 				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_109()));
 		}
@@ -145,14 +149,14 @@ namespace iTextSharp.Signatures
 			String src = sourceFolder + "emptySigWithAppearance.pdf";
 			String dest = destinationFolder + "filledSignatureReuseAppearanceFields.pdf";
 			String fieldName = "Signature1";
-			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, provider.GetName()
-				, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", null, true);
+			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+				.CADES, "Test 1", "TestCity", null, true);
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>
 		protected internal virtual void Sign(String src, String name, String dest, X509Certificate
-			[] chain, ICipherParameters pk, String digestAlgorithm, String provider, PdfSigner.CryptoStandard
+			[] chain, ICipherParameters pk, String digestAlgorithm, PdfSigner.CryptoStandard
 			 subfilter, String reason, String location, Rectangle rectangleForNewField, bool
 			 setReuseAppearance)
 		{
@@ -169,7 +173,6 @@ namespace iTextSharp.Signatures
 			signer.SetFieldName(name);
 			// Creating the signature
 			IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-			IExternalDigest digest = new DigestUtilities();
 			signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
 		}
 	}

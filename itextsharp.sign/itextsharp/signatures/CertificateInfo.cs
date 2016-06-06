@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -161,10 +162,10 @@ namespace iTextSharp.Signatures
 			/// <param name="seq">an ASN1 Sequence</param>
 			public X500Name(Asn1Sequence seq)
 			{
-				IEnumerator<Asn1Set> e = (IEnumerator<Asn1Set>)seq.GetObjects();
+				IEnumerator e = seq.GetObjects();
 				while (e.MoveNext())
 				{
-					Asn1Set set = e.Current;
+					Asn1Set set = (Asn1Set)e.Current;
 					for (int i = 0; i < set.Count; i++)
 					{
 						Asn1Sequence s = (Asn1Sequence)set.GetObjectAt(i);
