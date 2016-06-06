@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using NUnit.Framework;
@@ -102,8 +103,8 @@ namespace iTextSharp.Samples {
             string tmp = GetDest();
             if (tmp == null)
                 return null;
-            int i = tmp.LastIndexOf("/");
-            string path = "../../cmpfiles/" + tmp.Substring(8, (i + 1) - 8) + "cmp_" + tmp.Substring(i + 1);
+            string path = TestContext.CurrentContext.TestDirectory + "/../../" +
+                          Regex.Replace(tmp.Substring(TestContext.CurrentContext.TestDirectory.Length + 5), "/([^/]+)$", "/cmp_$1");
             return path;
         }
 

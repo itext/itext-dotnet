@@ -42,7 +42,7 @@ namespace iTextSharp.Samples.Sandbox.Acroforms {
                 Indent = true,
                 IndentChars = "    "
             };
-            XmlWriter writer = XmlTextWriter.Create(DEST, settings);
+            XmlWriter writer = XmlWriter.Create(DEST, settings);
             node.WriteTo(writer);
             writer.Close();
 
