@@ -69,8 +69,11 @@ namespace iTextSharp.Layout.Renderer
 			bool moduleFound = false;
 			try
 			{
-				System.Type.GetType("com.itextpdf.typography.shaping.Shaper");
-				moduleFound = true;
+				Type type = System.Type.GetType("com.itextpdf.typography.shaping.Shaper");
+				if (type != null)
+				{
+					moduleFound = true;
+				}
 			}
 			catch (TypeLoadException)
 			{
