@@ -121,14 +121,7 @@ namespace iTextSharp.Forms.Xfa
 			PdfObject xfa = acroFormDictionary.Get(PdfName.XFA);
 			if (xfa != null)
 			{
-				try
-				{
-					InitXfaForm(xfa);
-				}
-				catch (Exception e)
-				{
-					throw new PdfException(e);
-				}
+			    InitXfaForm(xfa);
 			}
 		}
 
@@ -143,14 +136,7 @@ namespace iTextSharp.Forms.Xfa
 			PdfObject xfa = GetXfaObject(pdfDocument);
 			if (xfa != null)
 			{
-				try
-				{
-					InitXfaForm(xfa);
-				}
-				catch (Exception e)
-				{
-					throw new PdfException(e);
-				}
+			    InitXfaForm(xfa);
 			}
 		}
 
@@ -222,7 +208,7 @@ namespace iTextSharp.Forms.Xfa
 		{
 			IDictionary<String, XNode> xfaNodes = new Dictionary<String, XNode>();
 		    XNode n = domDocument.FirstNode;
-			while (((XElement)n).Nodes().Count() == 0)
+			while (!(n is XElement) || !((XElement)n).Nodes().Any())
 			{
 				n = n.NextNode;
 			}

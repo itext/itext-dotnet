@@ -145,7 +145,7 @@ namespace iTextSharp.Forms.Xfa
 				{
 					return true;
 				}
-			    n2 = (n2 is XmlElement ? ((XElement) n2).NextNode : null);
+			    n2 = n2.NextNode;
 			}
 			return false;
 		}
