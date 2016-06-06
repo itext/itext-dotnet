@@ -151,8 +151,8 @@ namespace iTextSharp.Layout.Renderer
 			float? wordSpacing = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
 				WORD_SPACING);
 			PdfFont font = this.GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
-			float? hScale = this.GetProperty<float>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				, 1f);
+			float? hScale = this.GetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				, (float?)1f);
 			ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(iTextSharp.Layout.Property.Property
 				.SPLIT_CHARACTERS);
 			float italicSkewAddition = true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property
@@ -182,7 +182,7 @@ namespace iTextSharp.Layout.Renderer
 			int initialLineTextPos = currentTextPos;
 			float currentLineWidth = 0;
 			int previousCharPos = -1;
-			char tabAnchorCharacter = this.GetProperty<char>(iTextSharp.Layout.Property.Property
+			char? tabAnchorCharacter = this.GetProperty<char?>(iTextSharp.Layout.Property.Property
 				.TAB_ANCHOR);
 			TextLayoutResult result = null;
 			// true in situations like "\nHello World"
@@ -507,7 +507,7 @@ namespace iTextSharp.Layout.Renderer
 				{
 					TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
 				}
-				FontKerning fontKerning = this.GetProperty<FontKerning>(iTextSharp.Layout.Property.Property
+				FontKerning? fontKerning = this.GetProperty<FontKerning?>(iTextSharp.Layout.Property.Property
 					.FONT_KERNING);
 				if (fontKerning == FontKerning.YES)
 				{
@@ -561,7 +561,7 @@ namespace iTextSharp.Layout.Renderer
 					.FONT_SIZE);
 				iTextSharp.Kernel.Color.Color fontColor = GetPropertyAsColor(iTextSharp.Layout.Property.Property
 					.FONT_COLOR);
-				int? textRenderingMode = this.GetProperty<int>(iTextSharp.Layout.Property.Property
+				int? textRenderingMode = this.GetProperty<int?>(iTextSharp.Layout.Property.Property
 					.TEXT_RENDERING_MODE);
 				float? textRise = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TEXT_RISE
 					);
@@ -569,7 +569,7 @@ namespace iTextSharp.Layout.Renderer
 					.CHARACTER_SPACING);
 				float? wordSpacing = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
 					WORD_SPACING);
-				float? horizontalScaling = this.GetProperty<float>(iTextSharp.Layout.Property.Property
+				float? horizontalScaling = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
 					.HORIZONTAL_SCALING);
 				float?[] skew = this.GetProperty<float?[]>(iTextSharp.Layout.Property.Property.SKEW
 					);

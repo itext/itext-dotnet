@@ -70,7 +70,7 @@ namespace iTextSharp.Layout.Renderer
 			maxAscent = 0;
 			maxDescent = 0;
 			int childPos = 0;
-			BaseDirection baseDirection = this.GetProperty<BaseDirection>(iTextSharp.Layout.Property.Property
+			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(iTextSharp.Layout.Property.Property
 				.BASE_DIRECTION);
 			foreach (IRenderer renderer in childRenderers)
 			{
@@ -104,7 +104,7 @@ namespace iTextSharp.Layout.Renderer
 						}
 					}
 				}
-				levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToArray(unicodeIdsLst
+				levels = TypographyUtils.GetBidiLevels((BaseDirection)baseDirection, ArrayUtil.ToArray(unicodeIdsLst
 					));
 			}
 			bool anythingPlaced = false;
