@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C0E65B6F-D2E0-4AE3-BAC2-0CD8C9F58A45}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>itextsharp.samples</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net40\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="itextsharp\samples\GenericTest.cs" />
+    <Compile Include="itextsharp\samples\sandbox\acroforms\RemoveXFA.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\itextsharp.barcodes\itextsharp.barcodes.csproj">
+      <Project>{dcae8241-e391-418d-ba36-c7c064d7c413}</Project>
+      <Name>itextsharp.barcodes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.font-asian\itextsharp.font-asian.csproj">
+      <Project>{0f10190c-7611-4378-a157-03bf2ed78e30}</Project>
+      <Name>itextsharp.font-asian</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.forms\itextsharp.forms.csproj">
+      <Project>{e2828ac4-3c63-4b2a-b5ad-5f98862775be}</Project>
+      <Name>itextsharp.forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.hyph\itextsharp.hyph.csproj">
+      <Project>{56137079-541a-425a-ab97-43af63793c97}</Project>
+      <Name>itextsharp.hyph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
+      <Project>{cee5e7e1-1bf0-4be1-9941-903262ce2f83}</Project>
+      <Name>itextsharp.io</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.kernel\itextsharp.kernel.csproj">
+      <Project>{4e7819e8-7555-4e2e-9a01-d8718a2cfdda}</Project>
+      <Name>itextsharp.kernel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.layout\itextsharp.layout.csproj">
+      <Project>{42173642-db52-44d3-9883-3e34c65c53bc}</Project>
+      <Name>itextsharp.layout</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.pdfa\itextsharp.pdfa.csproj">
+      <Project>{9fc2f0b3-a8d2-46da-8724-72e00e67a8fa}</Project>
+      <Name>itextsharp.pdfa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.pdftest\itextsharp.pdftest.csproj">
+      <Project>{f9880dc4-f015-4413-af86-66d0e9512774}</Project>
+      <Name>itextsharp.pdftest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="resources\pdfs\reportcardinitial.pdf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
