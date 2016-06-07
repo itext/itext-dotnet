@@ -212,13 +212,13 @@ namespace iTextSharp.Layout.Renderer
 			{
 				attributes.Put(PdfName.EndIndent, new PdfNumber((float)endIndent));
 			}
-			float? firstLineIndent = renderer.GetProperty<float>(iTextSharp.Layout.Property.Property
+			float? firstLineIndent = renderer.GetProperty<float?>(iTextSharp.Layout.Property.Property
 				.FIRST_LINE_INDENT);
 			if (firstLineIndent != null && firstLineIndent != 0)
 			{
 				attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
 			}
-			TextAlignment textAlignment = renderer.GetProperty<TextAlignment>(iTextSharp.Layout.Property.Property
+			TextAlignment? textAlignment = renderer.GetProperty<TextAlignment?>(iTextSharp.Layout.Property.Property
 				.TEXT_ALIGNMENT);
 			if (textAlignment != null && (!role.Equals(PdfName.TH) && !role.Equals(PdfName.TD
 				)))
@@ -253,7 +253,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 			if (role.Equals(PdfName.TH) || role.Equals(PdfName.TD))
 			{
-				HorizontalAlignment horizontalAlignment = renderer.GetProperty<HorizontalAlignment
+				HorizontalAlignment? horizontalAlignment = renderer.GetProperty<HorizontalAlignment?
 					>(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
 				if (horizontalAlignment != null)
 				{
@@ -485,7 +485,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		private static PdfName TransformTextAlignmentValueToName(TextAlignment textAlignment
+		private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment
 			)
 		{
 			//TODO set rightToLeft value according with actual text content if it is possible.
@@ -536,7 +536,7 @@ namespace iTextSharp.Layout.Renderer
 			}
 		}
 
-		private static PdfName TransformBlockAlignToName(HorizontalAlignment horizontalAlignment
+		private static PdfName TransformBlockAlignToName(HorizontalAlignment? horizontalAlignment
 			)
 		{
 			//TODO set rightToLeft value according with actual text content if it is possible.

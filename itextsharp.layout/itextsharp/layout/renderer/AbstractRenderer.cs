@@ -759,8 +759,8 @@ namespace iTextSharp.Layout.Renderer
 		protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float
 			 availableWidth)
 		{
-			HorizontalAlignment horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment
-				>(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
+			HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?
+                >(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
 			if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT)
 			{
 				float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth

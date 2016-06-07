@@ -215,7 +215,6 @@ namespace iTextSharp.Layout.Renderer
 				{
 					DeleteOwnProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT);
 				}
-				VerticalAlignment verticalAlignment = (VerticalAlignment)(Object)null;
 				CellRenderer[] currentRow = rows[row];
 				float rowHeight = 0;
 				bool split = false;
@@ -287,7 +286,7 @@ namespace iTextSharp.Layout.Renderer
 						, cellWidth, cellLayoutBoxHeight);
 					LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox
 						);
-					verticalAlignment = cell.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
+					VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(iTextSharp.Layout.Property.Property
 						.VERTICAL_ALIGNMENT);
 					cell.SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, null);
 					LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea)
@@ -359,7 +358,7 @@ namespace iTextSharp.Layout.Renderer
 											if (rows[addRow][addCol_1] != null)
 											{
 												CellRenderer addRenderer = rows[addRow][addCol_1];
-												verticalAlignment = addRenderer.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
+												verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(iTextSharp.Layout.Property.Property
 													.VERTICAL_ALIGNMENT);
 												if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM
 													))

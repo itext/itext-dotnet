@@ -71,7 +71,7 @@ namespace iTextSharp.Layout.Renderer
 			maxDescent = 0;
 			int childPos = 0;
 			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(iTextSharp.Layout.Property.Property
-				.BASE_DIRECTION);
+				.BASE_DIRECTION, BaseDirection.NO_BIDI);
 			foreach (IRenderer renderer in childRenderers)
 			{
 				if (renderer is TextRenderer)
@@ -79,9 +79,9 @@ namespace iTextSharp.Layout.Renderer
 					renderer.SetParent(this);
 					((TextRenderer)renderer).ApplyOtf();
 					renderer.SetParent(null);
-					if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
+                    if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
 					{
-						baseDirection = renderer.GetOwnProperty<BaseDirection>(iTextSharp.Layout.Property.Property
+						baseDirection = renderer.GetOwnProperty<BaseDirection?>(iTextSharp.Layout.Property.Property
 							.BASE_DIRECTION);
 					}
 				}

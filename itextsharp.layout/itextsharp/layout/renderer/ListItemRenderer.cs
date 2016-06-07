@@ -141,10 +141,11 @@ namespace iTextSharp.Layout.Renderer
 						() - symbolRenderer.GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea
 						().GetBBox().GetY());
 				}
-				ListSymbolAlignment listSymbolAlignment = parent.GetProperty<ListSymbolAlignment>
-					(iTextSharp.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT);
+				ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty
+					<ListSymbolAlignment?>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT
+					, ListSymbolAlignment.RIGHT);
 				float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
-				if (listSymbolAlignment == null || listSymbolAlignment == ListSymbolAlignment.RIGHT)
+				if (listSymbolAlignment == ListSymbolAlignment.RIGHT)
 				{
 					xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth
 						();

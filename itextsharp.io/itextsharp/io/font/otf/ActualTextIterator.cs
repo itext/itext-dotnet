@@ -13,7 +13,7 @@ namespace iTextSharp.IO.Font.Otf
 		public ActualTextIterator(GlyphLine glyphLine)
 		{
 			this.glyphLine = glyphLine;
-			this.pos = glyphLine.start - 1;
+			this.pos = glyphLine.start;
 		}
 
 		public ActualTextIterator(GlyphLine glyphLine, int start, int end)

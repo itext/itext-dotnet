@@ -67,8 +67,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
-				 null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -161,8 +161,8 @@ namespace iTextSharp.Layout.Renderer
 						processedRenderer = (LineRenderer)result.GetSplitRenderer();
 					}
 				}
-				TextAlignment textAlignment = this.GetProperty<TextAlignment>(iTextSharp.Layout.Property.Property
-					.TEXT_ALIGNMENT);
+				TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(iTextSharp.Layout.Property.Property
+					.TEXT_ALIGNMENT, TextAlignment.LEFT);
 				if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.
 					JUSTIFIED && !result.IsSplitForcedByNewline() || textAlignment == TextAlignment.
 					JUSTIFIED_ALL)
@@ -174,8 +174,7 @@ namespace iTextSharp.Layout.Renderer
 				}
 				else
 				{
-					if (textAlignment != null && textAlignment != TextAlignment.LEFT && processedRenderer
-						 != null)
+					if (textAlignment != TextAlignment.LEFT && processedRenderer != null)
 					{
 						float deltaX = availableWidth - processedRenderer.GetOccupiedArea().GetBBox().GetWidth
 							();
@@ -312,8 +311,8 @@ namespace iTextSharp.Layout.Renderer
 			}
 			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 			ApplyMargins(occupiedArea.GetBBox(), margins, true);
-			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
-				 null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))

@@ -171,7 +171,7 @@ namespace iTextSharp.Layout
 		/// <returns>the height of the element, as a floating point value.</returns>
 		public virtual float? GetHeight()
 		{
-			return this.GetProperty<float>(iTextSharp.Layout.Property.Property.HEIGHT);
+			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HEIGHT);
 		}
 
 		/// <summary>Sets the height property of the Element.</summary>
@@ -312,10 +312,10 @@ namespace iTextSharp.Layout
 		/// <summary>Sets the horizontal alignment of this Element.</summary>
 		/// <param name="horizontalAlignment">
 		/// an enum value of type
-		/// <see cref="iTextSharp.Layout.Property.HorizontalAlignment"/>
+		/// <see cref="iTextSharp.Layout.Property.HorizontalAlignment?"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetHorizontalAlignment(HorizontalAlignment horizontalAlignment)
+		public virtual T SetHorizontalAlignment(HorizontalAlignment? horizontalAlignment)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT, horizontalAlignment
 				);
@@ -359,10 +359,10 @@ namespace iTextSharp.Layout
 		/// <summary>Sets the text alignment of this Element.</summary>
 		/// <param name="alignment">
 		/// an enum value of type
-		/// <see cref="iTextSharp.Layout.Property.TextAlignment"/>
+		/// <see cref="iTextSharp.Layout.Property.TextAlignment?"/>
 		/// </param>
 		/// <returns>this Element.</returns>
-		public virtual T SetTextAlignment(TextAlignment alignment)
+		public virtual T SetTextAlignment(TextAlignment? alignment)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.TEXT_ALIGNMENT, alignment);
 			return (T)(Object)this;
@@ -541,7 +541,7 @@ namespace iTextSharp.Layout
 		/// 	/>
 		public virtual int? GetTextRenderingMode()
 		{
-			return this.GetProperty<int>(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
+			return this.GetProperty<int?>(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE
 				);
 		}
 
@@ -594,7 +594,7 @@ namespace iTextSharp.Layout
 		/// <returns>the current stroke width</returns>
 		public virtual float? GetStrokeWidth()
 		{
-			return this.GetProperty<float>(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
+			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
 		}
 
 		/// <summary>Sets the stroke width for the current element.</summary>

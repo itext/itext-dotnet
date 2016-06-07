@@ -507,8 +507,8 @@ namespace iTextSharp.Layout.Renderer
 				{
 					TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
 				}
-				FontKerning? fontKerning = this.GetProperty<FontKerning?>(iTextSharp.Layout.Property.Property
-					.FONT_KERNING);
+				FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(iTextSharp.Layout.Property.Property
+					.FONT_KERNING, FontKerning.NO);
 				if (fontKerning == FontKerning.YES)
 				{
 					TypographyUtils.ApplyKerning(font.GetFontProgram(), text);

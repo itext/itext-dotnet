@@ -75,9 +75,9 @@ namespace iTextSharp.Layout.Element
 		/// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
 		/// <param name="areaBreakType">
 		/// an
-		/// <see cref="iTextSharp.Layout.Property.AreaBreakType">area break type</see>
+		/// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
 		/// </param>
-		public AreaBreak(AreaBreakType areaBreakType)
+		public AreaBreak(AreaBreakType? areaBreakType)
 		{
 			SetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE, areaBreakType);
 		}
@@ -119,12 +119,12 @@ namespace iTextSharp.Layout.Element
 		/// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
 		/// <returns>
 		/// the current
-		/// <see cref="iTextSharp.Layout.Property.AreaBreakType">area break type</see>
+		/// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
 		/// </returns>
-		public virtual AreaBreakType GetAreaType()
+		public virtual AreaBreakType? GetAreaType()
 		{
-			return ((AreaBreakType)this.GetProperty<AreaBreakType>(iTextSharp.Layout.Property.Property
-				.AREA_BREAK_TYPE));
+			return this.GetProperty<AreaBreakType?>(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
+				);
 		}
 
 		protected internal override IRenderer MakeNewRenderer()

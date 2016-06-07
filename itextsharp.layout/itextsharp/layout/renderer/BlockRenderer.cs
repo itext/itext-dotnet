@@ -65,8 +65,8 @@ namespace iTextSharp.Layout.Renderer
 		{
 			int pageNumber = layoutContext.GetArea().GetPageNumber();
 			Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
-				 null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
 					.INF);
@@ -136,7 +136,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							childRenderers[childPos] = result.GetSplitRenderer();
 							// TODO linkedList would make it faster
-							childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
+							childRenderers.Insert(childPos + 1, result.GetOverflowRenderer());
 						}
 						else
 						{
@@ -174,7 +174,7 @@ namespace iTextSharp.Layout.Renderer
 							else
 							{
 								childRenderers[childPos] = result.GetSplitRenderer();
-								childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
+								childRenderers.Insert(childPos + 1, result.GetOverflowRenderer());
 								layoutBox = areas[++currentAreaPos].Clone();
 								break;
 							}
@@ -250,8 +250,8 @@ namespace iTextSharp.Layout.Renderer
 			}
 			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 			ApplyMargins(occupiedArea.GetBBox(), margins, true);
-			if (this.GetProperty<float>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) !=
-				 null)
+			if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
+				!= null)
 			{
 				ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
 				if (IsNotFittingHeight(layoutContext.GetArea()))
@@ -349,7 +349,7 @@ namespace iTextSharp.Layout.Renderer
 		public override Rectangle GetOccupiedAreaBBox()
 		{
 			Rectangle bBox = occupiedArea.GetBBox().Clone();
-			float? rotationAngle = this.GetProperty<float>(iTextSharp.Layout.Property.Property
+			float? rotationAngle = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
 				.ROTATION_ANGLE);
 			if (rotationAngle != null)
 			{
@@ -363,7 +363,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyVerticalAlignment()
 		{
-			VerticalAlignment verticalAlignment = this.GetProperty<VerticalAlignment>(iTextSharp.Layout.Property.Property
+			VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(iTextSharp.Layout.Property.Property
 				.VERTICAL_ALIGNMENT);
 			if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers
 				.Count > 0)

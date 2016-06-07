@@ -93,8 +93,7 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
 		public virtual float? GetTextRise()
 		{
-			return ((float?)this.GetProperty<float>(iTextSharp.Layout.Property.Property.TEXT_RISE
-				));
+			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE);
 		}
 
 		/// <summary>Sets the text rise.</summary>
@@ -113,8 +112,8 @@ namespace iTextSharp.Layout.Element
 		/// <returns>the horizontal spacing, as a <code>float</code></returns>
 		public virtual float? GetHorizontalScaling()
 		{
-			return ((float?)this.GetProperty<float>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				));
+			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+				);
 		}
 
 		/// <summary>Skews the text to simulate italic and other effects.</summary>
