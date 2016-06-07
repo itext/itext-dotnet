@@ -466,6 +466,7 @@ namespace iTextSharp.Forms.Xfa
             XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
             xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
             XmlReader reader = XmlReader.Create(@is, new XmlReaderSettings(), new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+            
             FillXfaForm(reader, readOnly);
 		}
 
@@ -505,7 +506,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
 		public virtual void FillXfaForm(XmlReader @is, bool readOnly) {
-		    FillXfaForm(XDocument.Load(@is), readOnly);
+		    FillXfaForm(XDocument.Load(@is, LoadOptions.PreserveWhitespace), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -610,7 +611,8 @@ namespace iTextSharp.Forms.Xfa
             MemoryStream fout = new MemoryStream();
 		    if (n != null) {
 		        XmlWriterSettings settings = new XmlWriterSettings {
-		            Encoding = new UpperCaseUTF8Encoding(false)
+		            Encoding = new UpperCaseUTF8Encoding(false),
+                    OmitXmlDeclaration = true
                 };
 		        XmlWriter writer = XmlTextWriter.Create(fout, settings);
                 n.WriteTo(writer);
