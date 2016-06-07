@@ -1204,7 +1204,7 @@ namespace iTextSharp.Layout.Renderer
 					{
 						horizontalBorders.Add(new List<iTextSharp.Layout.Border.Border>());
 					}
-					horizontalBorders[row].Insert(colN + i_1, cellBorders[2]);
+					horizontalBorders[row].Add(colN + i_1, cellBorders[2]);
 				}
 			}
 			if (rowspan > 1)
@@ -1312,7 +1312,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				for (int count = borders.Count; count <= j; count++)
 				{
-					borders.Insert(count, null);
+					borders.Add(count, null);
 				}
 			}
 			iTextSharp.Layout.Border.Border neighbour = borders[j];

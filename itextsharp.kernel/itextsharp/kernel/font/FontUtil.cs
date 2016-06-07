@@ -95,7 +95,7 @@ namespace iTextSharp.Kernel.Font
 			}
 			lock (uniMaps)
 			{
-				if (uniMaps.ContainsKey(uniMap))
+				if (uniMaps.Contains(uniMap))
 				{
 					return uniMaps.Get(uniMap);
 				}
