@@ -612,7 +612,7 @@ namespace iTextSharp.Forms.Xfa
 		    if (n != null) {
 		        XmlWriterSettings settings = new XmlWriterSettings {
 		            Encoding = new UpperCaseUTF8Encoding(false),
-                    OmitXmlDeclaration = true
+                    OmitXmlDeclaration = !(n is XDocument)
                 };
 		        XmlWriter writer = XmlTextWriter.Create(fout, settings);
                 n.WriteTo(writer);
