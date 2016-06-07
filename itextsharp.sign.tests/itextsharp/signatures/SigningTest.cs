@@ -71,18 +71,11 @@ namespace iTextSharp.Signatures
 			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
 				.CADES, "Test 1", "TestCity", rect, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
-				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_75()));
-		}
-
-		private sealed class _Dictionary_75 : Dictionary<int?, IList<Rectangle>>
-		{
-			public _Dictionary_75()
-			{
-				{
-					this[1] = iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 690, 155, 15
-						));
-				}
-			}
+				 + "cmp_" + fileName, destinationFolder, "diff_", 
+                 new Dictionary<int, IList<Rectangle>>{ {1 , IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 690, 155, 15
+                        ))}
+            }
+		));
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -99,18 +92,8 @@ namespace iTextSharp.Signatures
 			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
 				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
-				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_92()));
-		}
-
-		private sealed class _Dictionary_92 : Dictionary<int?, IList<Rectangle>>
-		{
-			public _Dictionary_92()
-			{
-				{
-					this[1] = iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15
-						));
-				}
-			}
+				 + "cmp_" + fileName, destinationFolder, "diff_", 
+                 new Dictionary<int, IList<Rectangle>>{ {1 , IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15))}}));
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -127,18 +110,8 @@ namespace iTextSharp.Signatures
 			Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
 				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
-				 + "cmp_" + fileName, destinationFolder, "diff_", new _Dictionary_109()));
-		}
-
-		private sealed class _Dictionary_109 : Dictionary<int?, IList<Rectangle>>
-		{
-			public _Dictionary_109()
-			{
-				{
-					this[1] = iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15
-						));
-				}
-			}
+				 + "cmp_" + fileName, destinationFolder, "diff_",
+                 new Dictionary<int, IList<Rectangle>> { { 1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15)) } }));
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
