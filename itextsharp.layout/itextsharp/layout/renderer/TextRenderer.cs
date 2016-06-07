@@ -226,7 +226,7 @@ namespace iTextSharp.Layout.Renderer
 						())
 					{
 						tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
-						tabAnchorCharacter = (char)(Object)null;
+						tabAnchorCharacter = (char?)null;
 					}
 					float glyphWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, 
 						wordSpacing) / TEXT_SPACE_COEFF;
