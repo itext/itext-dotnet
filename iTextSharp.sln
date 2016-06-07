@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.font-asian", "it
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.samples", "itextsharp.samples\itextsharp.samples.csproj", "{C0E65B6F-D2E0-4AE3-BAC2-0CD8C9F58A45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itextsharp.profiling", "itextsharp.profiling\itextsharp.profiling.csproj", "{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,10 @@ Global
 		{C0E65B6F-D2E0-4AE3-BAC2-0CD8C9F58A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0E65B6F-D2E0-4AE3-BAC2-0CD8C9F58A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0E65B6F-D2E0-4AE3-BAC2-0CD8C9F58A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
