@@ -242,9 +242,8 @@ namespace iTextSharp.Kernel.Utils
 			return cmpName.Equals(outName);
 		}
 
-		public virtual bool CompareNumbers(PdfNumber outNumber, PdfNumber cmpNumber)
-		{
-			return cmpNumber.GetValue() == outNumber.GetValue();
+		public virtual bool CompareNumbers(PdfNumber outNumber, PdfNumber cmpNumber) {
+			return 0 == cmpNumber.GetValue().CompareTo(outNumber.GetValue());
 		}
 
 		public virtual bool CompareStrings(PdfString outString, PdfString cmpString)
@@ -1366,7 +1365,7 @@ namespace iTextSharp.Kernel.Utils
 		private bool CompareNumbersExtended(PdfNumber outNumber, PdfNumber cmpNumber, CompareTool.ObjectPath
 			 currentPath, CompareTool.CompareResult compareResult)
 		{
-			if (cmpNumber.GetValue() == outNumber.GetValue())
+			if (0 == cmpNumber.GetValue().CompareTo(outNumber.GetValue()))
 			{
 				return true;
 			}
