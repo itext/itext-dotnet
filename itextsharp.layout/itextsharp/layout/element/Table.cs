@@ -687,14 +687,19 @@ namespace iTextSharp.Layout.Element
 			}
 			int firstRow = lastAddedRowGroups[0].startRow;
 			int lastRow = lastAddedRowGroups[lastAddedRowGroups.Count - 1].finishRow;
-			for (IEnumerator<IElement> iterator = childElements.GetEnumerator(); iterator.MoveNext
+			List<IElement> toRemove = new List<IElement>();
+            for (IEnumerator<IElement> iterator = childElements.GetEnumerator(); iterator.MoveNext
 				(); )
 			{
 				IElement cell = iterator.Current;
 				if (((Cell)cell).GetRow() >= firstRow && ((Cell)cell).GetRow() <= lastRow) {
-				    childElements.Remove(cell);
+				    toRemove.Add(cell);
 				}
 			}
+            foreach (IElement cell in toRemove)
+		    {
+		        childElements.Remove(cell);
+		    }
 			for (int i = 0; i <= lastRow - firstRow; i++)
 			{
 				rows.JRemoveAt(firstRow - rowWindowStart);
