@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using  Org.BouncyCastle.Asn1;
@@ -210,11 +211,10 @@ namespace iTextSharp.Signatures
 				version = ((DerInteger)content.GetObjectAt(0)).Value.IntValue;
 				// the digestAlgorithms
 				digestalgos = new HashSet<String>();
-				IEnumerator<Asn1Sequence> e_1 = (IEnumerator<Asn1Sequence>)((Asn1Set)content.GetObjectAt
-					(1)).GetObjects();
+				IEnumerator e_1 = ((Asn1Set)content.GetObjectAt(1)).GetObjects();
 				while (e_1.MoveNext())
 				{
-					Asn1Sequence s = e_1.Current;
+					Asn1Sequence s = (Asn1Sequence)e_1.Current;
 					DerObjectIdentifier o = (DerObjectIdentifier)s.GetObjectAt(0);
 					digestalgos.Add(o.Id);
 				}
@@ -513,7 +513,7 @@ namespace iTextSharp.Signatures
 		public virtual DateTime GetSignDate()
 		{
 			DateTime dt = GetTimeStampDate();
-			if (dt == null)
+			if (dt == SignUtils.UNDEFINED_TIMESTAMP_DATE)
 			{
 				return this.signDate;
 			}

@@ -27,20 +27,20 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 
         public static readonly string EXAMPLE3 = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/step_6_signed_by_dave_broken_by_chuck.pdf";
 
-	    public const String expectedOutput = "===== sig =====\n" + "Signature covers whole document: false\n"
-			 + "Document revision: 1 of 2\n" + "Integrity check OK? true\n" + "\n" + "===== sig1 =====\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 1 of 4\n" + 
-			"Integrity check OK? true\n" + "===== sig2 =====\n" + "Signature covers whole document: false\n"
-			 + "Document revision: 2 of 4\n" + "Integrity check OK? true\n" + "===== sig3 =====\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 3 of 4\n" + 
-			"Integrity check OK? true\n" + "===== sig4 =====\n" + "Signature covers whole document: true\n"
-			 + "Document revision: 4 of 4\n" + "Integrity check OK? true\n" + "\n" + "===== sig1 =====\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 1 of 5\n" + 
-			"Integrity check OK? true\n" + "===== sig2 =====\n" + "Signature covers whole document: false\n"
-			 + "Document revision: 2 of 5\n" + "Integrity check OK? true\n" + "===== sig3 =====\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 3 of 5\n" + 
-			"Integrity check OK? true\n" + "===== sig4 =====\n" + "Signature covers whole document: false\n"
-			 + "Document revision: 4 of 5\n" + "Integrity check OK? true\n" + "\n";
+	    public const String expectedOutput = "===== sig =====\r\n" + "Signature covers whole document: False\r\n"
+			 + "Document revision: 1 of 2\r\n" + "Integrity check OK? True\r\n" + "\r\n" + "===== sig1 =====\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 1 of 4\r\n" + 
+			"Integrity check OK? True\r\n" + "===== sig2 =====\r\n" + "Signature covers whole document: False\r\n"
+			 + "Document revision: 2 of 4\r\n" + "Integrity check OK? True\r\n" + "===== sig3 =====\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 3 of 4\r\n" + 
+			"Integrity check OK? True\r\n" + "===== sig4 =====\r\n" + "Signature covers whole document: True\r\n"
+			 + "Document revision: 4 of 4\r\n" + "Integrity check OK? True\r\n" + "\r\n" + "===== sig1 =====\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 1 of 5\r\n" + 
+			"Integrity check OK? True\r\n" + "===== sig2 =====\r\n" + "Signature covers whole document: False\r\n"
+			 + "Document revision: 2 of 5\r\n" + "Integrity check OK? True\r\n" + "===== sig3 =====\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 3 of 5\r\n" + 
+			"Integrity check OK? True\r\n" + "===== sig4 =====\r\n" + "Signature covers whole document: False\r\n"
+			 + "Document revision: 4 of 5\r\n" + "Integrity check OK? True\r\n" + "\r\n";
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		/// <exception cref="System.IO.IOException"/>

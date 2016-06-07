@@ -164,7 +164,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
 		public virtual void RunTest() {
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_10_SequentialSignatures.Main(null);
 		}
 		//

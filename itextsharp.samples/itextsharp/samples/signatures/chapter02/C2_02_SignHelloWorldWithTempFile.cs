@@ -85,7 +85,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
             C2_02_SignHelloWorldWithTempFile.Main(null);
 			String[] resultFiles = new String[] { "hello_signed_with_temp.pdf" };
 			String destPath = String.Format(outPath, "chapter02");

@@ -32,18 +32,18 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 
         public static readonly string EXAMPLE3 = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/hello_signed1.pdf";
 
-	    public const String expectedOutput = "===== sig =====\n" + "Signature covers whole document: true\n"
-			 + "Document revision: 1 of 1\n" + "Integrity check OK? true\n" + "Certificates verified against the KeyStore\n"
-			 + "=== Certificate 0 ===\n" + "Issuer: C=BE,ST=OVL,L=Ghent,O=iText Software,OU=IT,CN=Bruno Specimen\n"
-			 + "Subject: C=BE,ST=OVL,L=Ghent,O=iText Software,OU=IT,CN=Bruno Specimen\n" + "Valid from: 2012-08-04\n"
-			 + "Valid to: 2112-07-11\n" + "The certificate was valid at the time of signing.\n"
-			 + "The certificate is still valid.\n" + "=== Checking validity of the document at the time of signing ===\n"
-			 + " [main] INFO  com.itextpdf.signatures.OCSPVerifier - Valid OCSPs found: 0\n"
-			 + " [main] INFO  com.itextpdf.signatures.CRLVerifier - Valid CRLs found: 0\n" +
-			 "The signing certificate couldn't be verified\n" + "=== Checking validity of the document today ===\n"
-			 + " [main] INFO  com.itextpdf.signatures.OCSPVerifier - Valid OCSPs found: 0\n"
-			 + " [main] INFO  com.itextpdf.signatures.CRLVerifier - Valid CRLs found: 0\n" +
-			 "The signing certificate couldn't be verified\n" + "\n";
+	    public const String expectedOutput = "===== sig =====\r\n" + "Signature covers whole document: True\r\n"
+			 + "Document revision: 1 of 1\r\n" + "Integrity check OK? True\r\n" + "Certificates verified against the KeyStore\r\n"
+			 + "=== Certificate 0 ===\r\n" + "Issuer: C=BE,ST=OVL,L=Ghent,O=iText Software,OU=IT,CN=Bruno Specimen\r\n"
+			 + "Subject: C=BE,ST=OVL,L=Ghent,O=iText Software,OU=IT,CN=Bruno Specimen\r\n" + "Valid from: 2012-08-04\r\n"
+			 + "Valid to: 2112-07-11\r\n" + "The certificate was valid at the time of signing.\r\n"
+			 + "The certificate is still valid.\r\n" + "=== Checking validity of the document at the time of signing ===\r\n"
+//			 + " [main] INFO  com.itextpdf.signatures.OCSPVerifier - Valid OCSPs found: 0\r\n"
+//			 + " [main] INFO  com.itextpdf.signatures.CRLVerifier - Valid CRLs found: 0\r\n"
+			 + "The signing certificate couldn't be verified\r\n" + "=== Checking validity of the document today ===\r\n"
+//			 + " [main] INFO  com.itextpdf.signatures.OCSPVerifier - Valid OCSPs found: 0\r\n"
+//			 + " [main] INFO  com.itextpdf.signatures.CRLVerifier - Valid CRLs found: 0\r\n"
+			 + "The signing certificate couldn't be verified\r\n" + "\r\n";
 
         internal List<X509Certificate> ks;
 
@@ -131,9 +131,9 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 		{
 			System.Console.Out.WriteLine("Issuer: " + cert.IssuerDN);
 			System.Console.Out.WriteLine("Subject: " + cert.SubjectDN);
-		    System.Console.Out.WriteLine("Valid from: " + (cert.NotBefore.ToString("yyyy-MM-dd")));
-				
-			System.Console.Out.WriteLine("Valid to: " + cert.NotAfter.ToString("yyyy-MM-dd"));
+		    System.Console.Out.WriteLine("Valid from: " + (cert.NotBefore.ToLocalTime().ToString("yyyy-MM-dd")));
+
+            System.Console.Out.WriteLine("Valid to: " + cert.NotAfter.ToLocalTime().ToString("yyyy-MM-dd"));
 			try
 			{
 				cert.CheckValidity(signDate);

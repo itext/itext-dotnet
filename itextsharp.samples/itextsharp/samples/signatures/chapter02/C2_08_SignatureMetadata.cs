@@ -112,7 +112,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_08_SignatureMetadata.Main(null);
 			String[] resultFiles = new String[] { "field_metadata.pdf" };
 			String destPath = String.Format(outPath, "chapter02");

@@ -19,6 +19,7 @@ using Org.BouncyCastle.X509;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Signatures;
+using NUnit.Framework;
 using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Samples.Signatures.Chapter03
@@ -66,9 +67,10 @@ namespace iTextSharp.Samples.Signatures.Chapter03
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
+        [Ignore("Ignored in java version: \"This test takes over 24 minutes to run\"")]
 		public override void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
 			C3_04_SignWithCRLOnline.Main(null);
 			String[] resultFiles = new String[] { "hello_cacert_crl.pdf" };
 			String destPath = String.Format(outPath, "chapter03");

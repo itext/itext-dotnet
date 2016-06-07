@@ -23,6 +23,7 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Layout;
 using iTextSharp.Layout.Property;
 using iTextSharp.Signatures;
+using NUnit.Framework;
 using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Samples.Signatures.Chapter02
@@ -180,8 +181,9 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
+        [Ignore("DEVSIX-488")]
 		public virtual void RunTest() {
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_09_SignatureTypes.Main(null);
 			String[] resultFiles = new String[] { "hello_level_1.pdf", "hello_level_2.pdf", "hello_level_3.pdf"
 				, "hello_level_4.pdf", "hello_level_2_annotated.pdf", "hello_level_3_annotated.pdf"

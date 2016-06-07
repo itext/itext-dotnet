@@ -80,7 +80,7 @@ namespace iTextSharp.Samples.Signatures.Chapter03
 		[NUnit.Framework.Test]
 		public override void RunTest()
         {
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
 			C3_05_SignWithCRLOffline.Main(null);
 			String[] resultFiles = new String[] { "hello_cacert_crl_offline.pdf" };
 			String destPath = String.Format(outPath, "chapter03");

@@ -109,7 +109,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_07_SignatureAppearances.Main(null);
 			String[] resultFiles = new String[] { "signature_appearance_1.pdf", "signature_appearance_2.pdf"
 				, "signature_appearance_3.pdf", "signature_appearance_4.pdf" };

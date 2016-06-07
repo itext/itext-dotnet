@@ -27,6 +27,7 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Renderer;
 using iTextSharp.Samples.Signatures;
 using iTextSharp.Signatures;
+using NUnit.Framework;
 using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Samples.Signatures.Chapter02
@@ -47,7 +48,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 
 	    public static readonly char[] PASSWORD = "password".ToCharArray();
 
-        public static readonly string DEST = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/step%s_signed_by_%s.pdf";
+        public static readonly string DEST = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/step{0}_signed_by_{1}.pdf";
 
 	    /// <exception cref="System.IO.IOException"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -280,9 +281,10 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
+        [Ignore("DEVSIX-488")]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_11_SignatureWorkflow.Main(null);
 			String[] resultFiles = new String[] { "step1_signed_by_alice.pdf", "step2_signed_by_alice_and_filled_out_by_bob.pdf"
 				, "step3_signed_by_alice_and_bob.pdf", "step4_signed_by_alice_and_bob_filled_out_by_carol.pdf"

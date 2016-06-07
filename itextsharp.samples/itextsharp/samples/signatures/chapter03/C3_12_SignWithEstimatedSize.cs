@@ -19,6 +19,7 @@ using Org.BouncyCastle.X509;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Signatures;
+using NUnit.Framework;
 using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Samples.Signatures.Chapter03
@@ -87,9 +88,10 @@ namespace iTextSharp.Samples.Signatures.Chapter03
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
+        [Ignore("Put property file with valid data")]
 		public override void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
 			SetupSystemOutput();
 			C3_12_SignWithEstimatedSize.Main(null);
 			String sysOut = GetSystemOutput();

@@ -90,7 +90,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_03_SignEmptyField.Main(null);
 			String[] resultFiles = new String[] { "field_signed1.pdf", "field_signed2.pdf", "field_signed3.pdf"
 				, "field_signed4.pdf" };

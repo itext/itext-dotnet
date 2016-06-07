@@ -32,45 +32,45 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 
         public static readonly string EXAMPLE6 = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/field_metadata.pdf";
 
-	    public const String expectedOutput = "===== sig1 =====\n" + "\n" + "Field on page 1; llx: 36.0, lly: 728.02, urx: 559.0; ury: 779.02\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 1 of 4\n" + 
-			"Integrity check OK? true\n" + "Digest algorithm: SHA256\n" + "Encryption algorithm: RSA\n"
-			 + "Filter subtype: /adbe.pkcs7.detached\n" + "Name of the signer: Alice Specimen\n"
-			 + "Signed on: 2016-02-23\n" + "Location: \n" + "Reason: \n" + "Contact info: \n"
-			 + "Signature type: certification\n" + "Filling out fields allowed: true\n" + "Adding annotations allowed: false\n"
-			 + "===== sig2 =====\n" + "\n" + "\n" + "\n" + "Field on page 1; llx: 36.0, lly: 629.04, urx: 559.0; ury: 680.04\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 2 of 4\n" + 
-			"Integrity check OK? true\n" + "Digest algorithm: SHA256\n" + "Encryption algorithm: RSA\n"
-			 + "Filter subtype: /adbe.pkcs7.detached\n" + "Name of the signer: Bob Specimen\n"
-			 + "Signed on: 2016-02-23\n" + "Location: \n" + "Reason: \n" + "Contact info: \n"
-			 + "Signature type: approval\n" + "Filling out fields allowed: true\n" + "Adding annotations allowed: false\n"
-			 + "Lock: /Include[sig1 approved_bob sig2 ]\n" + "===== sig3 =====\n" + "\n" + "\n"
-			 + "\n" + "\n" + "\n" + "Field on page 1; llx: 36.0, lly: 530.05, urx: 559.0; ury: 581.05\n"
-			 + "Signature covers whole document: false\n" + "Document revision: 3 of 4\n" + 
-			"Integrity check OK? true\n" + "Digest algorithm: SHA256\n" + "Encryption algorithm: RSA\n"
-			 + "Filter subtype: /adbe.pkcs7.detached\n" + "Name of the signer: Carol Specimen\n"
-			 + "Signed on: 2016-02-23\n" + "Location: \n" + "Reason: \n" + "Contact info: \n"
-			 + "Signature type: approval\n" + "Filling out fields allowed: true\n" + "Adding annotations allowed: false\n"
-			 + "Lock: /Include[sig1 approved_bob sig2 ]\n" + "Lock: /Exclude[approved_dave sig4 ]\n"
-			 + "===== sig4 =====\n" + "\n" + "\n" + "\n" + "\n" + "\n" + "\n" + "\n" + "Field on page 1; llx: 36.0, lly: 431.07, urx: 559.0; ury: 482.07\n"
-			 + "Signature covers whole document: true\n" + "Document revision: 4 of 4\n" + "Integrity check OK? true\n"
-			 + "Digest algorithm: SHA256\n" + "Encryption algorithm: RSA\n" + "Filter subtype: /adbe.pkcs7.detached\n"
-			 + "Name of the signer: Dave Specimen\n" + "Signed on: 2016-02-23\n" + "Location: \n"
-			 + "Reason: \n" + "Contact info: \n" + "Signature type: approval\n" + "Filling out fields allowed: false\n"
-			 + "Adding annotations allowed: false\n" + "Lock: /Include[sig1 approved_bob sig2 ]\n"
-			 + "Lock: /Exclude[approved_dave sig4 ]\n" + "\n" + "===== sig =====\n" + "\n" +
-			 "Field on page 1; llx: 36.0, lly: 648.0, urx: 236.0; ury: 748.0\n" + "Signature covers whole document: true\n"
-			 + "Document revision: 1 of 1\n" + "Integrity check OK? true\n" + "Digest algorithm: RIPEMD160\n"
-			 + "Encryption algorithm: RSA\n" + "Filter subtype: /ETSI.CAdES.detached\n" + "Name of the signer: Bruno Specimen\n"
-			 + "Signed on: 2016-02-23\n" + "Location: Ghent\n" + "Reason: Test 4\n" + "Contact info: \n"
-			 + "Signature type: approval\n" + "Filling out fields allowed: true\n" + "Adding annotations allowed: true\n"
-			 + "\n" + "===== Signature1 =====\n" + "\n" + "Field on page 1; llx: 46.0674, lly: 472.172, urx: 332.563; ury: 726.831\n"
-			 + "Signature covers whole document: true\n" + "Document revision: 1 of 1\n" + "Integrity check OK? true\n"
-			 + "Digest algorithm: SHA256\n" + "Encryption algorithm: RSA\n" + "Filter subtype: /adbe.pkcs7.detached\n"
-			 + "Name of the signer: Bruno Specimen\n" + "Alternative name of the signer: Bruno L. Specimen\n"
-			 + "Signed on: 2016-02-23\n" + "Location: Ghent\n" + "Reason: Test metadata\n" +
-			 "Contact info: 555 123 456\n" + "Signature type: approval\n" + "Filling out fields allowed: true\n"
-			 + "Adding annotations allowed: true\n" + "\n";
+	    public const String expectedOutput = "===== sig1 =====\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 728,02, urx: 559; ury: 779,02\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 1 of 4\r\n" + 
+			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
+			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Alice Specimen\r\n"
+			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
+			 + "Signature type: certification\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
+			 + "===== sig2 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 629,04, urx: 559; ury: 680,04\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 2 of 4\r\n" + 
+			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
+			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Bob Specimen\r\n"
+			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
+			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
+			 + "Lock: /Include[sig1 approved_bob sig2 ]\r\n" + "===== sig3 =====\r\n" + "\r\n" + "\r\n"
+			 + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 530,05, urx: 559; ury: 581,05\r\n"
+			 + "Signature covers whole document: False\r\n" + "Document revision: 3 of 4\r\n" + 
+			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
+			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Carol Specimen\r\n"
+			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
+			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
+			 + "Lock: /Include[sig1 approved_bob sig2 ]\r\n" + "Lock: /Exclude[approved_dave sig4 ]\r\n"
+			 + "===== sig4 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 431,07, urx: 559; ury: 482,07\r\n"
+			 + "Signature covers whole document: True\r\n" + "Document revision: 4 of 4\r\n" + "Integrity check OK? True\r\n"
+			 + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n" + "Filter subtype: /adbe.pkcs7.detached\r\n"
+			 + "Name of the signer: Dave Specimen\r\n" + "Signed on: 2016-02-23\r\n" + "Location: \r\n"
+			 + "Reason: \r\n" + "Contact info: \r\n" + "Signature type: approval\r\n" + "Filling out fields allowed: False\r\n"
+			 + "Adding annotations allowed: False\r\n" + "Lock: /Include[sig1 approved_bob sig2 ]\r\n"
+			 + "Lock: /Exclude[approved_dave sig4 ]\r\n" + "\r\n" + "===== sig =====\r\n" + "\r\n" +
+			 "Field on page 1; llx: 36, lly: 648, urx: 236; ury: 748\r\n" + "Signature covers whole document: True\r\n"
+			 + "Document revision: 1 of 1\r\n" + "Integrity check OK? True\r\n" + "Digest algorithm: RIPEMD160\r\n"
+			 + "Encryption algorithm: RSA\r\n" + "Filter subtype: /ETSI.CAdES.detached\r\n" + "Name of the signer: Bruno Specimen\r\n"
+			 + "Signed on: 2016-02-23\r\n" + "Location: Ghent\r\n" + "Reason: Test 4\r\n" + "Contact info: \r\n"
+			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: True\r\n"
+			 + "\r\n" + "===== Signature1 =====\r\n" + "\r\n" + "Field on page 1; llx: 46,0674, lly: 472,172, urx: 332,563; ury: 726,831\r\n"
+			 + "Signature covers whole document: True\r\n" + "Document revision: 1 of 1\r\n" + "Integrity check OK? True\r\n"
+			 + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n" + "Filter subtype: /adbe.pkcs7.detached\r\n"
+			 + "Name of the signer: Bruno Specimen\r\n" + "Alternative name of the signer: Bruno L. Specimen\r\n"
+			 + "Signed on: 2016-02-23\r\n" + "Location: Ghent\r\n" + "Reason: Test metadata\r\n" +
+			 "Contact info: 555 123 456\r\n" + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n"
+			 + "Adding annotations allowed: True\r\n" + "\r\n";
 
 		// public static final String EXAMPLE2 = "results/chapter3/hello_cacert_ocsp_ts.pdf";
 		// public static final String EXAMPLE3 = "results/chapter3/hello_token.pdf";
@@ -105,7 +105,7 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 				}
 				else
 				{
-					System.Console.Out.WriteLine(String.Format("Field on page %s; llx: %s, lly: %s, urx: %s; ury: %s"
+					System.Console.Out.WriteLine(String.Format("Field on page {0}; llx: {1}, lly: {2}, urx: {3}; ury: {4}"
 						, pageNum, pos.GetLeft(), pos.GetBottom(), pos.GetRight(), pos.GetTop()));
 				}
 			}
@@ -123,7 +123,7 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 					());
 			}
             System.Console.Out.WriteLine("Signed on: " + pkcs7.GetSignDate().ToUniversalTime().ToString("yyyy-MM-dd"));
-			if (pkcs7.GetTimeStampDate() != null)
+			if (pkcs7.GetTimeStampDate() != DateTime.MaxValue)
 			{
                 System.Console.Out.WriteLine("TimeStamp: " + pkcs7.GetTimeStampDate().ToUniversalTime().ToString("yyyy-MM-dd"));
 				TimeStampToken ts = pkcs7.GetTimeStampToken();

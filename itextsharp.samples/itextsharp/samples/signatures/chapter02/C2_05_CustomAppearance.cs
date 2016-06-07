@@ -103,7 +103,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_05_CustomAppearance.Main(null);
 			String[] resultFiles = new String[] { "signature_custom.pdf" };
 			String destPath = String.Format(outPath, "chapter02");

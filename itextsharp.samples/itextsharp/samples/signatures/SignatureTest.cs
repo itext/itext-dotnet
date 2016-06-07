@@ -22,19 +22,19 @@ using Org.BouncyCastle.Security.Certificates;
 
 namespace iTextSharp.Samples.Signatures
 {
-	public class SignatureTest : ExtendedITextTest
+	public class SignatureTest
 	{
-		public const String ADOBE = "./src/test/resources/encryption/adobeRootCA.cer";
+	    public static readonly string ADOBE = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/encryption/adobeRootCA.cer";
 
-		public const String CACERT = "./src/test/resources/encryption/CACertSigningAuthority.crt";
+	    public static readonly string CACERT = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/encryption/CACertSigningAuthority.crt";
 
-		public const String BRUNO = "./src/test/resources/encryption/bruno.crt";
+	    public static readonly string BRUNO = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/encryption/bruno.crt";
 
-		public const String cmpPath = "./src/test/resources/signatures/%s/";
+	    public static readonly string cmpPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/signatures/{0}/";
 
-		public const String outPath = "./target/test/resources/signatures/%s/";
+	    public static readonly string outPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/{0}/";
 
-		private String errorMessage;
+	    private String errorMessage;
 
 		private TextWriter oldSysOut;
 
@@ -52,7 +52,10 @@ namespace iTextSharp.Samples.Signatures
 		{
 			System.Console.Out.Flush();
             System.Console.SetOut(oldSysOut);
-			return output.ToString();
+
+            output.Position = 0;
+            var sr = new StreamReader(output);
+            return sr.ReadToEnd();
 		}
 
 		/// <exception cref="System.Exception"/>
@@ -64,8 +67,7 @@ namespace iTextSharp.Samples.Signatures
 			errorMessage = null;
 			//compares documents visually
 			CompareTool ct = new CompareTool();
-			String comparisonResult = ct.CompareVisually(outFile, cmpFile, destPath, "diff", 
-				ignoredAreas);
+			String comparisonResult = ct.CompareVisually(outFile, cmpFile, destPath, "diff", ignoredAreas);
 			AddError(comparisonResult);
 			//verifies document signatures
 			VerifySignaturesForDocument(outFile);
@@ -124,7 +126,7 @@ namespace iTextSharp.Samples.Signatures
 				// verify signature integrity
 				if (!pkcs7.Verify())
 				{
-					AddError(String.Format("\"%s\" signature integrity is invalid\n", name));
+					AddError(String.Format("\"{0}\" signature integrity is invalid\n", name));
 				}
 				VerifyCertificates(pkcs7);
 			}
@@ -174,7 +176,7 @@ namespace iTextSharp.Samples.Signatures
 			{
 				AddError("The certificate wasn't valid yet at the time of signing.");
 			}
-			if (pkcs7.GetTimeStampDate() != null)
+			if (pkcs7.GetTimeStampDate() != DateTime.MaxValue)
 			{
 				if (!pkcs7.VerifyTimestampImprint())
 				{
@@ -260,7 +262,7 @@ namespace iTextSharp.Samples.Signatures
 				sigInfo.SetSignerName(iTextSharp.Signatures.CertificateInfo.GetSubjectFields(signCert).GetField("CN"));
 				sigInfo.SetAlternativeSignerName(pkcs7.GetSignName());
 				sigInfo.SetSignDate(pkcs7.GetSignDate().ToUniversalTime());
-				if (pkcs7.GetTimeStampDate() != null)
+                if (pkcs7.GetTimeStampDate() != DateTime.MaxValue)
 				{
 					sigInfo.SetTimeStamp(pkcs7.GetTimeStampDate().ToUniversalTime());
 					TimeStampToken ts = pkcs7.GetTimeStampToken();
@@ -505,7 +507,7 @@ namespace iTextSharp.Samples.Signatures
 		private void AddComparisonError(String comparisonCategory, String newVal, String 
 			oldVal)
 		{
-			String error = "%s [%s] isn't equal to expected value [%s].";
+			String error = "{0} [{1}] isn't equal to expected value [{2}].";
 			AddError(String.Format(error, comparisonCategory, newVal, oldVal));
 		}
 

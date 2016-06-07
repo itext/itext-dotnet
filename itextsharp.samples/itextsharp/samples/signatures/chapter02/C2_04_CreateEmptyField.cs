@@ -116,7 +116,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		public static void Main(String[] args)
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_04_CreateEmptyField appCreate = new C2_04_CreateEmptyField();
 			appCreate.CreatePdf(UNSIGNED);
 			appCreate.AddField(SRC, UNSIGNED2);

@@ -87,7 +87,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 		[NUnit.Framework.Test]
 		public virtual void RunTest()
 		{
-            CreateDestinationFolder(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
+            Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter02/");
 			C2_01_SignHelloWorld.Main(null);
 			String[] resultFiles = new String[] { "hello_signed1.pdf", "hello_signed2.pdf", "hello_signed3.pdf"
 				, "hello_signed4.pdf" };
