@@ -461,9 +461,12 @@ namespace iTextSharp.Forms.Xfa
 		/// on IO error on the
 		/// <see cref="Org.Xml.Sax.InputSource"/>
 		/// </exception>
-		public virtual void FillXfaForm(Stream @is, bool readOnly)
-		{
-			FillXfaForm(XmlReader.Create(@is), readOnly);
+		public virtual void FillXfaForm(Stream @is, bool readOnly) {
+            XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
+            XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
+            xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
+            XmlReader reader = XmlReader.Create(@is, new XmlReaderSettings(), new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+            FillXfaForm(reader, readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -559,7 +562,7 @@ namespace iTextSharp.Forms.Xfa
 				XNode firstNode = GetFirstElementNode(data);
 				if (firstNode != null)
 				{
-					firstNode.ReplaceWith(node);
+					firstNode.ReplaceWith(node is XDocument ? ((XDocument)node).FirstNode : node);
 				}
 			}
 			ExtractNodes();

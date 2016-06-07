@@ -186,7 +186,7 @@ namespace iTextSharp.Forms.Xfa
 							stack.Pop();
 						}
 					}
-				    n2 = ((XElement) n2).NextNode;
+				    n2 = n2 is XElement ? ((XElement) n2).NextNode : (n2 is XText ? ((XText)n2).NextNode : null);
 				}
 			}
 		}

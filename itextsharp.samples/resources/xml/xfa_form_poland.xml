@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><xfa:data xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/">
+<Deklaracja xmlns="http://crd.gov.pl/wzor/2014/12/05/1880/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2011/06/21/eD/DefinicjeTypy/">
+<Naglowek>
+<KodFormularza kodPodatku="PIT" kodSystemowy="PIT-8C (7)" rodzajZobowiazania="Z" wersjaSchemy="1-0E">PIT-8C</KodFormularza>
+<WariantFormularza>7</WariantFormularza>
+<CelZlozenia poz="P_6">1</CelZlozenia>
+<Rok>1234</Rok>
+<KodUrzedu>2411</KodUrzedu>
+</Naglowek>
+<Podmiot1 rola="Składający">
+<etd:OsobaNiefizyczna>
+<etd:NIP>1234567890</etd:NIP>
+<etd:PelnaNazwa>IT IS EASY</etd:PelnaNazwa>
+</etd:OsobaNiefizyczna>
+</Podmiot1>
+<Podmiot2 rola="Podatnik">
+<etd:OsobaFizyczna>
+<etd:NIP>0123456789</etd:NIP>
+<etd:ImiePierwsze>JUST TRY</etd:ImiePierwsze>
+<etd:Nazwisko>DUDE</etd:Nazwisko>
+<etd:DataUrodzenia>2015-02-19</etd:DataUrodzenia>
+</etd:OsobaFizyczna>
+<etd:AdresZamieszkania rodzajAdresu="RAD">
+<etd:AdresPol>
+<etd:KodKraju>PL</etd:KodKraju>
+<etd:Wojewodztwo>DO YOUR OWN JOB</etd:Wojewodztwo>
+<etd:Powiat>DON'T EXPECT ME TO DO IT!</etd:Powiat>
+<etd:Gmina>IT'S XML!</etd:Gmina>
+<etd:NrDomu>012345678</etd:NrDomu>
+<etd:Miejscowosc>READ THE DOCUMENTATION</etd:Miejscowosc>
+<etd:KodPocztowy>DUDE</etd:KodPocztowy>
+<etd:Poczta>LEARN BEFORE YOU CODE</etd:Poczta>
+</etd:AdresPol>
+</etd:AdresZamieszkania>
+</Podmiot2>
+<PozycjeSzczegolowe>
+<P_24/>
+<P_25/>
+<P_26/>
+<P_27/>
+<P_28/>
+<P_29/>
+<P_30/>
+<P_31/>
+<P_32/>
+<P_33/>
+<P_34/>
+<P_35/>
+<P_37/>
+<P_39/>
+<P_41/>
+<P_43/>
+<P_45/>
+<P_47/>
+<P_48/>
+</PozycjeSzczegolowe>
+<Pouczenie1>Za uchybienie obowiązkom płatnika, a także za złożenie informacji nieprawdziwej grozi odpowiedzialność przewidziana w Kodeksie karnym skarbowym.</Pouczenie1>
+<Pouczenie2>Informacji nie sporządzają płatnicy stypendiów, którym podatnik (stypendysta) w terminie do dnia 10 stycznia roku następującego po roku podatkowym złożył oświadczenie, o którym mowa w art. 37 ust. 1 ustawy.</Pouczenie2>
+</Deklaracja>
+</xfa:data>
