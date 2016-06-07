@@ -811,7 +811,7 @@ namespace iTextSharp.Barcodes
 					{
 						throw new ArgumentException("AI not found");
 					}
-					sai = iTextSharp.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(ai));
+					sai = System.Convert.ToInt32(ai).ToString();
 					if (sai.Length == 1)
 					{
 						sai = "0" + sai;

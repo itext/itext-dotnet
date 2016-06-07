@@ -228,7 +228,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				this.content.Put(PdfName.Count, new PdfNumber(-1));
 			}
-			children.Add(position, outline);
+			children.Insert(position, outline);
 			return outline;
 		}
 

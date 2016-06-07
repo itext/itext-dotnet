@@ -128,7 +128,7 @@ namespace iTextSharp.Layout.Element
 		{
 			alpha = (float)Math.Tan(alpha * Math.PI / 180);
 			beta = (float)Math.Tan(beta * Math.PI / 180);
-			SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float?[] { alpha, beta }
+			SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta }
 				);
 			return this;
 		}

@@ -302,7 +302,7 @@ namespace iTextSharp.Kernel.Color
 				}
 				return new DeviceRgb(color[0], color[1], color[2]);
 			}
-			if (!NAMES.Contains(colorName))
+			if (!NAMES.ContainsKey(colorName))
 			{
 				throw new PdfException(PdfException.ColorNotFound).SetMessageParams(colorName);
 			}

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iTextSharp.IO.Log;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout;
 using iTextSharp.Layout.Layout;
@@ -61,6 +62,19 @@ namespace iTextSharp.Layout.Renderer
 			this.canvas = canvas;
 			this.modelElement = canvas;
 			this.immediateFlush = immediateFlush;
+		}
+
+		public override void AddChild(IRenderer renderer)
+		{
+			if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FULL)))
+			{
+				LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
+					);
+			}
+			else
+			{
+				base.AddChild(renderer);
+			}
 		}
 
 		protected internal override void FlushSingleRenderer(IRenderer resultRenderer)

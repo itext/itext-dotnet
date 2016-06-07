@@ -2926,7 +2926,7 @@ namespace iTextSharp.Forms.Fields
 				justification = 0;
 			}
 			float x = 0;
-			TextAlignment textAlignment = TextAlignment.LEFT;
+			TextAlignment? textAlignment = TextAlignment.LEFT;
 			if (justification == ALIGN_RIGHT)
 			{
 				textAlignment = TextAlignment.RIGHT;

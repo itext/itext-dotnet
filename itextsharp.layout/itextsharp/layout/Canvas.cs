@@ -192,6 +192,15 @@ namespace iTextSharp.Layout
 			}
 		}
 
+		/// <summary>
+		/// Forces all registered renderers (including child element renderers) to
+		/// flush their contents to the content stream.
+		/// </summary>
+		public virtual void Flush()
+		{
+			rootRenderer.Flush();
+		}
+
 		protected internal override RootRenderer EnsureRootRendererNotNull()
 		{
 			if (rootRenderer == null)

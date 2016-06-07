@@ -238,7 +238,7 @@ namespace iTextSharp.Kernel.Xmp.Options
 			Hashtable optionsNames = ProcureOptionNames();
 			int? key = option;
 			String result = null;
-			if (optionsNames.Contains(key))
+			if (optionsNames.ContainsKey(key))
 			{
 				result = DefineOptionName(option);
 				if (result != null)

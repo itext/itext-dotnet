@@ -234,7 +234,7 @@ namespace iTextSharp.IO.Font
 					{
 						if (tmp[j].Length >= fullNameLength)
 						{
-							tmp.Add(j, fullName);
+							tmp.Insert(j, fullName);
 							inserted = true;
 							break;
 						}
@@ -248,7 +248,7 @@ namespace iTextSharp.IO.Font
 							//remove "regular" at the end of the font name
 							newFullName = newFullName.JSubstring(0, newFullName.Length - 7).Trim();
 							//insert this font name at the first position for higher priority
-							tmp.Add(0, fullName.JSubstring(0, newFullName.Length));
+							tmp.Insert(0, fullName.JSubstring(0, newFullName.Length));
 						}
 					}
 				}

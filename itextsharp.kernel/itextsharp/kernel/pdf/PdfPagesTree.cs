@@ -267,8 +267,8 @@ namespace iTextSharp.Kernel.Pdf
 			parentPages.AddPage(index, pdfPage);
 			pdfPage.parentPages = parentPages;
 			CorrectPdfPagesFromProperty(parentIndex + 1, +1);
-			pageRefs.Add(index, pdfPage.GetPdfObject());
-			pages.Add(index, pdfPage);
+			pageRefs.Insert(index, pdfPage.GetPdfObject());
+			pages.Insert(index, pdfPage);
 		}
 
 		/// <summary>Removes the page at the specified position in this tree.</summary>
@@ -454,7 +454,7 @@ namespace iTextSharp.Kernel.Pdf
 				parents.JRemoveAt(parentIndex);
 				for (int i_2 = newParents.Count - 1; i_2 >= 0; i_2--)
 				{
-					parents.Add(parentIndex, newParents[i_2]);
+					parents.Insert(parentIndex, newParents[i_2]);
 				}
 				// recursive call, to load needed pageRef.
 				// NOTE optimization? add to loadPage startParentIndex.
