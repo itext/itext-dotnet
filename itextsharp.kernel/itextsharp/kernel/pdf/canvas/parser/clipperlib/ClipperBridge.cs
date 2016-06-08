@@ -140,8 +140,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 				if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
 				{
 					IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-					clipper.AddPath(ConvertToLongPoints(linearApproxPoints), polyType, subpath.IsClosed
-						());
+					clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), polyType
+						, subpath.IsClosed());
 				}
 			}
 		}
@@ -187,7 +187,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 						et = endType;
 					}
 					IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-					offset.AddPath(ConvertToLongPoints(linearApproxPoints), joinType, et);
+					offset.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), joinType
+						, et);
 				}
 			}
 			return degenerateSubpaths;
@@ -218,9 +219,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 		/// <see cref="IntPoint"/>
 		/// objects.
 		/// </summary>
-		public static List<IntPoint> ConvertToLongPoints(IList<Point> points)
+		public static IList<IntPoint> ConvertToLongPoints(IList<Point> points)
 		{
-			List<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
+			IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
 			foreach (Point point in points)
 			{
 				convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier 
@@ -325,8 +326,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
 		public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType
 			 polyType)
 		{
-			clipper.AddPath(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-				(rectVertices))), polyType, true);
+			clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+				(rectVertices)))), polyType, true);
 		}
 	}
 }

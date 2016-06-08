@@ -91,9 +91,10 @@ namespace iTextSharp.Layout.Element
 
 		/// <summary>Gets the text rise.</summary>
 		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
-		public virtual float? GetTextRise()
+		public virtual float GetTextRise()
 		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE);
+			return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE
+				);
 		}
 
 		/// <summary>Sets the text rise.</summary>
