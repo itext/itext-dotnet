@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -50,7 +50,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
                 return new EncryptedContentInfo((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid EncryptedContentInfo: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid EncryptedContentInfo: " + Platform.GetTypeName(obj));
         }
 
         public DerObjectIdentifier ContentType

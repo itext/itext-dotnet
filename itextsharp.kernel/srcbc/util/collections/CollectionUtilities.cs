@@ -4,13 +4,9 @@ using System.Text;
 
 namespace Org.BouncyCastle.Utilities.Collections
 {
-	public sealed class CollectionUtilities
-	{
-		private CollectionUtilities()
-		{
-		}
-
-        public static void AddRange(IList to, ICollection range)
+    public abstract class CollectionUtilities
+    {
+        public static void AddRange(IList to, IEnumerable range)
         {
             foreach (object o in range)
             {
@@ -18,17 +14,15 @@ namespace Org.BouncyCastle.Utilities.Collections
             }
         }
 
-        public static bool CheckElementsAreOfType(
-			IEnumerable e,
-			Type		t)
-		{
-			foreach (object o in e)
-			{
-				if (!t.IsInstanceOfType(o))
-					return false;
-			}
-			return true;
-		}
+        public static bool CheckElementsAreOfType(IEnumerable e, Type t)
+        {
+            foreach (object o in e)
+            {
+                if (!t.IsInstanceOfType(o))
+                    return false;
+            }
+            return true;
+        }
 
         public static IDictionary ReadOnly(IDictionary d)
         {
@@ -45,27 +39,26 @@ namespace Org.BouncyCastle.Utilities.Collections
             return new UnmodifiableSetProxy(s);
         }
 
-        public static string ToString(
-			IEnumerable c)
-		{
-			StringBuilder sb = new StringBuilder("[");
+        public static string ToString(IEnumerable c)
+        {
+            StringBuilder sb = new StringBuilder("[");
 
-			IEnumerator e = c.GetEnumerator();
+            IEnumerator e = c.GetEnumerator();
 
-			if (e.MoveNext())
-			{
-				sb.Append(e.Current.ToString());
+            if (e.MoveNext())
+            {
+                sb.Append(e.Current.ToString());
 
-				while (e.MoveNext())
-				{
-					sb.Append(", ");
-					sb.Append(e.Current.ToString());
-				}
-			}
+                while (e.MoveNext())
+                {
+                    sb.Append(", ");
+                    sb.Append(e.Current.ToString());
+                }
+            }
 
-			sb.Append(']');
+            sb.Append(']');
 
-			return sb.ToString();
-		}
-	}
+            return sb.ToString();
+        }
+    }
 }

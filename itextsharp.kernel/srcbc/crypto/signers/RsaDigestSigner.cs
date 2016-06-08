@@ -19,16 +19,16 @@ using Org.BouncyCastle.Utilities;
 namespace Org.BouncyCastle.Crypto.Signers
 {
     public class RsaDigestSigner
-		: ISigner
+        : ISigner
     {
         private readonly IAsymmetricBlockCipher rsaEngine = new Pkcs1Encoding(new RsaBlindedEngine());
         private readonly AlgorithmIdentifier algId;
-		private readonly IDigest digest;
-		private bool forSigning;
+        private readonly IDigest digest;
+        private bool forSigning;
 
-		private static readonly IDictionary oidMap = Platform.CreateHashtable();
+        private static readonly IDictionary oidMap = Platform.CreateHashtable();
 
-		/// <summary>
+        /// <summary>
         /// Load oid table.
         /// </summary>
         static RsaDigestSigner()
@@ -48,37 +48,36 @@ namespace Org.BouncyCastle.Crypto.Signers
             oidMap["MD5"] = PkcsObjectIdentifiers.MD5;
         }
 
-		public RsaDigestSigner(
-			IDigest digest)
+        public RsaDigestSigner(IDigest digest)
+            :   this(digest, (DerObjectIdentifier)oidMap[digest.AlgorithmName])
         {
-            this.digest = digest;
-
-			string algName = digest.AlgorithmName;
-			if (algName.Equals("NULL"))
-			{
-				this.algId = null;
-			}
-			else
-			{
-				this.algId = new AlgorithmIdentifier(
-					(DerObjectIdentifier)oidMap[digest.AlgorithmName], DerNull.Instance);
-			}
         }
 
-		public string AlgorithmName
+        public RsaDigestSigner(IDigest digest, DerObjectIdentifier digestOid)
+            :   this(digest, new AlgorithmIdentifier(digestOid, DerNull.Instance))
+        {
+        }
+
+        public RsaDigestSigner(IDigest digest, AlgorithmIdentifier algId)
+        {
+            this.digest = digest;
+            this.algId = algId;
+        }
+
+        public virtual string AlgorithmName
         {
             get { return digest.AlgorithmName + "withRSA"; }
         }
 
-		/**
+        /**
          * Initialise the signer for signing or verification.
          *
          * @param forSigning true if for signing, false otherwise
          * @param param necessary parameters.
          */
-        public void Init(
-			bool				forSigning,
-			ICipherParameters	parameters)
+        public virtual void Init(
+            bool				forSigning,
+            ICipherParameters	parameters)
         {
             this.forSigning = forSigning;
             AsymmetricKeyParameter k;
@@ -95,10 +94,10 @@ namespace Org.BouncyCastle.Crypto.Signers
             if (forSigning && !k.IsPrivate)
                 throw new InvalidKeyException("Signing requires private key.");
 
-			if (!forSigning && k.IsPrivate)
+            if (!forSigning && k.IsPrivate)
                 throw new InvalidKeyException("Verification requires public key.");
 
-			Reset();
+            Reset();
 
             rsaEngine.Init(forSigning, parameters);
         }
@@ -106,8 +105,8 @@ namespace Org.BouncyCastle.Crypto.Signers
         /**
          * update the internal digest with the byte b
          */
-        public void Update(
-			byte input)
+        public virtual void Update(
+            byte input)
         {
             digest.Update(input);
         }
@@ -115,10 +114,10 @@ namespace Org.BouncyCastle.Crypto.Signers
         /**
          * update the internal digest with the byte array in
          */
-        public void BlockUpdate(
-			byte[]	input,
-			int		inOff,
-			int		length)
+        public virtual void BlockUpdate(
+            byte[]	input,
+            int		inOff,
+            int		length)
         {
             digest.BlockUpdate(input, inOff, length);
         }
@@ -127,102 +126,92 @@ namespace Org.BouncyCastle.Crypto.Signers
          * Generate a signature for the message we've been loaded with using
          * the key we were initialised with.
          */
-        public byte[] GenerateSignature()
+        public virtual byte[] GenerateSignature()
         {
             if (!forSigning)
                 throw new InvalidOperationException("RsaDigestSigner not initialised for signature generation.");
 
-			byte[] hash = new byte[digest.GetDigestSize()];
+            byte[] hash = new byte[digest.GetDigestSize()];
             digest.DoFinal(hash, 0);
 
-			byte[] data = DerEncode(hash);
+            byte[] data = DerEncode(hash);
             return rsaEngine.ProcessBlock(data, 0, data.Length);
         }
 
-		/**
+        /**
          * return true if the internal state represents the signature described
          * in the passed in array.
          */
-        public bool VerifySignature(
-			byte[] signature)
+        public virtual bool VerifySignature(
+            byte[] signature)
         {
-			if (forSigning)
-				throw new InvalidOperationException("RsaDigestSigner not initialised for verification");
+            if (forSigning)
+                throw new InvalidOperationException("RsaDigestSigner not initialised for verification");
 
-			byte[] hash = new byte[digest.GetDigestSize()];
-			digest.DoFinal(hash, 0);
+            byte[] hash = new byte[digest.GetDigestSize()];
+            digest.DoFinal(hash, 0);
 
-			byte[] sig;
-			byte[] expected;
+            byte[] sig;
+            byte[] expected;
 
-			try
-			{
-				sig = rsaEngine.ProcessBlock(signature, 0, signature.Length);
-				expected = DerEncode(hash);
-			}
-			catch (Exception)
-			{
-				return false;
-			}
+            try
+            {
+                sig = rsaEngine.ProcessBlock(signature, 0, signature.Length);
+                expected = DerEncode(hash);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-			if (sig.Length == expected.Length)
-			{
-				for (int i = 0; i < sig.Length; i++)
-				{
-					if (sig[i] != expected[i])
-					{
-						return false;
-					}
-				}
-			}
-			else if (sig.Length == expected.Length - 2)  // NULL left out
-			{
-				int sigOffset = sig.Length - hash.Length - 2;
-				int expectedOffset = expected.Length - hash.Length - 2;
+            if (sig.Length == expected.Length)
+            {
+                return Arrays.ConstantTimeAreEqual(sig, expected);
+            }
+            else if (sig.Length == expected.Length - 2)  // NULL left out
+            {
+                int sigOffset = sig.Length - hash.Length - 2;
+                int expectedOffset = expected.Length - hash.Length - 2;
 
-				expected[1] -= 2;      // adjust lengths
-				expected[3] -= 2;
+                expected[1] -= 2;      // adjust lengths
+                expected[3] -= 2;
 
-				for (int i = 0; i < hash.Length; i++)
-				{
-					if (sig[sigOffset + i] != expected[expectedOffset + i])  // check hash
-					{
-						return false;
-					}
-				}
+                int nonEqual = 0;
 
-				for (int i = 0; i < sigOffset; i++)
-				{
-					if (sig[i] != expected[i])  // check header less NULL
-					{
-						return false;
-					}
-				}
-			}
-			else
-			{
-				return false;
-			}
+                for (int i = 0; i < hash.Length; i++)
+                {
+                    nonEqual |= (sig[sigOffset + i] ^ expected[expectedOffset + i]);
+                }
 
-			return true;
+                for (int i = 0; i < sigOffset; i++)
+                {
+                    nonEqual |= (sig[i] ^ expected[i]);  // check header less NULL
+                }
+
+                return nonEqual == 0;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             digest.Reset();
         }
 
-		private byte[] DerEncode(byte[] hash)
-		{
-			if (algId == null)
-			{
-				// For raw RSA, the DigestInfo must be prepared externally
-				return hash;
-			}
+        private byte[] DerEncode(byte[] hash)
+        {
+            if (algId == null)
+            {
+                // For raw RSA, the DigestInfo must be prepared externally
+                return hash;
+            }
 
-			DigestInfo dInfo = new DigestInfo(algId, hash);
+            DigestInfo dInfo = new DigestInfo(algId, hash);
 
-			return dInfo.GetDerEncoded();
-		}
+            return dInfo.GetDerEncoded();
+        }
     }
 }

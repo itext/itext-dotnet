@@ -54,7 +54,75 @@ namespace Org.BouncyCastle.Crypto.Agreement.Srp
 		    return val;
 		}
 
-		private static BigInteger HashPaddedPair(IDigest digest, BigInteger N, BigInteger n1, BigInteger n2)
+        /** 
+         * Computes the client evidence message (M1) according to the standard routine:
+         * M1 = H( A | B | S )
+         * @param digest The Digest used as the hashing function H
+         * @param N Modulus used to get the pad length
+         * @param A The public client value
+         * @param B The public server value
+         * @param S The secret calculated by both sides
+         * @return M1 The calculated client evidence message
+         */
+        public static BigInteger CalculateM1(IDigest digest, BigInteger N, BigInteger A, BigInteger B, BigInteger S)
+        {
+            BigInteger M1 = HashPaddedTriplet(digest, N, A, B, S);
+            return M1;
+        }
+
+        /** 
+         * Computes the server evidence message (M2) according to the standard routine:
+         * M2 = H( A | M1 | S )
+         * @param digest The Digest used as the hashing function H
+         * @param N Modulus used to get the pad length
+         * @param A The public client value
+         * @param M1 The client evidence message
+         * @param S The secret calculated by both sides
+         * @return M2 The calculated server evidence message
+         */
+        public static BigInteger CalculateM2(IDigest digest, BigInteger N, BigInteger A, BigInteger M1, BigInteger S)
+        {
+            BigInteger M2 = HashPaddedTriplet(digest, N, A, M1, S);
+            return M2;
+        }
+
+        /**
+         * Computes the final Key according to the standard routine: Key = H(S)
+         * @param digest The Digest used as the hashing function H
+         * @param N Modulus used to get the pad length
+         * @param S The secret calculated by both sides
+         * @return
+         */
+        public static BigInteger CalculateKey(IDigest digest, BigInteger N, BigInteger S)
+        {
+            int padLength = (N.BitLength + 7) / 8;
+            byte[] _S = GetPadded(S, padLength);
+            digest.BlockUpdate(_S, 0, _S.Length);
+
+            byte[] output = new byte[digest.GetDigestSize()];
+            digest.DoFinal(output, 0);
+            return new BigInteger(1, output);
+        }
+
+        private static BigInteger HashPaddedTriplet(IDigest digest, BigInteger N, BigInteger n1, BigInteger n2, BigInteger n3)
+        {
+            int padLength = (N.BitLength + 7) / 8;
+
+            byte[] n1_bytes = GetPadded(n1, padLength);
+            byte[] n2_bytes = GetPadded(n2, padLength);
+            byte[] n3_bytes = GetPadded(n3, padLength);
+
+            digest.BlockUpdate(n1_bytes, 0, n1_bytes.Length);
+            digest.BlockUpdate(n2_bytes, 0, n2_bytes.Length);
+            digest.BlockUpdate(n3_bytes, 0, n3_bytes.Length);
+
+            byte[] output = new byte[digest.GetDigestSize()];
+            digest.DoFinal(output, 0);
+
+            return new BigInteger(1, output);
+        }
+
+        private static BigInteger HashPaddedPair(IDigest digest, BigInteger N, BigInteger n1, BigInteger n2)
 		{
 	    	int padLength = (N.BitLength + 7) / 8;
 

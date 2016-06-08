@@ -40,7 +40,7 @@ namespace Org.BouncyCastle.Cms
 			try
 			{
 				byte[] encryptedKey = info.EncryptedKey.GetOctets();
-				IWrapper keyWrapper = WrapperUtilities.GetWrapper(keyEncAlg.ObjectID.Id);
+                IWrapper keyWrapper = WrapperUtilities.GetWrapper(keyEncAlg.Algorithm.Id);
 
 				keyWrapper.Init(false, key);
 

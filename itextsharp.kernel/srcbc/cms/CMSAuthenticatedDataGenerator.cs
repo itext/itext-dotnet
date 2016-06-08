@@ -9,6 +9,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.IO;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Cms
@@ -83,10 +84,9 @@ namespace Org.BouncyCastle.Cms
 
 				content.Write(mOut);
 
-				mOut.Close();
-				bOut.Close();
+                Platform.Dispose(mOut);
 
-				encContent = new BerOctetString(bOut.ToArray());
+                encContent = new BerOctetString(bOut.ToArray());
 
 				byte[] macOctets = MacUtilities.DoFinal(mac);
 				macResult = new DerOctetString(macOctets);

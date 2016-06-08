@@ -18,7 +18,7 @@ namespace Org.BouncyCastle.Pkcs
             this.key = key;
         }
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
         [Obsolete]
         public AsymmetricKeyEntry(
             AsymmetricKeyParameter key,

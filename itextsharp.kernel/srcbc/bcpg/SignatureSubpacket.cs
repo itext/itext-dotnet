@@ -7,20 +7,22 @@ namespace Org.BouncyCastle.Bcpg
     {
         private readonly SignatureSubpacketTag type;
         private readonly bool critical;
-
-		internal readonly byte[] data;
+        private readonly bool isLongLength;
+		internal byte[] data;
 
 		protected internal SignatureSubpacket(
             SignatureSubpacketTag	type,
             bool					critical,
+            bool                    isLongLength,
             byte[]					data)
         {
             this.type = type;
             this.critical = critical;
+            this.isLongLength = isLongLength;
             this.data = data;
         }
 
-		public SignatureSubpacketTag SubpacketType
+        public SignatureSubpacketTag SubpacketType
         {
 			get { return type; }
         }
@@ -30,7 +32,12 @@ namespace Org.BouncyCastle.Bcpg
             return critical;
         }
 
-		/// <summary>Return the generic data making up the packet.</summary>
+        public bool IsLongLength()
+        {
+            return isLongLength;
+        }
+
+        /// <summary>Return the generic data making up the packet.</summary>
         public byte[] GetData()
         {
             return (byte[]) data.Clone();
@@ -41,24 +48,35 @@ namespace Org.BouncyCastle.Bcpg
         {
             int bodyLen = data.Length + 1;
 
-            if (bodyLen < 192)
-            {
-                os.WriteByte((byte)bodyLen);
-            }
-            else if (bodyLen <= 8383)
-            {
-                bodyLen -= 192;
-
-                os.WriteByte((byte)(((bodyLen >> 8) & 0xff) + 192));
-                os.WriteByte((byte)bodyLen);
-            }
-            else
+            if (isLongLength)
             {
                 os.WriteByte(0xff);
                 os.WriteByte((byte)(bodyLen >> 24));
                 os.WriteByte((byte)(bodyLen >> 16));
                 os.WriteByte((byte)(bodyLen >> 8));
                 os.WriteByte((byte)bodyLen);
+            }
+            else
+            {
+                if (bodyLen < 192)
+                {
+                    os.WriteByte((byte)bodyLen);
+                }
+                else if (bodyLen <= 8383)
+                {
+                    bodyLen -= 192;
+
+                    os.WriteByte((byte)(((bodyLen >> 8) & 0xff) + 192));
+                    os.WriteByte((byte)bodyLen);
+                }
+                else
+                {
+                    os.WriteByte(0xff);
+                    os.WriteByte((byte)(bodyLen >> 24));
+                    os.WriteByte((byte)(bodyLen >> 16));
+                    os.WriteByte((byte)(bodyLen >> 8));
+                    os.WriteByte((byte)bodyLen);
+                }
             }
 
             if (critical)

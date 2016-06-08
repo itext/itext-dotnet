@@ -44,7 +44,7 @@ namespace Org.BouncyCastle.Crypto.Agreement
 			DHKdfParameters dhKdfParams = new DHKdfParameters(
 				new DerObjectIdentifier(algorithm),
 				keySize,
-				bigIntToBytes(result));
+				BigIntToBytes(result));
 
 			kdf.Init(dhKdfParams);
 
@@ -54,10 +54,9 @@ namespace Org.BouncyCastle.Crypto.Agreement
 			return new BigInteger(1, keyBytes);
 		}
 
-		private byte[] bigIntToBytes(
-			BigInteger r)
+		private byte[] BigIntToBytes(BigInteger r)
 		{
-			int byteLength = X9IntegerConverter.GetByteLength(privParams.StaticPrivateKey.Parameters.G.X);
+			int byteLength = X9IntegerConverter.GetByteLength(privParams.StaticPrivateKey.Parameters.Curve);
 			return X9IntegerConverter.IntegerToBytes(r, byteLength);
 		}
 	}

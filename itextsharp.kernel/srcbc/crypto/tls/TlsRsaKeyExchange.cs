@@ -1,165 +1,140 @@
 using System;
+using System.Collections;
 using System.IO;
 
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-	/// <summary>
-	/// TLS 1.0 RSA key exchange.
-	/// </summary>
-	internal class TlsRsaKeyExchange
-		: TlsKeyExchange
-	{
-		protected TlsClientContext context;
+    /// <summary>(D)TLS and SSLv3 RSA key exchange.</summary>
+    public class TlsRsaKeyExchange
+        :   AbstractTlsKeyExchange
+    {
+        protected AsymmetricKeyParameter mServerPublicKey = null;
 
-		protected AsymmetricKeyParameter serverPublicKey = null;
+        protected RsaKeyParameters mRsaServerPublicKey = null;
 
-        protected RsaKeyParameters rsaServerPublicKey = null;
+        protected TlsEncryptionCredentials mServerCredentials = null;
 
-        protected byte[] premasterSecret;
+        protected byte[] mPremasterSecret;
 
-		internal TlsRsaKeyExchange(TlsClientContext context)
-		{
-			this.context = context;
-		}
+        public TlsRsaKeyExchange(IList supportedSignatureAlgorithms)
+            :   base(KeyExchangeAlgorithm.RSA, supportedSignatureAlgorithms)
+        {
+        }
 
-		public virtual void SkipServerCertificate()
-		{
-			throw new TlsFatalAlert(AlertDescription.unexpected_message);
-		}
+        public override void SkipServerCredentials()
+        {
+            throw new TlsFatalAlert(AlertDescription.unexpected_message);
+        }
 
-		public virtual void ProcessServerCertificate(Certificate serverCertificate)
-		{
-			X509CertificateStructure x509Cert = serverCertificate.certs[0];
-			SubjectPublicKeyInfo keyInfo = x509Cert.SubjectPublicKeyInfo;
+        public override void ProcessServerCredentials(TlsCredentials serverCredentials)
+        {
+            if (!(serverCredentials is TlsEncryptionCredentials))
+                throw new TlsFatalAlert(AlertDescription.internal_error);
 
-			try
-			{
-				this.serverPublicKey = PublicKeyFactory.CreateKey(keyInfo);
-			}
-//			catch (RuntimeException)
-			catch (Exception)
-			{
-				throw new TlsFatalAlert(AlertDescription.unsupported_certificate);
-			}
+            ProcessServerCertificate(serverCredentials.Certificate);
 
-			// Sanity check the PublicKeyFactory
-			if (this.serverPublicKey.IsPrivate)
-			{
-				throw new TlsFatalAlert(AlertDescription.internal_error);
-			}
+            this.mServerCredentials = (TlsEncryptionCredentials)serverCredentials;
+        }
 
-			this.rsaServerPublicKey = ValidateRsaPublicKey((RsaKeyParameters)this.serverPublicKey);
+        public override void ProcessServerCertificate(Certificate serverCertificate)
+        {
+            if (serverCertificate.IsEmpty)
+                throw new TlsFatalAlert(AlertDescription.bad_certificate);
 
-			TlsUtilities.ValidateKeyUsage(x509Cert, KeyUsage.KeyEncipherment);
+            X509CertificateStructure x509Cert = serverCertificate.GetCertificateAt(0);
 
-			// TODO
-			/*
-			* Perform various checks per RFC2246 7.4.2: "Unless otherwise specified, the
-			* signing algorithm for the certificate must be the same as the algorithm for the
-			* certificate key."
-			*/
-		}
+            SubjectPublicKeyInfo keyInfo = x509Cert.SubjectPublicKeyInfo;
+            try
+            {
+                this.mServerPublicKey = PublicKeyFactory.CreateKey(keyInfo);
+            }
+            catch (Exception e)
+            {
+                throw new TlsFatalAlert(AlertDescription.unsupported_certificate, e);
+            }
 
-		public virtual void SkipServerKeyExchange()
-		{
-			// OK
-		}
+            // Sanity check the PublicKeyFactory
+            if (this.mServerPublicKey.IsPrivate)
+                throw new TlsFatalAlert(AlertDescription.internal_error);
 
-		public virtual void ProcessServerKeyExchange(Stream input)
-		{
-			throw new TlsFatalAlert(AlertDescription.unexpected_message);
-		}
+            this.mRsaServerPublicKey = ValidateRsaPublicKey((RsaKeyParameters)this.mServerPublicKey);
 
-		public virtual void ValidateCertificateRequest(CertificateRequest certificateRequest)
-		{
-			ClientCertificateType[] types = certificateRequest.CertificateTypes;
-			foreach (ClientCertificateType type in types)
-			{
-				switch (type)
-				{
-					case ClientCertificateType.rsa_sign:
-					case ClientCertificateType.dss_sign:
-					case ClientCertificateType.ecdsa_sign:
-						break;
-					default:
-						throw new TlsFatalAlert(AlertDescription.illegal_parameter);
-				}
-			}
-		}
+            TlsUtilities.ValidateKeyUsage(x509Cert, KeyUsage.KeyEncipherment);
 
-		public virtual void SkipClientCredentials()
-		{
-			// OK
-		}
+            base.ProcessServerCertificate(serverCertificate);
+        }
 
-		public virtual void ProcessClientCredentials(TlsCredentials clientCredentials)
-		{
-			if (!(clientCredentials is TlsSignerCredentials))
-			{
-				throw new TlsFatalAlert(AlertDescription.internal_error);
-			}
-		}
-		
-        public virtual void GenerateClientKeyExchange(Stream output)
-		{
-			this.premasterSecret = TlsRsaUtilities.GenerateEncryptedPreMasterSecret(
-				context.SecureRandom, this.rsaServerPublicKey, output);
-		}
+        public override void ValidateCertificateRequest(CertificateRequest certificateRequest)
+        {
+            byte[] types = certificateRequest.CertificateTypes;
+            for (int i = 0; i < types.Length; ++i)
+            {
+                switch (types[i])
+                {
+                case ClientCertificateType.rsa_sign:
+                case ClientCertificateType.dss_sign:
+                case ClientCertificateType.ecdsa_sign:
+                    break;
+                default:
+                    throw new TlsFatalAlert(AlertDescription.illegal_parameter);
+                }
+            }
+        }
 
-		public virtual byte[] GeneratePremasterSecret()
-		{
-			byte[] tmp = this.premasterSecret;
-			this.premasterSecret = null;
-			return tmp;
-		}
+        public override void ProcessClientCredentials(TlsCredentials clientCredentials)
+        {
+            if (!(clientCredentials is TlsSignerCredentials))
+                throw new TlsFatalAlert(AlertDescription.internal_error);
+        }
 
-    	// Would be needed to process RSA_EXPORT server key exchange
-//	    protected virtual void ProcessRsaServerKeyExchange(Stream input, ISigner signer)
-//	    {
-//	        Stream sigIn = input;
-//	        if (signer != null)
-//	        {
-//	            sigIn = new SignerStream(input, signer, null);
-//	        }
-//
-//	        byte[] modulusBytes = TlsUtilities.ReadOpaque16(sigIn);
-//	        byte[] exponentBytes = TlsUtilities.ReadOpaque16(sigIn);
-//
-//	        if (signer != null)
-//	        {
-//	            byte[] sigByte = TlsUtilities.ReadOpaque16(input);
-//
-//	            if (!signer.VerifySignature(sigByte))
-//	            {
-//	                handler.FailWithError(AlertLevel.fatal, AlertDescription.decrypt_error);
-//	            }
-//	        }
-//
-//	        BigInteger modulus = new BigInteger(1, modulusBytes);
-//	        BigInteger exponent = new BigInteger(1, exponentBytes);
-//
-//	        this.rsaServerPublicKey = ValidateRSAPublicKey(new RsaKeyParameters(false, modulus, exponent));
-//	    }
+        public override void GenerateClientKeyExchange(Stream output)
+        {
+            this.mPremasterSecret = TlsRsaUtilities.GenerateEncryptedPreMasterSecret(mContext, mRsaServerPublicKey, output);
+        }
+
+        public override void ProcessClientKeyExchange(Stream input)
+        {
+            byte[] encryptedPreMasterSecret;
+            if (TlsUtilities.IsSsl(mContext))
+            {
+                // TODO Do any SSLv3 clients actually include the length?
+                encryptedPreMasterSecret = Streams.ReadAll(input);
+            }
+            else
+            {
+                encryptedPreMasterSecret = TlsUtilities.ReadOpaque16(input);
+            }
+
+            this.mPremasterSecret = mServerCredentials.DecryptPreMasterSecret(encryptedPreMasterSecret);
+        }
+
+        public override byte[] GeneratePremasterSecret()
+        {
+            if (this.mPremasterSecret == null)
+                throw new TlsFatalAlert(AlertDescription.internal_error);
+
+            byte[] tmp = this.mPremasterSecret;
+            this.mPremasterSecret = null;
+            return tmp;
+        }
 
         protected virtual RsaKeyParameters ValidateRsaPublicKey(RsaKeyParameters key)
-		{
-			// TODO What is the minimum bit length required?
-//			key.Modulus.BitLength;
+        {
+            // TODO What is the minimum bit length required?
+            // key.Modulus.BitLength;
 
-			if (!key.Exponent.IsProbablePrime(2))
-			{
-				throw new TlsFatalAlert(AlertDescription.illegal_parameter);
-			}
+            if (!key.Exponent.IsProbablePrime(2))
+                throw new TlsFatalAlert(AlertDescription.illegal_parameter);
 
-			return key;
-		}
-	}
+            return key;
+        }
+    }
 }

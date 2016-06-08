@@ -10,6 +10,7 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Cms
 {
@@ -52,7 +53,7 @@ namespace Org.BouncyCastle.Cms
 		{
 			byte[] keyBytes = contentEncryptionKey.GetKey();
 
-			IWrapper keyWrapper = Helper.CreateWrapper(keyEncryptionAlgorithm.ObjectID.Id);
+            IWrapper keyWrapper = Helper.CreateWrapper(keyEncryptionAlgorithm.Algorithm.Id);
 			keyWrapper.Init(true, new ParametersWithRandom(keyEncryptionKey, random));
         	Asn1OctetString encryptedKey = new DerOctetString(
 				keyWrapper.Wrap(keyBytes, 0, keyBytes.Length));
@@ -63,19 +64,19 @@ namespace Org.BouncyCastle.Cms
 		private static AlgorithmIdentifier DetermineKeyEncAlg(
 			string algorithm, KeyParameter key)
 		{
-			if (algorithm.StartsWith("DES"))
+			if (Platform.StartsWith(algorithm, "DES"))
 			{
 				return new AlgorithmIdentifier(
 					PkcsObjectIdentifiers.IdAlgCms3DesWrap,
 					DerNull.Instance);
 			}
-			else if (algorithm.StartsWith("RC2"))
+            else if (Platform.StartsWith(algorithm, "RC2"))
 			{
 				return new AlgorithmIdentifier(
 					PkcsObjectIdentifiers.IdAlgCmsRC2Wrap,
 					new DerInteger(58));
 			}
-			else if (algorithm.StartsWith("AES"))
+			else if (Platform.StartsWith(algorithm, "AES"))
 			{
 				int length = key.GetKey().Length * 8;
 				DerObjectIdentifier wrapOid;
@@ -99,12 +100,12 @@ namespace Org.BouncyCastle.Cms
 
 				return new AlgorithmIdentifier(wrapOid);  // parameters absent
 			}
-			else if (algorithm.StartsWith("SEED"))
+			else if (Platform.StartsWith(algorithm, "SEED"))
 			{
 				// parameters absent
 				return new AlgorithmIdentifier(KisaObjectIdentifiers.IdNpkiAppCmsSeedWrap);
 			}
-			else if (algorithm.StartsWith("CAMELLIA"))
+			else if (Platform.StartsWith(algorithm, "CAMELLIA"))
 			{
 				int length = key.GetKey().Length * 8;
 				DerObjectIdentifier wrapOid;

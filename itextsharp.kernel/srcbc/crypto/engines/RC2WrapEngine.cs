@@ -51,7 +51,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			* @param forWrapping
 			* @param param
 			*/
-		public void Init(
+        public virtual void Init(
 			bool				forWrapping,
 			ICipherParameters	parameters)
 		{
@@ -101,7 +101,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return
 		*/
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "RC2"; }
 		}
@@ -114,7 +114,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @param inLen
 		* @return
 		*/
-		public byte[] Wrap(
+        public virtual byte[] Wrap(
 			byte[]	input,
 			int		inOff,
 			int		length)
@@ -215,7 +215,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return
 		* @throws InvalidCipherTextException
 		*/
-		public byte[] Unwrap(
+        public virtual byte[] Unwrap(
 			byte[]	input,
 			int		inOff,
 			int		length)

@@ -36,7 +36,7 @@ namespace Org.BouncyCastle.Asn1.Misc
          * e.g. (X509NetscapeCertType.sslCA | X509NetscapeCertType.smimeCA)
          */
         public NetscapeCertType(int usage)
-			: base(GetBytes(usage), GetPadBits(usage))
+			: base(usage)
         {
         }
 

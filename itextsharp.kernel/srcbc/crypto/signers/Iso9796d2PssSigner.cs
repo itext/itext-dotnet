@@ -26,28 +26,22 @@ namespace Org.BouncyCastle.Crypto.Signers
             return recoveredMessage;
         }
 
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerImplicit = 0xBC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerRipeMD160 = 0x31CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerRipeMD128 = 0x32CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerSha1 = 0x33CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerSha256 = 0x34CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerSha512 = 0x35CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerSha384 = 0x36CC;
+        [Obsolete("Use 'IsoTrailers' instead")]
         public const int TrailerWhirlpool = 0x37CC;
-
-        private static readonly IDictionary trailerMap = Platform.CreateHashtable();
-
-        static Iso9796d2PssSigner()
-        {
-            trailerMap.Add("RIPEMD128", TrailerRipeMD128);
-            trailerMap.Add("RIPEMD160", TrailerRipeMD160);
-            trailerMap.Add("SHA-1", TrailerSha1);
-            trailerMap.Add("SHA-256", TrailerSha256);
-            trailerMap.Add("SHA-384", TrailerSha384);
-            trailerMap.Add("SHA-512", TrailerSha512);
-
-            trailerMap.Add("Whirlpool", TrailerWhirlpool);
-        }
 
         private IDigest digest;
         private IAsymmetricBlockCipher cipher;
@@ -71,8 +65,7 @@ namespace Org.BouncyCastle.Crypto.Signers
         private int preTLength;
 
         /// <summary>
-        /// Generate a signer for the with either implicit or explicit trailers
-        /// for ISO9796-2, scheme 2 or 3.
+        /// Generate a signer with either implicit or explicit trailers for ISO9796-2, scheme 2 or 3.
         /// </summary>
         /// <param name="cipher">base cipher to use for signature creation/verification</param>
         /// <param name="digest">digest to use.</param>
@@ -91,15 +84,15 @@ namespace Org.BouncyCastle.Crypto.Signers
 
             if (isImplicit)
             {
-                trailer = TrailerImplicit;
+                trailer = IsoTrailers.TRAILER_IMPLICIT;
+            }
+            else if (IsoTrailers.NoTrailerAvailable(digest))
+            {
+                throw new ArgumentException("no valid trailer", "digest");
             }
             else
             {
-                string digestAlg = digest.AlgorithmName;
-                if (!trailerMap.Contains(digestAlg))
-                    throw new ArgumentException("no valid trailer for digest");
-
-                trailer = (int)trailerMap[digestAlg];
+                trailer = IsoTrailers.GetTrailer(digest);
             }
         }
 
@@ -120,7 +113,7 @@ namespace Org.BouncyCastle.Crypto.Signers
         {
         }
 
-        public string AlgorithmName
+        public virtual string AlgorithmName
         {
             get { return digest.AlgorithmName + "with" + "ISO9796-2S2"; }
         }
@@ -180,7 +173,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 
             block = new byte[(keyBits + 7) / 8];
 
-            if (trailer == TrailerImplicit)
+            if (trailer == IsoTrailers.TRAILER_IMPLICIT)
             {
                 mBuf = new byte[block.Length - digest.GetDigestSize() - saltLength - 1 - 1];
             }
@@ -247,11 +240,10 @@ namespace Org.BouncyCastle.Crypto.Signers
             {
                 int sigTrail = ((block[block.Length - 2] & 0xFF) << 8) | (block[block.Length - 1] & 0xFF);
 
-                string digestAlg = digest.AlgorithmName;
-                if (!trailerMap.Contains(digestAlg))
+                if (IsoTrailers.NoTrailerAvailable(digest))
                     throw new ArgumentException("unrecognised hash in signature");
 
-                if (sigTrail != (int)trailerMap[digestAlg])
+                if (sigTrail != IsoTrailers.GetTrailer(digest))
                     throw new InvalidOperationException("signer initialised with wrong digest for trailer " + sigTrail);
 
                 tLength = 2;
@@ -365,7 +357,7 @@ namespace Org.BouncyCastle.Crypto.Signers
         /// <summary> Generate a signature for the loaded message using the key we were
         /// initialised with.
         /// </summary>
-        public byte[] GenerateSignature()
+        public virtual byte[] GenerateSignature()
         {
             int digSize = digest.GetDigestSize();
             byte[] m2Hash = new byte[digSize];
@@ -395,7 +387,7 @@ namespace Org.BouncyCastle.Crypto.Signers
             digest.DoFinal(hash, 0);
 
             int tLength = 2;
-            if (trailer == TrailerImplicit)
+            if (trailer == IsoTrailers.TRAILER_IMPLICIT)
             {
                 tLength = 1;
             }
@@ -415,9 +407,9 @@ namespace Org.BouncyCastle.Crypto.Signers
 
             Array.Copy(hash, 0, block, block.Length - hLen - tLength, hLen);
 
-            if (trailer == TrailerImplicit)
+            if (trailer == IsoTrailers.TRAILER_IMPLICIT)
             {
-                block[block.Length - 1] = (byte)TrailerImplicit;
+                block[block.Length - 1] = (byte)IsoTrailers.TRAILER_IMPLICIT;
             }
             else
             {
@@ -494,7 +486,14 @@ namespace Org.BouncyCastle.Crypto.Signers
             digest.BlockUpdate(m2Hash, 0, m2Hash.Length);
 
             // Update for the salt
-            digest.BlockUpdate(block, mStart + recoveredMessage.Length, saltLength);
+            if (standardSalt != null)
+            {
+                digest.BlockUpdate(standardSalt, 0, standardSalt.Length);
+            }
+            else
+            {
+                digest.BlockUpdate(block, mStart + recoveredMessage.Length, saltLength);
+            }
 
             byte[] hash = new byte[digest.GetDigestSize()];
             digest.DoFinal(hash, 0);

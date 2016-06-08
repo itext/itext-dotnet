@@ -52,7 +52,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 
 				if (pgpPub == null)
 				{
-					throw new PgpException(obj.GetType().FullName + " found where PgpPublicKeyRing expected");
+					throw new PgpException(Platform.GetTypeName(obj) + " found where PgpPublicKeyRing expected");
 				}
 
 				long key = pgpPub.GetPublicKey().KeyId;
@@ -113,7 +113,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 
 			if (ignoreCase)
 			{
-                userId = Platform.ToLowerInvariant(userId);
+                userId = Platform.ToUpperInvariant(userId);
 			}
 
 			foreach (PgpPublicKeyRing pubRing in GetKeyRings())
@@ -123,12 +123,12 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 					string next = nextUserID;
 					if (ignoreCase)
 					{
-                        next = Platform.ToLowerInvariant(next);
+                        next = Platform.ToUpperInvariant(next);
                     }
 
 					if (matchPartial)
 					{
-						if (next.IndexOf(userId) > -1)
+                        if (Platform.IndexOf(next, userId) > -1)
 						{
 							rings.Add(pubRing);
 						}

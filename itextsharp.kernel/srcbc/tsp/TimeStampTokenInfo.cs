@@ -86,7 +86,7 @@ namespace Org.BouncyCastle.Tsp
 
 		public string MessageImprintAlgOid
 		{
-			get { return tstInfo.MessageImprint.HashAlgorithm.ObjectID.Id; }
+            get { return tstInfo.MessageImprint.HashAlgorithm.Algorithm.Id; }
 		}
 
 		public byte[] GetMessageImprintDigest()

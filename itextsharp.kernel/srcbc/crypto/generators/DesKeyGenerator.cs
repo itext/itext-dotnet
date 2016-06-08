@@ -42,12 +42,12 @@ namespace Org.BouncyCastle.Crypto.Generators
 
 		protected override byte[] engineGenerateKey()
         {
-            byte[] newKey;
+            byte[] newKey = new byte[DesParameters.DesKeyLength];
 
-			do
+            do
             {
-				newKey = random.GenerateSeed(DesParameters.DesKeyLength);
-				DesParameters.SetOddParity(newKey);
+                random.NextBytes(newKey);
+                DesParameters.SetOddParity(newKey);
             }
             while (DesParameters.IsWeakKey(newKey, 0));
 

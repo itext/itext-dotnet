@@ -1,29 +1,30 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
     public class OriginatorPublicKey
         : Asn1Encodable
     {
-        private AlgorithmIdentifier algorithm;
-        private DerBitString        publicKey;
+        private readonly AlgorithmIdentifier mAlgorithm;
+        private readonly DerBitString        mPublicKey;
 
-		public OriginatorPublicKey(
+        public OriginatorPublicKey(
             AlgorithmIdentifier algorithm,
             byte[]              publicKey)
         {
-            this.algorithm = algorithm;
-            this.publicKey = new DerBitString(publicKey);
+            this.mAlgorithm = algorithm;
+            this.mPublicKey = new DerBitString(publicKey);
         }
 
+        [Obsolete("Use 'GetInstance' instead")]
 		public OriginatorPublicKey(
             Asn1Sequence seq)
         {
-            algorithm = AlgorithmIdentifier.GetInstance(seq[0]);
-            publicKey = (DerBitString) seq[1];
+            this.mAlgorithm = AlgorithmIdentifier.GetInstance(seq[0]);
+            this.mPublicKey = DerBitString.GetInstance(seq[1]);
         }
 
 		/**
@@ -55,19 +56,19 @@ namespace Org.BouncyCastle.Asn1.Cms
                 return (OriginatorPublicKey)obj;
 
 			if (obj is Asn1Sequence)
-                return new OriginatorPublicKey((Asn1Sequence) obj);
+                return new OriginatorPublicKey(Asn1Sequence.GetInstance(obj));
 
-			throw new ArgumentException("Invalid OriginatorPublicKey: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid OriginatorPublicKey: " + Platform.GetTypeName(obj));
         }
 
 		public AlgorithmIdentifier Algorithm
 		{
-			get { return algorithm; }
+			get { return mAlgorithm; }
 		}
 
 		public DerBitString PublicKey
 		{
-			get { return publicKey; }
+			get { return mPublicKey; }
 		}
 
 		/**
@@ -81,7 +82,7 @@ namespace Org.BouncyCastle.Asn1.Cms
          */
         public override Asn1Object ToAsn1Object()
         {
-			return new DerSequence(algorithm, publicKey);
+			return new DerSequence(mAlgorithm, mPublicKey);
         }
     }
 }

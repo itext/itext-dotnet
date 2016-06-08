@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	public class RecipientEncryptedKey
@@ -50,7 +52,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 				return new RecipientEncryptedKey((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("Invalid RecipientEncryptedKey: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Invalid RecipientEncryptedKey: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public RecipientEncryptedKey(

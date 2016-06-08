@@ -7,45 +7,73 @@ using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
-	/**
-	 * Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005
-	 */
+	/// <summary>
+	/// Implementation of Daniel J. Bernstein's Salsa20 stream cipher, Snuffle 2005
+	/// </summary>
 	public class Salsa20Engine
 		: IStreamCipher
 	{
+		public static readonly int DEFAULT_ROUNDS = 20;
+
 		/** Constants */
 		private const int StateSize = 16; // 16, 32 bit ints = 64 bytes
 
-		private readonly static byte[]
+        private readonly static uint[] TAU_SIGMA = Pack.LE_To_UInt32(Strings.ToAsciiByteArray("expand 16-byte k" + "expand 32-byte k"), 0, 8);
+
+        internal void PackTauOrSigma(int keyLength, uint[] state, int stateOffset)
+        {
+            int tsOff = (keyLength - 16) / 4;
+            state[stateOffset] = TAU_SIGMA[tsOff];
+            state[stateOffset + 1] = TAU_SIGMA[tsOff + 1];
+            state[stateOffset + 2] = TAU_SIGMA[tsOff + 2];
+            state[stateOffset + 3] = TAU_SIGMA[tsOff + 3];
+        }
+
+        [Obsolete]
+        protected readonly static byte[]
 			sigma = Strings.ToAsciiByteArray("expand 32-byte k"),
 			tau = Strings.ToAsciiByteArray("expand 16-byte k");
+
+		protected int rounds;
 
 		/*
 		 * variables to hold the state of the engine
 		 * during encryption and decryption
 		 */
-		private int		index = 0;
-		private uint[]  engineState = new uint[StateSize]; // state
-		private uint[]  x = new uint[StateSize]; // internal buffer
-		private byte[]  keyStream = new byte[StateSize * 4], // expanded state, 64 bytes
-						workingKey  = null,
-						workingIV   = null;
-		private bool	initialised = false;
+		private int		 index = 0;
+		internal uint[] engineState = new uint[StateSize]; // state
+		internal uint[] x = new uint[StateSize]; // internal buffer
+		private byte[]	 keyStream = new byte[StateSize * 4]; // expanded state, 64 bytes
+		private bool	 initialised = false;
 
 		/*
 		 * internal counter
 		 */
 		private uint cW0, cW1, cW2;
 
-		/**
-		 * initialise a Salsa20 cipher.
-		 *
-		 * @param forEncryption whether or not we are for encryption.
-		 * @param params the parameters required to set up the cipher.
-		 * @exception ArgumentException if the params argument is
-		 * inappropriate.
-		 */
-		public void Init(
+		/// <summary>
+		/// Creates a 20 round Salsa20 engine.
+		/// </summary>
+		public Salsa20Engine()
+			: this(DEFAULT_ROUNDS)
+		{
+		}
+
+		/// <summary>
+		/// Creates a Salsa20 engine with a specific number of rounds.
+		/// </summary>
+		/// <param name="rounds">the number of rounds (must be an even number).</param>
+		public Salsa20Engine(int rounds)
+		{
+			if (rounds <= 0 || (rounds & 1) != 0)
+			{
+				throw new ArgumentException("'rounds' must be a positive, even number");
+			}
+
+			this.rounds = rounds;
+		}
+
+        public virtual void Init(
 			bool				forEncryption, 
 			ICipherParameters	parameters)
 		{
@@ -56,32 +84,53 @@ namespace Org.BouncyCastle.Crypto.Engines
 			 */
 
 			ParametersWithIV ivParams = parameters as ParametersWithIV;
-
 			if (ivParams == null)
-				throw new ArgumentException("Salsa20 Init requires an IV", "parameters");
+				throw new ArgumentException(AlgorithmName + " Init requires an IV", "parameters");
 
 			byte[] iv = ivParams.GetIV();
+			if (iv == null || iv.Length != NonceSize)
+				throw new ArgumentException(AlgorithmName + " requires exactly " + NonceSize + " bytes of IV");
 
-			if (iv == null || iv.Length != 8)
-				throw new ArgumentException("Salsa20 requires exactly 8 bytes of IV");
+            ICipherParameters keyParam = ivParams.Parameters;
+            if (keyParam == null)
+            {
+                if (!initialised)
+                    throw new InvalidOperationException(AlgorithmName + " KeyParameter can not be null for first initialisation");
 
-			KeyParameter key = ivParams.Parameters as KeyParameter;
+                SetKey(null, iv);
+            }
+            else if (keyParam is KeyParameter)
+            {
+                SetKey(((KeyParameter)keyParam).GetKey(), iv);
+            }
+            else
+            {
+                throw new ArgumentException(AlgorithmName + " Init parameters must contain a KeyParameter (or null for re-init)");
+            }
 
-			if (key == null)
-				throw new ArgumentException("Salsa20 Init requires a key", "parameters");
-
-			workingKey = key.GetKey();
-			workingIV = iv;
-
-			SetKey(workingKey, workingIV);
+            Reset();
+			initialised = true;
 		}
 
-		public string AlgorithmName
+		protected virtual int NonceSize
 		{
-			get { return "Salsa20"; }
+			get { return 8; }
 		}
 
-		public byte ReturnByte(
+		public virtual string AlgorithmName
+		{
+			get
+            { 
+				string name = "Salsa20";
+				if (rounds != DEFAULT_ROUNDS)
+				{
+					name += "/" + rounds;
+				}
+				return name;
+			}
+		}
+
+        public virtual byte ReturnByte(
 			byte input)
 		{
 			if (LimitExceeded())
@@ -92,11 +141,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			if (index == 0)
 			{
 				GenerateKeyStream(keyStream);
-
-				if (++engineState[8] == 0)
-				{
-					++engineState[9];
-				}
+				AdvanceCounter();
 			}
 
 			byte output = (byte)(keyStream[index] ^ input);
@@ -105,7 +150,15 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return output;
 		}
 
-		public void ProcessBytes(
+		protected virtual void AdvanceCounter()
+		{
+			if (++engineState[8] == 0)
+			{
+				++engineState[9];
+			}
+		}
+
+        public virtual void ProcessBytes(
 			byte[]	inBytes, 
 			int		inOff, 
 			int		len, 
@@ -113,151 +166,161 @@ namespace Org.BouncyCastle.Crypto.Engines
 			int		outOff)
 		{
 			if (!initialised)
-			{
 				throw new InvalidOperationException(AlgorithmName + " not initialised");
-			}
 
-			if ((inOff + len) > inBytes.Length)
-			{
-				throw new DataLengthException("input buffer too short");
-			}
+            Check.DataLength(inBytes, inOff, len, "input buffer too short");
+            Check.OutputLength(outBytes, outOff, len, "output buffer too short");
 
-			if ((outOff + len) > outBytes.Length)
-			{
-				throw new DataLengthException("output buffer too short");
-			}
-
-			if (LimitExceeded((uint)len))
-			{
+            if (LimitExceeded((uint)len))
 				throw new MaxBytesExceededException("2^70 byte limit per IV would be exceeded; Change IV");
-			}
 
-			for (int i = 0; i < len; i++)
+            for (int i = 0; i < len; i++)
 			{
 				if (index == 0)
 				{
 					GenerateKeyStream(keyStream);
-
-					if (++engineState[8] == 0)
-					{
-						++engineState[9];
-					}
+					AdvanceCounter();
 				}
 				outBytes[i+outOff] = (byte)(keyStream[index]^inBytes[i+inOff]);
 				index = (index + 1) & 63;
 			}
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
-			SetKey(workingKey, workingIV);
-		}
-
-		// Private implementation
-
-		private void SetKey(byte[] keyBytes, byte[] ivBytes)
-		{
-			workingKey = keyBytes;
-			workingIV  = ivBytes;
-
 			index = 0;
+			ResetLimitCounter();
 			ResetCounter();
-			int offset = 0;
-			byte[] constants;
-
-			// Key
-			engineState[1] = Pack.LE_To_UInt32(workingKey, 0);
-			engineState[2] = Pack.LE_To_UInt32(workingKey, 4);
-			engineState[3] = Pack.LE_To_UInt32(workingKey, 8);
-			engineState[4] = Pack.LE_To_UInt32(workingKey, 12);
-
-			if (workingKey.Length == 32)
-			{
-				constants = sigma;
-				offset = 16;
-			}
-			else
-			{
-				constants = tau;
-			}
-
-			engineState[11] = Pack.LE_To_UInt32(workingKey, offset);
-			engineState[12] = Pack.LE_To_UInt32(workingKey, offset + 4);
-			engineState[13] = Pack.LE_To_UInt32(workingKey, offset + 8);
-			engineState[14] = Pack.LE_To_UInt32(workingKey, offset + 12);
-			engineState[0] = Pack.LE_To_UInt32(constants, 0);
-			engineState[5] = Pack.LE_To_UInt32(constants, 4);
-			engineState[10] = Pack.LE_To_UInt32(constants, 8);
-			engineState[15] = Pack.LE_To_UInt32(constants, 12);
-
-			// IV
-			engineState[6] = Pack.LE_To_UInt32(workingIV, 0);
-			engineState[7] = Pack.LE_To_UInt32(workingIV, 4);
-			engineState[8] = engineState[9] = 0;
-
-			initialised = true;
 		}
 
-		private void GenerateKeyStream(byte[] output)
+		protected virtual void ResetCounter()
 		{
-			SalsaCore(20, engineState, x);
+			engineState[8] = engineState[9] = 0;
+		}
+
+		protected virtual void SetKey(byte[] keyBytes, byte[] ivBytes)
+		{
+            if (keyBytes != null)
+            {
+                if ((keyBytes.Length != 16) && (keyBytes.Length != 32))
+                    throw new ArgumentException(AlgorithmName + " requires 128 bit or 256 bit key");
+
+                int tsOff = (keyBytes.Length - 16) / 4;
+                engineState[0] = TAU_SIGMA[tsOff];
+                engineState[5] = TAU_SIGMA[tsOff + 1];
+                engineState[10] = TAU_SIGMA[tsOff + 2];
+                engineState[15] = TAU_SIGMA[tsOff + 3];
+
+                // Key
+                Pack.LE_To_UInt32(keyBytes, 0, engineState, 1, 4);
+                Pack.LE_To_UInt32(keyBytes, keyBytes.Length - 16, engineState, 11, 4);
+            }
+
+            // IV
+            Pack.LE_To_UInt32(ivBytes, 0, engineState, 6, 2);
+        }
+
+        protected virtual void GenerateKeyStream(byte[] output)
+		{
+			SalsaCore(rounds, engineState, x);
 			Pack.UInt32_To_LE(x, output, 0);
 		}
 
-		internal static void SalsaCore(int rounds, uint[] state, uint[] x)
+		internal static void SalsaCore(int rounds, uint[] input, uint[] x)
 		{
-            // TODO Exception if rounds odd?
+			if (input.Length != 16)
+				throw new ArgumentException();
+			if (x.Length != 16)
+				throw new ArgumentException();
+			if (rounds % 2 != 0)
+				throw new ArgumentException("Number of rounds must be even");
 
-            Array.Copy(state, 0, x, 0, state.Length);
+            uint x00 = input[ 0];
+			uint x01 = input[ 1];
+			uint x02 = input[ 2];
+			uint x03 = input[ 3];
+			uint x04 = input[ 4];
+			uint x05 = input[ 5];
+			uint x06 = input[ 6];
+			uint x07 = input[ 7];
+			uint x08 = input[ 8];
+			uint x09 = input[ 9];
+			uint x10 = input[10];
+			uint x11 = input[11];
+			uint x12 = input[12];
+			uint x13 = input[13];
+			uint x14 = input[14];
+			uint x15 = input[15];
 
 			for (int i = rounds; i > 0; i -= 2)
 			{
-				x[ 4] ^= R((x[ 0]+x[12]), 7);
-				x[ 8] ^= R((x[ 4]+x[ 0]), 9);
-				x[12] ^= R((x[ 8]+x[ 4]),13);
-				x[ 0] ^= R((x[12]+x[ 8]),18);
-				x[ 9] ^= R((x[ 5]+x[ 1]), 7);
-				x[13] ^= R((x[ 9]+x[ 5]), 9);
-				x[ 1] ^= R((x[13]+x[ 9]),13);
-				x[ 5] ^= R((x[ 1]+x[13]),18);
-				x[14] ^= R((x[10]+x[ 6]), 7);
-				x[ 2] ^= R((x[14]+x[10]), 9);
-				x[ 6] ^= R((x[ 2]+x[14]),13);
-				x[10] ^= R((x[ 6]+x[ 2]),18);
-				x[ 3] ^= R((x[15]+x[11]), 7);
-				x[ 7] ^= R((x[ 3]+x[15]), 9);
-				x[11] ^= R((x[ 7]+x[ 3]),13);
-				x[15] ^= R((x[11]+x[ 7]),18);
-				x[ 1] ^= R((x[ 0]+x[ 3]), 7);
-				x[ 2] ^= R((x[ 1]+x[ 0]), 9);
-				x[ 3] ^= R((x[ 2]+x[ 1]),13);
-				x[ 0] ^= R((x[ 3]+x[ 2]),18);
-				x[ 6] ^= R((x[ 5]+x[ 4]), 7);
-				x[ 7] ^= R((x[ 6]+x[ 5]), 9);
-				x[ 4] ^= R((x[ 7]+x[ 6]),13);
-				x[ 5] ^= R((x[ 4]+x[ 7]),18);
-				x[11] ^= R((x[10]+x[ 9]), 7);
-				x[ 8] ^= R((x[11]+x[10]), 9);
-				x[ 9] ^= R((x[ 8]+x[11]),13);
-				x[10] ^= R((x[ 9]+x[ 8]),18);
-				x[12] ^= R((x[15]+x[14]), 7);
-				x[13] ^= R((x[12]+x[15]), 9);
-				x[14] ^= R((x[13]+x[12]),13);
-				x[15] ^= R((x[14]+x[13]),18);
+				x04 ^= R((x00+x12), 7);
+				x08 ^= R((x04+x00), 9);
+				x12 ^= R((x08+x04),13);
+				x00 ^= R((x12+x08),18);
+				x09 ^= R((x05+x01), 7);
+				x13 ^= R((x09+x05), 9);
+				x01 ^= R((x13+x09),13);
+				x05 ^= R((x01+x13),18);
+				x14 ^= R((x10+x06), 7);
+				x02 ^= R((x14+x10), 9);
+				x06 ^= R((x02+x14),13);
+				x10 ^= R((x06+x02),18);
+				x03 ^= R((x15+x11), 7);
+				x07 ^= R((x03+x15), 9);
+				x11 ^= R((x07+x03),13);
+				x15 ^= R((x11+x07),18);
+
+				x01 ^= R((x00+x03), 7);
+				x02 ^= R((x01+x00), 9);
+				x03 ^= R((x02+x01),13);
+				x00 ^= R((x03+x02),18);
+				x06 ^= R((x05+x04), 7);
+				x07 ^= R((x06+x05), 9);
+				x04 ^= R((x07+x06),13);
+				x05 ^= R((x04+x07),18);
+				x11 ^= R((x10+x09), 7);
+				x08 ^= R((x11+x10), 9);
+				x09 ^= R((x08+x11),13);
+				x10 ^= R((x09+x08),18);
+				x12 ^= R((x15+x14), 7);
+				x13 ^= R((x12+x15), 9);
+				x14 ^= R((x13+x12),13);
+				x15 ^= R((x14+x13),18);
 			}
 
-			for (int i = 0; i < StateSize; ++i)
-			{
-				x[i] += state[i];
-			}
+			x[ 0] = x00 + input[ 0];
+			x[ 1] = x01 + input[ 1];
+			x[ 2] = x02 + input[ 2];
+			x[ 3] = x03 + input[ 3];
+			x[ 4] = x04 + input[ 4];
+			x[ 5] = x05 + input[ 5];
+			x[ 6] = x06 + input[ 6];
+			x[ 7] = x07 + input[ 7];
+			x[ 8] = x08 + input[ 8];
+			x[ 9] = x09 + input[ 9];
+			x[10] = x10 + input[10];
+			x[11] = x11 + input[11];
+			x[12] = x12 + input[12];
+			x[13] = x13 + input[13];
+			x[14] = x14 + input[14];
+			x[15] = x15 + input[15];
 		}
 
-		private static uint R(uint x, int y)
+		/**
+		 * Rotate left
+		 *
+		 * @param   x   value to rotate
+		 * @param   y   amount to rotate x
+		 *
+		 * @return  rotated x
+		 */
+		internal static uint R(uint x, int y)
 		{
 			return (x << y) | (x >> (32 - y));
 		}
 
-		private void ResetCounter()
+		private void ResetLimitCounter()
 		{
 			cW0 = 0;
 			cW1 = 0;

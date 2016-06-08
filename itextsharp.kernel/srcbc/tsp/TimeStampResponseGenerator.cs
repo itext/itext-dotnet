@@ -166,9 +166,8 @@ namespace Org.BouncyCastle.Tsp
         class FailInfo
             : DerBitString
         {
-            internal FailInfo(
-                int failInfoValue)
-                : base(GetBytes(failInfoValue), GetPadBits(failInfoValue))
+            internal FailInfo(int failInfoValue)
+                : base(failInfoValue)
             {
             }
         }

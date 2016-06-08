@@ -5,7 +5,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 	/// <remarks>
 	/// Thrown if the key checksum is invalid.
 	/// </remarks>
-#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT)
+#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT || PORTABLE)
     [Serializable]
 #endif
     public class PgpKeyValidationException

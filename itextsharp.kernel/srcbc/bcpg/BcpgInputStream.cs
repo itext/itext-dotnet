@@ -2,6 +2,7 @@ using System;
 using System.IO;
 
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Bcpg
@@ -105,19 +106,15 @@ namespace Org.BouncyCastle.Bcpg
                 next = true;
             }
 
-            if (nextB >= 0)
-            {
-                if ((nextB & 0x40) != 0)    // new
-                {
-                    return (PacketTag)(nextB & 0x3f);
-                }
-                else    // old
-                {
-                    return (PacketTag)((nextB & 0x3f) >> 2);
-                }
-            }
+            if (nextB < 0)
+                return (PacketTag)nextB;
 
-            return (PacketTag) nextB;
+            int maskB = nextB & 0x3f;
+            if ((nextB & 0x40) == 0)    // old
+            {
+                maskB >>= 2;
+            }
+            return (PacketTag)maskB;
         }
 
         public Packet ReadPacket()
@@ -250,11 +247,22 @@ namespace Org.BouncyCastle.Bcpg
             }
         }
 
+#if PORTABLE
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Platform.Dispose(m_in);
+            }
+            base.Dispose(disposing);
+        }
+#else
 		public override void Close()
 		{
-			m_in.Close();
+            Platform.Dispose(m_in);
 			base.Close();
 		}
+#endif
 
 		/// <summary>
 		/// A stream that overlays our input stream, allowing the user to only read a segment of it.

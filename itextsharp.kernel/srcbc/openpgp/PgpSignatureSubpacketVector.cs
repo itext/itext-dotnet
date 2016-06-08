@@ -209,7 +209,17 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			return list;
         }
 
-		[Obsolete("Use 'Count' property instead")]
+        public Features GetFeatures()
+        {
+            SignatureSubpacket p = this.GetSubpacket(SignatureSubpacketTag.Features);
+
+            if (p == null)
+                return null;
+
+            return new Features(p.IsCritical(), p.IsLongLength(), p.GetData());
+        }
+
+        [Obsolete("Use 'Count' property instead")]
 		public int Size
 		{
 			get { return packets.Length; }

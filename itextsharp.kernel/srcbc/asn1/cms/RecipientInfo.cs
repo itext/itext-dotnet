@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -57,7 +57,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (o is Asn1TaggedObject)
                 return new RecipientInfo((Asn1TaggedObject) o);
 
-			throw new ArgumentException("unknown object in factory: " + o.GetType().Name);
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(o));
         }
 
 		public DerInteger Version

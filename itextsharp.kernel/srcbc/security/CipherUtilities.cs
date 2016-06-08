@@ -54,6 +54,10 @@ namespace Org.BouncyCastle.Security
             SERPENT,
             SKIPJACK,
             TEA,
+            THREEFISH_256,
+            THREEFISH_512,
+            THREEFISH_1024,
+            TNEPRES,
             TWOFISH,
             VMPC,
             VMPC_KSA3,
@@ -278,9 +282,9 @@ namespace Org.BouncyCastle.Security
 
 
 
-            if (algorithm.StartsWith("PBE"))
+            if (Platform.StartsWith(algorithm, "PBE"))
             {
-                if (algorithm.EndsWith("-CBC"))
+                if (Platform.EndsWith(algorithm, "-CBC"))
                 {
                     if (algorithm == "PBEWITHSHA1ANDDES-CBC")
                     {
@@ -305,7 +309,7 @@ namespace Org.BouncyCastle.Security
                             new CbcBlockCipher(new RC2Engine()));
                     }
                 }
-                else if (algorithm.EndsWith("-BC") || algorithm.EndsWith("-OPENSSL"))
+                else if (Platform.EndsWith(algorithm, "-BC") || Platform.EndsWith(algorithm, "-OPENSSL"))
                 {
                     if (Strings.IsOneOf(algorithm,
                         "PBEWITHSHAAND128BITAES-CBC-BC",
@@ -389,11 +393,9 @@ namespace Org.BouncyCastle.Security
                 case CipherAlgorithm.HC256:
                     streamCipher = new HC256Engine();
                     break;
-#if INCLUDE_IDEA
                 case CipherAlgorithm.IDEA:
                     blockCipher = new IdeaEngine();
                     break;
-#endif
                 case CipherAlgorithm.NOEKEON:
                     blockCipher = new NoekeonEngine();
                     break;
@@ -433,6 +435,18 @@ namespace Org.BouncyCastle.Security
                     break;
                 case CipherAlgorithm.TEA:
                     blockCipher = new TeaEngine();
+                    break;
+                case CipherAlgorithm.THREEFISH_256:
+                    blockCipher = new ThreefishEngine(ThreefishEngine.BLOCKSIZE_256);
+                    break;
+                case CipherAlgorithm.THREEFISH_512:
+                    blockCipher = new ThreefishEngine(ThreefishEngine.BLOCKSIZE_512);
+                    break;
+                case CipherAlgorithm.THREEFISH_1024:
+                    blockCipher = new ThreefishEngine(ThreefishEngine.BLOCKSIZE_1024);
+                    break;
+                case CipherAlgorithm.TNEPRES:
+                    blockCipher = new TnepresEngine();
                     break;
                 case CipherAlgorithm.TWOFISH:
                     blockCipher = new TwofishEngine();
@@ -716,9 +730,7 @@ namespace Org.BouncyCastle.Security
                 case CipherAlgorithm.DES: return new DesEngine();
                 case CipherAlgorithm.DESEDE: return new DesEdeEngine();
                 case CipherAlgorithm.GOST28147: return new Gost28147Engine();
-#if INCLUDE_IDEA
                 case CipherAlgorithm.IDEA: return new IdeaEngine();
-#endif
                 case CipherAlgorithm.NOEKEON: return new NoekeonEngine();
                 case CipherAlgorithm.RC2: return new RC2Engine();
                 case CipherAlgorithm.RC5: return new RC532Engine();
@@ -729,6 +741,10 @@ namespace Org.BouncyCastle.Security
                 case CipherAlgorithm.SERPENT: return new SerpentEngine();
                 case CipherAlgorithm.SKIPJACK: return new SkipjackEngine();
                 case CipherAlgorithm.TEA: return new TeaEngine();
+                case CipherAlgorithm.THREEFISH_256: return new ThreefishEngine(ThreefishEngine.BLOCKSIZE_256);
+                case CipherAlgorithm.THREEFISH_512: return new ThreefishEngine(ThreefishEngine.BLOCKSIZE_512);
+                case CipherAlgorithm.THREEFISH_1024: return new ThreefishEngine(ThreefishEngine.BLOCKSIZE_1024);
+                case CipherAlgorithm.TNEPRES: return new TnepresEngine();
                 case CipherAlgorithm.TWOFISH: return new TwofishEngine();
                 case CipherAlgorithm.XTEA: return new XteaEngine();
                 default:

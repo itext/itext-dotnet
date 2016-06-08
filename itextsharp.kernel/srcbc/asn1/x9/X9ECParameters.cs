@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Math.Field;
 
 namespace Org.BouncyCastle.Asn1.X9
 {
@@ -14,12 +15,27 @@ namespace Org.BouncyCastle.Asn1.X9
     {
         private X9FieldID	fieldID;
         private ECCurve		curve;
-        private ECPoint		g;
+        private X9ECPoint	g;
         private BigInteger	n;
         private BigInteger	h;
         private byte[]		seed;
 
-		public X9ECParameters(
+		public static X9ECParameters GetInstance(Object obj)
+		{
+			if (obj is X9ECParameters)
+			{
+				return (X9ECParameters)obj;
+			}
+
+			if (obj != null)
+			{
+				return new X9ECParameters(Asn1Sequence.GetInstance(obj));
+			}
+
+			return null;
+		}
+
+        public X9ECParameters(
             Asn1Sequence seq)
         {
             if (!(seq[0] is DerInteger)
@@ -28,48 +44,49 @@ namespace Org.BouncyCastle.Asn1.X9
                 throw new ArgumentException("bad version in X9ECParameters");
             }
 
-			X9Curve x9c = null;
-            if (seq[2] is X9Curve)
+            X9Curve x9c = new X9Curve(
+                X9FieldID.GetInstance(seq[1]),
+                Asn1Sequence.GetInstance(seq[2]));
+
+            this.curve = x9c.Curve;
+            object p = seq[3];
+
+            if (p is X9ECPoint)
             {
-                x9c = (X9Curve) seq[2];
+                this.g = ((X9ECPoint)p);
             }
             else
             {
-                x9c = new X9Curve(
-					new X9FieldID(
-						(Asn1Sequence) seq[1]),
-						(Asn1Sequence) seq[2]);
+                this.g = new X9ECPoint(curve, (Asn1OctetString)p);
             }
 
-			this.curve = x9c.Curve;
-
-			if (seq[3] is X9ECPoint)
-            {
-                this.g = ((X9ECPoint) seq[3]).Point;
-            }
-            else
-            {
-                this.g = new X9ECPoint(curve, (Asn1OctetString) seq[3]).Point;
-            }
-
-			this.n = ((DerInteger) seq[4]).Value;
+            this.n = ((DerInteger)seq[4]).Value;
             this.seed = x9c.GetSeed();
 
-			if (seq.Count == 6)
+            if (seq.Count == 6)
             {
-                this.h = ((DerInteger) seq[5]).Value;
+                this.h = ((DerInteger)seq[5]).Value;
             }
         }
 
-		public X9ECParameters(
+        public X9ECParameters(
             ECCurve		curve,
             ECPoint		g,
             BigInteger	n)
-            : this(curve, g, n, BigInteger.One, null)
+            : this(curve, g, n, null, null)
         {
         }
 
-		public X9ECParameters(
+        public X9ECParameters(
+            ECCurve     curve,
+            X9ECPoint   g,
+            BigInteger  n,
+            BigInteger  h)
+            : this(curve, g, n, h, null)
+        {
+        }
+
+        public X9ECParameters(
             ECCurve		curve,
             ECPoint		g,
             BigInteger	n,
@@ -78,12 +95,22 @@ namespace Org.BouncyCastle.Asn1.X9
         {
         }
 
-		public X9ECParameters(
+        public X9ECParameters(
             ECCurve		curve,
             ECPoint		g,
             BigInteger	n,
             BigInteger	h,
             byte[]		seed)
+            : this(curve, new X9ECPoint(g), n, h, seed)
+        {
+        }
+
+        public X9ECParameters(
+            ECCurve     curve,
+            X9ECPoint   g,
+            BigInteger  n,
+            BigInteger  h,
+            byte[]      seed)
         {
             this.curve = curve;
             this.g = g;
@@ -91,53 +118,89 @@ namespace Org.BouncyCastle.Asn1.X9
             this.h = h;
             this.seed = seed;
 
-			if (curve is FpCurve)
-			{
-				this.fieldID = new X9FieldID(((FpCurve) curve).Q);
-			}
-			else if (curve is F2mCurve)
-			{
-				F2mCurve curveF2m = (F2mCurve) curve;
-				this.fieldID = new X9FieldID(curveF2m.M, curveF2m.K1,
-					curveF2m.K2, curveF2m.K3);
-			}
+            if (ECAlgorithms.IsFpCurve(curve))
+            {
+                this.fieldID = new X9FieldID(curve.Field.Characteristic);
+            }
+            else if (ECAlgorithms.IsF2mCurve(curve))
+            {
+                IPolynomialExtensionField field = (IPolynomialExtensionField)curve.Field;
+                int[] exponents = field.MinimalPolynomial.GetExponentsPresent();
+                if (exponents.Length == 3)
+                {
+                    this.fieldID = new X9FieldID(exponents[2], exponents[1]);
+                }
+                else if (exponents.Length == 5)
+                {
+                    this.fieldID = new X9FieldID(exponents[4], exponents[1], exponents[2], exponents[3]);
+                }
+                else
+                {
+                    throw new ArgumentException("Only trinomial and pentomial curves are supported");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("'curve' is of an unsupported type");
+            }
         }
 
-		public ECCurve Curve
+        public ECCurve Curve
         {
-			get { return curve; }
+            get { return curve; }
         }
 
-		public ECPoint G
+        public ECPoint G
         {
-            get { return g; }
+            get { return g.Point; }
         }
 
-		public BigInteger N
+        public BigInteger N
         {
             get { return n; }
         }
 
-		public BigInteger H
+        public BigInteger H
         {
-            get
-			{
-				if (h == null)
-				{
-					// TODO - this should be calculated, it will cause issues with custom curves.
-					return BigInteger.One;
-				}
-
-				return h;
-			}
+            get { return h; }
         }
 
-		public byte[] GetSeed()
+        public byte[] GetSeed()
         {
             return seed;
         }
 
-		/**
+        /**
+         * Return the ASN.1 entry representing the Curve.
+         *
+         * @return the X9Curve for the curve in these parameters.
+         */
+        public X9Curve CurveEntry
+        {
+            get { return new X9Curve(curve, seed); }
+        }
+
+        /**
+         * Return the ASN.1 entry representing the FieldID.
+         *
+         * @return the X9FieldID for the FieldID in these parameters.
+         */
+        public X9FieldID FieldIDEntry
+        {
+            get { return fieldID; }
+        }
+
+        /**
+         * Return the ASN.1 entry representing the base point G.
+         *
+         * @return the X9ECPoint for the base point in these parameters.
+         */
+        public X9ECPoint BaseEntry
+        {
+            get { return g; }
+        }
+
+        /**
          * Produce an object suitable for an Asn1OutputStream.
          * <pre>
          *  ECParameters ::= Sequence {
@@ -153,18 +216,18 @@ namespace Org.BouncyCastle.Asn1.X9
         public override Asn1Object ToAsn1Object()
         {
             Asn1EncodableVector v = new Asn1EncodableVector(
-				new DerInteger(1),
-				fieldID,
-				new X9Curve(curve, seed),
-				new X9ECPoint(g),
-				new DerInteger(n));
+                new DerInteger(BigInteger.One),
+                fieldID,
+                new X9Curve(curve, seed),
+                g,
+                new DerInteger(n));
 
-			if (h != null)
+            if (h != null)
             {
                 v.Add(new DerInteger(h));
             }
 
-			return new DerSequence(v);
+            return new DerSequence(v);
         }
     }
 }

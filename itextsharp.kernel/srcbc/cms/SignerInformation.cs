@@ -117,7 +117,7 @@ namespace Org.BouncyCastle.Cms
 		*/
 		public string DigestAlgOid
 		{
-			get { return digestAlgorithm.ObjectID.Id; }
+            get { return digestAlgorithm.Algorithm.Id; }
 		}
 
 		/**
@@ -156,7 +156,7 @@ namespace Org.BouncyCastle.Cms
 		*/
 		public string EncryptionAlgOid
 		{
-			get { return encryptionAlgorithm.ObjectID.Id; }
+            get { return encryptionAlgorithm.Algorithm.Id; }
 		}
 
 		/**
@@ -272,7 +272,7 @@ namespace Org.BouncyCastle.Cms
 					*/
 					SignerInfo si = SignerInfo.GetInstance(asn1Obj.ToAsn1Object());
 
-					string digestName = CmsSignedHelper.Instance.GetDigestAlgName(si.DigestAlgorithm.ObjectID.Id);
+                    string digestName = CmsSignedHelper.Instance.GetDigestAlgName(si.DigestAlgorithm.Algorithm.Id);
 
 					counterSignatures.Add(new SignerInformation(si, null, null, new CounterSignatureDigestCalculator(digestName, GetSignature())));
 				}
@@ -298,7 +298,7 @@ namespace Org.BouncyCastle.Cms
 			string digestName = Helper.GetDigestAlgName(this.DigestAlgOid);
 			IDigest digest = Helper.GetDigestInstance(digestName);
 
-			DerObjectIdentifier sigAlgOid = this.encryptionAlgorithm.ObjectID;
+            DerObjectIdentifier sigAlgOid = this.encryptionAlgorithm.Algorithm;
 			Asn1Encodable sigParams = this.encryptionAlgorithm.Parameters;
 			ISigner sig;
 
@@ -318,12 +318,12 @@ namespace Org.BouncyCastle.Cms
 					Asn1.Pkcs.RsassaPssParameters pss = Asn1.Pkcs.RsassaPssParameters.GetInstance(
 						sigParams.ToAsn1Object());
 
-					if (!pss.HashAlgorithm.ObjectID.Equals(this.digestAlgorithm.ObjectID))
+                    if (!pss.HashAlgorithm.Algorithm.Equals(this.digestAlgorithm.Algorithm))
 						throw new CmsException("RSASSA-PSS signature parameters specified incorrect hash algorithm");
-					if (!pss.MaskGenAlgorithm.ObjectID.Equals(Asn1.Pkcs.PkcsObjectIdentifiers.IdMgf1))
+                    if (!pss.MaskGenAlgorithm.Algorithm.Equals(Asn1.Pkcs.PkcsObjectIdentifiers.IdMgf1))
 						throw new CmsException("RSASSA-PSS signature parameters specified unknown MGF");
 
-					IDigest pssDigest = DigestUtilities.GetDigest(pss.HashAlgorithm.ObjectID);
+                    IDigest pssDigest = DigestUtilities.GetDigest(pss.HashAlgorithm.Algorithm);
 					int saltLength = pss.SaltLength.Value.IntValue;
 					byte trailerField = (byte) pss.TrailerField.Value.IntValue;
 
@@ -345,9 +345,12 @@ namespace Org.BouncyCastle.Cms
 //				if (sigParams != null)
 //					throw new CmsException("unrecognised signature parameters provided");
 
-				string signatureName = digestName + "with" + Helper.GetEncryptionAlgName(this.EncryptionAlgOid);
+                string signatureName = digestName + "with" + Helper.GetEncryptionAlgName(this.EncryptionAlgOid);
 
-				sig = Helper.GetSignatureInstance(signatureName);
+                sig = Helper.GetSignatureInstance(signatureName);
+
+                //sig = Helper.GetSignatureInstance(this.EncryptionAlgOid);
+                //sig = SignerUtilities.GetSigner(sigAlgOid);
 			}
 
 			try
@@ -529,7 +532,7 @@ namespace Org.BouncyCastle.Cms
 
 					DigestInfo digInfo = DerDecode(decrypt);
 
-					if (!digInfo.AlgorithmID.ObjectID.Equals(digestAlgorithm.ObjectID))
+                    if (!digInfo.AlgorithmID.Algorithm.Equals(digestAlgorithm.Algorithm))
 					{
 						return false;
 					}

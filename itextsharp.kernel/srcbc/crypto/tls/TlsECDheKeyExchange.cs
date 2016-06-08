@@ -2,91 +2,111 @@ using System;
 using System.Collections;
 using System.IO;
 
-using Org.BouncyCastle.Crypto.IO;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
+using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-    /**
-    * ECDHE key exchange (see RFC 4492)
-    */
-    internal class TlsECDheKeyExchange : TlsECDHKeyExchange
+    /// <summary>(D)TLS ECDHE key exchange (see RFC 4492).</summary>
+    public class TlsECDheKeyExchange
+        :   TlsECDHKeyExchange
     {
-        internal TlsECDheKeyExchange(TlsClientContext context, KeyExchangeAlgorithm keyExchange)
-            : base(context, keyExchange)
+        protected TlsSignerCredentials mServerCredentials = null;
+
+        public TlsECDheKeyExchange(int keyExchange, IList supportedSignatureAlgorithms, int[] namedCurves,
+            byte[] clientECPointFormats, byte[] serverECPointFormats)
+            :   base(keyExchange, supportedSignatureAlgorithms, namedCurves, clientECPointFormats, serverECPointFormats)
         {
         }
 
-        public override void SkipServerKeyExchange()
+        public override void ProcessServerCredentials(TlsCredentials serverCredentials)
         {
-            throw new TlsFatalAlert(AlertDescription.unexpected_message);
+            if (!(serverCredentials is TlsSignerCredentials))
+                throw new TlsFatalAlert(AlertDescription.internal_error);
+
+            ProcessServerCertificate(serverCredentials.Certificate);
+
+            this.mServerCredentials = (TlsSignerCredentials)serverCredentials;
+        }
+
+        public override byte[] GenerateServerKeyExchange()
+        {
+            DigestInputBuffer buf = new DigestInputBuffer();
+
+            this.mECAgreePrivateKey = TlsEccUtilities.GenerateEphemeralServerKeyExchange(mContext.SecureRandom, mNamedCurves,
+                mClientECPointFormats, buf);
+
+            /*
+             * RFC 5246 4.7. digitally-signed element needs SignatureAndHashAlgorithm from TLS 1.2
+             */
+            SignatureAndHashAlgorithm signatureAndHashAlgorithm = TlsUtilities.GetSignatureAndHashAlgorithm(
+                mContext, mServerCredentials);
+
+            IDigest d = TlsUtilities.CreateHash(signatureAndHashAlgorithm);
+
+            SecurityParameters securityParameters = mContext.SecurityParameters;
+            d.BlockUpdate(securityParameters.clientRandom, 0, securityParameters.clientRandom.Length);
+            d.BlockUpdate(securityParameters.serverRandom, 0, securityParameters.serverRandom.Length);
+            buf.UpdateDigest(d);
+
+            byte[] hash = DigestUtilities.DoFinal(d);
+
+            byte[] signature = mServerCredentials.GenerateCertificateSignature(hash);
+
+            DigitallySigned signed_params = new DigitallySigned(signatureAndHashAlgorithm, signature);
+            signed_params.Encode(buf);
+
+            return buf.ToArray();
         }
 
         public override void ProcessServerKeyExchange(Stream input)
         {
-            SecurityParameters securityParameters = context.SecurityParameters;
+            SecurityParameters securityParameters = mContext.SecurityParameters;
 
-            ISigner signer = InitSigner(tlsSigner, securityParameters);
-            Stream sigIn = new SignerStream(input, signer, null);
+            SignerInputBuffer buf = new SignerInputBuffer();
+            Stream teeIn = new TeeInputStream(input, buf);
 
-            ECCurveType curveType = (ECCurveType)TlsUtilities.ReadUint8(sigIn);
-            ECDomainParameters curve_params;
+            ECDomainParameters curve_params = TlsEccUtilities.ReadECParameters(mNamedCurves, mClientECPointFormats, teeIn);
 
-            //  Currently, we only support named curves
-            if (curveType == ECCurveType.named_curve)
-            {
-                NamedCurve namedCurve = (NamedCurve)TlsUtilities.ReadUint16(sigIn);
+            byte[] point = TlsUtilities.ReadOpaque8(teeIn);
 
-                // TODO Check namedCurve is one we offered?
+            DigitallySigned signed_params = ParseSignature(input);
 
-                curve_params = NamedCurveHelper.GetECParameters(namedCurve);
-            }
-            else
-            {
-                // TODO Add support for explicit curve parameters (read from sigIn)
-
-                throw new TlsFatalAlert(AlertDescription.handshake_failure);
-            }
-
-            byte[] publicBytes = TlsUtilities.ReadOpaque8(sigIn);
-
-            byte[] sigByte = TlsUtilities.ReadOpaque16(input);
-            if (!signer.VerifySignature(sigByte))
-            {
+            ISigner signer = InitVerifyer(mTlsSigner, signed_params.Algorithm, securityParameters);
+            buf.UpdateSigner(signer);
+            if (!signer.VerifySignature(signed_params.Signature))
                 throw new TlsFatalAlert(AlertDescription.decrypt_error);
-            }
 
-            // TODO Check curve_params not null
-
-            ECPoint Q = curve_params.Curve.DecodePoint(publicBytes);
-
-            this.ecAgreeServerPublicKey = ValidateECPublicKey(new ECPublicKeyParameters(Q, curve_params));
+            this.mECAgreePublicKey = TlsEccUtilities.ValidateECPublicKey(TlsEccUtilities.DeserializeECPublicKey(
+                mClientECPointFormats, curve_params, point));
         }
-        
+
         public override void ValidateCertificateRequest(CertificateRequest certificateRequest)
         {
             /*
-             * RFC 4492 3. [...] The ECDSA_fixed_ECDH and RSA_fixed_ECDH mechanisms are usable
-             * with ECDH_ECDSA and ECDH_RSA. Their use with ECDHE_ECDSA and ECDHE_RSA is
-             * prohibited because the use of a long-term ECDH client key would jeopardize the
-             * forward secrecy property of these algorithms.
+             * RFC 4492 3. [...] The ECDSA_fixed_ECDH and RSA_fixed_ECDH mechanisms are usable with
+             * ECDH_ECDSA and ECDH_RSA. Their use with ECDHE_ECDSA and ECDHE_RSA is prohibited because
+             * the use of a long-term ECDH client key would jeopardize the forward secrecy property of
+             * these algorithms.
              */
-            ClientCertificateType[] types = certificateRequest.CertificateTypes;
-            foreach (ClientCertificateType type in types)
+            byte[] types = certificateRequest.CertificateTypes;
+            for (int i = 0; i < types.Length; ++i)
             {
-                switch (type)
+                switch (types[i])
                 {
-                    case ClientCertificateType.rsa_sign:
-                    case ClientCertificateType.dss_sign:
-                    case ClientCertificateType.ecdsa_sign:
-                        break;
-                    default:
-                        throw new TlsFatalAlert(AlertDescription.illegal_parameter);
+                case ClientCertificateType.rsa_sign:
+                case ClientCertificateType.dss_sign:
+                case ClientCertificateType.ecdsa_sign:
+                    break;
+                default:
+                    throw new TlsFatalAlert(AlertDescription.illegal_parameter);
                 }
             }
         }
-        
+
         public override void ProcessClientCredentials(TlsCredentials clientCredentials)
         {
             if (clientCredentials is TlsSignerCredentials)
@@ -99,9 +119,10 @@ namespace Org.BouncyCastle.Crypto.Tls
             }
         }
 
-        protected virtual ISigner InitSigner(TlsSigner tlsSigner, SecurityParameters securityParameters)
+        protected virtual ISigner InitVerifyer(TlsSigner tlsSigner, SignatureAndHashAlgorithm algorithm,
+            SecurityParameters securityParameters)
         {
-            ISigner signer = tlsSigner.CreateVerifyer(this.serverPublicKey);
+            ISigner signer = tlsSigner.CreateVerifyer(algorithm, this.mServerPublicKey);
             signer.BlockUpdate(securityParameters.clientRandom, 0, securityParameters.clientRandom.Length);
             signer.BlockUpdate(securityParameters.serverRandom, 0, securityParameters.serverRandom.Length);
             return signer;

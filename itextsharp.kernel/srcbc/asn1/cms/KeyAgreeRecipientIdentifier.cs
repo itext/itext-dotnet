@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	public class KeyAgreeRecipientIdentifier
@@ -42,7 +44,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 					(Asn1TaggedObject)obj, false));
 			}
 
-			throw new ArgumentException("Invalid KeyAgreeRecipientIdentifier: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Invalid KeyAgreeRecipientIdentifier: " + Platform.GetTypeName(obj), "obj");
 		} 
 
 		private readonly IssuerAndSerialNumber issuerSerial;

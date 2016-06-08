@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -36,17 +37,17 @@ namespace Org.BouncyCastle.Crypto.Engines
 			_initialised = false;
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "TEA"; }
 		}
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return block_size;
 		}
@@ -59,14 +60,14 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @exception ArgumentException if the params argument is
 		* inappropriate.
 		*/
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
 			if (!(parameters is KeyParameter))
 			{
 				throw new ArgumentException("invalid parameter passed to TEA init - "
-					+ parameters.GetType().FullName);
+					+ Platform.GetTypeName(parameters));
 			}
 
 			_forEncryption = forEncryption;
@@ -77,7 +78,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			setKey(p.GetKey());
 		}
 
-		public int ProcessBlock(
+        public virtual int ProcessBlock(
 			byte[]  inBytes,
 			int     inOff,
 			byte[]  outBytes,
@@ -86,18 +87,15 @@ namespace Org.BouncyCastle.Crypto.Engines
 			if (!_initialised)
 				throw new InvalidOperationException(AlgorithmName + " not initialised");
 
-			if ((inOff + block_size) > inBytes.Length)
-				throw new DataLengthException("input buffer too short");
+            Check.DataLength(inBytes, inOff, block_size, "input buffer too short");
+            Check.OutputLength(outBytes, outOff, block_size, "output buffer too short");
 
-			if ((outOff + block_size) > outBytes.Length)
-				throw new DataLengthException("output buffer too short");
-
-			return _forEncryption
+            return _forEncryption
 				?	encryptBlock(inBytes, inOff, outBytes, outOff)
 				:	decryptBlock(inBytes, inOff, outBytes, outOff);
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
 		}
 

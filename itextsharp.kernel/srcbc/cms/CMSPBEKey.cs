@@ -50,9 +50,9 @@ namespace Org.BouncyCastle.Cms
 			char[]				password,
 			AlgorithmIdentifier keyDerivationAlgorithm)
 		{
-			if (!keyDerivationAlgorithm.ObjectID.Equals(PkcsObjectIdentifiers.IdPbkdf2))
+            if (!keyDerivationAlgorithm.Algorithm.Equals(PkcsObjectIdentifiers.IdPbkdf2))
 				throw new ArgumentException("Unsupported key derivation algorithm: "
-					+ keyDerivationAlgorithm.ObjectID);
+                    + keyDerivationAlgorithm.Algorithm);
 
 			Pbkdf2Params kdfParams = Pbkdf2Params.GetInstance(
 				keyDerivationAlgorithm.Parameters.ToAsn1Object());

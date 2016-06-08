@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -31,7 +32,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             ICipherParameters	parameters)
         {
             if (!(parameters is KeyParameter))
-				throw new ArgumentException("invalid parameter passed to DES init - " + parameters.GetType().ToString());
+				throw new ArgumentException("invalid parameter passed to DES init - " + Platform.GetTypeName(parameters));
 
 			workingKey = GenerateWorkingKey(forEncryption, ((KeyParameter)parameters).GetKey());
         }
@@ -41,7 +42,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             get { return "DES"; }
         }
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
@@ -59,12 +60,11 @@ namespace Org.BouncyCastle.Crypto.Engines
         {
             if (workingKey == null)
                 throw new InvalidOperationException("DES engine not initialised");
-			if ((inOff + BLOCK_SIZE) > input.Length)
-                throw new DataLengthException("input buffer too short");
-            if ((outOff + BLOCK_SIZE) > output.Length)
-                throw new DataLengthException("output buffer too short");
 
-			DesFunc(workingKey, input, inOff, output, outOff);
+            Check.DataLength(input, inOff, BLOCK_SIZE, "input buffer too short");
+            Check.OutputLength(output, outOff, BLOCK_SIZE, "output buffer too short");
+
+            DesFunc(workingKey, input, inOff, output, outOff);
 
 			return BLOCK_SIZE;
         }

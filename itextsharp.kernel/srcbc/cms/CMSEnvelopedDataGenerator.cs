@@ -80,9 +80,9 @@ namespace Org.BouncyCastle.Cms
 
 				content.Write(cOut);
 
-				cOut.Close();
+                Platform.Dispose(cOut);
 
-				encContent = new BerOctetString(bOut.ToArray());
+                encContent = new BerOctetString(bOut.ToArray());
 			}
 			catch (SecurityUtilityException e)
 			{

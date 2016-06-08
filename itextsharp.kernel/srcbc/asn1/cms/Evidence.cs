@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	public class Evidence
@@ -28,7 +30,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1TaggedObject)
 				return new Evidence(Asn1TaggedObject.GetInstance(obj));
 
-			throw new ArgumentException("Unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public virtual TimeStampTokenEvidence TstEvidence

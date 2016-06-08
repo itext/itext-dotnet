@@ -230,7 +230,7 @@ namespace Org.BouncyCastle.Pkix
 			{
 				try
 				{
-					if (location.StartsWith("ldap://"))
+					if (Platform.StartsWith(location, "ldap://"))
 					{
 						// ldap://directory.d-trust.net/CN=D-TRUST
 						// Qualified CA 2003 1:PN,O=D-Trust GmbH,C=DE
@@ -528,7 +528,7 @@ namespace Org.BouncyCastle.Pkix
 					}
 					catch (Exception e)
 					{
-						new Exception(
+						throw new Exception(
 							"Reason code CRL entry extension could not be decoded.",
 							e);
 					}
@@ -683,8 +683,8 @@ namespace Org.BouncyCastle.Pkix
 		/// the certificates</param>
 		/// <param name="certStores">a List containing only X509Store objects. These
 		/// are used to search for certificates.</param>
-		/// <returns>a Collection of all found <see cref="X509Certificate "/> or
-		/// org.bouncycastle.x509.X509AttributeCertificate objects.
+		/// <returns>a Collection of all found <see cref="X509Certificate"/> or
+		/// <see cref="Org.BouncyCastle.X509.IX509AttributeCertificate"/> objects.
 		/// May be empty but never <code>null</code>.</returns>
 		/// <exception cref="Exception"></exception>
 		internal static ICollection FindCertificates(
@@ -864,7 +864,7 @@ namespace Org.BouncyCastle.Pkix
 			}
 			catch (Exception e)
 			{
-				new Exception("Could not get issuer information from distribution point.", e);
+				throw new Exception("Could not get issuer information from distribution point.", e);
 			}
 
 			if (cert is X509Certificate)
@@ -924,7 +924,7 @@ namespace Org.BouncyCastle.Pkix
 			}
 			catch (IOException e)
 			{
-				new Exception("Cannot extract issuer from CRL.", e);
+				throw new Exception("Cannot extract issuer from CRL.", e);
 			}
 
 			BigInteger completeCRLNumber = null;

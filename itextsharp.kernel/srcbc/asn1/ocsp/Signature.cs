@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Ocsp
 {
@@ -32,7 +32,7 @@ namespace Org.BouncyCastle.Asn1.Ocsp
 				return new Signature((Asn1Sequence)obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public Signature(
@@ -80,7 +80,12 @@ namespace Org.BouncyCastle.Asn1.Ocsp
 			get { return signatureValue; }
 		}
 
-		public Asn1Sequence Certs
+        public byte[] GetSignatureOctets()
+        {
+            return signatureValue.GetOctets();
+        }
+
+        public Asn1Sequence Certs
 		{
 			get { return certs; }
 		}

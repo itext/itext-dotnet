@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace Org.BouncyCastle.Bcpg.Sig
 {
     /**
@@ -25,15 +23,16 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
         public KeyExpirationTime(
             bool    critical,
-            byte[]     data)
-            : base(SignatureSubpacketTag.KeyExpireTime, critical, data)
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.KeyExpireTime, critical, isLongLength, data)
         {
         }
 
         public KeyExpirationTime(
             bool    critical,
-            long       seconds)
-            : base(SignatureSubpacketTag.KeyExpireTime, critical, TimeToBytes(seconds))
+            long    seconds)
+            : base(SignatureSubpacketTag.KeyExpireTime, critical, false, TimeToBytes(seconds))
         {
         }
 

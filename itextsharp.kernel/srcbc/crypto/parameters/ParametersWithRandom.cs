@@ -15,7 +15,7 @@ namespace Org.BouncyCastle.Crypto.Parameters
             SecureRandom		random)
         {
 			if (parameters == null)
-				throw new ArgumentNullException("random");
+				throw new ArgumentNullException("parameters");
 			if (random == null)
 				throw new ArgumentNullException("random");
 

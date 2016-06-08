@@ -103,7 +103,7 @@ namespace Org.BouncyCastle.X509
 			// TODO Allow 'objectDigest' to be null?
 
 			holder = new Holder(new ObjectDigestInfo(digestedObjectType, otherObjectTypeID,
-				new AlgorithmIdentifier(digestAlgorithm), Arrays.Clone(objectDigest)));
+				new AlgorithmIdentifier(new DerObjectIdentifier(digestAlgorithm)), Arrays.Clone(objectDigest)));
 		}
 
 		/**
@@ -147,7 +147,7 @@ namespace Org.BouncyCastle.X509
 
 				return odi == null
 					?	null
-					:	odi.DigestAlgorithm.ObjectID.Id;
+					:	odi.DigestAlgorithm.Algorithm.Id;
 			}
 		}
 

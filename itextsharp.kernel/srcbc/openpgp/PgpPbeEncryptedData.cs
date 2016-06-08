@@ -30,18 +30,43 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 		}
 
 		/// <summary>Return the decrypted input stream, using the passed in passphrase.</summary>
-        public Stream GetDataStream(
-            char[] passPhrase)
+        /// <remarks>
+        /// Conversion of the passphrase characters to bytes is performed using Convert.ToByte(), which is
+        /// the historical behaviour of the library (1.7 and earlier).
+        /// </remarks>
+        public Stream GetDataStream(char[] passPhrase)
+        {
+            return DoGetDataStream(PgpUtilities.EncodePassPhrase(passPhrase, false), true);
+        }
+
+		/// <summary>Return the decrypted input stream, using the passed in passphrase.</summary>
+        /// <remarks>
+        /// The passphrase is encoded to bytes using UTF8 (Encoding.UTF8.GetBytes).
+        /// </remarks>
+        public Stream GetDataStreamUtf8(char[] passPhrase)
+        {
+            return DoGetDataStream(PgpUtilities.EncodePassPhrase(passPhrase, true), true);
+        }
+
+		/// <summary>Return the decrypted input stream, using the passed in passphrase.</summary>
+        /// <remarks>
+        /// Allows the caller to handle the encoding of the passphrase to bytes.
+        /// </remarks>
+        public Stream GetDataStreamRaw(byte[] rawPassPhrase)
+        {
+            return DoGetDataStream(rawPassPhrase, false);
+        }
+
+        internal Stream DoGetDataStream(byte[] rawPassPhrase, bool clearPassPhrase)
         {
 			try
 			{
 				SymmetricKeyAlgorithmTag keyAlgorithm = keyData.EncAlgorithm;
 
-				KeyParameter key = PgpUtilities.MakeKeyFromPassPhrase(
-					keyAlgorithm, keyData.S2k, passPhrase);
+				KeyParameter key = PgpUtilities.DoMakeKeyFromPassPhrase(
+					keyAlgorithm, keyData.S2k, rawPassPhrase, clearPassPhrase);
 
-
-				byte[] secKeyData = keyData.GetSecKeyData();
+                byte[] secKeyData = keyData.GetSecKeyData();
 				if (secKeyData != null && secKeyData.Length > 0)
 				{
 					IBufferedCipher keyCipher = CipherUtilities.GetCipher(

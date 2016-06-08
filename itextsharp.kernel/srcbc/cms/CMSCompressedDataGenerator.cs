@@ -5,6 +5,7 @@ using System.IO;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Zlib;
 
 namespace Org.BouncyCastle.Cms
@@ -45,9 +46,9 @@ namespace Org.BouncyCastle.Cms
 
 				content.Write(zOut);
 
-				zOut.Close();
+                Platform.Dispose(zOut);
 
-				comAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(compressionOid));
+                comAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(compressionOid));
 				comOcts = new BerOctetString(bOut.ToArray());
             }
             catch (IOException e)

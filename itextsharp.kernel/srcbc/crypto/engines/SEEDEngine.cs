@@ -168,7 +168,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		private int[] wKey;
 		private bool forEncryption;
 
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -176,22 +176,22 @@ namespace Org.BouncyCastle.Crypto.Engines
 			wKey = createWorkingKey(((KeyParameter)parameters).GetKey());
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "SEED"; }
 		}
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return BlockSize;
 		}
 
-		public int ProcessBlock(
+        public virtual int ProcessBlock(
 			byte[]	inBuf,
 			int		inOff,
 			byte[]	outBuf,
@@ -199,12 +199,11 @@ namespace Org.BouncyCastle.Crypto.Engines
 		{
 			if (wKey == null)
 				throw new InvalidOperationException("SEED engine not initialised");
-			if (inOff + BlockSize > inBuf.Length)
-				throw new DataLengthException("input buffer too short");
-			if (outOff + BlockSize > outBuf.Length)
-				throw new DataLengthException("output buffer too short");
 
-			long l = bytesToLong(inBuf, inOff + 0);
+            Check.DataLength(inBuf, inOff, BlockSize, "input buffer too short");
+            Check.OutputLength(outBuf, outOff, BlockSize, "output buffer too short");
+
+            long l = bytesToLong(inBuf, inOff + 0);
 			long r = bytesToLong(inBuf, inOff + 8);
 
 			if (forEncryption)
@@ -234,7 +233,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return BlockSize;
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
 		}
 

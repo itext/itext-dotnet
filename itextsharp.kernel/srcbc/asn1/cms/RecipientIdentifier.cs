@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -49,7 +49,7 @@ namespace Org.BouncyCastle.Asn1.Cms
                 return new RecipientIdentifier((Asn1Object) o);
 
 			throw new ArgumentException(
-              "Illegal object in RecipientIdentifier: " + o.GetType().Name);
+              "Illegal object in RecipientIdentifier: " + Platform.GetTypeName(o));
         }
 
 		public bool IsTagged

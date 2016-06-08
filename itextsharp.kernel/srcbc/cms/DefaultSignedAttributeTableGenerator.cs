@@ -41,7 +41,7 @@ namespace Org.BouncyCastle.Cms
 			}
 		}
 
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
 		/**
 		 * Create a standard attribute table from the passed in parameters - this will
 		 * normally include contentType, signingTime, and messageDigest. If the constructor

@@ -1,3 +1,5 @@
+using System;
+
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Crypto;
@@ -20,19 +22,19 @@ namespace Org.BouncyCastle.Crypto.Agreement
      * Section 7.2.2).
      */
     public class ECDHBasicAgreement
-		: IBasicAgreement
+        : IBasicAgreement
     {
         protected internal ECPrivateKeyParameters privKey;
 
         public virtual void Init(
-			ICipherParameters parameters)
+            ICipherParameters parameters)
         {
-			if (parameters is ParametersWithRandom)
-			{
-				parameters = ((ParametersWithRandom)parameters).Parameters;
-			}
+            if (parameters is ParametersWithRandom)
+            {
+                parameters = ((ParametersWithRandom)parameters).Parameters;
+            }
 
-			this.privKey = (ECPrivateKeyParameters)parameters;
+            this.privKey = (ECPrivateKeyParameters)parameters;
         }
 
         public virtual int GetFieldSize()
@@ -44,11 +46,15 @@ namespace Org.BouncyCastle.Crypto.Agreement
             ICipherParameters pubKey)
         {
             ECPublicKeyParameters pub = (ECPublicKeyParameters) pubKey;
-            ECPoint P = pub.Q.Multiply(privKey.D);
+            if (!pub.Parameters.Equals(privKey.Parameters))
+                throw new InvalidOperationException("ECDH public key has wrong domain parameters");
 
-            // if ( p.IsInfinity ) throw new Exception("d*Q == infinity");
+            ECPoint P = pub.Q.Multiply(privKey.D).Normalize();
 
-            return P.X.ToBigInteger();
+            if (P.IsInfinity)
+                throw new InvalidOperationException("Infinity is not a valid agreement value for ECDH");
+
+            return P.AffineXCoord.ToBigInteger();
         }
     }
 }

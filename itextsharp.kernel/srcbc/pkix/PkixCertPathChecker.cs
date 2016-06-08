@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using Org.BouncyCastle.Utilities.Collections;
 using Org.BouncyCastle.X509;
 
@@ -82,7 +80,7 @@ namespace Org.BouncyCastle.Pkix
          * @exception CertPathValidatorException
          *                if the specified certificate does not pass the check
          */
-        public abstract void Check(X509Certificate cert, ICollection unresolvedCritExts);
+        public abstract void Check(X509Certificate cert, ISet unresolvedCritExts);
         //throws CertPathValidatorException;
 
         /**

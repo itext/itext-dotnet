@@ -52,14 +52,14 @@ namespace Org.BouncyCastle.Crypto.Generators
 
         protected override byte[] engineGenerateKey()
         {
-            byte[] newKey;
+            byte[] newKey = new byte[strength];
 
-			do
+            do
             {
-                newKey = random.GenerateSeed(strength);
+                random.NextBytes(newKey);
                 DesEdeParameters.SetOddParity(newKey);
             }
-            while (DesEdeParameters.IsWeakKey(newKey, 0, newKey.Length));
+            while (DesEdeParameters.IsWeakKey(newKey, 0, newKey.Length) || !DesEdeParameters.IsRealEdeKey(newKey, 0));
 
             return newKey;
         }

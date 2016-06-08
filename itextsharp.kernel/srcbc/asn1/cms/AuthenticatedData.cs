@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -123,7 +124,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 				return new AuthenticatedData((Asn1Sequence)obj);
 			}
 
-			throw new ArgumentException("Invalid AuthenticatedData: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid AuthenticatedData: " + Platform.GetTypeName(obj));
 		}
 
 		public DerInteger Version

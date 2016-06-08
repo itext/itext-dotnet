@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Tsp
 {
@@ -26,7 +26,7 @@ namespace Org.BouncyCastle.Asn1.Tsp
 			}
 
 			throw new ArgumentException(
-				"Unknown object in 'TimeStampResp' factory: " + o.GetType().FullName);
+				"Unknown object in 'TimeStampResp' factory: " + Platform.GetTypeName(o));
 		}
 
 		private TimeStampResp(

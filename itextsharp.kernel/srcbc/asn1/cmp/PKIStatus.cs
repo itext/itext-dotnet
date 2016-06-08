@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cmp
 {
@@ -46,7 +47,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is DerInteger)
 				return new PkiStatusEncodable((DerInteger)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public virtual BigInteger Value

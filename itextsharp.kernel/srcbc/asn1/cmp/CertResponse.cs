@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cmp
 {
 	public class CertResponse
@@ -45,7 +47,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is Asn1Sequence)
 				return new CertResponse((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public CertResponse(
@@ -107,8 +109,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 		public override Asn1Object ToAsn1Object()
 		{
 			Asn1EncodableVector v = new Asn1EncodableVector(certReqId, status);
-			v.AddOptional(certifiedKeyPair);
-			v.AddOptional(rspInfo);
+			v.AddOptional(certifiedKeyPair, rspInfo);
 			return new DerSequence(v);
 		}
 	}

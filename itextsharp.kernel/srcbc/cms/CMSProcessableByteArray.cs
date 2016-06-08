@@ -11,23 +11,23 @@ namespace Org.BouncyCastle.Cms
 	{
 		private readonly byte[] bytes;
 
-		public CmsProcessableByteArray(
-			byte[] bytes)
+        public CmsProcessableByteArray(byte[] bytes)
 		{
 			this.bytes = bytes;
 		}
 
-		public Stream GetInputStream()
+        public virtual Stream GetInputStream()
 		{
 			return new MemoryStream(bytes, false);
 		}
 
-		public virtual void Write(Stream zOut)
+        public virtual void Write(Stream zOut)
 		{
 			zOut.Write(bytes, 0, bytes.Length);
 		}
 
-		/// <returns>A clone of the byte array</returns>
+        /// <returns>A clone of the byte array</returns>
+        [Obsolete]
 		public virtual object GetContent()
 		{
 			return bytes.Clone();

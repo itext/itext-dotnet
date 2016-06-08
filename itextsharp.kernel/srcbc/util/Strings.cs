@@ -3,33 +3,29 @@ using System.Text;
 
 namespace Org.BouncyCastle.Utilities
 {
-	/// <summary> General string utilities.</summary>
-	public sealed class Strings
-	{
-		private Strings()
-		{
-		}
+    /// <summary> General string utilities.</summary>
+    public abstract class Strings
+    {
+        internal static bool IsOneOf(string s, params string[] candidates)
+        {
+            foreach (string candidate in candidates)
+            {
+                if (s == candidate)
+                    return true;
+            }
+            return false;
+        }
 
-		internal static bool IsOneOf(string s, params string[] candidates)
-		{
-			foreach (string candidate in candidates)
-			{
-				if (s == candidate)
-					return true;
-			}
-			return false;
-		}
-
-		public static string FromByteArray(
-			byte[] bs)
-		{
-			char[] cs = new char[bs.Length];
-			for (int i = 0; i < cs.Length; ++i)
-			{
-				cs[i] = Convert.ToChar(bs[i]);
-			}
-			return new string(cs);
-		}
+        public static string FromByteArray(
+            byte[] bs)
+        {
+            char[] cs = new char[bs.Length];
+            for (int i = 0; i < cs.Length; ++i)
+            {
+                cs[i] = Convert.ToChar(bs[i]);
+            }
+            return new string(cs);
+        }
 
         public static byte[] ToByteArray(
             char[] cs)
@@ -43,20 +39,20 @@ namespace Org.BouncyCastle.Utilities
         }
 
         public static byte[] ToByteArray(
-			string s)
-		{
-			byte[] bs = new byte[s.Length];
-			for (int i = 0; i < bs.Length; ++i)
-			{
-				bs[i] = Convert.ToByte(s[i]);
-			}
-			return bs;
-		}
+            string s)
+        {
+            byte[] bs = new byte[s.Length];
+            for (int i = 0; i < bs.Length; ++i)
+            {
+                bs[i] = Convert.ToByte(s[i]);
+            }
+            return bs;
+        }
 
         public static string FromAsciiByteArray(
             byte[] bytes)
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
             // TODO Check for non-ASCII bytes in input?
             return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 #else
@@ -67,7 +63,7 @@ namespace Org.BouncyCastle.Utilities
         public static byte[] ToAsciiByteArray(
             char[] cs)
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
             // TODO Check for non-ASCII characters in input?
             return Encoding.UTF8.GetBytes(cs);
 #else
@@ -78,7 +74,7 @@ namespace Org.BouncyCastle.Utilities
         public static byte[] ToAsciiByteArray(
             string s)
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
             // TODO Check for non-ASCII characters in input?
             return Encoding.UTF8.GetBytes(s);
 #else
@@ -87,10 +83,10 @@ namespace Org.BouncyCastle.Utilities
         }
 
         public static string FromUtf8ByteArray(
-			byte[] bytes)
-		{
-			return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-		}
+            byte[] bytes)
+        {
+            return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+        }
 
         public static byte[] ToUtf8ByteArray(
             char[] cs)
@@ -98,10 +94,10 @@ namespace Org.BouncyCastle.Utilities
             return Encoding.UTF8.GetBytes(cs);
         }
 
-		public static byte[] ToUtf8ByteArray(
-			string s)
-		{
-			return Encoding.UTF8.GetBytes(s);
-		}
-	}
+        public static byte[] ToUtf8ByteArray(
+            string s)
+        {
+            return Encoding.UTF8.GetBytes(s);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -36,6 +37,13 @@ namespace Org.BouncyCastle.Crypto.Digests
         */
         public Sha256Digest(Sha256Digest t) : base(t)
         {
+			CopyIn(t);
+		}
+
+		private void CopyIn(Sha256Digest t)
+		{
+			base.CopyIn(t);
+
             H1 = t.H1;
             H2 = t.H2;
             H3 = t.H3;
@@ -305,5 +313,18 @@ namespace Org.BouncyCastle.Crypto.Digests
             0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
             0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
         };
+		
+		public override IMemoable Copy()
+		{
+			return new Sha256Digest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			Sha256Digest d = (Sha256Digest)other;
+
+			CopyIn(d);
+		}
+
     }
 }

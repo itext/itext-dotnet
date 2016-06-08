@@ -11,6 +11,9 @@ namespace Org.BouncyCastle.Crypto.Modes
 		/// <summary>The name of the algorithm this cipher implements.</summary>
 		string AlgorithmName { get; }
 
+		/// <summary>The block cipher underlying this algorithm.</summary>
+		IBlockCipher GetUnderlyingCipher();
+
 		/// <summary>Initialise the cipher.</summary>
 		/// <remarks>Parameter can either be an AeadParameters or a ParametersWithIV object.</remarks>
 		/// <param name="forEncryption">Initialise for encryption if true, for decryption if false.</param>

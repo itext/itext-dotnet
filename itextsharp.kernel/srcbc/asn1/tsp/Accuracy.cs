@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Tsp
 {
 	public class Accuracy
@@ -97,7 +99,7 @@ namespace Org.BouncyCastle.Asn1.Tsp
 			}
 
 			throw new ArgumentException(
-				"Unknown object in 'Accuracy' factory: " + o.GetType().FullName);
+				"Unknown object in 'Accuracy' factory: " + Platform.GetTypeName(o));
 		}
 
 		public DerInteger Seconds

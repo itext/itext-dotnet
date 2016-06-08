@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -49,7 +49,7 @@ namespace Org.BouncyCastle.Asn1.Cms
                 return new SignerIdentifier((Asn1Object) o);
 
 			throw new ArgumentException(
-				"Illegal object in SignerIdentifier: " + o.GetType().Name);
+                "Illegal object in SignerIdentifier: " + Platform.GetTypeName(o));
         }
 
 		public bool IsTagged

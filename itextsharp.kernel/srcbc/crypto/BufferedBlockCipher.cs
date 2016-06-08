@@ -118,7 +118,7 @@ namespace Org.BouncyCastle.Crypto
 		}
 
 		/**
-		* process a single byte, producing an output block if neccessary.
+		* process a single byte, producing an output block if necessary.
 		*
 		* @param in the input byte.
 		* @param out the space for any output that might be produced.
@@ -223,13 +223,10 @@ namespace Org.BouncyCastle.Crypto
 
 			if (outLength > 0)
 			{
-				if ((outOff + outLength) > output.Length)
-				{
-					throw new DataLengthException("output buffer too short");
-				}
+                Check.OutputLength(output, outOff, outLength, "output buffer too short");
 			}
 
-			int resultLen = 0;
+            int resultLen = 0;
 			int gapLen = buf.Length - bufOff;
 			if (length > gapLen)
 			{
@@ -339,17 +336,10 @@ namespace Org.BouncyCastle.Crypto
 			{
 				if (bufOff != 0)
 				{
-					if (!cipher.IsPartialBlockOkay)
-					{
-						throw new DataLengthException("data not block size aligned");
-					}
-	
-					if (outOff + bufOff > output.Length)
-					{
-						throw new DataLengthException("output buffer too short for DoFinal()");
-					}
-	
-					// NB: Can't copy directly, or we may write too much output
+                    Check.DataLength(!cipher.IsPartialBlockOkay, "data not block size aligned");
+                    Check.OutputLength(output, outOff, bufOff, "output buffer too short for DoFinal()");
+
+                    // NB: Can't copy directly, or we may write too much output
 					cipher.ProcessBlock(buf, 0, buf, 0);
 					Array.Copy(buf, 0, output, outOff, bufOff);
 				}

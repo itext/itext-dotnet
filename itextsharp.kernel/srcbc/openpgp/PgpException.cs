@@ -3,7 +3,7 @@ using System;
 namespace Org.BouncyCastle.Bcpg.OpenPgp
 {
 	/// <remarks>Generic exception class for PGP encoding/decoding problems.</remarks>
-#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT)
+#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT || PORTABLE)
     [Serializable]
 #endif
     public class PgpException

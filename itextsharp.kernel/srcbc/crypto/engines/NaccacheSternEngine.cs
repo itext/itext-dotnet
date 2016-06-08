@@ -20,9 +20,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 
 		private IList[] lookup = null;
 
-		private bool debug = false;
-
-		public string AlgorithmName
+        public string AlgorithmName
 		{
 			get { return "NaccacheStern"; }
 		}
@@ -33,7 +31,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @see org.bouncycastle.crypto.AsymmetricBlockCipher#init(bool,
 		*      org.bouncycastle.crypto.CipherParameters)
 		*/
-		public void Init(
+		public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -49,10 +47,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 			// construct lookup table for faster decryption if necessary
 			if (!this.forEncryption)
 			{
-				if (debug)
-				{
-					Console.WriteLine("Constructing lookup Array");
-				}
 				NaccacheSternPrivateKeyParameters priv = (NaccacheSternPrivateKeyParameters)key;
 				IList primes = priv.SmallPrimesList;
 				lookup = new IList[primes.Count];
@@ -63,11 +57,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 
 					lookup[i] = Platform.CreateArrayList(actualPrimeValue);
 					lookup[i].Add(BigInteger.One);
-
-					if (debug)
-					{
-						Console.WriteLine("Constructing lookup ArrayList for " + actualPrimeValue);
-					}
 
 					BigInteger accJ = BigInteger.Zero;
 
@@ -83,17 +72,18 @@ namespace Org.BouncyCastle.Crypto.Engines
 			}
 		}
 
-		public bool Debug
+        [Obsolete("Remove: no longer used")]
+        public virtual bool Debug
 		{
-			set { this.debug = value; }
+			set {}
 		}
 
-		/**
+        /**
 		* Returns the input block size of this algorithm.
 		*
 		* @see org.bouncycastle.crypto.AsymmetricBlockCipher#GetInputBlockSize()
 		*/
-		public int GetInputBlockSize()
+        public virtual int GetInputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -113,7 +103,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @see org.bouncycastle.crypto.AsymmetricBlockCipher#GetOutputBlockSize()
 		*/
-		public int GetOutputBlockSize()
+        public virtual int GetOutputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -134,7 +124,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @see org.bouncycastle.crypto.AsymmetricBlockCipher#ProcessBlock(byte[],
 		*      int, int)
 		*/
-		public byte[] ProcessBlock(
+        public virtual byte[] ProcessBlock(
 			byte[]	inBytes,
 			int		inOff,
 			int		length)
@@ -156,11 +146,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 			// transform input into BigInteger
 			BigInteger input = new BigInteger(1, inBytes, inOff, length);
 
-			if (debug)
-			{
-				Console.WriteLine("input as BigInteger: " + input);
-			}
-
 			byte[] output;
 			if (forEncryption)
 			{
@@ -178,10 +163,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 					IList al = lookup[i];
 					if (lookup[i].Count != ((BigInteger)primes[i]).IntValue)
 					{
-						if (debug)
-						{
-							Console.WriteLine("Prime is " + primes[i] + ", lookup table has size " + al.Count);
-						}
 						throw new InvalidCipherTextException("Error in lookup Array for "
 										+ ((BigInteger)primes[i]).IntValue
 										+ ": Size mismatch. Expected ArrayList with length "
@@ -192,18 +173,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 
 					if (lookedup == -1)
 					{
-						if (debug)
-						{
-							Console.WriteLine("Actual prime is " + primes[i]);
-							Console.WriteLine("Decrypted value is " + exp);
-
-							Console.WriteLine("LookupList for " + primes[i] + " with size " + lookup[i].Count
-											+ " is: ");
-							for (int j = 0; j < lookup[i].Count; j++)
-							{
-								Console.WriteLine(lookup[i][j]);
-							}
-						}
 						throw new InvalidCipherTextException("Lookup failed");
 					}
 					plain.Add(BigInteger.ValueOf(lookedup));
@@ -218,16 +187,9 @@ namespace Org.BouncyCastle.Crypto.Engines
 				// to guess them. But as stated in the paper, this is not a security
 				// breach. So we can just work with the correct sigma.
 
-				// if (debug) {
-				//      Console.WriteLine("Decryption is " + test);
-				// }
 				// if ((key.G.ModPow(test, key.Modulus)).Equals(input)) {
 				//      output = test.ToByteArray();
 				// } else {
-				//      if(debug){
-				//          Console.WriteLine("Engine seems to be used as an oracle,
-				//          returning null");
-				//      }
 				//      output = null;
 				// }
 
@@ -245,7 +207,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return The byte[] representation of the encrypted BigInteger (i.e.
 		*         crypted.toByteArray())
 		*/
-		public byte[] Encrypt(
+        public virtual byte[] Encrypt(
 			BigInteger plain)
 		{
 			// Always return modulus size values 0-padded at the beginning
@@ -256,10 +218,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 
 			byte[] tmp = key.G.ModPow(plain, key.Modulus).ToByteArray();
 			Array.Copy(tmp, 0, output, output.Length - tmp.Length, tmp.Length);
-			if (debug)
-			{
-				Console.WriteLine("Encrypted value is:  " + new BigInteger(output));
-			}
 			return output;
 		}
 
@@ -273,7 +231,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return encrypt((block1 + block2) mod sigma)
 		* @throws InvalidCipherTextException
 		*/
-		public byte[] AddCryptedBlocks(
+        public virtual byte[] AddCryptedBlocks(
 			byte[] block1,
 			byte[] block2)
 		{
@@ -302,14 +260,8 @@ namespace Org.BouncyCastle.Crypto.Engines
 			BigInteger m2Crypt = new BigInteger(1, block2);
 			BigInteger m1m2Crypt = m1Crypt.Multiply(m2Crypt);
 			m1m2Crypt = m1m2Crypt.Mod(key.Modulus);
-			if (debug)
-			{
-				Console.WriteLine("c(m1) as BigInteger:....... " + m1Crypt);
-				Console.WriteLine("c(m2) as BigInteger:....... " + m2Crypt);
-				Console.WriteLine("c(m1)*c(m2)%n = c(m1+m2)%n: " + m1m2Crypt);
-			}
 
-			//byte[] output = key.Modulus.ToByteArray();
+            //byte[] output = key.Modulus.ToByteArray();
 			//Array.Clear(output, 0, output.Length);
 			byte[] output = new byte[key.Modulus.BitLength / 8 + 1];
 
@@ -329,23 +281,13 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return the data after it went through the NaccacheSternEngine.
 		* @throws InvalidCipherTextException
 		*/
-		public byte[] ProcessData(
+        public virtual byte[] ProcessData(
 			byte[] data)
 		{
-			if (debug)
-			{
-				Console.WriteLine();
-			}
 			if (data.Length > GetInputBlockSize())
 			{
 				int inBlocksize = GetInputBlockSize();
 				int outBlocksize = GetOutputBlockSize();
-				if (debug)
-				{
-					Console.WriteLine("Input blocksize is:  " + inBlocksize + " bytes");
-					Console.WriteLine("Output blocksize is: " + outBlocksize + " bytes");
-					Console.WriteLine("Data has length:.... " + data.Length + " bytes");
-				}
 				int datapos = 0;
 				int retpos = 0;
 				byte[] retval = new byte[(data.Length / inBlocksize + 1) * outBlocksize];
@@ -362,10 +304,6 @@ namespace Org.BouncyCastle.Crypto.Engines
 						tmp = ProcessBlock(data, datapos, data.Length - datapos);
 						datapos += data.Length - datapos;
 					}
-					if (debug)
-					{
-						Console.WriteLine("new datapos is " + datapos);
-					}
 					if (tmp != null)
 					{
 						tmp.CopyTo(retval, retpos);
@@ -373,27 +311,15 @@ namespace Org.BouncyCastle.Crypto.Engines
 					}
 					else
 					{
-						if (debug)
-						{
-							Console.WriteLine("cipher returned null");
-						}
 						throw new InvalidCipherTextException("cipher returned null");
 					}
 				}
 				byte[] ret = new byte[retpos];
 				Array.Copy(retval, 0, ret, 0, retpos);
-				if (debug)
-				{
-					Console.WriteLine("returning " + ret.Length + " bytes");
-				}
 				return ret;
 			}
 			else
 			{
-				if (debug)
-				{
-					Console.WriteLine("data size is less then input block size, processing directly");
-				}
 				return ProcessBlock(data, 0, data.Length);
 			}
 		}

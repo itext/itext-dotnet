@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.X9
 {
 	public class DHValidationParms
@@ -21,7 +23,7 @@ namespace Org.BouncyCastle.Asn1.X9
 			if (obj is Asn1Sequence)
 				return new DHValidationParms((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid DHValidationParms: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Invalid DHValidationParms: " + Platform.GetTypeName(obj), "obj");
 		}
 		
 		public DHValidationParms(DerBitString seed, DerInteger pgenCounter)

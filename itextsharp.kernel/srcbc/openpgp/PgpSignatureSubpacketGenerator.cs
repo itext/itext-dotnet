@@ -25,7 +25,14 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
             list.Add(new Exportable(isCritical, isExportable));
         }
 
-		/// <summary>
+        public void SetFeature(
+            bool    isCritical,
+            byte    feature)
+        {
+            list.Add(new Features(isCritical, feature));
+        }
+
+        /// <summary>
 		/// Add a TrustSignature packet to the signature. The values for depth and trust are largely
 		/// installation dependent but there are some guidelines in RFC 4880 - 5.2.3.13.
 		/// </summary>
@@ -117,7 +124,17 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			list.Add(new SignerUserId(isCritical, userId));
         }
 
-		public void SetEmbeddedSignature(
+        public void SetSignerUserId(
+            bool    isCritical,
+            byte[]  rawUserId)
+        {
+            if (rawUserId == null)
+                throw new ArgumentNullException("rawUserId");
+
+            list.Add(new SignerUserId(isCritical, false, rawUserId));
+        }
+
+        public void SetEmbeddedSignature(
 			bool			isCritical,
 			PgpSignature	pgpSignature)
 		{
@@ -136,7 +153,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 
 			Array.Copy(sig, sig.Length - data.Length, data, 0, data.Length);
 
-			list.Add(new EmbeddedSignature(isCritical, data));
+			list.Add(new EmbeddedSignature(isCritical, false, data));
 		}
 
 		public void SetPrimaryUserId(

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Cms
@@ -8,44 +9,44 @@ namespace Org.BouncyCastle.Cms
 	public class CmsProcessableInputStream
 		: CmsProcessable, CmsReadable
 	{
-		private Stream input;
-		private bool used = false;
+		private readonly Stream input;
 
-		public CmsProcessableInputStream(
-			Stream input)
+        private bool used = false;
+
+        public CmsProcessableInputStream(Stream input)
 		{
 			this.input = input;
 		}
 
-		public Stream GetInputStream()
+        public virtual Stream GetInputStream()
 		{
 			CheckSingleUsage();
 
-			return input;
+            return input;
 		}
 
-		public void Write(Stream output)
+        public virtual void Write(Stream output)
 		{
 			CheckSingleUsage();
 
 			Streams.PipeAll(input, output);
-			input.Close();
+            Platform.Dispose(input);
 		}
 
-		[Obsolete]
-		public object GetContent()
+        [Obsolete]
+		public virtual object GetContent()
 		{
 			return GetInputStream();
 		}
 
-		private void CheckSingleUsage()
+        protected virtual void CheckSingleUsage()
 		{
 			lock (this)
 			{
 				if (used)
 					throw new InvalidOperationException("CmsProcessableInputStream can only be used once");
 
-				used = true;
+                used = true;
 			}
 		}
 	}

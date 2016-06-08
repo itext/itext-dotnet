@@ -21,22 +21,42 @@ namespace Org.BouncyCastle.Crypto.Parameters
 			ECPrivateKeyParameters	ephemeralPrivateKey,
 			ECPublicKeyParameters	ephemeralPublicKey)
 		{
-			this.staticPrivateKey = staticPrivateKey;
-			this.ephemeralPrivateKey = ephemeralPrivateKey;
-			this.ephemeralPublicKey = ephemeralPublicKey;
+            if (staticPrivateKey == null)
+                throw new ArgumentNullException("staticPrivateKey");
+            if (ephemeralPrivateKey == null)
+                throw new ArgumentNullException("ephemeralPrivateKey");
+
+            ECDomainParameters parameters = staticPrivateKey.Parameters;
+            if (!parameters.Equals(ephemeralPrivateKey.Parameters))
+                throw new ArgumentException("Static and ephemeral private keys have different domain parameters");
+
+            if (ephemeralPublicKey == null)
+            {
+                ephemeralPublicKey = new ECPublicKeyParameters(
+                    parameters.G.Multiply(ephemeralPrivateKey.D),
+                    parameters);
+            }
+            else if (!parameters.Equals(ephemeralPublicKey.Parameters))
+            {
+                throw new ArgumentException("Ephemeral public key has different domain parameters");
+            }
+
+            this.staticPrivateKey = staticPrivateKey;
+            this.ephemeralPrivateKey = ephemeralPrivateKey;
+            this.ephemeralPublicKey = ephemeralPublicKey;
 		}
 
-		public ECPrivateKeyParameters StaticPrivateKey
+        public virtual ECPrivateKeyParameters StaticPrivateKey
 		{
 			get { return staticPrivateKey; }
 		}
 
-		public ECPrivateKeyParameters EphemeralPrivateKey
+        public virtual ECPrivateKeyParameters EphemeralPrivateKey
 		{
 			get { return ephemeralPrivateKey; }
 		}
 
-		public ECPublicKeyParameters EphemeralPublicKey
+        public virtual ECPublicKeyParameters EphemeralPublicKey
 		{
 			get { return ephemeralPublicKey; }
 		}

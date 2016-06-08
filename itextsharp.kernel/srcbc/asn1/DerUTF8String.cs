@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1
 {
     /**
@@ -24,7 +26,7 @@ namespace Org.BouncyCastle.Asn1
                 return (DerUtf8String)obj;
             }
 
-			throw new ArgumentException("illegal object in GetInstance: " + obj.GetType().Name);
+            throw new ArgumentException("illegal object in GetInstance: " + Platform.GetTypeName(obj));
         }
 
         /**

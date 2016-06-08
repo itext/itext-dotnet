@@ -29,7 +29,7 @@ namespace Org.BouncyCastle.Asn1.X509
 			this.seq = seq;
 		}
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
         public PolicyMappings(
             Hashtable mappings)
             : this((IDictionary)mappings)

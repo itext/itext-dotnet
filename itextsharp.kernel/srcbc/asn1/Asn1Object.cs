@@ -13,13 +13,18 @@ namespace Org.BouncyCastle.Asn1
 		public static Asn1Object FromByteArray(
 			byte[] data)
 		{
-			try
+            try
 			{
-				return new Asn1InputStream(data).ReadObject();
+                MemoryStream input = new MemoryStream(data, false);
+                Asn1InputStream asn1 = new Asn1InputStream(input, data.Length);
+                Asn1Object result = asn1.ReadObject();
+                if (input.Position != input.Length)
+                    throw new IOException("extra data found after object");
+                return result;
 			}
 			catch (InvalidCastException)
 			{
-				throw new IOException("cannot recognise object in stream");    
+				throw new IOException("cannot recognise object in byte array");
 			}
 		}
 
@@ -36,7 +41,7 @@ namespace Org.BouncyCastle.Asn1
 			}
 			catch (InvalidCastException)
 			{
-				throw new IOException("cannot recognise object in stream");    
+				throw new IOException("cannot recognise object in stream");
 			}
 		}
 

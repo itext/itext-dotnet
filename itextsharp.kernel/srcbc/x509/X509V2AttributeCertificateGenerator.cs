@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.IO;
 
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
@@ -66,12 +68,13 @@ namespace Org.BouncyCastle.X509
 			acInfoGen.SetEndDate(new DerGeneralizedTime(date));
 		}
 
-		/// <summary>
-		/// Set the signature algorithm. This can be either a name or an OID, names
-		/// are treated as case insensitive.
-		/// </summary>
-		/// <param name="signatureAlgorithm">The algorithm name.</param>
-		public void SetSignatureAlgorithm(
+        /// <summary>
+        /// Set the signature algorithm. This can be either a name or an OID, names
+        /// are treated as case insensitive.
+        /// </summary>
+        /// <param name="signatureAlgorithm">The algorithm name.</param>
+        [Obsolete("Not needed if Generate used with an ISignatureFactory")]
+        public void SetSignatureAlgorithm(
 			string signatureAlgorithm)
 		{
 			this.signatureAlgorithm = signatureAlgorithm;
@@ -127,37 +130,57 @@ namespace Org.BouncyCastle.X509
 			extGenerator.AddExtension(new DerObjectIdentifier(oid), critical, extensionValue);
 		}
 
-		/// <summary>
-		/// Generate an X509 certificate, based on the current issuer and subject.
-		/// </summary>
-		public IX509AttributeCertificate Generate(
-			AsymmetricKeyParameter publicKey)
+        /// <summary>
+        /// Generate an X509 certificate, based on the current issuer and subject.
+        /// </summary>
+        [Obsolete("Use Generate with an ISignatureFactory")]
+        public IX509AttributeCertificate Generate(
+			AsymmetricKeyParameter privateKey)
 		{
-			return Generate(publicKey, null);
+			return Generate(privateKey, null);
 		}
 
-		/// <summary>
-		/// Generate an X509 certificate, based on the current issuer and subject,
-		/// using the supplied source of randomness, if required.
-		/// </summary>
-		public IX509AttributeCertificate Generate(
-			AsymmetricKeyParameter	publicKey,
+        /// <summary>
+        /// Generate an X509 certificate, based on the current issuer and subject,
+        /// using the supplied source of randomness, if required.
+        /// </summary>
+        [Obsolete("Use Generate with an ISignatureFactory")]
+        public IX509AttributeCertificate Generate(
+			AsymmetricKeyParameter	privateKey,
 			SecureRandom			random)
-		{
-			if (!extGenerator.IsEmpty)
+        {
+            return Generate(new Asn1SignatureFactory(signatureAlgorithm, privateKey, random));
+        }
+
+        /// <summary>
+        /// Generate a new X.509 Attribute Certificate using the passed in SignatureCalculator.
+        /// </summary>
+        /// <param name="signatureCalculatorFactory">A signature calculator factory with the necessary algorithm details.</param>
+        /// <returns>An IX509AttributeCertificate.</returns>
+        public IX509AttributeCertificate Generate(ISignatureFactory signatureCalculatorFactory)
+        {
+            if (!extGenerator.IsEmpty)
 			{
 				acInfoGen.SetExtensions(extGenerator.Generate());
 			}
 
 			AttributeCertificateInfo acInfo = acInfoGen.GenerateAttributeCertificateInfo();
 
-			Asn1EncodableVector v = new Asn1EncodableVector();
+            byte[] encoded = acInfo.GetDerEncoded();
 
-			v.Add(acInfo, sigAlgId);
+            IStreamCalculator streamCalculator = signatureCalculatorFactory.CreateCalculator();
+
+            streamCalculator.Stream.Write(encoded, 0, encoded.Length);
+
+            Platform.Dispose(streamCalculator.Stream);
+
+            Asn1EncodableVector v = new Asn1EncodableVector();
+
+			v.Add(acInfo, (AlgorithmIdentifier)signatureCalculatorFactory.AlgorithmDetails);
 
 			try
 			{
-				v.Add(new DerBitString(X509Utilities.GetSignatureForObject(sigOID, signatureAlgorithm, publicKey, random, acInfo)));
+				v.Add(new DerBitString(((IBlockResult)streamCalculator.GetResult()).Collect()));
 
 				return new X509V2AttributeCertificate(AttributeCertificate.GetInstance(new DerSequence(v)));
 			}

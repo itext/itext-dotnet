@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace Org.BouncyCastle.Bcpg.Sig
 {
     /**
@@ -28,16 +26,17 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
         public Revocable(
             bool    critical,
-            byte[]     data)
-            : base(SignatureSubpacketTag.Revocable, critical, data)
-    {
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.Revocable, critical, isLongLength, data)
+        {
         }
 
         public Revocable(
             bool    critical,
             bool    isRevocable)
-            : base(SignatureSubpacketTag.Revocable, critical, BooleanToByteArray(isRevocable))
-    {
+            : base(SignatureSubpacketTag.Revocable, critical, false, BooleanToByteArray(isRevocable))
+        {
         }
 
         public bool IsRevocable()

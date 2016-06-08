@@ -3,6 +3,7 @@ using System.Collections;
 
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Macs
 {
@@ -20,6 +21,8 @@ namespace Org.BouncyCastle.Crypto.Macs
         private readonly IDigest digest;
         private readonly int digestSize;
         private readonly int blockLength;
+		private IMemoable ipadState;
+		private IMemoable opadState;
 
 		private readonly byte[] inputPad;
         private readonly byte[] outputBuf;
@@ -68,8 +71,19 @@ namespace Org.BouncyCastle.Crypto.Macs
 			XorPad(inputPad, blockLength, IPAD);
             XorPad(outputBuf, blockLength, OPAD);
 
-            // Initialise the digest
+			if (digest is IMemoable)
+			{
+				opadState = ((IMemoable)digest).Copy();
+
+				((IDigest)opadState).BlockUpdate(outputBuf, 0, blockLength);
+			}
+
 			digest.BlockUpdate(inputPad, 0, inputPad.Length);
+
+			if (digest is IMemoable)
+			{
+				ipadState = ((IMemoable)digest).Copy();
+			}
         }
 
         public virtual int GetMacSize()
@@ -90,13 +104,29 @@ namespace Org.BouncyCastle.Crypto.Macs
         public virtual int DoFinal(byte[] output, int outOff)
         {
             digest.DoFinal(outputBuf, blockLength);
-            digest.BlockUpdate(outputBuf, 0, outputBuf.Length);
-            int len = digest.DoFinal(output, outOff);
 
-            Array.Clear(outputBuf, blockLength, digestSize);
+			if (opadState != null)
+			{
+				((IMemoable)digest).Reset(opadState);
+				digest.BlockUpdate(outputBuf, blockLength, digest.GetDigestSize());
+			}
+			else
+			{
+				digest.BlockUpdate(outputBuf, 0, outputBuf.Length);
+			}
 
-			// Initialise the digest
-            digest.BlockUpdate(inputPad, 0, inputPad.Length);
+			int len = digest.DoFinal(output, outOff);
+
+			Array.Clear(outputBuf, blockLength, digestSize);
+
+			if (ipadState != null)
+			{
+				((IMemoable)digest).Reset(ipadState);
+			}
+			else
+			{
+				digest.BlockUpdate(inputPad, 0, inputPad.Length);
+			}
 
             return len;
         }

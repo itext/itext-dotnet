@@ -6,11 +6,11 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace Org.BouncyCastle.Ocsp
 {
@@ -185,21 +185,12 @@ namespace Org.BouncyCastle.Ocsp
 		}
 
 		private BasicOcspResp GenerateResponse(
-			string					signatureName,
-			AsymmetricKeyParameter	privateKey,
+			ISignatureFactory    signatureCalculator,
 			X509Certificate[]		chain,
-			DateTime				producedAt,
-			SecureRandom			random)
+			DateTime				producedAt)
 		{
-			DerObjectIdentifier signingAlgorithm;
-			try
-			{
-				signingAlgorithm = OcspUtilities.GetAlgorithmOid(signatureName);
-			}
-			catch (Exception e)
-			{
-				throw new ArgumentException("unknown signing algorithm specified", e);
-			}
+            AlgorithmIdentifier signingAlgID = (AlgorithmIdentifier)signatureCalculator.AlgorithmDetails;
+            DerObjectIdentifier signingAlgorithm = signingAlgID.Algorithm;
 
 			Asn1EncodableVector responses = new Asn1EncodableVector();
 
@@ -216,35 +207,19 @@ namespace Org.BouncyCastle.Ocsp
 			}
 
 			ResponseData tbsResp = new ResponseData(responderID.ToAsn1Object(), new DerGeneralizedTime(producedAt), new DerSequence(responses), responseExtensions);
-
-			ISigner sig = null;
-
-			try
-			{
-				sig = SignerUtilities.GetSigner(signatureName);
-
-				if (random != null)
-				{
-					sig.Init(true, new ParametersWithRandom(privateKey, random));
-				}
-				else
-				{
-					sig.Init(true, privateKey);
-				}
-			}
-			catch (Exception e)
-			{
-				throw new OcspException("exception creating signature: " + e, e);
-			}
-
 			DerBitString bitSig = null;
 
 			try
 			{
-				byte[] encoded = tbsResp.GetDerEncoded();
-				sig.BlockUpdate(encoded, 0, encoded.Length);
+                IStreamCalculator streamCalculator = signatureCalculator.CreateCalculator();
 
-				bitSig = new DerBitString(sig.GenerateSignature());
+				byte[] encoded = tbsResp.GetDerEncoded();
+
+                streamCalculator.Stream.Write(encoded, 0, encoded.Length);
+
+                Platform.Dispose(streamCalculator.Stream);
+
+                bitSig = new DerBitString(((IBlockResult)streamCalculator.GetResult()).Collect());
 			}
 			catch (Exception e)
 			{
@@ -302,15 +277,35 @@ namespace Org.BouncyCastle.Ocsp
 				throw new ArgumentException("no signing algorithm specified");
 			}
 
-			return GenerateResponse(signingAlgorithm, privateKey, chain, producedAt, random);
+			return GenerateResponse(new Asn1SignatureFactory(signingAlgorithm, privateKey, random), chain, producedAt);
 		}
 
-		/**
+        /// <summary>
+        /// Generate the signed response using the passed in signature calculator.
+        /// </summary>
+        /// <param name="signatureCalculatorFactory">Implementation of signing calculator factory.</param>
+        /// <param name="chain">The certificate chain associated with the response signer.</param>
+        /// <param name="producedAt">"produced at" date.</param>
+        /// <returns></returns>
+        public BasicOcspResp Generate(
+            ISignatureFactory signatureCalculatorFactory,
+            X509Certificate[] chain,
+            DateTime producedAt)
+        {
+            if (signatureCalculatorFactory == null)
+            {
+                throw new ArgumentException("no signature calculator specified");
+            }
+
+            return GenerateResponse(signatureCalculatorFactory, chain, producedAt);
+        }
+
+        /**
 		 * Return an IEnumerable of the signature names supported by the generator.
 		 *
 		 * @return an IEnumerable containing recognised names.
 		 */
-		public IEnumerable SignatureAlgNames
+        public IEnumerable SignatureAlgNames
 		{
 			get { return OcspUtilities.AlgNames; }
 		}

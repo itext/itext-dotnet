@@ -34,16 +34,23 @@ namespace Org.BouncyCastle.Crypto.Agreement
             MqvPublicParameters pubParams = (MqvPublicParameters)pubKey;
 
             ECPrivateKeyParameters staticPrivateKey = privParams.StaticPrivateKey;
+            ECDomainParameters parameters = staticPrivateKey.Parameters;
 
-            ECPoint agreement = calculateMqvAgreement(staticPrivateKey.Parameters, staticPrivateKey,
+            if (!parameters.Equals(pubParams.StaticPublicKey.Parameters))
+                throw new InvalidOperationException("ECMQV public key components have wrong domain parameters");
+
+            ECPoint agreement = CalculateMqvAgreement(parameters, staticPrivateKey,
                 privParams.EphemeralPrivateKey, privParams.EphemeralPublicKey,
-                pubParams.StaticPublicKey, pubParams.EphemeralPublicKey);
+                pubParams.StaticPublicKey, pubParams.EphemeralPublicKey).Normalize();
 
-            return agreement.X.ToBigInteger();
+            if (agreement.IsInfinity)
+                throw new InvalidOperationException("Infinity is not a valid agreement value for MQV");
+
+            return agreement.AffineXCoord.ToBigInteger();
         }
-        
+
         // The ECMQV Primitive as described in SEC-1, 3.4
-        private static ECPoint calculateMqvAgreement(
+        private static ECPoint CalculateMqvAgreement(
             ECDomainParameters		parameters,
             ECPrivateKeyParameters	d1U,
             ECPrivateKeyParameters	d2U,
@@ -55,36 +62,32 @@ namespace Org.BouncyCastle.Crypto.Agreement
             int e = (n.BitLength + 1) / 2;
             BigInteger powE = BigInteger.One.ShiftLeft(e);
 
-            // The Q2U public key is optional
-            ECPoint q;
-            if (Q2U == null)
-            {
-                q = parameters.G.Multiply(d2U.D);
-            }
-            else
-            {
-                q = Q2U.Q;
-            }
+            ECCurve curve = parameters.Curve;
 
-            BigInteger x = q.X.ToBigInteger();
+            ECPoint[] points = new ECPoint[]{
+                // The Q2U public key is optional - but will be calculated for us if it wasn't present
+                ECAlgorithms.ImportPoint(curve, Q2U.Q),
+                ECAlgorithms.ImportPoint(curve, Q1V.Q),
+                ECAlgorithms.ImportPoint(curve, Q2V.Q)
+            };
+
+            curve.NormalizeAll(points);
+
+            ECPoint q2u = points[0], q1v = points[1], q2v = points[2];
+
+            BigInteger x = q2u.AffineXCoord.ToBigInteger();
             BigInteger xBar = x.Mod(powE);
             BigInteger Q2UBar = xBar.SetBit(e);
-            BigInteger s = d1U.D.Multiply(Q2UBar).Mod(n).Add(d2U.D).Mod(n);
+            BigInteger s = d1U.D.Multiply(Q2UBar).Add(d2U.D).Mod(n);
 
-            BigInteger xPrime = Q2V.Q.X.ToBigInteger();
+            BigInteger xPrime = q2v.AffineXCoord.ToBigInteger();
             BigInteger xPrimeBar = xPrime.Mod(powE);
             BigInteger Q2VBar = xPrimeBar.SetBit(e);
 
             BigInteger hs = parameters.H.Multiply(s).Mod(n);
 
-            //ECPoint p = Q1V.Q.Multiply(Q2VBar).Add(Q2V.Q).Multiply(hs);
-            ECPoint p = ECAlgorithms.SumOfTwoMultiplies(
-                Q1V.Q, Q2VBar.Multiply(hs).Mod(n), Q2V.Q, hs);
-
-            if (p.IsInfinity)
-                throw new InvalidOperationException("Infinity is not a valid agreement value for MQV");
-
-            return p;
+            return ECAlgorithms.SumOfTwoMultiplies(
+                q1v, Q2VBar.Multiply(hs).Mod(n), q2v, hs);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -9,7 +10,7 @@ namespace Org.BouncyCastle.Crypto.Digests
     * Base class for SHA-384 and SHA-512.
     */
     public abstract class LongDigest
-		: IDigest
+		: IDigest, IMemoable
     {
         private int     MyByteLength = 128;
 
@@ -41,8 +42,14 @@ namespace Org.BouncyCastle.Crypto.Digests
         */
         internal LongDigest(
 			LongDigest t)
-        {
-            xBuf = new byte[t.xBuf.Length];
+		{
+			xBuf = new byte[t.xBuf.Length];
+
+			CopyIn(t);
+		}
+
+		protected void CopyIn(LongDigest t)
+		{
             Array.Copy(t.xBuf, 0, xBuf, 0, t.xBuf.Length);
 
             xBufOff = t.xBufOff;
@@ -342,5 +349,7 @@ namespace Org.BouncyCastle.Crypto.Digests
 		public abstract string AlgorithmName { get; }
 		public abstract int GetDigestSize();
         public abstract int DoFinal(byte[] output, int outOff);
+		public abstract IMemoable Copy();
+		public abstract void Reset(IMemoable t);
     }
 }

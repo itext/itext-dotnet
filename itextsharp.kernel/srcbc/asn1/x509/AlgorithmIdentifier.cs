@@ -5,9 +5,8 @@ namespace Org.BouncyCastle.Asn1.X509
     public class AlgorithmIdentifier
         : Asn1Encodable
     {
-        private readonly DerObjectIdentifier	objectID;
+        private readonly DerObjectIdentifier	algorithm;
         private readonly Asn1Encodable			parameters;
-        private readonly bool					parametersDefined;
 
         public static AlgorithmIdentifier GetInstance(
             Asn1TaggedObject	obj,
@@ -19,39 +18,32 @@ namespace Org.BouncyCastle.Asn1.X509
         public static AlgorithmIdentifier GetInstance(
             object obj)
         {
-            if (obj == null || obj is AlgorithmIdentifier)
-                return (AlgorithmIdentifier) obj;
-
-            // TODO: delete
-            if (obj is DerObjectIdentifier)
-                return new AlgorithmIdentifier((DerObjectIdentifier) obj);
-
-            // TODO: delete
-            if (obj is string)
-                return new AlgorithmIdentifier((string) obj);
-
+            if (obj == null)
+                return null;
+            if (obj is AlgorithmIdentifier)
+                return (AlgorithmIdentifier)obj;
             return new AlgorithmIdentifier(Asn1Sequence.GetInstance(obj));
         }
 
         public AlgorithmIdentifier(
-            DerObjectIdentifier objectID)
+            DerObjectIdentifier algorithm)
         {
-            this.objectID = objectID;
+            this.algorithm = algorithm;
+        }
+
+        [Obsolete("Use version taking a DerObjectIdentifier")]
+        public AlgorithmIdentifier(
+            string algorithm)
+        {
+            this.algorithm = new DerObjectIdentifier(algorithm);
         }
 
         public AlgorithmIdentifier(
-            string objectID)
-        {
-            this.objectID = new DerObjectIdentifier(objectID);
-        }
-
-        public AlgorithmIdentifier(
-            DerObjectIdentifier	objectID,
+            DerObjectIdentifier algorithm,
             Asn1Encodable		parameters)
         {
-            this.objectID = objectID;
+            this.algorithm = algorithm;
             this.parameters = parameters;
-            this.parametersDefined = true;
         }
 
         internal AlgorithmIdentifier(
@@ -60,21 +52,28 @@ namespace Org.BouncyCastle.Asn1.X509
             if (seq.Count < 1 || seq.Count > 2)
                 throw new ArgumentException("Bad sequence size: " + seq.Count);
 
-            this.objectID = DerObjectIdentifier.GetInstance(seq[0]);
-            this.parametersDefined = (seq.Count == 2);
-
-            if (parametersDefined)
-            {
-                this.parameters = seq[1];
-            }
+            this.algorithm = DerObjectIdentifier.GetInstance(seq[0]);
+            this.parameters = seq.Count < 2 ? null : seq[1];
         }
 
+        /// <summary>
+        /// Return the OID in the Algorithm entry of this identifier.
+        /// </summary>
+		public virtual DerObjectIdentifier Algorithm
+		{
+			get { return algorithm; }
+		}
+
+        [Obsolete("Use 'Algorithm' property instead")]
         public virtual DerObjectIdentifier ObjectID
         {
-            get { return objectID; }
+            get { return algorithm; }
         }
 
-        public Asn1Encodable Parameters
+        /// <summary>
+        /// Return the parameters structure in the Parameters entry of this identifier.
+        /// </summary>
+        public virtual Asn1Encodable Parameters
         {
             get { return parameters; }
         }
@@ -89,20 +88,8 @@ namespace Org.BouncyCastle.Asn1.X509
          */
         public override Asn1Object ToAsn1Object()
         {
-            Asn1EncodableVector v = new Asn1EncodableVector(objectID);
-
-            if (parametersDefined)
-            {
-                if (parameters != null)
-                {
-                    v.Add(parameters);
-                }
-                else
-                {
-                    v.Add(DerNull.Instance);
-                }
-            }
-
+            Asn1EncodableVector v = new Asn1EncodableVector(algorithm);
+            v.AddOptional(parameters);
             return new DerSequence(v);
         }
     }

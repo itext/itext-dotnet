@@ -14,17 +14,18 @@ namespace Org.BouncyCastle.Bcpg
 		// 20 octets of fingerprint
 		public RevocationKey(
 			bool	isCritical,
-			byte[]	data)
-			: base(SignatureSubpacketTag.RevocationKey, isCritical, data)
+            bool    isLongLength,
+            byte[]  data)
+			: base(SignatureSubpacketTag.RevocationKey, isCritical, isLongLength, data)
 		{
 		}
 
-		public RevocationKey(
+        public RevocationKey(
 			bool					isCritical,
 			RevocationKeyTag		signatureClass,
 			PublicKeyAlgorithmTag	keyAlgorithm,
 			byte[]					fingerprint)
-			: base(SignatureSubpacketTag.RevocationKey, isCritical,
+			: base(SignatureSubpacketTag.RevocationKey, isCritical, false,
 				CreateData(signatureClass, keyAlgorithm, fingerprint))
 		{
 		}

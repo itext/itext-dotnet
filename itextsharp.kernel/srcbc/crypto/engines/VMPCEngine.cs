@@ -92,15 +92,8 @@ namespace Org.BouncyCastle.Crypto.Engines
             byte[]	output,
             int		outOff)
         {
-            if ((inOff + len) > input.Length)
-            {
-                throw new DataLengthException("input buffer too short");
-            }
-
-            if ((outOff + len) > output.Length)
-            {
-                throw new DataLengthException("output buffer too short");
-            }
+            Check.DataLength(input, inOff, len, "input buffer too short");
+            Check.OutputLength(output, outOff, len, "output buffer too short");
 
             for (int i = 0; i < len; i++)
             {

@@ -18,7 +18,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		{
 		}
 
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -26,22 +26,22 @@ namespace Org.BouncyCastle.Crypto.Engines
 			initialised = true;
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "Null"; }
 		}
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return true; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return BlockSize;
 		}
 
-		public int ProcessBlock(
+        public virtual int ProcessBlock(
 			byte[]	input,
 			int		inOff,
 			byte[]	output,
@@ -49,12 +49,11 @@ namespace Org.BouncyCastle.Crypto.Engines
 		{
 			if (!initialised)
 				throw new InvalidOperationException("Null engine not initialised");
-			if ((inOff + BlockSize) > input.Length)
-				throw new DataLengthException("input buffer too short");
-			if ((outOff + BlockSize) > output.Length)
-				throw new DataLengthException("output buffer too short");
 
-			for (int i = 0; i < BlockSize; ++i)
+            Check.DataLength(input, inOff, BlockSize, "input buffer too short");
+            Check.OutputLength(output, outOff, BlockSize, "output buffer too short");
+
+            for (int i = 0; i < BlockSize; ++i)
 			{
 				output[outOff + i] = input[inOff + i];
 			}
@@ -62,7 +61,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return BlockSize;
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
 			// nothing needs to be done
 		}

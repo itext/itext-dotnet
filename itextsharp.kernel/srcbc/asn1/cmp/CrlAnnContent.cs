@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cmp
 {
@@ -22,7 +23,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is Asn1Sequence)
 				return new CrlAnnContent((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public virtual CertificateList[] ToCertificateListArray()

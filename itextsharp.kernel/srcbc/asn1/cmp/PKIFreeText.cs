@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cmp
 {
 	public class PkiFreeText
@@ -27,7 +29,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 				return new PkiFreeText((Asn1Sequence)obj);
 			}
 
-			throw new ArgumentException("Unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public PkiFreeText(

@@ -10,40 +10,44 @@ namespace Org.BouncyCastle.Bcpg
     */
     public class UserAttributeSubpacket
     {
-        private readonly UserAttributeSubpacketTag	type;
-        private readonly byte[]						data;
+        internal readonly UserAttributeSubpacketTag	type;
+        private readonly bool longLength;   // we preserve this as not everyone encodes length properly.
+        protected readonly byte[] data;
 
-		internal UserAttributeSubpacket(
-            UserAttributeSubpacketTag	type,
-            byte[]						data)
+        protected internal UserAttributeSubpacket(UserAttributeSubpacketTag type, byte[] data)
+            : this(type, false, data)
+        {
+        }
+
+        protected internal UserAttributeSubpacket(UserAttributeSubpacketTag type, bool forceLongLength, byte[] data)
         {
             this.type = type;
+            this.longLength = forceLongLength;
             this.data = data;
         }
 
-		public UserAttributeSubpacketTag SubpacketType
+        public virtual UserAttributeSubpacketTag SubpacketType
         {
             get { return type; }
         }
 
-		/**
+        /**
         * return the generic data making up the packet.
         */
-        public byte[] GetData()
+        public virtual byte[] GetData()
         {
             return data;
         }
 
-        public void Encode(
-            Stream os)
+        public virtual void Encode(Stream os)
         {
             int bodyLen = data.Length + 1;
 
-            if (bodyLen < 192)
+            if (bodyLen < 192 && !longLength)
             {
                 os.WriteByte((byte)bodyLen);
             }
-            else if (bodyLen <= 8383)
+            else if (bodyLen <= 8383 && !longLength)
             {
                 bodyLen -= 192;
 
@@ -69,18 +73,18 @@ namespace Org.BouncyCastle.Bcpg
             if (obj == this)
                 return true;
 
-			UserAttributeSubpacket other = obj as UserAttributeSubpacket;
+            UserAttributeSubpacket other = obj as UserAttributeSubpacket;
 
-			if (other == null)
-				return false;
+            if (other == null)
+                return false;
 
-			return type == other.type
-				&& Arrays.AreEqual(data, other.data);
+            return type == other.type
+                && Arrays.AreEqual(data, other.data);
         }
 
-		public override int GetHashCode()
+        public override int GetHashCode()
         {
-			return type.GetHashCode() ^ Arrays.GetHashCode(data);
+            return type.GetHashCode() ^ Arrays.GetHashCode(data);
         }
     }
 }

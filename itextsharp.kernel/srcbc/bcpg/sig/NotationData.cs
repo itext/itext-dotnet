@@ -17,8 +17,9 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
 		public NotationData(
 			bool	critical,
-			byte[]	data)
-			: base(SignatureSubpacketTag.NotationData, critical, data)
+            bool    isLongLength,
+            byte[]  data)
+			: base(SignatureSubpacketTag.NotationData, critical, isLongLength, data)
 		{
 		}
 
@@ -27,12 +28,12 @@ namespace Org.BouncyCastle.Bcpg.Sig
 			bool	humanReadable,
 			string	notationName,
 			string	notationValue)
-			: base(SignatureSubpacketTag.NotationData, critical,
-				createData(humanReadable, notationName, notationValue))
+			: base(SignatureSubpacketTag.NotationData, critical, false,
+				CreateData(humanReadable, notationName, notationValue))
 		{
 		}
 
-		private static byte[] createData(
+		private static byte[] CreateData(
 			bool	humanReadable,
 			string	notationName,
 			string	notationValue)

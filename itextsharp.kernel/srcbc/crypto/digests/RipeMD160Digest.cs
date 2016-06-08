@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Crypto.Digests
 {
     /**
@@ -30,6 +32,13 @@ namespace Org.BouncyCastle.Crypto.Digests
         */
         public RipeMD160Digest(RipeMD160Digest t) : base(t)
         {
+			CopyIn(t);
+		}
+
+		private void CopyIn(RipeMD160Digest t)
+		{
+			base.CopyIn(t);
+
             H0 = t.H0;
             H1 = t.H1;
             H2 = t.H2;
@@ -418,6 +427,19 @@ namespace Org.BouncyCastle.Crypto.Digests
                 X[i] = 0;
             }
         }
+		
+		public override IMemoable Copy()
+		{
+			return new RipeMD160Digest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			RipeMD160Digest d = (RipeMD160Digest)other;
+
+			CopyIn(d);
+		}
+
     }
 
 }

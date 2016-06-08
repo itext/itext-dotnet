@@ -1,9 +1,10 @@
-#if !(NETCF_1_0 || SILVERLIGHT)
+#if !(NETCF_1_0 || SILVERLIGHT || PORTABLE)
 
 using System;
 using System.Security.Cryptography;
 using SystemX509 = System.Security.Cryptography.X509Certificates;
 
+using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -161,22 +162,21 @@ namespace Org.BouncyCastle.Security
 
 		public static RSA ToRSA(RsaKeyParameters rsaKey)
 		{
-			RSAParameters rp = ToRSAParameters(rsaKey);
-			RSACryptoServiceProvider rsaCsp = new RSACryptoServiceProvider();
-			// TODO This call appears to not work for private keys (when no CRT info)
-			rsaCsp.ImportParameters(rp);
-			return rsaCsp;
-		}
+            // TODO This appears to not work for private keys (when no CRT info)
+            return CreateRSAProvider(ToRSAParameters(rsaKey));
+        }
 
 		public static RSA ToRSA(RsaPrivateCrtKeyParameters privKey)
 		{
-			RSAParameters rp = ToRSAParameters(privKey);
-			RSACryptoServiceProvider rsaCsp = new RSACryptoServiceProvider();
-			rsaCsp.ImportParameters(rp);
-			return rsaCsp;
-		}
+            return CreateRSAProvider(ToRSAParameters(privKey));
+        }
 
-		public static RSAParameters ToRSAParameters(RsaKeyParameters rsaKey)
+        public static RSA ToRSA(RsaPrivateKeyStructure privKey)
+        {
+            return CreateRSAProvider(ToRSAParameters(privKey));
+        }
+
+        public static RSAParameters ToRSAParameters(RsaKeyParameters rsaKey)
 		{
 			RSAParameters rp = new RSAParameters();
 			rp.Modulus = rsaKey.Modulus.ToByteArrayUnsigned();
@@ -201,7 +201,21 @@ namespace Org.BouncyCastle.Security
 			return rp;
 		}
 
-		// TODO Move functionality to more general class
+        public static RSAParameters ToRSAParameters(RsaPrivateKeyStructure privKey)
+        {
+            RSAParameters rp = new RSAParameters();
+            rp.Modulus = privKey.Modulus.ToByteArrayUnsigned();
+            rp.Exponent = privKey.PublicExponent.ToByteArrayUnsigned();
+            rp.P = privKey.Prime1.ToByteArrayUnsigned();
+            rp.Q = privKey.Prime2.ToByteArrayUnsigned();
+            rp.D = ConvertRSAParametersField(privKey.PrivateExponent, rp.Modulus.Length);
+            rp.DP = ConvertRSAParametersField(privKey.Exponent1, rp.P.Length);
+            rp.DQ = ConvertRSAParametersField(privKey.Exponent2, rp.Q.Length);
+            rp.InverseQ = ConvertRSAParametersField(privKey.Coefficient, rp.Q.Length);
+            return rp;
+        }
+
+        // TODO Move functionality to more general class
 		private static byte[] ConvertRSAParametersField(BigInteger n, int size)
 		{
 			byte[] bs = n.ToByteArrayUnsigned();
@@ -216,6 +230,15 @@ namespace Org.BouncyCastle.Security
 			Array.Copy(bs, 0, padded, size - bs.Length, bs.Length);
 			return padded;
 		}
+
+        private static RSA CreateRSAProvider(RSAParameters rp)
+        {
+            CspParameters csp = new CspParameters();
+            csp.KeyContainerName = string.Format("BouncyCastle-{0}", Guid.NewGuid());
+            RSACryptoServiceProvider rsaCsp = new RSACryptoServiceProvider(csp);
+            rsaCsp.ImportParameters(rp);
+            return rsaCsp;
+        }
 	}
 }
 

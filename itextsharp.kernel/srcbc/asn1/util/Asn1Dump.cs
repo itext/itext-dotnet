@@ -10,9 +10,9 @@ namespace Org.BouncyCastle.Asn1.Utilities
 {
     public sealed class Asn1Dump
     {
-		private static readonly string NewLine = Platform.NewLine;
+        private static readonly string NewLine = Platform.NewLine;
 
-		private Asn1Dump()
+        private Asn1Dump()
         {
         }
 
@@ -28,12 +28,12 @@ namespace Org.BouncyCastle.Asn1.Utilities
             string			indent,
             bool			verbose,
             Asn1Object		obj,
-			StringBuilder	buf)
+            StringBuilder	buf)
         {
             if (obj is Asn1Sequence)
             {
-				string tab = indent + Tab;
-				buf.Append(indent);
+                string tab = indent + Tab;
+                buf.Append(indent);
                 if (obj is BerSequence)
                 {
                     buf.Append("BER Sequence");
@@ -49,8 +49,8 @@ namespace Org.BouncyCastle.Asn1.Utilities
 
                 buf.Append(NewLine);
 
-				foreach (Asn1Encodable o in ((Asn1Sequence)obj))
-				{
+                foreach (Asn1Encodable o in ((Asn1Sequence)obj))
+                {
                     if (o == null || o is Asn1Null)
                     {
                         buf.Append(tab);
@@ -66,7 +66,7 @@ namespace Org.BouncyCastle.Asn1.Utilities
             else if (obj is DerTaggedObject)
             {
                 string tab = indent + Tab;
-				buf.Append(indent);
+                buf.Append(indent);
                 if (obj is BerTaggedObject)
                 {
                     buf.Append("BER Tagged [");
@@ -76,19 +76,19 @@ namespace Org.BouncyCastle.Asn1.Utilities
                     buf.Append("Tagged [");
                 }
 
-				DerTaggedObject o = (DerTaggedObject)obj;
+                DerTaggedObject o = (DerTaggedObject)obj;
 
-				buf.Append(((int)o.TagNo).ToString());
+                buf.Append(((int)o.TagNo).ToString());
                 buf.Append(']');
 
-				if (!o.IsExplicit())
+                if (!o.IsExplicit())
                 {
                     buf.Append(" IMPLICIT ");
                 }
 
-				buf.Append(NewLine);
+                buf.Append(NewLine);
 
-				if (o.IsEmpty())
+                if (o.IsEmpty())
                 {
                     buf.Append(tab);
                     buf.Append("EMPTY");
@@ -103,12 +103,12 @@ namespace Org.BouncyCastle.Asn1.Utilities
             {
                 string tab = indent + Tab;
 
-				buf.Append(indent);
+                buf.Append(indent);
                 buf.Append("BER Set");
                 buf.Append(NewLine);
 
-				foreach (Asn1Encodable o in ((Asn1Set)obj))
-				{
+                foreach (Asn1Encodable o in ((Asn1Set)obj))
+                {
                     if (o == null)
                     {
                         buf.Append(tab);
@@ -125,12 +125,12 @@ namespace Org.BouncyCastle.Asn1.Utilities
             {
                 string tab = indent + Tab;
 
-				buf.Append(indent);
+                buf.Append(indent);
                 buf.Append("DER Set");
                 buf.Append(NewLine);
 
-				foreach (Asn1Encodable o in ((Asn1Set)obj))
-				{
+                foreach (Asn1Encodable o in ((Asn1Set)obj))
+                {
                     if (o == null)
                     {
                         buf.Append(tab);
@@ -155,33 +155,33 @@ namespace Org.BouncyCastle.Asn1.Utilities
             {
                 buf.Append(indent + "Integer(" + ((DerInteger)obj).Value + ")" + NewLine);
             }
-			else if (obj is BerOctetString)
-			{
-				byte[] octets = ((Asn1OctetString)obj).GetOctets();
-				string extra = verbose ? dumpBinaryDataAsString(indent, octets) : "";
-				buf.Append(indent + "BER Octet String" + "[" + octets.Length + "] " + extra + NewLine);
-			}
+            else if (obj is BerOctetString)
+            {
+                byte[] octets = ((Asn1OctetString)obj).GetOctets();
+                string extra = verbose ? dumpBinaryDataAsString(indent, octets) : "";
+                buf.Append(indent + "BER Octet String" + "[" + octets.Length + "] " + extra + NewLine);
+            }
             else if (obj is DerOctetString)
             {
-				byte[] octets = ((Asn1OctetString)obj).GetOctets();
-				string extra = verbose ? dumpBinaryDataAsString(indent, octets) : "";
-				buf.Append(indent + "DER Octet String" + "[" + octets.Length + "] " + extra + NewLine);
-			}
-			else if (obj is DerBitString)
-			{
-				DerBitString bt = (DerBitString)obj; 
-				byte[] bytes = bt.GetBytes();
-				string extra = verbose ? dumpBinaryDataAsString(indent, bytes) : "";
-				buf.Append(indent + "DER Bit String" + "[" + bytes.Length + ", " + bt.PadBits + "] " + extra + NewLine);
-			}
+                byte[] octets = ((Asn1OctetString)obj).GetOctets();
+                string extra = verbose ? dumpBinaryDataAsString(indent, octets) : "";
+                buf.Append(indent + "DER Octet String" + "[" + octets.Length + "] " + extra + NewLine);
+            }
+            else if (obj is DerBitString)
+            {
+                DerBitString bt = (DerBitString)obj; 
+                byte[] bytes = bt.GetBytes();
+                string extra = verbose ? dumpBinaryDataAsString(indent, bytes) : "";
+                buf.Append(indent + "DER Bit String" + "[" + bytes.Length + ", " + bt.PadBits + "] " + extra + NewLine);
+            }
             else if (obj is DerIA5String)
             {
                 buf.Append(indent + "IA5String(" + ((DerIA5String)obj).GetString() + ") " + NewLine);
             }
-			else if (obj is DerUtf8String)
-			{
-				buf.Append(indent + "UTF8String(" + ((DerUtf8String)obj).GetString() + ") " + NewLine);
-			}
+            else if (obj is DerUtf8String)
+            {
+                buf.Append(indent + "UTF8String(" + ((DerUtf8String)obj).GetString() + ") " + NewLine);
+            }
             else if (obj is DerPrintableString)
             {
                 buf.Append(indent + "PrintableString(" + ((DerPrintableString)obj).GetString() + ") " + NewLine);
@@ -198,18 +198,21 @@ namespace Org.BouncyCastle.Asn1.Utilities
             {
                 buf.Append(indent + "T61String(" + ((DerT61String)obj).GetString() + ") " + NewLine);
             }
+            else if (obj is DerGraphicString)
+            {
+                buf.Append(indent + "GraphicString(" + ((DerGraphicString)obj).GetString() + ") " + NewLine);
+            }
+            else if (obj is DerVideotexString)
+            {
+                buf.Append(indent + "VideotexString(" + ((DerVideotexString)obj).GetString() + ") " + NewLine);
+            }
             else if (obj is DerUtcTime)
             {
                 buf.Append(indent + "UTCTime(" + ((DerUtcTime)obj).TimeString + ") " + NewLine);
             }
-			else if (obj is DerGeneralizedTime)
-			{
-				buf.Append(indent + "GeneralizedTime(" + ((DerGeneralizedTime)obj).GetTime() + ") " + NewLine);
-			}
-            else if (obj is DerUnknownTag)
+            else if (obj is DerGeneralizedTime)
             {
-				string hex = Hex.ToHexString(((DerUnknownTag)obj).GetData());
-                buf.Append(indent + "Unknown " + ((int)((DerUnknownTag)obj).Tag).ToString("X") + " " + hex + NewLine);
+                buf.Append(indent + "GeneralizedTime(" + ((DerGeneralizedTime)obj).GetTime() + ") " + NewLine);
             }
             else if (obj is BerApplicationSpecific)
             {
@@ -219,32 +222,32 @@ namespace Org.BouncyCastle.Asn1.Utilities
             {
                 buf.Append(outputApplicationSpecific("DER", indent, verbose, (DerApplicationSpecific)obj));
             }
-			else if (obj is DerEnumerated)
-			{
-				DerEnumerated en = (DerEnumerated)obj;
-				buf.Append(indent + "DER Enumerated(" + en.Value + ")" + NewLine);
-			}
-			else if (obj is DerExternal)
-			{
-				DerExternal ext = (DerExternal)obj;
-				buf.Append(indent + "External " + NewLine);
+            else if (obj is DerEnumerated)
+            {
+                DerEnumerated en = (DerEnumerated)obj;
+                buf.Append(indent + "DER Enumerated(" + en.Value + ")" + NewLine);
+            }
+            else if (obj is DerExternal)
+            {
+                DerExternal ext = (DerExternal)obj;
+                buf.Append(indent + "External " + NewLine);
                 string tab = indent + Tab;
 
-				if (ext.DirectReference != null)
-				{
-					buf.Append(tab + "Direct Reference: " + ext.DirectReference.Id + NewLine);
-				}
-				if (ext.IndirectReference != null)
-				{
-					buf.Append(tab + "Indirect Reference: " + ext.IndirectReference.ToString() + NewLine);
-				}
-				if (ext.DataValueDescriptor != null)
-				{
-					AsString(tab, verbose, ext.DataValueDescriptor, buf);
-				}
-				buf.Append(tab + "Encoding: " + ext.Encoding + NewLine);
-				AsString(tab, verbose, ext.ExternalContent, buf);
-			}
+                if (ext.DirectReference != null)
+                {
+                    buf.Append(tab + "Direct Reference: " + ext.DirectReference.Id + NewLine);
+                }
+                if (ext.IndirectReference != null)
+                {
+                    buf.Append(tab + "Indirect Reference: " + ext.IndirectReference.ToString() + NewLine);
+                }
+                if (ext.DataValueDescriptor != null)
+                {
+                    AsString(tab, verbose, ext.DataValueDescriptor, buf);
+                }
+                buf.Append(tab + "Encoding: " + ext.Encoding + NewLine);
+                AsString(tab, verbose, ext.ExternalContent, buf);
+            }
             else
             {
                 buf.Append(indent + obj.ToString() + NewLine);
@@ -267,7 +270,7 @@ namespace Org.BouncyCastle.Asn1.Utilities
                     buf.Append(indent + type + " ApplicationSpecific[" + app.ApplicationTag + "]" + NewLine);
                     foreach (Asn1Encodable ae in s)
                     {
-                    	AsString(indent + Tab, verbose, ae.ToAsn1Object(), buf);
+                        AsString(indent + Tab, verbose, ae.ToAsn1Object(), buf);
                     }
                 }
                 catch (IOException e)
@@ -281,98 +284,98 @@ namespace Org.BouncyCastle.Asn1.Utilities
                 + Hex.ToHexString(app.GetContents()) + ")" + NewLine;
         }
 
-		[Obsolete("Use version accepting Asn1Encodable")]
-		public static string DumpAsString(
+        [Obsolete("Use version accepting Asn1Encodable")]
+        public static string DumpAsString(
             object   obj)
         {
             if (obj is Asn1Encodable)
             {
-				StringBuilder buf = new StringBuilder();
+                StringBuilder buf = new StringBuilder();
                 AsString("", false, ((Asn1Encodable)obj).ToAsn1Object(), buf);
-				return buf.ToString();
+                return buf.ToString();
             }
 
             return "unknown object type " + obj.ToString();
         }
 
-		/**
-		 * dump out a DER object as a formatted string, in non-verbose mode
-		 *
-		 * @param obj the Asn1Encodable to be dumped out.
-		 * @return  the resulting string.
-		 */
-		public static string DumpAsString(
-			Asn1Encodable obj)
-		{
-			return DumpAsString(obj, false);
-		}
+        /**
+         * dump out a DER object as a formatted string, in non-verbose mode
+         *
+         * @param obj the Asn1Encodable to be dumped out.
+         * @return  the resulting string.
+         */
+        public static string DumpAsString(
+            Asn1Encodable obj)
+        {
+            return DumpAsString(obj, false);
+        }
 
-		/**
-		 * Dump out the object as a string
-		 *
-		 * @param obj the Asn1Encodable to be dumped out.
-		 * @param verbose  if true, dump out the contents of octet and bit strings.
-		 * @return  the resulting string.
-		 */
-		public static string DumpAsString(
-			Asn1Encodable	obj,
-			bool			verbose)
-		{
-			StringBuilder buf = new StringBuilder();
-			AsString("", verbose, obj.ToAsn1Object(), buf);
-			return buf.ToString();
-		}
+        /**
+         * Dump out the object as a string
+         *
+         * @param obj the Asn1Encodable to be dumped out.
+         * @param verbose  if true, dump out the contents of octet and bit strings.
+         * @return  the resulting string.
+         */
+        public static string DumpAsString(
+            Asn1Encodable	obj,
+            bool			verbose)
+        {
+            StringBuilder buf = new StringBuilder();
+            AsString("", verbose, obj.ToAsn1Object(), buf);
+            return buf.ToString();
+        }
 
-		private static string dumpBinaryDataAsString(string indent, byte[] bytes)
-		{
-			indent += Tab;
+        private static string dumpBinaryDataAsString(string indent, byte[] bytes)
+        {
+            indent += Tab;
 
-			StringBuilder buf = new StringBuilder(NewLine);
+            StringBuilder buf = new StringBuilder(NewLine);
 
-			for (int i = 0; i < bytes.Length; i += SampleSize)
-			{
-				if (bytes.Length - i > SampleSize)
-				{
-					buf.Append(indent);
-					buf.Append(Hex.ToHexString(bytes, i, SampleSize));
-					buf.Append(Tab);
-					buf.Append(calculateAscString(bytes, i, SampleSize));
-					buf.Append(NewLine);
-				}
-				else
-				{
-					buf.Append(indent);
-					buf.Append(Hex.ToHexString(bytes, i, bytes.Length - i));
-					for (int j = bytes.Length - i; j != SampleSize; j++)
-					{
-						buf.Append("  ");
-					}
-					buf.Append(Tab);
-					buf.Append(calculateAscString(bytes, i, bytes.Length - i));
-					buf.Append(NewLine);
-				}
-			}
+            for (int i = 0; i < bytes.Length; i += SampleSize)
+            {
+                if (bytes.Length - i > SampleSize)
+                {
+                    buf.Append(indent);
+                    buf.Append(Hex.ToHexString(bytes, i, SampleSize));
+                    buf.Append(Tab);
+                    buf.Append(calculateAscString(bytes, i, SampleSize));
+                    buf.Append(NewLine);
+                }
+                else
+                {
+                    buf.Append(indent);
+                    buf.Append(Hex.ToHexString(bytes, i, bytes.Length - i));
+                    for (int j = bytes.Length - i; j != SampleSize; j++)
+                    {
+                        buf.Append("  ");
+                    }
+                    buf.Append(Tab);
+                    buf.Append(calculateAscString(bytes, i, bytes.Length - i));
+                    buf.Append(NewLine);
+                }
+            }
 
-			return buf.ToString();
-		}
+            return buf.ToString();
+        }
 
-		private static string calculateAscString(
-			byte[]	bytes,
-			int		off,
-			int		len)
-		{
-			StringBuilder buf = new StringBuilder();
+        private static string calculateAscString(
+            byte[]	bytes,
+            int		off,
+            int		len)
+        {
+            StringBuilder buf = new StringBuilder();
 
-			for (int i = off; i != off + len; i++)
-			{
-				char c = (char)bytes[i]; 
-				if (c >= ' ' && c <= '~')
-				{
-					buf.Append(c);
-				}
-			}
+            for (int i = off; i != off + len; i++)
+            {
+                char c = (char)bytes[i]; 
+                if (c >= ' ' && c <= '~')
+                {
+                    buf.Append(c);
+                }
+            }
 
-			return buf.ToString();
-		}
+            return buf.ToString();
+        }
     }
 }

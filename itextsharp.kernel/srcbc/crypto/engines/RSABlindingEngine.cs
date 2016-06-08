@@ -21,7 +21,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 
 		private bool forEncryption;
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "RSA"; }
 		}
@@ -32,7 +32,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @param forEncryption true if we are encrypting (blinding), false otherwise.
 		* @param param         the necessary RSA key parameters.
 		*/
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	param)
 		{
@@ -63,7 +63,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an input block.
 		*/
-		public int GetInputBlockSize()
+        public virtual int GetInputBlockSize()
 		{
 			return core.GetInputBlockSize();
 		}
@@ -75,7 +75,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an output block.
 		*/
-		public int GetOutputBlockSize()
+        public virtual int GetOutputBlockSize()
 		{
 			return core.GetOutputBlockSize();
 		}
@@ -89,7 +89,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return the result of the RSA process.
 		* @throws DataLengthException the input block is too large.
 		*/
-		public byte[] ProcessBlock(
+        public virtual byte[] ProcessBlock(
 			byte[]	inBuf,
 			int		inOff,
 			int		inLen)

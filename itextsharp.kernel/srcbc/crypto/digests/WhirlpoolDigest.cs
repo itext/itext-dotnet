@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -9,7 +10,8 @@ namespace Org.BouncyCastle.Crypto.Digests
 	* and Rijmen.
 	*
 	*/
-	public sealed class WhirlpoolDigest : IDigest
+	public sealed class WhirlpoolDigest
+		: IDigest, IMemoable
 	{
 		private const int BYTE_LENGTH = 64;
 
@@ -149,19 +151,7 @@ namespace Org.BouncyCastle.Crypto.Digests
 			*/
 		public WhirlpoolDigest(WhirlpoolDigest originalDigest)
 		{
-			Array.Copy(originalDigest._rc, 0, _rc, 0, _rc.Length);
-
-			Array.Copy(originalDigest._buffer, 0, _buffer, 0, _buffer.Length);
-
-			this._bufferPos = originalDigest._bufferPos;
-			Array.Copy(originalDigest._bitCount, 0, _bitCount, 0, _bitCount.Length);
-
-			// -- internal hash state --
-			Array.Copy(originalDigest._hash, 0, _hash, 0, _hash.Length);
-			Array.Copy(originalDigest._K, 0, _K, 0, _K.Length);
-			Array.Copy(originalDigest._L, 0, _L, 0, _L.Length);
-			Array.Copy(originalDigest._block, 0, _block, 0, _block.Length);
-			Array.Copy(originalDigest._state, 0, _state, 0, _state.Length);
+			Reset(originalDigest);
 		}
 
 		public string AlgorithmName
@@ -393,5 +383,31 @@ namespace Org.BouncyCastle.Crypto.Digests
 		{
 			return BYTE_LENGTH;
 		}
+
+		public IMemoable Copy()
+		{
+			return new WhirlpoolDigest(this);
+		}
+
+		public void Reset(IMemoable other)
+		{
+			WhirlpoolDigest originalDigest = (WhirlpoolDigest)other;
+
+			Array.Copy(originalDigest._rc, 0, _rc, 0, _rc.Length);
+
+			Array.Copy(originalDigest._buffer, 0, _buffer, 0, _buffer.Length);
+
+			this._bufferPos = originalDigest._bufferPos;
+			Array.Copy(originalDigest._bitCount, 0, _bitCount, 0, _bitCount.Length);
+
+			// -- internal hash state --
+			Array.Copy(originalDigest._hash, 0, _hash, 0, _hash.Length);
+			Array.Copy(originalDigest._K, 0, _K, 0, _K.Length);
+			Array.Copy(originalDigest._L, 0, _L, 0, _L.Length);
+			Array.Copy(originalDigest._block, 0, _block, 0, _block.Length);
+			Array.Copy(originalDigest._state, 0, _state, 0, _state.Length);
+		}
+
+
 	}
 }

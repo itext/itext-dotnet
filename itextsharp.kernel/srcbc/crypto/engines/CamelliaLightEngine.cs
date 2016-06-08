@@ -524,22 +524,22 @@ namespace Org.BouncyCastle.Crypto.Engines
 			initialised = false;
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "Camellia"; }
 		}
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return BLOCK_SIZE;
 		}
 
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -551,7 +551,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			initialised = true;
 		}
 
-		public int ProcessBlock(
+        public virtual int ProcessBlock(
 			byte[]	input,
 			int		inOff,
             byte[]	output,
@@ -559,12 +559,11 @@ namespace Org.BouncyCastle.Crypto.Engines
 		{
 			if (!initialised)
 				throw new InvalidOperationException("Camellia engine not initialised");
-			if ((inOff + BLOCK_SIZE) > input.Length)
-				throw new DataLengthException("input buffer too short");
-			if ((outOff + BLOCK_SIZE) > output.Length)
-				throw new DataLengthException("output buffer too short");
 
-			if (_keyis128)
+            Check.DataLength(input, inOff, BLOCK_SIZE, "input buffer too short");
+            Check.OutputLength(output, outOff, BLOCK_SIZE, "output buffer too short");
+
+            if (_keyis128)
 			{
 				return processBlock128(input, inOff, output, outOff);
 			}
@@ -574,7 +573,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			}
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
 		}
 	}

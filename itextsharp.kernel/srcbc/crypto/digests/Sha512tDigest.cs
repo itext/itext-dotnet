@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -44,14 +45,7 @@ namespace Org.BouncyCastle.Crypto.Digests
         {
             this.digestLength = t.digestLength;
 
-            this.H1t = t.H1t;
-            this.H2t = t.H2t;
-            this.H3t = t.H3t;
-            this.H4t = t.H4t;
-            this.H5t = t.H5t;
-            this.H6t = t.H6t;
-            this.H7t = t.H7t;
-            this.H8t = t.H8t;
+			Reset(t);
         }
 
         public override string AlgorithmName
@@ -175,5 +169,32 @@ namespace Org.BouncyCastle.Crypto.Digests
                 bs[off + num] = (byte)(n >> shift);
             }
         }
-    }
+
+		public override IMemoable Copy()
+		{
+			return new Sha512tDigest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			Sha512tDigest t = (Sha512tDigest)other;
+
+			if (this.digestLength != t.digestLength)
+			{
+				throw new MemoableResetException("digestLength inappropriate in other");
+			}
+
+			base.CopyIn(t);
+
+			this.H1t = t.H1t;
+			this.H2t = t.H2t;
+			this.H3t = t.H3t;
+			this.H4t = t.H4t;
+			this.H5t = t.H5t;
+			this.H6t = t.H6t;
+			this.H7t = t.H7t;
+			this.H8t = t.H8t;
+		}
+
+	}
 }

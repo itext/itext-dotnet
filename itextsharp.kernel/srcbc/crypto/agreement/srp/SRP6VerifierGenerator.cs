@@ -1,5 +1,6 @@
 using System;
 
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 
 namespace Org.BouncyCastle.Crypto.Agreement.Srp
@@ -31,7 +32,12 @@ namespace Org.BouncyCastle.Crypto.Agreement.Srp
 	        this.digest = digest;
 	    }
 
-	    /**
+        public virtual void Init(Srp6GroupParameters group, IDigest digest)
+        {
+            Init(group.N, group.G, digest);
+        }
+
+        /**
 	     * Creates a new SRP verifier
 	     * @param salt The salt to use, generally should be large and random
 	     * @param identity The user's identifying information (eg. username)

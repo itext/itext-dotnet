@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 {
@@ -48,7 +49,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 				return new MonetaryLimit(Asn1Sequence.GetInstance(obj));
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		private MonetaryLimit(
@@ -117,6 +118,5 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 		{
 			return new DerSequence(currency, amount, exponent);
 		}
-
 	}
 }

@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -82,7 +82,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
                 return new PasswordRecipientInfo((Asn1Sequence) obj);
 
-			throw new ArgumentException("Invalid PasswordRecipientInfo: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid PasswordRecipientInfo: " + Platform.GetTypeName(obj));
         }
 
 		public DerInteger Version

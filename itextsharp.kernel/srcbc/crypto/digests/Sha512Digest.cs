@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -17,35 +18,35 @@ namespace Org.BouncyCastle.Crypto.Digests
      * </pre>
      */
     public class Sha512Digest
-		: LongDigest
+        : LongDigest
     {
         private const int DigestLength = 64;
 
-		public Sha512Digest()
+        public Sha512Digest()
         {
         }
 
-		/**
+        /**
          * Copy constructor.  This will copy the state of the provided
          * message digest.
          */
         public Sha512Digest(
-			Sha512Digest t)
-			: base(t)
-		{
-		}
+            Sha512Digest t)
+            : base(t)
+        {
+        }
 
-		public override string AlgorithmName
-		{
-			get { return "SHA-512"; }
-		}
+        public override string AlgorithmName
+        {
+            get { return "SHA-512"; }
+        }
 
-		public override int GetDigestSize()
-		{
-			return DigestLength;
-		}
+        public override int GetDigestSize()
+        {
+            return DigestLength;
+        }
 
-		public override int DoFinal(
+        public override int DoFinal(
             byte[]  output,
             int     outOff)
         {
@@ -86,5 +87,18 @@ namespace Org.BouncyCastle.Crypto.Digests
             H7 = 0x1f83d9abfb41bd6b;
             H8 = 0x5be0cd19137e2179;
         }
+		
+		public override IMemoable Copy()
+		{
+			return new Sha512Digest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			Sha512Digest d = (Sha512Digest)other;
+
+			CopyIn(d);
+		}
+
     }
 }

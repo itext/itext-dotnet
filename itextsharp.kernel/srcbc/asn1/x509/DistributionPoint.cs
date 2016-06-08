@@ -42,7 +42,7 @@ namespace Org.BouncyCastle.Asn1.X509
                 return new DistributionPoint((Asn1Sequence) obj);
             }
 
-			throw new ArgumentException("Invalid DistributionPoint: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid DistributionPoint: " + Platform.GetTypeName(obj));
         }
 
 		private DistributionPoint(

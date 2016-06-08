@@ -81,7 +81,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 				Array.Copy(lookAhead, bufStart, buf, pos, len);
 				bufStart += len;
 
-				return pos + len - off;;
+				return pos + len - off;
 			}
 
 			internal byte[] GetLookAhead()

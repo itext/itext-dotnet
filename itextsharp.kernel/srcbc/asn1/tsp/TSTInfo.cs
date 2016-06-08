@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Tsp
 {
@@ -48,7 +49,7 @@ namespace Org.BouncyCastle.Asn1.Tsp
 			}
 
 			throw new ArgumentException(
-				"Unknown object in 'TstInfo' factory: " + o.GetType().FullName);
+				"Unknown object in 'TstInfo' factory: " + Platform.GetTypeName(o));
 		}
 
 		private TstInfo(

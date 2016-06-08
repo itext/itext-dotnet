@@ -1,108 +1,152 @@
-using System;
+﻿using System;
+using System.IO;
 
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-    public class TlsStreamCipher : TlsCipher
+    public class TlsStreamCipher
+        :   TlsCipher
     {
-        protected TlsClientContext context;
+        protected readonly TlsContext context;
 
-        protected IStreamCipher encryptCipher;
-        protected IStreamCipher decryptCipher;
+        protected readonly IStreamCipher encryptCipher;
+        protected readonly IStreamCipher decryptCipher;
 
-        protected TlsMac writeMac;
-        protected TlsMac readMac;
+        protected readonly TlsMac writeMac;
+        protected readonly TlsMac readMac;
 
-        public TlsStreamCipher(TlsClientContext context, IStreamCipher encryptCipher,
-			IStreamCipher decryptCipher, IDigest writeDigest, IDigest readDigest, int cipherKeySize)
-		{
-			this.context = context;
-			this.encryptCipher = encryptCipher;
-			this.decryptCipher = decryptCipher;
+        protected readonly bool usesNonce;
 
-            int prfSize = (2 * cipherKeySize) + writeDigest.GetDigestSize()
-                + readDigest.GetDigestSize();
-
-			SecurityParameters securityParameters = context.SecurityParameters;
-
-			byte[] keyBlock = TlsUtilities.PRF(securityParameters.masterSecret, "key expansion",
-				TlsUtilities.Concat(securityParameters.serverRandom, securityParameters.clientRandom),
-				prfSize);
-
-			int offset = 0;
-
-			// Init MACs
-			writeMac = CreateTlsMac(writeDigest, keyBlock, ref offset);
-			readMac = CreateTlsMac(readDigest, keyBlock, ref offset);
-
-			// Build keys
-			KeyParameter encryptKey = CreateKeyParameter(keyBlock, ref offset, cipherKeySize);
-			KeyParameter decryptKey = CreateKeyParameter(keyBlock, ref offset, cipherKeySize);
-
-			if (offset != prfSize)
-                throw new TlsFatalAlert(AlertDescription.internal_error);
-
-            // Init Ciphers
-            encryptCipher.Init(true, encryptKey);
-            decryptCipher.Init(false, decryptKey);
-		}
-
-        public byte[] EncodePlaintext(ContentType type, byte[] plaintext, int offset, int len)
+        /// <exception cref="IOException"></exception>
+        public TlsStreamCipher(TlsContext context, IStreamCipher clientWriteCipher,
+            IStreamCipher serverWriteCipher, IDigest clientWriteDigest, IDigest serverWriteDigest,
+            int cipherKeySize, bool usesNonce)
         {
-            byte[] mac = writeMac.CalculateMac(type, plaintext, offset, len);
-            int size = len + mac.Length;
+            bool isServer = context.IsServer;
 
-            byte[] outbuf = new byte[size];
+            this.context = context;
+            this.usesNonce = usesNonce;
 
-            encryptCipher.ProcessBytes(plaintext, offset, len, outbuf, 0);
-            encryptCipher.ProcessBytes(mac, 0, mac.Length, outbuf, len);
+            this.encryptCipher = clientWriteCipher;
+            this.decryptCipher = serverWriteCipher;
 
-            return outbuf;
-        }
+            int key_block_size = (2 * cipherKeySize) + clientWriteDigest.GetDigestSize()
+                + serverWriteDigest.GetDigestSize();
 
-        public byte[] DecodeCiphertext(ContentType type, byte[] ciphertext, int offset, int len)
-        {
-            byte[] deciphered = new byte[len];
-            decryptCipher.ProcessBytes(ciphertext, offset, len, deciphered, 0);
+            byte[] key_block = TlsUtilities.CalculateKeyBlock(context, key_block_size);
 
-            int plaintextSize = deciphered.Length - readMac.Size;
-            byte[] plainText = CopyData(deciphered, 0, plaintextSize);
+            int offset = 0;
 
-            byte[] receivedMac = CopyData(deciphered, plaintextSize, readMac.Size);
-            byte[] computedMac = readMac.CalculateMac(type, plainText, 0, plainText.Length);
+            // Init MACs
+            TlsMac clientWriteMac = new TlsMac(context, clientWriteDigest, key_block, offset,
+                clientWriteDigest.GetDigestSize());
+            offset += clientWriteDigest.GetDigestSize();
+            TlsMac serverWriteMac = new TlsMac(context, serverWriteDigest, key_block, offset,
+                serverWriteDigest.GetDigestSize());
+            offset += serverWriteDigest.GetDigestSize();
 
-            if (!Arrays.ConstantTimeAreEqual(receivedMac, computedMac))
+            // Build keys
+            KeyParameter clientWriteKey = new KeyParameter(key_block, offset, cipherKeySize);
+            offset += cipherKeySize;
+            KeyParameter serverWriteKey = new KeyParameter(key_block, offset, cipherKeySize);
+            offset += cipherKeySize;
+
+            if (offset != key_block_size)
             {
-                throw new TlsFatalAlert(AlertDescription.bad_record_mac);
+                throw new TlsFatalAlert(AlertDescription.internal_error);
             }
 
-            return plainText;
+            ICipherParameters encryptParams, decryptParams;
+            if (isServer)
+            {
+                this.writeMac = serverWriteMac;
+                this.readMac = clientWriteMac;
+                this.encryptCipher = serverWriteCipher;
+                this.decryptCipher = clientWriteCipher;
+                encryptParams = serverWriteKey;
+                decryptParams = clientWriteKey;
+            }
+            else
+            {
+                this.writeMac = clientWriteMac;
+                this.readMac = serverWriteMac;
+                this.encryptCipher = clientWriteCipher;
+                this.decryptCipher = serverWriteCipher;
+                encryptParams = clientWriteKey;
+                decryptParams = serverWriteKey;
+            }
+
+            if (usesNonce)
+            {
+                byte[] dummyNonce = new byte[8];
+                encryptParams = new ParametersWithIV(encryptParams, dummyNonce);
+                decryptParams = new ParametersWithIV(decryptParams, dummyNonce);
+            }
+
+            this.encryptCipher.Init(true, encryptParams);
+            this.decryptCipher.Init(false, decryptParams);
         }
 
-        protected virtual TlsMac CreateTlsMac(IDigest digest, byte[] buf, ref int off)
+        public virtual int GetPlaintextLimit(int ciphertextLimit)
         {
-            int len = digest.GetDigestSize();
-            TlsMac mac = new TlsMac(digest, buf, off, len);
-            off += len;
-            return mac;
+            return ciphertextLimit - writeMac.Size;
         }
 
-        protected virtual KeyParameter CreateKeyParameter(byte[] buf, ref int off, int len)
+        public virtual byte[] EncodePlaintext(long seqNo, byte type, byte[] plaintext, int offset, int len)
         {
-            KeyParameter key = new KeyParameter(buf, off, len);
-            off += len;
-            return key;
+            if (usesNonce)
+            {
+                UpdateIV(encryptCipher, true, seqNo);
+            }
+
+            byte[] outBuf = new byte[len + writeMac.Size];
+
+            encryptCipher.ProcessBytes(plaintext, offset, len, outBuf, 0);
+
+            byte[] mac = writeMac.CalculateMac(seqNo, type, plaintext, offset, len);
+            encryptCipher.ProcessBytes(mac, 0, mac.Length, outBuf, len);
+
+            return outBuf;
         }
 
-        protected virtual byte[] CopyData(byte[] text, int offset, int len)
+        /// <exception cref="IOException"></exception>
+        public virtual byte[] DecodeCiphertext(long seqNo, byte type, byte[] ciphertext, int offset, int len)
         {
-            byte[] result = new byte[len];
-            Array.Copy(text, offset, result, 0, len);
-            return result;
+            if (usesNonce)
+            {
+                UpdateIV(decryptCipher, false, seqNo);
+            }
+
+            int macSize = readMac.Size;
+            if (len < macSize)
+                throw new TlsFatalAlert(AlertDescription.decode_error);
+
+            int plaintextLength = len - macSize;
+
+            byte[] deciphered = new byte[len];
+            decryptCipher.ProcessBytes(ciphertext, offset, len, deciphered, 0);
+            CheckMac(seqNo, type, deciphered, plaintextLength, len, deciphered, 0, plaintextLength);
+            return Arrays.CopyOfRange(deciphered, 0, plaintextLength);
+        }
+
+        /// <exception cref="IOException"></exception>
+        protected virtual void CheckMac(long seqNo, byte type, byte[] recBuf, int recStart, int recEnd, byte[] calcBuf, int calcOff, int calcLen)
+        {
+            byte[] receivedMac = Arrays.CopyOfRange(recBuf, recStart, recEnd);
+            byte[] computedMac = readMac.CalculateMac(seqNo, type, calcBuf, calcOff, calcLen);
+
+            if (!Arrays.ConstantTimeAreEqual(receivedMac, computedMac))
+                throw new TlsFatalAlert(AlertDescription.bad_record_mac);
+        }
+
+        protected virtual void UpdateIV(IStreamCipher cipher, bool forEncryption, long seqNo)
+        {
+            byte[] nonce = new byte[8];
+            TlsUtilities.WriteUint64(seqNo, nonce, 0);
+            cipher.Init(forEncryption, new ParametersWithIV(null, nonce));
         }
     }
 }

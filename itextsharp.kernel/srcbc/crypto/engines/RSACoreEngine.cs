@@ -21,7 +21,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @param forEncryption true if we are encrypting, false otherwise.
 		* @param param the necessary RSA key parameters.
 		*/
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -45,7 +45,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an input block.
 		*/
-		public int GetInputBlockSize()
+        public virtual int GetInputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -62,7 +62,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an output block.
 		*/
-		public int GetOutputBlockSize()
+        public virtual int GetOutputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -72,7 +72,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return (bitSize - 1) / 8;
 		}
 
-		public BigInteger ConvertInput(
+        public virtual BigInteger ConvertInput(
 			byte[]	inBuf,
 			int		inOff,
 			int		inLen)
@@ -90,7 +90,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return input;
 		}
 
-		public byte[] ConvertOutput(
+        public virtual byte[] ConvertOutput(
 			BigInteger result)
 		{
 			byte[] output = result.ToByteArrayUnsigned();
@@ -112,7 +112,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return output;
 		}
 
-		public BigInteger ProcessBlock(
+        public virtual BigInteger ProcessBlock(
 			BigInteger input)
 		{
 			if (key is RsaPrivateCrtKeyParameters)
@@ -124,7 +124,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 				//
 				RsaPrivateCrtKeyParameters crtKey = (RsaPrivateCrtKeyParameters)key;
 
-				BigInteger p = crtKey.P;;
+				BigInteger p = crtKey.P;
 				BigInteger q = crtKey.Q;
 				BigInteger dP = crtKey.DP;
 				BigInteger dQ = crtKey.DQ;

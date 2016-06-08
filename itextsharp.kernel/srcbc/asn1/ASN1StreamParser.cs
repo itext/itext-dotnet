@@ -187,9 +187,8 @@ namespace Org.BouncyCastle.Asn1
 						case Asn1Tags.External:
 							return new DerExternalParser(new Asn1StreamParser(defIn));
 						default:
-							// TODO Add DerUnknownTagParser class?
-							return new DerUnknownTag(true, tagNo, defIn.ToArray());
-					}
+                            throw new IOException("unknown tag " + tagNo + " encountered");
+                    }
 				}
 
 				// Some primitive encodings can be handled by parsers too...

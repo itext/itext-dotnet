@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace Org.BouncyCastle.Bcpg.Sig
 {
     /**
@@ -24,24 +22,25 @@ namespace Org.BouncyCastle.Bcpg.Sig
         }
 
         public PreferredAlgorithms(
-            SignatureSubpacketTag        type,
-            bool    critical,
-            byte[]     data)
-            : base(type, critical, data)
+            SignatureSubpacketTag   type,
+            bool                    critical,
+            bool                    isLongLength,
+            byte[]                  data)
+            : base(type, critical, isLongLength, data)
         {
         }
 
         public PreferredAlgorithms(
-            SignatureSubpacketTag        type,
-            bool    critical,
-            int[]      preferences)
-            : base(type, critical, IntToByteArray(preferences))
+            SignatureSubpacketTag   type,
+            bool                    critical,
+            int[]                   preferences)
+            : base(type, critical, false, IntToByteArray(preferences))
         {
         }
 
         public int[] GetPreferences()
         {
-            int[]    v = new int[data.Length];
+            int[] v = new int[data.Length];
 
             for (int i = 0; i != v.Length; i++)
             {

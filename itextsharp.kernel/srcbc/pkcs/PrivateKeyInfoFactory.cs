@@ -106,49 +106,46 @@ namespace Org.BouncyCastle.Pkcs
 
             if (key is ECPrivateKeyParameters)
             {
-                ECPrivateKeyParameters _key = (ECPrivateKeyParameters)key;
+                ECPrivateKeyParameters priv = (ECPrivateKeyParameters)key;
+                ECDomainParameters dp = priv.Parameters;
+                int orderBitLength = dp.N.BitLength;
+
                 AlgorithmIdentifier algID;
                 ECPrivateKeyStructure ec;
 
-                if (_key.AlgorithmName == "ECGOST3410")
+                if (priv.AlgorithmName == "ECGOST3410")
                 {
-                    if (_key.PublicKeyParamSet == null)
+                    if (priv.PublicKeyParamSet == null)
                         throw Platform.CreateNotImplementedException("Not a CryptoPro parameter set");
 
                     Gost3410PublicKeyAlgParameters gostParams = new Gost3410PublicKeyAlgParameters(
-                        _key.PublicKeyParamSet, CryptoProObjectIdentifiers.GostR3411x94CryptoProParamSet);
+                        priv.PublicKeyParamSet, CryptoProObjectIdentifiers.GostR3411x94CryptoProParamSet);
 
-                    algID = new AlgorithmIdentifier(
-                        CryptoProObjectIdentifiers.GostR3410x2001,
-                        gostParams.ToAsn1Object());
+                    algID = new AlgorithmIdentifier(CryptoProObjectIdentifiers.GostR3410x2001, gostParams);
 
                     // TODO Do we need to pass any parameters here?
-                    ec = new ECPrivateKeyStructure(_key.D);
+                    ec = new ECPrivateKeyStructure(orderBitLength, priv.D);
                 }
                 else
                 {
                     X962Parameters x962;
-                    if (_key.PublicKeyParamSet == null)
+                    if (priv.PublicKeyParamSet == null)
                     {
-                        ECDomainParameters kp = _key.Parameters;
-                        X9ECParameters ecP = new X9ECParameters(kp.Curve, kp.G, kp.N, kp.H, kp.GetSeed());
-
+                        X9ECParameters ecP = new X9ECParameters(dp.Curve, dp.G, dp.N, dp.H, dp.GetSeed());
                         x962 = new X962Parameters(ecP);
                     }
                     else
                     {
-                        x962 = new X962Parameters(_key.PublicKeyParamSet);
+                        x962 = new X962Parameters(priv.PublicKeyParamSet);
                     }
 
-                    Asn1Object x962Object = x962.ToAsn1Object();
-
                     // TODO Possible to pass the publicKey bitstring here?
-                    ec = new ECPrivateKeyStructure(_key.D, x962Object);
+                    ec = new ECPrivateKeyStructure(orderBitLength, priv.D, x962);
 
-                    algID = new AlgorithmIdentifier(X9ObjectIdentifiers.IdECPublicKey, x962Object);
+                    algID = new AlgorithmIdentifier(X9ObjectIdentifiers.IdECPublicKey, x962);
                 }
 
-                return new PrivateKeyInfo(algID, ec.ToAsn1Object());
+                return new PrivateKeyInfo(algID, ec);
             }
 
             if (key is Gost3410PrivateKeyParameters)
@@ -176,7 +173,7 @@ namespace Org.BouncyCastle.Pkcs
                 return new PrivateKeyInfo(algID, new DerOctetString(keyBytes));
             }
 
-            throw new ArgumentException("Class provided is not convertible: " + key.GetType().FullName);
+            throw new ArgumentException("Class provided is not convertible: " + Platform.GetTypeName(key));
         }
 
         public static PrivateKeyInfo CreatePrivateKeyInfo(
@@ -195,7 +192,7 @@ namespace Org.BouncyCastle.Pkcs
 
             IBufferedCipher cipher = PbeUtilities.CreateEngine(algID) as IBufferedCipher;
             if (cipher == null)
-                throw new Exception("Unknown encryption algorithm: " + algID.ObjectID);
+                throw new Exception("Unknown encryption algorithm: " + algID.Algorithm);
 
             ICipherParameters cipherParameters = PbeUtilities.GenerateCipherParameters(
                 algID, passPhrase, wrongPkcs12Zero);

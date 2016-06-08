@@ -1,5 +1,7 @@
 using System;
+
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -9,7 +11,7 @@ namespace Org.BouncyCastle.Crypto.Digests
     *  http://www.cs.technion.ac.il/~biham/Reports/Tiger</a>
     */
     public class TigerDigest
-		: IDigest
+		: IDigest, IMemoable
     {
         private const int MyByteLength = 64;
 
@@ -571,17 +573,7 @@ namespace Org.BouncyCastle.Crypto.Digests
         */
         public TigerDigest(TigerDigest t)
         {
-            a = t.a;
-            b = t.b;
-            c = t.c;
-
-            Array.Copy(t.x, 0, x, 0, t.x.Length);
-            xOff = t.xOff;
-
-            Array.Copy(t.Buffer, 0, Buffer, 0, t.Buffer.Length);
-            bOff = t.bOff;
-
-            byteCount = t.byteCount;
+			Reset(t);
         }
 
 		public string AlgorithmName
@@ -864,5 +856,28 @@ namespace Org.BouncyCastle.Crypto.Digests
 
             byteCount = 0;
         }
-    }
+
+		public IMemoable Copy()
+		{
+			return new TigerDigest(this);
+		}
+
+		public void Reset(IMemoable other)
+		{
+			TigerDigest t = (TigerDigest)other;
+
+			a = t.a;
+			b = t.b;
+			c = t.c;
+
+			Array.Copy(t.x, 0, x, 0, t.x.Length);
+			xOff = t.xOff;
+
+			Array.Copy(t.Buffer, 0, Buffer, 0, t.Buffer.Length);
+			bOff = t.bOff;
+
+			byteCount = t.byteCount;
+		}    
+
+	}
 }

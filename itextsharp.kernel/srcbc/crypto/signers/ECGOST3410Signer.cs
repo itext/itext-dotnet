@@ -4,6 +4,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
 
 namespace Org.BouncyCastle.Crypto.Signers
@@ -17,12 +18,12 @@ namespace Org.BouncyCastle.Crypto.Signers
         private ECKeyParameters key;
         private SecureRandom random;
 
-        public string AlgorithmName
+        public virtual string AlgorithmName
         {
             get { return "ECGOST3410"; }
         }
 
-        public void Init(
+        public virtual void Init(
             bool				forSigning,
             ICipherParameters	parameters)
         {
@@ -61,7 +62,7 @@ namespace Org.BouncyCastle.Crypto.Signers
          *
          * @param message the message that will be verified later.
          */
-        public BigInteger[] GenerateSignature(
+        public virtual BigInteger[] GenerateSignature(
             byte[] message)
         {
             byte[] mRev = new byte[message.Length]; // conversion is little-endian
@@ -71,15 +72,18 @@ namespace Org.BouncyCastle.Crypto.Signers
             }
 
             BigInteger e = new BigInteger(1, mRev);
-            BigInteger n = key.Parameters.N;
 
-            BigInteger r = null;
-            BigInteger s = null;
+            ECDomainParameters ec = key.Parameters;
+            BigInteger n = ec.N;
+            BigInteger d = ((ECPrivateKeyParameters)key).D;
+
+            BigInteger r, s = null;
+
+            ECMultiplier basePointMultiplier = CreateBasePointMultiplier();
 
             do // generate s
             {
-                BigInteger k = null;
-
+                BigInteger k;
                 do // generate r
                 {
                     do
@@ -88,15 +92,11 @@ namespace Org.BouncyCastle.Crypto.Signers
                     }
                     while (k.SignValue == 0);
 
-                    ECPoint p = key.Parameters.G.Multiply(k);
+                    ECPoint p = basePointMultiplier.Multiply(ec.G, k).Normalize();
 
-                    BigInteger x = p.X.ToBigInteger();
-
-                    r = x.Mod(n);
+                    r = p.AffineXCoord.ToBigInteger().Mod(n);
                 }
                 while (r.SignValue == 0);
-
-                BigInteger d = ((ECPrivateKeyParameters)key).D;
 
                 s = (k.Multiply(e)).Add(d.Multiply(r)).Mod(n);
             }
@@ -110,7 +110,7 @@ namespace Org.BouncyCastle.Crypto.Signers
          * the passed in message (for standard GOST3410 the message should be
          * a GOST3411 hash of the real message to be verified).
          */
-        public bool VerifySignature(
+        public virtual bool VerifySignature(
             byte[]		message,
             BigInteger	r,
             BigInteger	s)
@@ -144,14 +144,19 @@ namespace Org.BouncyCastle.Crypto.Signers
             ECPoint G = key.Parameters.G; // P
             ECPoint Q = ((ECPublicKeyParameters)key).Q;
 
-            ECPoint point = ECAlgorithms.SumOfTwoMultiplies(G, z1, Q, z2);
+            ECPoint point = ECAlgorithms.SumOfTwoMultiplies(G, z1, Q, z2).Normalize();
 
             if (point.IsInfinity)
                 return false;
 
-            BigInteger R = point.X.ToBigInteger().Mod(n);
+            BigInteger R = point.AffineXCoord.ToBigInteger().Mod(n);
 
             return R.Equals(r);
+        }
+
+        protected virtual ECMultiplier CreateBasePointMultiplier()
+        {
+            return new FixedPointCombMultiplier();
         }
     }
 }

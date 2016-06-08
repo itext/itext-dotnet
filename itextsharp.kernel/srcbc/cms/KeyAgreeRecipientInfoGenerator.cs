@@ -164,7 +164,7 @@ namespace Org.BouncyCastle.Cms
 		{
 			SubjectPublicKeyInfo spki = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey);
 			return new OriginatorPublicKey(
-				new AlgorithmIdentifier(spki.AlgorithmID.ObjectID, DerNull.Instance),
+                new AlgorithmIdentifier(spki.AlgorithmID.Algorithm, DerNull.Instance),
 				spki.PublicKeyData.GetBytes());
 		}
 	}

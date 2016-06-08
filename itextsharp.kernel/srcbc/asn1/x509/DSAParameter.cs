@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509
 {
@@ -30,7 +31,7 @@ namespace Org.BouncyCastle.Asn1.X509
                 return new DsaParameter((Asn1Sequence) obj);
             }
 
-			throw new ArgumentException("Invalid DsaParameter: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid DsaParameter: " + Platform.GetTypeName(obj));
         }
 
 		public DsaParameter(

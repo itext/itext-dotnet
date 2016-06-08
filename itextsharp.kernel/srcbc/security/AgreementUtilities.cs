@@ -22,14 +22,14 @@ namespace Org.BouncyCastle.Security
 		private static readonly IDictionary algorithms = Platform.CreateHashtable();
         //private static readonly IDictionary oids = Platform.CreateHashtable();
 
-		static AgreementUtilities()
+        static AgreementUtilities()
 		{
-			//algorithms[X9ObjectIdentifiers.DHSinglePassCofactorDHSha1KdfScheme.Id] = ?;
+            algorithms[X9ObjectIdentifiers.DHSinglePassCofactorDHSha1KdfScheme.Id] = "ECCDHWITHSHA1KDF";
 			algorithms[X9ObjectIdentifiers.DHSinglePassStdDHSha1KdfScheme.Id] = "ECDHWITHSHA1KDF";
 			algorithms[X9ObjectIdentifiers.MqvSinglePassSha1KdfScheme.Id] = "ECMQVWITHSHA1KDF";
 		}
 
-		public static IBasicAgreement GetBasicAgreement(
+        public static IBasicAgreement GetBasicAgreement(
 			DerObjectIdentifier oid)
 		{
 			return GetBasicAgreement(oid.Id);
@@ -52,8 +52,8 @@ namespace Org.BouncyCastle.Security
 			if (mechanism == "ECDH")
 				return new ECDHBasicAgreement();
 
-			if (mechanism == "ECDHC")
-				return new ECDHCBasicAgreement();
+            if (mechanism == "ECDHC" || mechanism == "ECCDH")
+                    return new ECDHCBasicAgreement();
 
 			if (mechanism == "ECMQV")
 				return new ECMqvBasicAgreement();

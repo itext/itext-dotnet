@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X500;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 {
@@ -25,7 +26,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 			if (obj is IAsn1String)
 				return new Restriction(DirectoryString.GetInstance(obj));
 
-			throw new ArgumentException("Unknown object in GetInstance: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**

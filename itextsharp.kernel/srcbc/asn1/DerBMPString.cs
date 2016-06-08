@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1
 {
     /**
@@ -24,7 +26,7 @@ namespace Org.BouncyCastle.Asn1
                 return (DerBmpString)obj;
             }
 
-			throw new ArgumentException("illegal object in GetInstance: " + obj.GetType().Name);
+            throw new ArgumentException("illegal object in GetInstance: " + Platform.GetTypeName(obj));
         }
 
         /**

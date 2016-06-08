@@ -33,8 +33,8 @@ namespace Org.BouncyCastle.Cms
 		internal string GetContentAlgorithmName()
 		{
 			AlgorithmIdentifier algorithm = secureReadable.Algorithm;
-//			return CmsEnvelopedHelper.Instance.GetSymmetricCipherName(algorithm.ObjectID.Id);
-			return algorithm.ObjectID.Id;
+//			return CmsEnvelopedHelper.Instance.GetSymmetricCipherName(algorithm.Algorithm.Id);
+			return algorithm.Algorithm.Id;
 		}
 
 		public RecipientID RecipientID
@@ -54,7 +54,7 @@ namespace Org.BouncyCastle.Cms
         */
         public string KeyEncryptionAlgOid
         {
-			get { return keyEncAlg.ObjectID.Id; }
+            get { return keyEncAlg.Algorithm.Id; }
         }
 
 		/**

@@ -73,7 +73,7 @@ namespace Org.BouncyCastle.Cms
         */
         public string EncryptionAlgOid
         {
-			get { return encAlg.ObjectID.Id; }
+            get { return encAlg.Algorithm.Id; }
         }
 
 		/**

@@ -84,6 +84,12 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			get { return sigPck.HashAlgorithm; }
 		}
 
+        /// <summary>Return true if this signature represents a certification.</summary>
+        public bool IsCertification()
+        {
+            return IsCertification(SignatureType);
+        }
+
 		public void InitVerify(
             PgpPublicKey pubKey)
         {
@@ -418,5 +424,24 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 				throw new PgpException("exception preparing key.", e);
 			}
 		}
+
+        /// <summary>
+        /// Return true if the passed in signature type represents a certification, false if the signature type is not.
+        /// </summary>
+        /// <param name="signatureType"></param>
+        /// <returns>true if signatureType is a certification, false otherwise.</returns>
+        public static bool IsCertification(int signatureType)
+        {
+            switch (signatureType)
+            {
+                case DefaultCertification:
+                case NoCertification:
+                case CasualCertification:
+                case PositiveCertification:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

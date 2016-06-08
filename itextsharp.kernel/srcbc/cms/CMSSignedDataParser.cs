@@ -122,7 +122,7 @@ namespace Org.BouncyCastle.Cms
 
 					try
 					{
-						string digestOid = id.ObjectID.Id;
+                        string digestOid = id.Algorithm.Id;
 						string digestName = Helper.GetDigestAlgName(digestOid);
 
 						if (!this._digests.Contains(digestName))
@@ -170,11 +170,6 @@ namespace Org.BouncyCastle.Cms
 			{
 				throw new CmsException("io exception: " + e.Message, e);
 			}
-
-			if (_digests.Count < 1)
-			{
-				throw new CmsException("no digests could be created for message.");
-			}
 		}
 
 		/**
@@ -221,7 +216,7 @@ namespace Org.BouncyCastle.Cms
 					{
 						SignerInfo info = SignerInfo.GetInstance(o.ToAsn1Object());
 						string digestName = Helper.GetDigestAlgName(
-							info.DigestAlgorithm.ObjectID.Id);
+                            info.DigestAlgorithm.Algorithm.Id);
 
 						byte[] hash = (byte[]) hashes[digestName];
 
@@ -389,7 +384,7 @@ namespace Org.BouncyCastle.Cms
 
 //			gen.AddSigners(parser.GetSignerInfos());
 
-			contentOut.Close();
+            Platform.Dispose(contentOut);
 
 			return outStr;
 		}
@@ -439,12 +434,12 @@ namespace Org.BouncyCastle.Cms
 
 			gen.AddSigners(parser.GetSignerInfos());
 
-			contentOut.Close();
+            Platform.Dispose(contentOut);
 
-			return outStr;
+            return outStr;
 		}
 
-		private static Asn1Set GetAsn1Set(
+        private static Asn1Set GetAsn1Set(
 			Asn1SetParser asn1SetParser)
 		{
 			return asn1SetParser == null

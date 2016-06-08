@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509.Qualified
 {
@@ -45,7 +45,7 @@ namespace Org.BouncyCastle.Asn1.X509.Qualified
                 return new Iso4217CurrencyCode(alphabetic.GetString());
             }
 
-			throw new ArgumentException("unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
         }
 
 		public Iso4217CurrencyCode(
@@ -53,7 +53,7 @@ namespace Org.BouncyCastle.Asn1.X509.Qualified
         {
             if (numeric > NumericMaxSize || numeric < NumericMinSize)
             {
-                throw new ArgumentException("wrong size in numeric code : not in (" +NumericMinSize +".."+ NumericMaxSize +")");
+                throw new ArgumentException("wrong size in numeric code : not in (" + NumericMinSize + ".." + NumericMaxSize + ")");
             }
 
 			obj = new DerInteger(numeric);

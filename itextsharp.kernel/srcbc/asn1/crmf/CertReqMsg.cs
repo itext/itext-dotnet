@@ -98,8 +98,7 @@ namespace Org.BouncyCastle.Asn1.Crmf
         public override Asn1Object ToAsn1Object()
         {
             Asn1EncodableVector v = new Asn1EncodableVector(certReq);
-            v.AddOptional(popo);
-            v.AddOptional(regInfo);
+            v.AddOptional(popo, regInfo);
             return new DerSequence(v);
         }
     }

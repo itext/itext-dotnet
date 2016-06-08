@@ -24,20 +24,21 @@ namespace Org.BouncyCastle.Bcpg.Sig
         }
 
         public SignerUserId(
-            bool	critical,
-            byte[]	data)
-            : base(SignatureSubpacketTag.SignerUserId, critical, data)
+            bool    critical,
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.SignerUserId, critical, isLongLength, data)
 		{
 		}
 
-		public SignerUserId(
-            bool	critical,
-            string	userId)
-            : base(SignatureSubpacketTag.SignerUserId, critical, UserIdToBytes(userId))
+        public SignerUserId(
+            bool    critical,
+            string  userId)
+            : base(SignatureSubpacketTag.SignerUserId, critical, false, UserIdToBytes(userId))
 		{
         }
 
-		public string GetId()
+        public string GetId()
         {
             char[] chars = new char[data.Length];
 

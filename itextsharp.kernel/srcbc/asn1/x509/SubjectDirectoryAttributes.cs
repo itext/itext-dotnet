@@ -43,7 +43,7 @@ namespace Org.BouncyCastle.Asn1.X509
 				return new SubjectDirectoryAttributes((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**
@@ -78,7 +78,7 @@ namespace Org.BouncyCastle.Asn1.X509
 			}
 		}
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
         [Obsolete]
         public SubjectDirectoryAttributes(
             ArrayList attributes)

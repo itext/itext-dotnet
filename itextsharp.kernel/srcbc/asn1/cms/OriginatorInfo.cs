@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -79,7 +79,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
                 return new OriginatorInfo((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid OriginatorInfo: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid OriginatorInfo: " + Platform.GetTypeName(obj));
         }
 
 		public Asn1Set Certificates

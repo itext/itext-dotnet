@@ -1,5 +1,7 @@
 using System;
+
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -9,7 +11,7 @@ namespace Org.BouncyCastle.Crypto.Digests
     * as outlined in RFC1319 by B.Kaliski from RSA Laboratories April 1992
     */
     public class MD2Digest
-		: IDigest
+		: IDigest, IMemoable
     {
         private const int DigestLength = 16;
         private const int BYTE_LENGTH = 16;
@@ -32,8 +34,14 @@ namespace Org.BouncyCastle.Crypto.Digests
         {
             Reset();
         }
+
         public MD2Digest(MD2Digest t)
-        {
+		{
+			CopyIn(t);
+		}
+
+		private void CopyIn(MD2Digest t)
+		{
             Array.Copy(t.X, 0, X, 0, t.X.Length);
             xOff = t.xOff;
             Array.Copy(t.M, 0, M, 0, t.M.Length);
@@ -41,6 +49,7 @@ namespace Org.BouncyCastle.Crypto.Digests
             Array.Copy(t.C, 0, C, 0, t.C.Length);
             COff = t.COff;
         }
+
         /**
         * return the algorithm name
         *
@@ -242,6 +251,19 @@ namespace Org.BouncyCastle.Crypto.Digests
         (byte)237,(byte)31,(byte)26,(byte)219,(byte)153,(byte)141,(byte)51,
         (byte)159,(byte)17,(byte)131,(byte)20
         };
+
+		public IMemoable Copy()
+		{
+			return new MD2Digest(this);
+		}
+
+		public void Reset(IMemoable other)
+		{
+			MD2Digest d = (MD2Digest)other;
+
+			CopyIn(d);
+		}
+
     }
 
 }

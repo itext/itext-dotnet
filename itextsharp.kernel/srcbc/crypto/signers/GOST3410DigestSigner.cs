@@ -26,12 +26,12 @@ namespace Org.BouncyCastle.Crypto.Signers
 			this.digest = digest;
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return digest.AlgorithmName + "with" + dsaSigner.AlgorithmName; }
 		}
 
-		public void Init(
+        public virtual void Init(
 			bool				forSigning,
 			ICipherParameters	parameters)
 		{
@@ -65,7 +65,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 		/**
 		 * update the internal digest with the byte b
 		 */
-		public void Update(
+        public virtual void Update(
 			byte input)
 		{
 			digest.Update(input);
@@ -74,7 +74,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 		/**
 		 * update the internal digest with the byte array in
 		 */
-		public void BlockUpdate(
+        public virtual void BlockUpdate(
 			byte[]	input,
 			int		inOff,
 			int		length)
@@ -86,7 +86,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 		 * Generate a signature for the message we've been loaded with using
 		 * the key we were initialised with.
 		 */
-		public byte[] GenerateSignature()
+        public virtual byte[] GenerateSignature()
 		{
 			if (!forSigning)
 				throw new InvalidOperationException("GOST3410DigestSigner not initialised for signature generation.");
@@ -113,7 +113,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 		}
 
 		/// <returns>true if the internal state represents the signature described in the passed in array.</returns>
-		public bool VerifySignature(
+        public virtual bool VerifySignature(
 			byte[] signature)
 		{
 			if (forSigning)
@@ -137,7 +137,7 @@ namespace Org.BouncyCastle.Crypto.Signers
 		}
 
 		/// <summary>Reset the internal state</summary>
-		public void Reset()
+        public virtual void Reset()
 		{
 			digest.Reset();
 		}

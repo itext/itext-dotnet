@@ -172,7 +172,7 @@ namespace Org.BouncyCastle.Cms
 					}
 					else
 					{
-						byte[] hash = (byte[]) hashes[info.DigestAlgorithm.ObjectID.Id];
+                        byte[] hash = (byte[])hashes[info.DigestAlgorithm.Algorithm.Id];
 
 						signerInfos.Add(new SignerInformation(info, contentType, null, new BaseDigestCalculator(hash)));
 					}

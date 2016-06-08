@@ -17,7 +17,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		private bool forEncryption;
 		private int bitSize;
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "ElGamal"; }
 		}
@@ -28,7 +28,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @param forEncryption true if we are encrypting, false otherwise.
 		* @param param the necessary ElGamal key parameters.
 		*/
-		public void Init(
+        public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
@@ -71,7 +71,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an input block.
 		*/
-		public int GetInputBlockSize()
+        public virtual int GetInputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -88,7 +88,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		*
 		* @return maximum size for an output block.
 		*/
-		public int GetOutputBlockSize()
+        public virtual int GetOutputBlockSize()
 		{
 			if (forEncryption)
 			{
@@ -107,7 +107,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @return the result of the ElGamal process.
 		* @exception DataLengthException the input block is too large.
 		*/
-		public byte[] ProcessBlock(
+        public virtual byte[] ProcessBlock(
 			byte[]	input,
 			int		inOff,
 			int		length)

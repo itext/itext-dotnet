@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Org.BouncyCastle.Bcpg
 {
-	/// <remarks>Base class for a PGP object.</remarks>
+    /// <remarks>Base class for a PGP object.</remarks>
     public abstract class BcpgObject
     {
         public virtual byte[] GetEncoded()
@@ -11,12 +11,12 @@ namespace Org.BouncyCastle.Bcpg
             MemoryStream bOut = new MemoryStream();
             BcpgOutputStream pOut = new BcpgOutputStream(bOut);
 
-			pOut.WriteObject(this);
+            pOut.WriteObject(this);
 
-			return bOut.ToArray();
+            return bOut.ToArray();
         }
 
-		public abstract void Encode(BcpgOutputStream bcpgOut);
+        public abstract void Encode(BcpgOutputStream bcpgOut);
     }
 }
 

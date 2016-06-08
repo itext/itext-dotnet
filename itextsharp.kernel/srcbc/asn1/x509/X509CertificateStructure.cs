@@ -21,109 +21,112 @@ namespace Org.BouncyCastle.Asn1.X509
         private readonly AlgorithmIdentifier		sigAlgID;
         private readonly DerBitString				sig;
 
-		public static X509CertificateStructure GetInstance(
+        public static X509CertificateStructure GetInstance(
             Asn1TaggedObject	obj,
             bool				explicitly)
         {
             return GetInstance(Asn1Sequence.GetInstance(obj, explicitly));
         }
 
-		public static X509CertificateStructure GetInstance(
+        public static X509CertificateStructure GetInstance(
             object obj)
         {
             if (obj is X509CertificateStructure)
                 return (X509CertificateStructure)obj;
-
-			if (obj != null)
-				return new X509CertificateStructure(Asn1Sequence.GetInstance(obj));
-
-			return null;
+            if (obj == null)
+                return null;
+            return new X509CertificateStructure(Asn1Sequence.GetInstance(obj));
         }
 
-		public X509CertificateStructure(
-			TbsCertificateStructure	tbsCert,
-			AlgorithmIdentifier		sigAlgID,
-			DerBitString			sig)
-		{
-			if (tbsCert == null)
-				throw new ArgumentNullException("tbsCert");
-			if (sigAlgID == null)
-				throw new ArgumentNullException("sigAlgID");
-			if (sig == null)
-				throw new ArgumentNullException("sig");
+        public X509CertificateStructure(
+            TbsCertificateStructure	tbsCert,
+            AlgorithmIdentifier		sigAlgID,
+            DerBitString			sig)
+        {
+            if (tbsCert == null)
+                throw new ArgumentNullException("tbsCert");
+            if (sigAlgID == null)
+                throw new ArgumentNullException("sigAlgID");
+            if (sig == null)
+                throw new ArgumentNullException("sig");
 
-			this.tbsCert = tbsCert;
-			this.sigAlgID = sigAlgID;
-			this.sig = sig;
-		}
+            this.tbsCert = tbsCert;
+            this.sigAlgID = sigAlgID;
+            this.sig = sig;
+        }
 
-		private X509CertificateStructure(
+        private X509CertificateStructure(
             Asn1Sequence seq)
         {
-			if (seq.Count != 3)
-				throw new ArgumentException("sequence wrong size for a certificate", "seq");
+            if (seq.Count != 3)
+                throw new ArgumentException("sequence wrong size for a certificate", "seq");
 
-			//
+            //
             // correct x509 certficate
             //
-			tbsCert = TbsCertificateStructure.GetInstance(seq[0]);
-			sigAlgID = AlgorithmIdentifier.GetInstance(seq[1]);
-			sig = DerBitString.GetInstance(seq[2]);
+            tbsCert = TbsCertificateStructure.GetInstance(seq[0]);
+            sigAlgID = AlgorithmIdentifier.GetInstance(seq[1]);
+            sig = DerBitString.GetInstance(seq[2]);
         }
 
-		public TbsCertificateStructure TbsCertificate
+        public TbsCertificateStructure TbsCertificate
         {
-			get { return tbsCert; }
+            get { return tbsCert; }
         }
 
-		public int Version
+        public int Version
         {
             get { return tbsCert.Version; }
         }
 
-		public DerInteger SerialNumber
+        public DerInteger SerialNumber
         {
             get { return tbsCert.SerialNumber; }
         }
 
-		public X509Name Issuer
+        public X509Name Issuer
         {
             get { return tbsCert.Issuer; }
         }
 
-		public Time StartDate
+        public Time StartDate
         {
             get { return tbsCert.StartDate; }
         }
 
-		public Time EndDate
+        public Time EndDate
         {
             get { return tbsCert.EndDate; }
         }
 
-		public X509Name Subject
+        public X509Name Subject
         {
             get { return tbsCert.Subject; }
         }
 
-		public SubjectPublicKeyInfo SubjectPublicKeyInfo
+        public SubjectPublicKeyInfo SubjectPublicKeyInfo
         {
             get { return tbsCert.SubjectPublicKeyInfo; }
         }
 
-		public AlgorithmIdentifier SignatureAlgorithm
+        public AlgorithmIdentifier SignatureAlgorithm
         {
             get { return sigAlgID; }
         }
 
-		public DerBitString Signature
+        public DerBitString Signature
         {
             get { return sig; }
         }
 
-		public override Asn1Object ToAsn1Object()
+        public byte[] GetSignatureOctets()
         {
-			return new DerSequence(tbsCert, sigAlgID, sig);
+            return sig.GetOctets();
         }
-	}
+
+        public override Asn1Object ToAsn1Object()
+        {
+            return new DerSequence(tbsCert, sigAlgID, sig);
+        }
+    }
 }

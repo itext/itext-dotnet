@@ -83,10 +83,10 @@ namespace Org.BouncyCastle.Utilities.IO
 			int numRead;
 			while ((numRead = inStr.Read(bs, 0, bs.Length)) > 0)
 			{
-				total += numRead;
-				if (total > limit)
+                if ((limit - total) < numRead)
 					throw new StreamOverflowException("Data Overflow");
-				outStr.Write(bs, 0, numRead);
+                total += numRead;
+                outStr.Write(bs, 0, numRead);
 			}
 			return total;
 		}

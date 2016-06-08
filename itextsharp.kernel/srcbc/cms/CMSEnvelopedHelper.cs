@@ -160,7 +160,7 @@ namespace Org.BouncyCastle.Cms
 
 			public CmsReadable GetReadable(KeyParameter sKey)
 			{
-				string macAlg = this.algorithm.ObjectID.Id;
+                string macAlg = this.algorithm.Algorithm.Id;
 //				Asn1Object sParams = this.algorithm.Parameters.ToAsn1Object();
 
 				try
@@ -190,11 +190,11 @@ namespace Org.BouncyCastle.Cms
 //						if (asn1Params != null && !(asn1Params is Asn1Null))
 //						{
 //							cipherParameters = ParameterUtilities.GetCipherParameters(
-//							macAlg.ObjectID, cipherParameters, asn1Params);
+//							macAlg.Algorithm, cipherParameters, asn1Params);
 //						}
 //						else
 //						{
-//							string alg = macAlg.ObjectID.Id;
+//							string alg = macAlg.Algorithm.Id;
 //							if (alg.Equals(CmsEnvelopedDataGenerator.DesEde3Cbc)
 //								|| alg.Equals(CmsEnvelopedDataGenerator.IdeaCbc)
 //								|| alg.Equals(CmsEnvelopedDataGenerator.Cast5Cbc))
@@ -258,7 +258,7 @@ namespace Org.BouncyCastle.Cms
 			{
 				try
 				{
-					this.cipher =  CipherUtilities.GetCipher(this.algorithm.ObjectID);
+                    this.cipher = CipherUtilities.GetCipher(this.algorithm.Algorithm);
 
 					Asn1Encodable asn1Enc = this.algorithm.Parameters;
 					Asn1Object asn1Params = asn1Enc == null ? null : asn1Enc.ToAsn1Object();
@@ -268,11 +268,11 @@ namespace Org.BouncyCastle.Cms
 					if (asn1Params != null && !(asn1Params is Asn1Null))
 					{
 						cipherParameters = ParameterUtilities.GetCipherParameters(
-							this.algorithm.ObjectID, cipherParameters, asn1Params);
+                            this.algorithm.Algorithm, cipherParameters, asn1Params);
 					}
 					else
 					{
-						string alg = this.algorithm.ObjectID.Id;
+                        string alg = this.algorithm.Algorithm.Id;
 						if (alg.Equals(CmsEnvelopedDataGenerator.DesEde3Cbc)
 							|| alg.Equals(CmsEnvelopedDataGenerator.IdeaCbc)
 							|| alg.Equals(CmsEnvelopedDataGenerator.Cast5Cbc))

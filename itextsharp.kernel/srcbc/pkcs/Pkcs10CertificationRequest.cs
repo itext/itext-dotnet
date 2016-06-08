@@ -15,6 +15,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Collections;
 using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace Org.BouncyCastle.Pkcs
 {
@@ -198,17 +199,18 @@ namespace Org.BouncyCastle.Pkcs
 			Stream input)
 			: base((Asn1Sequence) Asn1Object.FromStream(input))
 		{
-		}
+        }
 
-		/// <summary>
-		/// Instantiate a Pkcs10CertificationRequest object with the necessary credentials.
-		/// </summary>
-		///<param name="signatureAlgorithm">Name of Sig Alg.</param>
-		/// <param name="subject">X509Name of subject eg OU="My unit." O="My Organisatioin" C="au" </param>
-		/// <param name="publicKey">Public Key to be included in cert reqest.</param>
-		/// <param name="attributes">ASN1Set of Attributes.</param>
-		/// <param name="signingKey">Matching Private key for nominated (above) public key to be used to sign the request.</param>
-		public Pkcs10CertificationRequest(
+        /// <summary>
+        /// Instantiate a Pkcs10CertificationRequest object with the necessary credentials.
+        /// </summary>
+        ///<param name="signatureAlgorithm">Name of Sig Alg.</param>
+        /// <param name="subject">X509Name of subject eg OU="My unit." O="My Organisatioin" C="au" </param>
+        /// <param name="publicKey">Public Key to be included in cert reqest.</param>
+        /// <param name="attributes">ASN1Set of Attributes.</param>
+        /// <param name="signingKey">Matching Private key for nominated (above) public key to be used to sign the request.</param>
+        [Obsolete("Use constructor with an ISignatureFactory")]
+        public Pkcs10CertificationRequest(
 			string					signatureAlgorithm,
 			X509Name				subject,
 			AsymmetricKeyParameter	publicKey,
@@ -226,79 +228,84 @@ namespace Org.BouncyCastle.Pkcs
 			if (!signingKey.IsPrivate)
 				throw new ArgumentException("key for signing must be private", "signingKey");
 
-//			DerObjectIdentifier sigOid = SignerUtilities.GetObjectIdentifier(signatureAlgorithm);
-			string algorithmName = Platform.ToUpperInvariant(signatureAlgorithm);
-			DerObjectIdentifier sigOid = (DerObjectIdentifier) algorithms[algorithmName];
-
-			if (sigOid == null)
-			{
-				try
-				{
-					sigOid = new DerObjectIdentifier(algorithmName);
-				}
-				catch (Exception e)
-				{
-					throw new ArgumentException("Unknown signature type requested", e);
-				}
-			}
-
-			if (noParams.Contains(sigOid))
-			{
-				this.sigAlgId = new AlgorithmIdentifier(sigOid);
-			}
-			else if (exParams.Contains(algorithmName))
-			{
-				this.sigAlgId = new AlgorithmIdentifier(sigOid, (Asn1Encodable) exParams[algorithmName]);
-			}
-			else
-			{
-				this.sigAlgId = new AlgorithmIdentifier(sigOid, DerNull.Instance);
-			}
-
-			SubjectPublicKeyInfo pubInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey);
-
-			this.reqInfo = new CertificationRequestInfo(subject, pubInfo, attributes);
-
-			ISigner sig = SignerUtilities.GetSigner(signatureAlgorithm);
-
-			sig.Init(true, signingKey);
-
-			try
-			{
-				// Encode.
-				byte[] b = reqInfo.GetDerEncoded();
-				sig.BlockUpdate(b, 0, b.Length);
-			}
-			catch (Exception e)
-			{
-				throw new ArgumentException("exception encoding TBS cert request", e);
-			}
-
-			// Generate Signature.
-			sigBits = new DerBitString(sig.GenerateSignature());
+            init(new Asn1SignatureFactory(signatureAlgorithm, signingKey), subject, publicKey, attributes, signingKey);
 		}
 
-//        internal Pkcs10CertificationRequest(
-//        	Asn1InputStream seqStream)
-//        {
-//			Asn1Sequence seq = (Asn1Sequence) seqStream.ReadObject();
-//            try
-//            {
-//                this.reqInfo = CertificationRequestInfo.GetInstance(seq[0]);
-//                this.sigAlgId = AlgorithmIdentifier.GetInstance(seq[1]);
-//                this.sigBits = (DerBitString) seq[2];
-//            }
-//            catch (Exception ex)
-//            {
-//                throw new ArgumentException("Create From Asn1Sequence: " + ex.Message);
-//            }
-//        }
+        /// <summary>
+        /// Instantiate a Pkcs10CertificationRequest object with the necessary credentials.
+        /// </summary>
+        ///<param name="signatureCalculatorFactory">The factory for signature calculators to sign the PKCS#10 request with.</param>
+        /// <param name="subject">X509Name of subject eg OU="My unit." O="My Organisatioin" C="au" </param>
+        /// <param name="publicKey">Public Key to be included in cert reqest.</param>
+        /// <param name="attributes">ASN1Set of Attributes.</param>
+        /// <param name="signingKey">Matching Private key for nominated (above) public key to be used to sign the request.</param>
+        public Pkcs10CertificationRequest(
+            ISignatureFactory signatureCalculatorFactory,
+            X509Name subject,
+            AsymmetricKeyParameter publicKey,
+            Asn1Set attributes,
+            AsymmetricKeyParameter signingKey)
+        {
+            if (signatureCalculatorFactory == null)
+                throw new ArgumentNullException("signatureCalculator");
+            if (subject == null)
+                throw new ArgumentNullException("subject");
+            if (publicKey == null)
+                throw new ArgumentNullException("publicKey");
+            if (publicKey.IsPrivate)
+                throw new ArgumentException("expected public key", "publicKey");
+            if (!signingKey.IsPrivate)
+                throw new ArgumentException("key for signing must be private", "signingKey");
 
-		/// <summary>
-		/// Get the public key.
-		/// </summary>
-		/// <returns>The public key.</returns>
-		public AsymmetricKeyParameter GetPublicKey()
+            init(signatureCalculatorFactory, subject, publicKey, attributes, signingKey);
+        }
+
+        private void init(
+            ISignatureFactory signatureCalculator, 
+            X509Name subject,
+            AsymmetricKeyParameter publicKey,
+            Asn1Set attributes,
+            AsymmetricKeyParameter signingKey)
+        {
+            this.sigAlgId = (AlgorithmIdentifier)signatureCalculator.AlgorithmDetails;
+
+            SubjectPublicKeyInfo pubInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey);
+
+            this.reqInfo = new CertificationRequestInfo(subject, pubInfo, attributes);
+
+            IStreamCalculator streamCalculator = signatureCalculator.CreateCalculator();
+
+            byte[] reqInfoData = reqInfo.GetDerEncoded();
+
+            streamCalculator.Stream.Write(reqInfoData, 0, reqInfoData.Length);
+
+            Platform.Dispose(streamCalculator.Stream);
+
+            // Generate Signature.
+            sigBits = new DerBitString(((IBlockResult)streamCalculator.GetResult()).Collect());
+        }
+
+        //        internal Pkcs10CertificationRequest(
+        //        	Asn1InputStream seqStream)
+        //        {
+        //			Asn1Sequence seq = (Asn1Sequence) seqStream.ReadObject();
+        //            try
+        //            {
+        //                this.reqInfo = CertificationRequestInfo.GetInstance(seq[0]);
+        //                this.sigAlgId = AlgorithmIdentifier.GetInstance(seq[1]);
+        //                this.sigBits = (DerBitString) seq[2];
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                throw new ArgumentException("Create From Asn1Sequence: " + ex.Message);
+        //            }
+        //        }
+
+        /// <summary>
+        /// Get the public key.
+        /// </summary>
+        /// <returns>The public key.</returns>
+        public AsymmetricKeyParameter GetPublicKey()
 		{
 			return PublicKeyFactory.CreateKey(reqInfo.SubjectPublicKeyInfo);
 		}
@@ -315,55 +322,47 @@ namespace Org.BouncyCastle.Pkcs
 		public bool Verify(
 			AsymmetricKeyParameter publicKey)
 		{
-			ISigner sig;
-
-			try
-			{
-				sig = SignerUtilities.GetSigner(GetSignatureName(sigAlgId));
-			}
-			catch (Exception e)
-			{
-				// try an alternate
-				string alt = (string) oids[sigAlgId.ObjectID];
-
-				if (alt != null)
-				{
-					sig = SignerUtilities.GetSigner(alt);
-				}
-				else
-				{
-					throw e;
-				}
-			}
-
-			SetSignatureParameters(sig, sigAlgId.Parameters);
-
-			sig.Init(false, publicKey);
-
-			try
-			{
-				byte[] b = reqInfo.GetDerEncoded();
-				sig.BlockUpdate(b, 0, b.Length);
-			}
-			catch (Exception e)
-			{
-				throw new SignatureException("exception encoding TBS cert request", e);
-			}
-
-			return sig.VerifySignature(sigBits.GetBytes());
+            return Verify(new Asn1VerifierFactoryProvider(publicKey));
 		}
 
-//        /// <summary>
-//        /// Get the Der Encoded Pkcs10 Certification Request.
-//        /// </summary>
-//        /// <returns>A byte array.</returns>
-//        public byte[] GetEncoded()
-//        {
-//        	return new CertificationRequest(reqInfo, sigAlgId, sigBits).GetDerEncoded();
-//        }
+        public bool Verify(
+            IVerifierFactoryProvider verifierProvider)
+        {
+            return Verify(verifierProvider.CreateVerifierFactory(sigAlgId));
+        }
 
-		// TODO Figure out how to set parameters on an ISigner
-		private void SetSignatureParameters(
+        public bool Verify(
+            IVerifierFactory verifier)
+        {
+            try
+            {
+                byte[] b = reqInfo.GetDerEncoded();
+
+                IStreamCalculator streamCalculator = verifier.CreateCalculator();
+
+                streamCalculator.Stream.Write(b, 0, b.Length);
+
+                Platform.Dispose(streamCalculator.Stream);
+
+                return ((IVerifier)streamCalculator.GetResult()).IsVerified(sigBits.GetOctets());
+            }
+            catch (Exception e)
+            {
+                throw new SignatureException("exception encoding TBS cert request", e);
+            }
+        }
+
+        //        /// <summary>
+        //        /// Get the Der Encoded Pkcs10 Certification Request.
+        //        /// </summary>
+        //        /// <returns>A byte array.</returns>
+        //        public byte[] GetEncoded()
+        //        {
+        //        	return new CertificationRequest(reqInfo, sigAlgId, sigBits).GetDerEncoded();
+        //        }
+
+        // TODO Figure out how to set parameters on an ISigner
+        private void SetSignatureParameters(
 			ISigner			signature,
 			Asn1Encodable	asn1Params)
 		{
@@ -380,7 +379,7 @@ namespace Org.BouncyCastle.Pkcs
 //					throw new SignatureException("IOException decoding parameters: " + e.Message);
 //				}
 
-				if (signature.AlgorithmName.EndsWith("MGF1"))
+				if (Platform.EndsWith(signature.AlgorithmName, "MGF1"))
 				{
 					throw Platform.CreateNotImplementedException("signature algorithm with MGF1");
 
@@ -403,14 +402,14 @@ namespace Org.BouncyCastle.Pkcs
 
 			if (asn1Params != null && !(asn1Params is Asn1Null))
 			{
-				if (sigAlgId.ObjectID.Equals(PkcsObjectIdentifiers.IdRsassaPss))
+                if (sigAlgId.Algorithm.Equals(PkcsObjectIdentifiers.IdRsassaPss))
 				{
 					RsassaPssParameters rsaParams = RsassaPssParameters.GetInstance(asn1Params);
-					return GetDigestAlgName(rsaParams.HashAlgorithm.ObjectID) + "withRSAandMGF1";
+                    return GetDigestAlgName(rsaParams.HashAlgorithm.Algorithm) + "withRSAandMGF1";
 				}
 			}
 
-			return sigAlgId.ObjectID.Id;
+            return sigAlgId.Algorithm.Id;
 		}
 
 		private static string GetDigestAlgName(

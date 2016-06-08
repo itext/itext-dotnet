@@ -10,7 +10,7 @@ namespace Org.BouncyCastle.Asn1
     {
         private readonly byte[] bytes;
 
-		/**
+        /**
          * return an integer from the passed in object
          *
          * @exception ArgumentException if the object cannot be converted.
@@ -23,7 +23,7 @@ namespace Org.BouncyCastle.Asn1
                 return (DerEnumerated)obj;
             }
 
-            throw new ArgumentException("illegal object in GetInstance: " + obj.GetType().Name);
+            throw new ArgumentException("illegal object in GetInstance: " + Platform.GetTypeName(obj));
         }
 
         /**
@@ -39,14 +39,14 @@ namespace Org.BouncyCastle.Asn1
             Asn1TaggedObject	obj,
             bool				isExplicit)
         {
-			Asn1Object o = obj.GetObject();
+            Asn1Object o = obj.GetObject();
 
-			if (isExplicit || o is DerEnumerated)
-			{
-				return GetInstance(o);
-			}
+            if (isExplicit || o is DerEnumerated)
+            {
+                return GetInstance(o);
+            }
 
-			return new DerEnumerated(((Asn1OctetString)o).GetOctets());
+            return FromOctetString(((Asn1OctetString)o).GetOctets());
         }
 
         public DerEnumerated(
@@ -69,32 +69,56 @@ namespace Org.BouncyCastle.Asn1
 
         public BigInteger Value
         {
-            get
-            {
-                return new BigInteger(bytes);
-            }
+            get { return new BigInteger(bytes); }
         }
 
-		internal override void Encode(
+        internal override void Encode(
             DerOutputStream derOut)
         {
             derOut.WriteEncoded(Asn1Tags.Enumerated, bytes);
         }
 
-		protected override bool Asn1Equals(
-			Asn1Object asn1Object)
+        protected override bool Asn1Equals(
+            Asn1Object asn1Object)
         {
-			DerEnumerated other = asn1Object as DerEnumerated;
+            DerEnumerated other = asn1Object as DerEnumerated;
 
-			if (other == null)
-				return false;
+            if (other == null)
+                return false;
 
-			return Arrays.AreEqual(this.bytes, other.bytes);
+            return Arrays.AreEqual(this.bytes, other.bytes);
         }
 
-		protected override int Asn1GetHashCode()
-		{
-			return Arrays.GetHashCode(bytes);
+        protected override int Asn1GetHashCode()
+        {
+            return Arrays.GetHashCode(bytes);
+        }
+
+        private static readonly DerEnumerated[] cache = new DerEnumerated[12];
+
+        internal static DerEnumerated FromOctetString(byte[] enc)
+        {
+            if (enc.Length == 0)
+            {
+                throw new ArgumentException("ENUMERATED has zero length", "enc");
+            }
+
+            if (enc.Length == 1)
+            {
+                int value = enc[0];
+                if (value < cache.Length)
+                {
+                    DerEnumerated cached = cache[value];
+                    if (cached != null)
+                    {
+                        return cached;
+                    }
+
+                    return cache[value] = new DerEnumerated(Arrays.Clone(enc));
+                }
+            }
+
+            return new DerEnumerated(Arrays.Clone(enc));
         }
     }
 }

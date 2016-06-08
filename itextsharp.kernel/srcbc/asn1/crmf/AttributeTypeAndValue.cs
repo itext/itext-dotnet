@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Crmf
 {
@@ -22,7 +24,7 @@ namespace Org.BouncyCastle.Asn1.Crmf
             if (obj is Asn1Sequence)
                 return new AttributeTypeAndValue((Asn1Sequence)obj);
 
-            throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
         }
 
         public AttributeTypeAndValue(

@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -571,7 +572,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @exception ArgumentException if the parameters argument is
 		* inappropriate.
 		*/
-		public void Init(
+        public virtual void Init(
 			bool           forEncryption,
 			ICipherParameters  parameters)
 		{
@@ -582,46 +583,37 @@ namespace Org.BouncyCastle.Crypto.Engines
 				return;
 			}
 
-			throw new ArgumentException("invalid parameter passed to Rijndael init - " + parameters.GetType().ToString());
+			throw new ArgumentException("invalid parameter passed to Rijndael init - " + Platform.GetTypeName(parameters));
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return "Rijndael"; }
 		}
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return BC / 2;
 		}
 
-		public int ProcessBlock(
+        public virtual int ProcessBlock(
 			byte[]	input,
 			int		inOff,
 			byte[]	output,
 			int		outOff)
 		{
 			if (workingKey == null)
-			{
 				throw new InvalidOperationException("Rijndael engine not initialised");
-			}
 
-			if ((inOff + (BC / 2)) > input.Length)
-			{
-				throw new DataLengthException("input buffer too short");
-			}
+            Check.DataLength(input, inOff, (BC / 2), "input buffer too short");
+            Check.OutputLength(output, outOff, (BC / 2), "output buffer too short");
 
-			if ((outOff + (BC / 2)) > output.Length)
-			{
-				throw new DataLengthException("output buffer too short");
-			}
-
-			UnPackBlock(input, inOff);
+            UnPackBlock(input, inOff);
 
 			if (forEncryption)
 			{
@@ -637,11 +629,11 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return BC / 2;
 		}
 
-		public void Reset()
+        public virtual void Reset()
 		{
 		}
 
-		private  void UnPackBlock(
+		private void UnPackBlock(
 			byte[]      bytes,
 			int         off)
 		{
@@ -743,5 +735,4 @@ namespace Org.BouncyCastle.Crypto.Engines
 			KeyAddition(rk[0]);
 		}
 	}
-
 }

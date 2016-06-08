@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Collections;
 
 namespace Org.BouncyCastle.Asn1.Esf
@@ -28,7 +29,7 @@ namespace Org.BouncyCastle.Asn1.Esf
 
 			throw new ArgumentException(
 				"Unknown object in 'CertificateValues' factory: "
-					+ obj.GetType().Name,
+                    + Platform.GetTypeName(obj),
 				"obj");
 		}
 

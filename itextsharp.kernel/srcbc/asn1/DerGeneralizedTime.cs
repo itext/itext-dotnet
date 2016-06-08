@@ -14,7 +14,7 @@ namespace Org.BouncyCastle.Asn1
     {
         private readonly string time;
 
-		/**
+        /**
          * return a generalized time from the passed in object
          *
          * @exception ArgumentException if the object cannot be converted.
@@ -22,15 +22,15 @@ namespace Org.BouncyCastle.Asn1
         public static DerGeneralizedTime GetInstance(
             object obj)
         {
-			if (obj == null || obj is DerGeneralizedTime)
+            if (obj == null || obj is DerGeneralizedTime)
             {
                 return (DerGeneralizedTime)obj;
             }
 
-			throw new ArgumentException("illegal object in GetInstance: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("illegal object in GetInstance: " + Platform.GetTypeName(obj), "obj");
         }
 
-		/**
+        /**
          * return a Generalized Time object from a tagged object.
          *
          * @param obj the tagged object holding the object we want
@@ -43,50 +43,54 @@ namespace Org.BouncyCastle.Asn1
             Asn1TaggedObject	obj,
             bool				isExplicit)
         {
-			Asn1Object o = obj.GetObject();
+            Asn1Object o = obj.GetObject();
 
-			if (isExplicit || o is DerGeneralizedTime)
-			{
-				return GetInstance(o);
-			}
+            if (isExplicit || o is DerGeneralizedTime)
+            {
+                return GetInstance(o);
+            }
 
-			return new DerGeneralizedTime(((Asn1OctetString)o).GetOctets());
+            return new DerGeneralizedTime(((Asn1OctetString)o).GetOctets());
         }
 
-		/**
-		 * The correct format for this is YYYYMMDDHHMMSS[.f]Z, or without the Z
-		 * for local time, or Z+-HHMM on the end, for difference between local
-		 * time and UTC time. The fractional second amount f must consist of at
-		 * least one number with trailing zeroes removed.
-		 *
-		 * @param time the time string.
-		 * @exception ArgumentException if string is an illegal format.
-		 */
-		public DerGeneralizedTime(
-			string time)
-		{
-			this.time = time;
+        /**
+         * The correct format for this is YYYYMMDDHHMMSS[.f]Z, or without the Z
+         * for local time, or Z+-HHMM on the end, for difference between local
+         * time and UTC time. The fractional second amount f must consist of at
+         * least one number with trailing zeroes removed.
+         *
+         * @param time the time string.
+         * @exception ArgumentException if string is an illegal format.
+         */
+        public DerGeneralizedTime(
+            string time)
+        {
+            this.time = time;
 
-			try
-			{
-				ToDateTime();
-			}
-			catch (FormatException e)
-			{
-				throw new ArgumentException("invalid date string: " + e.Message);
-			}
-		}
+            try
+            {
+                ToDateTime();
+            }
+            catch (FormatException e)
+            {
+                throw new ArgumentException("invalid date string: " + e.Message);
+            }
+        }
 
-		/**
+        /**
          * base constructor from a local time object
          */
         public DerGeneralizedTime(
             DateTime time)
         {
+#if PORTABLE
+            this.time = time.ToUniversalTime().ToString(@"yyyyMMddHHmmss\Z");
+#else
             this.time = time.ToString(@"yyyyMMddHHmmss\Z");
+#endif
         }
 
-		internal DerGeneralizedTime(
+        internal DerGeneralizedTime(
             byte[] bytes)
         {
             //
@@ -95,16 +99,16 @@ namespace Org.BouncyCastle.Asn1
             this.time = Strings.FromAsciiByteArray(bytes);
         }
 
-		/**
-		 * Return the time.
-		 * @return The time string as it appeared in the encoded object.
-		 */
-		public string TimeString
-		{
-			get { return time; }
-		}
+        /**
+         * Return the time.
+         * @return The time string as it appeared in the encoded object.
+         */
+        public string TimeString
+        {
+            get { return time; }
+        }
 
-		/**
+        /**
          * return the time - always in the form of
          *  YYYYMMDDhhmmssGMT(+hh:mm|-hh:mm).
          * <p>
@@ -154,151 +158,162 @@ namespace Org.BouncyCastle.Asn1
             return time + CalculateGmtOffset();
         }
 
-		private string CalculateGmtOffset()
-		{
-			char sign = '+';
+        private string CalculateGmtOffset()
+        {
+            char sign = '+';
             DateTime time = ToDateTime();
 
-#if SILVERLIGHT
-			long offset = time.Ticks - time.ToUniversalTime().Ticks;
-			if (offset < 0)
-			{
-				sign = '-';
-				offset = -offset;
-			}
-			int hours = (int)(offset / TimeSpan.TicksPerHour);
-			int minutes = (int)(offset / TimeSpan.TicksPerMinute) % 60;
+#if SILVERLIGHT || PORTABLE
+            long offset = time.Ticks - time.ToUniversalTime().Ticks;
+            if (offset < 0)
+            {
+                sign = '-';
+                offset = -offset;
+            }
+            int hours = (int)(offset / TimeSpan.TicksPerHour);
+            int minutes = (int)(offset / TimeSpan.TicksPerMinute) % 60;
 #else
             // Note: GetUtcOffset incorporates Daylight Savings offset
-			TimeSpan offset =  TimeZone.CurrentTimeZone.GetUtcOffset(time);
-			if (offset.CompareTo(TimeSpan.Zero) < 0)
-			{
-				sign = '-';
-				offset = offset.Duration();
-			}
-			int hours = offset.Hours;
-			int minutes = offset.Minutes;
+            TimeSpan offset =  TimeZone.CurrentTimeZone.GetUtcOffset(time);
+            if (offset.CompareTo(TimeSpan.Zero) < 0)
+            {
+                sign = '-';
+                offset = offset.Duration();
+            }
+            int hours = offset.Hours;
+            int minutes = offset.Minutes;
 #endif
 
-			return "GMT" + sign + Convert(hours) + ":" + Convert(minutes);
-		}
+            return "GMT" + sign + Convert(hours) + ":" + Convert(minutes);
+        }
 
-		private static string Convert(
-			int time)
-		{
-			if (time < 10)
-			{
-				return "0" + time;
-			}
+        private static string Convert(
+            int time)
+        {
+            if (time < 10)
+            {
+                return "0" + time;
+            }
 
-			return time.ToString();
-		}
+            return time.ToString();
+        }
 
-		public DateTime ToDateTime()
-		{
-			string formatStr;
-			string d = time;
-			bool makeUniversal = false;
+        public DateTime ToDateTime()
+        {
+            string formatStr;
+            string d = time;
+            bool makeUniversal = false;
 
-			if (d.EndsWith("Z"))
-			{
-				if (HasFractionalSeconds)
-				{
-					int fCount = d.Length - d.IndexOf('.') - 2;
-					formatStr = @"yyyyMMddHHmmss." + FString(fCount) + @"\Z";
-				}
-				else
-				{
-					formatStr = @"yyyyMMddHHmmss\Z";
-				}
-			}
-			else if (time.IndexOf('-') > 0 || time.IndexOf('+') > 0)
-			{
-				d = GetTime();
-				makeUniversal = true;
+            if (Platform.EndsWith(d, "Z"))
+            {
+                if (HasFractionalSeconds)
+                {
+                    int fCount = d.Length - d.IndexOf('.') - 2;
+                    formatStr = @"yyyyMMddHHmmss." + FString(fCount) + @"\Z";
+                }
+                else
+                {
+                    formatStr = @"yyyyMMddHHmmss\Z";
+                }
+            }
+            else if (time.IndexOf('-') > 0 || time.IndexOf('+') > 0)
+            {
+                d = GetTime();
+                makeUniversal = true;
 
-				if (HasFractionalSeconds)
-				{
-					int fCount = d.IndexOf("GMT") - 1 - d.IndexOf('.');
-					formatStr = @"yyyyMMddHHmmss." + FString(fCount) + @"'GMT'zzz";
-				}
-				else
-				{
-					formatStr = @"yyyyMMddHHmmss'GMT'zzz";
-				}
-			}
-			else
-			{
-				if (HasFractionalSeconds)
-				{
-					int fCount = d.Length - 1 - d.IndexOf('.');
-					formatStr = @"yyyyMMddHHmmss." + FString(fCount);
-				}
-				else
-				{
-					formatStr = @"yyyyMMddHHmmss";
-				}
+                if (HasFractionalSeconds)
+                {
+                    int fCount = Platform.IndexOf(d, "GMT") - 1 - d.IndexOf('.');
+                    formatStr = @"yyyyMMddHHmmss." + FString(fCount) + @"'GMT'zzz";
+                }
+                else
+                {
+                    formatStr = @"yyyyMMddHHmmss'GMT'zzz";
+                }
+            }
+            else
+            {
+                if (HasFractionalSeconds)
+                {
+                    int fCount = d.Length - 1 - d.IndexOf('.');
+                    formatStr = @"yyyyMMddHHmmss." + FString(fCount);
+                }
+                else
+                {
+                    formatStr = @"yyyyMMddHHmmss";
+                }
 
-				// TODO?
+                // TODO?
 //				dateF.setTimeZone(new SimpleTimeZone(0, TimeZone.getDefault().getID()));
-			}
+            }
 
-			return ParseDateString(d, formatStr, makeUniversal);
-		}
+            return ParseDateString(d, formatStr, makeUniversal);
+        }
 
-		private string FString(
-			int count)
-		{
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < count; ++i)
-			{
-				sb.Append('f');
-			}
-			return sb.ToString();
-		}
+        private string FString(
+            int count)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < count; ++i)
+            {
+                sb.Append('f');
+            }
+            return sb.ToString();
+        }
 
-		private DateTime ParseDateString(
-			string	dateStr,
-			string	formatStr,
-			bool	makeUniversal)
-		{
-			DateTime dt = DateTime.ParseExact(
-				dateStr,
-				formatStr,
-				DateTimeFormatInfo.InvariantInfo);
+        private DateTime ParseDateString(string	s, string format, bool makeUniversal)
+        {
+            /*
+             * NOTE: DateTime.Kind and DateTimeStyles.AssumeUniversal not available in .NET 1.1
+             */
+            DateTimeStyles style = DateTimeStyles.None;
+            if (Platform.EndsWith(format, "Z"))
+            {
+                try
+                {
+                    style = (DateTimeStyles)Enums.GetEnumValue(typeof(DateTimeStyles), "AssumeUniversal");
+                }
+                catch (Exception)
+                {
+                }
 
-			return makeUniversal ? dt.ToUniversalTime() : dt;
-		}
+                style |= DateTimeStyles.AdjustToUniversal;
+            }
 
-		private bool HasFractionalSeconds
-		{
-			get { return time.IndexOf('.') == 14; }
-		}
+            DateTime dt = DateTime.ParseExact(s, format, DateTimeFormatInfo.InvariantInfo, style);
 
-		private byte[] GetOctets()
+            return makeUniversal ? dt.ToUniversalTime() : dt;
+        }
+
+        private bool HasFractionalSeconds
+        {
+            get { return time.IndexOf('.') == 14; }
+        }
+
+        private byte[] GetOctets()
         {
             return Strings.ToAsciiByteArray(time);
         }
 
-		internal override void Encode(
+        internal override void Encode(
             DerOutputStream derOut)
         {
             derOut.WriteEncoded(Asn1Tags.GeneralizedTime, GetOctets());
         }
 
-		protected override bool Asn1Equals(
-			Asn1Object asn1Object)
+        protected override bool Asn1Equals(
+            Asn1Object asn1Object)
         {
-			DerGeneralizedTime other = asn1Object as DerGeneralizedTime;
+            DerGeneralizedTime other = asn1Object as DerGeneralizedTime;
 
-			if (other == null)
-				return false;
+            if (other == null)
+                return false;
 
-			return this.time.Equals(other.time);
+            return this.time.Equals(other.time);
         }
 
-		protected override int Asn1GetHashCode()
-		{
+        protected override int Asn1GetHashCode()
+        {
             return time.GetHashCode();
         }
     }

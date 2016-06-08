@@ -80,7 +80,12 @@ namespace Org.BouncyCastle.Asn1.X509
 			get { return sig; }
 		}
 
-		public int Version
+        public byte[] GetSignatureOctets()
+        {
+            return sig.GetOctets();
+        }
+
+        public int Version
 		{
 			get { return tbsCertList.Version; }
 		}

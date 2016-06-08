@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cmp
 {
 	public class ErrorMsgContent
@@ -35,7 +37,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is Asn1Sequence)
 				return new ErrorMsgContent((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public ErrorMsgContent(PkiStatusInfo pkiStatusInfo)
@@ -86,8 +88,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 		public override Asn1Object ToAsn1Object()
 		{
 			Asn1EncodableVector v = new Asn1EncodableVector(pkiStatusInfo);
-			v.AddOptional(errorCode);
-			v.AddOptional(errorDetails);
+			v.AddOptional(errorCode, errorDetails);
 			return new DerSequence(v);
 		}
 	}

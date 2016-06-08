@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace Org.BouncyCastle.Bcpg.Sig
 {
     /**
@@ -27,15 +25,16 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
         public Exportable(
             bool    critical,
-            byte[]     data)
-            : base(SignatureSubpacketTag.Exportable, critical, data)
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.Exportable, critical, isLongLength, data)
         {
         }
 
         public Exportable(
             bool    critical,
             bool    isExportable)
-            : base(SignatureSubpacketTag.Exportable, critical, BooleanToByteArray(isExportable))
+            : base(SignatureSubpacketTag.Exportable, critical, false, BooleanToByteArray(isExportable))
         {
         }
 

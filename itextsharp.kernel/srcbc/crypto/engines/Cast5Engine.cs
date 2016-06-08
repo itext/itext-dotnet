@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -329,12 +330,12 @@ namespace Org.BouncyCastle.Crypto.Engines
         * @exception ArgumentException if the parameters argument is
         * inappropriate.
         */
-        public void Init(
+        public virtual void Init(
             bool				forEncryption,
             ICipherParameters	parameters)
         {
             if (!(parameters is KeyParameter))
-				throw new ArgumentException("Invalid parameter passed to "+ AlgorithmName +" init - " + parameters.GetType().ToString());
+				throw new ArgumentException("Invalid parameter passed to "+ AlgorithmName +" init - " + Platform.GetTypeName(parameters));
 
 			_encrypting = forEncryption;
 			_workingKey = ((KeyParameter)parameters).GetKey();
@@ -360,12 +361,11 @@ namespace Org.BouncyCastle.Crypto.Engines
 			int blockSize = GetBlockSize();
             if (_workingKey == null)
                 throw new InvalidOperationException(AlgorithmName + " not initialised");
-            if ((inOff + blockSize) > input.Length)
-                throw new DataLengthException("Input buffer too short");
-            if ((outOff + blockSize) > output.Length)
-                throw new DataLengthException("Output buffer too short");
 
-			if (_encrypting)
+            Check.DataLength(input, inOff, blockSize, "input buffer too short");
+            Check.OutputLength(output, outOff, blockSize, "output buffer too short");
+
+            if (_encrypting)
             {
                 return EncryptBlock(input, inOff, output, outOff);
             }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace Org.BouncyCastle.X509
@@ -59,7 +60,7 @@ namespace Org.BouncyCastle.X509
 
 			while ((line = ReadLine(inStream)) != null)
 			{
-				if (line.StartsWith(_header1) || line.StartsWith(_header2))
+                if (Platform.StartsWith(line, _header1) || Platform.StartsWith(line, _header2))
 				{
 					break;
 				}
@@ -67,7 +68,7 @@ namespace Org.BouncyCastle.X509
 
 			while ((line = ReadLine(inStream)) != null)
 			{
-				if (line.StartsWith(_footer1) || line.StartsWith(_footer2))
+                if (Platform.StartsWith(line, _footer1) || Platform.StartsWith(line, _footer2))
 				{
 					break;
 				}

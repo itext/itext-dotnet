@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cmp
 {
@@ -37,7 +38,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
             if (obj is Asn1TaggedObject)
                 return new CmpCertificate(AttributeCertificate.GetInstance(((Asn1TaggedObject)obj).GetObject()));
 
-            throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
         }
 
         public virtual bool IsX509v3PKCert

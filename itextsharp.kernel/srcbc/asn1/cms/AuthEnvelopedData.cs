@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	public class AuthEnvelopedData
@@ -119,7 +121,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
 				return new AuthEnvelopedData((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid AuthEnvelopedData: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid AuthEnvelopedData: " + Platform.GetTypeName(obj));
 		}
 
 		public DerInteger Version

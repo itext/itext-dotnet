@@ -130,7 +130,7 @@ namespace Org.BouncyCastle.Crypto
             if (password == null)
                 return new byte[0];
 
-            return Strings.ToAsciiByteArray(password);
+            return Strings.ToByteArray(password);
         }
 
         [Obsolete("Use version taking 'char[]' instead")]
@@ -140,7 +140,7 @@ namespace Org.BouncyCastle.Crypto
             if (password == null)
                 return new byte[0];
 
-            return Strings.ToAsciiByteArray(password);
+            return Strings.ToByteArray(password);
         }
 
         /**

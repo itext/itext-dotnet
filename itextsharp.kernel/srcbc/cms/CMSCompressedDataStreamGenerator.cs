@@ -4,6 +4,7 @@ using System.IO;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 using Org.BouncyCastle.Utilities.Zlib;
 
@@ -124,17 +125,34 @@ namespace Org.BouncyCastle.Cms
 				_out.Write(bytes, off, len);
 			}
 
-			public override void Close()
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    Platform.Dispose(_out);
+
+                    // TODO Parent context(s) should really be be closed explicitly
+
+                    _eiGen.Close();
+				    _cGen.Close();
+				    _sGen.Close();
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
 			{
-				_out.Close();
+                Platform.Dispose(_out);
 
-				// TODO Parent context(s) should really be be closed explicitly
+                // TODO Parent context(s) should really be be closed explicitly
 
-				_eiGen.Close();
+                _eiGen.Close();
 				_cGen.Close();
 				_sGen.Close();
 				base.Close();
 			}
+#endif
 		}
 	}
 }

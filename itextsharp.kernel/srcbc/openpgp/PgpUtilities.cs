@@ -86,7 +86,13 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 				case PublicKeyAlgorithmTag.Dsa:
 					encAlg = "DSA";
 					break;
-				case PublicKeyAlgorithmTag.ElGamalEncrypt: // in some malformed cases.
+                case PublicKeyAlgorithmTag.ECDH:
+                    encAlg = "ECDH";
+                    break;
+                case PublicKeyAlgorithmTag.ECDsa:
+                    encAlg = "ECDSA";
+                    break;
+                case PublicKeyAlgorithmTag.ElGamalEncrypt: // in some malformed cases.
 				case PublicKeyAlgorithmTag.ElGamalGeneral:
 					encAlg = "ElGamal";
 					break;
@@ -97,7 +103,7 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			return GetDigestName(hashAlgorithm) + "with" + encAlg;
         }
 
-		public static string GetSymmetricCipherName(
+	public static string GetSymmetricCipherName(
             SymmetricKeyAlgorithmTag algorithm)
         {
             switch (algorithm)
@@ -124,12 +130,18 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 					return "AES";
 				case SymmetricKeyAlgorithmTag.Twofish:
 					return "Twofish";
+				case SymmetricKeyAlgorithmTag.Camellia128:
+					return "Camellia";
+				case SymmetricKeyAlgorithmTag.Camellia192:
+					return "Camellia";
+				case SymmetricKeyAlgorithmTag.Camellia256:
+					return "Camellia";
 				default:
 					throw new PgpException("unknown symmetric algorithm: " + algorithm);
             }
         }
 
-		public static int GetKeySize(SymmetricKeyAlgorithmTag algorithm)
+        public static int GetKeySize(SymmetricKeyAlgorithmTag algorithm)
         {
             int keySize;
             switch (algorithm)
@@ -142,14 +154,17 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
                 case SymmetricKeyAlgorithmTag.Blowfish:
                 case SymmetricKeyAlgorithmTag.Safer:
                 case SymmetricKeyAlgorithmTag.Aes128:
+                case SymmetricKeyAlgorithmTag.Camellia128:
                     keySize = 128;
                     break;
                 case SymmetricKeyAlgorithmTag.TripleDes:
                 case SymmetricKeyAlgorithmTag.Aes192:
+                case SymmetricKeyAlgorithmTag.Camellia192:
                     keySize = 192;
                     break;
                 case SymmetricKeyAlgorithmTag.Aes256:
                 case SymmetricKeyAlgorithmTag.Twofish:
+                case SymmetricKeyAlgorithmTag.Camellia256:
                     keySize = 256;
                     break;
                 default:
@@ -178,13 +193,44 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			return MakeKey(algorithm, keyBytes);
         }
 
-		public static KeyParameter MakeKeyFromPassPhrase(
-            SymmetricKeyAlgorithmTag	algorithm,
-            S2k							s2k,
-            char[]						passPhrase)
+        internal static byte[] EncodePassPhrase(char[] passPhrase, bool utf8)
+        {
+            return passPhrase == null
+                ? null
+                : utf8
+                ? Encoding.UTF8.GetBytes(passPhrase)
+                : Strings.ToByteArray(passPhrase);
+        }
+
+        /// <remarks>
+        /// Conversion of the passphrase characters to bytes is performed using Convert.ToByte(), which is
+        /// the historical behaviour of the library (1.7 and earlier).
+        /// </remarks>
+        public static KeyParameter MakeKeyFromPassPhrase(SymmetricKeyAlgorithmTag algorithm, S2k s2k, char[] passPhrase)
+        {
+            return DoMakeKeyFromPassPhrase(algorithm, s2k, EncodePassPhrase(passPhrase, false), true);
+        }
+
+        /// <remarks>
+        /// The passphrase is encoded to bytes using UTF8 (Encoding.UTF8.GetBytes).
+        /// </remarks>
+        public static KeyParameter MakeKeyFromPassPhraseUtf8(SymmetricKeyAlgorithmTag algorithm, S2k s2k, char[] passPhrase)
+        {
+            return DoMakeKeyFromPassPhrase(algorithm, s2k, EncodePassPhrase(passPhrase, true), true);
+        }
+
+        /// <remarks>
+        /// Allows the caller to handle the encoding of the passphrase to bytes.
+        /// </remarks>
+        public static KeyParameter MakeKeyFromPassPhraseRaw(SymmetricKeyAlgorithmTag algorithm, S2k s2k, byte[] rawPassPhrase)
+        {
+            return DoMakeKeyFromPassPhrase(algorithm, s2k, rawPassPhrase, false);
+        }
+
+        internal static KeyParameter DoMakeKeyFromPassPhrase(SymmetricKeyAlgorithmTag algorithm, S2k s2k, byte[] rawPassPhrase, bool clearPassPhrase)
         {
 			int keySize = GetKeySize(algorithm);
-			byte[] pBytes = Strings.ToByteArray(new string(passPhrase));
+            byte[] pBytes = rawPassPhrase;
 			byte[] keyBytes = new byte[(keySize + 7) / 8];
 
 			int generatedBytes = 0;
@@ -293,12 +339,16 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 				loopCount++;
             }
 
-			Array.Clear(pBytes, 0, pBytes.Length);
+            if (clearPassPhrase && rawPassPhrase != null)
+            {
+                Array.Clear(rawPassPhrase, 0, rawPassPhrase.Length);
+            }
 
-			return MakeKey(algorithm, keyBytes);
+            return MakeKey(algorithm, keyBytes);
         }
 
-		/// <summary>Write out the passed in file as a literal data packet.</summary>
+#if !PORTABLE || DOTNET
+        /// <summary>Write out the passed in file as a literal data packet.</summary>
         public static void WriteFileToLiteralData(
             Stream		output,
             char		fileType,
@@ -332,9 +382,10 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
                 pOut.Write(buf, 0, len);
             }
 
-			pOut.Close();
-			inputStream.Close();
+            Platform.Dispose(pOut);
+            Platform.Dispose(inputStream);
 		}
+#endif
 
 		private const int ReadAhead = 60;
 
@@ -421,6 +472,36 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 
 				return new ArmoredInputStream(inputStream, hasHeaders);
             }
+        }
+
+        internal static IWrapper CreateWrapper(SymmetricKeyAlgorithmTag encAlgorithm)
+        {
+            switch (encAlgorithm)
+            {
+            case SymmetricKeyAlgorithmTag.Aes128:
+            case SymmetricKeyAlgorithmTag.Aes192:
+            case SymmetricKeyAlgorithmTag.Aes256:
+                return WrapperUtilities.GetWrapper("AESWRAP");
+            case SymmetricKeyAlgorithmTag.Camellia128:
+            case SymmetricKeyAlgorithmTag.Camellia192:
+            case SymmetricKeyAlgorithmTag.Camellia256:
+                return WrapperUtilities.GetWrapper("CAMELLIAWRAP");
+            default:
+                throw new PgpException("unknown wrap algorithm: " + encAlgorithm);
+            }
+        }
+
+        internal static byte[] GenerateIV(int length, SecureRandom random)
+        {
+            byte[] iv = new byte[length];
+            random.NextBytes(iv);
+            return iv;
+        }
+
+        internal static S2k GenerateS2k(HashAlgorithmTag hashAlgorithm, int s2kCount, SecureRandom random)
+        {
+            byte[] iv = GenerateIV(8, random);
+            return new S2k(hashAlgorithm, iv, s2kCount);
         }
     }
 }

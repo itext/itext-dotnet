@@ -50,7 +50,7 @@ namespace Org.BouncyCastle.Asn1
                 }
             }
 
-            throw new ArgumentException("Unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+            throw new ArgumentException("Unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
         }
 
         /**
@@ -103,7 +103,7 @@ namespace Org.BouncyCastle.Asn1
                 return (Asn1Sequence) inner;
             }
 
-            throw new ArgumentException("Unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+            throw new ArgumentException("Unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
         }
 
         protected internal Asn1Sequence(

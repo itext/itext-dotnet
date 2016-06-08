@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms.Ecc
 {
 	public class MQVuserKeyingMaterial
@@ -67,7 +69,7 @@ namespace Org.BouncyCastle.Asn1.Cms.Ecc
 				return new MQVuserKeyingMaterial((Asn1Sequence)obj);
 			}
 
-			throw new ArgumentException("Invalid MQVuserKeyingMaterial: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid MQVuserKeyingMaterial: " + Platform.GetTypeName(obj));
 		}
 		
 		public OriginatorPublicKey EphemeralPublicKey

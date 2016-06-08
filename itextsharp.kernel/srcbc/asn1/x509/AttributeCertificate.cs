@@ -63,7 +63,12 @@ namespace Org.BouncyCastle.Asn1.X509
 			get { return signatureValue; }
 		}
 
-		/**
+        public byte[] GetSignatureOctets()
+        {
+            return signatureValue.GetOctets();
+        }
+
+        /**
          * Produce an object suitable for an Asn1OutputStream.
          * <pre>
          *  AttributeCertificate ::= Sequence {

@@ -43,7 +43,7 @@ namespace Org.BouncyCastle.Ocsp
 
 		public string HashAlgOid
 		{
-			get { return id.HashAlgorithm.ObjectID.Id; }
+            get { return id.HashAlgorithm.Algorithm.Id; }
 		}
 
 		public byte[] GetIssuerNameHash()
@@ -118,7 +118,7 @@ namespace Org.BouncyCastle.Ocsp
 		{
 			try
 			{
-				String hashAlgorithm = hashAlg.ObjectID.Id;
+                String hashAlgorithm = hashAlg.Algorithm.Id;
 
 				X509Name issuerName = PrincipalUtilities.GetSubjectX509Principal(issuerCert);
 				byte[] issuerNameHash = DigestUtilities.CalculateDigest(

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Pkcs
 {
@@ -42,7 +43,7 @@ namespace Org.BouncyCastle.Asn1.Pkcs
 				return new EncryptedPrivateKeyInfo((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("Unknown object in factory: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public AlgorithmIdentifier EncryptionAlgorithm

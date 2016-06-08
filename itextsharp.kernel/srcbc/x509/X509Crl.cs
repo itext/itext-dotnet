@@ -14,6 +14,7 @@ using Org.BouncyCastle.Utilities.Collections;
 using Org.BouncyCastle.Utilities.Date;
 using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.X509.Extension;
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace Org.BouncyCastle.X509
 {
@@ -63,7 +64,7 @@ namespace Org.BouncyCastle.X509
 
 		protected override X509Extensions GetX509Extensions()
 		{
-			return Version == 2
+			return c.Version >= 2
 				?	c.TbsCertList.Extensions
 				:	null;
 		}
@@ -83,24 +84,46 @@ namespace Org.BouncyCastle.X509
 		public virtual void Verify(
 			AsymmetricKeyParameter publicKey)
 		{
-			if (!c.SignatureAlgorithm.Equals(c.TbsCertList.Signature))
-			{
-				throw new CrlException("Signature algorithm on CertificateList does not match TbsCertList.");
-			}
-
-			ISigner sig = SignerUtilities.GetSigner(SigAlgName);
-			sig.Init(false, publicKey);
-
-			byte[] encoded = this.GetTbsCertList();
-			sig.BlockUpdate(encoded, 0, encoded.Length);
-
-			if (!sig.VerifySignature(this.GetSignature()))
-			{
-				throw new SignatureException("CRL does not verify with supplied public key.");
-			}
+            Verify(new Asn1VerifierFactoryProvider(publicKey));
 		}
 
-		public virtual int Version
+        /// <summary>
+        /// Verify the CRL's signature using a verifier created using the passed in verifier provider.
+        /// </summary>
+        /// <param name="verifierProvider">An appropriate provider for verifying the CRL's signature.</param>
+        /// <returns>True if the signature is valid.</returns>
+        /// <exception cref="Exception">If verifier provider is not appropriate or the CRL algorithm is invalid.</exception>
+        public virtual void Verify(
+            IVerifierFactoryProvider verifierProvider)
+        {
+            CheckSignature(verifierProvider.CreateVerifierFactory(c.SignatureAlgorithm));
+        }
+
+        protected virtual void CheckSignature(
+            IVerifierFactory verifier)
+        {
+            if (!c.SignatureAlgorithm.Equals(c.TbsCertList.Signature))
+            {
+                throw new CrlException("Signature algorithm on CertificateList does not match TbsCertList.");
+            }
+
+            Asn1Encodable parameters = c.SignatureAlgorithm.Parameters;
+
+            IStreamCalculator streamCalculator = verifier.CreateCalculator();
+
+            byte[] b = this.GetTbsCertList();
+
+            streamCalculator.Stream.Write(b, 0, b.Length);
+
+            Platform.Dispose(streamCalculator.Stream);
+
+            if (!((IVerifier)streamCalculator.GetResult()).IsVerified(this.GetSignature()))
+            {
+                throw new InvalidKeyException("CRL does not verify with supplied public key.");
+            }
+        }
+
+        public virtual int Version
 		{
 			get { return c.Version; }
 		}
@@ -188,7 +211,7 @@ namespace Org.BouncyCastle.X509
 
 		public virtual byte[] GetSignature()
 		{
-			return c.Signature.GetBytes();
+			return c.GetSignatureOctets();
 		}
 
 		public virtual string SigAlgName
@@ -198,7 +221,7 @@ namespace Org.BouncyCastle.X509
 
 		public virtual string SigAlgOid
 		{
-			get { return c.SignatureAlgorithm.ObjectID.Id; }
+            get { return c.SignatureAlgorithm.Algorithm.Id; }
 		}
 
 		public virtual byte[] GetSigAlgParams()

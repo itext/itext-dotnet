@@ -3,6 +3,7 @@ using System.Collections;
 
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509.SigI
 {
@@ -47,7 +48,7 @@ namespace Org.BouncyCastle.Asn1.X509.SigI
 				return new PersonalData((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**

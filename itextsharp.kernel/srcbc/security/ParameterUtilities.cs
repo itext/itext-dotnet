@@ -83,10 +83,8 @@ namespace Org.BouncyCastle.Security
                 CryptoProObjectIdentifiers.GostR28147Cbc);
             AddAlgorithm("HC128");
             AddAlgorithm("HC256");
-#if INCLUDE_IDEA
             AddAlgorithm("IDEA",
                 "1.3.6.1.4.1.188.7.1.1.2");
-#endif
             AddAlgorithm("NOEKEON");
             AddAlgorithm("RC2",
                 PkcsObjectIdentifiers.RC2Cbc,
@@ -106,6 +104,10 @@ namespace Org.BouncyCastle.Security
             AddAlgorithm("SERPENT");
             AddAlgorithm("SKIPJACK");
             AddAlgorithm("TEA");
+            AddAlgorithm("THREEFISH-256");
+            AddAlgorithm("THREEFISH-512");
+            AddAlgorithm("THREEFISH-1024");
+            AddAlgorithm("TNEPRES");
             AddAlgorithm("TWOFISH");
             AddAlgorithm("VMPC");
             AddAlgorithm("VMPC-KSA3");
@@ -234,12 +236,10 @@ namespace Org.BouncyCastle.Security
                 {
                     iv = Cast5CbcParameters.GetInstance(asn1Params).GetIV();
                 }
-#if INCLUDE_IDEA
                 else if (canonical == "IDEA")
                 {
                     iv = IdeaCbcPar.GetInstance(asn1Params).GetIV();
                 }
-#endif
                 else if (canonical == "RC2")
                 {
                     iv = RC2CbcParameter.GetInstance(asn1Params).GetIV();
@@ -288,10 +288,8 @@ namespace Org.BouncyCastle.Security
             if (canonical == "CAST5")
                 return new Cast5CbcParameters(CreateIV(random, 8), 128);
 
-#if INCLUDE_IDEA
             if (canonical == "IDEA")
                 return new IdeaCbcPar(CreateIV(random, 8));
-#endif
 
             if (canonical == "RC2")
                 return new RC2CbcParameter(CreateIV(random, 8));

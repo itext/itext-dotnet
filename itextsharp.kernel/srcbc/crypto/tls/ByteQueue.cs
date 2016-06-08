@@ -68,13 +68,13 @@ namespace Org.BouncyCastle.Crypto.Tls
             int		len,
             int		skip)
         {
-            if ((available - skip) < len)
-            {
-                throw new TlsException("Not enough data to read");
-            }
             if ((buf.Length - offset) < len)
             {
-                throw new TlsException("Buffer size of " + buf.Length + " is too small for a read of " + len + " bytes");
+                throw new ArgumentException("Buffer size of " + buf.Length + " is too small for a read of " + len + " bytes");
+            }
+            if ((available - skip) < len)
+            {
+                throw new InvalidOperationException("Not enough data to read");
             }
             Array.Copy(databuf, skipped + skip, buf, offset, len);
         }
@@ -115,7 +115,7 @@ namespace Org.BouncyCastle.Crypto.Tls
         {
             if (i > available)
             {
-                throw new TlsException("Cannot remove " + i + " bytes, only got " + available);
+                throw new InvalidOperationException("Cannot remove " + i + " bytes, only got " + available);
             }
 
             /*

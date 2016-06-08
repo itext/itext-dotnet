@@ -5,17 +5,22 @@ using Org.BouncyCastle.Crypto.Signers;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-	internal class TlsECDsaSigner
-		: TlsDsaSigner
-	{
-		public override bool IsValidPublicKey(AsymmetricKeyParameter publicKey)
-		{
-			return publicKey is ECPublicKeyParameters;
-		}
+    public class TlsECDsaSigner
+        :   TlsDsaSigner
+    {
+        public override bool IsValidPublicKey(AsymmetricKeyParameter publicKey)
+        {
+            return publicKey is ECPublicKeyParameters;
+        }
 
-		protected override IDsa CreateDsaImpl()
-		{
-			return new ECDsaSigner();
-		}
-	}
+        protected override IDsa CreateDsaImpl(byte hashAlgorithm)
+        {
+            return new ECDsaSigner(new HMacDsaKCalculator(TlsUtilities.CreateHash(hashAlgorithm)));
+        }
+
+        protected override byte SignatureAlgorithm
+        {
+            get { return Tls.SignatureAlgorithm.ecdsa; }
+        }
+    }
 }

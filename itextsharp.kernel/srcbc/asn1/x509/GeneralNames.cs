@@ -23,7 +23,7 @@ namespace Org.BouncyCastle.Asn1.X509
 				return new GeneralNames((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public static GeneralNames GetInstance(

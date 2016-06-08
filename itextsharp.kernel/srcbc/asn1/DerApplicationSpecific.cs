@@ -48,7 +48,7 @@ namespace Org.BouncyCastle.Asn1
 
             byte[] data = asn1Obj.GetDerEncoded();
 
-			this.isConstructed = isExplicit || asn1Obj is Asn1Set || asn1Obj is Asn1Sequence;
+            this.isConstructed = Asn1TaggedObject.IsConstructed(isExplicit, asn1Obj);
 			this.tag = tag;
 
 			if (isExplicit)
@@ -160,7 +160,7 @@ namespace Org.BouncyCastle.Asn1
 				tmp[0] |= Asn1Tags.Constructed;
 			}
 
-			return FromByteArray(tmp);;
+			return FromByteArray(tmp);
 		}
 
 		internal override void Encode(

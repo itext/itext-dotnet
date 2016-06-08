@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -267,7 +268,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             ICipherParameters parameters)
         {
             if (!(parameters is KeyParameter))
-				throw new ArgumentException("invalid parameter passed to Twofish init - " + parameters.GetType().ToString());
+				throw new ArgumentException("invalid parameter passed to Twofish init - " + Platform.GetTypeName(parameters));
 
 			this.encrypting = forEncryption;
 			this.workingKey = ((KeyParameter)parameters).GetKey();
@@ -293,12 +294,11 @@ namespace Org.BouncyCastle.Crypto.Engines
         {
             if (workingKey == null)
                 throw new InvalidOperationException("Twofish not initialised");
-            if ((inOff + BLOCK_SIZE) > input.Length)
-                throw new DataLengthException("input buffer too short");
-            if ((outOff + BLOCK_SIZE) > output.Length)
-                throw new DataLengthException("output buffer too short");
 
-			if (encrypting)
+            Check.DataLength(input, inOff, BLOCK_SIZE, "input buffer too short");
+            Check.OutputLength(output, outOff, BLOCK_SIZE, "output buffer too short");
+
+            if (encrypting)
             {
                 EncryptBlock(input, inOff, output, outOff);
             }

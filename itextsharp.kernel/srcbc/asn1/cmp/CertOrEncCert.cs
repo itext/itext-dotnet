@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.Crmf;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cmp
 {
@@ -34,7 +35,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is Asn1TaggedObject)
 				return new CertOrEncCert((Asn1TaggedObject)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+			throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public CertOrEncCert(CmpCertificate certificate)

@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cmp
 {
 	public class CertRepMessage
@@ -28,7 +30,7 @@ namespace Org.BouncyCastle.Asn1.Cmp
 			if (obj is Asn1Sequence)
 				return new CertRepMessage((Asn1Sequence)obj);
 
-			throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public CertRepMessage(CmpCertificate[] caPubs, CertResponse[] response)

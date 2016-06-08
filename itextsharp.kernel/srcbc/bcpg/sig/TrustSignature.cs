@@ -16,17 +16,18 @@ namespace Org.BouncyCastle.Bcpg.Sig
         }
 
 		public TrustSignature(
-            bool	critical,
-            byte[]	data)
-            : base(SignatureSubpacketTag.TrustSig, critical, data)
+            bool    critical,
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.TrustSig, critical, isLongLength, data)
         {
         }
 
         public TrustSignature(
-            bool	critical,
-            int		depth,
-            int		trustAmount)
-            : base(SignatureSubpacketTag.TrustSig, critical, IntToByteArray(depth, trustAmount))
+            bool    critical,
+            int     depth,
+            int     trustAmount)
+            : base(SignatureSubpacketTag.TrustSig, critical, false, IntToByteArray(depth, trustAmount))
         {
         }
 

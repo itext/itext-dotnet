@@ -51,14 +51,8 @@ namespace Org.BouncyCastle.Crypto.Generators
 			int strength = param.Strength;
 			SecureRandom rand = param.Random;
 			int certainty = param.Certainty;
-			bool debug = param.IsDebug;
 
-			if (debug)
-			{
-				Console.WriteLine("Fetching first " + param.CountSmallPrimes + " primes.");
-			}
-
-			IList smallPrimes = findFirstPrimes(param.CountSmallPrimes);
+            IList smallPrimes = findFirstPrimes(param.CountSmallPrimes);
 
 			smallPrimes = permuteList(smallPrimes, rand);
 
@@ -92,12 +86,8 @@ namespace Org.BouncyCastle.Crypto.Generators
 			BigInteger q;
 
 			long tries = 0;
-			if (debug)
-			{
-				Console.WriteLine("generating p and q");
-			}
 
-			BigInteger _2au = a.Multiply(u).ShiftLeft(1);
+            BigInteger _2au = a.Multiply(u).ShiftLeft(1);
 			BigInteger _2bv = b.Multiply(v).ShiftLeft(1);
 
 			for (;;)
@@ -108,7 +98,7 @@ namespace Org.BouncyCastle.Crypto.Generators
 
 				p = _p.Multiply(_2au).Add(BigInteger.One);
 
-				if (!p.IsProbablePrime(certainty))
+				if (!p.IsProbablePrime(certainty, true))
 					continue;
 
 				for (;;)
@@ -120,42 +110,29 @@ namespace Org.BouncyCastle.Crypto.Generators
 
 					q = _q.Multiply(_2bv).Add(BigInteger.One);
 
-					if (q.IsProbablePrime(certainty))
+					if (q.IsProbablePrime(certainty, true))
 						break;
 				}
 
 				if (!sigma.Gcd(_p.Multiply(_q)).Equals(BigInteger.One))
 				{
-					Console.WriteLine("sigma.gcd(_p.mult(_q)) != 1!\n _p: " + _p +"\n _q: "+ _q );
+                    //Console.WriteLine("sigma.gcd(_p.mult(_q)) != 1!\n _p: " + _p +"\n _q: "+ _q );
 					continue;
 				}
 
 				if (p.Multiply(q).BitLength < strength)
 				{
-					if (debug)
-					{
-						Console.WriteLine("key size too small. Should be " + strength + " but is actually "
-							+ p.Multiply(q).BitLength);
-					}
 					continue;
 				}
 				break;
-			}
-
-			if (debug)
-			{
-				Console.WriteLine("needed " + tries + " tries to generate p and q.");
 			}
 
 			BigInteger n = p.Multiply(q);
 			BigInteger phi_n = p.Subtract(BigInteger.One).Multiply(q.Subtract(BigInteger.One));
 			BigInteger g;
 			tries = 0;
-			if (debug)
-			{
-				Console.WriteLine("generating g");
-			}
-			for (;;)
+
+            for (;;)
 			{
 				// TODO After the first loop, just regenerate one randomly-selected gPart each time?
 				IList gParts = Platform.CreateArrayList();
@@ -191,10 +168,6 @@ namespace Org.BouncyCastle.Crypto.Generators
 				{
 					if (g.ModPow(phi_n.Divide((BigInteger)smallPrimes[i]), n).Equals(BigInteger.One))
 					{
-						if (debug)
-						{
-							Console.WriteLine("g has order phi(n)/" + smallPrimes[i] + "\n g: " + g);
-						}
 						divisible = true;
 						break;
 					}
@@ -210,67 +183,29 @@ namespace Org.BouncyCastle.Crypto.Generators
 				//if (g.ModPow(phi_n.Divide(BigInteger.ValueOf(4)), n).Equals(BigInteger.One))
 				if (g.ModPow(phi_n.ShiftRight(2), n).Equals(BigInteger.One))
 				{
-					if (debug)
-					{
-						Console.WriteLine("g has order phi(n)/4\n g:" + g);
-					}
 					continue;
 				}
 
 				if (g.ModPow(phi_n.Divide(_p), n).Equals(BigInteger.One))
 				{
-					if (debug)
-					{
-						Console.WriteLine("g has order phi(n)/p'\n g: " + g);
-					}
 					continue;
 				}
 				if (g.ModPow(phi_n.Divide(_q), n).Equals(BigInteger.One))
 				{
-					if (debug)
-					{
-						Console.WriteLine("g has order phi(n)/q'\n g: " + g);
-					}
 					continue;
 				}
 				if (g.ModPow(phi_n.Divide(a), n).Equals(BigInteger.One))
 				{
-					if (debug)
-					{
-						Console.WriteLine("g has order phi(n)/a\n g: " + g);
-					}
 					continue;
 				}
 				if (g.ModPow(phi_n.Divide(b), n).Equals(BigInteger.One))
 				{
-					if (debug)
-					{
-						Console.WriteLine("g has order phi(n)/b\n g: " + g);
-					}
 					continue;
 				}
 				break;
 			}
-			if (debug)
-			{
-				Console.WriteLine("needed " + tries + " tries to generate g");
-				Console.WriteLine();
-				Console.WriteLine("found new NaccacheStern cipher variables:");
-				Console.WriteLine("smallPrimes: " + CollectionUtilities.ToString(smallPrimes));
-				Console.WriteLine("sigma:...... " + sigma + " (" + sigma.BitLength + " bits)");
-				Console.WriteLine("a:.......... " + a);
-				Console.WriteLine("b:.......... " + b);
-				Console.WriteLine("p':......... " + _p);
-				Console.WriteLine("q':......... " + _q);
-				Console.WriteLine("p:.......... " + p);
-				Console.WriteLine("q:.......... " + q);
-				Console.WriteLine("n:.......... " + n);
-				Console.WriteLine("phi(n):..... " + phi_n);
-				Console.WriteLine("g:.......... " + g);
-				Console.WriteLine();
-			}
 
-			return new AsymmetricCipherKeyPair(new NaccacheSternKeyParameters(false, g, n, sigma.BitLength),
+            return new AsymmetricCipherKeyPair(new NaccacheSternKeyParameters(false, g, n, sigma.BitLength),
 				new NaccacheSternPrivateKeyParameters(g, n, sigma.BitLength, smallPrimes, phi_n));
 		}
 

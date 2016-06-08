@@ -12,6 +12,16 @@ namespace Org.BouncyCastle.Asn1
     public abstract class Asn1TaggedObject
 		: Asn1Object, Asn1TaggedObjectParser
     {
+        internal static bool IsConstructed(bool isExplicit, Asn1Object obj)
+        {
+            if (isExplicit || obj is Asn1Sequence || obj is Asn1Set)
+                return true;
+            Asn1TaggedObject tagged = obj as Asn1TaggedObject;
+            if (tagged == null)
+                return false;
+            return IsConstructed(tagged.IsExplicit(), tagged.GetObject());
+        }
+
         internal int            tagNo;
 //        internal bool           empty;
         internal bool           explicitly = true;
@@ -37,7 +47,7 @@ namespace Org.BouncyCastle.Asn1
 				return (Asn1TaggedObject) obj;
 			}
 
-			throw new ArgumentException("Unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**

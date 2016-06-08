@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509.Qualified
 {
@@ -37,7 +35,7 @@ namespace Org.BouncyCastle.Asn1.X509.Qualified
 				return new BiometricData(Asn1Sequence.GetInstance(obj));
             }
 
-			throw new ArgumentException("unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		private BiometricData(

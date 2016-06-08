@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Crypto.IO
 {
 	public class MacStream
@@ -109,12 +111,24 @@ namespace Org.BouncyCastle.Crypto.IO
 			set { stream.Position = value; }
 		}
 
-		public override void Close()
-		{
-			stream.Close();
-		}
+#if PORTABLE
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Platform.Dispose(stream);
+            }
+            base.Dispose(disposing);
+        }
+#else
+        public override void Close()
+        {
+            Platform.Dispose(stream);
+            base.Close();
+        }
+#endif
 
-		public override void Flush()
+        public override void Flush()
 		{
 			stream.Flush();
 		}

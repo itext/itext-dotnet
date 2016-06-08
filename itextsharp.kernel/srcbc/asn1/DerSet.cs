@@ -1,4 +1,7 @@
+using System;
 using System.IO;
+
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1
 {
@@ -98,9 +101,9 @@ namespace Org.BouncyCastle.Asn1
 				dOut.WriteObject(obj);
 			}
 
-			dOut.Close();
+            Platform.Dispose(dOut);
 
-			byte[] bytes = bOut.ToArray();
+            byte[] bytes = bOut.ToArray();
 
 			derOut.WriteEncoded(Asn1Tags.Set | Asn1Tags.Constructed, bytes);
 		}

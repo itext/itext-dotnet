@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.IsisMtt.Ocsp
 {
@@ -43,7 +44,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.Ocsp
 				return new CertHash((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**

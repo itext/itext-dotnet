@@ -5,11 +5,11 @@ using Org.BouncyCastle.Utilities.Date;
 
 namespace Org.BouncyCastle.Bcpg
 {
-	/// <remarks>Basic packet for a PGP public key.</remarks>
+    /// <remarks>Basic packet for a PGP public key.</remarks>
     public class PublicKeyPacket
         : ContainedPacket //, PublicKeyAlgorithmTag
     {
-		private int version;
+        private int version;
         private long time;
         private int validDays;
         private PublicKeyAlgorithmTag algorithm;
@@ -44,49 +44,55 @@ namespace Org.BouncyCastle.Bcpg
                 case PublicKeyAlgorithmTag.ElGamalGeneral:
                     key = new ElGamalPublicBcpgKey(bcpgIn);
                     break;
+                case PublicKeyAlgorithmTag.ECDH:
+                    key = new ECDHPublicBcpgKey(bcpgIn);
+                    break;
+                case PublicKeyAlgorithmTag.ECDsa:
+                    key = new ECDsaPublicBcpgKey(bcpgIn);
+                    break;
                 default:
                     throw new IOException("unknown PGP public key algorithm encountered");
             }
         }
 
-		/// <summary>Construct a version 4 public key packet.</summary>
+        /// <summary>Construct a version 4 public key packet.</summary>
         public PublicKeyPacket(
             PublicKeyAlgorithmTag	algorithm,
             DateTime				time,
             IBcpgKey				key)
         {
-			this.version = 4;
+            this.version = 4;
             this.time = DateTimeUtilities.DateTimeToUnixMs(time) / 1000L;
             this.algorithm = algorithm;
             this.key = key;
         }
 
-        public int Version
+        public virtual int Version
         {
-			get { return version; }
+            get { return version; }
         }
 
-        public PublicKeyAlgorithmTag Algorithm
+        public virtual PublicKeyAlgorithmTag Algorithm
         {
-			get { return algorithm; }
+            get { return algorithm; }
         }
 
-        public int ValidDays
+        public virtual int ValidDays
         {
-			get { return validDays; }
+            get { return validDays; }
         }
 
-		public DateTime GetTime()
+        public virtual DateTime GetTime()
         {
             return DateTimeUtilities.UnixMsToDateTime(time * 1000L);
         }
 
-        public IBcpgKey Key
+        public virtual IBcpgKey Key
         {
-			get { return key; }
+            get { return key; }
         }
 
-        public byte[] GetEncodedContents()
+        public virtual byte[] GetEncodedContents()
         {
             MemoryStream bOut = new MemoryStream();
             BcpgOutputStream pOut = new BcpgOutputStream(bOut);
@@ -94,22 +100,22 @@ namespace Org.BouncyCastle.Bcpg
             pOut.WriteByte((byte) version);
             pOut.WriteInt((int) time);
 
-			if (version <= 3)
+            if (version <= 3)
             {
                 pOut.WriteShort((short) validDays);
             }
 
-			pOut.WriteByte((byte) algorithm);
+            pOut.WriteByte((byte) algorithm);
 
-			pOut.WriteObject((BcpgObject)key);
+            pOut.WriteObject((BcpgObject)key);
 
-			return bOut.ToArray();
+            return bOut.ToArray();
         }
 
-		public override void Encode(
-			BcpgOutputStream bcpgOut)
-		{
-			bcpgOut.WritePacket(PacketTag.PublicKey, GetEncodedContents(), true);
-		}
-	}
+        public override void Encode(
+            BcpgOutputStream bcpgOut)
+        {
+            bcpgOut.WritePacket(PacketTag.PublicKey, GetEncodedContents(), true);
+        }
+    }
 }

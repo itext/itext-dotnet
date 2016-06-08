@@ -31,13 +31,12 @@ namespace Org.BouncyCastle.Asn1.X509
          * @param reasons - the bitwise OR of the Key Reason flags giving the
          * allowed uses for the key.
          */
-        public ReasonFlags(
-            int reasons)
-             : base(GetBytes(reasons), GetPadBits(reasons))
+        public ReasonFlags(int reasons)
+             : base(reasons)
         {
         }
 
-		public ReasonFlags(
+        public ReasonFlags(
             DerBitString reasons)
              : base(reasons.GetBytes(), reasons.PadBits)
         {

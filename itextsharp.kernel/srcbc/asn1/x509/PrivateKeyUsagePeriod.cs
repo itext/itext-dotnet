@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.X509
 {
 	/// <remarks>
@@ -31,7 +33,7 @@ namespace Org.BouncyCastle.Asn1.X509
 				return GetInstance(X509Extension.ConvertValueToObject((X509Extension) obj));
 			}
 
-			throw new ArgumentException("unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		private DerGeneralizedTime _notBefore, _notAfter;

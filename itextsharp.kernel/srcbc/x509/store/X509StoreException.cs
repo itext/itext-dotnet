@@ -2,7 +2,7 @@ using System;
 
 namespace Org.BouncyCastle.X509.Store
 {
-#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT)
+#if !(NETCF_1_0 || NETCF_2_0 || SILVERLIGHT || PORTABLE)
     [Serializable]
 #endif
     public class X509StoreException

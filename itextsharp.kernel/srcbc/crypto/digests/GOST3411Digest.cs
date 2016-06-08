@@ -11,7 +11,7 @@ namespace Org.BouncyCastle.Crypto.Digests
 	* implementation of GOST R 34.11-94
 	*/
 	public class Gost3411Digest
-		: IDigest
+		: IDigest, IMemoable
 	{
 		private const int DIGEST_LENGTH = 32;
 
@@ -24,7 +24,7 @@ namespace Org.BouncyCastle.Crypto.Digests
 		private ulong	byteCount;
 
 		private readonly IBlockCipher cipher = new Gost28147Engine();
-		private readonly byte[] sBox;
+		private byte[] sBox;
 
 		private static byte[][] MakeC()
 		{
@@ -65,22 +65,7 @@ namespace Org.BouncyCastle.Crypto.Digests
 		 */
 		public Gost3411Digest(Gost3411Digest t)
 		{
-			this.sBox = t.sBox;
-			cipher.Init(true, new ParametersWithSBox(null, sBox));
-
-			Reset();
-
-			Array.Copy(t.H, 0, this.H, 0, t.H.Length);
-			Array.Copy(t.L, 0, this.L, 0, t.L.Length);
-			Array.Copy(t.M, 0, this.M, 0, t.M.Length);
-			Array.Copy(t.Sum, 0, this.Sum, 0, t.Sum.Length);
-			Array.Copy(t.C[1], 0, this.C[1], 0, t.C[1].Length);
-			Array.Copy(t.C[2], 0, this.C[2], 0, t.C[2].Length);
-			Array.Copy(t.C[3], 0, this.C[3], 0, t.C[3].Length);
-			Array.Copy(t.xBuf, 0, this.xBuf, 0, t.xBuf.Length);
-
-			this.xBufOff = t.xBufOff;
-			this.byteCount = t.byteCount;
+			Reset(t);
 		}
 
 		public string AlgorithmName
@@ -339,5 +324,33 @@ namespace Org.BouncyCastle.Crypto.Digests
 		{
 			return 32;
 		}
+
+		public IMemoable Copy()
+		{
+			return new Gost3411Digest(this);
+		}
+
+		public void Reset(IMemoable other)
+		{
+			Gost3411Digest t = (Gost3411Digest)other;
+
+			this.sBox = t.sBox;
+			cipher.Init(true, new ParametersWithSBox(null, sBox));
+
+			Reset();
+
+			Array.Copy(t.H, 0, this.H, 0, t.H.Length);
+			Array.Copy(t.L, 0, this.L, 0, t.L.Length);
+			Array.Copy(t.M, 0, this.M, 0, t.M.Length);
+			Array.Copy(t.Sum, 0, this.Sum, 0, t.Sum.Length);
+			Array.Copy(t.C[1], 0, this.C[1], 0, t.C[1].Length);
+			Array.Copy(t.C[2], 0, this.C[2], 0, t.C[2].Length);
+			Array.Copy(t.C[3], 0, this.C[3], 0, t.C[3].Length);
+			Array.Copy(t.xBuf, 0, this.xBuf, 0, t.xBuf.Length);
+
+			this.xBufOff = t.xBufOff;
+			this.byteCount = t.byteCount;
+		}
 	}
+
 }

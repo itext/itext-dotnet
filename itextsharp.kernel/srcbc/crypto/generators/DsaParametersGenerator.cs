@@ -31,13 +31,11 @@ namespace Org.BouncyCastle.Crypto.Generators
             this.digest = digest;
         }
 
-        /**
-         * initialise the key generator.
-         *
-         * @param size size of the key (range 2^512 -> 2^1024 - 64 bit increments)
-         * @param certainty measure of robustness of prime (for FIPS 186-2 compliance this should be at least 80).
-         * @param random random byte source.
-         */
+        /// <summary>Initialise the generator</summary>
+        /// <remarks>This form can only be used for older DSA (pre-DSA2) parameters</remarks>
+        /// <param name="size">the size of keys in bits (from 512 up to 1024, and a multiple of 64)</param>
+        /// <param name="certainty">measure of robustness of primes (at least 80 for FIPS 186-2 compliance)</param>
+        /// <param name="random">the source of randomness to use</param>
         public virtual void Init(
             int             size,
             int             certainty,
@@ -53,14 +51,9 @@ namespace Org.BouncyCastle.Crypto.Generators
             this.random = random;
         }
 
-        /**
-         * Initialise the key generator for DSA 2.
-         * <p>
-         *     Use this init method if you need to generate parameters for DSA 2 keys.
-         * </p>
-         *
-         * @param params  DSA 2 key generation parameters.
-         */
+        /// <summary>Initialise the generator for DSA 2</summary>
+        /// <remarks>You must use this Init method if you need to generate parameters for DSA 2 keys</remarks>
+        /// <param name="parameters">An instance of <c>DsaParameterGenerationParameters</c> used to configure this generator</param>
         public virtual void Init(DsaParameterGenerationParameters parameters)
         {
             // TODO Should we enforce the minimum 'certainty' values as per C.3 Table C.1?
@@ -84,35 +77,8 @@ namespace Org.BouncyCastle.Crypto.Generators
                 throw new InvalidOperationException("Digest output size too small for value of N");
         }
 
-//        /**
-//         * add value to b, returning the result in a. The a value is treated
-//         * as a BigInteger of length (a.Length * 8) bits. The result is
-//         * modulo 2^a.Length in case of overflow.
-//         */
-//        private static void Add(
-//            byte[]  a,
-//            byte[]  b,
-//            int     value)
-//        {
-//            int     x = (b[b.Length - 1] & 0xff) + value;
-//
-//            a[b.Length - 1] = (byte)x;
-//            x = (int) ((uint) x >>8);
-//
-//            for (int i = b.Length - 2; i >= 0; i--)
-//            {
-//                x += (b[i] & 0xff);
-//                a[i] = (byte)x;
-//                x = (int) ((uint) x >>8);
-//            }
-//        }
-
-        /**
-         * which Generates the p and g values from the given parameters,
-         * returning the DsaParameters object.
-         * <p>
-         * Note: can take a while...</p>
-         */
+        /// <summary>Generates a set of <c>DsaParameters</c></summary>
+        /// <remarks>Can take a while...</remarks>
         public virtual DsaParameters GenerateParameters()
         {
             return use186_3
@@ -242,8 +208,7 @@ namespace Org.BouncyCastle.Crypto.Generators
                 BigInteger U = new BigInteger(1, output).Mod(BigInteger.One.ShiftLeft(N - 1));
 
 // 7. q = 2^(N–1) + U + 1 – ( U mod 2).
-                BigInteger q = BigInteger.One.ShiftLeft(N - 1).Add(U).Add(BigInteger.One).Subtract(
-                    U.Mod(BigInteger.Two));
+                BigInteger q = U.SetBit(0).SetBit(N - 1);
 
 // 8. Test whether or not q is prime as specified in Appendix C.3.
                 // TODO Review C.3 for primality checking

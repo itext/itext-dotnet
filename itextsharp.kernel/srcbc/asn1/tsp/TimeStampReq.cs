@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Tsp
 {
@@ -28,7 +29,7 @@ namespace Org.BouncyCastle.Asn1.Tsp
 			}
 
 			throw new ArgumentException(
-				"Unknown object in 'TimeStampReq' factory: " + o.GetType().FullName);
+				"Unknown object in 'TimeStampReq' factory: " + Platform.GetTypeName(o));
 		}
 
 		private TimeStampReq(

@@ -9,6 +9,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.IO;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 
 namespace Org.BouncyCastle.Cms
@@ -164,7 +165,7 @@ namespace Org.BouncyCastle.Cms
 				Stream octetOutputStream = CmsUtilities.CreateBerOctetOutputStream(
 					eiGen.GetRawOutputStream(), 0, false, _bufferSize);
 
-				IMac mac = MacUtilities.GetMac(macAlgId.ObjectID);
+                IMac mac = MacUtilities.GetMac(macAlgId.Algorithm);
 				// TODO Confirm no ParametersWithRandom needed
 	            mac.Init(cipherParameters);
 				Stream mOut = new TeeOutputStream(octetOutputStream, new MacOutputStream(mac));
@@ -251,11 +252,33 @@ namespace Org.BouncyCastle.Cms
 				macStream.Write(bytes, off, len);
 			}
 
-			public override void Close()
-			{
-				macStream.Close();
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    Platform.Dispose(macStream);
 
-				// TODO Parent context(s) should really be be closed explicitly
+                    // TODO Parent context(s) should really be be closed explicitly
+
+				    eiGen.Close();
+
+				    // [TODO] auth attributes go here 
+				    byte[] macOctets = MacUtilities.DoFinal(mac);
+				    authGen.AddObject(new DerOctetString(macOctets));
+				    // [TODO] unauth attributes go here
+
+				    authGen.Close();
+				    cGen.Close();
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
+			{
+                Platform.Dispose(macStream);
+
+                // TODO Parent context(s) should really be be closed explicitly
 
 				eiGen.Close();
 
@@ -266,7 +289,9 @@ namespace Org.BouncyCastle.Cms
 
 				authGen.Close();
 				cGen.Close();
+                base.Close();
 			}
+#endif
 		}
 	}
 }

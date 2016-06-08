@@ -25,6 +25,12 @@ namespace Org.BouncyCastle.Asn1.Nist
         public static readonly DerObjectIdentifier IdSha224 = HashAlgs.Branch("4");
         public static readonly DerObjectIdentifier IdSha512_224 = HashAlgs.Branch("5");
         public static readonly DerObjectIdentifier IdSha512_256 = HashAlgs.Branch("6");
+        public static readonly DerObjectIdentifier IdSha3_224 = HashAlgs.Branch("7");
+        public static readonly DerObjectIdentifier IdSha3_256 = HashAlgs.Branch("8");
+        public static readonly DerObjectIdentifier IdSha3_384 = HashAlgs.Branch("9");
+        public static readonly DerObjectIdentifier IdSha3_512 = HashAlgs.Branch("10");
+        public static readonly DerObjectIdentifier IdShake128 = HashAlgs.Branch("11");
+        public static readonly DerObjectIdentifier IdShake256 = HashAlgs.Branch("12");
 
         public static readonly DerObjectIdentifier Aes = new DerObjectIdentifier(NistAlgorithm + ".1");
 

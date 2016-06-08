@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -70,7 +70,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
                 return new CompressedData((Asn1Sequence) obj);
 
-			throw new ArgumentException("Invalid CompressedData: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid CompressedData: " + Platform.GetTypeName(obj));
         }
 
 		public DerInteger Version

@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Ess
 {
@@ -21,7 +22,7 @@ namespace Org.BouncyCastle.Asn1.Ess
 
             throw new ArgumentException(
                 "unknown object in 'SigningCertificateV2' factory : "
-                + o.GetType().Name + ".");
+                + Platform.GetTypeName(o) + ".");
         }
 
         private SigningCertificateV2(

@@ -42,7 +42,7 @@ namespace Org.BouncyCastle.Pkix
 				throw new PkixCertPathBuilderException(
 					"TargetConstraints must be an instance of "
 					+ typeof(X509CertStoreSelector).FullName + " for "
-					+ this.GetType() + " class.");
+					+ Platform.GetTypeName(this) + " class.");
 			}
 
 			ISet targets = new HashSet();

@@ -192,7 +192,7 @@ namespace Org.BouncyCastle.Asn1.X509
                 return GetInstance(((Asn1TaggedObject) obj).GetObject());
             }
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**
@@ -278,7 +278,7 @@ namespace Org.BouncyCastle.Asn1.X509
             }
         }
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
 		/**
          * constructor from a table of extensions.
          * <p>

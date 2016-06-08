@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -83,5 +84,18 @@ namespace Org.BouncyCastle.Crypto.Digests
             H7 = 0xdb0c2e0d64f98fa7;
             H8 = 0x47b5481dbefa4fa4;
         }
+		
+		public override IMemoable Copy()
+		{
+			return new Sha384Digest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			Sha384Digest d = (Sha384Digest)other;
+
+			CopyIn(d);
+		}
+
     }
 }

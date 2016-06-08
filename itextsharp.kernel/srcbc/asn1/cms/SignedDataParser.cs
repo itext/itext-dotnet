@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	/**
@@ -32,7 +34,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (o is Asn1SequenceParser)
 				return new SignedDataParser((Asn1SequenceParser)o);
 
-			throw new IOException("unknown object encountered: " + o.GetType().Name);
+            throw new IOException("unknown object encountered: " + Platform.GetTypeName(o));
 		}
 
 		public SignedDataParser(

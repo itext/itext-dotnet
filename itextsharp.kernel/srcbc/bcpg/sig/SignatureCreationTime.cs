@@ -21,18 +21,22 @@ namespace Org.BouncyCastle.Bcpg.Sig
             data[3] = (byte)t;
             return data;
         }
+
         public SignatureCreationTime(
-            bool	critical,
-            byte[]	data)
-            : base(SignatureSubpacketTag.CreationTime, critical, data)
+            bool    critical,
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.CreationTime, critical, isLongLength, data)
         {
         }
+
         public SignatureCreationTime(
-            bool		critical,
-            DateTime	date)
-            : base(SignatureSubpacketTag.CreationTime, critical, TimeToBytes(date))
+            bool        critical,
+            DateTime    date)
+            : base(SignatureSubpacketTag.CreationTime, critical, false, TimeToBytes(date))
         {
         }
+
         public DateTime GetTime()
         {
 			long time = (long)(

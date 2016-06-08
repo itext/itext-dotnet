@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace Org.BouncyCastle.Bcpg.Sig
 {
     /**
@@ -28,15 +26,16 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
         public PrimaryUserId(
             bool    critical,
-            byte[]     data)
-            : base(SignatureSubpacketTag.PrimaryUserId, critical, data)
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.PrimaryUserId, critical, isLongLength, data)
         {
         }
 
         public PrimaryUserId(
             bool    critical,
             bool    isPrimaryUserId)
-            : base(SignatureSubpacketTag.PrimaryUserId, critical, BooleanToByteArray(isPrimaryUserId))
+            : base(SignatureSubpacketTag.PrimaryUserId, critical, false, BooleanToByteArray(isPrimaryUserId))
         {
         }
 

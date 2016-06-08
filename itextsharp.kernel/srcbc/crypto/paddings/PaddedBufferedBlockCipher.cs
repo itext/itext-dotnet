@@ -122,7 +122,7 @@ namespace Org.BouncyCastle.Crypto.Paddings
 		}
 
 		/**
-		* process a single byte, producing an output block if neccessary.
+		* process a single byte, producing an output block if necessary.
 		*
 		* @param in the input byte.
 		* @param out the space for any output that might be produced.
@@ -178,10 +178,7 @@ namespace Org.BouncyCastle.Crypto.Paddings
 
 			if (outLength > 0)
 			{
-				if ((outOff + outLength) > output.Length)
-				{
-					throw new DataLengthException("output buffer too short");
-				}
+                Check.OutputLength(output, outOff, outLength, "output buffer too short");
 			}
 
 			int resultLen = 0;
@@ -242,7 +239,7 @@ namespace Org.BouncyCastle.Crypto.Paddings
 					{
 						Reset();
 
-						throw new DataLengthException("output buffer too short");
+						throw new OutputLengthException("output buffer too short");
 					}
 
 					resultLen = cipher.ProcessBlock(buf, 0, output, outOff);

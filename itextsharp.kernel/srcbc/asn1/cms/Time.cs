@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -20,13 +20,12 @@ namespace Org.BouncyCastle.Asn1.Cms
 		public Time(
             Asn1Object time)
         {
-            if (!(time is DerUtcTime)
-                && !(time is DerGeneralizedTime))
-            {
+            if (time == null)
+                throw new ArgumentNullException("time");
+            if (!(time is DerUtcTime) && !(time is DerGeneralizedTime))
                 throw new ArgumentException("unknown object passed to Time");
-            }
 
-			this.time = time;
+            this.time = time;
         }
 
 		/**
@@ -37,7 +36,7 @@ namespace Org.BouncyCastle.Asn1.Cms
         public Time(
             DateTime date)
         {
-            string d = date.ToString("yyyyMMddHHmmss") + "Z";
+            string d = date.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture) + "Z";
 
 			int year = int.Parse(d.Substring(0, 4));
 
@@ -56,14 +55,12 @@ namespace Org.BouncyCastle.Asn1.Cms
         {
             if (obj == null || obj is Time)
                 return (Time)obj;
-
 			if (obj is DerUtcTime)
                 return new Time((DerUtcTime)obj);
-
 			if (obj is DerGeneralizedTime)
                 return new Time((DerGeneralizedTime)obj);
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
         }
 
 		public string TimeString

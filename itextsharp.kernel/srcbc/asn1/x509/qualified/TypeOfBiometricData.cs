@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509.Qualified
 {
@@ -46,7 +46,7 @@ namespace Org.BouncyCastle.Asn1.X509.Qualified
                 return new TypeOfBiometricData(BiometricDataOid);
             }
 
-			throw new ArgumentException("unknown object in GetInstance: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("unknown object in GetInstance: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public TypeOfBiometricData(

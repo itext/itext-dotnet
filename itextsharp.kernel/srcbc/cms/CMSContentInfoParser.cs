@@ -3,6 +3,7 @@ using System.IO;
 
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Cms
 {
@@ -41,7 +42,7 @@ namespace Org.BouncyCastle.Cms
 		*/
 		public void Close()
 		{
-			this.data.Close();
+            Platform.Dispose(this.data);
 		}
 	}
 }

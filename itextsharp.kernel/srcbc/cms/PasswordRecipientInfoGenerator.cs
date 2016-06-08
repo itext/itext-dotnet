@@ -7,6 +7,7 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Cms
 {
@@ -46,7 +47,7 @@ namespace Org.BouncyCastle.Cms
 			IWrapper keyWrapper = Helper.CreateWrapper(rfc3211WrapperName);
 
 			// Note: In Java build, the IV is automatically generated in JCE layer
-			int ivLength = rfc3211WrapperName.StartsWith("DESEDE") ? 8 : 16;
+			int ivLength = Platform.StartsWith(rfc3211WrapperName, "DESEDE") ? 8 : 16;
 			byte[] iv = new byte[ivLength];
 			random.NextBytes(iv);
 

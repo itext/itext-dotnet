@@ -1,6 +1,5 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Utilities;
 
@@ -20,7 +19,7 @@ namespace Org.BouncyCastle.Asn1.Pkcs
                 return new RC2CbcParameter((Asn1Sequence) obj);
             }
 
-			throw new ArgumentException("Unknown object in factory: " + obj.GetType().FullName, "obj");
+			throw new ArgumentException("Unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public RC2CbcParameter(

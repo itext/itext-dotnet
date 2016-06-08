@@ -77,7 +77,7 @@ namespace Org.BouncyCastle.Tsp
 
 		public string MessageImprintAlgOid
 		{
-			get { return req.MessageImprint.HashAlgorithm.ObjectID.Id; }
+            get { return req.MessageImprint.HashAlgorithm.Algorithm.Id; }
 		}
 
 		public byte[] GetMessageImprintDigest()
@@ -130,34 +130,24 @@ namespace Org.BouncyCastle.Tsp
 			IList extensions)
 		{
 			if (!algorithms.Contains(this.MessageImprintAlgOid))
-			{
-				throw new TspValidationException("request contains unknown algorithm.", PkiFailureInfo.BadAlg);
-			}
+				throw new TspValidationException("request contains unknown algorithm", PkiFailureInfo.BadAlg);
 
-			if (policies != null && this.ReqPolicy != null && !policies.Contains(this.ReqPolicy))
-			{
-				throw new TspValidationException("request contains unknown policy.", PkiFailureInfo.UnacceptedPolicy);
-			}
+            if (policies != null && this.ReqPolicy != null && !policies.Contains(this.ReqPolicy))
+				throw new TspValidationException("request contains unknown policy", PkiFailureInfo.UnacceptedPolicy);
 
-			if (this.Extensions != null && extensions != null)
+            if (this.Extensions != null && extensions != null)
 			{
 				foreach (DerObjectIdentifier oid in this.Extensions.ExtensionOids)
 				{
 					if (!extensions.Contains(oid.Id))
-					{
-						throw new TspValidationException("request contains unknown extension.",
-							PkiFailureInfo.UnacceptedExtension);
-					}
+						throw new TspValidationException("request contains unknown extension", PkiFailureInfo.UnacceptedExtension);
 				}
 			}
 
 			int digestLength = TspUtil.GetDigestLength(this.MessageImprintAlgOid);
 
 			if (digestLength != this.GetMessageImprintDigest().Length)
-			{
-				throw new TspValidationException("imprint digest the wrong length.",
-					PkiFailureInfo.BadDataFormat);
-			}
+				throw new TspValidationException("imprint digest the wrong length", PkiFailureInfo.BadDataFormat);
 		}
 
 		/**

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.IO
 {
@@ -201,7 +201,23 @@ namespace Org.BouncyCastle.Crypto.IO
             set { throw new NotSupportedException(); }
         }
 
-		public override void Close()
+#if PORTABLE
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+			    if (outCipher != null)
+			    {
+				    byte[] data = outCipher.DoFinal();
+				    stream.Write(data, 0, data.Length);
+				    stream.Flush();
+			    }
+                Platform.Dispose(stream);
+            }
+            base.Dispose(disposing);
+        }
+#else
+        public override void Close()
         {
 			if (outCipher != null)
 			{
@@ -209,10 +225,12 @@ namespace Org.BouncyCastle.Crypto.IO
 				stream.Write(data, 0, data.Length);
 				stream.Flush();
 			}
-			stream.Close();
+            Platform.Dispose(stream);
+            base.Close();
         }
+#endif
 
-		public override void Flush()
+        public override void Flush()
         {
 			// Note: outCipher.DoFinal is only called during Close()
 			stream.Flush();

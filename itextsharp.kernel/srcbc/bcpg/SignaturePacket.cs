@@ -146,6 +146,11 @@ namespace Org.BouncyCastle.Bcpg
                     MPInteger y = new MPInteger(bcpgIn);
 					signature = new MPInteger[]{ p, g, y };
                     break;
+                case PublicKeyAlgorithmTag.ECDsa:
+                    MPInteger ecR = new MPInteger(bcpgIn);
+                    MPInteger ecS = new MPInteger(bcpgIn);
+                    signature = new MPInteger[]{ ecR, ecS };
+                    break;
                 default:
 					if (keyAlgorithm >= PublicKeyAlgorithmTag.Experimental_1 && keyAlgorithm <= PublicKeyAlgorithmTag.Experimental_11)
 					{

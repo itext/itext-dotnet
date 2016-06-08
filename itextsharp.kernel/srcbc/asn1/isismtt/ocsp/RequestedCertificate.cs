@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.IsisMtt.Ocsp
 {
@@ -69,7 +71,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.Ocsp
 				return new RequestedCertificate((Asn1TaggedObject) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public static RequestedCertificate GetInstance(

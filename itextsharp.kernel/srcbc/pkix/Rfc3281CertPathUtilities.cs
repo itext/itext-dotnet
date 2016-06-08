@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.IO;
-using iTextSharp.Kernel.Crypto.Securityhandler;
+
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
@@ -195,10 +195,10 @@ namespace Org.BouncyCastle.Pkix
 					}
 					if (certStatus.Status != CertStatus.Unrevoked)
 					{
-						// TODO This format is forced by the NistCertPath tests
-						string formattedDate = certStatus.RevocationDate.Value.ToString(
-                            "G", EncryptionUtils.GetStandartEnUsLocale());
-						string message = "Attribute certificate revocation after "
+                        // This format is enforced by the NistCertPath tests
+                        string formattedDate = certStatus.RevocationDate.Value.ToString(
+                            "ddd MMM dd HH:mm:ss K yyyy");
+                        string message = "Attribute certificate revocation after "
 							+ formattedDate;
 						message += ", reason: "
 							+ Rfc3280CertPathUtilities.CrlReasons[certStatus.Status];

@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Mozilla
 {
@@ -38,7 +39,7 @@ namespace Org.BouncyCastle.Asn1.Mozilla
 
 			throw new ArgumentException(
 				"unknown object in 'PublicKeyAndChallenge' factory : "
-				+ obj.GetType().Name + ".");
+                + Platform.GetTypeName(obj) + ".");
 		}
 
 		public PublicKeyAndChallenge(

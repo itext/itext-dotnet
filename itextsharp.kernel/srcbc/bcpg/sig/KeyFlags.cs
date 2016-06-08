@@ -40,15 +40,16 @@ namespace Org.BouncyCastle.Bcpg.Sig
 
 		public KeyFlags(
             bool	critical,
-            byte[]	data)
-            : base(SignatureSubpacketTag.KeyFlags, critical, data)
+            bool    isLongLength,
+            byte[]  data)
+            : base(SignatureSubpacketTag.KeyFlags, critical, isLongLength, data)
         {
         }
 
 		public KeyFlags(
-			bool	critical,
-			int		flags)
-            : base(SignatureSubpacketTag.KeyFlags, critical, IntToByteArray(flags))
+			bool    critical,
+			int     flags)
+            : base(SignatureSubpacketTag.KeyFlags, critical, false, IntToByteArray(flags))
         {
         }
 

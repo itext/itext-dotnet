@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Utilities;
@@ -21,10 +21,10 @@ namespace Org.BouncyCastle.Crypto.Macs
         protected readonly int c, d;
 
         protected long k0, k1;
-        protected long v0, v1, v2, v3, v4;
+        protected long v0, v1, v2, v3;
 
-        protected byte[] buf = new byte[8];
-        protected int bufPos = 0;
+        protected long m = 0;
+        protected int wordPos = 0;
         protected int wordCount = 0;
 
         /// <summary>SipHash-2-4</summary>
@@ -69,34 +69,60 @@ namespace Org.BouncyCastle.Crypto.Macs
 
         public virtual void Update(byte input)
         {
-            buf[bufPos] = input;
-            if (++bufPos == buf.Length)
+            m = (long)(((ulong)m >> 8) | ((ulong)input << 56));
+
+            if (++wordPos == 8)
             {
                 ProcessMessageWord();
-                bufPos = 0;
+                wordPos = 0;
             }
         }
 
         public virtual void BlockUpdate(byte[] input, int offset, int length)
         {
-            for (int i = 0; i < length; ++i)
+            int i = 0, fullWords = length & ~7;
+            if (wordPos == 0)
             {
-                buf[bufPos] = input[offset + i];
-                if (++bufPos == buf.Length)
+                for (; i < fullWords; i += 8)
                 {
+                    m = (long)Pack.LE_To_UInt64(input, offset + i);
                     ProcessMessageWord();
-                    bufPos = 0;
+                }
+                for (; i < length; ++i)
+                {
+                    m = (long)(((ulong)m >> 8) | ((ulong)input[offset + i] << 56));
+                }
+                wordPos = length - fullWords;
+            }
+            else
+            {
+                int bits = wordPos << 3;
+                for (; i < fullWords; i += 8)
+                {
+                    ulong n = Pack.LE_To_UInt64(input, offset + i);
+                    m = (long)((n << bits) | ((ulong)m >> -bits));
+                    ProcessMessageWord();
+                    m = (long)n;
+                }
+                for (; i < length; ++i)
+                {
+                    m = (long)(((ulong)m >> 8) | ((ulong)input[offset + i] << 56));
+
+                    if (++wordPos == 8)
+                    {
+                        ProcessMessageWord();
+                        wordPos = 0;
+                    }
                 }
             }
         }
 
         public virtual long DoFinal()
         {
-            buf[7] = (byte)((wordCount << 3) + bufPos);
-            while (bufPos < 7)
-            {
-                buf[bufPos++] = 0;
-            }
+            // NOTE: 2 distinct shifts to avoid "64-bit shift" when wordPos == 0
+            m = (long)((ulong)m >> ((7 - wordPos) << 3));
+            m = (long)((ulong)m >> 8);
+            m = (long)((ulong)m | ((ulong)((wordCount << 3) + wordPos) << 56));
 
             ProcessMessageWord();
 
@@ -125,15 +151,14 @@ namespace Org.BouncyCastle.Crypto.Macs
             v2 = k0 ^ 0x6c7967656e657261L;
             v3 = k1 ^ 0x7465646279746573L;
 
-            Array.Clear(buf, 0, buf.Length);
-            bufPos = 0;
+            m = 0;
+            wordPos = 0;
             wordCount = 0;
         }
 
         protected virtual void ProcessMessageWord()
         {
             ++wordCount;
-            long m = (long)Pack.LE_To_UInt64(buf, 0);
             v3 ^= m;
             ApplySipRounds(c);
             v0 ^= m;
@@ -141,29 +166,33 @@ namespace Org.BouncyCastle.Crypto.Macs
 
         protected virtual void ApplySipRounds(int n)
         {
+            long r0 = v0, r1 = v1, r2 = v2, r3 = v3;
+
             for (int r = 0; r < n; ++r)
             {
-                v0 += v1;
-                v2 += v3;
-                v1 = RotateLeft(v1, 13);
-                v3 = RotateLeft(v3, 16);
-                v1 ^= v0;
-                v3 ^= v2;
-                v0 = RotateLeft(v0, 32);
-                v2 += v1;
-                v0 += v3;
-                v1 = RotateLeft(v1, 17);
-                v3 = RotateLeft(v3, 21);
-                v1 ^= v2;
-                v3 ^= v0;
-                v2 = RotateLeft(v2, 32);
+                r0 += r1;
+                r2 += r3;
+                r1 = RotateLeft(r1, 13);
+                r3 = RotateLeft(r3, 16);
+                r1 ^= r0;
+                r3 ^= r2;
+                r0 = RotateLeft(r0, 32);
+                r2 += r1;
+                r0 += r3;
+                r1 = RotateLeft(r1, 17);
+                r3 = RotateLeft(r3, 21);
+                r1 ^= r2;
+                r3 ^= r0;
+                r2 = RotateLeft(r2, 32);
             }
+
+            v0 = r0; v1 = r1; v2 = r2; v3 = r3;
         }
 
         protected static long RotateLeft(long x, int n)
         {
             ulong ux = (ulong)x;
-            ux = (ux << n) | (ux >> (64 - n));
+            ux = (ux << n) | (ux >> -n);
             return (long)ux;
         }
     }

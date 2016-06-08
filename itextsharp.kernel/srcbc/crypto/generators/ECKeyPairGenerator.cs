@@ -6,9 +6,11 @@ using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Asn1.TeleTrust;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.EC;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 
@@ -76,29 +78,43 @@ namespace Org.BouncyCastle.Crypto.Generators
 
                 X9ECParameters ecps = FindECCurveByOid(oid);
 
+                this.publicKeyParamSet = oid;
                 this.parameters = new ECDomainParameters(
                     ecps.Curve, ecps.G, ecps.N, ecps.H, ecps.GetSeed());
             }
 
             this.random = parameters.Random;
+
+            if (this.random == null)
+            {
+                this.random = new SecureRandom();
+            }
         }
 
         /**
-         * Given the domain parameters this routine Generates an EC key
+         * Given the domain parameters this routine generates an EC key
          * pair in accordance with X9.62 section 5.2.1 pages 26, 27.
          */
         public AsymmetricCipherKeyPair GenerateKeyPair()
         {
             BigInteger n = parameters.N;
             BigInteger d;
+            int minWeight = n.BitLength >> 2;
 
-            do
+            for (;;)
             {
                 d = new BigInteger(n.BitLength, random);
-            }
-            while (d.SignValue == 0 || (d.CompareTo(n) >= 0));
 
-            ECPoint q = parameters.G.Multiply(d);
+                if (d.CompareTo(BigInteger.Two) < 0 || d.CompareTo(n) >= 0)
+                    continue;
+
+                if (WNafUtilities.GetNafWeight(d) < minWeight)
+                    continue;
+
+                break;
+            }
+
+            ECPoint q = CreateBasePointMultiplier().Multiply(parameters.G, d);
 
             if (publicKeyParamSet != null)
             {
@@ -112,42 +128,35 @@ namespace Org.BouncyCastle.Crypto.Generators
                 new ECPrivateKeyParameters(algorithm, d, parameters));
         }
 
+        protected virtual ECMultiplier CreateBasePointMultiplier()
+        {
+            return new FixedPointCombMultiplier();
+        }
+
         internal static X9ECParameters FindECCurveByOid(DerObjectIdentifier oid)
         {
             // TODO ECGost3410NamedCurves support (returns ECDomainParameters though)
 
-            X9ECParameters ecP = X962NamedCurves.GetByOid(oid);
-
+            X9ECParameters ecP = CustomNamedCurves.GetByOid(oid);
             if (ecP == null)
             {
-                ecP = SecNamedCurves.GetByOid(oid);
-
-                if (ecP == null)
-                {
-                    ecP = NistNamedCurves.GetByOid(oid);
-
-                    if (ecP == null)
-                    {
-                        ecP = TeleTrusTNamedCurves.GetByOid(oid);
-                    }
-                }
+                ecP = ECNamedCurveTable.GetByOid(oid);
             }
-
             return ecP;
         }
 
         internal static ECPublicKeyParameters GetCorrespondingPublicKey(
             ECPrivateKeyParameters privKey)
         {
-            ECDomainParameters parameters = privKey.Parameters;
-            ECPoint q = parameters.G.Multiply(privKey.D);
+            ECDomainParameters ec = privKey.Parameters;
+            ECPoint q = new FixedPointCombMultiplier().Multiply(ec.G, privKey.D);
 
             if (privKey.PublicKeyParamSet != null)
             {
                 return new ECPublicKeyParameters(privKey.AlgorithmName, q, privKey.PublicKeyParamSet);
             }
 
-            return new ECPublicKeyParameters(privKey.AlgorithmName, q, parameters);
+            return new ECPublicKeyParameters(privKey.AlgorithmName, q, ec);
         }
     }
 }

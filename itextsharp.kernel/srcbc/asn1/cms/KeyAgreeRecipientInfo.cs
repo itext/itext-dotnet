@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -80,7 +80,7 @@ namespace Org.BouncyCastle.Asn1.Cms
                 return new KeyAgreeRecipientInfo((Asn1Sequence)obj);
 
 			throw new ArgumentException(
-                "Illegal object in KeyAgreeRecipientInfo: " + obj.GetType().Name);
+                "Illegal object in KeyAgreeRecipientInfo: " + Platform.GetTypeName(obj));
 
         }
 

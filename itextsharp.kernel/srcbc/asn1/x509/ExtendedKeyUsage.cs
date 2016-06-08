@@ -17,14 +17,14 @@ namespace Org.BouncyCastle.Asn1.X509
         internal readonly IDictionary usageTable = Platform.CreateHashtable();
         internal readonly Asn1Sequence seq;
 
-		public static ExtendedKeyUsage GetInstance(
+        public static ExtendedKeyUsage GetInstance(
             Asn1TaggedObject	obj,
             bool				explicitly)
         {
             return GetInstance(Asn1Sequence.GetInstance(obj, explicitly));
         }
 
-		public static ExtendedKeyUsage GetInstance(
+        public static ExtendedKeyUsage GetInstance(
             object obj)
         {
             if (obj is ExtendedKeyUsage)
@@ -32,45 +32,45 @@ namespace Org.BouncyCastle.Asn1.X509
                 return (ExtendedKeyUsage) obj;
             }
 
-			if (obj is Asn1Sequence)
+            if (obj is Asn1Sequence)
             {
                 return new ExtendedKeyUsage((Asn1Sequence) obj);
             }
 
-			if (obj is X509Extension)
-			{
-				return GetInstance(X509Extension.ConvertValueToObject((X509Extension) obj));
-			}
+            if (obj is X509Extension)
+            {
+                return GetInstance(X509Extension.ConvertValueToObject((X509Extension) obj));
+            }
 
-			throw new ArgumentException("Invalid ExtendedKeyUsage: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid ExtendedKeyUsage: " + Platform.GetTypeName(obj));
         }
 
-		private ExtendedKeyUsage(
+        private ExtendedKeyUsage(
             Asn1Sequence seq)
         {
             this.seq = seq;
 
-			foreach (object o in seq)
-			{
-				if (!(o is DerObjectIdentifier))
-					throw new ArgumentException("Only DerObjectIdentifier instances allowed in ExtendedKeyUsage.");
+            foreach (object o in seq)
+            {
+                if (!(o is DerObjectIdentifier))
+                    throw new ArgumentException("Only DerObjectIdentifier instances allowed in ExtendedKeyUsage.");
 
-				this.usageTable.Add(o, o);
+                this.usageTable[o] = o;
             }
         }
 
-		public ExtendedKeyUsage(
-			params KeyPurposeID[] usages)
-		{
-			this.seq = new DerSequence(usages);
+        public ExtendedKeyUsage(
+            params KeyPurposeID[] usages)
+        {
+            this.seq = new DerSequence(usages);
 
-			foreach (KeyPurposeID usage in usages)
-			{
-				this.usageTable.Add(usage, usage);
-			}
-		}
+            foreach (KeyPurposeID usage in usages)
+            {
+                this.usageTable[usage] = usage;
+            }
+        }
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
         [Obsolete]
         public ExtendedKeyUsage(
             ArrayList usages)
@@ -84,23 +84,24 @@ namespace Org.BouncyCastle.Asn1.X509
         {
             Asn1EncodableVector v = new Asn1EncodableVector();
 
-			foreach (Asn1Object o in usages)
+            foreach (object usage in usages)
             {
-				v.Add(o);
+                Asn1Encodable o = KeyPurposeID.GetInstance(usage);
 
-				this.usageTable.Add(o, o);
+                v.Add(o);
+                this.usageTable[o] = o;
             }
 
-			this.seq = new DerSequence(v);
+            this.seq = new DerSequence(v);
         }
 
-		public bool HasKeyPurposeId(
+        public bool HasKeyPurposeId(
             KeyPurposeID keyPurposeId)
         {
-            return usageTable[keyPurposeId] != null;
+            return usageTable.Contains(keyPurposeId);
         }
 
-#if !SILVERLIGHT
+#if !(SILVERLIGHT || PORTABLE)
         [Obsolete("Use 'GetAllUsages'")]
         public ArrayList GetUsages()
         {
@@ -109,21 +110,21 @@ namespace Org.BouncyCastle.Asn1.X509
 #endif
 
         /**
-		 * Returns all extended key usages.
-		 * The returned ArrayList contains DerObjectIdentifier instances.
-		 * @return An ArrayList with all key purposes.
-		 */
-		public IList GetAllUsages()
-		{
-			return Platform.CreateArrayList(usageTable.Values);
-		}
+         * Returns all extended key usages.
+         * The returned ArrayList contains DerObjectIdentifier instances.
+         * @return An ArrayList with all key purposes.
+         */
+        public IList GetAllUsages()
+        {
+            return Platform.CreateArrayList(usageTable.Values);
+        }
 
         public int Count
-		{
-			get { return usageTable.Count; }
-		}
+        {
+            get { return usageTable.Count; }
+        }
 
-		public override Asn1Object ToAsn1Object()
+        public override Asn1Object ToAsn1Object()
         {
             return seq;
         }

@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Crypto.Digests
 {
     /**
@@ -7,7 +9,7 @@ namespace Org.BouncyCastle.Crypto.Digests
     * "Handbook of Applied Cryptography", pages 344 - 347.
     */
     public abstract class GeneralDigest
-		: IDigest
+		: IDigest, IMemoable
     {
         private const int BYTE_LENGTH = 64;
 
@@ -22,8 +24,13 @@ namespace Org.BouncyCastle.Crypto.Digests
         }
 
         internal GeneralDigest(GeneralDigest t)
-        {
-            xBuf = new byte[t.xBuf.Length];
+		{
+			xBuf = new byte[t.xBuf.Length];
+			CopyIn(t);
+		}
+
+		protected void CopyIn(GeneralDigest t)
+		{
             Array.Copy(t.xBuf, 0, xBuf, 0, t.xBuf.Length);
 
             xBufOff = t.xBufOff;
@@ -48,38 +55,44 @@ namespace Org.BouncyCastle.Crypto.Digests
             int     inOff,
             int     length)
         {
+            length = System.Math.Max(0, length);
+
             //
             // fill the current word
             //
-            while ((xBufOff != 0) && (length > 0))
+            int i = 0;
+            if (xBufOff != 0)
             {
-                Update(input[inOff]);
-                inOff++;
-                length--;
+                while (i < length)
+                {
+                    xBuf[xBufOff++] = input[inOff + i++];
+                    if (xBufOff == 4)
+                    {
+                        ProcessWord(xBuf, 0);
+                        xBufOff = 0;
+                        break;
+                    }
+                }
             }
 
             //
             // process whole words.
             //
-            while (length > xBuf.Length)
+            int limit = ((length - i) & ~3) + i;
+            for (; i < limit; i += 4)
             {
-                ProcessWord(input, inOff);
-
-                inOff += xBuf.Length;
-                length -= xBuf.Length;
-                byteCount += xBuf.Length;
+                ProcessWord(input, inOff + i);
             }
 
             //
             // load in the remainder.
             //
-            while (length > 0)
+            while (i < length)
             {
-                Update(input[inOff]);
-
-                inOff++;
-                length--;
+                xBuf[xBufOff++] = input[inOff + i++];
             }
+
+            byteCount += length;
         }
 
         public void Finish()
@@ -114,5 +127,7 @@ namespace Org.BouncyCastle.Crypto.Digests
         public abstract string AlgorithmName { get; }
 		public abstract int GetDigestSize();
         public abstract int DoFinal(byte[] output, int outOff);
+		public abstract IMemoable Copy();
+		public abstract void Reset(IMemoable t);
     }
 }

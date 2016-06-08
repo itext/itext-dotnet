@@ -75,7 +75,7 @@ namespace Org.BouncyCastle.Asn1.X509
          */
         public Asn1Object GetPublicKey()
         {
-			return Asn1Object.FromByteArray(keyData.GetBytes());
+			return Asn1Object.FromByteArray(keyData.GetOctets());
         }
 
 		/**

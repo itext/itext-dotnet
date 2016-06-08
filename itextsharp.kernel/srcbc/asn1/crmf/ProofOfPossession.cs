@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Crmf
 {
@@ -41,7 +43,7 @@ namespace Org.BouncyCastle.Asn1.Crmf
             if (obj is Asn1TaggedObject)
                 return new ProofOfPossession((Asn1TaggedObject)obj);
 
-            throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
         }
 
         /** Creates a ProofOfPossession with type raVerified. */

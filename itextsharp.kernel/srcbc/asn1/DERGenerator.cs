@@ -28,7 +28,7 @@ namespace Org.BouncyCastle.Asn1
             _tagNo = tagNo;
         }
 
-        private static void WriteLength(
+		private static void WriteLength(
             Stream	outStr,
             int		length)
         {

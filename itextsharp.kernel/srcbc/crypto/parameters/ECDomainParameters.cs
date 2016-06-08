@@ -14,11 +14,11 @@ namespace Org.BouncyCastle.Crypto.Parameters
         internal BigInteger  n;
         internal BigInteger  h;
 
-		public ECDomainParameters(
+        public ECDomainParameters(
             ECCurve     curve,
             ECPoint     g,
             BigInteger  n)
-			: this(curve, g, n, BigInteger.One)
+            : this(curve, g, n, BigInteger.One)
         {
         }
 
@@ -27,34 +27,34 @@ namespace Org.BouncyCastle.Crypto.Parameters
             ECPoint     g,
             BigInteger  n,
             BigInteger  h)
-			: this(curve, g, n, h, null)
-		{
+            : this(curve, g, n, h, null)
+        {
         }
 
-		public ECDomainParameters(
+        public ECDomainParameters(
             ECCurve     curve,
             ECPoint     g,
             BigInteger  n,
             BigInteger  h,
             byte[]      seed)
         {
-			if (curve == null)
-				throw new ArgumentNullException("curve");
-			if (g == null)
-				throw new ArgumentNullException("g");
-			if (n == null)
-				throw new ArgumentNullException("n");
-			if (h == null)
-				throw new ArgumentNullException("h");
+            if (curve == null)
+                throw new ArgumentNullException("curve");
+            if (g == null)
+                throw new ArgumentNullException("g");
+            if (n == null)
+                throw new ArgumentNullException("n");
+            if (h == null)
+                throw new ArgumentNullException("h");
 
-			this.curve = curve;
-            this.g = g;
+            this.curve = curve;
+            this.g = g.Normalize();
             this.n = n;
             this.h = h;
             this.seed = Arrays.Clone(seed);
         }
 
-		public ECCurve Curve
+        public ECCurve Curve
         {
             get { return curve; }
         }
@@ -76,41 +76,42 @@ namespace Org.BouncyCastle.Crypto.Parameters
 
         public byte[] GetSeed()
         {
-			return Arrays.Clone(seed);
+            return Arrays.Clone(seed);
         }
 
-		public override bool Equals(
-			object obj)
+        public override bool Equals(
+            object obj)
         {
-			if (obj == this)
-				return true;
+            if (obj == this)
+                return true;
 
-			ECDomainParameters other = obj as ECDomainParameters;
+            ECDomainParameters other = obj as ECDomainParameters;
 
-			if (other == null)
-				return false;
+            if (other == null)
+                return false;
 
-			return Equals(other);
+            return Equals(other);
         }
 
-		protected bool Equals(
-			ECDomainParameters other)
-		{
-			return curve.Equals(other.curve)
-				&&	g.Equals(other.g)
-				&&	n.Equals(other.n)
-				&&	h.Equals(other.h)
-				&&	Arrays.AreEqual(seed, other.seed);
-		}
-
-		public override int GetHashCode()
+        protected virtual bool Equals(
+            ECDomainParameters other)
         {
-            return curve.GetHashCode()
-				^	g.GetHashCode()
-				^	n.GetHashCode()
-				^	h.GetHashCode()
-				^	Arrays.GetHashCode(seed);
+            return curve.Equals(other.curve)
+                &&	g.Equals(other.g)
+                &&	n.Equals(other.n)
+                &&	h.Equals(other.h);
+        }
+
+        public override int GetHashCode()
+        {
+            int hc = curve.GetHashCode();
+            hc *= 37;
+            hc ^= g.GetHashCode();
+            hc *= 37;
+            hc ^= n.GetHashCode();
+            hc *= 37;
+            hc ^= h.GetHashCode();
+            return hc;
         }
     }
-
 }

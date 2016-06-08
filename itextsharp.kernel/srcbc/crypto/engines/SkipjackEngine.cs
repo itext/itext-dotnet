@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -43,12 +44,12 @@ namespace Org.BouncyCastle.Crypto.Engines
         * @exception ArgumentException if the parameters argument is
         * inappropriate.
         */
-        public void Init(
+        public virtual void Init(
             bool				forEncryption,
             ICipherParameters	parameters)
         {
             if (!(parameters is KeyParameter))
-	            throw new ArgumentException("invalid parameter passed to SKIPJACK init - " + parameters.GetType().ToString());
+	            throw new ArgumentException("invalid parameter passed to SKIPJACK init - " + Platform.GetTypeName(parameters));
 
 			byte[] keyBytes = ((KeyParameter)parameters).GetKey();
 
@@ -71,22 +72,22 @@ namespace Org.BouncyCastle.Crypto.Engines
             }
         }
 
-        public string AlgorithmName
+        public virtual string AlgorithmName
         {
             get { return "SKIPJACK"; }
         }
 
-		public bool IsPartialBlockOkay
+        public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
         {
             return BLOCK_SIZE;
         }
 
-        public int ProcessBlock(
+        public virtual int ProcessBlock(
             byte[]	input,
             int		inOff,
             byte[]	output,
@@ -94,12 +95,11 @@ namespace Org.BouncyCastle.Crypto.Engines
         {
             if (key1 == null)
                 throw new InvalidOperationException("SKIPJACK engine not initialised");
-            if ((inOff + BLOCK_SIZE) > input.Length)
-                throw new DataLengthException("input buffer too short");
-            if ((outOff + BLOCK_SIZE) > output.Length)
-                throw new DataLengthException("output buffer too short");
 
-			if (encrypting)
+            Check.DataLength(input, inOff, BLOCK_SIZE, "input buffer too short");
+            Check.OutputLength(output, outOff, BLOCK_SIZE, "output buffer too short");
+
+            if (encrypting)
             {
                 EncryptBlock(input, inOff, output, outOff);
             }
@@ -111,7 +111,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return BLOCK_SIZE;
         }
 
-		public void Reset()
+        public virtual void Reset()
         {
         }
 
@@ -135,7 +135,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             return ((g5 << 8) + g6);
         }
 
-        public int EncryptBlock(
+        public virtual int EncryptBlock(
             byte[]      input,
             int         inOff,
             byte[]      outBytes,
@@ -203,7 +203,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             return ((h6 << 8) + h5);
         }
 
-        public int DecryptBlock(
+        public virtual int DecryptBlock(
             byte[]      input,
             int         inOff,
             byte[]      outBytes,
@@ -251,5 +251,4 @@ namespace Org.BouncyCastle.Crypto.Engines
             return BLOCK_SIZE;
         }
     }
-
 }

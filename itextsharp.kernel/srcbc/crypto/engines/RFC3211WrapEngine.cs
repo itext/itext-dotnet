@@ -24,7 +24,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			this.engine = new CbcBlockCipher(engine);
 		}
 
-		public void Init(
+        public virtual void Init(
 			bool				forWrapping,
 			ICipherParameters	param)
 		{
@@ -48,12 +48,12 @@ namespace Org.BouncyCastle.Crypto.Engines
 			}
 		}
 
-		public string AlgorithmName
+        public virtual string AlgorithmName
 		{
 			get { return engine.GetUnderlyingCipher().AlgorithmName + "/RFC3211Wrap"; }
 		}
 
-		public byte[] Wrap(
+        public virtual byte[] Wrap(
 			byte[]	inBytes,
 			int		inOff,
 			int		inLen)
@@ -99,7 +99,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			return cekBlock;
 		}
 
-		public byte[] Unwrap(
+        public virtual byte[] Unwrap(
 			byte[]	inBytes,
 			int		inOff,
 			int		inLen)

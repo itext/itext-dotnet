@@ -271,10 +271,10 @@ namespace Org.BouncyCastle.Tsp
 				if (certID != null)
 					return "SHA-1";
 
-				if (NistObjectIdentifiers.IdSha256.Equals(certIDv2.HashAlgorithm.ObjectID))
+                if (NistObjectIdentifiers.IdSha256.Equals(certIDv2.HashAlgorithm.Algorithm))
 					return "SHA-256";
 
-				return certIDv2.HashAlgorithm.ObjectID.Id;
+                return certIDv2.HashAlgorithm.Algorithm.Id;
 			}
 
 			public AlgorithmIdentifier GetHashAlgorithm()

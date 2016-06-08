@@ -8,13 +8,9 @@ namespace Org.BouncyCastle.Utilities
     /**
      * BigInteger utilities.
      */
-    public sealed class BigIntegers
+    public abstract class BigIntegers
     {
         private const int MaxIterations = 1000;
-
-        private BigIntegers()
-        {
-        }
 
         /**
         * Return the passed in value as an unsigned byte array.

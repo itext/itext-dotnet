@@ -1,7 +1,7 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Cms
 {
@@ -95,7 +95,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (o is Asn1TaggedObject)
 				return new OriginatorIdentifierOrKey((Asn1TaggedObject)o);
 
-			throw new ArgumentException("Invalid OriginatorIdentifierOrKey: " + o.GetType().Name);
+            throw new ArgumentException("Invalid OriginatorIdentifierOrKey: " + Platform.GetTypeName(o));
         }
 
 		public Asn1Encodable ID

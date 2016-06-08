@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Esf
 {
@@ -32,7 +33,7 @@ namespace Org.BouncyCastle.Asn1.Esf
 
 			throw new ArgumentException(
 				"Unknown object in 'OcspIdentifier' factory: "
-					+ obj.GetType().Name,
+                    + Platform.GetTypeName(obj),
 				"obj");
 		}
 

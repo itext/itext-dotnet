@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509
 {
@@ -46,7 +47,7 @@ namespace Org.BouncyCastle.Asn1.X509
 				return GetInstance(X509Extension.ConvertValueToObject((X509Extension) obj));
 			}
 
-			throw new ArgumentException("Invalid SubjectKeyIdentifier: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid SubjectKeyIdentifier: " + Platform.GetTypeName(obj));
         }
 
 		public SubjectKeyIdentifier(

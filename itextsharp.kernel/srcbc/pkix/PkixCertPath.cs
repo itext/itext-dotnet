@@ -208,12 +208,12 @@ namespace Org.BouncyCastle.Pkix
 			string	encoding)
 //			: base("X.509")
 		{
-            string upper = encoding.ToUpper();
+            string upper = Platform.ToUpperInvariant(encoding);
 
             IList certs;
 			try
 			{
-				if (upper.Equals("PkiPath".ToUpper()))
+				if (upper.Equals(Platform.ToUpperInvariant("PkiPath")))
 				{
 					Asn1InputStream derInStream = new Asn1InputStream(inStream);
 					Asn1Object derObject = derInStream.ReadObject();
@@ -357,7 +357,7 @@ namespace Org.BouncyCastle.Pkix
 		public virtual byte[] GetEncoded(
 			string encoding)
 		{
-			if (Platform.CompareIgnoreCase(encoding, "PkiPath") == 0)
+			if (Platform.EqualsIgnoreCase(encoding, "PkiPath"))
 			{
 				Asn1EncodableVector v = new Asn1EncodableVector();
 
@@ -368,7 +368,7 @@ namespace Org.BouncyCastle.Pkix
 
 				return ToDerEncoded(new DerSequence(v));
 			}
-            else if (Platform.CompareIgnoreCase(encoding, "PKCS7") == 0)
+            else if (Platform.EqualsIgnoreCase(encoding, "PKCS7"))
 			{
 				Asn1.Pkcs.ContentInfo encInfo = new Asn1.Pkcs.ContentInfo(
 					PkcsObjectIdentifiers.Data, null);
@@ -389,7 +389,7 @@ namespace Org.BouncyCastle.Pkix
 
 				return ToDerEncoded(new Asn1.Pkcs.ContentInfo(PkcsObjectIdentifiers.SignedData, sd));
 			}
-            else if (Platform.CompareIgnoreCase(encoding, "PEM") == 0)
+            else if (Platform.EqualsIgnoreCase(encoding, "PEM"))
 			{
 				MemoryStream bOut = new MemoryStream();
 				PemWriter pWrt = new PemWriter(new StreamWriter(bOut));
@@ -401,7 +401,7 @@ namespace Org.BouncyCastle.Pkix
 						pWrt.WriteObject(certificates[i]);
 					}
 
-					pWrt.Writer.Close();
+                    Platform.Dispose(pWrt.Writer);
 				}
 				catch (Exception)
 				{

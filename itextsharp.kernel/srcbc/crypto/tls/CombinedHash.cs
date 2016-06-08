@@ -1,82 +1,133 @@
 using System;
 
-using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Security;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-	/// <remarks>A combined hash, which implements md5(m) || sha1(m).</remarks>
-	internal class CombinedHash
-		: IDigest
-	{
-		private readonly MD5Digest md5;
-		private readonly Sha1Digest sha1;
+    /**
+     * A combined hash, which implements md5(m) || sha1(m).
+     */
+    internal class CombinedHash
+        :   TlsHandshakeHash
+    {
+        protected TlsContext mContext;
+        protected IDigest mMd5;
+        protected IDigest mSha1;
 
-		internal CombinedHash()
-		{
-			this.md5 = new MD5Digest();
-			this.sha1 = new Sha1Digest();
-		}
+        internal CombinedHash()
+        {
+            this.mMd5 = TlsUtilities.CreateHash(HashAlgorithm.md5);
+            this.mSha1 = TlsUtilities.CreateHash(HashAlgorithm.sha1);
+        }
 
-		internal CombinedHash(CombinedHash t)
-		{
-			this.md5 = new MD5Digest(t.md5);
-			this.sha1 = new Sha1Digest(t.sha1);
-		}
+        internal CombinedHash(CombinedHash t)
+        {
+            this.mContext = t.mContext;
+            this.mMd5 = TlsUtilities.CloneHash(HashAlgorithm.md5, t.mMd5);
+            this.mSha1 = TlsUtilities.CloneHash(HashAlgorithm.sha1, t.mSha1);
+        }
 
-		/// <seealso cref="IDigest.AlgorithmName"/>
-		public string AlgorithmName
-		{
-			get
-			{
-				return md5.AlgorithmName + " and " + sha1.AlgorithmName + " for TLS 1.0";
-			}
-		}
+        public virtual void Init(TlsContext context)
+        {
+            this.mContext = context;
+        }
 
-		/// <seealso cref="IDigest.GetByteLength"/>
-		public int GetByteLength()
-		{
-			return System.Math.Max(md5.GetByteLength(), sha1.GetByteLength());
-		}
+        public virtual TlsHandshakeHash NotifyPrfDetermined()
+        {
+            return this;
+        }
 
-		/// <seealso cref="IDigest.GetDigestSize"/>
-		public int GetDigestSize()
-		{
-			return md5.GetDigestSize() + sha1.GetDigestSize();
-		}
+        public virtual void TrackHashAlgorithm(byte hashAlgorithm)
+        {
+            throw new InvalidOperationException("CombinedHash only supports calculating the legacy PRF for handshake hash");
+        }
 
-		/// <seealso cref="IDigest.Update"/>
-		public void Update(
-			byte input)
-		{
-			md5.Update(input);
-			sha1.Update(input);
-		}
+        public virtual void SealHashAlgorithms()
+        {
+        }
 
-		/// <seealso cref="IDigest.BlockUpdate"/>
-		public void BlockUpdate(
-			byte[]	input,
-			int		inOff,
-			int		len)
-		{
-			md5.BlockUpdate(input, inOff, len);
-			sha1.BlockUpdate(input, inOff, len);
-		}
+        public virtual TlsHandshakeHash StopTracking()
+        {
+            return new CombinedHash(this);
+        }
 
-		/// <seealso cref="IDigest.DoFinal"/>
-		public int DoFinal(
-			byte[]	output,
-			int		outOff)
-		{
-			int i1 = md5.DoFinal(output, outOff);
-			int i2 = sha1.DoFinal(output, outOff + i1);
-			return i1 + i2;
-		}
+        public virtual IDigest ForkPrfHash()
+        {
+            return new CombinedHash(this);
+        }
 
-		/// <seealso cref="IDigest.Reset"/>
-		public void Reset()
-		{
-			md5.Reset();
-			sha1.Reset();
-		}
-	}
+        public virtual byte[] GetFinalHash(byte hashAlgorithm)
+        {
+            throw new InvalidOperationException("CombinedHash doesn't support multiple hashes");
+        }
+
+        public virtual string AlgorithmName
+        {
+            get { return mMd5.AlgorithmName + " and " + mSha1.AlgorithmName; }
+        }
+
+        public virtual int GetByteLength()
+        {
+            return System.Math.Max(mMd5.GetByteLength(), mSha1.GetByteLength());
+        }
+
+        public virtual int GetDigestSize()
+        {
+            return mMd5.GetDigestSize() + mSha1.GetDigestSize();
+        }
+
+        public virtual void Update(byte input)
+        {
+            mMd5.Update(input);
+            mSha1.Update(input);
+        }
+
+        /**
+         * @see org.bouncycastle.crypto.Digest#update(byte[], int, int)
+         */
+        public virtual void BlockUpdate(byte[] input, int inOff, int len)
+        {
+            mMd5.BlockUpdate(input, inOff, len);
+            mSha1.BlockUpdate(input, inOff, len);
+        }
+
+        /**
+         * @see org.bouncycastle.crypto.Digest#doFinal(byte[], int)
+         */
+        public virtual int DoFinal(byte[] output, int outOff)
+        {
+            if (mContext != null && TlsUtilities.IsSsl(mContext))
+            {
+                Ssl3Complete(mMd5, Ssl3Mac.IPAD, Ssl3Mac.OPAD, 48);
+                Ssl3Complete(mSha1, Ssl3Mac.IPAD, Ssl3Mac.OPAD, 40);
+            }
+
+            int i1 = mMd5.DoFinal(output, outOff);
+            int i2 = mSha1.DoFinal(output, outOff + i1);
+            return i1 + i2;
+        }
+
+        /**
+         * @see org.bouncycastle.crypto.Digest#reset()
+         */
+        public virtual void Reset()
+        {
+            mMd5.Reset();
+            mSha1.Reset();
+        }
+
+        protected virtual void Ssl3Complete(IDigest d, byte[] ipad, byte[] opad, int padLength)
+        {
+            byte[] master_secret = mContext.SecurityParameters.masterSecret;
+
+            d.BlockUpdate(master_secret, 0, master_secret.Length);
+            d.BlockUpdate(ipad, 0, padLength);
+
+            byte[] tmp = DigestUtilities.DoFinal(d);
+
+            d.BlockUpdate(master_secret, 0, master_secret.Length);
+            d.BlockUpdate(opad, 0, padLength);
+            d.BlockUpdate(tmp, 0, tmp.Length);
+        }
+    }
 }

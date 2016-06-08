@@ -85,7 +85,7 @@ namespace Org.BouncyCastle.Utilities.Net
 		public static bool IsValidIPv4WithNetmask(
 			string address)
 		{
-			int index = address.IndexOf("/");
+			int index = address.IndexOf('/');
 			string mask = address.Substring(index + 1);
 
 			return (index > 0) && IsValidIPv4(address.Substring(0, index))
@@ -95,7 +95,7 @@ namespace Org.BouncyCastle.Utilities.Net
 		public static bool IsValidIPv6WithNetmask(
 			string address)
 		{
-			int index = address.IndexOf("/");
+			int index = address.IndexOf('/');
 			string mask = address.Substring(index + 1);
 
 			return (index > 0) && (IsValidIPv6(address.Substring(0, index))

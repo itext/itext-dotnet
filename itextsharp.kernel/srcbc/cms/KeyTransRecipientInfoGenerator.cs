@@ -64,7 +64,7 @@ namespace Org.BouncyCastle.Cms
 			byte[] keyBytes = contentEncryptionKey.GetKey();
 			AlgorithmIdentifier keyEncryptionAlgorithm = info.AlgorithmID;
 
-			IWrapper keyWrapper = Helper.CreateWrapper(keyEncryptionAlgorithm.ObjectID.Id);
+            IWrapper keyWrapper = Helper.CreateWrapper(keyEncryptionAlgorithm.Algorithm.Id);
 			keyWrapper.Init(true, new ParametersWithRandom(recipientPublicKey, random));
 			byte[] encryptedKeyBytes = keyWrapper.Wrap(keyBytes, 0, keyBytes.Length);
 

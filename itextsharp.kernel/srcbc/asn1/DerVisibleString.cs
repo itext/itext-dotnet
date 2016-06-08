@@ -36,7 +36,7 @@ namespace Org.BouncyCastle.Asn1
                 return GetInstance(((Asn1TaggedObject)obj).GetObject());
             }
 
-            throw new ArgumentException("illegal object in GetInstance: " + obj.GetType().Name);
+            throw new ArgumentException("illegal object in GetInstance: " + Platform.GetTypeName(obj));
         }
 
         /**

@@ -83,7 +83,7 @@ namespace Org.BouncyCastle.Cms
 		*/
 		public string MacAlgOid
 		{
-			get { return macAlg.ObjectID.Id; }
+            get { return macAlg.Algorithm.Id; }
 		}
 
 		/**

@@ -102,7 +102,22 @@ namespace Org.BouncyCastle.Asn1
 				}
 			}
 
-			public override void Close()
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+				    if (_off != 0)
+				    {
+					    DerOctetString.Encode(_derOut, _buf, 0, _off);
+				    }
+
+				    _gen.WriteBerEnd();
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
 			{
 				if (_off != 0)
 				{
@@ -112,6 +127,7 @@ namespace Org.BouncyCastle.Asn1
 				_gen.WriteBerEnd();
 				base.Close();
 			}
+#endif
 		}
 	}
 }

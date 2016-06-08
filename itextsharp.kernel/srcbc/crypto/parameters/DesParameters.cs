@@ -103,28 +103,37 @@ namespace Org.BouncyCastle.Crypto.Parameters
 			return IsWeakKey(key, 0);
 		}
 
-		/**
+        public static byte SetOddParity(byte b)
+        {
+            uint parity = b ^ 1U;
+            parity ^= (parity >> 4);
+            parity ^= (parity >> 2);
+            parity ^= (parity >> 1);
+            parity &= 1U;
+
+            return (byte)(b ^ parity);
+        }
+
+        /**
         * DES Keys use the LSB as the odd parity bit.  This can
         * be used to check for corrupt keys.
         *
         * @param bytes the byte array to set the parity on.
         */
-        public static void SetOddParity(
-            byte[] bytes)
+        public static void SetOddParity(byte[] bytes)
         {
             for (int i = 0; i < bytes.Length; i++)
             {
-                int b = bytes[i];
-                bytes[i] = (byte)((b & 0xfe) |
-                                ((((b >> 1) ^
-                                (b >> 2) ^
-                                (b >> 3) ^
-                                (b >> 4) ^
-                                (b >> 5) ^
-                                (b >> 6) ^
-                                (b >> 7)) ^ 0x01) & 0x01));
+                bytes[i] = SetOddParity(bytes[i]);
+            }
+        }
+
+        public static void SetOddParity(byte[] bytes, int off, int len)
+        {
+            for (int i = 0; i < len; i++)
+            {
+                bytes[off + i] = SetOddParity(bytes[off + i]);
             }
         }
     }
-
 }

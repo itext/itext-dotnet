@@ -5,6 +5,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
+#if PORTABLE
+using System.Linq;
+#endif
+
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
 
@@ -36,46 +40,46 @@ namespace Org.BouncyCastle.Bcpg
          * encode the input data producing a base 64 encoded byte array.
          */
         private static void Encode(
-            Stream	outStream,
-            int[]	data,
-            int		len)
+            Stream    outStream,
+            int[]    data,
+            int        len)
         {
-			Debug.Assert(len > 0);
-			Debug.Assert(len < 4);
+            Debug.Assert(len > 0);
+            Debug.Assert(len < 4);
 
-			byte[] bs = new byte[4];
-			int d1 = data[0];
-			bs[0] = encodingTable[(d1 >> 2) & 0x3f];
+            byte[] bs = new byte[4];
+            int d1 = data[0];
+            bs[0] = encodingTable[(d1 >> 2) & 0x3f];
 
-			switch (len)
+            switch (len)
             {
-				case 1:
-				{
-					bs[1] = encodingTable[(d1 << 4) & 0x3f];
-					bs[2] = (byte)'=';
-					bs[3] = (byte)'=';
-					break;
-				}
-				case 2:
-				{
-					int d2 = data[1];
-					bs[1] = encodingTable[((d1 << 4) | (d2 >> 4)) & 0x3f];
-					bs[2] = encodingTable[(d2 << 2) & 0x3f];
-					bs[3] = (byte)'=';
-					break;
-				}
-				case 3:
-				{
-					int d2 = data[1];
-					int d3 = data[2];
-					bs[1] = encodingTable[((d1 << 4) | (d2 >> 4)) & 0x3f];
-					bs[2] = encodingTable[((d2 << 2) | (d3 >> 6)) & 0x3f];
-					bs[3] = encodingTable[d3 & 0x3f];
-					break;
-				}
+                case 1:
+                {
+                    bs[1] = encodingTable[(d1 << 4) & 0x3f];
+                    bs[2] = (byte)'=';
+                    bs[3] = (byte)'=';
+                    break;
+                }
+                case 2:
+                {
+                    int d2 = data[1];
+                    bs[1] = encodingTable[((d1 << 4) | (d2 >> 4)) & 0x3f];
+                    bs[2] = encodingTable[(d2 << 2) & 0x3f];
+                    bs[3] = (byte)'=';
+                    break;
+                }
+                case 3:
+                {
+                    int d2 = data[1];
+                    int d3 = data[2];
+                    bs[1] = encodingTable[((d1 << 4) | (d2 >> 4)) & 0x3f];
+                    bs[2] = encodingTable[((d2 << 2) | (d3 >> 6)) & 0x3f];
+                    bs[3] = encodingTable[d3 & 0x3f];
+                    break;
+                }
             }
 
-			outStream.Write(bs, 0, bs.Length);
+            outStream.Write(bs, 0, bs.Length);
         }
 
         private readonly Stream outStream;
@@ -91,18 +95,17 @@ namespace Org.BouncyCastle.Bcpg
 
         private string          type;
 
-        private static readonly string	nl = Platform.NewLine;
-        private static readonly string	headerStart = "-----BEGIN PGP ";
-        private static readonly string	headerTail = "-----";
-        private static readonly string	footerStart = "-----END PGP ";
-        private static readonly string	footerTail = "-----";
+        private static readonly string    nl = Platform.NewLine;
+        private static readonly string    headerStart = "-----BEGIN PGP ";
+        private static readonly string    headerTail = "-----";
+        private static readonly string    footerStart = "-----END PGP ";
+        private static readonly string    footerTail = "-----";
 
-        private static readonly string version = "BCPG C# v"
-			+ Assembly.GetExecutingAssembly().GetName().Version;
+        private static readonly string version = "BCPG C# v1.8.1";
 
-		private readonly IDictionary headers;
+        private readonly IDictionary headers;
 
-		public ArmoredOutputStream(Stream outStream)
+        public ArmoredOutputStream(Stream outStream)
         {
             this.outStream = outStream;
             this.headers = Platform.CreateHashtable();
@@ -174,10 +177,10 @@ namespace Org.BouncyCastle.Bcpg
                 throw new IOException("unknown hash algorithm tag in beginClearText: " + hashAlgorithm);
             }
 
-			DoWrite("-----BEGIN PGP SIGNED MESSAGE-----" + nl);
+            DoWrite("-----BEGIN PGP SIGNED MESSAGE-----" + nl);
             DoWrite("Hash: " + hash + nl + nl);
 
-			clearText = true;
+            clearText = true;
             newLine = true;
             lastb = 0;
         }
@@ -218,7 +221,7 @@ namespace Org.BouncyCastle.Bcpg
             {
                 bool newPacket = (b & 0x40) != 0;
 
-				int tag;
+                int tag;
                 if (newPacket)
                 {
                     tag = b & 0x3f;
@@ -241,7 +244,7 @@ namespace Org.BouncyCastle.Bcpg
                     break;
                 default:
                     type = "MESSAGE";
-				    break;
+                    break;
                 }
 
                 DoWrite(headerStart + type + headerTail + nl);
@@ -277,54 +280,77 @@ namespace Org.BouncyCastle.Bcpg
         }
 
         /**
-         * <b>Note</b>: close does nor close the underlying stream. So it is possible to write
+         * <b>Note</b>: Close() does not close the underlying stream. So it is possible to write
          * multiple objects using armoring to a single stream.
          */
-        public override void Close()
+#if PORTABLE
+        protected override void Dispose(bool disposing)
         {
-            if (type != null)
+            if (disposing)
             {
-				if (bufPtr > 0)
-				{
-					Encode(outStream, buf, bufPtr);
-				}
+                if (type == null)
+                    return;
 
-                DoWrite(nl + '=');
-
-                int crcV = crc.Value;
-
-				buf[0] = ((crcV >> 16) & 0xff);
-                buf[1] = ((crcV >> 8) & 0xff);
-                buf[2] = (crcV & 0xff);
-
-                Encode(outStream, buf, 3);
-
-                DoWrite(nl);
-                DoWrite(footerStart);
-                DoWrite(type);
-                DoWrite(footerTail);
-                DoWrite(nl);
-
-                outStream.Flush();
+                DoClose();
 
                 type = null;
                 start = true;
-				base.Close();
-			}
+            }
+            base.Dispose(disposing);
+        }
+#else
+        public override void Close()
+        {
+            if (type == null)
+                return;
+
+            DoClose();
+
+            type = null;
+            start = true;
+
+            base.Close();
+        }
+#endif
+
+        private void DoClose()
+        {
+            if (bufPtr > 0)
+            {
+                Encode(outStream, buf, bufPtr);
+            }
+
+            DoWrite(nl + '=');
+
+            int crcV = crc.Value;
+
+            buf[0] = ((crcV >> 16) & 0xff);
+            buf[1] = ((crcV >> 8) & 0xff);
+            buf[2] = (crcV & 0xff);
+
+            Encode(outStream, buf, 3);
+
+            DoWrite(nl);
+            DoWrite(footerStart);
+            DoWrite(type);
+            DoWrite(footerTail);
+            DoWrite(nl);
+
+            outStream.Flush();
         }
 
-		private void WriteHeaderEntry(
-			string	name,
-			string	v)
+        private void WriteHeaderEntry(
+            string name,
+            string v)
         {
             DoWrite(name + ": " + v + nl);
         }
 
-		private void DoWrite(
-			string s)
+        private void DoWrite(
+            string s)
         {
             byte[] bs = Strings.ToAsciiByteArray(s);
-			outStream.Write(bs, 0, bs.Length);
+            outStream.Write(bs, 0, bs.Length);
         }
     }
 }

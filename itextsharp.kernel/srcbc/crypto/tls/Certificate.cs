@@ -8,104 +8,129 @@ using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-	/**
-	* A representation for a certificate chain.
-	*/
-	public class Certificate
-	{
-		public static readonly Certificate EmptyChain = new Certificate(new X509CertificateStructure[0]);
+    /**
+     * Parsing and encoding of a <i>Certificate</i> struct from RFC 4346.
+     * <p/>
+     * <pre>
+     * opaque ASN.1Cert&lt;2^24-1&gt;;
+     *
+     * struct {
+     *     ASN.1Cert certificate_list&lt;0..2^24-1&gt;;
+     * } Certificate;
+     * </pre>
+     *
+     * @see Org.BouncyCastle.Asn1.X509.X509CertificateStructure
+     */
+    public class Certificate
+    {
+        public static readonly Certificate EmptyChain = new Certificate(new X509CertificateStructure[0]);
 
-		/**
-		* The certificates.
-		*/
-		internal X509CertificateStructure[] certs;
+        /**
+        * The certificates.
+        */
+        protected readonly X509CertificateStructure[] mCertificateList;
 
-		/**
-		* Parse the ServerCertificate message.
-		*
-		* @param inStr The stream where to parse from.
-		* @return A Certificate object with the certs, the server has sended.
-		* @throws IOException If something goes wrong during parsing.
-		*/
-		internal static Certificate Parse(
-			Stream inStr)
-		{
-			int left = TlsUtilities.ReadUint24(inStr);
-			if (left == 0)
-			{
-				return EmptyChain;
-			}
-			IList tmp = Platform.CreateArrayList();
-			while (left > 0)
-			{
-				int size = TlsUtilities.ReadUint24(inStr);
-				left -= 3 + size;
-				byte[] buf = new byte[size];
-				TlsUtilities.ReadFully(buf, inStr);
-				MemoryStream bis = new MemoryStream(buf, false);
-				Asn1Object o = Asn1Object.FromStream(bis);
-				tmp.Add(X509CertificateStructure.GetInstance(o));
-				if (bis.Position < bis.Length)
-				{
-					throw new ArgumentException("Sorry, there is garbage data left after the certificate");
-				}
-			}
-            X509CertificateStructure[] certs = new X509CertificateStructure[tmp.Count];
-            for (int i = 0; i < tmp.Count; ++i)
+        public Certificate(X509CertificateStructure[] certificateList)
+        {
+            if (certificateList == null)
+                throw new ArgumentNullException("certificateList");
+
+            this.mCertificateList = certificateList;
+        }
+
+        /**
+         * @return an array of {@link org.bouncycastle.asn1.x509.Certificate} representing a certificate
+         *         chain.
+         */
+        public virtual X509CertificateStructure[] GetCertificateList()
+        {
+            return CloneCertificateList();
+        }
+
+        public virtual X509CertificateStructure GetCertificateAt(int index)
+        {
+            return mCertificateList[index];
+        }
+
+        public virtual int Length
+        {
+            get { return mCertificateList.Length; }
+        }
+
+        /**
+         * @return <code>true</code> if this certificate chain contains no certificates, or
+         *         <code>false</code> otherwise.
+         */
+        public virtual bool IsEmpty
+        {
+            get { return mCertificateList.Length == 0; }
+        }
+
+        /**
+         * Encode this {@link Certificate} to a {@link Stream}.
+         *
+         * @param output the {@link Stream} to encode to.
+         * @throws IOException
+         */
+        public virtual void Encode(Stream output)
+        {
+            IList derEncodings = Platform.CreateArrayList(mCertificateList.Length);
+
+            int totalLength = 0;
+            foreach (Asn1Encodable asn1Cert in mCertificateList)
             {
-                certs[i] = (X509CertificateStructure)tmp[i];
+                byte[] derEncoding = asn1Cert.GetEncoded(Asn1Encodable.Der);
+                derEncodings.Add(derEncoding);
+                totalLength += derEncoding.Length + 3;
             }
-			return new Certificate(certs);
-		}
 
-		/**
-		 * Encodes version of the ClientCertificate message
-		 *
-		 * @param outStr stream to write the message to
-		 * @throws IOException If something goes wrong
-		 */
-		internal void Encode(
-			Stream outStr)
-		{
-			IList encCerts = Platform.CreateArrayList();
-			int totalSize = 0;
-			foreach (X509CertificateStructure cert in certs)
-			{
-				byte[] encCert = cert.GetEncoded(Asn1Encodable.Der);
-				encCerts.Add(encCert);
-				totalSize += encCert.Length + 3;
-			}
+            TlsUtilities.CheckUint24(totalLength);
+            TlsUtilities.WriteUint24(totalLength, output);
 
-			TlsUtilities.WriteUint24(totalSize, outStr);
+            foreach (byte[] derEncoding in derEncodings)
+            {
+                TlsUtilities.WriteOpaque24(derEncoding, output);
+            }
+        }
 
-			foreach (byte[] encCert in encCerts)
-			{
-				TlsUtilities.WriteOpaque24(encCert, outStr);
-			}
-		}
+        /**
+         * Parse a {@link Certificate} from a {@link Stream}.
+         *
+         * @param input the {@link Stream} to parse from.
+         * @return a {@link Certificate} object.
+         * @throws IOException
+         */
+        public static Certificate Parse(Stream input)
+        {
+            int totalLength = TlsUtilities.ReadUint24(input);
+            if (totalLength == 0)
+            {
+                return EmptyChain;
+            }
 
-		/**
-		* Private constructor from a cert array.
-		*
-		* @param certs The certs the chain should contain.
-		*/
-		public Certificate(X509CertificateStructure[] certs)
-		{
-			if (certs == null)
-				throw new ArgumentNullException("certs");
+            byte[] certListData = TlsUtilities.ReadFully(totalLength, input);
 
-			this.certs = certs;
-		}
+            MemoryStream buf = new MemoryStream(certListData, false);
 
-		/// <returns>An array which contains the certs, this chain contains.</returns>
-		public X509CertificateStructure[] GetCerts()
-		{
-			return (X509CertificateStructure[]) certs.Clone();
-		}
+            IList certificate_list = Platform.CreateArrayList();
+            while (buf.Position < buf.Length)
+            {
+                byte[] derEncoding = TlsUtilities.ReadOpaque24(buf);
+                Asn1Object asn1Cert = TlsUtilities.ReadDerObject(derEncoding);
+                certificate_list.Add(X509CertificateStructure.GetInstance(asn1Cert));
+            }
 
-		public bool IsEmpty
-		{
-			get { return certs.Length == 0; }
-		}
-	}
+            X509CertificateStructure[] certificateList = new X509CertificateStructure[certificate_list.Count];
+            for (int i = 0; i < certificate_list.Count; ++i)
+            {
+                certificateList[i] = (X509CertificateStructure)certificate_list[i];
+            }
+            return new Certificate(certificateList);
+        }
+
+        protected virtual X509CertificateStructure[] CloneCertificateList()
+        {
+            return (X509CertificateStructure[])mCertificateList.Clone();
+        }
+    }
 }

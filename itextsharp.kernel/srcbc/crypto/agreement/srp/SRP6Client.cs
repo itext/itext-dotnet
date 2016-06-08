@@ -1,5 +1,6 @@
 using System;
 
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
@@ -24,7 +25,11 @@ namespace Org.BouncyCastle.Crypto.Agreement.Srp
 	    protected BigInteger u;
 	    protected BigInteger S;
 
-	    protected IDigest digest;
+        protected BigInteger M1;
+	    protected BigInteger M2;
+	    protected BigInteger Key;
+
+        protected IDigest digest;
 	    protected SecureRandom random;
 
 	    public Srp6Client()
@@ -45,6 +50,11 @@ namespace Org.BouncyCastle.Crypto.Agreement.Srp
 	        this.digest = digest;
 	        this.random = random;
 	    }
+
+        public virtual void Init(Srp6GroupParameters group, IDigest digest, SecureRandom random)
+        {
+            Init(group.N, group.G, digest, random);
+        }
 
 	    /**
 	     * Generates client's credentials given the client's salt, identity and password
@@ -88,6 +98,67 @@ namespace Org.BouncyCastle.Crypto.Agreement.Srp
 	        BigInteger exp = u.Multiply(x).Add(privA);
 	        BigInteger tmp = g.ModPow(x, N).Multiply(k).Mod(N);
 	        return B.Subtract(tmp).Mod(N).ModPow(exp, N);
+	    }
+    
+        /**
+	     * Computes the client evidence message M1 using the previously received values.
+	     * To be called after calculating the secret S.
+	     * @return M1: the client side generated evidence message
+	     * @throws CryptoException
+	     */
+	    public virtual BigInteger CalculateClientEvidenceMessage()
+	    {
+		    // Verify pre-requirements
+		    if (this.pubA == null || this.B == null || this.S == null)
+		    {
+			    throw new CryptoException("Impossible to compute M1: " +
+					    "some data are missing from the previous operations (A,B,S)");
+		    }
+		    // compute the client evidence message 'M1'
+		    this.M1 = Srp6Utilities.CalculateM1(digest, N, pubA, B, S);  
+		    return M1;
+	    }
+
+        /** Authenticates the server evidence message M2 received and saves it only if correct.
+	     * @param M2: the server side generated evidence message
+	     * @return A boolean indicating if the server message M2 was the expected one.
+	     * @throws CryptoException
+	     */
+	    public virtual bool VerifyServerEvidenceMessage(BigInteger serverM2)
+	    {
+		    // Verify pre-requirements
+		    if (this.pubA == null || this.M1 == null || this.S == null)
+		    {
+			    throw new CryptoException("Impossible to compute and verify M2: " +
+					    "some data are missing from the previous operations (A,M1,S)");
+		    }
+
+		    // Compute the own server evidence message 'M2'
+		    BigInteger computedM2 = Srp6Utilities.CalculateM2(digest, N, pubA, M1, S);
+		    if (computedM2.Equals(serverM2))
+		    {
+			    this.M2 = serverM2;
+			    return true;
+		    }
+		    return false;
+	    }
+
+	    /**
+	     * Computes the final session key as a result of the SRP successful mutual authentication
+	     * To be called after verifying the server evidence message M2.
+	     * @return Key: the mutually authenticated symmetric session key
+	     * @throws CryptoException
+	     */
+	    public virtual BigInteger CalculateSessionKey()
+	    {
+		    // Verify pre-requirements (here we enforce a previous calculation of M1 and M2)
+		    if (this.S == null || this.M1 == null || this.M2 == null)
+		    {
+			    throw new CryptoException("Impossible to compute Key: " +
+					    "some data are missing from the previous operations (S,M1,M2)");
+		    }
+		    this.Key = Srp6Utilities.CalculateKey(digest, N, S);
+		    return Key;
 	    }
 	}
 }

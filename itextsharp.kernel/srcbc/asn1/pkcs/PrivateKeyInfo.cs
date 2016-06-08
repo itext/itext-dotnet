@@ -10,46 +10,46 @@ namespace Org.BouncyCastle.Asn1.Pkcs
     public class PrivateKeyInfo
         : Asn1Encodable
     {
-        private readonly Asn1Object				privKey;
+        private readonly Asn1OctetString        privKey;
         private readonly AlgorithmIdentifier	algID;
-		private readonly Asn1Set				attributes;
+        private readonly Asn1Set				attributes;
 
-		public static PrivateKeyInfo GetInstance(
-			object obj)
-		{
-			if (obj is PrivateKeyInfo)
-				return (PrivateKeyInfo) obj;
+        public static PrivateKeyInfo GetInstance(Asn1TaggedObject obj, bool explicitly)
+        {
+            return GetInstance(Asn1Sequence.GetInstance(obj, explicitly));
+        }
 
-			if (obj != null)
-				return new PrivateKeyInfo(Asn1Sequence.GetInstance(obj));
+        public static PrivateKeyInfo GetInstance(
+            object obj)
+        {
+            if (obj == null)
+                return null;
+            if (obj is PrivateKeyInfo)
+                return (PrivateKeyInfo) obj;
+            return new PrivateKeyInfo(Asn1Sequence.GetInstance(obj));
+        }
 
-			return null;
-		}
+        public PrivateKeyInfo(AlgorithmIdentifier algID, Asn1Encodable privateKey)
+            : this(algID, privateKey, null)
+        {
+        }
 
-		public PrivateKeyInfo(
+        public PrivateKeyInfo(
             AlgorithmIdentifier	algID,
-            Asn1Object			privateKey)
-			: this(algID, privateKey, null)
-		{
-		}
+            Asn1Encodable       privateKey,
+            Asn1Set				attributes)
+        {
+            this.algID = algID;
+            this.privKey = new DerOctetString(privateKey.GetEncoded(Asn1Encodable.Der));
+            this.attributes = attributes;
+        }
 
-		public PrivateKeyInfo(
-			AlgorithmIdentifier	algID,
-			Asn1Object			privateKey,
-			Asn1Set				attributes)
-		{
-			this.privKey = privateKey;
-			this.algID = algID;
-			this.attributes = attributes;
-		}
-
-		private PrivateKeyInfo(
-            Asn1Sequence seq)
+        private PrivateKeyInfo(Asn1Sequence seq)
         {
             IEnumerator e = seq.GetEnumerator();
 
-			e.MoveNext();
-            BigInteger version = ((DerInteger) e.Current).Value;
+            e.MoveNext();
+            BigInteger version = ((DerInteger)e.Current).Value;
             if (version.IntValue != 0)
             {
                 throw new ArgumentException("wrong version for private key info: " + version.IntValue);
@@ -57,41 +57,53 @@ namespace Org.BouncyCastle.Asn1.Pkcs
 
             e.MoveNext();
             algID = AlgorithmIdentifier.GetInstance(e.Current);
+            e.MoveNext();
+            privKey = Asn1OctetString.GetInstance(e.Current);
 
-			try
+            if (e.MoveNext())
             {
-				e.MoveNext();
-				Asn1OctetString data = (Asn1OctetString) e.Current;
-
-				privKey = Asn1Object.FromByteArray(data.GetOctets());
+                attributes = Asn1Set.GetInstance((Asn1TaggedObject)e.Current, false);
             }
-            catch (IOException)
+        }
+
+        public virtual AlgorithmIdentifier PrivateKeyAlgorithm
+        {
+            get { return algID; }
+        }
+
+        [Obsolete("Use 'PrivateKeyAlgorithm' property instead")]
+        public virtual AlgorithmIdentifier AlgorithmID
+        {
+            get { return algID; }
+        }
+
+        public virtual Asn1Object ParsePrivateKey()
+        {
+            return Asn1Object.FromByteArray(privKey.GetOctets());
+        }
+
+        [Obsolete("Use 'ParsePrivateKey' instead")]
+        public virtual Asn1Object PrivateKey
+        {
+            get
             {
-				throw new ArgumentException("Error recoverying private key from sequence");
+                try
+                {
+                    return ParsePrivateKey();
+                }
+                catch (IOException)
+                {
+                    throw new InvalidOperationException("unable to parse private key");
+                }
             }
+        }
 
-			if (e.MoveNext())
-			{
-				attributes = Asn1Set.GetInstance((Asn1TaggedObject) e.Current, false);
-			}
-		}
+        public virtual Asn1Set Attributes
+        {
+            get { return attributes; }
+        }
 
-		public AlgorithmIdentifier AlgorithmID
-		{
-			get { return algID; }
-		}
-
-		public Asn1Object PrivateKey
-		{
-			get { return privKey; }
-		}
-
-    	public Asn1Set Attributes
-    	{
-    		get { return attributes; }
-    	}
-
-		/**
+        /**
          * write out an RSA private key with its associated information
          * as described in Pkcs8.
          * <pre>
@@ -110,17 +122,14 @@ namespace Org.BouncyCastle.Asn1.Pkcs
          */
         public override Asn1Object ToAsn1Object()
         {
-			Asn1EncodableVector v = new Asn1EncodableVector(
-				new DerInteger(0),
-				algID,
-				new DerOctetString(privKey));
+            Asn1EncodableVector v = new Asn1EncodableVector(new DerInteger(0), algID, privKey);
 
-			if (attributes != null)
-			{
-				v.Add(new DerTaggedObject(false, 0, attributes));
-			}
+            if (attributes != null)
+            {
+                v.Add(new DerTaggedObject(false, 0, attributes));
+            }
 
-			return new DerSequence(v);
+            return new DerSequence(v);
         }
     }
 }

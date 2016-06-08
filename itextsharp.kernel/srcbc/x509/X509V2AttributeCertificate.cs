@@ -5,6 +5,7 @@ using System.IO;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
@@ -146,34 +147,58 @@ namespace Org.BouncyCastle.X509
 				throw new CertificateNotYetValidException("certificate not valid until " + NotBefore);
 		}
 
+        public virtual AlgorithmIdentifier SignatureAlgorithm
+        {
+            get { return cert.SignatureAlgorithm; }
+        }
+
 		public virtual byte[] GetSignature()
 		{
-			return cert.SignatureValue.GetBytes();
+            return cert.GetSignatureOctets();
 		}
 
-		public virtual void Verify(
-			AsymmetricKeyParameter publicKey)
-		{
-			if (!cert.SignatureAlgorithm.Equals(cert.ACInfo.Signature))
+        public virtual void Verify(
+            AsymmetricKeyParameter key)
+        {
+            CheckSignature(new Asn1VerifierFactory(cert.SignatureAlgorithm, key));
+        }
+
+        /// <summary>
+        /// Verify the certificate's signature using a verifier created using the passed in verifier provider.
+        /// </summary>
+        /// <param name="verifierProvider">An appropriate provider for verifying the certificate's signature.</param>
+        /// <returns>True if the signature is valid.</returns>
+        /// <exception cref="Exception">If verifier provider is not appropriate or the certificate algorithm is invalid.</exception>
+        public virtual void Verify(
+            IVerifierFactoryProvider verifierProvider)
+        {
+            CheckSignature(verifierProvider.CreateVerifierFactory(cert.SignatureAlgorithm));
+        }
+
+        protected virtual void CheckSignature(
+            IVerifierFactory verifier)
+        {
+            if (!cert.SignatureAlgorithm.Equals(cert.ACInfo.Signature))
 			{
 				throw new CertificateException("Signature algorithm in certificate info not same as outer certificate");
 			}
 
-			ISigner signature = SignerUtilities.GetSigner(cert.SignatureAlgorithm.ObjectID.Id);
-
-			signature.Init(false, publicKey);
+            IStreamCalculator streamCalculator = verifier.CreateCalculator();
 
 			try
 			{
-				byte[] b = cert.ACInfo.GetEncoded();
-				signature.BlockUpdate(b, 0, b.Length);
-			}
+                byte[] b = this.cert.ACInfo.GetEncoded();
+
+                streamCalculator.Stream.Write(b, 0, b.Length);
+
+                Platform.Dispose(streamCalculator.Stream);
+            }
 			catch (IOException e)
 			{
 				throw new SignatureException("Exception encoding certificate info object", e);
 			}
 
-			if (!signature.VerifySignature(this.GetSignature()))
+			if (!((IVerifier)streamCalculator.GetResult()).IsVerified(this.GetSignature()))
 			{
 				throw new InvalidKeyException("Public key presented not for certificate signature");
 			}

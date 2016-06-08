@@ -72,7 +72,7 @@ namespace Org.BouncyCastle.Crypto.Engines
         * @param pubParam the recipient's/sender's public key parameters
         * @param param encoding and derivation parameters.
         */
-        public void Init(
+        public virtual void Init(
             bool                     forEncryption,
             ICipherParameters            privParameters,
             ICipherParameters            pubParameters,
@@ -96,6 +96,10 @@ namespace Org.BouncyCastle.Crypto.Engines
             int             macKeySize = param.MacKeySize;
 
             kdf.Init(kParam);
+
+            // Ensure that the length of the input is greater than the MAC in bytes
+            if (inLen < mac.GetMacSize())
+                throw new InvalidCipherTextException("Length of input must be greater than the MAC");
 
             inLen -= mac.GetMacSize();
 
@@ -133,7 +137,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 
             inOff += inLen;
 
-            byte[] T1 = Arrays.Copy(in_enc, inOff, macBuf.Length);
+            byte[] T1 = Arrays.CopyOfRange(in_enc, inOff, inOff + macBuf.Length);
 
             if (!Arrays.ConstantTimeAreEqual(T1, macBuf))
                 throw (new InvalidCipherTextException("Invalid MAC."));
@@ -213,7 +217,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             return buf;
         }
 
-        public byte[] ProcessBlock(
+        public virtual byte[] ProcessBlock(
             byte[]  input,
             int     inOff,
             int     inLen)
@@ -224,10 +228,16 @@ namespace Org.BouncyCastle.Crypto.Engines
 
             byte[] zBytes = BigIntegers.AsUnsignedByteArray(agree.GetFieldSize(), z);
 
-            return forEncryption
-                ?	EncryptBlock(input, inOff, inLen, zBytes)
-                :	DecryptBlock(input, inOff, inLen, zBytes);
+            try
+            {
+                return forEncryption
+                    ?	EncryptBlock(input, inOff, inLen, zBytes)
+                    :	DecryptBlock(input, inOff, inLen, zBytes);
+            }
+            finally
+            {
+                Array.Clear(zBytes, 0, zBytes.Length);
+            }
         }
     }
-
 }

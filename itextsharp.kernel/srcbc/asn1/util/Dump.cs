@@ -1,7 +1,8 @@
-using Org.BouncyCastle.Asn1;
-
+#if !PORTABLE
 using System;
 using System.IO;
+
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Utilities
 {
@@ -22,7 +23,8 @@ namespace Org.BouncyCastle.Asn1.Utilities
                 Console.WriteLine(Asn1Dump.DumpAsString(obj));
             }
 
-			bIn.Close();
+            Platform.Dispose(bIn);
         }
     }
 }
+#endif

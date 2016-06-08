@@ -2,6 +2,7 @@ using System;
 using System.IO;
 
 using Org.BouncyCastle.Apache.Bzip2;
+using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Zlib;
 
 namespace Org.BouncyCastle.Bcpg.OpenPgp
@@ -155,10 +156,8 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			{
 				if (dOut != pkOut)
 				{
-					dOut.Close();
-					dOut.Flush();
+                    Platform.Dispose(dOut);
 				}
-
 				dOut = null;
 
 				pkOut.Finish();
@@ -174,10 +173,22 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			{
 			}
 
-			public override void Close()
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+				    Finish();
+                    return;
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
 			{
 				Finish();
 			}
+#endif
 		}
 
 		private class SafeZOutputStream : ZOutputStream
@@ -187,11 +198,24 @@ namespace Org.BouncyCastle.Bcpg.OpenPgp
 			{
 			}
 
-			public override void Close()
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+				    Finish();
+				    End();
+                    return;
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
 			{
 				Finish();
 				End();
 			}
+#endif
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 using Org.BouncyCastle.Crypto.Agreement;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -8,69 +9,61 @@ using Org.BouncyCastle.Utilities;
 namespace Org.BouncyCastle.Crypto.Tls
 {
     public class DefaultTlsAgreementCredentials
-        : TlsAgreementCredentials
+        : AbstractTlsAgreementCredentials
     {
-        protected Certificate clientCert;
-        protected AsymmetricKeyParameter clientPrivateKey;
+        protected readonly Certificate mCertificate;
+        protected readonly AsymmetricKeyParameter mPrivateKey;
 
-        protected IBasicAgreement basicAgreement;
-        protected bool truncateAgreement;
+        protected readonly IBasicAgreement mBasicAgreement;
+        protected readonly bool mTruncateAgreement;
 
-        public DefaultTlsAgreementCredentials(Certificate clientCertificate, AsymmetricKeyParameter clientPrivateKey)
+        public DefaultTlsAgreementCredentials(Certificate certificate, AsymmetricKeyParameter privateKey)
         {
-            if (clientCertificate == null)
-            {
-                throw new ArgumentNullException("clientCertificate");
-            }
-            if (clientCertificate.certs.Length == 0)
-            {
-                throw new ArgumentException("cannot be empty", "clientCertificate");
-            }
-            if (clientPrivateKey == null)
-            {
-                throw new ArgumentNullException("clientPrivateKey");
-            }
-            if (!clientPrivateKey.IsPrivate)
-            {
-                throw new ArgumentException("must be private", "clientPrivateKey");
-            }
+            if (certificate == null)
+                throw new ArgumentNullException("certificate");
+            if (certificate.IsEmpty)
+                throw new ArgumentException("cannot be empty", "certificate");
+            if (privateKey == null)
+                throw new ArgumentNullException("privateKey");
+            if (!privateKey.IsPrivate)
+                throw new ArgumentException("must be private", "privateKey");
 
-            if (clientPrivateKey is DHPrivateKeyParameters)
+            if (privateKey is DHPrivateKeyParameters)
             {
-                basicAgreement = new DHBasicAgreement();
-                truncateAgreement = true;
+                mBasicAgreement = new DHBasicAgreement();
+                mTruncateAgreement = true;
             }
-            else if (clientPrivateKey is ECPrivateKeyParameters)
+            else if (privateKey is ECPrivateKeyParameters)
             {
-                basicAgreement = new ECDHBasicAgreement();
-                truncateAgreement = false;
+                mBasicAgreement = new ECDHBasicAgreement();
+                mTruncateAgreement = false;
             }
             else
             {
-                throw new ArgumentException("type not supported: "
-                    + clientPrivateKey.GetType().FullName, "clientPrivateKey");
+                throw new ArgumentException("type not supported: " + Platform.GetTypeName(privateKey), "privateKey");
             }
 
-            this.clientCert = clientCertificate;
-            this.clientPrivateKey = clientPrivateKey;
+            this.mCertificate = certificate;
+            this.mPrivateKey = privateKey;
         }
 
-        public virtual Certificate Certificate
+        public override Certificate Certificate
         {
-            get { return clientCert; }
+            get { return mCertificate; }
         }
 
-        public virtual byte[] GenerateAgreement(AsymmetricKeyParameter serverPublicKey)
+        /// <exception cref="IOException"></exception>
+        public override byte[] GenerateAgreement(AsymmetricKeyParameter peerPublicKey)
         {
-            basicAgreement.Init(clientPrivateKey);
-            BigInteger agreementValue = basicAgreement.CalculateAgreement(serverPublicKey);
+            mBasicAgreement.Init(mPrivateKey);
+            BigInteger agreementValue = mBasicAgreement.CalculateAgreement(peerPublicKey);
 
-            if (truncateAgreement)
+            if (mTruncateAgreement)
             {
                 return BigIntegers.AsUnsignedByteArray(agreementValue);
             }
 
-            return BigIntegers.AsUnsignedByteArray(basicAgreement.GetFieldSize(), agreementValue);
+            return BigIntegers.AsUnsignedByteArray(mBasicAgreement.GetFieldSize(), agreementValue);
         }
     }
 }

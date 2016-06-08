@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.Crmf
 {
@@ -28,7 +29,7 @@ namespace Org.BouncyCastle.Asn1.Crmf
             if (obj is Asn1Sequence)
                 return new PKMacValue((Asn1Sequence)obj);
 
-            throw new ArgumentException("Invalid object: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("Invalid object: " + Platform.GetTypeName(obj), "obj");
         }
 
         public static PKMacValue GetInstance(Asn1TaggedObject obj, bool isExplicit)

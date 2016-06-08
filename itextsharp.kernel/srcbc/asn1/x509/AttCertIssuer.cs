@@ -1,6 +1,6 @@
 using System;
 
-using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509
 {
@@ -34,7 +34,7 @@ namespace Org.BouncyCastle.Asn1.X509
 				return new AttCertIssuer(GeneralNames.GetInstance(obj));
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		public static AttCertIssuer GetInstance(

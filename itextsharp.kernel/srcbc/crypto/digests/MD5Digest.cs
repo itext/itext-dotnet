@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Digests
 {
@@ -28,7 +29,13 @@ namespace Org.BouncyCastle.Crypto.Digests
         */
         public MD5Digest(MD5Digest t)
             : base(t)
-        {
+		{
+			CopyIn(t);
+		}
+
+		private void CopyIn(MD5Digest t)
+		{
+			base.CopyIn(t);
             H1 = t.H1;
             H2 = t.H2;
             H3 = t.H3;
@@ -287,7 +294,20 @@ namespace Org.BouncyCastle.Crypto.Digests
 
             xOff = 0;
         }
-    }
+
+		public override IMemoable Copy()
+		{
+			return new MD5Digest(this);
+		}
+
+		public override void Reset(IMemoable other)
+		{
+			MD5Digest d = (MD5Digest)other;
+
+			CopyIn(d);
+		}
+
+	}
 
 }
 

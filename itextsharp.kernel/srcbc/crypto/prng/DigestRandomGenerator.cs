@@ -1,6 +1,7 @@
 using System;
 
 using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Prng
 {
@@ -108,15 +109,12 @@ namespace Org.BouncyCastle.Crypto.Prng
 
 		private void DigestAddCounter(long seedVal)
 		{
-			ulong seed = (ulong)seedVal;
-			for (int i = 0; i != 8; i++)
-			{
-				digest.Update((byte)seed);
-				seed >>= 8;
-			}
+            byte[] bytes = new byte[8];
+            Pack.UInt64_To_LE((ulong)seedVal, bytes);
+            digest.BlockUpdate(bytes, 0, bytes.Length);
 		}
 
-		private void DigestUpdate(byte[] inSeed)
+        private void DigestUpdate(byte[] inSeed)
 		{
 			digest.BlockUpdate(inSeed, 0, inSeed.Length);
 		}

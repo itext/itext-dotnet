@@ -166,7 +166,7 @@ namespace Org.BouncyCastle.Cms
 				Stream octetOutputStream = CmsUtilities.CreateBerOctetOutputStream(
 					eiGen.GetRawOutputStream(), 0, false, _bufferSize);
 
-				IBufferedCipher cipher = CipherUtilities.GetCipher(encAlgID.ObjectID);
+                IBufferedCipher cipher = CipherUtilities.GetCipher(encAlgID.Algorithm);
 				cipher.Init(true, new ParametersWithRandom(cipherParameters, rand));
 				CipherStream cOut = new CipherStream(octetOutputStream, null, cipher);
 
@@ -255,11 +255,37 @@ namespace Org.BouncyCastle.Cms
 				_out.Write(bytes, off, len);
 			}
 
-			public override void Close()
-			{
-				_out.Close();
+#if PORTABLE
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    Platform.Dispose(_out);
 
-				// TODO Parent context(s) should really be be closed explicitly
+                    // TODO Parent context(s) should really be closed explicitly
+
+				    _eiGen.Close();
+
+                    if (_outer.unprotectedAttributeGenerator != null)
+                    {
+                        Asn1.Cms.AttributeTable attrTable = _outer.unprotectedAttributeGenerator.GetAttributes(Platform.CreateHashtable());
+
+                        Asn1Set unprotectedAttrs = new BerSet(attrTable.ToAsn1EncodableVector());
+
+                        _envGen.AddObject(new DerTaggedObject(false, 1, unprotectedAttrs));
+                    }
+
+				    _envGen.Close();
+				    _cGen.Close();
+                }
+                base.Dispose(disposing);
+            }
+#else
+            public override void Close()
+			{
+                Platform.Dispose(_out);
+
+                // TODO Parent context(s) should really be closed explicitly
 
 				_eiGen.Close();
 
@@ -276,6 +302,7 @@ namespace Org.BouncyCastle.Cms
 				_cGen.Close();
 				base.Close();
 			}
+#endif
 		}
 	}
 }

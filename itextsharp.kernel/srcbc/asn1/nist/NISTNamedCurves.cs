@@ -21,45 +21,40 @@ namespace Org.BouncyCastle.Asn1.Nist
         private static readonly IDictionary objIds = Platform.CreateHashtable();
         private static readonly IDictionary names = Platform.CreateHashtable();
 
-        private static void DefineCurve(
+        private static void DefineCurveAlias(
             string				name,
             DerObjectIdentifier	oid)
         {
-            objIds.Add(name, oid);
+            objIds.Add(Platform.ToUpperInvariant(name), oid);
             names.Add(oid, name);
         }
 
         static NistNamedCurves()
         {
-            DefineCurve("B-571", SecObjectIdentifiers.SecT571r1);
-            DefineCurve("B-409", SecObjectIdentifiers.SecT409r1);
-            DefineCurve("B-283", SecObjectIdentifiers.SecT283r1);
-            DefineCurve("B-233", SecObjectIdentifiers.SecT233r1);
-            DefineCurve("B-163", SecObjectIdentifiers.SecT163r2);
-            DefineCurve("K-571", SecObjectIdentifiers.SecT571k1);
-            DefineCurve("K-409", SecObjectIdentifiers.SecT409k1);
-            DefineCurve("K-283", SecObjectIdentifiers.SecT283k1);
-            DefineCurve("K-233", SecObjectIdentifiers.SecT233k1);
-            DefineCurve("K-163", SecObjectIdentifiers.SecT163k1);
-            DefineCurve("P-521", SecObjectIdentifiers.SecP521r1);
-            DefineCurve("P-384", SecObjectIdentifiers.SecP384r1);
-            DefineCurve("P-256", SecObjectIdentifiers.SecP256r1);
-            DefineCurve("P-224", SecObjectIdentifiers.SecP224r1);
-            DefineCurve("P-192", SecObjectIdentifiers.SecP192r1);
+            DefineCurveAlias("B-163", SecObjectIdentifiers.SecT163r2);
+            DefineCurveAlias("B-233", SecObjectIdentifiers.SecT233r1);
+            DefineCurveAlias("B-283", SecObjectIdentifiers.SecT283r1);
+            DefineCurveAlias("B-409", SecObjectIdentifiers.SecT409r1);
+            DefineCurveAlias("B-571", SecObjectIdentifiers.SecT571r1);
+
+            DefineCurveAlias("K-163", SecObjectIdentifiers.SecT163k1);
+            DefineCurveAlias("K-233", SecObjectIdentifiers.SecT233k1);
+            DefineCurveAlias("K-283", SecObjectIdentifiers.SecT283k1);
+            DefineCurveAlias("K-409", SecObjectIdentifiers.SecT409k1);
+            DefineCurveAlias("K-571", SecObjectIdentifiers.SecT571k1);
+
+            DefineCurveAlias("P-192", SecObjectIdentifiers.SecP192r1);
+            DefineCurveAlias("P-224", SecObjectIdentifiers.SecP224r1);
+            DefineCurveAlias("P-256", SecObjectIdentifiers.SecP256r1);
+            DefineCurveAlias("P-384", SecObjectIdentifiers.SecP384r1);
+            DefineCurveAlias("P-521", SecObjectIdentifiers.SecP521r1);
         }
 
         public static X9ECParameters GetByName(
             string name)
         {
-            DerObjectIdentifier oid = (DerObjectIdentifier) objIds[
-                Platform.ToUpperInvariant(name)];
-
-            if (oid != null)
-            {
-                return GetByOid(oid);
-            }
-
-            return null;
+            DerObjectIdentifier oid = GetOid(name);
+            return oid == null ? null : GetByOid(oid);
         }
 
         /**
@@ -83,8 +78,7 @@ namespace Org.BouncyCastle.Asn1.Nist
         public static DerObjectIdentifier GetOid(
             string name)
         {
-            return (DerObjectIdentifier) objIds[
-                Platform.ToUpperInvariant(name)];
+            return (DerObjectIdentifier) objIds[Platform.ToUpperInvariant(name)];
         }
 
         /**
@@ -102,7 +96,7 @@ namespace Org.BouncyCastle.Asn1.Nist
         */
         public static IEnumerable Names
         {
-            get { return new EnumerableProxy(objIds.Keys); }
+            get { return new EnumerableProxy(names.Values); }
         }
     }
 }

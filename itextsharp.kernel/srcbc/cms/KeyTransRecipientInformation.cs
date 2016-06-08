@@ -68,7 +68,7 @@ namespace Org.BouncyCastle.Cms
 		internal KeyParameter UnwrapKey(ICipherParameters key)
 		{
 			byte[] encryptedKey = info.EncryptedKey.GetOctets();
-			string keyExchangeAlgorithm = GetExchangeEncryptionAlgorithmName(keyEncAlg.ObjectID);
+            string keyExchangeAlgorithm = GetExchangeEncryptionAlgorithmName(keyEncAlg.Algorithm);
 
 			try
 			{

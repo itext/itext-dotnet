@@ -1,5 +1,7 @@
 using System;
 
+using Org.BouncyCastle.Utilities;
+
 namespace Org.BouncyCastle.Asn1.Cms
 {
 	public class EncryptedData
@@ -18,7 +20,7 @@ namespace Org.BouncyCastle.Asn1.Cms
 			if (obj is Asn1Sequence)
 				return new EncryptedData((Asn1Sequence) obj);
 
-			throw new ArgumentException("Invalid EncryptedData: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid EncryptedData: " + Platform.GetTypeName(obj));
 		}
 
 		public EncryptedData(
@@ -52,8 +54,8 @@ namespace Org.BouncyCastle.Asn1.Cms
 
 			if (seq.Count > 2)
 			{
-				this.unprotectedAttrs = Asn1Set.GetInstance(seq[2]);
-			}
+                this.unprotectedAttrs = Asn1Set.GetInstance((Asn1TaggedObject)seq[2], false);
+            }
 		}
 
 		public virtual DerInteger Version

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Org.BouncyCastle.Cms
 {
-	internal interface CmsReadable
+	public interface CmsReadable
 	{
 		Stream GetInputStream();
 	}

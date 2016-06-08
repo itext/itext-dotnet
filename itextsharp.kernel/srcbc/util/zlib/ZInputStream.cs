@@ -93,14 +93,30 @@ namespace Org.BouncyCastle.Utilities.Zlib
 		public sealed override bool CanSeek { get { return false; } }
 		public sealed override bool CanWrite { get { return false; } }
 
-		public override void Close()
+#if PORTABLE
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+			    if (closed)
+                    return;
+
+                closed = true;
+                Platform.Dispose(input);
+            }
+            base.Dispose(disposing);
+        }
+#else
+        public override void Close()
 		{
-			if (!closed)
-			{
-				closed = true;
-				input.Close();
-			}
+            if (closed)
+                return;
+
+            closed = true;
+            Platform.Dispose(input);
+            base.Close();
 		}
+#endif
 
 		public sealed override void Flush() {}
 

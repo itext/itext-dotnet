@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 {
@@ -42,7 +43,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 				return new Admissions((Asn1Sequence) obj);
 			}
 
-			throw new ArgumentException("unknown object in factory: " + obj.GetType().Name, "obj");
+            throw new ArgumentException("unknown object in factory: " + Platform.GetTypeName(obj), "obj");
 		}
 
 		/**
@@ -103,7 +104,7 @@ namespace Org.BouncyCastle.Asn1.IsisMtt.X509
 			professionInfos = Asn1Sequence.GetInstance(o);
 			if (e.MoveNext())
 			{
-				throw new ArgumentException("Bad object encountered: " + e.Current.GetType().Name);
+                throw new ArgumentException("Bad object encountered: " + Platform.GetTypeName(e.Current));
 			}
 		}
 

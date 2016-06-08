@@ -11,16 +11,16 @@ namespace Org.BouncyCastle.Bcpg
     public class RevocationReason
 		: SignatureSubpacket
     {
-        public RevocationReason(bool isCritical, byte[] data)
-            : base(SignatureSubpacketTag.RevocationReason, isCritical, data)
+        public RevocationReason(bool isCritical, bool isLongLength, byte[] data)
+            : base(SignatureSubpacketTag.RevocationReason, isCritical, isLongLength, data)
         {
         }
 
-		public RevocationReason(
-			bool				isCritical,
-			RevocationReasonTag	reason,
-			string				description)
-            : base(SignatureSubpacketTag.RevocationReason, isCritical, CreateData(reason, description))
+        public RevocationReason(
+			bool                isCritical,
+			RevocationReasonTag reason,
+			string              description)
+            : base(SignatureSubpacketTag.RevocationReason, isCritical, false, CreateData(reason, description))
         {
         }
 

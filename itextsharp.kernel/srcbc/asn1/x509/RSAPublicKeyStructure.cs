@@ -1,8 +1,9 @@
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Math;
-
 using System;
 using System.Collections;
+
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Asn1.X509
 {
@@ -32,7 +33,7 @@ namespace Org.BouncyCastle.Asn1.X509
                 return new RsaPublicKeyStructure((Asn1Sequence) obj);
             }
 
-			throw new ArgumentException("Invalid RsaPublicKeyStructure: " + obj.GetType().Name);
+            throw new ArgumentException("Invalid RsaPublicKeyStructure: " + Platform.GetTypeName(obj));
         }
 
 		public RsaPublicKeyStructure(

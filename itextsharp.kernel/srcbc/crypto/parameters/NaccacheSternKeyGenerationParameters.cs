@@ -17,9 +17,8 @@ namespace Org.BouncyCastle.Crypto.Parameters
 		// private BigInteger publicExponent;
 		private readonly int certainty;
 		private readonly int countSmallPrimes;
-		private bool debug;
 
-		/**
+        /**
 		 * Parameters for generating a NaccacheStern KeyPair.
 		 *
 		 * @param random
@@ -37,9 +36,16 @@ namespace Org.BouncyCastle.Crypto.Parameters
 			int				strength,
 			int				certainty,
 			int				countSmallPrimes)
-			: this(random, strength, certainty, countSmallPrimes, false)
-		{
-		}
+            : base(random, strength)
+        {
+            if (countSmallPrimes % 2 == 1)
+                throw new ArgumentException("countSmallPrimes must be a multiple of 2");
+            if (countSmallPrimes < 30)
+                throw new ArgumentException("countSmallPrimes must be >= 30 for security reasons");
+
+            this.certainty = certainty;
+            this.countSmallPrimes = countSmallPrimes;
+        }
 
 		/**
 		 * Parameters for a NaccacheStern KeyPair.
@@ -54,27 +60,17 @@ namespace Org.BouncyCastle.Crypto.Parameters
 		 * @param cntSmallPrimes
 		 *            How many small key factors are desired
 		 * @param debug
-		 *            Turn debugging on or off (reveals secret information, use with
-		 *            caution)
+         *            Ignored
 		 */
-		public NaccacheSternKeyGenerationParameters(SecureRandom random,
-			int		strength,
-			int		certainty,
-			int		countSmallPrimes,
-			bool	debug)
-			: base(random, strength)
+        [Obsolete("Use version without 'debug' parameter")]
+		public NaccacheSternKeyGenerationParameters(
+            SecureRandom    random,
+			int             strength,
+			int             certainty,
+			int             countSmallPrimes,
+			bool            debug)
+			: this(random, strength, certainty, countSmallPrimes)
 		{
-			if (countSmallPrimes % 2 == 1)
-			{
-				throw new ArgumentException("countSmallPrimes must be a multiple of 2");
-			}
-			if (countSmallPrimes < 30)
-			{
-				throw new ArgumentException("countSmallPrimes must be >= 30 for security reasons");
-			}
-			this.certainty = certainty;
-			this.countSmallPrimes = countSmallPrimes;
-			this.debug = debug;
 		}
 
 		/**
@@ -93,9 +89,10 @@ namespace Org.BouncyCastle.Crypto.Parameters
 			get { return countSmallPrimes; }
 		}
 
-		public bool IsDebug
+        [Obsolete("Remove: always false")]
+        public bool IsDebug
 		{
-			get { return debug; }
+			get { return false; }
 		}
 	}
 }

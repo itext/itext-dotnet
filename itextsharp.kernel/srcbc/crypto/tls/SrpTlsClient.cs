@@ -6,183 +6,99 @@ using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Tls
 {
-	public abstract class SrpTlsClient
-		: TlsClient
-	{
-		protected TlsCipherFactory cipherFactory;
-		protected byte[] identity;
-		protected byte[] password;
+    public class SrpTlsClient
+        :   AbstractTlsClient
+    {
+        protected TlsSrpGroupVerifier mGroupVerifier;
 
-		protected TlsClientContext context;
+        protected byte[] mIdentity;
+        protected byte[] mPassword;
 
-        protected CompressionMethod selectedCompressionMethod;
-        protected CipherSuite selectedCipherSuite;
-
-		public SrpTlsClient(byte[] identity, byte[] password)
-			: this(new DefaultTlsCipherFactory(), identity, password)
-		{
-		}
-
-		public SrpTlsClient(TlsCipherFactory cipherFactory, byte[] identity, byte[] password)
-		{
-			this.cipherFactory = cipherFactory;
-			this.identity = Arrays.Clone(identity);
-			this.password = Arrays.Clone(password);
-		}
-
-		public virtual void Init(TlsClientContext context)
-		{
-			this.context = context;
-		}
-
-		public virtual CipherSuite[] GetCipherSuites()
-		{
-			return new CipherSuite[] {
-				CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_WITH_AES_256_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_WITH_AES_128_CBC_SHA,
-				CipherSuite.TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA,
-			};
-		}
-
-		public virtual IDictionary GetClientExtensions()
-		{
-			IDictionary clientExtensions = Platform.CreateHashtable();
-
-			MemoryStream srpData = new MemoryStream();
-			TlsUtilities.WriteOpaque8(this.identity, srpData);
-			clientExtensions[ExtensionType.srp] = srpData.ToArray();
-
-			return clientExtensions;
-		}
-
-		public virtual CompressionMethod[] GetCompressionMethods()
-		{
-			return new CompressionMethod[] { CompressionMethod.NULL };
-		}
-
-		public virtual void NotifySessionID(byte[] sessionID)
-		{
-			// Currently ignored 
-		}
-
-		public virtual void NotifySelectedCipherSuite(CipherSuite selectedCipherSuite)
-		{
-			this.selectedCipherSuite = selectedCipherSuite;
-		}
-
-		public virtual void NotifySelectedCompressionMethod(CompressionMethod selectedCompressionMethod)
-		{
-            this.selectedCompressionMethod = selectedCompressionMethod;
+        public SrpTlsClient(byte[] identity, byte[] password)
+            :   this(new DefaultTlsCipherFactory(), new DefaultTlsSrpGroupVerifier(), identity, password)
+        {
         }
 
-		public virtual void NotifySecureRenegotiation(bool secureRenegotiation)
-		{
-			if (!secureRenegotiation)
-			{
-				/*
-				 * RFC 5746 3.4. If the extension is not present, the server does not support
-				 * secure renegotiation; set secure_renegotiation flag to FALSE. In this case,
-				 * some clients may want to terminate the handshake instead of continuing; see
-				 * Section 4.1 for discussion.
-				 */
-//				throw new TlsFatalAlert(AlertDescription.handshake_failure);
-			}
-		}
+        public SrpTlsClient(TlsCipherFactory cipherFactory, byte[] identity, byte[] password)
+            :   this(cipherFactory, new DefaultTlsSrpGroupVerifier(), identity, password)
+        {
+        }
 
-		public virtual void ProcessServerExtensions(IDictionary serverExtensions)
-		{
-			// There is no server response for the SRP extension
-		}
+        public SrpTlsClient(TlsCipherFactory cipherFactory, TlsSrpGroupVerifier groupVerifier,
+            byte[] identity, byte[] password)
+            :   base(cipherFactory)
+        {
+            this.mGroupVerifier = groupVerifier;
+            this.mIdentity = Arrays.Clone(identity);
+            this.mPassword = Arrays.Clone(password);
+        }
 
-		public virtual TlsKeyExchange GetKeyExchange()
-		{
-			switch (selectedCipherSuite)
-			{
-				case CipherSuite.TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_WITH_AES_128_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_WITH_AES_256_CBC_SHA:
-					return CreateSrpKeyExchange(KeyExchangeAlgorithm.SRP);
+        protected virtual bool RequireSrpServerExtension
+        {
+            // No explicit guidance in RFC 5054; by default an (empty) extension from server is optional
+            get { return false; }
+        }
 
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA:
-					return CreateSrpKeyExchange(KeyExchangeAlgorithm.SRP_RSA);
+        public override int[] GetCipherSuites()
+        {
+            return new int[]
+            {
+                CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA
+            };
+        }
 
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA:
-					return CreateSrpKeyExchange(KeyExchangeAlgorithm.SRP_DSS);
+        public override IDictionary GetClientExtensions()
+        {
+            IDictionary clientExtensions = TlsExtensionsUtilities.EnsureExtensionsInitialised(base.GetClientExtensions());
+            TlsSrpUtilities.AddSrpExtension(clientExtensions, this.mIdentity);
+            return clientExtensions;
+        }
 
-				default:
-					/*
-					 * Note: internal error here; the TlsProtocolHandler verifies that the
-					 * server-selected cipher suite was in the list of client-offered cipher
-					 * suites, so if we now can't produce an implementation, we shouldn't have
-					 * offered it!
-					 */
-					throw new TlsFatalAlert(AlertDescription.internal_error);
-			}
-		}
-		
-		public abstract TlsAuthentication GetAuthentication();
+        public override void ProcessServerExtensions(IDictionary serverExtensions)
+        {
+            if (!TlsUtilities.HasExpectedEmptyExtensionData(serverExtensions, ExtensionType.srp,
+                AlertDescription.illegal_parameter))
+            {
+                if (RequireSrpServerExtension)
+                    throw new TlsFatalAlert(AlertDescription.illegal_parameter);
+            }
 
-		public virtual TlsCompression GetCompression()
-		{
-			switch (selectedCompressionMethod)
-			{
-				case CompressionMethod.NULL:
-					return new TlsNullCompression();
+            base.ProcessServerExtensions(serverExtensions);
+        }
 
-				default:
-					/*
-					 * Note: internal error here; the TlsProtocolHandler verifies that the
-					 * server-selected compression method was in the list of client-offered compression
-					 * methods, so if we now can't produce an implementation, we shouldn't have
-					 * offered it!
-					 */
-					throw new TlsFatalAlert(AlertDescription.internal_error);
-			}
-		}
+        public override TlsKeyExchange GetKeyExchange()
+        {
+            int keyExchangeAlgorithm = TlsUtilities.GetKeyExchangeAlgorithm(mSelectedCipherSuite);
 
-		public virtual TlsCipher GetCipher()
-		{
-			switch (selectedCipherSuite)
-			{
-				case CipherSuite.TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA:
-					return cipherFactory.CreateCipher(context, EncryptionAlgorithm.cls_3DES_EDE_CBC, DigestAlgorithm.SHA);
+            switch (keyExchangeAlgorithm)
+            {
+            case KeyExchangeAlgorithm.SRP:
+            case KeyExchangeAlgorithm.SRP_DSS:
+            case KeyExchangeAlgorithm.SRP_RSA:
+                return CreateSrpKeyExchange(keyExchangeAlgorithm);
 
-				case CipherSuite.TLS_SRP_SHA_WITH_AES_128_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA:
-					return cipherFactory.CreateCipher(context, EncryptionAlgorithm.AES_128_CBC, DigestAlgorithm.SHA);
+            default:
+                /*
+                 * Note: internal error here; the TlsProtocol implementation verifies that the
+                 * server-selected cipher suite was in the list of client-offered cipher suites, so if
+                 * we now can't produce an implementation, we shouldn't have offered it!
+                 */
+                throw new TlsFatalAlert(AlertDescription.internal_error);
+            }
+        }
 
-				case CipherSuite.TLS_SRP_SHA_WITH_AES_256_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA:
-				case CipherSuite.TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA:
-					return cipherFactory.CreateCipher(context, EncryptionAlgorithm.AES_256_CBC, DigestAlgorithm.SHA);
+        public override TlsAuthentication GetAuthentication()
+        {
+            /*
+             * Note: This method is not called unless a server certificate is sent, which may be the
+             * case e.g. for SRP_DSS or SRP_RSA key exchange.
+             */
+            throw new TlsFatalAlert(AlertDescription.internal_error);
+        }
 
-				default:
-					/*
-					 * Note: internal error here; the TlsProtocolHandler verifies that the
-					 * server-selected cipher suite was in the list of client-offered cipher
-					 * suites, so if we now can't produce an implementation, we shouldn't have
-					 * offered it!
-					 */
-					throw new TlsFatalAlert(AlertDescription.internal_error);
-			}
-		}
-
-		protected virtual TlsKeyExchange CreateSrpKeyExchange(KeyExchangeAlgorithm keyExchange)
-		{
-			return new TlsSrpKeyExchange(context, keyExchange, identity, password);
-		}
-	}
+        protected virtual TlsKeyExchange CreateSrpKeyExchange(int keyExchange)
+        {
+            return new TlsSrpKeyExchange(keyExchange, mSupportedSignatureAlgorithms, mGroupVerifier, mIdentity, mPassword);
+        }
+    }
 }

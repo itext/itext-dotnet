@@ -2,6 +2,7 @@ using System;
 
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Utilities;
+using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Crypto.Engines
 {
@@ -42,17 +43,17 @@ namespace Org.BouncyCastle.Crypto.Engines
 			_initialised = false;
 		}
 
-		public string AlgorithmName
+		public virtual string AlgorithmName
 		{
 			get { return "Noekeon"; }
 		}
 
-		public bool IsPartialBlockOkay
+		public virtual bool IsPartialBlockOkay
 		{
 			get { return false; }
 		}
 
-		public int GetBlockSize()
+        public virtual int GetBlockSize()
 		{
 			return GenericSize;
 		}
@@ -65,12 +66,13 @@ namespace Org.BouncyCastle.Crypto.Engines
 		* @exception ArgumentException if the params argument is
 		* inappropriate.
 		*/
-		public void Init(
+		public virtual void Init(
 			bool				forEncryption,
 			ICipherParameters	parameters)
 		{
 			if (!(parameters is KeyParameter))
-				throw new ArgumentException("Invalid parameters passed to Noekeon init - " + parameters.GetType().Name, "parameters");
+				throw new ArgumentException("Invalid parameters passed to Noekeon init - "
+                    + Platform.GetTypeName(parameters), "parameters");
 
 			_forEncryption = forEncryption;
 			_initialised = true;
@@ -80,7 +82,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 			setKey(p.GetKey());
 		}
 
-		public int ProcessBlock(
+		public virtual int ProcessBlock(
 			byte[]	input,
 			int		inOff,
 			byte[]	output,
@@ -88,17 +90,16 @@ namespace Org.BouncyCastle.Crypto.Engines
 		{
 			if (!_initialised)
 				throw new InvalidOperationException(AlgorithmName + " not initialised");
-			if ((inOff + GenericSize) > input.Length)
-				throw new DataLengthException("input buffer too short");
-			if ((outOff + GenericSize) > output.Length)
-				throw new DataLengthException("output buffer too short");
 
-			return _forEncryption
+            Check.DataLength(input, inOff, GenericSize, "input buffer too short");
+            Check.OutputLength(output, outOff, GenericSize, "output buffer too short");
+
+            return _forEncryption
 				?	encryptBlock(input, inOff, output, outOff)
 				:	decryptBlock(input, inOff, output, outOff);
 		}
 
-		public void Reset()
+		public virtual void Reset()
 		{
 			// TODO This should do something in case the encryption is aborted
 		}

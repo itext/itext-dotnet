@@ -18,6 +18,8 @@ using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.X509;
 using Org.BouncyCastle.X509.Store;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace Org.BouncyCastle.Cms
 {
@@ -25,11 +27,20 @@ namespace Org.BouncyCastle.Cms
     {
         internal static readonly CmsSignedHelper Instance = new CmsSignedHelper();
 
-		private static readonly IDictionary encryptionAlgs = Platform.CreateHashtable();
+        private static readonly string EncryptionECDsaWithSha1 = X9ObjectIdentifiers.ECDsaWithSha1.Id;
+        private static readonly string EncryptionECDsaWithSha224 = X9ObjectIdentifiers.ECDsaWithSha224.Id;
+        private static readonly string EncryptionECDsaWithSha256 = X9ObjectIdentifiers.ECDsaWithSha256.Id;
+        private static readonly string EncryptionECDsaWithSha384 = X9ObjectIdentifiers.ECDsaWithSha384.Id;
+        private static readonly string EncryptionECDsaWithSha512 = X9ObjectIdentifiers.ECDsaWithSha512.Id;
+
+        private static readonly IDictionary encryptionAlgs = Platform.CreateHashtable();
         private static readonly IDictionary digestAlgs = Platform.CreateHashtable();
         private static readonly IDictionary digestAliases = Platform.CreateHashtable();
 
-		private static void AddEntries(DerObjectIdentifier oid, string digest, string encryption)
+        private static readonly ISet noParams = new HashSet();
+        private static readonly IDictionary ecAlgorithms = Platform.CreateHashtable();
+
+        private static void AddEntries(DerObjectIdentifier oid, string digest, string encryption)
 		{
 			string alias = oid.Id;
 			digestAlgs.Add(alias, digest);
@@ -100,7 +111,21 @@ namespace Org.BouncyCastle.Cms
 			digestAliases.Add("SHA256", new string[] { "SHA-256" });
 			digestAliases.Add("SHA384", new string[] { "SHA-384" });
 			digestAliases.Add("SHA512", new string[] { "SHA-512" });
-		}
+
+            noParams.Add(CmsSignedGenerator.EncryptionDsa);
+            //			noParams.Add(EncryptionECDsa);
+            noParams.Add(EncryptionECDsaWithSha1);
+            noParams.Add(EncryptionECDsaWithSha224);
+            noParams.Add(EncryptionECDsaWithSha256);
+            noParams.Add(EncryptionECDsaWithSha384);
+            noParams.Add(EncryptionECDsaWithSha512);
+
+            ecAlgorithms.Add(CmsSignedGenerator.DigestSha1, EncryptionECDsaWithSha1);
+            ecAlgorithms.Add(CmsSignedGenerator.DigestSha224, EncryptionECDsaWithSha224);
+            ecAlgorithms.Add(CmsSignedGenerator.DigestSha256, EncryptionECDsaWithSha256);
+            ecAlgorithms.Add(CmsSignedGenerator.DigestSha384, EncryptionECDsaWithSha384);
+            ecAlgorithms.Add(CmsSignedGenerator.DigestSha512, EncryptionECDsaWithSha512);
+    }
 
 		/**
         * Return the digest algorithm using one of the standard JCA string
@@ -119,7 +144,19 @@ namespace Org.BouncyCastle.Cms
 			return digestAlgOid;
         }
 
-		internal string[] GetDigestAliases(
+    internal AlgorithmIdentifier GetEncAlgorithmIdentifier(
+    DerObjectIdentifier encOid,
+    Asn1Encodable sigX509Parameters)
+    {
+        if (noParams.Contains(encOid.Id))
+        {
+            return new AlgorithmIdentifier(encOid);
+        }
+
+        return new AlgorithmIdentifier(encOid, sigX509Parameters);
+    }
+
+    internal string[] GetDigestAliases(
 			string algName)
 		{
 			string[] aliases = (string[]) digestAliases[algName];
@@ -311,9 +348,79 @@ namespace Org.BouncyCastle.Cms
 			AlgorithmIdentifier algId)
 		{
 			if (algId.Parameters == null)
-				return new AlgorithmIdentifier(algId.ObjectID, DerNull.Instance);
+                return new AlgorithmIdentifier(algId.Algorithm, DerNull.Instance);
 
 			return algId;
 		}
+
+        internal string GetEncOid(
+            AsymmetricKeyParameter key,
+            string digestOID)
+        {
+            string encOID = null;
+
+            if (key is RsaKeyParameters)
+            {
+                if (!((RsaKeyParameters)key).IsPrivate)
+                    throw new ArgumentException("Expected RSA private key");
+
+                encOID = CmsSignedGenerator.EncryptionRsa;
+            }
+            else if (key is DsaPrivateKeyParameters)
+            {
+                if (digestOID.Equals(CmsSignedGenerator.DigestSha1))
+                {
+                    encOID = CmsSignedGenerator.EncryptionDsa;
+                }
+                else if (digestOID.Equals(CmsSignedGenerator.DigestSha224))
+                {
+                    encOID = NistObjectIdentifiers.DsaWithSha224.Id;
+                }
+                else if (digestOID.Equals(CmsSignedGenerator.DigestSha256))
+                {
+                    encOID = NistObjectIdentifiers.DsaWithSha256.Id;
+                }
+                else if (digestOID.Equals(CmsSignedGenerator.DigestSha384))
+                {
+                    encOID = NistObjectIdentifiers.DsaWithSha384.Id;
+                }
+                else if (digestOID.Equals(CmsSignedGenerator.DigestSha512))
+                {
+                    encOID = NistObjectIdentifiers.DsaWithSha512.Id;
+                }
+                else
+                {
+                    throw new ArgumentException("can't mix DSA with anything but SHA1/SHA2");
+                }
+            }
+            else if (key is ECPrivateKeyParameters)
+            {
+                ECPrivateKeyParameters ecPrivKey = (ECPrivateKeyParameters)key;
+                string algName = ecPrivKey.AlgorithmName;
+
+                if (algName == "ECGOST3410")
+                {
+                    encOID = CmsSignedGenerator.EncryptionECGost3410;
+                }
+                else
+                {
+                    // TODO Should we insist on algName being one of "EC" or "ECDSA", as Java does?
+                    encOID = (string)ecAlgorithms[digestOID];
+
+                    if (encOID == null)
+                        throw new ArgumentException("can't mix ECDSA with anything but SHA family digests");
+                }
+            }
+            else if (key is Gost3410PrivateKeyParameters)
+            {
+                encOID = CmsSignedGenerator.EncryptionGost3410;
+            }
+            else
+            {
+                throw new ArgumentException("Unknown algorithm in CmsSignedGenerator.GetEncOid");
+            }
+
+            return encOID;
+        }
     }
 }

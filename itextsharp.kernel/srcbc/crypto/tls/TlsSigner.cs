@@ -1,17 +1,28 @@
 using System;
 
-using Org.BouncyCastle.Security;
-
 namespace Org.BouncyCastle.Crypto.Tls
 {
     public interface TlsSigner
     {
-        byte[] GenerateRawSignature(SecureRandom random, AsymmetricKeyParameter privateKey,
-            byte[] md5andsha1);
-        bool VerifyRawSignature(byte[] sigBytes, AsymmetricKeyParameter publicKey, byte[] md5andsha1);
+        void Init(TlsContext context);
 
-        ISigner CreateSigner(SecureRandom random, AsymmetricKeyParameter privateKey);
+        byte[] GenerateRawSignature(AsymmetricKeyParameter privateKey, byte[] md5AndSha1);
+
+        byte[] GenerateRawSignature(SignatureAndHashAlgorithm algorithm,
+            AsymmetricKeyParameter privateKey, byte[] hash);
+
+        bool VerifyRawSignature(byte[] sigBytes, AsymmetricKeyParameter publicKey, byte[] md5AndSha1);
+
+        bool VerifyRawSignature(SignatureAndHashAlgorithm algorithm, byte[] sigBytes,
+            AsymmetricKeyParameter publicKey, byte[] hash);
+
+        ISigner CreateSigner(AsymmetricKeyParameter privateKey);
+
+        ISigner CreateSigner(SignatureAndHashAlgorithm algorithm, AsymmetricKeyParameter privateKey);
+
         ISigner CreateVerifyer(AsymmetricKeyParameter publicKey);
+
+        ISigner CreateVerifyer(SignatureAndHashAlgorithm algorithm, AsymmetricKeyParameter publicKey);
 
         bool IsValidPublicKey(AsymmetricKeyParameter publicKey);
     }
