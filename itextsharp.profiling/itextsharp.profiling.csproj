@@ -8,7 +8,8 @@
     <ProjectGuid>{0CA79FA1-69A5-44DD-90FF-934B4168BBD9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>itextsharp.profiling</RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>itextsharp.profiling</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,28 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="itextsharp\profiling\test\LayoutTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformanceTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformancePartialTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformancePartialFullCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformanceFullCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformanceFlateTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfFontTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfReaderTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentRemoveThreePagesWithCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentRemoveThreePagesTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentLeaveThreePagesWithCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentLeaveThreePagesTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentChangeMediaBoxTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentChangeMediaBoxFullCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentAppendContentTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentAppendContentFullCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfDocumentTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfCanvasComparePerformanceWithFlateTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfCanvasComparePerformanceTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfCanvasComparePerformanceFullCompressionTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfCanvasTest.cs" />
-    <Compile Include="itextsharp\profiling\test\PdfCopyTest.cs" />
+    <Compile Include="itextsharp\profiling\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

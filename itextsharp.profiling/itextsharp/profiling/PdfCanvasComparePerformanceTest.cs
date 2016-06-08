@@ -1,7 +1,7 @@
 ﻿
 using NUnit.Framework;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfCanvasComparePerformanceTest : PdfCanvasTest
     {

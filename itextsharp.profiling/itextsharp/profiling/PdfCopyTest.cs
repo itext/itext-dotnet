@@ -9,7 +9,7 @@ using PdfDocument = iTextSharp.Kernel.Pdf.PdfDocument;
 using PdfReader = iTextSharp.Kernel.Pdf.PdfReader;
 using PdfWriter = iTextSharp.Kernel.Pdf.PdfWriter;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfCopyTest
     {

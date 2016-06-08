@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using iTextSharp.IO.Font;
@@ -14,7 +13,7 @@ using PdfDocument = iTextSharp.Kernel.Pdf.PdfDocument;
 using PdfFont = iTextSharp.Kernel.Font.PdfFont;
 using PdfWriter = iTextSharp.Kernel.Pdf.PdfWriter;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class LayoutTest
     {

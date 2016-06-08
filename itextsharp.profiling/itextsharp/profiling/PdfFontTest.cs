@@ -10,7 +10,7 @@ using iTextSharp.Layout.Element;
 using NUnit.Framework;
 using PdfDocument = iTextSharp.Kernel.Pdf.PdfDocument;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfFontTest : PdfCanvasTest
     {

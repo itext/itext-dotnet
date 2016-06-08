@@ -8,7 +8,7 @@ using PdfName = iTextSharp.Kernel.Pdf.PdfName;
 using PdfPage = iTextSharp.Kernel.Pdf.PdfPage;
 using PdfReader = iTextSharp.Kernel.Pdf.PdfReader;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfReaderTest
     {

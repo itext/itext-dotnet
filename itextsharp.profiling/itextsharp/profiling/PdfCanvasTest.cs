@@ -9,7 +9,7 @@ using PdfDocument = iTextSharp.Kernel.Pdf.PdfDocument;
 using PdfPage = iTextSharp.Kernel.Pdf.PdfPage;
 using PdfWriter = iTextSharp.Kernel.Pdf.PdfWriter;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfCanvasTest
     {

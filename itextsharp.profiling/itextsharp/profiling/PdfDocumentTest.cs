@@ -18,7 +18,7 @@ using PdfReader = iTextSharp.Kernel.Pdf.PdfReader;
 using PdfWriter = iTextSharp.Kernel.Pdf.PdfWriter;
 using Rectangle = iTextSharp.Kernel.Geom.Rectangle;
 
-namespace itextsharp.profiling.itextsharp.profiling.test
+namespace iTextSharp.Profiling
 {
     class PdfDocumenTest
     {
