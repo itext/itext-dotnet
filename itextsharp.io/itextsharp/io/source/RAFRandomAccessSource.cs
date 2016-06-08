@@ -76,27 +76,29 @@ namespace iTextSharp.IO.Source
 		/// <exception cref="System.IO.IOException"/>
 		public virtual int Get(long position)
 		{
-			// TODO: test to make sure we are handling the length properly (i.e. is raf.length() the last byte in the file, or one past the last byte?)
-			if (position > raf.Length)
-			{
-				return -1;
-			}
-			// Not thread safe!
-			raf.Seek(position);
-			return raf.ReadByte();
-		}
+            if (position > length)
+                return -1;
+
+            // Not thread safe!
+		    if (raf.Position != position)
+		        raf.Seek(position, SeekOrigin.Begin);
+
+            return raf.ReadByte();
+        }
 
 		/// <summary><inheritDoc/></summary>
 		/// <exception cref="System.IO.IOException"/>
 		public virtual int Get(long position, byte[] bytes, int off, int len)
 		{
-			if (position > length)
-			{
-				return -1;
-			}
-			// Not thread safe!
-			raf.Seek(position);
-			return raf.Read(bytes, off, len);
+            if (position > length)
+                return -1;
+
+            // Not thread safe!
+            if (raf.Position != position)
+                raf.Seek(position, SeekOrigin.Begin);
+
+            int n = raf.JRead(bytes, off, len);
+		    return n;
 		}
 
 		/// <summary>
