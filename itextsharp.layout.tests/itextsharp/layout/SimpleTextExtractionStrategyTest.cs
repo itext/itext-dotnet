@@ -53,11 +53,10 @@ namespace iTextSharp.Layout
 		public virtual void TestCoLinnearTextEndingWithSpaceCharacter()
 		{
 			// in this case, we shouldn't be inserting an extra space
-			TEXT1 = TEXT1 + " ";
-			byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 2);
+			byte[] bytes = CreatePdfWithRotatedText(TEXT1 + " ", TEXT2, 0, false, 2);
 			//TestResourceUtils.openBytesAsPdf(bytes);
-			NUnit.Framework.Assert.AreEqual(TEXT1 + TEXT2, PdfTextExtractor.GetTextFromPage(new 
-				PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
+			NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
+				(new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
 				()));
 		}
 
