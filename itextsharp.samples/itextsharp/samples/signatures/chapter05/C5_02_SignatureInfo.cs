@@ -13,6 +13,7 @@ Copyright (c) 1998-2016 iText Group NV
 */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
@@ -32,27 +33,27 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 
         public static readonly string EXAMPLE6 = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/pdfs/field_metadata.pdf";
 
-	    public const String expectedOutput = "===== sig1 =====\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 728,02, urx: 559; ury: 779,02\r\n"
+	    public const String expectedOutput = "===== sig1 =====\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 728.02, urx: 559; ury: 779.02\r\n"
 			 + "Signature covers whole document: False\r\n" + "Document revision: 1 of 4\r\n" + 
 			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
 			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Alice Specimen\r\n"
 			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
 			 + "Signature type: certification\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
-			 + "===== sig2 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 629,04, urx: 559; ury: 680,04\r\n"
+			 + "===== sig2 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 629.04, urx: 559; ury: 680.04\r\n"
 			 + "Signature covers whole document: False\r\n" + "Document revision: 2 of 4\r\n" + 
 			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
 			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Bob Specimen\r\n"
 			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
 			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
 			 + "Lock: /Include[sig1 approved_bob sig2 ]\r\n" + "===== sig3 =====\r\n" + "\r\n" + "\r\n"
-			 + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 530,05, urx: 559; ury: 581,05\r\n"
+			 + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 530.05, urx: 559; ury: 581.05\r\n"
 			 + "Signature covers whole document: False\r\n" + "Document revision: 3 of 4\r\n" + 
 			"Integrity check OK? True\r\n" + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n"
 			 + "Filter subtype: /adbe.pkcs7.detached\r\n" + "Name of the signer: Carol Specimen\r\n"
 			 + "Signed on: 2016-02-23\r\n" + "Location: \r\n" + "Reason: \r\n" + "Contact info: \r\n"
 			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: False\r\n"
 			 + "Lock: /Include[sig1 approved_bob sig2 ]\r\n" + "Lock: /Exclude[approved_dave sig4 ]\r\n"
-			 + "===== sig4 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 431,07, urx: 559; ury: 482,07\r\n"
+			 + "===== sig4 =====\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "\r\n" + "Field on page 1; llx: 36, lly: 431.07, urx: 559; ury: 482.07\r\n"
 			 + "Signature covers whole document: True\r\n" + "Document revision: 4 of 4\r\n" + "Integrity check OK? True\r\n"
 			 + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n" + "Filter subtype: /adbe.pkcs7.detached\r\n"
 			 + "Name of the signer: Dave Specimen\r\n" + "Signed on: 2016-02-23\r\n" + "Location: \r\n"
@@ -64,7 +65,7 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 			 + "Encryption algorithm: RSA\r\n" + "Filter subtype: /ETSI.CAdES.detached\r\n" + "Name of the signer: Bruno Specimen\r\n"
 			 + "Signed on: 2016-02-23\r\n" + "Location: Ghent\r\n" + "Reason: Test 4\r\n" + "Contact info: \r\n"
 			 + "Signature type: approval\r\n" + "Filling out fields allowed: True\r\n" + "Adding annotations allowed: True\r\n"
-			 + "\r\n" + "===== Signature1 =====\r\n" + "\r\n" + "Field on page 1; llx: 46,0674, lly: 472,172, urx: 332,563; ury: 726,831\r\n"
+			 + "\r\n" + "===== Signature1 =====\r\n" + "\r\n" + "Field on page 1; llx: 46.0674, lly: 472.172, urx: 332.563; ury: 726.831\r\n"
 			 + "Signature covers whole document: True\r\n" + "Document revision: 1 of 1\r\n" + "Integrity check OK? True\r\n"
 			 + "Digest algorithm: SHA256\r\n" + "Encryption algorithm: RSA\r\n" + "Filter subtype: /adbe.pkcs7.detached\r\n"
 			 + "Name of the signer: Bruno Specimen\r\n" + "Alternative name of the signer: Bruno L. Specimen\r\n"
@@ -106,7 +107,8 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 				else
 				{
 					System.Console.Out.WriteLine(String.Format("Field on page {0}; llx: {1}, lly: {2}, urx: {3}; ury: {4}"
-						, pageNum, pos.GetLeft(), pos.GetBottom(), pos.GetRight(), pos.GetTop()));
+                        , pageNum, pos.GetLeft().ToString(CultureInfo.InvariantCulture), pos.GetBottom().ToString(CultureInfo.InvariantCulture),
+                        pos.GetRight().ToString(CultureInfo.InvariantCulture), pos.GetTop().ToString(CultureInfo.InvariantCulture)));
 				}
 			}
 			PdfPKCS7 pkcs7 = base.VerifySignature(signUtil, name);
