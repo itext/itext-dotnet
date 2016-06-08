@@ -21,7 +21,7 @@ namespace iTextSharp.Signatures
 			.TestDirectory + "/test/itextsharp/signatures/";
 
 		public static readonly String keystorePath = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/../../resources/itextsharp/signatures/ks.p12";
+			.TestDirectory + "/../../resources/itextsharp/signatures/ks";
 
 		public static readonly char[] password = "password".ToCharArray();
 
