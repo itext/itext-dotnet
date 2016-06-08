@@ -168,8 +168,8 @@ namespace iTextSharp.Signatures
 					Asn1Set set = (Asn1Set)e.Current;
 					for (int i = 0; i < set.Count; i++)
 					{
-						Asn1Sequence s = (Asn1Sequence)set.GetObjectAt(i);
-						String id = DefaultSymbols.Get((DerObjectIdentifier)s.GetObjectAt(0));
+						Asn1Sequence s = (Asn1Sequence)set[i];
+						String id = DefaultSymbols.Get((DerObjectIdentifier)s[0]);
 						if (id == null)
 						{
 							continue;
@@ -180,7 +180,7 @@ namespace iTextSharp.Signatures
 							vs = new List<String>();
 							values[id] = vs;
 						}
-						vs.Add(((DerStringBase)s.GetObjectAt(1)).GetString());
+						vs.Add(((DerStringBase)s[1]).GetString());
 					}
 				}
 			}
@@ -358,8 +358,7 @@ namespace iTextSharp.Signatures
 			{
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
 				Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
-				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is Asn1TaggedObject ? 3 : 2
-					);
+				return (Asn1Object)seq[seq[0] is Asn1TaggedObject ? 3 : 2];
 			}
 			catch (System.IO.IOException e)
 			{
@@ -397,8 +396,7 @@ namespace iTextSharp.Signatures
 			{
 				Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
 				Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
-				return (Asn1Object)seq.GetObjectAt(seq.GetObjectAt(0) is Asn1TaggedObject ? 5 : 4
-					);
+				return (Asn1Object)seq[seq[0] is Asn1TaggedObject ? 5 : 4];
 			}
 			catch (System.IO.IOException e)
 			{

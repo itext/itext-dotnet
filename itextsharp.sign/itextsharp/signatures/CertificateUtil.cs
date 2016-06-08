@@ -148,19 +148,19 @@ namespace iTextSharp.Signatures
 				Asn1Sequence AccessDescriptions = (Asn1Sequence)obj;
 				for (int i = 0; i < AccessDescriptions.Count; i++)
 				{
-					Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions.GetObjectAt(i);
+					Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions[i];
 					if (AccessDescription.Count != 2)
 					{
 						continue;
 					}
 					else
 					{
-						if (AccessDescription.GetObjectAt(0) is DerObjectIdentifier)
+						if (AccessDescription[0] is DerObjectIdentifier)
 						{
-							DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription.GetObjectAt(0);
+							DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription[0];
 							if (SecurityIDs.ID_OCSP.Equals(id.Id))
 							{
-								Asn1Object description = (Asn1Object)AccessDescription.GetObjectAt(1);
+								Asn1Object description = (Asn1Object)AccessDescription[1];
 								String AccessLocation = GetStringFromGeneralName(description);
 								if (AccessLocation == null)
 								{
@@ -201,7 +201,7 @@ namespace iTextSharp.Signatures
 				DerOctetString octets = (DerOctetString)asn1obj;
 				asn1obj = Asn1Object.FromByteArray(octets.GetOctets());
 				Asn1Sequence asn1seq = Asn1Sequence.GetInstance(asn1obj);
-				return GetStringFromGeneralName(asn1seq.GetObjectAt(1).ToAsn1Object());
+				return GetStringFromGeneralName(asn1seq[1].ToAsn1Object());
 			}
 			catch (System.IO.IOException)
 			{

@@ -194,13 +194,13 @@ namespace iTextSharp.Signatures
 					throw new ArgumentException(PdfException.NotAValidPkcs7ObjectNotASequence);
 				}
 				Asn1Sequence signedData = (Asn1Sequence)pkcs;
-				DerObjectIdentifier objId = (DerObjectIdentifier)signedData.GetObjectAt(0);
+				DerObjectIdentifier objId = (DerObjectIdentifier)signedData[0];
 				if (!objId.Id.Equals(SecurityIDs.ID_PKCS7_SIGNED_DATA))
 				{
 					throw new ArgumentException(PdfException.NotAValidPkcs7ObjectNotSignedData);
 				}
-				Asn1Sequence content = (Asn1Sequence)((Asn1TaggedObject)signedData.GetObjectAt(1)
-					).GetObject();
+				Asn1Sequence content = (Asn1Sequence)((Asn1TaggedObject)signedData[1]).GetObject(
+					);
 				// the positions that we care are:
 				//     0 - version
 				//     1 - digestAlgorithms
@@ -208,26 +208,26 @@ namespace iTextSharp.Signatures
 				//     (the certificates and crls are taken out by other means)
 				//     last - signerInfos
 				// the version
-				version = ((DerInteger)content.GetObjectAt(0)).Value.IntValue;
+				version = ((DerInteger)content[0]).Value.IntValue;
 				// the digestAlgorithms
 				digestalgos = new HashSet<String>();
-				IEnumerator e_1 = ((Asn1Set)content.GetObjectAt(1)).GetObjects();
+				IEnumerator e_1 = ((Asn1Set)content[1]).GetObjects();
 				while (e_1.MoveNext())
 				{
 					Asn1Sequence s = (Asn1Sequence)e_1.Current;
-					DerObjectIdentifier o = (DerObjectIdentifier)s.GetObjectAt(0);
+					DerObjectIdentifier o = (DerObjectIdentifier)s[0];
 					digestalgos.Add(o.Id);
 				}
 				// the possible ID_PKCS7_DATA
-				Asn1Sequence rsaData = (Asn1Sequence)content.GetObjectAt(2);
+				Asn1Sequence rsaData = (Asn1Sequence)content[2];
 				if (rsaData.Count > 1)
 				{
-					Asn1OctetString rsaDataContent = (Asn1OctetString)((Asn1TaggedObject)rsaData.GetObjectAt
-						(1)).GetObject();
+					Asn1OctetString rsaDataContent = (Asn1OctetString)((Asn1TaggedObject)rsaData[1]).
+						GetObject();
 					RSAdata = rsaDataContent.GetOctets();
 				}
 				int next = 3;
-				while (content.GetObjectAt(next) is Asn1TaggedObject)
+				while (content[next] is Asn1TaggedObject)
 				{
 					++next;
 				}
@@ -270,24 +270,24 @@ namespace iTextSharp.Signatures
 				}
 				*/
 				// the signerInfos
-				Asn1Set signerInfos = (Asn1Set)content.GetObjectAt(next);
+				Asn1Set signerInfos = (Asn1Set)content[next];
 				if (signerInfos.Count != 1)
 				{
 					throw new ArgumentException(PdfException.ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime
 						);
 				}
-				Asn1Sequence signerInfo = (Asn1Sequence)signerInfos.GetObjectAt(0);
+				Asn1Sequence signerInfo = (Asn1Sequence)signerInfos[0];
 				// the positions that we care are
 				//     0 - version
 				//     1 - the signing certificate issuer and serial number
 				//     2 - the digest algorithm
 				//     3 or 4 - digestEncryptionAlgorithm
 				//     4 or 5 - encryptedDigest
-				signerversion = ((DerInteger)signerInfo.GetObjectAt(0)).Value.IntValue;
+				signerversion = ((DerInteger)signerInfo[0]).Value.IntValue;
 				// Get the signing certificate
-				Asn1Sequence issuerAndSerialNumber = (Asn1Sequence)signerInfo.GetObjectAt(1);
+				Asn1Sequence issuerAndSerialNumber = (Asn1Sequence)signerInfo[1];
 				X509Name issuer = SignUtils.GetIssuerX509Name(issuerAndSerialNumber);
-				BigInteger serialNumber = ((DerInteger)issuerAndSerialNumber.GetObjectAt(1)).Value;
+				BigInteger serialNumber = ((DerInteger)issuerAndSerialNumber[1]).Value;
 				foreach (Object element in certs)
 				{
 					X509Certificate cert = (X509Certificate)element;
@@ -303,35 +303,34 @@ namespace iTextSharp.Signatures
 						(issuer.ToString() + " / " + serialNumber.ToString(16));
 				}
 				SignCertificateChain();
-				digestAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo.GetObjectAt(
-					2)).GetObjectAt(0)).Id;
+				digestAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo[2])[0]).Id;
 				next = 3;
 				bool foundCades = false;
-				if (signerInfo.GetObjectAt(next) is Asn1TaggedObject)
+				if (signerInfo[next] is Asn1TaggedObject)
 				{
-					Asn1TaggedObject tagsig = (Asn1TaggedObject)signerInfo.GetObjectAt(next);
+					Asn1TaggedObject tagsig = (Asn1TaggedObject)signerInfo[next];
 					Asn1Set sseq = Asn1Set.GetInstance(tagsig, false);
 					sigAttr = sseq.GetEncoded();
 					// maybe not necessary, but we use the following line as fallback:
 					sigAttrDer = sseq.GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der);
 					for (int k = 0; k < sseq.Count; ++k)
 					{
-						Asn1Sequence seq2 = (Asn1Sequence)sseq.GetObjectAt(k);
-						String idSeq2 = ((DerObjectIdentifier)seq2.GetObjectAt(0)).Id;
+						Asn1Sequence seq2 = (Asn1Sequence)sseq[k];
+						String idSeq2 = ((DerObjectIdentifier)seq2[0]).Id;
 						if (idSeq2.Equals(SecurityIDs.ID_MESSAGE_DIGEST))
 						{
-							Asn1Set set = (Asn1Set)seq2.GetObjectAt(1);
-							digestAttr = ((Asn1OctetString)set.GetObjectAt(0)).GetOctets();
+							Asn1Set set = (Asn1Set)seq2[1];
+							digestAttr = ((Asn1OctetString)set[0]).GetOctets();
 						}
 						else
 						{
 							if (idSeq2.Equals(SecurityIDs.ID_ADBE_REVOCATION))
 							{
-								Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
-								Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
+								Asn1Set setout = (Asn1Set)seq2[1];
+								Asn1Sequence seqout = (Asn1Sequence)setout[0];
 								for (int j = 0; j < seqout.Count; ++j)
 								{
-									Asn1TaggedObject tg = (Asn1TaggedObject)seqout.GetObjectAt(j);
+									Asn1TaggedObject tg = (Asn1TaggedObject)seqout[j];
 									if (tg.TagNo == 0)
 									{
 										Asn1Sequence seqin = (Asn1Sequence)tg.GetObject();
@@ -348,8 +347,8 @@ namespace iTextSharp.Signatures
 							{
 								if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V1))
 								{
-									Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
-									Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
+									Asn1Set setout = (Asn1Set)seq2[1];
+									Asn1Sequence seqout = (Asn1Sequence)setout[0];
 									SigningCertificate sv2 = SigningCertificate.GetInstance(seqout);
 									EssCertID[] cerv2m = sv2.GetCerts();
 									EssCertID cerv2 = cerv2m[0];
@@ -368,8 +367,8 @@ namespace iTextSharp.Signatures
 								{
 									if (isCades && idSeq2.Equals(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2))
 									{
-										Asn1Set setout = (Asn1Set)seq2.GetObjectAt(1);
-										Asn1Sequence seqout = (Asn1Sequence)setout.GetObjectAt(0);
+										Asn1Set setout = (Asn1Set)seq2[1];
+										Asn1Sequence seqout = (Asn1Sequence)setout[0];
 										SigningCertificateV2 sv2 = SigningCertificateV2.GetInstance(seqout);
 										EssCertIDv2[] cerv2m = sv2.GetCerts();
 										EssCertIDv2 cerv2 = cerv2m[0];
@@ -401,22 +400,21 @@ namespace iTextSharp.Signatures
 				{
 					throw new ArgumentException("CAdES ESS information missing.");
 				}
-				digestEncryptionAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo.GetObjectAt
-					(next++)).GetObjectAt(0)).Id;
-				digest = ((Asn1OctetString)signerInfo.GetObjectAt(next++)).GetOctets();
-				if (next < signerInfo.Count && signerInfo.GetObjectAt(next) is Asn1TaggedObject)
+				digestEncryptionAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo[next
+					++])[0]).Id;
+				digest = ((Asn1OctetString)signerInfo[next++]).GetOctets();
+				if (next < signerInfo.Count && signerInfo[next] is Asn1TaggedObject)
 				{
-					Asn1TaggedObject taggedObject = (Asn1TaggedObject)signerInfo.GetObjectAt(next);
+					Asn1TaggedObject taggedObject = (Asn1TaggedObject)signerInfo[next];
 					Asn1Set unat = Asn1Set.GetInstance(taggedObject, false);
 					Org.BouncyCastle.Asn1.Cms.AttributeTable attble = new Org.BouncyCastle.Asn1.Cms.AttributeTable
 						(unat);
-					Org.BouncyCastle.Asn1.Cms.Attribute ts = attble.Get(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdAASignatureTimeStampToken
-						);
+					Org.BouncyCastle.Asn1.Cms.Attribute ts = attble[Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdAASignatureTimeStampToken
+						];
 					if (ts != null && ts.AttrValues.Count > 0)
 					{
 						Asn1Set attributeValues = ts.AttrValues;
-						Asn1Sequence tokenSequence = Asn1Sequence.GetInstance(attributeValues.GetObjectAt
-							(0));
+						Asn1Sequence tokenSequence = Asn1Sequence.GetInstance(attributeValues[0]);
 						ContentInfo contentInfo = ContentInfo.GetInstance(tokenSequence);
 						this.timeStampToken = new TimeStampToken(contentInfo);
 					}
@@ -1276,7 +1274,7 @@ namespace iTextSharp.Signatures
 				crls = new List<X509Crl>();
 				for (int k = 0; k < seq.Count; ++k)
 				{
-					MemoryStream ar = new MemoryStream(seq.GetObjectAt(k).ToAsn1Object().GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der
+					MemoryStream ar = new MemoryStream(seq[k].ToAsn1Object().GetEncoded(Org.BouncyCastle.Asn1.Asn1Encodable.Der
 						));
 					X509Crl crl = (X509Crl)SignUtils.ParseCrlFromStream(ar);
 					crls.Add(crl);
@@ -1337,23 +1335,23 @@ namespace iTextSharp.Signatures
 			bool ret = false;
 			while (true)
 			{
-				if (seq.GetObjectAt(0) is DerObjectIdentifier && ((DerObjectIdentifier)seq.GetObjectAt
-					(0)).Id.Equals(OcspObjectIdentifiers.PkixOcspBasic.Id))
+				if (seq[0] is DerObjectIdentifier && ((DerObjectIdentifier)seq[0]).Id.Equals(OcspObjectIdentifiers
+					.PkixOcspBasic.Id))
 				{
 					break;
 				}
 				ret = true;
 				for (int k = 0; k < seq.Count; ++k)
 				{
-					if (seq.GetObjectAt(k) is Asn1Sequence)
+					if (seq[k] is Asn1Sequence)
 					{
-						seq = (Asn1Sequence)seq.GetObjectAt(0);
+						seq = (Asn1Sequence)seq[0];
 						ret = false;
 						break;
 					}
-					if (seq.GetObjectAt(k) is Asn1TaggedObject)
+					if (seq[k] is Asn1TaggedObject)
 					{
-						Asn1TaggedObject tag = (Asn1TaggedObject)seq.GetObjectAt(k);
+						Asn1TaggedObject tag = (Asn1TaggedObject)seq[k];
 						if (tag.GetObject() is Asn1Sequence)
 						{
 							seq = (Asn1Sequence)tag.GetObject();
@@ -1371,7 +1369,7 @@ namespace iTextSharp.Signatures
 					return;
 				}
 			}
-			Asn1OctetString os = (Asn1OctetString)seq.GetObjectAt(1);
+			Asn1OctetString os = (Asn1OctetString)seq[1];
 			Asn1InputStream inp = new Asn1InputStream(os.GetOctets());
 			BasicOcspResponse resp = BasicOcspResponse.GetInstance(inp.ReadObject());
 			basicResp = new BasicOcspResp(resp);
