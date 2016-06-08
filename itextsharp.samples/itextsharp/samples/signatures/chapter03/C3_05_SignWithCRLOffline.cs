@@ -19,6 +19,7 @@ using Org.BouncyCastle.X509;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Signatures;
+using NUnit.Framework;
 using Org.BouncyCastle.Pkcs;
 
 namespace iTextSharp.Samples.Signatures.Chapter03
@@ -78,6 +79,7 @@ namespace iTextSharp.Samples.Signatures.Chapter03
 		/// <exception cref="System.Exception"/>
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
 		[NUnit.Framework.Test]
+        [Timeout(60000)]
 		public override void RunTest()
         {
             Directory.CreateDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/resources/signatures/chapter03/");
