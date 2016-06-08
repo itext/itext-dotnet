@@ -10,6 +10,7 @@ namespace itextsharp.profiling.itextsharp.profiling.test
             .TestDirectory + "/../../resources/itextsharp/profiling/PdfDocumentTest/";
 
         [Test]
+        [Timeout(300000)]
         public void Test() {
             AppendContentStream(sourceFolder + "100000PagesDocumentWithFullCompression.pdf", true, 1.48f);
         }

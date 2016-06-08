@@ -74,7 +74,7 @@ namespace itextsharp.profiling.itextsharp.profiling.test
                     document.Close();
                 }
                 catch (IOException e) {
-                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine(e.Message);
                 }
             }
         }

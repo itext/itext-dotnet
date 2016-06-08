@@ -17,6 +17,7 @@ namespace itextsharp.profiling.itextsharp.profiling.test
             .TestDirectory + "/../../resources/itextsharp/profiling/PdfCopyTest/";
 
         [Test]
+        [Timeout(300000)]
         public void CopyPagesTest() {
             int runCount = 10;
             long iText5Time = 0;

@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="itextsharp\profiling\test\LayoutTest.cs" />
     <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformanceTest.cs" />
     <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformancePartialTest.cs" />
     <Compile Include="itextsharp\profiling\test\PdfReaderComparePerformancePartialFullCompressionTest.cs" />
