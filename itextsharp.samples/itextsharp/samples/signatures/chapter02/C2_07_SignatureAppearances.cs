@@ -55,7 +55,7 @@ namespace iTextSharp.Samples.Signatures.Chapter02
 			appearance.SetLocation(location);
 			appearance.SetReuseAppearance(false);
 			signer.SetFieldName(name);
-			appearance.SetLayer2Text("Signed on " + new DateTime().ToString());
+			appearance.SetLayer2Text("Signed on " + DateTime.Now);
 			appearance.SetRenderingMode(renderingMode);
 			appearance.SetSignatureGraphic(image);
 			// Creating the signature

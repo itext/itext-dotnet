@@ -993,7 +993,7 @@ namespace iTextSharp.Signatures
 						byte[] buf = new byte[8192];
 						while (length > 0)
 						{
-							int r = raf.Read(buf, 0, (int)Math.Min((long)buf.Length, length));
+							int r = raf.JRead(buf, 0, (int)Math.Min((long)buf.Length, length));
 							if (r < 0)
 							{
 								throw new EndOfStreamException("unexpected eof");

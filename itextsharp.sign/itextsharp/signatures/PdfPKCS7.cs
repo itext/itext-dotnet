@@ -169,7 +169,7 @@ namespace iTextSharp.Signatures
 		/// <param name="filterSubtype">the filtersubtype</param>
 		/// <param name="provider">the provider or <code>null</code> for the default provider
 		/// 	</param>
-		public PdfPKCS7(byte[] contentsKey, PdfName filterSubtype, String provider)
+		public PdfPKCS7(byte[] contentsKey, PdfName filterSubtype)
 		{
 			this.filterSubtype = filterSubtype;
 			isTsp = PdfName.ETSI_RFC3161.Equals(filterSubtype);

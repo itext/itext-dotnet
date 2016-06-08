@@ -319,7 +319,7 @@ namespace iTextSharp.Signatures
 					CRLVerifier crlVerifier = new CRLVerifier(null, null);
 					crlVerifier.SetRootStore(rootStore);
 					crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-					crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentTime
+					crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentUtcTime
 						());
 					return;
 				}

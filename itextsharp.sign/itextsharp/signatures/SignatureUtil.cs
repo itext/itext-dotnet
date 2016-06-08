@@ -88,23 +88,10 @@ namespace iTextSharp.Signatures
 		/// <see cref="PdfPKCS7"/>
 		/// object.
 		/// </remarks>
-		/// <param name="name">String the signature field name</param>
-		/// <returns>PdfPKCS7 object to continue the verification</returns>
-		public virtual PdfPKCS7 VerifySignature(String name)
-		{
-			return VerifySignature(name, null);
-		}
-
-		/// <summary>Verifies a signature.</summary>
-		/// <remarks>
-		/// Verifies a signature. Further verification can be done on the returned
-		/// <see cref="PdfPKCS7"/>
-		/// object.
-		/// </remarks>
 		/// <param name="name">the signature field name</param>
 		/// <param name="provider">the provider or null for the default provider</param>
 		/// <returns>PdfPKCS7 object to continue the verification</returns>
-		public virtual PdfPKCS7 VerifySignature(String name, String provider)
+		public virtual PdfPKCS7 VerifySignature(String name)
 		{
 			PdfDictionary v = GetSignatureDictionary(name);
 			if (v == null)
@@ -128,8 +115,7 @@ namespace iTextSharp.Signatures
 				}
 				else
 				{
-					pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), sub, provider
-						);
+					pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), sub);
 				}
 				UpdateByteRange(pk, v);
 				PdfString str = v.GetAsString(PdfName.M);

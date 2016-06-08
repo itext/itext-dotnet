@@ -103,7 +103,7 @@ namespace iTextSharp.Signatures
 			this.sgnUtil = new SignatureUtil(document);
 			IList<String> names = sgnUtil.GetSignatureNames();
 			signatureName = names[names.Count - 1];
-			this.signDate = SignUtils.GetCurrentTime();
+			this.signDate = SignUtils.GetCurrentUtcTime();
 			pkcs7 = CoversWholeDocument();
 			LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
 				 : "", signatureName));
