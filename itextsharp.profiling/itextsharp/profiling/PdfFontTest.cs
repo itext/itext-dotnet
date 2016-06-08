@@ -63,7 +63,7 @@ namespace iTextSharp.Profiling
                     PdfFont times = PdfFontFactory.CreateFont(FontProgramFactory.CreateFont(FontConstants.TIMES_ROMAN));
                     PdfFont kozmin = PdfFontFactory.CreateFont(FontProgramFactory.CreateFont("KozMinPro-Regular"), "78-EUC-H");
 
-                    byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(sourceFolder + "abserif4_5.ttf", FileMode.Open));
+                    byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(sourceFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfFont serif = PdfFontFactory.CreateFont(FontProgramFactory.CreateFont("Aboriginal Serif.ttf", ttf, false));
 
                     document.Add(new Paragraph("Hello, world-helvetica!").SetFont(helvetica));

@@ -27,7 +27,7 @@ namespace iTextSharp.Profiling
             {
                 {
                     long t1 = DateTime.Now.Ticks;
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     int pageCount = reader.NumberOfPages;
                     for (int k = 1; k < pageCount + 1; k++)
                     {
@@ -75,7 +75,7 @@ namespace iTextSharp.Profiling
             {
                 {
                     long t1 = DateTime.Now.Ticks;
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     int pageCount = reader.NumberOfPages;
                     for (int k = 1; k < pageCount + 1; k += 10)
                     {

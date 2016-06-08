@@ -60,7 +60,7 @@ namespace iTextSharp.Profiling
                     long t1 = DateTime.Now.Ticks;
                     Document.Compress = false;
                     String filename2 = String.Format("{0}removeThreePagesIText5{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     reader.SelectPages(pagesToKeep);
                     PdfStamper stamper = new PdfStamper(reader, new FileStream(filename2, FileMode.Create));
@@ -71,7 +71,7 @@ namespace iTextSharp.Profiling
                 {
                     long t1 = DateTime.Now.Ticks;
                     String filename2 = String.Format("{0}removeThreePagesIText7{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
-                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfWriter writer = new PdfWriter(new FileStream(filename2, FileMode.Create),
                             new WriterProperties().SetFullCompressionMode(fullCompression));
                     writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -110,7 +110,7 @@ namespace iTextSharp.Profiling
                     long t1 = DateTime.Now.Ticks;
                     Document.Compress = false;
                     String filename2 = String.Format("{0}leaveThreePagesIText5{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     reader.SelectPages(pagesToKeep);
                     PdfStamper stamper = new PdfStamper(reader, new FileStream(filename2, FileMode.Create));
@@ -121,7 +121,7 @@ namespace iTextSharp.Profiling
                 {
                     long t1 = DateTime.Now.Ticks;
                     String filename2 = String.Format("{0}leaveThreePagesIText7{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
-                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfWriter writer = new PdfWriter(new FileStream(filename2, FileMode.Create),
                             new WriterProperties().SetFullCompressionMode(fullCompression));
                     writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -159,7 +159,7 @@ namespace iTextSharp.Profiling
                     Document.Compress = false;
                     String filename2 = String.Format("{0}changeMediaBoxIText5{1}.pdf", destinationFolder, fullCompression ? "WithFC":"");
 
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfStamper stamper = new PdfStamper(reader, new FileStream(filename2, FileMode.Create));
                     if (fullCompression) stamper.SetFullCompression();
                     for (int p = 1; p <= reader.NumberOfPages; p++){
@@ -175,7 +175,7 @@ namespace iTextSharp.Profiling
                     long t1 = DateTime.Now.Ticks;
                     String filename2 = String.Format("{0}changeMediaBoxIText7{1}.pdf", destinationFolder, fullCompression ? "WithFC":"");
 
-                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfWriter writer = new PdfWriter(new FileStream(filename2, FileMode.Create),
                             new WriterProperties().SetFullCompressionMode(fullCompression));
                     writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -216,7 +216,7 @@ namespace iTextSharp.Profiling
                     Document.Compress = false;
                     String filename2 = String.Format("{0}appendContentStreamIText5{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
 
-                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open));
+                    iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfStamper stamper = new PdfStamper(reader, new FileStream(filename2, FileMode.Create));
                     if (fullCompression) stamper.SetFullCompression();
                     for (int p = 1; p <= reader.NumberOfPages; p++)
@@ -239,7 +239,7 @@ namespace iTextSharp.Profiling
                     long t1 = DateTime.Now.Ticks;
                     String filename2 = String.Format("{0}changeMediaBoxIText7{1}.pdf", destinationFolder, fullCompression ? "WithFC" : "");
 
-                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open));
+                    PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                     PdfWriter writer = new PdfWriter(new FileStream(filename2, FileMode.Create),
                             new WriterProperties().SetFullCompressionMode(fullCompression));
                     writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);

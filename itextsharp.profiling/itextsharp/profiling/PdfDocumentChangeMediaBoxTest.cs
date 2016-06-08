@@ -12,7 +12,7 @@ namespace iTextSharp.Profiling
         [Test]
         [Timeout(300000)]
         public void Test() {
-            ChangeMediaBox(sourceFolder + "100000PagesDocument.pdf", false, 1.50f);
+            ChangeMediaBox(sourceFolder + "100000PagesDocument.pdf", false, 1.35f);
         }
     }
 }
