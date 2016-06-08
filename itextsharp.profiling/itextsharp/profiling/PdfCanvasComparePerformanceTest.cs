@@ -6,7 +6,7 @@ namespace iTextSharp.Profiling
     class PdfCanvasComparePerformanceTest : PdfCanvasTest
     {
         [Test]
-        [Timeout(300000)]
+        [Ignore("")]
         public void Test() {
             ComparePerformance(false, 1.15f);
         }
