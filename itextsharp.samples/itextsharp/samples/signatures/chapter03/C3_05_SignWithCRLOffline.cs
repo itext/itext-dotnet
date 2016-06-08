@@ -60,7 +60,7 @@ namespace iTextSharp.Samples.Signatures.Chapter03
 			FileStream @is = new FileStream(CRLURL, FileMode.Open, FileAccess.Read);
 			MemoryStream baos = new MemoryStream();
 			byte[] buf = new byte[1024];
-			while (@is.Read(buf, 0, buf.Length) != -1)
+			while (@is.Read(buf, 0, buf.Length) != 0)
 			{
                 baos.Write(buf, 0, buf.Length);
 			}
