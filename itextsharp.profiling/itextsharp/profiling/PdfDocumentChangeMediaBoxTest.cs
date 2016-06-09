@@ -10,7 +10,7 @@ namespace iTextSharp.Profiling
             .TestDirectory + "/../../resources/itextsharp/profiling/PdfDocumentTest/";
 
         [Test]
-        [Ignore("")]
+        [Timeout(300000)]
         public void Test() {
             ChangeMediaBox(sourceFolder + "100000PagesDocument.pdf", false, 1.35f);
         }
