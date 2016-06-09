@@ -470,8 +470,10 @@ namespace iTextSharp.Layout.Renderer
 			float wordSpacing = ratio * baseFactor;
 			float characterSpacing = (1 - ratio) * baseFactor;
 			float lastRightPos = occupiedArea.GetBBox().GetX();
-			for (IEnumerator<IRenderer> iterator = childRenderers.GetEnumerator(); iterator.MoveNext
-				(); )
+		    IEnumerator<IRenderer> iterator = childRenderers.GetEnumerator();
+            // true only if the collection is empty
+            bool isLastTextRenderer = !iterator.MoveNext();
+            while (!isLastTextRenderer)
 			{
 				IRenderer child = iterator.Current;
 				float childX = child.GetOccupiedArea().GetBBox().GetX();
@@ -485,7 +487,7 @@ namespace iTextSharp.Layout.Renderer
 						 / childHSCale);
 					child.SetProperty(iTextSharp.Layout.Property.Property.WORD_SPACING, wordSpacing /
 						 childHSCale);
-					bool isLastTextRenderer = !iterator.MoveNext();
+					isLastTextRenderer = !iterator.MoveNext();
 					float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() -
 						 1) : ((TextRenderer)child).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer
 						)child).GetNumberOfSpaces();
