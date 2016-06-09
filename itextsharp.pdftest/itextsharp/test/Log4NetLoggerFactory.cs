@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Log;
 using iTextSharp.Test;
 
-namespace itextsharp.test
+namespace iTextSharp.Test
 {
     public class Log4NetLoggerFactory : ILoggerFactory
     {

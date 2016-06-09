@@ -14,7 +14,6 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.Collections.Generic;
 using System.IO;
-using itextsharp.test;
 using iTextSharp.IO.Log;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;

@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace itextsharp.io.util.Collections {
+namespace iTextSharp.IO.Util.Collections
+{
     internal class EmptySet<T> : ISet<T> {
         public IEnumerator<T> GetEnumerator() {
             yield break;

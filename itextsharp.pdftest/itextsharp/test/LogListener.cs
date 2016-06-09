@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using itextsharp.test;
 using iTextSharp.IO.Log;
 using iTextSharp.Test.Attributes;
 using log4net;

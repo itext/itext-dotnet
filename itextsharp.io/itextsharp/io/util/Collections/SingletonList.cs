@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace itextsharp.io.util.Collections {
+namespace iTextSharp.IO.Util.Collections
+{
     internal class SingletonList<T> : IList<T> {
         private readonly T element;
 

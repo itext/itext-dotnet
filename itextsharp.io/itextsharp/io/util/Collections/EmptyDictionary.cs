@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace itextsharp.io.util.Collections {
+namespace iTextSharp.IO.Util.Collections {
     internal class EmptyDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
             yield break;

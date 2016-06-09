@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using itextsharp.io.util.Collections;
+using iTextSharp.IO.Util.Collections;
 
 namespace iTextSharp.IO.Util {
     public static class JavaCollectionsUtil {
