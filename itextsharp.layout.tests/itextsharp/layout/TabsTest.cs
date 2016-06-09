@@ -38,7 +38,7 @@ namespace iTextSharp.Layout
 			 + "space anchor:\t2012 203\tslash anchor:\t2024\\2\tdot anchor:\t20421.333452\n"
 			 + "space anchor:\t201212 0423\tslash anchor:\t2067867824\\67867812\tdot anchor:\t21.32131232\n"
 			 + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
-			 + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292\n";
+			 + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
 		[NUnit.Framework.TestFixtureSetUp]
 		public static void BeforeClass()

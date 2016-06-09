@@ -646,7 +646,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				nextTabStopEntry = tabStops.HigherEntry(curWidth);
 			}
-			if (nextTabStopEntry != null)
+            if (!nextTabStopEntry.Equals(default(KeyValuePair<float, TabStop>)))
 			{
 				nextTabStop = ((KeyValuePair<float, TabStop>)nextTabStopEntry).Value;
 			}

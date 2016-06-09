@@ -69,13 +69,16 @@ namespace iTextSharp.Layout
             return 0 == queue.Count();
         }
 
-        public static KeyValuePair<K, V> HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key)
+        public static KeyValuePair<K, V> HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) 
         {
             List<K> list = dict.Keys.ToList();
             int index = list.BinarySearch(key, dict.Comparer);
             if (index < 0) {
                 index = ~index;
-            } 
+            }
+            else {
+                index++;
+            }
             if (index == list.Count) 
             {
                 return default(KeyValuePair<K, V>);

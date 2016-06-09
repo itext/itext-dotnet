@@ -16,7 +16,7 @@ namespace iTextSharp.Layout.Property
 			foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields
 				())
 			{
-				if (field.GetType() == typeof(int))
+				if (field.FieldType == typeof(int))
 				{
 					int value = (int)field.GetValue(null);
 					maxFieldValue = Math.Max(maxFieldValue, value);
