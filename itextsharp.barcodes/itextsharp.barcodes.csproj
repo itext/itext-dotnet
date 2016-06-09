@@ -8,7 +8,7 @@
     <ProjectGuid>{DCAE8241-E391-418D-BA36-C7C064D7C413}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>barcodes</AssemblyName>
+    <AssemblyName>itextsharp.barcodes</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
