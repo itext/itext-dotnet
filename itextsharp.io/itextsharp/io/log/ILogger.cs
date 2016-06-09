@@ -43,10 +43,6 @@ namespace iTextSharp.IO.Log
 {
     public interface ILogger {
 
-        ILogger GetLogger(Type klass);
-
-        ILogger GetLogger(String name);
-
         void Warn(String message);
 
         bool IsWarnEnabled();

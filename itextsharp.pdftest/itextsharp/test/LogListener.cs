@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using itextsharp.test;
 using iTextSharp.IO.Log;
 using iTextSharp.Test.Attributes;
+using log4net;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
@@ -14,7 +16,6 @@ namespace iTextSharp.Test
     {
         private static string LEFT_CURLY_BRACES = "{";
         private static string RIGHT_CURLY_BRACES = "}";
-        private Log4NetLogger iLog = new Log4NetLogger();
         private MemoryAppender appender;
 
 		public override void BeforeTest(ITest testDetails)
@@ -114,8 +115,9 @@ namespace iTextSharp.Test
 
         private void Init()
         {
-            LoggerFactory.GetInstance().SetLogger(iLog);
-            IAppender[] iAppenders = iLog.GetILog().Logger.Repository.GetAppenders();
+            ILoggerFactory iLog = new Log4NetLoggerFactory();
+            LoggerFactory.BindFactory(iLog);
+            IAppender[] iAppenders = LogManager.GetRepository().GetAppenders();
             appender = iAppenders[0] as MemoryAppender;
             appender.Clear();
         }

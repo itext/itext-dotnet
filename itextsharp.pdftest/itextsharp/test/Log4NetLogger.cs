@@ -5,16 +5,16 @@ using ILogger = iTextSharp.IO.Log.ILogger;
 
 namespace iTextSharp.Test {
     public class Log4NetLogger : ILogger {
-        private ILog iLog = LogManager.GetLogger("iTextSharp");
 
-        public ILogger GetLogger(Type klass) {
-            iLog = LogManager.GetLogger(klass);
-            return this;
+        private ILog iLog;
+
+        public Log4NetLogger(String name) {
+            iLog = LogManager.GetLogger(name);
         }
 
-        public ILogger GetLogger(string name) {
-            iLog = LogManager.GetLogger(name);
-            return this;
+        public Log4NetLogger(Type type)
+        {
+            iLog = LogManager.GetLogger(type);
         }
 
         public void Warn(string message) {

@@ -52,13 +52,6 @@ namespace iTextSharp.IO.Log
     public sealed class NoOpLogger : ILogger {
 
         /* (non-Javadoc)
-         * @see com.itextpdf.text.log.ILogger#getLogger(java.lang.Class)
-         */
-        public ILogger GetLogger(Type name) {
-            return this;
-        }
-
-        /* (non-Javadoc)
          * @see com.itextpdf.text.log.ILogger#warn(java.lang.String)
          */
         public void Warn(String message) {
@@ -117,13 +110,6 @@ namespace iTextSharp.IO.Log
          * @see com.itextpdf.text.log.ILogger#error(java.lang.String)
          */
         public void Error(String message) {
-        }
-
-        /* (non-Javadoc)
-         * @see com.itextpdf.text.log.ILogger#getLogger(java.lang.String)
-         */
-        public ILogger GetLogger(String name) {
-            return this;
         }
     }
 }

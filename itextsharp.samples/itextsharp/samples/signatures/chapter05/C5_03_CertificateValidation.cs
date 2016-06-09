@@ -14,6 +14,7 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.Collections.Generic;
 using System.IO;
+using itextsharp.test;
 using iTextSharp.IO.Log;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
@@ -40,10 +41,10 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 			 + "Subject: C=BE,ST=OVL,L=Ghent,O=iText Software,OU=IT,CN=Bruno Specimen\r\n" + "Valid from: 2012-08-04\r\n"
 			 + "Valid to: 2112-07-11\r\n" + "The certificate was valid at the time of signing.\r\n"
 			 + "The certificate is still valid.\r\n" + "=== Checking validity of the document at the time of signing ===\r\n"
-             + "iTextSharp.Signatures.OcspClientBouncyCastle: Valid OCSPs found: 0\r\n"
+             + "iTextSharp.Signatures.OCSPVerifier: Valid OCSPs found: 0\r\n"
              + "iTextSharp.Signatures.CRLVerifier: Valid CRLs found: 0\r\n"
 			 + "The signing certificate couldn't be verified\r\n" + "=== Checking validity of the document today ===\r\n"
-             + "iTextSharp.Signatures.CRLVerifier: Valid OCSPs found: 0\r\n"
+             + "iTextSharp.Signatures.OCSPVerifier: Valid OCSPs found: 0\r\n"
              + "iTextSharp.Signatures.CRLVerifier: Valid CRLs found: 0\r\n"
 			 + "The signing certificate couldn't be verified\r\n" + "\r\n";
 
@@ -196,7 +197,7 @@ namespace iTextSharp.Samples.Signatures.Chapter05
 		[NUnit.Framework.Test]
 		public override void RunTest()
 		{
-            LoggerFactory.GetInstance().SetLogger(new Log4NetLogger());
+            LoggerFactory.BindFactory(new Log4NetLoggerFactory());
 			SetupSystemOutput();
 			C5_03_CertificateValidation.Main(null);
 			String sysOut = GetSystemOutput();

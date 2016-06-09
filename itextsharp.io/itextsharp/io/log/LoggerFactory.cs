@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+
 /*
  * $Id$
  *
@@ -48,37 +50,26 @@ namespace iTextSharp.IO.Log
     /// to receive logging statements while developing applications with iText
     /// </summary>
     /// <author>redlab_b</author>
-    public class LoggerFactory {
+    public static class LoggerFactory {
 
-        static LoggerFactory() {
-            myself = new LoggerFactory();
-        }
-
-        private static LoggerFactory myself;
+        private static ILoggerFactory loggerFactory = new NoOpLoggerFactory();
 
         public static ILogger GetLogger(Type klass) {
-            return myself.logger.GetLogger(klass);
+            return loggerFactory.GetLogger(klass);
         }
 
         public static ILogger GetLogger(String name) {
-            return myself.logger.GetLogger(name);
+            return loggerFactory.GetLogger(name);
         }
 
-        public static LoggerFactory GetInstance() {
-            return myself;
+        public static ILoggerFactory GetILoggerFactory() {
+            return loggerFactory;
         }
 
-        private ILogger logger = new NoOpLogger();
-
-        private LoggerFactory() {
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void BindFactory(ILoggerFactory iLoggerFactory) {
+            loggerFactory = iLoggerFactory;
         }
 
-        public virtual void SetLogger(ILogger logger) {
-            this.logger = logger;
-        }
-
-        public virtual ILogger Logger() {
-            return logger;
-        }
     }
 }
