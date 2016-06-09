@@ -23,8 +23,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CreateEmptyDocument()
 		{
-			FileStream fos = new FileStream(destinationFolder + "emptyDocument.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "emptyDocument.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle
@@ -158,8 +158,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CopyObject1()
 		{
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject1_1.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject1_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -181,8 +181,8 @@ namespace iTextSharp.Kernel.Pdf
 			aDirect.Add(new PdfNumber(100));
 			aDirect.Add(new PdfString("string"));
 			catalog1.Put(new PdfName("aDirect"), aDirect);
-			FileStream fos2 = new FileStream(destinationFolder + "copyObject1_2.pdf", FileMode
-				.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copyObject1_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -222,8 +222,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CopyObject2()
 		{
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject2_1.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject2_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -250,8 +250,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject2_1.pdf"
 				));
 			aDirect = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(aDirectName);
-			FileStream fos2 = new FileStream(destinationFolder + "copyObject2_2.pdf", FileMode
-				.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copyObject2_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -290,8 +290,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyObject3()
 		{
 			{
-				FileStream fos1 = new FileStream(destinationFolder + "copyObject3_1.pdf", FileMode
-					.Create);
+				FileStream fos1 = new FileStream(destinationFolder + "copyObject3_1.pdf", FileMode.Create
+					);
 				PdfWriter writer1 = new PdfWriter(fos1);
 				PdfDocument pdfDoc1 = new PdfDocument(writer1);
 				PdfPage page1 = pdfDoc1.AddNewPage();
@@ -311,8 +311,8 @@ namespace iTextSharp.Kernel.Pdf
 				PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject3_1.pdf"
 					));
 				arr1 = (PdfArray)pdfDoc1R.GetCatalog().GetPdfObject().Get(arr1Name);
-				FileStream fos2 = new FileStream(destinationFolder + "copyObject3_2.pdf", FileMode
-					.Create);
+				FileStream fos2 = new FileStream(destinationFolder + "copyObject3_2.pdf", FileMode.Create
+					);
 				PdfWriter writer2 = new PdfWriter(fos2);
 				PdfDocument pdfDoc2 = new PdfDocument(writer2);
 				PdfPage page2 = pdfDoc2.AddNewPage();
@@ -342,8 +342,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CopyObject4()
 		{
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject4_1.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject4_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -361,8 +361,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			stream1 = (PdfStream)pdfDoc1R.GetCatalog().GetPdfObject().Get(new PdfName("stream"
 				));
-			FileStream fos2 = new FileStream(destinationFolder + "copyObject4_2.pdf", FileMode
-				.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copyObject4_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = pdfDoc2.AddNewPage();
@@ -387,8 +387,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CopyObject5()
 		{
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject5_1.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject5_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfDocument pdfDoc1 = new PdfDocument(writer1);
 			PdfPage page1 = pdfDoc1.AddNewPage();
@@ -399,8 +399,8 @@ namespace iTextSharp.Kernel.Pdf
 			PdfDocument pdfDoc1R = new PdfDocument(new PdfReader(destinationFolder + "copyObject5_1.pdf"
 				));
 			page1 = pdfDoc1R.GetPage(1);
-			FileStream fos2 = new FileStream(destinationFolder + "copyObject5_2.pdf", FileMode
-				.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copyObject5_2.pdf", FileMode.Create
+				);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			PdfDocument pdfDoc2 = new PdfDocument(writer2);
 			PdfPage page2 = page1.CopyTo(pdfDoc2);
@@ -429,8 +429,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CopyObject6()
 		{
-			FileStream fos = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
@@ -483,10 +483,10 @@ namespace iTextSharp.Kernel.Pdf
 			String exceptionMessage = null;
 			PdfDocument pdfDoc1;
 			PdfDocument pdfDoc2;
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode
-				.Create);
-			FileStream fos2 = new FileStream(destinationFolder + "copyObject6_2.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode.Create
+				);
+			FileStream fos2 = new FileStream(destinationFolder + "copyObject6_2.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			PdfWriter writer2 = new PdfWriter(fos2);
 			pdfDoc1 = new PdfDocument(writer1);
@@ -525,8 +525,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String exceptionMessage = null;
 			PdfDocument pdfDoc1;
-			FileStream fos1 = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode
-				.Create);
+			FileStream fos1 = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode.Create
+				);
 			PdfWriter writer1 = new PdfWriter(fos1);
 			pdfDoc1 = new PdfDocument(writer1);
 			try
@@ -555,8 +555,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CloseStream1()
 		{
-			FileStream fos = new FileStream(destinationFolder + "closeStream1.pdf", FileMode.
-				Create);
+			FileStream fos = new FileStream(destinationFolder + "closeStream1.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			PdfDocument pdfDoc = new PdfDocument(writer);
 			pdfDoc.AddNewPage();
@@ -575,8 +575,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void CloseStream2()
 		{
-			FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.
-				Create);
+			FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCloseStream(false);
 			PdfDocument pdfDoc = new PdfDocument(writer);

@@ -32,8 +32,8 @@ namespace iTextSharp.Kernel.Pdf
 				, FileAccess.Read);
 			PdfReader reader1 = new PdfReader(fis1);
 			PdfDocument pdfDoc1 = new PdfDocument(reader1);
-			FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode
-				.Create);
+			FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode.Create
+				);
 			PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(fos2));
 			pdfDoc1.CopyPagesTo(1, 1, pdfDoc2);
 			pdfDoc2.Close();
@@ -191,8 +191,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void CopyDocumentsWithFormFieldsTest()
 		{
 			String filename = sourceFolder + "fieldsOn2-sPage.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
+				));
 			FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);

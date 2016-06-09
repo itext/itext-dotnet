@@ -45,8 +45,8 @@ namespace iTextSharp.Kernel.Pdf
 			pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document"
 				);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -101,8 +101,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -150,8 +150,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -201,8 +201,8 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -255,8 +255,8 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -305,8 +305,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -353,8 +353,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -395,14 +395,14 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -445,14 +445,14 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -495,14 +495,14 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -545,14 +545,14 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -594,8 +594,8 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			int newPageCount = 10;
@@ -604,8 +604,8 @@ namespace iTextSharp.Kernel.Pdf
 				NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i_1), "Remove page " + i_1);
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_2 = 1; i_2 <= pdfDoc3.GetNumberOfPages(); i_2++)
 			{
@@ -651,8 +651,8 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			for (int i_1 = pageCount; i_1 > 1; i_1--)
@@ -668,8 +668,8 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_3 = 1; i_3 <= pdfDoc3.GetNumberOfPages(); i_3++)
 			{
@@ -703,8 +703,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filename1 = sourceFolder + "20000PagesDocument.pdf";
 			String filename2 = destinationFolder + "stamping14.pdf";
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--)
@@ -712,8 +712,8 @@ namespace iTextSharp.Kernel.Pdf
 				NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 1; i_1 <= pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -827,15 +827,15 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(false).AddXmpMetadata());
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -881,15 +881,15 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(true).AddXmpMetadata());
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
 			pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -941,8 +941,8 @@ namespace iTextSharp.Kernel.Pdf
 				);
 			pdfDoc2.GetDocumentInfo().SetModified();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -999,8 +999,8 @@ namespace iTextSharp.Kernel.Pdf
 			page2.SetModified();
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -1048,8 +1048,8 @@ namespace iTextSharp.Kernel.Pdf
 				));
 			page2.Flush();
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
 			{
@@ -1100,8 +1100,8 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1155,8 +1155,8 @@ namespace iTextSharp.Kernel.Pdf
 				page2.Flush();
 			}
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1199,14 +1199,14 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1249,15 +1249,15 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(true));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1300,15 +1300,15 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1351,15 +1351,15 @@ namespace iTextSharp.Kernel.Pdf
 				page.Flush();
 			}
 			pdfDoc1.Close();
-			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
+				));
 			PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
 				WriterProperties().SetFullCompressionMode(false));
 			PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
 				UseAppendMode());
 			pdfDoc2.Close();
-			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
+				));
 			PdfDocument pdfDoc3 = new PdfDocument(reader3);
 			for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
 			{
@@ -1443,8 +1443,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void StampingTestWithTaggedStructure()
 		{
 			String filename = sourceFolder + "iphone_user_guide.pdf";
-			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess
-				.Read));
+			PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
+				));
 			FileStream fos = new FileStream(destinationFolder + "stampingDocWithTaggedStructure.pdf"
 				, FileMode.Create);
 			PdfWriter writer = new PdfWriter(fos);

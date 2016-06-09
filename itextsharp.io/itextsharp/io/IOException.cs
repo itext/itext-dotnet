@@ -100,6 +100,8 @@ namespace iTextSharp.IO
 
 		public const String CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d = "ccitt.compression.type.must.be.ccittg4.ccittg3.1d.or.ccittg3.2d";
 
+		public const String TheCmap1WasNotFound = "The CMap {0} was not found";
+
 		public const String ComponentsMustBe1_3Or4 = "components.must.be.1.3.or.4";
 
 		public const String Compression1IsNotSupported = "compression {0} is.not.supported";

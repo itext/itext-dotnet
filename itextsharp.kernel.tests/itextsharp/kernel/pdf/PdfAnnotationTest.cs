@@ -902,8 +902,8 @@ namespace iTextSharp.Kernel.Pdf
 				(FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
 				).EndText().RestoreState();
 			PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-			Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess
-				.Read);
+			Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read
+				);
 			MemoryStream baos = new MemoryStream();
 			int reads = @is.Read();
 			while (reads != -1)

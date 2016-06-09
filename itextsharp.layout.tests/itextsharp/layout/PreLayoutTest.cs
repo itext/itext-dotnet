@@ -76,8 +76,8 @@ namespace iTextSharp.Layout
 		{
 			String outFileName = destinationFolder + "preLayoutTest02.pdf";
 			String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
-				.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+				)));
 			Document document = new Document(pdfDoc, PageSize.Default, false);
 			document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 			StringBuilder text = new StringBuilder();

@@ -860,8 +860,8 @@ namespace iTextSharp.Layout
 			String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
 			String outFileName = destinationFolder + testName;
 			String cmpFileName = sourceFolder + "cmp_" + testName;
-			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode
-				.Create)));
+			PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+				)));
 			Document doc = new Document(pdfDoc);
 			Table table = new Table(1);
 			Cell cell = new Cell();

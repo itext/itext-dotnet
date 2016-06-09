@@ -32,8 +32,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void StructElemTest01()
 		{
-			FileStream fos = new FileStream(destinationFolder + "structElemTest01.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest01.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -84,8 +84,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void StructElemTest02()
 		{
-			FileStream fos = new FileStream(destinationFolder + "structElemTest02.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest02.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -121,8 +121,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void StructElemTest03()
 		{
-			FileStream fos = new FileStream(destinationFolder + "structElemTest03.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest03.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -245,8 +245,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void StructElemTest05()
 		{
-			FileStream fos = new FileStream(destinationFolder + "structElemTest05.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest05.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -292,8 +292,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void StructElemTest06()
 		{
-			FileStream fos = new FileStream(destinationFolder + "structElemTest06.pdf", FileMode
-				.Create);
+			FileStream fos = new FileStream(destinationFolder + "structElemTest06.pdf", FileMode.Create
+				);
 			PdfWriter writer = new PdfWriter(fos);
 			writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
 			PdfDocument document = new PdfDocument(writer);
@@ -325,8 +325,8 @@ namespace iTextSharp.Kernel.Pdf
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest01()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open, FileAccess.Read);
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open
+				, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest01.pdf"
@@ -352,8 +352,8 @@ namespace iTextSharp.Kernel.Pdf
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest02()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open, FileAccess.Read);
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open
+				, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest02.pdf"
@@ -374,8 +374,8 @@ namespace iTextSharp.Kernel.Pdf
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest03()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open, FileAccess.Read);
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open
+				, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest03.pdf"
@@ -397,8 +397,8 @@ namespace iTextSharp.Kernel.Pdf
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest04()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open, FileAccess.Read);
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open
+				, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest04.pdf"
@@ -445,8 +445,8 @@ namespace iTextSharp.Kernel.Pdf
 		[LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
 		public virtual void StructTreeCopyingTest06()
 		{
-			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.
-				Open, FileAccess.Read);
+			FileStream fis = new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open
+				, FileAccess.Read);
 			PdfReader reader = new PdfReader(fis);
 			PdfDocument source = new PdfDocument(reader);
 			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "structTreeCopyingTest06.pdf"

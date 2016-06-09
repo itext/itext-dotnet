@@ -106,8 +106,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void RemoveUnusedObjectsInWriterModeTest()
 		{
 			String filename = "removeUnusedObjectsInWriter.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
-				.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create
+				));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -131,8 +131,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filenameIn = "docWithUnusedObjects_1.pdf";
 			String filenameOut = "removeUnusedObjectsInStamping.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
-				.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
+				));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -159,8 +159,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddUnusedObjectsInWriterModeTest()
 		{
 			String filename = "addUnusedObjectsInWriter.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode
-				.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create
+				));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -184,8 +184,8 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			String filenameIn = "docWithUnusedObjects_2.pdf";
 			String filenameOut = "addUnusedObjectsInStamping.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
-				.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
+				));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -212,8 +212,8 @@ namespace iTextSharp.Kernel.Pdf
 		public virtual void AddUnusedStreamObjectsTest()
 		{
 			String filenameIn = "docWithUnusedObjects_3.pdf";
-			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode
-				.Create));
+			PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
+				));
 			PdfDocument pdfDocument = new PdfDocument(writer);
 			pdfDocument.AddNewPage();
 			PdfDictionary unusedDictionary = new PdfDictionary();
@@ -291,8 +291,8 @@ namespace iTextSharp.Kernel.Pdf
 		[NUnit.Framework.Test]
 		public virtual void ReadEncryptedDocumentWithFullCompression()
 		{
-			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode
-				.Open, FileAccess.Read), new ReaderProperties().SetPassword("123".GetBytes()));
+			PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode.Open
+				, FileAccess.Read), new ReaderProperties().SetPassword("123".GetBytes()));
 			PdfDocument pdfDocument = new PdfDocument(reader);
 			PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
 				.AcroForm);
