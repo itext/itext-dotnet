@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.5.9.0">
-      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\iTextSharp(VS2010)\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.2.1\lib\net40\nunit.framework.dll</HintPath>
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\itextsharp.font-asian\itextsharp.font-asian.csproj">
       <Project>{0F10190C-7611-4378-A157-03BF2ED78E30}</Project>
       <Name>itextsharp.font-asian</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\itextsharp.forms\itextsharp.forms.csproj">
+      <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
+      <Name>itextsharp.forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
