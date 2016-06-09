@@ -24,6 +24,7 @@ namespace iTextSharp.Profiling
         public static void BeforeClass()
         {
             CreateOrClearDestinationFolder(destinationFolder);
+            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itextsharp.font_asian.dll");
         }
 
         public static void CreateOrClearDestinationFolder(String path)
@@ -55,7 +56,7 @@ namespace iTextSharp.Profiling
             {
                 try
                 {
-                    FileStream fos = new FileStream(destinationFolder + Thread.CurrentThread.Name + "_" + i + ".pdf", FileMode.Create);
+                    FileStream fos = new FileStream(destinationFolder + Guid.NewGuid() + "_" + i + ".pdf", FileMode.Create);
                     PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos));
                     Document document = new Document(pdfDocument);
                     PdfFont helvetica = PdfFontFactory.CreateFont(FontProgramFactory.CreateFont());

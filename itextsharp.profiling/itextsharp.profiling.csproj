@@ -51,6 +51,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\itextsharp.font-asian\itextsharp.font-asian.csproj">
+      <Project>{0F10190C-7611-4378-A157-03BF2ED78E30}</Project>
+      <Name>itextsharp.font-asian</Name>
+    </ProjectReference>
     <ProjectReference Include="..\itextsharp.io\itextsharp.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itextsharp.io</Name>
