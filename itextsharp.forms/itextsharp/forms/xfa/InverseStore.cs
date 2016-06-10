@@ -46,56 +46,56 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Forms.Xfa
 {
-	/// <summary>
-	/// A structure to store each part of a SOM name and link it to the next part
-	/// beginning from the lower hierarchy.
-	/// </summary>
-	internal class InverseStore
-	{
-		protected internal IList<String> part = new List<String>();
+    /// <summary>
+    /// A structure to store each part of a SOM name and link it to the next part
+    /// beginning from the lower hierarchy.
+    /// </summary>
+    internal class InverseStore
+    {
+        protected internal IList<String> part = new List<String>();
 
-		protected internal IList<Object> follow = new List<Object>();
+        protected internal IList<Object> follow = new List<Object>();
 
-		/// <summary>
-		/// Gets the full name by traversing the hierarchy using only the
-		/// index 0.
-		/// </summary>
-		/// <returns>the full name</returns>
-		public virtual String GetDefaultName()
-		{
-			InverseStore store = this;
-			while (true)
-			{
-				Object obj = store.follow[0];
-				if (obj is String)
-				{
-					return (String)obj;
-				}
-				store = (InverseStore)obj;
-			}
-		}
+        /// <summary>
+        /// Gets the full name by traversing the hierarchy using only the
+        /// index 0.
+        /// </summary>
+        /// <returns>the full name</returns>
+        public virtual String GetDefaultName()
+        {
+            InverseStore store = this;
+            while (true)
+            {
+                Object obj = store.follow[0];
+                if (obj is String)
+                {
+                    return (String)obj;
+                }
+                store = (InverseStore)obj;
+            }
+        }
 
-		/// <summary>Search the current node for a similar name.</summary>
-		/// <remarks>
-		/// Search the current node for a similar name. A similar name starts
-		/// with the same name but has a different index. For example, "detail[3]"
-		/// is similar to "detail[9]". The main use is to discard names that
-		/// correspond to out of bounds records.
-		/// </remarks>
-		/// <param name="name">the name to search</param>
-		/// <returns><CODE>true</CODE> if a similitude was found</returns>
-		public virtual bool IsSimilar(String name)
-		{
-			int idx = name.IndexOf('[');
-			name = name.JSubstring(0, idx + 1);
-			for (int k = 0; k < part.Count; ++k)
-			{
-				if (part[k].StartsWith(name))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+        /// <summary>Search the current node for a similar name.</summary>
+        /// <remarks>
+        /// Search the current node for a similar name. A similar name starts
+        /// with the same name but has a different index. For example, "detail[3]"
+        /// is similar to "detail[9]". The main use is to discard names that
+        /// correspond to out of bounds records.
+        /// </remarks>
+        /// <param name="name">the name to search</param>
+        /// <returns><CODE>true</CODE> if a similitude was found</returns>
+        public virtual bool IsSimilar(String name)
+        {
+            int idx = name.IndexOf('[');
+            name = name.JSubstring(0, idx + 1);
+            for (int k = 0; k < part.Count; ++k)
+            {
+                if (part[k].StartsWith(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

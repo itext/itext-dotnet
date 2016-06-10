@@ -47,75 +47,75 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>
-	/// Superclass for a series of certificate verifiers that will typically
-	/// be used in a chain.
-	/// </summary>
-	/// <remarks>
-	/// Superclass for a series of certificate verifiers that will typically
-	/// be used in a chain. It wraps another <code>CertificateVerifier</code>
-	/// that is the next element in the chain of which the <code>verify()</code>
-	/// method will be called.
-	/// </remarks>
-	public class CertificateVerifier
-	{
-		/// <summary>The previous CertificateVerifier in the chain of verifiers.</summary>
-		protected internal iTextSharp.Signatures.CertificateVerifier verifier;
+    /// <summary>
+    /// Superclass for a series of certificate verifiers that will typically
+    /// be used in a chain.
+    /// </summary>
+    /// <remarks>
+    /// Superclass for a series of certificate verifiers that will typically
+    /// be used in a chain. It wraps another <code>CertificateVerifier</code>
+    /// that is the next element in the chain of which the <code>verify()</code>
+    /// method will be called.
+    /// </remarks>
+    public class CertificateVerifier
+    {
+        /// <summary>The previous CertificateVerifier in the chain of verifiers.</summary>
+        protected internal iTextSharp.Signatures.CertificateVerifier verifier;
 
-		/// <summary>Indicates if going online to verify a certificate is allowed.</summary>
-		protected internal bool onlineCheckingAllowed = true;
+        /// <summary>Indicates if going online to verify a certificate is allowed.</summary>
+        protected internal bool onlineCheckingAllowed = true;
 
-		/// <summary>Creates the final CertificateVerifier in a chain of verifiers.</summary>
-		/// <param name="verifier">the previous verifier in the chain</param>
-		public CertificateVerifier(iTextSharp.Signatures.CertificateVerifier verifier)
-		{
-			this.verifier = verifier;
-		}
+        /// <summary>Creates the final CertificateVerifier in a chain of verifiers.</summary>
+        /// <param name="verifier">the previous verifier in the chain</param>
+        public CertificateVerifier(iTextSharp.Signatures.CertificateVerifier verifier)
+        {
+            this.verifier = verifier;
+        }
 
-		/// <summary>Decide whether or not online checking is allowed.</summary>
-		/// <param name="onlineCheckingAllowed"/>
-		public virtual void SetOnlineCheckingAllowed(bool onlineCheckingAllowed)
-		{
-			this.onlineCheckingAllowed = onlineCheckingAllowed;
-		}
+        /// <summary>Decide whether or not online checking is allowed.</summary>
+        /// <param name="onlineCheckingAllowed"/>
+        public virtual void SetOnlineCheckingAllowed(bool onlineCheckingAllowed)
+        {
+            this.onlineCheckingAllowed = onlineCheckingAllowed;
+        }
 
-		/// <summary>
-		/// Checks the validity of the certificate, and calls the next
-		/// verifier in the chain, if any.
-		/// </summary>
-		/// <param name="signCert">the certificate that needs to be checked</param>
-		/// <param name="issuerCert">its issuer</param>
-		/// <param name="signDate">the date the certificate needs to be valid</param>
-		/// <returns>
-		/// a list of <code>VerificationOK</code> objects.
-		/// The list will be empty if the certificate couldn't be verified.
-		/// </returns>
-		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-			 issuerCert, DateTime signDate)
-		{
-			// Check if the certificate is valid on the signDate
-			if (signDate != null)
-			{
-				signCert.CheckValidity(signDate);
-			}
-			// Check if the signature is valid
-			if (issuerCert != null)
-			{
-				signCert.Verify(issuerCert.GetPublicKey());
-			}
-			else
-			{
-				// Also in case, the certificate is self-signed
-				signCert.Verify(signCert.GetPublicKey());
-			}
-			IList<VerificationOK> result = new List<VerificationOK>();
-			if (verifier != null)
-			{
-				result.AddAll(verifier.Verify(signCert, issuerCert, signDate));
-			}
-			return result;
-		}
-	}
+        /// <summary>
+        /// Checks the validity of the certificate, and calls the next
+        /// verifier in the chain, if any.
+        /// </summary>
+        /// <param name="signCert">the certificate that needs to be checked</param>
+        /// <param name="issuerCert">its issuer</param>
+        /// <param name="signDate">the date the certificate needs to be valid</param>
+        /// <returns>
+        /// a list of <code>VerificationOK</code> objects.
+        /// The list will be empty if the certificate couldn't be verified.
+        /// </returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
+             issuerCert, DateTime signDate)
+        {
+            // Check if the certificate is valid on the signDate
+            if (signDate != null)
+            {
+                signCert.CheckValidity(signDate);
+            }
+            // Check if the signature is valid
+            if (issuerCert != null)
+            {
+                signCert.Verify(issuerCert.GetPublicKey());
+            }
+            else
+            {
+                // Also in case, the certificate is self-signed
+                signCert.Verify(signCert.GetPublicKey());
+            }
+            IList<VerificationOK> result = new List<VerificationOK>();
+            if (verifier != null)
+            {
+                result.AddAll(verifier.Verify(signCert, issuerCert, signDate));
+            }
+            return result;
+        }
+    }
 }

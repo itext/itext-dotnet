@@ -45,26 +45,26 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Layout
 {
-	public class LineLayoutResult : LayoutResult
-	{
-		protected internal bool splitForcedByNewline;
+    public class LineLayoutResult : LayoutResult
+    {
+        protected internal bool splitForcedByNewline;
 
-		public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
-			, IRenderer overflowRenderer)
-			: base(status, occupiedArea, splitRenderer, overflowRenderer)
-		{
-		}
+        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
+            , IRenderer overflowRenderer)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer)
+        {
+        }
 
-		public virtual bool IsSplitForcedByNewline()
-		{
-			return splitForcedByNewline;
-		}
+        public virtual bool IsSplitForcedByNewline()
+        {
+            return splitForcedByNewline;
+        }
 
-		public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(
-			bool isSplitForcedByNewline)
-		{
-			this.splitForcedByNewline = isSplitForcedByNewline;
-			return this;
-		}
-	}
+        public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(
+            bool isSplitForcedByNewline)
+        {
+            this.splitForcedByNewline = isSplitForcedByNewline;
+            return this;
+        }
+    }
 }

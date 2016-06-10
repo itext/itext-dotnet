@@ -46,114 +46,114 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Collection
 {
-	public class PdfCollection : PdfObjectWrapper<PdfDictionary>
-	{
-		/// <summary>A type of initial view</summary>
-		public const int DETAILS = 0;
+    public class PdfCollection : PdfObjectWrapper<PdfDictionary>
+    {
+        /// <summary>A type of initial view</summary>
+        public const int DETAILS = 0;
 
-		/// <summary>A type of initial view</summary>
-		public const int TILE = 1;
+        /// <summary>A type of initial view</summary>
+        public const int TILE = 1;
 
-		/// <summary>A type of initial view</summary>
-		public const int HIDDEN = 2;
+        /// <summary>A type of initial view</summary>
+        public const int HIDDEN = 2;
 
-		public PdfCollection(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfCollection(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <summary>Constructs a PDF Collection.</summary>
-		public PdfCollection()
-			: this(new PdfDictionary())
-		{
-		}
+        /// <summary>Constructs a PDF Collection.</summary>
+        public PdfCollection()
+            : this(new PdfDictionary())
+        {
+        }
 
-		/// <summary>Sets the Collection schema dictionary.</summary>
-		/// <param name="schema">an overview of the collection fields</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema
-			 schema)
-		{
-			GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
-			return this;
-		}
+        /// <summary>Sets the Collection schema dictionary.</summary>
+        /// <param name="schema">an overview of the collection fields</param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema
+             schema)
+        {
+            GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
+            return this;
+        }
 
-		public virtual PdfCollectionSchema GetSchema()
-		{
-			return new PdfCollectionSchema(GetPdfObject().GetAsDictionary(PdfName.Schema));
-		}
+        public virtual PdfCollectionSchema GetSchema()
+        {
+            return new PdfCollectionSchema(GetPdfObject().GetAsDictionary(PdfName.Schema));
+        }
 
-		/// <summary>
-		/// Identifies the document that will be initially presented
-		/// in the user interface.
-		/// </summary>
-		/// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree
-		/// 	</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(
-			String documentName)
-		{
-			GetPdfObject().Put(PdfName.D, new PdfString(documentName));
-			return this;
-		}
+        /// <summary>
+        /// Identifies the document that will be initially presented
+        /// in the user interface.
+        /// </summary>
+        /// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree
+        ///     </param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(
+            String documentName)
+        {
+            GetPdfObject().Put(PdfName.D, new PdfString(documentName));
+            return this;
+        }
 
-		public virtual PdfString GetInitialDocument()
-		{
-			return GetPdfObject().GetAsString(PdfName.D);
-		}
+        public virtual PdfString GetInitialDocument()
+        {
+            return GetPdfObject().GetAsString(PdfName.D);
+        }
 
-		/// <summary>Sets the initial view.</summary>
-		/// <param name="viewType"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType
-			)
-		{
-			switch (viewType)
-			{
-				default:
-				{
-					GetPdfObject().Put(PdfName.View, PdfName.D);
-					break;
-				}
+        /// <summary>Sets the initial view.</summary>
+        /// <param name="viewType"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType
+            )
+        {
+            switch (viewType)
+            {
+                default:
+                {
+                    GetPdfObject().Put(PdfName.View, PdfName.D);
+                    break;
+                }
 
-				case TILE:
-				{
-					GetPdfObject().Put(PdfName.View, PdfName.T);
-					break;
-				}
+                case TILE:
+                {
+                    GetPdfObject().Put(PdfName.View, PdfName.T);
+                    break;
+                }
 
-				case HIDDEN:
-				{
-					GetPdfObject().Put(PdfName.View, PdfName.H);
-					break;
-				}
-			}
-			return this;
-		}
+                case HIDDEN:
+                {
+                    GetPdfObject().Put(PdfName.View, PdfName.H);
+                    break;
+                }
+            }
+            return this;
+        }
 
-		public virtual PdfNumber GetView()
-		{
-			return GetPdfObject().GetAsNumber(PdfName.View);
-		}
+        public virtual PdfNumber GetView()
+        {
+            return GetPdfObject().GetAsNumber(PdfName.View);
+        }
 
-		/// <summary>Sets the Collection sort dictionary.</summary>
-		/// <param name="sort"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort
-			 sort)
-		{
-			GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());
-			return this;
-		}
+        /// <summary>Sets the Collection sort dictionary.</summary>
+        /// <param name="sort"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort
+             sort)
+        {
+            GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());
+            return this;
+        }
 
-		public virtual PdfCollectionSort GetSort()
-		{
-			return new PdfCollectionSort(GetPdfObject().GetAsDictionary(PdfName.Sort));
-		}
+        public virtual PdfCollectionSort GetSort()
+        {
+            return new PdfCollectionSort(GetPdfObject().GetAsDictionary(PdfName.Sort));
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

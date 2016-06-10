@@ -6,38 +6,38 @@ using iTextSharp.Test;
 
 namespace iTextSharp.Barcodes
 {
-	public class BarcodeCodabarTest : ExtendedITextTest
-	{
-		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/../../resources/itextsharp/barcodes/";
+    public class BarcodeCodabarTest : ExtendedITextTest
+    {
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
+            .TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/test/itextsharp/barcodes/Codabar/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
+            .TestDirectory + "/test/itextsharp/barcodes/Codabar/";
 
-		[NUnit.Framework.TestFixtureSetUp]
-		public static void BeforeClass()
-		{
-			CreateDestinationFolder(destinationFolder);
-		}
+        [NUnit.Framework.TestFixtureSetUp]
+        public static void BeforeClass()
+        {
+            CreateDestinationFolder(destinationFolder);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.PdfException"/>
-		/// <exception cref="System.Exception"/>
-		[NUnit.Framework.Test]
-		public virtual void Barcode01Test()
-		{
-			String filename = "codabar.pdf";
-			PdfWriter writer = new PdfWriter(destinationFolder + filename);
-			PdfDocument document = new PdfDocument(writer);
-			PdfPage page = document.AddNewPage();
-			PdfCanvas canvas = new PdfCanvas(page);
-			BarcodeCodabar codabar = new BarcodeCodabar(document);
-			codabar.SetCode("A123A");
-			codabar.SetStartStopText(true);
-			codabar.PlaceBarcode(canvas, null, null);
-			document.Close();
-			NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-				 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Barcode01Test()
+        {
+            String filename = "codabar.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            BarcodeCodabar codabar = new BarcodeCodabar(document);
+            codabar.SetCode("A123A");
+            codabar.SetStartStopText(true);
+            codabar.PlaceBarcode(canvas, null, null);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
+                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+        }
+    }
 }

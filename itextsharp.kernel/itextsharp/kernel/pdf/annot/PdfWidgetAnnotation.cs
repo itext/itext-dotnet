@@ -47,129 +47,129 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfWidgetAnnotation : PdfAnnotation
-	{
-		public PdfWidgetAnnotation(Rectangle rect)
-			: base(rect)
-		{
-			{
-				widgetEntries.Add(PdfName.Subtype);
-				widgetEntries.Add(PdfName.Type);
-				widgetEntries.Add(PdfName.Rect);
-				widgetEntries.Add(PdfName.Contents);
-				widgetEntries.Add(PdfName.P);
-				widgetEntries.Add(PdfName.NM);
-				widgetEntries.Add(PdfName.M);
-				widgetEntries.Add(PdfName.F);
-				widgetEntries.Add(PdfName.AP);
-				widgetEntries.Add(PdfName.AS);
-				widgetEntries.Add(PdfName.Border);
-				widgetEntries.Add(PdfName.C);
-				widgetEntries.Add(PdfName.StructParent);
-				widgetEntries.Add(PdfName.OC);
-				widgetEntries.Add(PdfName.H);
-				widgetEntries.Add(PdfName.MK);
-				widgetEntries.Add(PdfName.A);
-				widgetEntries.Add(PdfName.AA);
-				widgetEntries.Add(PdfName.BS);
-			}
-		}
+    public class PdfWidgetAnnotation : PdfAnnotation
+    {
+        public PdfWidgetAnnotation(Rectangle rect)
+            : base(rect)
+        {
+            {
+                widgetEntries.Add(PdfName.Subtype);
+                widgetEntries.Add(PdfName.Type);
+                widgetEntries.Add(PdfName.Rect);
+                widgetEntries.Add(PdfName.Contents);
+                widgetEntries.Add(PdfName.P);
+                widgetEntries.Add(PdfName.NM);
+                widgetEntries.Add(PdfName.M);
+                widgetEntries.Add(PdfName.F);
+                widgetEntries.Add(PdfName.AP);
+                widgetEntries.Add(PdfName.AS);
+                widgetEntries.Add(PdfName.Border);
+                widgetEntries.Add(PdfName.C);
+                widgetEntries.Add(PdfName.StructParent);
+                widgetEntries.Add(PdfName.OC);
+                widgetEntries.Add(PdfName.H);
+                widgetEntries.Add(PdfName.MK);
+                widgetEntries.Add(PdfName.A);
+                widgetEntries.Add(PdfName.AA);
+                widgetEntries.Add(PdfName.BS);
+            }
+        }
 
-		public PdfWidgetAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-			{
-				widgetEntries.Add(PdfName.Subtype);
-				widgetEntries.Add(PdfName.Type);
-				widgetEntries.Add(PdfName.Rect);
-				widgetEntries.Add(PdfName.Contents);
-				widgetEntries.Add(PdfName.P);
-				widgetEntries.Add(PdfName.NM);
-				widgetEntries.Add(PdfName.M);
-				widgetEntries.Add(PdfName.F);
-				widgetEntries.Add(PdfName.AP);
-				widgetEntries.Add(PdfName.AS);
-				widgetEntries.Add(PdfName.Border);
-				widgetEntries.Add(PdfName.C);
-				widgetEntries.Add(PdfName.StructParent);
-				widgetEntries.Add(PdfName.OC);
-				widgetEntries.Add(PdfName.H);
-				widgetEntries.Add(PdfName.MK);
-				widgetEntries.Add(PdfName.A);
-				widgetEntries.Add(PdfName.AA);
-				widgetEntries.Add(PdfName.BS);
-			}
-		}
+        public PdfWidgetAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+            {
+                widgetEntries.Add(PdfName.Subtype);
+                widgetEntries.Add(PdfName.Type);
+                widgetEntries.Add(PdfName.Rect);
+                widgetEntries.Add(PdfName.Contents);
+                widgetEntries.Add(PdfName.P);
+                widgetEntries.Add(PdfName.NM);
+                widgetEntries.Add(PdfName.M);
+                widgetEntries.Add(PdfName.F);
+                widgetEntries.Add(PdfName.AP);
+                widgetEntries.Add(PdfName.AS);
+                widgetEntries.Add(PdfName.Border);
+                widgetEntries.Add(PdfName.C);
+                widgetEntries.Add(PdfName.StructParent);
+                widgetEntries.Add(PdfName.OC);
+                widgetEntries.Add(PdfName.H);
+                widgetEntries.Add(PdfName.MK);
+                widgetEntries.Add(PdfName.A);
+                widgetEntries.Add(PdfName.AA);
+                widgetEntries.Add(PdfName.BS);
+            }
+        }
 
-		private HashSet<PdfName> widgetEntries = new HashSet<PdfName>();
+        private HashSet<PdfName> widgetEntries = new HashSet<PdfName>();
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Widget;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Widget;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject
-			 parent)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject
+             parent)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent
+                );
+        }
 
-		/// <summary>Setter for the annotation's highlighting mode.</summary>
-		/// <remarks>
-		/// Setter for the annotation's highlighting mode. Possible values are
-		/// <ul>
-		/// <li>
-		/// <see cref="PdfAnnotation.HIGHLIGHT_NONE"/>
-		/// - No highlighting.</li>
-		/// <li>
-		/// <see cref="PdfAnnotation.HIGHLIGHT_INVERT"/>
-		/// - Invert the contents of the annotation rectangle.</li>
-		/// <li>
-		/// <see cref="PdfAnnotation.HIGHLIGHT_OUTLINE"/>
-		/// - Invert the annotation's border.</li>
-		/// <li>
-		/// <see cref="PdfAnnotation.HIGHLIGHT_PUSH"/>
-		/// - Display the annotation?s down appearance, if any.</li>
-		/// <li>
-		/// <see cref="PdfAnnotation.HIGHLIGHT_TOGGLE"/>
-		/// - Same as P.</li>
-		/// </ul>
-		/// </remarks>
-		/// <param name="mode">The new value for the annotation's highlighting mode.</param>
-		/// <returns>The widget annotation which this method was called on.</returns>
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName
-			 mode)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
-		}
+        /// <summary>Setter for the annotation's highlighting mode.</summary>
+        /// <remarks>
+        /// Setter for the annotation's highlighting mode. Possible values are
+        /// <ul>
+        /// <li>
+        /// <see cref="PdfAnnotation.HIGHLIGHT_NONE"/>
+        /// - No highlighting.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.HIGHLIGHT_INVERT"/>
+        /// - Invert the contents of the annotation rectangle.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.HIGHLIGHT_OUTLINE"/>
+        /// - Invert the annotation's border.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.HIGHLIGHT_PUSH"/>
+        /// - Display the annotation?s down appearance, if any.</li>
+        /// <li>
+        /// <see cref="PdfAnnotation.HIGHLIGHT_TOGGLE"/>
+        /// - Same as P.</li>
+        /// </ul>
+        /// </remarks>
+        /// <param name="mode">The new value for the annotation's highlighting mode.</param>
+        /// <returns>The widget annotation which this method was called on.</returns>
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName
+             mode)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
+        }
 
-		/// <summary>Getter for the annotation's highlighting mode.</summary>
-		/// <returns>Current value of the annotation's highlighting mode.</returns>
-		public virtual PdfName GetHighlightMode()
-		{
-			return GetPdfObject().GetAsName(PdfName.H);
-		}
+        /// <summary>Getter for the annotation's highlighting mode.</summary>
+        /// <returns>Current value of the annotation's highlighting mode.</returns>
+        public virtual PdfName GetHighlightMode()
+        {
+            return GetPdfObject().GetAsName(PdfName.H);
+        }
 
-		/// <summary>This method removes all widget annotation entries from the form field  the given annotation merged with.
-		/// 	</summary>
-		public virtual void ReleaseFormFieldFromWidgetAnnotation()
-		{
-			PdfDictionary annotDict = GetPdfObject();
-			foreach (PdfName entry in widgetEntries)
-			{
-				annotDict.Remove(entry);
-			}
-			PdfDictionary parent = annotDict.GetAsDictionary(PdfName.Parent);
-			if (parent != null && annotDict.Size() == 1)
-			{
-				PdfArray kids = parent.GetAsArray(PdfName.Kids);
-				kids.Remove(annotDict.GetIndirectReference());
-				if (kids.Size() == 0)
-				{
-					parent.Remove(PdfName.Kids);
-				}
-			}
-		}
-	}
+        /// <summary>This method removes all widget annotation entries from the form field  the given annotation merged with.
+        ///     </summary>
+        public virtual void ReleaseFormFieldFromWidgetAnnotation()
+        {
+            PdfDictionary annotDict = GetPdfObject();
+            foreach (PdfName entry in widgetEntries)
+            {
+                annotDict.Remove(entry);
+            }
+            PdfDictionary parent = annotDict.GetAsDictionary(PdfName.Parent);
+            if (parent != null && annotDict.Size() == 1)
+            {
+                PdfArray kids = parent.GetAsArray(PdfName.Kids);
+                kids.Remove(annotDict.GetIndirectReference());
+                if (kids.Size() == 0)
+                {
+                    parent.Remove(PdfName.Kids);
+                }
+            }
+        }
+    }
 }

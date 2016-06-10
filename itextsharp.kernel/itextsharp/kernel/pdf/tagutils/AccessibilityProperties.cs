@@ -48,165 +48,165 @@ using iTextSharp.Kernel.Pdf.Tagging;
 
 namespace iTextSharp.Kernel.Pdf.Tagutils
 {
-	public class AccessibilityProperties
-	{
-		protected internal String language;
+    public class AccessibilityProperties
+    {
+        protected internal String language;
 
-		protected internal String actualText;
+        protected internal String actualText;
 
-		protected internal String alternateDescription;
+        protected internal String alternateDescription;
 
-		protected internal String expansion;
+        protected internal String expansion;
 
-		protected internal IList<PdfDictionary> attributesList = new List<PdfDictionary>(
-			);
+        protected internal IList<PdfDictionary> attributesList = new List<PdfDictionary>(
+            );
 
-		public virtual String GetLanguage()
-		{
-			return language;
-		}
+        public virtual String GetLanguage()
+        {
+            return language;
+        }
 
-		public virtual AccessibilityProperties SetLanguage(String language)
-		{
-			this.language = language;
-			return this;
-		}
+        public virtual AccessibilityProperties SetLanguage(String language)
+        {
+            this.language = language;
+            return this;
+        }
 
-		public virtual String GetActualText()
-		{
-			return actualText;
-		}
+        public virtual String GetActualText()
+        {
+            return actualText;
+        }
 
-		public virtual AccessibilityProperties SetActualText(String actualText)
-		{
-			this.actualText = actualText;
-			return this;
-		}
+        public virtual AccessibilityProperties SetActualText(String actualText)
+        {
+            this.actualText = actualText;
+            return this;
+        }
 
-		public virtual String GetAlternateDescription()
-		{
-			return alternateDescription;
-		}
+        public virtual String GetAlternateDescription()
+        {
+            return alternateDescription;
+        }
 
-		public virtual AccessibilityProperties SetAlternateDescription(String alternateDescription
-			)
-		{
-			this.alternateDescription = alternateDescription;
-			return this;
-		}
+        public virtual AccessibilityProperties SetAlternateDescription(String alternateDescription
+            )
+        {
+            this.alternateDescription = alternateDescription;
+            return this;
+        }
 
-		public virtual String GetExpansion()
-		{
-			return expansion;
-		}
+        public virtual String GetExpansion()
+        {
+            return expansion;
+        }
 
-		public virtual AccessibilityProperties SetExpansion(String expansion)
-		{
-			this.expansion = expansion;
-			return this;
-		}
+        public virtual AccessibilityProperties SetExpansion(String expansion)
+        {
+            this.expansion = expansion;
+            return this;
+        }
 
-		public virtual AccessibilityProperties AddAttributes(PdfDictionary attributes)
-		{
-			attributesList.Add(attributes);
-			return this;
-		}
+        public virtual AccessibilityProperties AddAttributes(PdfDictionary attributes)
+        {
+            attributesList.Add(attributes);
+            return this;
+        }
 
-		public virtual AccessibilityProperties ClearAttributes()
-		{
-			attributesList.Clear();
-			return this;
-		}
+        public virtual AccessibilityProperties ClearAttributes()
+        {
+            attributesList.Clear();
+            return this;
+        }
 
-		public virtual IList<PdfDictionary> GetAttributesList()
-		{
-			return attributesList;
-		}
+        public virtual IList<PdfDictionary> GetAttributesList()
+        {
+            return attributesList;
+        }
 
-		internal virtual void SetToStructElem(PdfStructElem elem)
-		{
-			if (GetActualText() != null)
-			{
-				elem.SetActualText(new PdfString(GetActualText()));
-			}
-			if (GetAlternateDescription() != null)
-			{
-				elem.SetAlt(new PdfString(GetAlternateDescription()));
-			}
-			if (GetExpansion() != null)
-			{
-				elem.SetE(new PdfString(GetExpansion()));
-			}
-			if (GetLanguage() != null)
-			{
-				elem.SetLang(new PdfString(GetLanguage()));
-			}
-			IList<PdfDictionary> newAttributesList = GetAttributesList();
-			if (newAttributesList.Count > 0)
-			{
-				PdfObject attributesObject = elem.GetAttributes(false);
-				PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList
-					, elem.GetPdfObject().GetAsNumber(PdfName.R));
-				elem.SetAttributes(combinedAttributes);
-			}
-		}
+        internal virtual void SetToStructElem(PdfStructElem elem)
+        {
+            if (GetActualText() != null)
+            {
+                elem.SetActualText(new PdfString(GetActualText()));
+            }
+            if (GetAlternateDescription() != null)
+            {
+                elem.SetAlt(new PdfString(GetAlternateDescription()));
+            }
+            if (GetExpansion() != null)
+            {
+                elem.SetE(new PdfString(GetExpansion()));
+            }
+            if (GetLanguage() != null)
+            {
+                elem.SetLang(new PdfString(GetLanguage()));
+            }
+            IList<PdfDictionary> newAttributesList = GetAttributesList();
+            if (newAttributesList.Count > 0)
+            {
+                PdfObject attributesObject = elem.GetAttributes(false);
+                PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList
+                    , elem.GetPdfObject().GetAsNumber(PdfName.R));
+                elem.SetAttributes(combinedAttributes);
+            }
+        }
 
-		protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject
-			, IList<PdfDictionary> newAttributesList, PdfNumber revision)
-		{
-			PdfObject combinedAttributes;
-			if (attributesObject is PdfDictionary)
-			{
-				PdfArray combinedAttributesArray = new PdfArray();
-				combinedAttributesArray.Add(attributesObject);
-				AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
-					);
-				combinedAttributes = combinedAttributesArray;
-			}
-			else
-			{
-				if (attributesObject is PdfArray)
-				{
-					PdfArray combinedAttributesArray = (PdfArray)attributesObject;
-					AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
-						);
-					combinedAttributes = combinedAttributesArray;
-				}
-				else
-				{
-					if (newAttributesList.Count == 1)
-					{
-						combinedAttributes = newAttributesList[0];
-					}
-					else
-					{
-						combinedAttributes = new PdfArray();
-						AddNewAttributesToAttributesArray(newAttributesList, revision, (PdfArray)combinedAttributes
-							);
-					}
-				}
-			}
-			return combinedAttributes;
-		}
+        protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject
+            , IList<PdfDictionary> newAttributesList, PdfNumber revision)
+        {
+            PdfObject combinedAttributes;
+            if (attributesObject is PdfDictionary)
+            {
+                PdfArray combinedAttributesArray = new PdfArray();
+                combinedAttributesArray.Add(attributesObject);
+                AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
+                    );
+                combinedAttributes = combinedAttributesArray;
+            }
+            else
+            {
+                if (attributesObject is PdfArray)
+                {
+                    PdfArray combinedAttributesArray = (PdfArray)attributesObject;
+                    AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
+                        );
+                    combinedAttributes = combinedAttributesArray;
+                }
+                else
+                {
+                    if (newAttributesList.Count == 1)
+                    {
+                        combinedAttributes = newAttributesList[0];
+                    }
+                    else
+                    {
+                        combinedAttributes = new PdfArray();
+                        AddNewAttributesToAttributesArray(newAttributesList, revision, (PdfArray)combinedAttributes
+                            );
+                    }
+                }
+            }
+            return combinedAttributes;
+        }
 
-		protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary
-			> newAttributesList, PdfNumber revision, PdfArray attributesArray)
-		{
-			if (revision != null)
-			{
-				foreach (PdfDictionary attributes in newAttributesList)
-				{
-					attributesArray.Add(attributes);
-					attributesArray.Add(revision);
-				}
-			}
-			else
-			{
-				foreach (PdfDictionary newAttribute in newAttributesList)
-				{
-					attributesArray.Add(newAttribute);
-				}
-			}
-		}
-	}
+        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary
+            > newAttributesList, PdfNumber revision, PdfArray attributesArray)
+        {
+            if (revision != null)
+            {
+                foreach (PdfDictionary attributes in newAttributesList)
+                {
+                    attributesArray.Add(attributes);
+                    attributesArray.Add(revision);
+                }
+            }
+            else
+            {
+                foreach (PdfDictionary newAttribute in newAttributesList)
+                {
+                    attributesArray.Add(newAttribute);
+                }
+            }
+        }
+    }
 }

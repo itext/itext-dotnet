@@ -45,9 +45,9 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
-	/// <author>Kevin Day</author>
-	public interface IXObjectDoHandler
-	{
-		void HandleXObject(PdfCanvasProcessor processor, PdfStream stream);
-	}
+    /// <author>Kevin Day</author>
+    public interface IXObjectDoHandler
+    {
+        void HandleXObject(PdfCanvasProcessor processor, PdfStream stream);
+    }
 }

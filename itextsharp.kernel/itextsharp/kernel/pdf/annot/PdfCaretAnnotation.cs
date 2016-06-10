@@ -46,32 +46,32 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfCaretAnnotation : PdfMarkupAnnotation
-	{
-		public PdfCaretAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfCaretAnnotation : PdfMarkupAnnotation
+    {
+        public PdfCaretAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfCaretAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfCaretAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Caret;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Caret;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString
-			 symbol)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.Sy, symbol);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString
+             symbol)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.Sy, symbol);
+        }
 
-		public virtual PdfString GetSymbol()
-		{
-			return GetPdfObject().GetAsString(PdfName.Sy);
-		}
-	}
+        public virtual PdfString GetSymbol()
+        {
+            return GetPdfObject().GetAsString(PdfName.Sy);
+        }
+    }
 }

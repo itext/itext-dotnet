@@ -46,28 +46,28 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>Interface to sign a document.</summary>
-	/// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
-	/// 	</remarks>
-	/// <author>Paulo Soares</author>
-	public interface IExternalSignatureContainer
-	{
-		/// <summary>Produces the container with the signature.</summary>
-		/// <param name="data">the data to sign</param>
-		/// <returns>a container with the signature and other objects, like CRL and OCSP. The container will generally be a PKCS7 one.
-		/// 	</returns>
-		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		byte[] Sign(Stream data);
+    /// <summary>Interface to sign a document.</summary>
+    /// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
+    ///     </remarks>
+    /// <author>Paulo Soares</author>
+    public interface IExternalSignatureContainer
+    {
+        /// <summary>Produces the container with the signature.</summary>
+        /// <param name="data">the data to sign</param>
+        /// <returns>a container with the signature and other objects, like CRL and OCSP. The container will generally be a PKCS7 one.
+        ///     </returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        byte[] Sign(Stream data);
 
-		/// <summary>Modifies the signature dictionary to suit the container.</summary>
-		/// <remarks>
-		/// Modifies the signature dictionary to suit the container. At least the keys
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfName.Filter"/>
-		/// and
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfName.SubFilter"/>
-		/// will have to be set.
-		/// </remarks>
-		/// <param name="signDic">the signature dictionary</param>
-		void ModifySigningDictionary(PdfDictionary signDic);
-	}
+        /// <summary>Modifies the signature dictionary to suit the container.</summary>
+        /// <remarks>
+        /// Modifies the signature dictionary to suit the container. At least the keys
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.Filter"/>
+        /// and
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.SubFilter"/>
+        /// will have to be set.
+        /// </remarks>
+        /// <param name="signDic">the signature dictionary</param>
+        void ModifySigningDictionary(PdfDictionary signDic);
+    }
 }

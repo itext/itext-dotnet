@@ -49,194 +49,194 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font
 {
-	internal class Type1Parser
-	{
-		private const String AFM_HEADER = "StartFontMetrics";
+    internal class Type1Parser
+    {
+        private const String AFM_HEADER = "StartFontMetrics";
 
-		private String afmPath;
+        private String afmPath;
 
-		private String pfbPath;
+        private String pfbPath;
 
-		private byte[] pfbData;
+        private byte[] pfbData;
 
-		private byte[] afmData;
+        private byte[] afmData;
 
-		private bool isBuiltInFont;
+        private bool isBuiltInFont;
 
-		private RandomAccessSourceFactory sourceFactory = new RandomAccessSourceFactory();
+        private RandomAccessSourceFactory sourceFactory = new RandomAccessSourceFactory();
 
-		/// <summary>Creates a new Type1 font file.</summary>
-		/// <param name="afm">the AFM file if the input is made with a <CODE>byte</CODE> array
-		/// 	</param>
-		/// <param name="pfb">the PFB file if the input is made with a <CODE>byte</CODE> array
-		/// 	</param>
-		/// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
-		/// 	</param>
-		/// <the>AFM file is invalid</the>
-		/// <exception cref="System.IO.IOException">the AFM file could not be read</exception>
-		public Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
-		{
-			this.afmData = afm;
-			this.pfbData = pfb;
-			this.afmPath = metricsPath;
-			this.pfbPath = binaryPath;
-		}
+        /// <summary>Creates a new Type1 font file.</summary>
+        /// <param name="afm">the AFM file if the input is made with a <CODE>byte</CODE> array
+        ///     </param>
+        /// <param name="pfb">the PFB file if the input is made with a <CODE>byte</CODE> array
+        ///     </param>
+        /// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
+        ///     </param>
+        /// <the>AFM file is invalid</the>
+        /// <exception cref="System.IO.IOException">the AFM file could not be read</exception>
+        public Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
+        {
+            this.afmData = afm;
+            this.pfbData = pfb;
+            this.afmPath = metricsPath;
+            this.pfbPath = binaryPath;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual RandomAccessFileOrArray GetMetricsFile()
-		{
-			isBuiltInFont = false;
-			if (FontConstants.BUILTIN_FONTS_14.Contains(afmPath))
-			{
-				isBuiltInFont = true;
-				byte[] buf = new byte[1024];
-				Stream resource = null;
-				try
-				{
-					String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
-					resource = ResourceUtil.GetResourceStream(resourcePath);
-					if (resource == null)
-					{
-						throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath
-							);
-					}
-					MemoryStream stream = new MemoryStream();
-					int read;
-					while ((read = resource.Read(buf)) >= 0)
-					{
-						stream.Write(buf, 0, read);
-					}
-					buf = stream.ToArray();
-				}
-				finally
-				{
-					if (resource != null)
-					{
-						try
-						{
-							resource.Close();
-						}
-						catch (Exception)
-						{
-						}
-					}
-				}
-				return new RandomAccessFileOrArray(sourceFactory.CreateSource(buf));
-			}
-			else
-			{
-				if (afmPath != null)
-				{
-					if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm"
-						))
-					{
-						return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
-					}
-					else
-					{
-						if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"
-							))
-						{
-							MemoryStream ba = new MemoryStream();
-							RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource
-								(afmPath));
-							Pfm2afm.Convert(rf, ba);
-							rf.Close();
-							return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
-						}
-						else
-						{
-							throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile
-								).SetMessageParams(afmPath);
-						}
-					}
-				}
-				else
-				{
-					if (afmData != null)
-					{
-						RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateSource
-							(afmData));
-						if (IsAfmFile(rf))
-						{
-							return rf;
-						}
-						else
-						{
-							MemoryStream ba = new MemoryStream();
-							try
-							{
-								Pfm2afm.Convert(rf, ba);
-							}
-							catch (Exception)
-							{
-								throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
-							}
-							finally
-							{
-								rf.Close();
-							}
-							return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
-						}
-					}
-					else
-					{
-						throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
-					}
-				}
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual RandomAccessFileOrArray GetMetricsFile()
+        {
+            isBuiltInFont = false;
+            if (FontConstants.BUILTIN_FONTS_14.Contains(afmPath))
+            {
+                isBuiltInFont = true;
+                byte[] buf = new byte[1024];
+                Stream resource = null;
+                try
+                {
+                    String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
+                    resource = ResourceUtil.GetResourceStream(resourcePath);
+                    if (resource == null)
+                    {
+                        throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath
+                            );
+                    }
+                    MemoryStream stream = new MemoryStream();
+                    int read;
+                    while ((read = resource.Read(buf)) >= 0)
+                    {
+                        stream.Write(buf, 0, read);
+                    }
+                    buf = stream.ToArray();
+                }
+                finally
+                {
+                    if (resource != null)
+                    {
+                        try
+                        {
+                            resource.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+                return new RandomAccessFileOrArray(sourceFactory.CreateSource(buf));
+            }
+            else
+            {
+                if (afmPath != null)
+                {
+                    if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm"
+                        ))
+                    {
+                        return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
+                    }
+                    else
+                    {
+                        if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"
+                            ))
+                        {
+                            MemoryStream ba = new MemoryStream();
+                            RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource
+                                (afmPath));
+                            Pfm2afm.Convert(rf, ba);
+                            rf.Close();
+                            return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
+                        }
+                        else
+                        {
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile
+                                ).SetMessageParams(afmPath);
+                        }
+                    }
+                }
+                else
+                {
+                    if (afmData != null)
+                    {
+                        RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateSource
+                            (afmData));
+                        if (IsAfmFile(rf))
+                        {
+                            return rf;
+                        }
+                        else
+                        {
+                            MemoryStream ba = new MemoryStream();
+                            try
+                            {
+                                Pfm2afm.Convert(rf, ba);
+                            }
+                            catch (Exception)
+                            {
+                                throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
+                            }
+                            finally
+                            {
+                                rf.Close();
+                            }
+                            return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
+                        }
+                    }
+                    else
+                    {
+                        throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
+                    }
+                }
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual RandomAccessFileOrArray GetPostscriptBinary()
-		{
-			if (pfbData != null)
-			{
-				return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
-			}
-			else
-			{
-				if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture
-					).EndsWith(".pfb"))
-				{
-					return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
-				}
-				else
-				{
-					pfbPath = afmPath.JSubstring(0, afmPath.Length - 3) + "pfb";
-					return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
-				}
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual RandomAccessFileOrArray GetPostscriptBinary()
+        {
+            if (pfbData != null)
+            {
+                return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
+            }
+            else
+            {
+                if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture
+                    ).EndsWith(".pfb"))
+                {
+                    return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
+                }
+                else
+                {
+                    pfbPath = afmPath.JSubstring(0, afmPath.Length - 3) + "pfb";
+                    return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
+                }
+            }
+        }
 
-		public virtual bool IsBuiltInFont()
-		{
-			return isBuiltInFont;
-		}
+        public virtual bool IsBuiltInFont()
+        {
+            return isBuiltInFont;
+        }
 
-		public virtual String GetAfmPath()
-		{
-			return afmPath;
-		}
+        public virtual String GetAfmPath()
+        {
+            return afmPath;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private bool IsAfmFile(RandomAccessFileOrArray raf)
-		{
-			StringBuilder builder = new StringBuilder(AFM_HEADER.Length);
-			for (int i = 0; i < AFM_HEADER.Length; i++)
-			{
-				try
-				{
-					builder.Append((char)raf.ReadByte());
-				}
-				catch (EndOfStreamException)
-				{
-					raf.Seek(0);
-					return false;
-				}
-			}
-			raf.Seek(0);
-			return AFM_HEADER.Equals(builder.ToString());
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        private bool IsAfmFile(RandomAccessFileOrArray raf)
+        {
+            StringBuilder builder = new StringBuilder(AFM_HEADER.Length);
+            for (int i = 0; i < AFM_HEADER.Length; i++)
+            {
+                try
+                {
+                    builder.Append((char)raf.ReadByte());
+                }
+                catch (EndOfStreamException)
+                {
+                    raf.Seek(0);
+                    return false;
+                }
+            }
+            raf.Seek(0);
+            return AFM_HEADER.Equals(builder.ToString());
+        }
+    }
 }

@@ -45,12 +45,12 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Font
 {
-	internal interface IDocFontProgram
-	{
-		PdfStream GetFontFile();
+    internal interface IDocFontProgram
+    {
+        PdfStream GetFontFile();
 
-		PdfName GetFontFileName();
+        PdfName GetFontFileName();
 
-		PdfName GetSubtype();
-	}
+        PdfName GetSubtype();
+    }
 }

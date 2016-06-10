@@ -49,350 +49,350 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	/// <summary>
-	/// A
-	/// <c>PdfString</c>
-	/// -class is the PDF-equivalent of a
-	/// JAVA-
-	/// <c>String</c>
-	/// -object.
-	/// <p/>
-	/// A string is a sequence of characters delimited by parenthesis.
-	/// If a string is too long to be conveniently placed on a single line, it may
-	/// be split across multiple lines by using the backslash character (\) at the
-	/// end of a line to indicate that the string continues on the following line.
-	/// Within a string, the backslash character is used as an escape to specify
-	/// unbalanced parenthesis, non-printing ASCII characters, and the backslash
-	/// character itself. Use of the \<i>ddd</i> escape sequence is the preferred
-	/// way to represent characters outside the printable ASCII character set.<br />
-	/// This object is described in the 'Portable Document Format Reference Manual
-	/// version 1.7' section 3.2.3 (page 53-56).
-	/// <p/>
-	/// <see cref="PdfObject"/>
-	/// </summary>
-	public class PdfString : PdfPrimitiveObject
-	{
-		private static String defaultCharset = "UTF-8";
+    /// <summary>
+    /// A
+    /// <c>PdfString</c>
+    /// -class is the PDF-equivalent of a
+    /// JAVA-
+    /// <c>String</c>
+    /// -object.
+    /// <p/>
+    /// A string is a sequence of characters delimited by parenthesis.
+    /// If a string is too long to be conveniently placed on a single line, it may
+    /// be split across multiple lines by using the backslash character (\) at the
+    /// end of a line to indicate that the string continues on the following line.
+    /// Within a string, the backslash character is used as an escape to specify
+    /// unbalanced parenthesis, non-printing ASCII characters, and the backslash
+    /// character itself. Use of the \<i>ddd</i> escape sequence is the preferred
+    /// way to represent characters outside the printable ASCII character set.<br />
+    /// This object is described in the 'Portable Document Format Reference Manual
+    /// version 1.7' section 3.2.3 (page 53-56).
+    /// <p/>
+    /// <see cref="PdfObject"/>
+    /// </summary>
+    public class PdfString : PdfPrimitiveObject
+    {
+        private static String defaultCharset = "UTF-8";
 
-		protected internal String value;
+        protected internal String value;
 
-		protected internal String encoding;
+        protected internal String encoding;
 
-		protected internal bool hexWriting = false;
+        protected internal bool hexWriting = false;
 
-		private int decryptInfoNum = 0;
+        private int decryptInfoNum = 0;
 
-		private int decryptInfoGen = 0;
+        private int decryptInfoGen = 0;
 
-		public PdfString(String value, String encoding)
-			: base()
-		{
-			/*
-			* using for decryption
-			* */
-			/*
-			* using for decryption
-			* */
-			this.value = value;
-			this.encoding = encoding;
-		}
+        public PdfString(String value, String encoding)
+            : base()
+        {
+            /*
+            * using for decryption
+            * */
+            /*
+            * using for decryption
+            * */
+            this.value = value;
+            this.encoding = encoding;
+        }
 
-		public PdfString(String value)
-			: this(value, null)
-		{
-		}
+        public PdfString(String value)
+            : this(value, null)
+        {
+        }
 
-		public PdfString(byte[] content)
-			: base()
-		{
-			if (content != null && content.Length > 0)
-			{
-				StringBuilder str = new StringBuilder(content.Length);
-				foreach (byte b in content)
-				{
-					str.Append((char)(b & 0xff));
-				}
-				this.value = str.ToString();
-			}
-			else
-			{
-				this.value = "";
-			}
-		}
+        public PdfString(byte[] content)
+            : base()
+        {
+            if (content != null && content.Length > 0)
+            {
+                StringBuilder str = new StringBuilder(content.Length);
+                foreach (byte b in content)
+                {
+                    str.Append((char)(b & 0xff));
+                }
+                this.value = str.ToString();
+            }
+            else
+            {
+                this.value = "";
+            }
+        }
 
-		/// <summary>Only PdfReader can use this method!</summary>
-		protected internal PdfString(byte[] content, bool hexWriting)
-			: base(content)
-		{
-			this.hexWriting = hexWriting;
-		}
+        /// <summary>Only PdfReader can use this method!</summary>
+        protected internal PdfString(byte[] content, bool hexWriting)
+            : base(content)
+        {
+            this.hexWriting = hexWriting;
+        }
 
-		private PdfString()
-			: base()
-		{
-		}
+        private PdfString()
+            : base()
+        {
+        }
 
-		public override byte GetObjectType()
-		{
-			return STRING;
-		}
+        public override byte GetObjectType()
+        {
+            return STRING;
+        }
 
-		public virtual bool IsHexWriting()
-		{
-			return hexWriting;
-		}
+        public virtual bool IsHexWriting()
+        {
+            return hexWriting;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting)
-		{
-			if (value == null)
-			{
-				GenerateValue();
-				content = null;
-			}
-			this.hexWriting = hexWriting;
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting)
+        {
+            if (value == null)
+            {
+                GenerateValue();
+                content = null;
+            }
+            this.hexWriting = hexWriting;
+            return this;
+        }
 
-		public virtual String GetValue()
-		{
-			if (value == null)
-			{
-				GenerateValue();
-			}
-			return value;
-		}
+        public virtual String GetValue()
+        {
+            if (value == null)
+            {
+                GenerateValue();
+            }
+            return value;
+        }
 
-		/// <summary>Gets the encoding of this string.</summary>
-		public virtual String GetEncoding()
-		{
-			return encoding;
-		}
+        /// <summary>Gets the encoding of this string.</summary>
+        public virtual String GetEncoding()
+        {
+            return encoding;
+        }
 
-		/// <summary>Sets the encoding of this string.</summary>
-		/// <remarks>
-		/// Sets the encoding of this string.
-		/// NOTE. Byte content will be removed.
-		/// </remarks>
-		public virtual void SetEncoding(String encoding)
-		{
-			this.encoding = encoding;
-			this.content = null;
-		}
+        /// <summary>Sets the encoding of this string.</summary>
+        /// <remarks>
+        /// Sets the encoding of this string.
+        /// NOTE. Byte content will be removed.
+        /// </remarks>
+        public virtual void SetEncoding(String encoding)
+        {
+            this.encoding = encoding;
+            this.content = null;
+        }
 
-		/// <summary>
-		/// Returns the Unicode
-		/// <c>String</c>
-		/// value of this
-		/// <c>PdfString</c>
-		/// -object.
-		/// </summary>
-		public virtual String ToUnicodeString()
-		{
-			if (encoding != null && encoding.Length != 0)
-			{
-				return GetValue();
-			}
-			if (content == null)
-			{
-				GenerateContent();
-			}
-			byte[] b = PdfTokenizer.DecodeStringContent(content, hexWriting);
-			if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF)
-			{
-				return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
-			}
-			else
-			{
-				return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
-			}
-		}
+        /// <summary>
+        /// Returns the Unicode
+        /// <c>String</c>
+        /// value of this
+        /// <c>PdfString</c>
+        /// -object.
+        /// </summary>
+        public virtual String ToUnicodeString()
+        {
+            if (encoding != null && encoding.Length != 0)
+            {
+                return GetValue();
+            }
+            if (content == null)
+            {
+                GenerateContent();
+            }
+            byte[] b = PdfTokenizer.DecodeStringContent(content, hexWriting);
+            if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF)
+            {
+                return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
+            }
+            else
+            {
+                return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
+            }
+        }
 
-		/// <summary>Gets bytes of String-value considering encoding.</summary>
-		/// <returns>byte array</returns>
-		public virtual byte[] GetValueBytes()
-		{
-			// Analog of com.itextpdf.text.pdf.PdfString.getBytes() method in iText5.
-			if (value == null)
-			{
-				GenerateValue();
-			}
-			if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings
-				.IsPdfDocEncoding(value))
-			{
-				return PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
-			}
-			else
-			{
-				return PdfEncodings.ConvertToBytes(value, encoding);
-			}
-		}
+        /// <summary>Gets bytes of String-value considering encoding.</summary>
+        /// <returns>byte array</returns>
+        public virtual byte[] GetValueBytes()
+        {
+            // Analog of com.itextpdf.text.pdf.PdfString.getBytes() method in iText5.
+            if (value == null)
+            {
+                GenerateValue();
+            }
+            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings
+                .IsPdfDocEncoding(value))
+            {
+                return PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
+            }
+            else
+            {
+                return PdfEncodings.ConvertToBytes(value, encoding);
+            }
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document);
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-			 reference)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
+             reference)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, true);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, true);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <param name="allowDuplicating">
-		/// indicates if to allow copy objects which already have been copied.
-		/// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-		/// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-		/// </param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="allowDuplicating">
+        /// indicates if to allow copy objects which already have been copied.
+        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
+        /// </param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
+        }
 
-		public override String ToString()
-		{
-			if (value == null)
-			{
-				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent
-					(content, hexWriting));
-			}
-			else
-			{
-				return GetValue();
-			}
-		}
+        public override String ToString()
+        {
+            if (value == null)
+            {
+                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent
+                    (content, hexWriting));
+            }
+            else
+            {
+                return GetValue();
+            }
+        }
 
-		protected internal virtual void GenerateValue()
-		{
-			System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value"
-				);
-			value = PdfEncodings.ConvertToString(PdfTokenizer.DecodeStringContent(content, hexWriting
-				), null);
-		}
+        protected internal virtual void GenerateValue()
+        {
+            System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value"
+                );
+            value = PdfEncodings.ConvertToString(PdfTokenizer.DecodeStringContent(content, hexWriting
+                ), null);
+        }
 
-		protected internal override void GenerateContent()
-		{
-			content = EncodeBytes(GetValueBytes());
-		}
+        protected internal override void GenerateContent()
+        {
+            content = EncodeBytes(GetValueBytes());
+        }
 
-		/// <summary>
-		/// Decrypt content of an encrypted
-		/// <c>PdfString</c>
-		/// .
-		/// </summary>
-		protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption 
-			decrypt)
-		{
-			if (decrypt != null)
-			{
-				System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value"
-					);
-				byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
-				content = null;
-				decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
-				value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null
-					);
-			}
-			return this;
-		}
+        /// <summary>
+        /// Decrypt content of an encrypted
+        /// <c>PdfString</c>
+        /// .
+        /// </summary>
+        protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption 
+            decrypt)
+        {
+            if (decrypt != null)
+            {
+                System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value"
+                    );
+                byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
+                content = null;
+                decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
+                value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null
+                    );
+            }
+            return this;
+        }
 
-		/// <summary>
-		/// Encrypt content of
-		/// <c>value</c>
-		/// and set as content.
-		/// <c>generateContent()</c>
-		/// won't be called.
-		/// </summary>
-		/// <param name="encrypt">@see PdfEncryption</param>
-		/// <returns>true if value was encrypted, otherwise false.</returns>
-		protected internal virtual bool Encrypt(PdfEncryption encrypt)
-		{
-			if (encrypt != null && !encrypt.IsEmbeddedFilesOnly())
-			{
-				byte[] b = encrypt.EncryptByteArray(GetValueBytes());
-				content = EncodeBytes(b);
-				return true;
-			}
-			return false;
-		}
+        /// <summary>
+        /// Encrypt content of
+        /// <c>value</c>
+        /// and set as content.
+        /// <c>generateContent()</c>
+        /// won't be called.
+        /// </summary>
+        /// <param name="encrypt">@see PdfEncryption</param>
+        /// <returns>true if value was encrypted, otherwise false.</returns>
+        protected internal virtual bool Encrypt(PdfEncryption encrypt)
+        {
+            if (encrypt != null && !encrypt.IsEmbeddedFilesOnly())
+            {
+                byte[] b = encrypt.EncryptByteArray(GetValueBytes());
+                content = EncodeBytes(b);
+                return true;
+            }
+            return false;
+        }
 
-		/// <summary>Escape special symbols or convert to hexadecimal string.</summary>
-		/// <remarks>
-		/// Escape special symbols or convert to hexadecimal string.
-		/// This method don't change either
-		/// <c>value</c>
-		/// or
-		/// <c>content</c>
-		/// ot the
-		/// <c>PdfString</c>
-		/// .
-		/// </remarks>
-		/// <param name="bytes">byte array to manipulate with.</param>
-		/// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>
-		protected internal virtual byte[] EncodeBytes(byte[] bytes)
-		{
-			if (hexWriting)
-			{
-				ByteBuffer buf = new ByteBuffer(bytes.Length * 2);
-				foreach (byte b in bytes)
-				{
-					buf.AppendHex(b);
-				}
-				return buf.GetInternalBuffer();
-			}
-			else
-			{
-				ByteBuffer buf = StreamUtil.CreateBufferedEscapedString(bytes);
-				return buf.ToByteArray(1, buf.Size() - 2);
-			}
-		}
+        /// <summary>Escape special symbols or convert to hexadecimal string.</summary>
+        /// <remarks>
+        /// Escape special symbols or convert to hexadecimal string.
+        /// This method don't change either
+        /// <c>value</c>
+        /// or
+        /// <c>content</c>
+        /// ot the
+        /// <c>PdfString</c>
+        /// .
+        /// </remarks>
+        /// <param name="bytes">byte array to manipulate with.</param>
+        /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>
+        protected internal virtual byte[] EncodeBytes(byte[] bytes)
+        {
+            if (hexWriting)
+            {
+                ByteBuffer buf = new ByteBuffer(bytes.Length * 2);
+                foreach (byte b in bytes)
+                {
+                    buf.AppendHex(b);
+                }
+                return buf.GetInternalBuffer();
+            }
+            else
+            {
+                ByteBuffer buf = StreamUtil.CreateBufferedEscapedString(bytes);
+                return buf.ToByteArray(1, buf.Size() - 2);
+            }
+        }
 
-		protected internal override PdfObject NewInstance()
-		{
-			return new iTextSharp.Kernel.Pdf.PdfString();
-		}
+        protected internal override PdfObject NewInstance()
+        {
+            return new iTextSharp.Kernel.Pdf.PdfString();
+        }
 
-		protected internal override void CopyContent(PdfObject from, PdfDocument document
-			)
-		{
-			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfString @string = (iTextSharp.Kernel.Pdf.PdfString)from;
-			value = @string.value;
-			hexWriting = @string.hexWriting;
-		}
+        protected internal override void CopyContent(PdfObject from, PdfDocument document
+            )
+        {
+            base.CopyContent(from, document);
+            iTextSharp.Kernel.Pdf.PdfString @string = (iTextSharp.Kernel.Pdf.PdfString)from;
+            value = @string.value;
+            hexWriting = @string.hexWriting;
+        }
 
-		internal virtual void SetDecryptInfoNum(int decryptInfoNum)
-		{
-			this.decryptInfoNum = decryptInfoNum;
-		}
+        internal virtual void SetDecryptInfoNum(int decryptInfoNum)
+        {
+            this.decryptInfoNum = decryptInfoNum;
+        }
 
-		internal virtual void SetDecryptInfoGen(int decryptInfoGen)
-		{
-			this.decryptInfoGen = decryptInfoGen;
-		}
-	}
+        internal virtual void SetDecryptInfoGen(int decryptInfoGen)
+        {
+            this.decryptInfoGen = decryptInfoGen;
+        }
+    }
 }

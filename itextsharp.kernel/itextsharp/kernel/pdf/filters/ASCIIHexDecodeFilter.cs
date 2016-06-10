@@ -48,55 +48,55 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>Handles ASCIIHexDecode filter</summary>
-	public class ASCIIHexDecodeFilter : IFilterHandler
-	{
-		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-			, PdfDictionary streamDictionary)
-		{
-			b = ASCIIHexDecode(b);
-			return b;
-		}
+    /// <summary>Handles ASCIIHexDecode filter</summary>
+    public class ASCIIHexDecodeFilter : IFilterHandler
+    {
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
+            , PdfDictionary streamDictionary)
+        {
+            b = ASCIIHexDecode(b);
+            return b;
+        }
 
-		/// <summary>Decodes a byte[] according to ASCII Hex encoding.</summary>
-		/// <param name="in">byte[] to be decoded</param>
-		/// <returns>decoded byte[]</returns>
-		public static byte[] ASCIIHexDecode(byte[] @in)
-		{
-			MemoryStream @out = new MemoryStream();
-			bool first = true;
-			int n1 = 0;
-			for (int k = 0; k < @in.Length; ++k)
-			{
-				int ch = @in[k] & 0xff;
-				if (ch == '>')
-				{
-					break;
-				}
-				if (PdfTokenizer.IsWhitespace(ch))
-				{
-					continue;
-				}
-				int n = ByteBuffer.GetHex(ch);
-				if (n == -1)
-				{
-					throw new PdfException(PdfException.IllegalCharacterInAsciihexdecode);
-				}
-				if (first)
-				{
-					n1 = n;
-				}
-				else
-				{
-					@out.Write((byte)((n1 << 4) + n));
-				}
-				first = !first;
-			}
-			if (!first)
-			{
-				@out.Write((byte)(n1 << 4));
-			}
-			return @out.ToArray();
-		}
-	}
+        /// <summary>Decodes a byte[] according to ASCII Hex encoding.</summary>
+        /// <param name="in">byte[] to be decoded</param>
+        /// <returns>decoded byte[]</returns>
+        public static byte[] ASCIIHexDecode(byte[] @in)
+        {
+            MemoryStream @out = new MemoryStream();
+            bool first = true;
+            int n1 = 0;
+            for (int k = 0; k < @in.Length; ++k)
+            {
+                int ch = @in[k] & 0xff;
+                if (ch == '>')
+                {
+                    break;
+                }
+                if (PdfTokenizer.IsWhitespace(ch))
+                {
+                    continue;
+                }
+                int n = ByteBuffer.GetHex(ch);
+                if (n == -1)
+                {
+                    throw new PdfException(PdfException.IllegalCharacterInAsciihexdecode);
+                }
+                if (first)
+                {
+                    n1 = n;
+                }
+                else
+                {
+                    @out.Write((byte)((n1 << 4) + n));
+                }
+                first = !first;
+            }
+            if (!first)
+            {
+                @out.Write((byte)(n1 << 4));
+            }
+            return @out.ToArray();
+        }
+    }
 }

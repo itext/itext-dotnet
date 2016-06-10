@@ -45,20 +45,20 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Kernel.Geom
 {
-	/// <summary>Represents segment from a PDF path.</summary>
-	public interface IShape
-	{
-		/// <summary>Treat base points as the points which are enough to construct a shape.</summary>
-		/// <remarks>
-		/// Treat base points as the points which are enough to construct a shape.
-		/// E.g. for a bezier curve they are control points, for a line segment - the start and the end points
-		/// of the segment.
-		/// </remarks>
-		/// <returns>
-		/// Ordered
-		/// <see cref="System.Collections.IList{E}"/>
-		/// consisting of shape's base points.
-		/// </returns>
-		IList<Point> GetBasePoints();
-	}
+    /// <summary>Represents segment from a PDF path.</summary>
+    public interface IShape
+    {
+        /// <summary>Treat base points as the points which are enough to construct a shape.</summary>
+        /// <remarks>
+        /// Treat base points as the points which are enough to construct a shape.
+        /// E.g. for a bezier curve they are control points, for a line segment - the start and the end points
+        /// of the segment.
+        /// </remarks>
+        /// <returns>
+        /// Ordered
+        /// <see cref="System.Collections.IList{E}"/>
+        /// consisting of shape's base points.
+        /// </returns>
+        IList<Point> GetBasePoints();
+    }
 }

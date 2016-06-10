@@ -45,28 +45,28 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Canvas
 {
-	/// <summary>
-	/// A subclass of
-	/// <see cref="CanvasTag"/>
-	/// for Artifacts.
-	/// In Tagged PDF, an object can be marked as an Artifact in order to signify
-	/// that it is more part of the document structure than of the document content.
-	/// Examples are page headers, layout features, etc. Screen readers can choose to
-	/// ignore Artifacts.
-	/// </summary>
-	public class CanvasArtifact : CanvasTag
-	{
-		/// <summary>
-		/// Creates a CanvasArtifact object, which is a
-		/// <see cref="CanvasTag"/>
-		/// with a role
-		/// of
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfName.Artifact">Artifact</see>
-		/// .
-		/// </summary>
-		public CanvasArtifact()
-			: base(PdfName.Artifact)
-		{
-		}
-	}
+    /// <summary>
+    /// A subclass of
+    /// <see cref="CanvasTag"/>
+    /// for Artifacts.
+    /// In Tagged PDF, an object can be marked as an Artifact in order to signify
+    /// that it is more part of the document structure than of the document content.
+    /// Examples are page headers, layout features, etc. Screen readers can choose to
+    /// ignore Artifacts.
+    /// </summary>
+    public class CanvasArtifact : CanvasTag
+    {
+        /// <summary>
+        /// Creates a CanvasArtifact object, which is a
+        /// <see cref="CanvasTag"/>
+        /// with a role
+        /// of
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.Artifact">Artifact</see>
+        /// .
+        /// </summary>
+        public CanvasArtifact()
+            : base(PdfName.Artifact)
+        {
+        }
+    }
 }

@@ -16,149 +16,149 @@
 */
 namespace iTextSharp.Layout.Hyphenation
 {
-	/// <summary>
-	/// <p>This class implements a simple char vector with access to the
-	/// underlying array.</p>
-	/// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
-	/// </summary>
-	public class CharVector
-	{
-		/// <summary>Capacity increment size</summary>
-		private const int DEFAULT_BLOCK_SIZE = 2048;
+    /// <summary>
+    /// <p>This class implements a simple char vector with access to the
+    /// underlying array.</p>
+    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// </summary>
+    public class CharVector
+    {
+        /// <summary>Capacity increment size</summary>
+        private const int DEFAULT_BLOCK_SIZE = 2048;
 
-		private int blockSize;
+        private int blockSize;
 
-		/// <summary>The encapsulated array</summary>
-		private char[] array;
+        /// <summary>The encapsulated array</summary>
+        private char[] array;
 
-		/// <summary>Points to next free item</summary>
-		private int n;
+        /// <summary>Points to next free item</summary>
+        private int n;
 
-		/// <summary>Construct char vector instance with default block size.</summary>
-		public CharVector()
-			: this(DEFAULT_BLOCK_SIZE)
-		{
-		}
+        /// <summary>Construct char vector instance with default block size.</summary>
+        public CharVector()
+            : this(DEFAULT_BLOCK_SIZE)
+        {
+        }
 
-		/// <summary>Construct char vector instance.</summary>
-		/// <param name="capacity">initial block size</param>
-		public CharVector(int capacity)
-		{
-			if (capacity > 0)
-			{
-				blockSize = capacity;
-			}
-			else
-			{
-				blockSize = DEFAULT_BLOCK_SIZE;
-			}
-			array = new char[blockSize];
-			n = 0;
-		}
+        /// <summary>Construct char vector instance.</summary>
+        /// <param name="capacity">initial block size</param>
+        public CharVector(int capacity)
+        {
+            if (capacity > 0)
+            {
+                blockSize = capacity;
+            }
+            else
+            {
+                blockSize = DEFAULT_BLOCK_SIZE;
+            }
+            array = new char[blockSize];
+            n = 0;
+        }
 
-		/// <summary>Construct char vector instance.</summary>
-		/// <param name="a">char array to use</param>
-		public CharVector(char[] a)
-		{
-			blockSize = DEFAULT_BLOCK_SIZE;
-			array = a;
-			n = a.Length;
-		}
+        /// <summary>Construct char vector instance.</summary>
+        /// <param name="a">char array to use</param>
+        public CharVector(char[] a)
+        {
+            blockSize = DEFAULT_BLOCK_SIZE;
+            array = a;
+            n = a.Length;
+        }
 
-		/// <summary>Construct char vector instance.</summary>
-		/// <param name="a">char array to use</param>
-		/// <param name="capacity">initial block size</param>
-		public CharVector(char[] a, int capacity)
-		{
-			if (capacity > 0)
-			{
-				blockSize = capacity;
-			}
-			else
-			{
-				blockSize = DEFAULT_BLOCK_SIZE;
-			}
-			array = a;
-			n = a.Length;
-		}
+        /// <summary>Construct char vector instance.</summary>
+        /// <param name="a">char array to use</param>
+        /// <param name="capacity">initial block size</param>
+        public CharVector(char[] a, int capacity)
+        {
+            if (capacity > 0)
+            {
+                blockSize = capacity;
+            }
+            else
+            {
+                blockSize = DEFAULT_BLOCK_SIZE;
+            }
+            array = a;
+            n = a.Length;
+        }
 
-		public CharVector(iTextSharp.Layout.Hyphenation.CharVector cv)
-		{
-			this.array = (char[])cv.array.Clone();
-			this.blockSize = cv.blockSize;
-			this.n = cv.n;
-		}
+        public CharVector(iTextSharp.Layout.Hyphenation.CharVector cv)
+        {
+            this.array = (char[])cv.array.Clone();
+            this.blockSize = cv.blockSize;
+            this.n = cv.n;
+        }
 
-		/// <summary>Reset length of vector, but don't clear contents.</summary>
-		public virtual void Clear()
-		{
-			n = 0;
-		}
+        /// <summary>Reset length of vector, but don't clear contents.</summary>
+        public virtual void Clear()
+        {
+            n = 0;
+        }
 
-		/// <summary>Obtain char vector array.</summary>
-		/// <returns>char array</returns>
-		public virtual char[] GetArray()
-		{
-			return array;
-		}
+        /// <summary>Obtain char vector array.</summary>
+        /// <returns>char array</returns>
+        public virtual char[] GetArray()
+        {
+            return array;
+        }
 
-		/// <summary>Obtain number of items in array.</summary>
-		/// <returns>number of items</returns>
-		public virtual int Length()
-		{
-			return n;
-		}
+        /// <summary>Obtain number of items in array.</summary>
+        /// <returns>number of items</returns>
+        public virtual int Length()
+        {
+            return n;
+        }
 
-		/// <summary>Obtain capacity of array.</summary>
-		/// <returns>current capacity of array</returns>
-		public virtual int Capacity()
-		{
-			return array.Length;
-		}
+        /// <summary>Obtain capacity of array.</summary>
+        /// <returns>current capacity of array</returns>
+        public virtual int Capacity()
+        {
+            return array.Length;
+        }
 
-		/// <summary>Pet char at index.</summary>
-		/// <param name="index">the index</param>
-		/// <param name="val">a char</param>
-		public virtual void Put(int index, char val)
-		{
-			array[index] = val;
-		}
+        /// <summary>Pet char at index.</summary>
+        /// <param name="index">the index</param>
+        /// <param name="val">a char</param>
+        public virtual void Put(int index, char val)
+        {
+            array[index] = val;
+        }
 
-		/// <summary>Get char at index.</summary>
-		/// <param name="index">the index</param>
-		/// <returns>a char</returns>
-		public virtual char Get(int index)
-		{
-			return array[index];
-		}
+        /// <summary>Get char at index.</summary>
+        /// <param name="index">the index</param>
+        /// <returns>a char</returns>
+        public virtual char Get(int index)
+        {
+            return array[index];
+        }
 
-		/// <summary>This is to implement memory allocation in the array.</summary>
-		/// <remarks>This is to implement memory allocation in the array. Like malloc().</remarks>
-		/// <param name="size">to allocate</param>
-		/// <returns>previous length</returns>
-		public virtual int Alloc(int size)
-		{
-			int index = n;
-			int len = array.Length;
-			if (n + size >= len)
-			{
-				char[] aux = new char[len + blockSize];
-				System.Array.Copy(array, 0, aux, 0, len);
-				array = aux;
-			}
-			n += size;
-			return index;
-		}
+        /// <summary>This is to implement memory allocation in the array.</summary>
+        /// <remarks>This is to implement memory allocation in the array. Like malloc().</remarks>
+        /// <param name="size">to allocate</param>
+        /// <returns>previous length</returns>
+        public virtual int Alloc(int size)
+        {
+            int index = n;
+            int len = array.Length;
+            if (n + size >= len)
+            {
+                char[] aux = new char[len + blockSize];
+                System.Array.Copy(array, 0, aux, 0, len);
+                array = aux;
+            }
+            n += size;
+            return index;
+        }
 
-		/// <summary>Trim char vector to current length.</summary>
-		public virtual void TrimToSize()
-		{
-			if (n < array.Length)
-			{
-				char[] aux = new char[n];
-				System.Array.Copy(array, 0, aux, 0, n);
-				array = aux;
-			}
-		}
-	}
+        /// <summary>Trim char vector to current length.</summary>
+        public virtual void TrimToSize()
+        {
+            if (n < array.Length)
+            {
+                char[] aux = new char[n];
+                System.Array.Copy(array, 0, aux, 0, n);
+                array = aux;
+            }
+        }
+    }
 }

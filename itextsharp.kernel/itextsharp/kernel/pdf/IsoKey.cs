@@ -43,16 +43,16 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	public enum IsoKey
-	{
-		CANVAS_STACK,
-		DRAWMODE_FILL,
-		DRAWMODE_FILL_STROKE,
-		DRAWMODE_STROKE,
-		GRAPHIC_STATE_ONLY,
-		INLINE_IMAGE,
-		PAGE,
-		PDF_OBJECT,
-		RENDERING_INTENT
-	}
+    public enum IsoKey
+    {
+        CANVAS_STACK,
+        DRAWMODE_FILL,
+        DRAWMODE_FILL_STROKE,
+        DRAWMODE_STROKE,
+        GRAPHIC_STATE_ONLY,
+        INLINE_IMAGE,
+        PAGE,
+        PDF_OBJECT,
+        RENDERING_INTENT
+    }
 }

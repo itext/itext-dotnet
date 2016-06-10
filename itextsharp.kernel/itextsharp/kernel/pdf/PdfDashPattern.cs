@@ -43,51 +43,51 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfDashPattern
-	{
-		/// <summary>This is the length of a dash.</summary>
-		private float dash = -1;
+    public class PdfDashPattern
+    {
+        /// <summary>This is the length of a dash.</summary>
+        private float dash = -1;
 
-		/// <summary>This is the length of a gap.</summary>
-		private float gap = -1;
+        /// <summary>This is the length of a gap.</summary>
+        private float gap = -1;
 
-		/// <summary>This is the phase.</summary>
-		private float phase = -1;
+        /// <summary>This is the phase.</summary>
+        private float phase = -1;
 
-		public PdfDashPattern()
-		{
-		}
+        public PdfDashPattern()
+        {
+        }
 
-		public PdfDashPattern(float dash)
-		{
-			this.dash = dash;
-		}
+        public PdfDashPattern(float dash)
+        {
+            this.dash = dash;
+        }
 
-		public PdfDashPattern(float dash, float gap)
-		{
-			this.dash = dash;
-			this.gap = gap;
-		}
+        public PdfDashPattern(float dash, float gap)
+        {
+            this.dash = dash;
+            this.gap = gap;
+        }
 
-		public PdfDashPattern(float dash, float gap, float phase)
-			: this(dash, gap)
-		{
-			this.phase = phase;
-		}
+        public PdfDashPattern(float dash, float gap, float phase)
+            : this(dash, gap)
+        {
+            this.phase = phase;
+        }
 
-		public virtual float GetDash()
-		{
-			return dash;
-		}
+        public virtual float GetDash()
+        {
+            return dash;
+        }
 
-		public virtual float GetGap()
-		{
-			return gap;
-		}
+        public virtual float GetGap()
+        {
+            return gap;
+        }
 
-		public virtual float GetPhase()
-		{
-			return phase;
-		}
-	}
+        public virtual float GetPhase()
+        {
+            return phase;
+        }
+    }
 }

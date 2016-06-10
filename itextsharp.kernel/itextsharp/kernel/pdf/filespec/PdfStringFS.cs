@@ -46,21 +46,21 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filespec
 {
-	public class PdfStringFS : PdfFileSpec
-	{
-		public PdfStringFS(String @string)
-			: base(new PdfString(@string))
-		{
-		}
+    public class PdfStringFS : PdfFileSpec
+    {
+        public PdfStringFS(String @string)
+            : base(new PdfString(@string))
+        {
+        }
 
-		public PdfStringFS(PdfString pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfStringFS(PdfString pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

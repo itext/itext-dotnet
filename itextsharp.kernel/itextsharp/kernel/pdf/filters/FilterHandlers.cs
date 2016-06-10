@@ -47,49 +47,49 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>Encapsulates filter behavior for PDF streams.</summary>
-	/// <remarks>
-	/// Encapsulates filter behavior for PDF streams.  Classes generally interace with this
-	/// using the static getDefaultFilterHandlers() method, then obtain the desired
-	/// <see cref="IFilterHandler"/>
-	/// via a lookup.
-	/// </remarks>
-	public sealed class FilterHandlers
-	{
-		/// <summary>
-		/// The default
-		/// <see cref="IFilterHandler"/>
-		/// s used by iText
-		/// </summary>
-		private static readonly IDictionary<PdfName, IFilterHandler> defaults;
+    /// <summary>Encapsulates filter behavior for PDF streams.</summary>
+    /// <remarks>
+    /// Encapsulates filter behavior for PDF streams.  Classes generally interace with this
+    /// using the static getDefaultFilterHandlers() method, then obtain the desired
+    /// <see cref="IFilterHandler"/>
+    /// via a lookup.
+    /// </remarks>
+    public sealed class FilterHandlers
+    {
+        /// <summary>
+        /// The default
+        /// <see cref="IFilterHandler"/>
+        /// s used by iText
+        /// </summary>
+        private static readonly IDictionary<PdfName, IFilterHandler> defaults;
 
-		static FilterHandlers()
-		{
-			// Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
-			// it may also be better to split the sub-classes out into a separate package
-			IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler
-				>();
-			map[PdfName.FlateDecode] = new FlateDecodeFilter();
-			map[PdfName.FL] = new FlateDecodeFilter();
-			map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();
-			map[PdfName.AHx] = new ASCIIHexDecodeFilter();
-			map[PdfName.ASCII85Decode] = new ASCII85DecodeFilter();
-			map[PdfName.A85] = new ASCII85DecodeFilter();
-			map[PdfName.LZWDecode] = new LZWDecodeFilter();
-			map[PdfName.CCITTFaxDecode] = new CCITTFaxDecodeFilter();
-			map[PdfName.Crypt] = new DoNothingFilter();
-			map[PdfName.RunLengthDecode] = new RunLengthDecodeFilter();
-			defaults = JavaCollectionsUtil.UnmodifiableMap(map);
-		}
+        static FilterHandlers()
+        {
+            // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
+            // it may also be better to split the sub-classes out into a separate package
+            IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler
+                >();
+            map[PdfName.FlateDecode] = new FlateDecodeFilter();
+            map[PdfName.FL] = new FlateDecodeFilter();
+            map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();
+            map[PdfName.AHx] = new ASCIIHexDecodeFilter();
+            map[PdfName.ASCII85Decode] = new ASCII85DecodeFilter();
+            map[PdfName.A85] = new ASCII85DecodeFilter();
+            map[PdfName.LZWDecode] = new LZWDecodeFilter();
+            map[PdfName.CCITTFaxDecode] = new CCITTFaxDecodeFilter();
+            map[PdfName.Crypt] = new DoNothingFilter();
+            map[PdfName.RunLengthDecode] = new RunLengthDecodeFilter();
+            defaults = JavaCollectionsUtil.UnmodifiableMap(map);
+        }
 
-		/// <returns>
-		/// the default
-		/// <see cref="IFilterHandler"/>
-		/// s used by iText
-		/// </returns>
-		public static IDictionary<PdfName, IFilterHandler> GetDefaultFilterHandlers()
-		{
-			return defaults;
-		}
-	}
+        /// <returns>
+        /// the default
+        /// <see cref="IFilterHandler"/>
+        /// s used by iText
+        /// </returns>
+        public static IDictionary<PdfName, IFilterHandler> GetDefaultFilterHandlers()
+        {
+            return defaults;
+        }
+    }
 }

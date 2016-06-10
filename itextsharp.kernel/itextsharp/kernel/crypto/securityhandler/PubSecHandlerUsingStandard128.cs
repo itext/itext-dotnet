@@ -47,57 +47,57 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
-	public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40
-	{
-		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate
-			[] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
-			: base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly
-				)
-		{
-		}
+    public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40
+    {
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate
+            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
+            : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly
+                )
+        {
+        }
 
-		public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters
-			 certificateKey, X509Certificate certificate, bool encryptMetadata)
-			: base(encryptionDictionary, certificateKey, certificate, encryptMetadata)
-		{
-		}
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters
+             certificateKey, X509Certificate certificate, bool encryptMetadata)
+            : base(encryptionDictionary, certificateKey, certificate, encryptMetadata)
+        {
+        }
 
-		protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-			 encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
-		{
-			encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
-			PdfArray recipients = CreateRecipientsArray();
-			if (encryptMetadata)
-			{
-				encryptionDictionary.Put(PdfName.R, new PdfNumber(3));
-				encryptionDictionary.Put(PdfName.V, new PdfNumber(2));
-				encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s4);
-				encryptionDictionary.Put(PdfName.Recipients, recipients);
-			}
-			else
-			{
-				encryptionDictionary.Put(PdfName.R, new PdfNumber(4));
-				encryptionDictionary.Put(PdfName.V, new PdfNumber(4));
-				encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);
-				PdfDictionary stdcf = new PdfDictionary();
-				stdcf.Put(PdfName.Recipients, recipients);
-				stdcf.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
-				stdcf.Put(PdfName.CFM, PdfName.V2);
-				PdfDictionary cf = new PdfDictionary();
-				cf.Put(PdfName.DefaultCryptFilter, stdcf);
-				encryptionDictionary.Put(PdfName.CF, cf);
-				if (embeddedFilesOnly)
-				{
-					encryptionDictionary.Put(PdfName.EFF, PdfName.DefaultCryptFilter);
-					encryptionDictionary.Put(PdfName.StrF, PdfName.Identity);
-					encryptionDictionary.Put(PdfName.StmF, PdfName.Identity);
-				}
-				else
-				{
-					encryptionDictionary.Put(PdfName.StrF, PdfName.DefaultCryptFilter);
-					encryptionDictionary.Put(PdfName.StmF, PdfName.DefaultCryptFilter);
-				}
-			}
-		}
-	}
+        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
+             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
+        {
+            encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
+            PdfArray recipients = CreateRecipientsArray();
+            if (encryptMetadata)
+            {
+                encryptionDictionary.Put(PdfName.R, new PdfNumber(3));
+                encryptionDictionary.Put(PdfName.V, new PdfNumber(2));
+                encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s4);
+                encryptionDictionary.Put(PdfName.Recipients, recipients);
+            }
+            else
+            {
+                encryptionDictionary.Put(PdfName.R, new PdfNumber(4));
+                encryptionDictionary.Put(PdfName.V, new PdfNumber(4));
+                encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);
+                PdfDictionary stdcf = new PdfDictionary();
+                stdcf.Put(PdfName.Recipients, recipients);
+                stdcf.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
+                stdcf.Put(PdfName.CFM, PdfName.V2);
+                PdfDictionary cf = new PdfDictionary();
+                cf.Put(PdfName.DefaultCryptFilter, stdcf);
+                encryptionDictionary.Put(PdfName.CF, cf);
+                if (embeddedFilesOnly)
+                {
+                    encryptionDictionary.Put(PdfName.EFF, PdfName.DefaultCryptFilter);
+                    encryptionDictionary.Put(PdfName.StrF, PdfName.Identity);
+                    encryptionDictionary.Put(PdfName.StmF, PdfName.Identity);
+                }
+                else
+                {
+                    encryptionDictionary.Put(PdfName.StrF, PdfName.DefaultCryptFilter);
+                    encryptionDictionary.Put(PdfName.StmF, PdfName.DefaultCryptFilter);
+                }
+            }
+        }
+    }
 }

@@ -52,129 +52,129 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// Defines the most common properties that most
-	/// <see cref="IElement"/>
-	/// implementations
-	/// share.
-	/// </summary>
-	/// 
-	public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
-		where T : IElement
-	{
-		protected internal IRenderer nextRenderer;
+    /// <summary>
+    /// Defines the most common properties that most
+    /// <see cref="IElement"/>
+    /// implementations
+    /// share.
+    /// </summary>
+    /// 
+    public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
+        where T : IElement
+    {
+        protected internal IRenderer nextRenderer;
 
-		protected internal IList<IElement> childElements = new List<IElement>();
+        protected internal IList<IElement> childElements = new List<IElement>();
 
-		protected internal ICollection<Style> styles;
+        protected internal ICollection<Style> styles;
 
-		public virtual IRenderer GetRenderer()
-		{
-			if (nextRenderer != null)
-			{
-				IRenderer renderer = nextRenderer;
-				nextRenderer = nextRenderer.GetNextRenderer();
-				return renderer;
-			}
-			return MakeNewRenderer();
-		}
+        public virtual IRenderer GetRenderer()
+        {
+            if (nextRenderer != null)
+            {
+                IRenderer renderer = nextRenderer;
+                nextRenderer = nextRenderer.GetNextRenderer();
+                return renderer;
+            }
+            return MakeNewRenderer();
+        }
 
-		public virtual void SetNextRenderer(IRenderer renderer)
-		{
-			this.nextRenderer = renderer;
-		}
+        public virtual void SetNextRenderer(IRenderer renderer)
+        {
+            this.nextRenderer = renderer;
+        }
 
-		public virtual IRenderer CreateRendererSubTree()
-		{
-			IRenderer rendererRoot = GetRenderer();
-			foreach (IElement child in childElements)
-			{
-				rendererRoot.AddChild(child.CreateRendererSubTree());
-			}
-			return rendererRoot;
-		}
+        public virtual IRenderer CreateRendererSubTree()
+        {
+            IRenderer rendererRoot = GetRenderer();
+            foreach (IElement child in childElements)
+            {
+                rendererRoot.AddChild(child.CreateRendererSubTree());
+            }
+            return rendererRoot;
+        }
 
-		public override bool HasProperty(int property)
-		{
-			bool hasProperty = base.HasProperty(property);
-			if (styles != null && styles.Count > 0 && !hasProperty)
-			{
-				foreach (Style style in styles)
-				{
-					if (style.HasProperty(property))
-					{
-						hasProperty = true;
-						break;
-					}
-				}
-			}
-			return hasProperty;
-		}
+        public override bool HasProperty(int property)
+        {
+            bool hasProperty = base.HasProperty(property);
+            if (styles != null && styles.Count > 0 && !hasProperty)
+            {
+                foreach (Style style in styles)
+                {
+                    if (style.HasProperty(property))
+                    {
+                        hasProperty = true;
+                        break;
+                    }
+                }
+            }
+            return hasProperty;
+        }
 
-		public override T1 GetProperty<T1>(int property)
-		{
-			Object result = base.GetProperty<T1>(property);
-			if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property
-				))
-			{
-				foreach (Style style in styles)
-				{
-					result = style.GetProperty<T1>(property);
-					if (result != null || base.HasProperty(property))
-					{
-						break;
-					}
-				}
-			}
-			return (T1)result;
-		}
+        public override T1 GetProperty<T1>(int property)
+        {
+            Object result = base.GetProperty<T1>(property);
+            if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property
+                ))
+            {
+                foreach (Style style in styles)
+                {
+                    result = style.GetProperty<T1>(property);
+                    if (result != null || base.HasProperty(property))
+                    {
+                        break;
+                    }
+                }
+            }
+            return (T1)result;
+        }
 
-		/// <summary>Add a new style to this element.</summary>
-		/// <remarks>
-		/// Add a new style to this element. A style can be used as an effective way
-		/// to define multiple equal properties to several elements.
-		/// </remarks>
-		/// <param name="style">the style to be added</param>
-		/// <returns>this element</returns>
-		public virtual T AddStyle(Style style)
-		{
-			if (styles == null)
-			{
-				styles = new LinkedHashSet<Style>();
-			}
-			styles.Add(style);
-			return (T)(Object)this;
-		}
+        /// <summary>Add a new style to this element.</summary>
+        /// <remarks>
+        /// Add a new style to this element. A style can be used as an effective way
+        /// to define multiple equal properties to several elements.
+        /// </remarks>
+        /// <param name="style">the style to be added</param>
+        /// <returns>this element</returns>
+        public virtual T AddStyle(Style style)
+        {
+            if (styles == null)
+            {
+                styles = new LinkedHashSet<Style>();
+            }
+            styles.Add(style);
+            return (T)(Object)this;
+        }
 
-		protected internal abstract IRenderer MakeNewRenderer();
+        protected internal abstract IRenderer MakeNewRenderer();
 
-		/// <summary>Marks all child elements as artifacts recursively.</summary>
-		protected internal virtual void PropagateArtifactRoleToChildElements()
-		{
-			foreach (IElement child in childElements)
-			{
-				if (child is IAccessibleElement)
-				{
-					((IAccessibleElement)child).SetRole(PdfName.Artifact);
-				}
-			}
-		}
+        /// <summary>Marks all child elements as artifacts recursively.</summary>
+        protected internal virtual void PropagateArtifactRoleToChildElements()
+        {
+            foreach (IElement child in childElements)
+            {
+                if (child is IAccessibleElement)
+                {
+                    ((IAccessibleElement)child).SetRole(PdfName.Artifact);
+                }
+            }
+        }
 
-		public virtual bool IsEmpty()
-		{
-			return 0 == childElements.Count;
-		}
+        public virtual bool IsEmpty()
+        {
+            return 0 == childElements.Count;
+        }
 
-		public virtual T SetAction(PdfAction action)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
-			return (T)(Object)this;
-		}
+        public virtual T SetAction(PdfAction action)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
+            return (T)(Object)this;
+        }
 
-		public virtual T SetPageNumber(int pageNumber)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
-			return (T)(Object)this;
-		}
-	}
+        public virtual T SetPageNumber(int pageNumber)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
+            return (T)(Object)this;
+        }
+    }
 }

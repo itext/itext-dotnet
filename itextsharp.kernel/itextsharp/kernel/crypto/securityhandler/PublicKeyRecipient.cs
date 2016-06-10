@@ -45,38 +45,38 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
-	public class PublicKeyRecipient
-	{
-		private X509Certificate certificate = null;
+    public class PublicKeyRecipient
+    {
+        private X509Certificate certificate = null;
 
-		private int permission = 0;
+        private int permission = 0;
 
-		protected internal byte[] cms = null;
+        protected internal byte[] cms = null;
 
-		public PublicKeyRecipient(X509Certificate certificate, int permission)
-		{
-			this.certificate = certificate;
-			this.permission = permission;
-		}
+        public PublicKeyRecipient(X509Certificate certificate, int permission)
+        {
+            this.certificate = certificate;
+            this.permission = permission;
+        }
 
-		public virtual X509Certificate GetCertificate()
-		{
-			return certificate;
-		}
+        public virtual X509Certificate GetCertificate()
+        {
+            return certificate;
+        }
 
-		public virtual int GetPermission()
-		{
-			return permission;
-		}
+        public virtual int GetPermission()
+        {
+            return permission;
+        }
 
-		protected internal virtual void SetCms(byte[] cms)
-		{
-			this.cms = cms;
-		}
+        protected internal virtual void SetCms(byte[] cms)
+        {
+            this.cms = cms;
+        }
 
-		protected internal virtual byte[] GetCms()
-		{
-			return cms;
-		}
-	}
+        protected internal virtual byte[] GetCms()
+        {
+            return cms;
+        }
+    }
 }

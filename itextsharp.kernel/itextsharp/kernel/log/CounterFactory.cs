@@ -45,56 +45,56 @@ using System;
 
 namespace iTextSharp.Kernel.Log
 {
-	/// <summary>Factory that creates a counter for every reader or writer class.</summary>
-	/// <remarks>
-	/// Factory that creates a counter for every reader or writer class.
-	/// You can implement your own counter and declare it like this:
-	/// <code>CounterFactory.getInstance().setCounter(new SysoCounter());</code>
-	/// SysoCounter is just an example of a Counter implementation.
-	/// It writes info about files being read and written to the System.out.
-	/// <p>
-	/// This functionality can be used to create metrics in a SaaS context.
-	/// </remarks>
-	public class CounterFactory
-	{
-		/// <summary>The singleton instance.</summary>
-		private static iTextSharp.Kernel.Log.CounterFactory instance;
+    /// <summary>Factory that creates a counter for every reader or writer class.</summary>
+    /// <remarks>
+    /// Factory that creates a counter for every reader or writer class.
+    /// You can implement your own counter and declare it like this:
+    /// <code>CounterFactory.getInstance().setCounter(new SysoCounter());</code>
+    /// SysoCounter is just an example of a Counter implementation.
+    /// It writes info about files being read and written to the System.out.
+    /// <p>
+    /// This functionality can be used to create metrics in a SaaS context.
+    /// </remarks>
+    public class CounterFactory
+    {
+        /// <summary>The singleton instance.</summary>
+        private static iTextSharp.Kernel.Log.CounterFactory instance;
 
-		/// <summary>The current counter implementation.</summary>
-		private Counter counter = new DefaultCounter();
+        /// <summary>The current counter implementation.</summary>
+        private Counter counter = new DefaultCounter();
 
-		static CounterFactory()
-		{
-			instance = new iTextSharp.Kernel.Log.CounterFactory();
-		}
+        static CounterFactory()
+        {
+            instance = new iTextSharp.Kernel.Log.CounterFactory();
+        }
 
-		/// <summary>The empty constructor.</summary>
-		private CounterFactory()
-		{
-		}
+        /// <summary>The empty constructor.</summary>
+        private CounterFactory()
+        {
+        }
 
-		/// <summary>Returns the singleton instance of the factory.</summary>
-		public static iTextSharp.Kernel.Log.CounterFactory GetInstance()
-		{
-			return instance;
-		}
+        /// <summary>Returns the singleton instance of the factory.</summary>
+        public static iTextSharp.Kernel.Log.CounterFactory GetInstance()
+        {
+            return instance;
+        }
 
-		/// <summary>Returns a counter factory.</summary>
-		public static Counter GetCounter(Type cls)
-		{
-			return instance.counter.GetCounter(cls);
-		}
+        /// <summary>Returns a counter factory.</summary>
+        public static Counter GetCounter(Type cls)
+        {
+            return instance.counter.GetCounter(cls);
+        }
 
-		/// <summary>Getter for the counter.</summary>
-		public virtual Counter GetCounter()
-		{
-			return counter;
-		}
+        /// <summary>Getter for the counter.</summary>
+        public virtual Counter GetCounter()
+        {
+            return counter;
+        }
 
-		/// <summary>Setter for the counter.</summary>
-		public virtual void SetCounter(Counter counter)
-		{
-			this.counter = counter;
-		}
-	}
+        /// <summary>Setter for the counter.</summary>
+        public virtual void SetCounter(Counter counter)
+        {
+            this.counter = counter;
+        }
+    }
 }

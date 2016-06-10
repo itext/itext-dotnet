@@ -46,21 +46,21 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
-	public interface IOcspClient
-	{
-		/// <summary>Gets an encoded byte array with OCSP validation.</summary>
-		/// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.
-		/// 	</remarks>
-		/// <param name="checkCert">Certificate to check.</param>
-		/// <param name="issuerCert">The parent certificate.</param>
-		/// <param name="url">
-		/// The url to get the verification. It it's null it will be taken.
-		/// from the check cert or from other implementation specific source
-		/// </param>
-		/// <returns>A byte array with the validation or null if the validation could not be obtained
-		/// 	</returns>
-		byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url
-			);
-	}
+    /// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
+    public interface IOcspClient
+    {
+        /// <summary>Gets an encoded byte array with OCSP validation.</summary>
+        /// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.
+        ///     </remarks>
+        /// <param name="checkCert">Certificate to check.</param>
+        /// <param name="issuerCert">The parent certificate.</param>
+        /// <param name="url">
+        /// The url to get the verification. It it's null it will be taken.
+        /// from the check cert or from other implementation specific source
+        /// </param>
+        /// <returns>A byte array with the validation or null if the validation could not be obtained
+        ///     </returns>
+        byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url
+            );
+    }
 }

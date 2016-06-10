@@ -46,19 +46,19 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter
 {
-	/// <summary>This is an interface which helps to filter events.</summary>
-	public interface IEventFilter
-	{
-		/// <summary>
-		/// This method checks an event and decides whether it should be processed further (corresponds to
-		/// <see langword="true"/>
-		/// return value), or filtered out (corresponds to
-		/// <see langword="false"/>
-		/// return value).
-		/// </summary>
-		/// <param name="data">event data</param>
-		/// <param name="type">event type</param>
-		/// <returns>true to process event further, false to filter event out</returns>
-		bool Accept(IEventData data, EventType type);
-	}
+    /// <summary>This is an interface which helps to filter events.</summary>
+    public interface IEventFilter
+    {
+        /// <summary>
+        /// This method checks an event and decides whether it should be processed further (corresponds to
+        /// <see langword="true"/>
+        /// return value), or filtered out (corresponds to
+        /// <see langword="false"/>
+        /// return value).
+        /// </summary>
+        /// <param name="data">event data</param>
+        /// <param name="type">event type</param>
+        /// <returns>true to process event further, false to filter event out</returns>
+        bool Accept(IEventData data, EventType type);
+    }
 }

@@ -51,69 +51,69 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A clickable piece of
-	/// <see cref="Text"/>
-	/// which contains a
-	/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary
-	/// 	</see>
-	/// . The concept is largely similar to that of the
-	/// HTML anchor tag.
-	/// </summary>
-	public class Link : Text
-	{
-		protected internal PdfLinkAnnotation linkAnnotation;
+    /// <summary>
+    /// A clickable piece of
+    /// <see cref="Text"/>
+    /// which contains a
+    /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary
+    ///     </see>
+    /// . The concept is largely similar to that of the
+    /// HTML anchor tag.
+    /// </summary>
+    public class Link : Text
+    {
+        protected internal PdfLinkAnnotation linkAnnotation;
 
-		/// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
-		/// <param name="text">the textual contents of the link</param>
-		/// <param name="linkAnnotation">
-		/// a
-		/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
-		/// </param>
-		public Link(String text, PdfLinkAnnotation linkAnnotation)
-			: base(text)
-		{
-			this.linkAnnotation = linkAnnotation;
-			SetRole(PdfName.Link);
-		}
+        /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
+        /// <param name="text">the textual contents of the link</param>
+        /// <param name="linkAnnotation">
+        /// a
+        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
+        /// </param>
+        public Link(String text, PdfLinkAnnotation linkAnnotation)
+            : base(text)
+        {
+            this.linkAnnotation = linkAnnotation;
+            SetRole(PdfName.Link);
+        }
 
-		/// <summary>Creates a Link which can execute an action.</summary>
-		/// <param name="text">the textual contents of the link</param>
-		/// <param name="action">
-		/// a
-		/// <see cref="iTextSharp.Kernel.Pdf.Action.PdfAction"/>
-		/// </param>
-		public Link(String text, PdfAction action)
-			: this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0))
-				.SetAction(action)))
-		{
-		}
+        /// <summary>Creates a Link which can execute an action.</summary>
+        /// <param name="text">the textual contents of the link</param>
+        /// <param name="action">
+        /// a
+        /// <see cref="iTextSharp.Kernel.Pdf.Action.PdfAction"/>
+        /// </param>
+        public Link(String text, PdfAction action)
+            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0))
+                .SetAction(action)))
+        {
+        }
 
-		/// <summary>Creates a Link to another location in the document.</summary>
-		/// <param name="text">the textual contents of the link</param>
-		/// <param name="destination">
-		/// a
-		/// <see cref="iTextSharp.Kernel.Pdf.Navigation.PdfDestination"/>
-		/// </param>
-		public Link(String text, PdfDestination destination)
-			: this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination
-				))
-		{
-		}
+        /// <summary>Creates a Link to another location in the document.</summary>
+        /// <param name="text">the textual contents of the link</param>
+        /// <param name="destination">
+        /// a
+        /// <see cref="iTextSharp.Kernel.Pdf.Navigation.PdfDestination"/>
+        /// </param>
+        public Link(String text, PdfDestination destination)
+            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination
+                ))
+        {
+        }
 
-		/// <summary>Gets the link annotation dictionary associated with this link.</summary>
-		/// <returns>
-		/// a
-		/// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
-		/// </returns>
-		public virtual PdfLinkAnnotation GetLinkAnnotation()
-		{
-			return linkAnnotation;
-		}
+        /// <summary>Gets the link annotation dictionary associated with this link.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
+        /// </returns>
+        public virtual PdfLinkAnnotation GetLinkAnnotation()
+        {
+            return linkAnnotation;
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new LinkRenderer(this, text);
-		}
-	}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new LinkRenderer(this, text);
+        }
+    }
 }

@@ -50,62 +50,62 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace iTextSharp.Kernel.Crypto
 {
-	/// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
-	/// <author>Paulo Soares</author>
-	public class AESCipher
-	{
-		private PaddedBufferedBlockCipher bp;
+    /// <summary>Creates an AES Cipher with CBC and padding PKCS5/7.</summary>
+    /// <author>Paulo Soares</author>
+    public class AESCipher
+    {
+        private PaddedBufferedBlockCipher bp;
 
-		/// <summary>Creates a new instance of AESCipher</summary>
-		public AESCipher(bool forEncryption, byte[] key, byte[] iv)
-		{
-			IBlockCipher aes = new AesFastEngine();
-			IBlockCipher cbc = new CbcBlockCipher(aes);
-			bp = new PaddedBufferedBlockCipher(cbc);
-			KeyParameter kp = new KeyParameter(key);
-			ParametersWithIV piv = new ParametersWithIV(kp, iv);
-			bp.Init(forEncryption, piv);
-		}
+        /// <summary>Creates a new instance of AESCipher</summary>
+        public AESCipher(bool forEncryption, byte[] key, byte[] iv)
+        {
+            IBlockCipher aes = new AesFastEngine();
+            IBlockCipher cbc = new CbcBlockCipher(aes);
+            bp = new PaddedBufferedBlockCipher(cbc);
+            KeyParameter kp = new KeyParameter(key);
+            ParametersWithIV piv = new ParametersWithIV(kp, iv);
+            bp.Init(forEncryption, piv);
+        }
 
-		public virtual byte[] Update(byte[] inp, int inpOff, int inpLen)
-		{
-			int neededLen = bp.GetUpdateOutputSize(inpLen);
-			byte[] outp;
-			if (neededLen > 0)
-			{
-				outp = new byte[neededLen];
-			}
-			else
-			{
-				outp = new byte[0];
-			}
-			bp.ProcessBytes(inp, inpOff, inpLen, outp, 0);
-			return outp;
-		}
+        public virtual byte[] Update(byte[] inp, int inpOff, int inpLen)
+        {
+            int neededLen = bp.GetUpdateOutputSize(inpLen);
+            byte[] outp;
+            if (neededLen > 0)
+            {
+                outp = new byte[neededLen];
+            }
+            else
+            {
+                outp = new byte[0];
+            }
+            bp.ProcessBytes(inp, inpOff, inpLen, outp, 0);
+            return outp;
+        }
 
-		public virtual byte[] DoFinal()
-		{
-			int neededLen = bp.GetOutputSize(0);
-			byte[] outp = new byte[neededLen];
-			int n;
-			try
-			{
-				n = bp.DoFinal(outp, 0);
-			}
-			catch (Exception)
-			{
-				return outp;
-			}
-			if (n != outp.Length)
-			{
-				byte[] outp2 = new byte[n];
-				System.Array.Copy(outp, 0, outp2, 0, n);
-				return outp2;
-			}
-			else
-			{
-				return outp;
-			}
-		}
-	}
+        public virtual byte[] DoFinal()
+        {
+            int neededLen = bp.GetOutputSize(0);
+            byte[] outp = new byte[neededLen];
+            int n;
+            try
+            {
+                n = bp.DoFinal(outp, 0);
+            }
+            catch (Exception)
+            {
+                return outp;
+            }
+            if (n != outp.Length)
+            {
+                byte[] outp2 = new byte[n];
+                System.Array.Copy(outp, 0, outp2, 0, n);
+                return outp2;
+            }
+            else
+            {
+                return outp;
+            }
+        }
+    }
 }

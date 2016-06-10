@@ -31,37 +31,37 @@ using System;
 
 namespace iTextSharp.Kernel.XMP
 {
-	/// <summary>This exception wraps all errors that occur in the XMP Toolkit.</summary>
-	/// <since>16.02.2006</since>
-	public class XMPException : Exception
-	{
-		/// <summary>the errorCode of the XMP toolkit</summary>
-		private int errorCode;
+    /// <summary>This exception wraps all errors that occur in the XMP Toolkit.</summary>
+    /// <since>16.02.2006</since>
+    public class XMPException : Exception
+    {
+        /// <summary>the errorCode of the XMP toolkit</summary>
+        private int errorCode;
 
-		/// <summary>Constructs an exception with a message and an error code.</summary>
-		/// <param name="message">the message</param>
-		/// <param name="errorCode">the error code</param>
-		public XMPException(String message, int errorCode)
-			: base(message)
-		{
-			this.errorCode = errorCode;
-		}
+        /// <summary>Constructs an exception with a message and an error code.</summary>
+        /// <param name="message">the message</param>
+        /// <param name="errorCode">the error code</param>
+        public XMPException(String message, int errorCode)
+            : base(message)
+        {
+            this.errorCode = errorCode;
+        }
 
-		/// <summary>Constructs an exception with a message, an error code and a <code>Throwable</code>
-		/// 	</summary>
-		/// <param name="message">the error message.</param>
-		/// <param name="errorCode">the error code</param>
-		/// <param name="t">the exception source</param>
-		public XMPException(String message, int errorCode, Exception t)
-			: base(message, t)
-		{
-			this.errorCode = errorCode;
-		}
+        /// <summary>Constructs an exception with a message, an error code and a <code>Throwable</code>
+        ///     </summary>
+        /// <param name="message">the error message.</param>
+        /// <param name="errorCode">the error code</param>
+        /// <param name="t">the exception source</param>
+        public XMPException(String message, int errorCode, Exception t)
+            : base(message, t)
+        {
+            this.errorCode = errorCode;
+        }
 
-		/// <returns>Returns the errorCode.</returns>
-		public virtual int GetErrorCode()
-		{
-			return errorCode;
-		}
-	}
+        /// <returns>Returns the errorCode.</returns>
+        public virtual int GetErrorCode()
+        {
+            return errorCode;
+        }
+    }
 }

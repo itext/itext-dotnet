@@ -47,22 +47,22 @@ using iTextSharp.Kernel.Pdf.Function;
 
 namespace iTextSharp.Kernel.Color
 {
-	public class Separation : iTextSharp.Kernel.Color.Color
-	{
-		public Separation(PdfSpecialCs.Separation cs)
-			: this(cs, 1f)
-		{
-		}
+    public class Separation : iTextSharp.Kernel.Color.Color
+    {
+        public Separation(PdfSpecialCs.Separation cs)
+            : this(cs, 1f)
+        {
+        }
 
-		public Separation(PdfSpecialCs.Separation cs, float value)
-			: base(cs, new float[] { value })
-		{
-		}
+        public Separation(PdfSpecialCs.Separation cs, float value)
+            : base(cs, new float[] { value })
+        {
+        }
 
-		public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform
-			, float value)
-			: this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value)
-		{
-		}
-	}
+        public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform
+            , float value)
+            : this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value)
+        {
+        }
+    }
 }

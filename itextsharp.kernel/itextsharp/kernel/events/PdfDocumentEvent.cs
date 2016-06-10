@@ -46,60 +46,60 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Events
 {
-	/// <summary>Event dispatched by PdfDocument.</summary>
-	public class PdfDocumentEvent : Event
-	{
-		/// <summary>Dispatched after page is created.</summary>
-		public const String START_PAGE = "StartPdfPage";
+    /// <summary>Event dispatched by PdfDocument.</summary>
+    public class PdfDocumentEvent : Event
+    {
+        /// <summary>Dispatched after page is created.</summary>
+        public const String START_PAGE = "StartPdfPage";
 
-		/// <summary>Dispatched after page is inserted/added into document.</summary>
-		public const String INSERT_PAGE = "InsertPdfPage";
+        /// <summary>Dispatched after page is inserted/added into document.</summary>
+        public const String INSERT_PAGE = "InsertPdfPage";
 
-		/// <summary>Dispatched after page is removed from document.</summary>
-		public const String REMOVE_PAGE = "RemovePdfPage";
+        /// <summary>Dispatched after page is removed from document.</summary>
+        public const String REMOVE_PAGE = "RemovePdfPage";
 
-		/// <summary>Dispatched before page is closed and written.</summary>
-		public const String END_PAGE = "EndPdfPage";
+        /// <summary>Dispatched before page is closed and written.</summary>
+        public const String END_PAGE = "EndPdfPage";
 
-		/// <summary>The PdfPage associated with this event.</summary>
-		protected internal PdfPage page;
+        /// <summary>The PdfPage associated with this event.</summary>
+        protected internal PdfPage page;
 
-		/// <summary>The PdfDocument associated with this event.</summary>
-		private PdfDocument document;
+        /// <summary>The PdfDocument associated with this event.</summary>
+        private PdfDocument document;
 
-		/// <summary>Creates a PdfDocumentEvent.</summary>
-		/// <param name="type">type of the event that fired this event</param>
-		/// <param name="document">document that fired this event</param>
-		public PdfDocumentEvent(String type, PdfDocument document)
-			: base(type)
-		{
-			this.document = document;
-		}
+        /// <summary>Creates a PdfDocumentEvent.</summary>
+        /// <param name="type">type of the event that fired this event</param>
+        /// <param name="document">document that fired this event</param>
+        public PdfDocumentEvent(String type, PdfDocument document)
+            : base(type)
+        {
+            this.document = document;
+        }
 
-		/// <summary>Creates a PdfDocumentEvent.</summary>
-		/// <param name="type">type of the event that fired this event</param>
-		/// <param name="page">page that fired this event</param>
-		public PdfDocumentEvent(String type, PdfPage page)
-			: base(type)
-		{
-			this.page = page;
-			this.document = page.GetDocument();
-		}
+        /// <summary>Creates a PdfDocumentEvent.</summary>
+        /// <param name="type">type of the event that fired this event</param>
+        /// <param name="page">page that fired this event</param>
+        public PdfDocumentEvent(String type, PdfPage page)
+            : base(type)
+        {
+            this.page = page;
+            this.document = page.GetDocument();
+        }
 
-		/// <summary>Returns the PdfDocument associated with this event.</summary>
-		/// <returns>the PdfDocument associated with this event</returns>
-		public virtual PdfDocument GetDocument()
-		{
-			return document;
-		}
+        /// <summary>Returns the PdfDocument associated with this event.</summary>
+        /// <returns>the PdfDocument associated with this event</returns>
+        public virtual PdfDocument GetDocument()
+        {
+            return document;
+        }
 
-		/// <summary>Returns the PdfPage associated with this event.</summary>
-		/// <remarks>Returns the PdfPage associated with this event. Warning: this can be null.
-		/// 	</remarks>
-		/// <returns>the PdfPage associated with this event</returns>
-		public virtual PdfPage GetPage()
-		{
-			return page;
-		}
-	}
+        /// <summary>Returns the PdfPage associated with this event.</summary>
+        /// <remarks>Returns the PdfPage associated with this event. Warning: this can be null.
+        ///     </remarks>
+        /// <returns>the PdfPage associated with this event</returns>
+        public virtual PdfPage GetPage()
+        {
+            return page;
+        }
+    }
 }

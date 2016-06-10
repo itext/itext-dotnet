@@ -46,118 +46,118 @@ using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Crypto
 {
-	public class OutputStreamAesEncryption : OutputStreamEncryption
-	{
-		protected internal AESCipher cipher;
+    public class OutputStreamAesEncryption : OutputStreamEncryption
+    {
+        protected internal AESCipher cipher;
 
-		private bool finished;
+        private bool finished;
 
-		/// <summary>Creates a new instance of OutputStreamCounter</summary>
-		public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
-			: base(@out)
-		{
-			byte[] iv = IVGenerator.GetIV();
-			byte[] nkey = new byte[len];
-			System.Array.Copy(key, off, nkey, 0, len);
-			cipher = new AESCipher(true, nkey, iv);
-			try
-			{
-				Write(iv);
-			}
-			catch (System.IO.IOException e)
-			{
-				throw new PdfException(PdfException.PdfEncryption, e);
-			}
-		}
+        /// <summary>Creates a new instance of OutputStreamCounter</summary>
+        public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
+            : base(@out)
+        {
+            byte[] iv = IVGenerator.GetIV();
+            byte[] nkey = new byte[len];
+            System.Array.Copy(key, off, nkey, 0, len);
+            cipher = new AESCipher(true, nkey, iv);
+            try
+            {
+                Write(iv);
+            }
+            catch (System.IO.IOException e)
+            {
+                throw new PdfException(PdfException.PdfEncryption, e);
+            }
+        }
 
-		public OutputStreamAesEncryption(Stream @out, byte[] key)
-			: this(@out, key, 0, key.Length)
-		{
-		}
+        public OutputStreamAesEncryption(Stream @out, byte[] key)
+            : this(@out, key, 0, key.Length)
+        {
+        }
 
-		/// <summary>
-		/// Writes
-		/// <paramref name="len"/>
-		/// bytes from the specified byte array
-		/// starting at offset
-		/// <paramref name="off"/>
-		/// to this output stream.
-		/// The general contract for
-		/// <c>write(b, off, len)</c>
-		/// is that
-		/// some of the bytes in the array
-		/// <paramref name="b"/>
-		/// are written to the
-		/// output stream in order; element
-		/// <c>b[off]</c>
-		/// is the first
-		/// byte written and
-		/// <c>b[off+len-1]</c>
-		/// is the last byte written
-		/// by this operation.
-		/// <p/>
-		/// The
-		/// <c>write</c>
-		/// method of
-		/// <c>OutputStream</c>
-		/// calls
-		/// the write method of one argument on each of the bytes to be
-		/// written out. Subclasses are encouraged to override this method and
-		/// provide a more efficient implementation.
-		/// <p/>
-		/// If
-		/// <paramref name="b"/>
-		/// is
-		/// <see langword="null"/>
-		/// , a
-		/// <c>NullPointerException</c>
-		/// is thrown.
-		/// <p/>
-		/// If
-		/// <paramref name="off"/>
-		/// is negative, or
-		/// <paramref name="len"/>
-		/// is negative, or
-		/// <c>off+len</c>
-		/// is greater than the length of the array
-		/// <paramref name="b"/>
-		/// , then an <tt>IndexOutOfBoundsException</tt> is thrown.
-		/// </summary>
-		/// <param name="b">the data.</param>
-		/// <param name="off">the start offset in the data.</param>
-		/// <param name="len">the number of bytes to write.</param>
-		/// <exception cref="System.IO.IOException">
-		/// if an I/O error occurs. In particular,
-		/// an
-		/// <c>IOException</c>
-		/// is thrown if the output
-		/// stream is closed.
-		/// </exception>
-		public override void Write(byte[] b, int off, int len)
-		{
-			byte[] b2 = cipher.Update(b, off, len);
-			if (b2 == null || b2.Length == 0)
-			{
-				return;
-			}
-			@out.Write(b2, 0, b2.Length);
-		}
+        /// <summary>
+        /// Writes
+        /// <paramref name="len"/>
+        /// bytes from the specified byte array
+        /// starting at offset
+        /// <paramref name="off"/>
+        /// to this output stream.
+        /// The general contract for
+        /// <c>write(b, off, len)</c>
+        /// is that
+        /// some of the bytes in the array
+        /// <paramref name="b"/>
+        /// are written to the
+        /// output stream in order; element
+        /// <c>b[off]</c>
+        /// is the first
+        /// byte written and
+        /// <c>b[off+len-1]</c>
+        /// is the last byte written
+        /// by this operation.
+        /// <p/>
+        /// The
+        /// <c>write</c>
+        /// method of
+        /// <c>OutputStream</c>
+        /// calls
+        /// the write method of one argument on each of the bytes to be
+        /// written out. Subclasses are encouraged to override this method and
+        /// provide a more efficient implementation.
+        /// <p/>
+        /// If
+        /// <paramref name="b"/>
+        /// is
+        /// <see langword="null"/>
+        /// , a
+        /// <c>NullPointerException</c>
+        /// is thrown.
+        /// <p/>
+        /// If
+        /// <paramref name="off"/>
+        /// is negative, or
+        /// <paramref name="len"/>
+        /// is negative, or
+        /// <c>off+len</c>
+        /// is greater than the length of the array
+        /// <paramref name="b"/>
+        /// , then an <tt>IndexOutOfBoundsException</tt> is thrown.
+        /// </summary>
+        /// <param name="b">the data.</param>
+        /// <param name="off">the start offset in the data.</param>
+        /// <param name="len">the number of bytes to write.</param>
+        /// <exception cref="System.IO.IOException">
+        /// if an I/O error occurs. In particular,
+        /// an
+        /// <c>IOException</c>
+        /// is thrown if the output
+        /// stream is closed.
+        /// </exception>
+        public override void Write(byte[] b, int off, int len)
+        {
+            byte[] b2 = cipher.Update(b, off, len);
+            if (b2 == null || b2.Length == 0)
+            {
+                return;
+            }
+            @out.Write(b2, 0, b2.Length);
+        }
 
-		public override void Finish()
-		{
-			if (!finished)
-			{
-				finished = true;
-				byte[] b = cipher.DoFinal();
-				try
-				{
-					@out.Write(b, 0, b.Length);
-				}
-				catch (System.IO.IOException e)
-				{
-					throw new PdfException(PdfException.PdfEncryption, e);
-				}
-			}
-		}
-	}
+        public override void Finish()
+        {
+            if (!finished)
+            {
+                finished = true;
+                byte[] b = cipher.DoFinal();
+                try
+                {
+                    @out.Write(b, 0, b.Length);
+                }
+                catch (System.IO.IOException e)
+                {
+                    throw new PdfException(PdfException.PdfEncryption, e);
+                }
+            }
+        }
+    }
 }

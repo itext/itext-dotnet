@@ -46,77 +46,77 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	public class OtfClass
-	{
-		private IntHashtable mapClass = new IntHashtable();
+    public class OtfClass
+    {
+        private IntHashtable mapClass = new IntHashtable();
 
-		/// <exception cref="System.IO.IOException"/>
-		public OtfClass(RandomAccessFileOrArray rf, int classLocation)
-		{
-			//key is glyph, value is class inside all 2
-			rf.Seek(classLocation);
-			int classFormat = rf.ReadUnsignedShort();
-			if (classFormat == 1)
-			{
-				int startGlyph = rf.ReadUnsignedShort();
-				int glyphCount = rf.ReadUnsignedShort();
-				int endGlyph = startGlyph + glyphCount;
-				for (int k = startGlyph; k < endGlyph; ++k)
-				{
-					int cl = rf.ReadUnsignedShort();
-					mapClass.Put(k, cl);
-				}
-			}
-			else
-			{
-				if (classFormat == 2)
-				{
-					int classRangeCount = rf.ReadUnsignedShort();
-					for (int k = 0; k < classRangeCount; ++k)
-					{
-						int glyphStart = rf.ReadUnsignedShort();
-						int glyphEnd = rf.ReadUnsignedShort();
-						int cl = rf.ReadUnsignedShort();
-						for (; glyphStart <= glyphEnd; ++glyphStart)
-						{
-							mapClass.Put(glyphStart, cl);
-						}
-					}
-				}
-				else
-				{
-					throw new System.IO.IOException("Invalid class format " + classFormat);
-				}
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public OtfClass(RandomAccessFileOrArray rf, int classLocation)
+        {
+            //key is glyph, value is class inside all 2
+            rf.Seek(classLocation);
+            int classFormat = rf.ReadUnsignedShort();
+            if (classFormat == 1)
+            {
+                int startGlyph = rf.ReadUnsignedShort();
+                int glyphCount = rf.ReadUnsignedShort();
+                int endGlyph = startGlyph + glyphCount;
+                for (int k = startGlyph; k < endGlyph; ++k)
+                {
+                    int cl = rf.ReadUnsignedShort();
+                    mapClass.Put(k, cl);
+                }
+            }
+            else
+            {
+                if (classFormat == 2)
+                {
+                    int classRangeCount = rf.ReadUnsignedShort();
+                    for (int k = 0; k < classRangeCount; ++k)
+                    {
+                        int glyphStart = rf.ReadUnsignedShort();
+                        int glyphEnd = rf.ReadUnsignedShort();
+                        int cl = rf.ReadUnsignedShort();
+                        for (; glyphStart <= glyphEnd; ++glyphStart)
+                        {
+                            mapClass.Put(glyphStart, cl);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new System.IO.IOException("Invalid class format " + classFormat);
+                }
+            }
+        }
 
-		public virtual int GetOtfClass(int glyph)
-		{
-			return mapClass.Get(glyph);
-		}
+        public virtual int GetOtfClass(int glyph)
+        {
+            return mapClass.Get(glyph);
+        }
 
-		public virtual bool HasClass(int glyph)
-		{
-			return mapClass.ContainsKey(glyph);
-		}
+        public virtual bool HasClass(int glyph)
+        {
+            return mapClass.ContainsKey(glyph);
+        }
 
-		public virtual int GetOtfClass(int glyph, bool strict)
-		{
-			if (strict)
-			{
-				if (mapClass.ContainsKey(glyph))
-				{
-					return mapClass.Get(glyph);
-				}
-				else
-				{
-					return -1;
-				}
-			}
-			else
-			{
-				return mapClass.Get(glyph);
-			}
-		}
-	}
+        public virtual int GetOtfClass(int glyph, bool strict)
+        {
+            if (strict)
+            {
+                if (mapClass.ContainsKey(glyph))
+                {
+                    return mapClass.Get(glyph);
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return mapClass.Get(glyph);
+            }
+        }
+    }
 }

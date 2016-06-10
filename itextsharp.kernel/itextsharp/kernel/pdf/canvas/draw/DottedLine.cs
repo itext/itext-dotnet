@@ -46,89 +46,89 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 {
-	/// <summary>
-	/// Implementation of
-	/// <see cref="ILineDrawer"/>
-	/// which draws a dotted horizontal line along
-	/// the bottom edge of the specified rectangle.
-	/// </summary>
-	public class DottedLine : ILineDrawer
-	{
-		/// <summary>the gap between the dots.</summary>
-		protected internal float gap = 4;
+    /// <summary>
+    /// Implementation of
+    /// <see cref="ILineDrawer"/>
+    /// which draws a dotted horizontal line along
+    /// the bottom edge of the specified rectangle.
+    /// </summary>
+    public class DottedLine : ILineDrawer
+    {
+        /// <summary>the gap between the dots.</summary>
+        protected internal float gap = 4;
 
-		private float lineWidth = 1;
+        private float lineWidth = 1;
 
-		private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
+        private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
 
-		/// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
-		/// 	</summary>
-		public DottedLine()
-		{
-		}
+        /// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
+        ///     </summary>
+        public DottedLine()
+        {
+        }
 
-		/// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
-		/// 	</summary>
-		/// <param name="lineWidth">the width of the line</param>
-		/// <param name="gap">the gap between the center of the dots of the dotted line.</param>
-		public DottedLine(float lineWidth, float gap)
-		{
-			this.lineWidth = lineWidth;
-			this.gap = gap;
-		}
+        /// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
+        ///     </summary>
+        /// <param name="lineWidth">the width of the line</param>
+        /// <param name="gap">the gap between the center of the dots of the dotted line.</param>
+        public DottedLine(float lineWidth, float gap)
+        {
+            this.lineWidth = lineWidth;
+            this.gap = gap;
+        }
 
-		/// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
-		/// 	</summary>
-		/// <param name="lineWidth">the width of the line</param>
-		public DottedLine(float lineWidth)
-		{
-			this.lineWidth = lineWidth;
-		}
+        /// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
+        ///     </summary>
+        /// <param name="lineWidth">the width of the line</param>
+        public DottedLine(float lineWidth)
+        {
+            this.lineWidth = lineWidth;
+        }
 
-		public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
-		{
-			canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(0, gap
-				, gap / 2).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND).MoveTo(drawArea
-				.GetX(), drawArea.GetY()).LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea
-				.GetY()).Stroke().RestoreState();
-		}
+        public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
+        {
+            canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(0, gap
+                , gap / 2).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND).MoveTo(drawArea
+                .GetX(), drawArea.GetY()).LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea
+                .GetY()).Stroke().RestoreState();
+        }
 
-		/// <summary>Getter for the gap between the center of the dots of the dotted line.</summary>
-		/// <returns>the gap between the center of the dots</returns>
-		public virtual float GetGap()
-		{
-			return gap;
-		}
+        /// <summary>Getter for the gap between the center of the dots of the dotted line.</summary>
+        /// <returns>the gap between the center of the dots</returns>
+        public virtual float GetGap()
+        {
+            return gap;
+        }
 
-		/// <summary>Setter for the gap between the center of the dots of the dotted line.</summary>
-		/// <param name="gap">the gap between the center of the dots</param>
-		public virtual void SetGap(float gap)
-		{
-			this.gap = gap;
-		}
+        /// <summary>Setter for the gap between the center of the dots of the dotted line.</summary>
+        /// <param name="gap">the gap between the center of the dots</param>
+        public virtual void SetGap(float gap)
+        {
+            this.gap = gap;
+        }
 
-		/// <summary>Gets line width in points</summary>
-		/// <returns>line thickness</returns>
-		public virtual float GetLineWidth()
-		{
-			return lineWidth;
-		}
+        /// <summary>Gets line width in points</summary>
+        /// <returns>line thickness</returns>
+        public virtual float GetLineWidth()
+        {
+            return lineWidth;
+        }
 
-		/// <summary>Sets line width in points</summary>
-		/// <param name="lineWidth">new line width</param>
-		public virtual void SetLineWidth(float lineWidth)
-		{
-			this.lineWidth = lineWidth;
-		}
+        /// <summary>Sets line width in points</summary>
+        /// <param name="lineWidth">new line width</param>
+        public virtual void SetLineWidth(float lineWidth)
+        {
+            this.lineWidth = lineWidth;
+        }
 
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
 
-		public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
-		{
-			this.color = color;
-		}
-	}
+        public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
+        {
+            this.color = color;
+        }
+    }
 }

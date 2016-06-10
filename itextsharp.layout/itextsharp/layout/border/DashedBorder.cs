@@ -46,107 +46,108 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Border
 {
-	/// <summary>Draws a border with dashes around the element it's been set to.</summary>
-	public class DashedBorder : iTextSharp.Layout.Border.Border
-	{
-		private const float DASH_MODIFIER = 5f;
+    /// <summary>Draws a border with dashes around the element it's been set to.</summary>
+    public class DashedBorder : iTextSharp.Layout.Border.Border
+    {
+        private const float DASH_MODIFIER = 5f;
 
-		private const float GAP_MODIFIER = 3.5f;
+        private const float GAP_MODIFIER = 3.5f;
 
-		/// <summary>Creates a DashedBorder with the specified width and sets the color to black.
-		/// 	</summary>
-		/// <param name="width">width of the border</param>
-		public DashedBorder(float width)
-			: base(width)
-		{
-		}
+        /// <summary>Creates a DashedBorder with the specified width and sets the color to black.
+        ///     </summary>
+        /// <param name="width">width of the border</param>
+        public DashedBorder(float width)
+            : base(width)
+        {
+        }
 
-		/// <summary>Creates a DashedBorder with the specified width and the specified color.
-		/// 	</summary>
-		/// <param name="color">color of the border</param>
-		/// <param name="width">width of the border</param>
-		public DashedBorder(iTextSharp.Kernel.Color.Color color, float width)
-			: base(color, width)
-		{
-		}
+        /// <summary>Creates a DashedBorder with the specified width and the specified color.
+        ///     </summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        public DashedBorder(iTextSharp.Kernel.Color.Color color, float width)
+            : base(color, width)
+        {
+        }
 
-		public override int GetBorderType()
-		{
-			return iTextSharp.Layout.Border.Border.DASHED;
-		}
+        public override int GetBorderType()
+        {
+            return iTextSharp.Layout.Border.Border.DASHED;
+        }
 
-		public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-			, float borderWidthBefore, float borderWidthAfter)
-		{
-			float initialGap = width * GAP_MODIFIER;
-			float dash = width * DASH_MODIFIER;
-			float dx = x2 - x1;
-			float dy = y2 - y1;
-			double borderLength = Math.Sqrt(dx * dx + dy * dy);
-			float adjustedGap = GetDotsGap(borderLength, initialGap + dash);
-			if (adjustedGap > dash)
-			{
-				adjustedGap -= dash;
-			}
-			float widthHalf = width / 2;
-			Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					y1 += widthHalf;
-					y2 += widthHalf;
-					break;
-				}
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
+            , float borderWidthBefore, float borderWidthAfter)
+        {
+            float initialGap = width * GAP_MODIFIER;
+            float dash = width * DASH_MODIFIER;
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            double borderLength = Math.Sqrt(dx * dx + dy * dy);
+            float adjustedGap = GetDotsGap(borderLength, initialGap + dash);
+            if (adjustedGap > dash)
+            {
+                adjustedGap -= dash;
+            }
+            float widthHalf = width / 2;
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    y1 += widthHalf;
+                    y2 += widthHalf;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x1 += widthHalf;
-					x2 += widthHalf;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x1 += widthHalf;
+                    x2 += widthHalf;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					y1 -= widthHalf;
-					y2 -= widthHalf;
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    y1 -= widthHalf;
+                    y2 -= widthHalf;
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					x1 -= widthHalf;
-					x2 -= widthHalf;
-					break;
-				}
-			}
-			canvas.SetLineWidth(width);
-			canvas.SetStrokeColor(color);
-			canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo
-				(x2, y2).Stroke();
-		}
+                case Border.Side.LEFT:
+                {
+                    x1 -= widthHalf;
+                    x2 -= widthHalf;
+                    break;
+                }
+            }
+            canvas.SetLineWidth(width);
+            canvas.SetStrokeColor(color);
+            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo
+                (x2, y2).Stroke();
+        }
 
-		public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-			, float y2)
-		{
-			float initialGap = width * GAP_MODIFIER;
-			float dash = width * DASH_MODIFIER;
-			float dx = x2 - x1;
-			float dy = y2 - y1;
-			double borderLength = Math.Sqrt(dx * dx + dy * dy);
-			float adjustedGap = GetDotsGap(borderLength, initialGap + dash);
-			if (adjustedGap > dash)
-			{
-				adjustedGap -= dash;
-			}
-			canvas.SaveState().SetStrokeColor(color).SetLineDash(dash, adjustedGap, dash + adjustedGap
-				 / 2).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
-		}
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
+            , float y2)
+        {
+            float initialGap = width * GAP_MODIFIER;
+            float dash = width * DASH_MODIFIER;
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            double borderLength = Math.Sqrt(dx * dx + dy * dy);
+            float adjustedGap = GetDotsGap(borderLength, initialGap + dash);
+            if (adjustedGap > dash)
+            {
+                adjustedGap -= dash;
+            }
+            canvas.SaveState().SetStrokeColor(color).SetLineDash(dash, adjustedGap, dash + adjustedGap
+                 / 2).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
+        }
 
-		protected internal virtual float GetDotsGap(double distance, float initialGap)
-		{
-			double gapsNum = System.Math.Ceiling(distance / initialGap);
-			return (float)(distance / gapsNum);
-		}
-	}
+        protected internal virtual float GetDotsGap(double distance, float initialGap)
+        {
+            double gapsNum = System.Math.Ceiling(distance / initialGap);
+            return (float)(distance / gapsNum);
+        }
+    }
 }

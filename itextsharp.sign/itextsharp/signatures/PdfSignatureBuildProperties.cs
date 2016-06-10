@@ -46,61 +46,61 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>Dictionary that stores signature build properties.</summary>
-	/// <author>Kwinten Pisman</author>
-	public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary>
-	{
-		/// <summary>Creates new PdfSignatureBuildProperties.</summary>
-		public PdfSignatureBuildProperties()
-			: base(new PdfDictionary())
-		{
-		}
+    /// <summary>Dictionary that stores signature build properties.</summary>
+    /// <author>Kwinten Pisman</author>
+    public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary>
+    {
+        /// <summary>Creates new PdfSignatureBuildProperties.</summary>
+        public PdfSignatureBuildProperties()
+            : base(new PdfDictionary())
+        {
+        }
 
-		/// <summary>Creates new PdfSignatureBuildProperties with preset values.</summary>
-		/// <param name="dict">PdfDictionary containing preset values</param>
-		public PdfSignatureBuildProperties(PdfDictionary dict)
-			: base(dict)
-		{
-		}
+        /// <summary>Creates new PdfSignatureBuildProperties with preset values.</summary>
+        /// <param name="dict">PdfDictionary containing preset values</param>
+        public PdfSignatureBuildProperties(PdfDictionary dict)
+            : base(dict)
+        {
+        }
 
-		/// <summary>
-		/// Sets the signatureCreator property in the underlying
-		/// <see cref="PdfSignatureAppDictionary"/>
-		/// dictionary.
-		/// </summary>
-		/// <param name="name"/>
-		public virtual void SetSignatureCreator(String name)
-		{
-			GetPdfSignatureAppProperty().SetSignatureCreator(name);
-		}
+        /// <summary>
+        /// Sets the signatureCreator property in the underlying
+        /// <see cref="PdfSignatureAppDictionary"/>
+        /// dictionary.
+        /// </summary>
+        /// <param name="name"/>
+        public virtual void SetSignatureCreator(String name)
+        {
+            GetPdfSignatureAppProperty().SetSignatureCreator(name);
+        }
 
-		/// <summary>
-		/// Gets the
-		/// <see cref="PdfSignatureAppDictionary"/>
-		/// from this dictionary. If it
-		/// does not exist, it adds a new
-		/// <see cref="PdfSignatureAppDictionary"/>
-		/// and
-		/// returns this instance.
-		/// </summary>
-		/// <returns>
-		/// 
-		/// <see cref="PdfSignatureAppDictionary"/>
-		/// </returns>
-		private PdfSignatureAppDictionary GetPdfSignatureAppProperty()
-		{
-			PdfDictionary appPropDic = GetPdfObject().GetAsDictionary(PdfName.App);
-			if (appPropDic == null)
-			{
-				appPropDic = new PdfDictionary();
-				GetPdfObject().Put(PdfName.App, appPropDic);
-			}
-			return new PdfSignatureAppDictionary(appPropDic);
-		}
+        /// <summary>
+        /// Gets the
+        /// <see cref="PdfSignatureAppDictionary"/>
+        /// from this dictionary. If it
+        /// does not exist, it adds a new
+        /// <see cref="PdfSignatureAppDictionary"/>
+        /// and
+        /// returns this instance.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfSignatureAppDictionary"/>
+        /// </returns>
+        private PdfSignatureAppDictionary GetPdfSignatureAppProperty()
+        {
+            PdfDictionary appPropDic = GetPdfObject().GetAsDictionary(PdfName.App);
+            if (appPropDic == null)
+            {
+                appPropDic = new PdfDictionary();
+                GetPdfObject().Put(PdfName.App, appPropDic);
+            }
+            return new PdfSignatureAppDictionary(appPropDic);
+        }
 
-		protected override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

@@ -31,57 +31,57 @@ using System;
 
 namespace iTextSharp.Kernel.XMP.Impl
 {
-	/// <since>09.11.2006</since>
-	public class QName
-	{
-		/// <summary>XML namespace prefix</summary>
-		private String prefix;
+    /// <since>09.11.2006</since>
+    public class QName
+    {
+        /// <summary>XML namespace prefix</summary>
+        private String prefix;
 
-		/// <summary>XML localname</summary>
-		private String localName;
+        /// <summary>XML localname</summary>
+        private String localName;
 
-		/// <summary>Splits a qname into prefix and localname.</summary>
-		/// <param name="qname">a QName</param>
-		public QName(String qname)
-		{
-			int colon = qname.IndexOf(':');
-			if (colon >= 0)
-			{
-				prefix = qname.JSubstring(0, colon);
-				localName = qname.Substring(colon + 1);
-			}
-			else
-			{
-				prefix = "";
-				localName = qname;
-			}
-		}
+        /// <summary>Splits a qname into prefix and localname.</summary>
+        /// <param name="qname">a QName</param>
+        public QName(String qname)
+        {
+            int colon = qname.IndexOf(':');
+            if (colon >= 0)
+            {
+                prefix = qname.JSubstring(0, colon);
+                localName = qname.Substring(colon + 1);
+            }
+            else
+            {
+                prefix = "";
+                localName = qname;
+            }
+        }
 
-		/// <summary>Constructor that initializes the fields</summary>
-		/// <param name="prefix">the prefix</param>
-		/// <param name="localName">the name</param>
-		public QName(String prefix, String localName)
-		{
-			this.prefix = prefix;
-			this.localName = localName;
-		}
+        /// <summary>Constructor that initializes the fields</summary>
+        /// <param name="prefix">the prefix</param>
+        /// <param name="localName">the name</param>
+        public QName(String prefix, String localName)
+        {
+            this.prefix = prefix;
+            this.localName = localName;
+        }
 
-		/// <returns>Returns whether the QName has a prefix.</returns>
-		public virtual bool HasPrefix()
-		{
-			return prefix != null && prefix.Length > 0;
-		}
+        /// <returns>Returns whether the QName has a prefix.</returns>
+        public virtual bool HasPrefix()
+        {
+            return prefix != null && prefix.Length > 0;
+        }
 
-		/// <returns>the localName</returns>
-		public virtual String GetLocalName()
-		{
-			return localName;
-		}
+        /// <returns>the localName</returns>
+        public virtual String GetLocalName()
+        {
+            return localName;
+        }
 
-		/// <returns>the prefix</returns>
-		public virtual String GetPrefix()
-		{
-			return prefix;
-		}
-	}
+        /// <returns>the prefix</returns>
+        public virtual String GetPrefix()
+        {
+            return prefix;
+        }
+    }
 }

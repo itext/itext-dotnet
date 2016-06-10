@@ -46,79 +46,79 @@ using iTextSharp.IO.Font;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfLiteral : PdfPrimitiveObject
-	{
-		private long position;
+    public class PdfLiteral : PdfPrimitiveObject
+    {
+        private long position;
 
-		public PdfLiteral(byte[] content)
-			: base(true)
-		{
-			this.content = content;
-		}
+        public PdfLiteral(byte[] content)
+            : base(true)
+        {
+            this.content = content;
+        }
 
-		public PdfLiteral(int size)
-			: this(new byte[size])
-		{
-			iTextSharp.IO.Util.JavaUtil.Fill(content, (byte)32);
-		}
+        public PdfLiteral(int size)
+            : this(new byte[size])
+        {
+            iTextSharp.IO.Util.JavaUtil.Fill(content, (byte)32);
+        }
 
-		public PdfLiteral(String content)
-			: this(PdfEncodings.ConvertToBytes(content, null))
-		{
-		}
+        public PdfLiteral(String content)
+            : this(PdfEncodings.ConvertToBytes(content, null))
+        {
+        }
 
-		private PdfLiteral()
-			: this((byte[])null)
-		{
-		}
+        private PdfLiteral()
+            : this((byte[])null)
+        {
+        }
 
-		public override byte GetObjectType()
-		{
-			return LITERAL;
-		}
+        public override byte GetObjectType()
+        {
+            return LITERAL;
+        }
 
-		public override String ToString()
-		{
-			if (content != null)
-			{
-				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
-			}
-			else
-			{
-				return "";
-			}
-		}
+        public override String ToString()
+        {
+            if (content != null)
+            {
+                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
+            }
+            else
+            {
+                return "";
+            }
+        }
 
-		public virtual long GetPosition()
-		{
-			return position;
-		}
+        public virtual long GetPosition()
+        {
+            return position;
+        }
 
-		public virtual void SetPosition(long position)
-		{
-			this.position = position;
-		}
+        public virtual void SetPosition(long position)
+        {
+            this.position = position;
+        }
 
-		public virtual int GetBytesCount()
-		{
-			return content.Length;
-		}
+        public virtual int GetBytesCount()
+        {
+            return content.Length;
+        }
 
-		protected internal override void GenerateContent()
-		{
-		}
+        protected internal override void GenerateContent()
+        {
+        }
 
-		protected internal override PdfObject NewInstance()
-		{
-			return new iTextSharp.Kernel.Pdf.PdfLiteral();
-		}
+        protected internal override PdfObject NewInstance()
+        {
+            return new iTextSharp.Kernel.Pdf.PdfLiteral();
+        }
 
-		protected internal override void CopyContent(PdfObject from, PdfDocument document
-			)
-		{
-			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfLiteral literal = (iTextSharp.Kernel.Pdf.PdfLiteral)from;
-			this.content = literal.GetInternalContent();
-		}
-	}
+        protected internal override void CopyContent(PdfObject from, PdfDocument document
+            )
+        {
+            base.CopyContent(from, document);
+            iTextSharp.Kernel.Pdf.PdfLiteral literal = (iTextSharp.Kernel.Pdf.PdfLiteral)from;
+            this.content = literal.GetInternalContent();
+        }
+    }
 }

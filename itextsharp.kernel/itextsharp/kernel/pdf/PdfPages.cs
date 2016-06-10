@@ -43,184 +43,184 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	internal class PdfPages : PdfObjectWrapper<PdfDictionary>
-	{
-		private int from;
+    internal class PdfPages : PdfObjectWrapper<PdfDictionary>
+    {
+        private int from;
 
-		private PdfNumber count;
+        private PdfNumber count;
 
-		private readonly PdfArray kids;
+        private readonly PdfArray kids;
 
-		private readonly iTextSharp.Kernel.Pdf.PdfPages parent;
+        private readonly iTextSharp.Kernel.Pdf.PdfPages parent;
 
-		public PdfPages(int from, PdfDocument pdfDocument, iTextSharp.Kernel.Pdf.PdfPages
-			 parent)
-			: base(new PdfDictionary())
-		{
-			if (pdfDocument.GetWriter() != null)
-			{
-				GetPdfObject().MakeIndirect(pdfDocument);
-			}
-			SetForbidRelease();
-			this.from = from;
-			this.count = new PdfNumber(0);
-			this.kids = new PdfArray();
-			this.parent = parent;
-			GetPdfObject().Put(PdfName.Type, PdfName.Pages);
-			GetPdfObject().Put(PdfName.Kids, this.kids);
-			GetPdfObject().Put(PdfName.Count, this.count);
-		}
+        public PdfPages(int from, PdfDocument pdfDocument, iTextSharp.Kernel.Pdf.PdfPages
+             parent)
+            : base(new PdfDictionary())
+        {
+            if (pdfDocument.GetWriter() != null)
+            {
+                GetPdfObject().MakeIndirect(pdfDocument);
+            }
+            SetForbidRelease();
+            this.from = from;
+            this.count = new PdfNumber(0);
+            this.kids = new PdfArray();
+            this.parent = parent;
+            GetPdfObject().Put(PdfName.Type, PdfName.Pages);
+            GetPdfObject().Put(PdfName.Kids, this.kids);
+            GetPdfObject().Put(PdfName.Count, this.count);
+        }
 
-		public PdfPages(int from, PdfDocument pdfDocument)
-			: this(from, pdfDocument, null)
-		{
-		}
+        public PdfPages(int from, PdfDocument pdfDocument)
+            : this(from, pdfDocument, null)
+        {
+        }
 
-		public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iTextSharp.Kernel.Pdf.PdfPages
-			 parent)
-			: base(pdfObject)
-		{
-			SetForbidRelease();
-			this.from = from;
-			this.count = pdfObject.GetAsNumber(PdfName.Count);
-			this.parent = parent;
-			if (this.count == null)
-			{
-				this.count = new PdfNumber(1);
-				pdfObject.Put(PdfName.Count, this.count);
-			}
-			else
-			{
-				if (maxCount < this.count.IntValue())
-				{
-					this.count.SetValue(maxCount);
-				}
-			}
-			this.kids = pdfObject.GetAsArray(PdfName.Kids);
-			pdfObject.Put(PdfName.Type, PdfName.Pages);
-		}
+        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iTextSharp.Kernel.Pdf.PdfPages
+             parent)
+            : base(pdfObject)
+        {
+            SetForbidRelease();
+            this.from = from;
+            this.count = pdfObject.GetAsNumber(PdfName.Count);
+            this.parent = parent;
+            if (this.count == null)
+            {
+                this.count = new PdfNumber(1);
+                pdfObject.Put(PdfName.Count, this.count);
+            }
+            else
+            {
+                if (maxCount < this.count.IntValue())
+                {
+                    this.count.SetValue(maxCount);
+                }
+            }
+            this.kids = pdfObject.GetAsArray(PdfName.Kids);
+            pdfObject.Put(PdfName.Type, PdfName.Pages);
+        }
 
-		public virtual void AddPage(PdfDictionary page)
-		{
-			kids.Add(page);
-			IncrementCount();
-			page.Put(PdfName.Parent, GetPdfObject());
-		}
+        public virtual void AddPage(PdfDictionary page)
+        {
+            kids.Add(page);
+            IncrementCount();
+            page.Put(PdfName.Parent, GetPdfObject());
+        }
 
-		public virtual bool AddPage(int index, PdfPage pdfPage)
-		{
-			if (index < from || index > from + GetCount())
-			{
-				return false;
-			}
-			kids.Add(index - from, pdfPage.GetPdfObject());
-			pdfPage.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
-			IncrementCount();
-			SetModified();
-			return true;
-		}
+        public virtual bool AddPage(int index, PdfPage pdfPage)
+        {
+            if (index < from || index > from + GetCount())
+            {
+                return false;
+            }
+            kids.Add(index - from, pdfPage.GetPdfObject());
+            pdfPage.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
+            IncrementCount();
+            SetModified();
+            return true;
+        }
 
-		public virtual bool RemovePage(int pageNum)
-		{
-			if (pageNum < from || pageNum >= from + GetCount())
-			{
-				return false;
-			}
-			DecrementCount();
-			kids.Remove(pageNum - from);
-			return true;
-		}
+        public virtual bool RemovePage(int pageNum)
+        {
+            if (pageNum < from || pageNum >= from + GetCount())
+            {
+                return false;
+            }
+            DecrementCount();
+            kids.Remove(pageNum - from);
+            return true;
+        }
 
-		public virtual void AddPages(iTextSharp.Kernel.Pdf.PdfPages pdfPages)
-		{
-			kids.Add(pdfPages.GetPdfObject());
-			count.SetValue(count.IntValue() + pdfPages.GetCount());
-			pdfPages.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
-			SetModified();
-		}
+        public virtual void AddPages(iTextSharp.Kernel.Pdf.PdfPages pdfPages)
+        {
+            kids.Add(pdfPages.GetPdfObject());
+            count.SetValue(count.IntValue() + pdfPages.GetCount());
+            pdfPages.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
+            SetModified();
+        }
 
-		// remove empty PdfPage.
-		public virtual void RemoveFromParent()
-		{
-			if (parent != null)
-			{
-				System.Diagnostics.Debug.Assert(GetCount() == 0);
-				if (parent.kids.Contains(GetPdfObject().GetIndirectReference()))
-				{
-					parent.kids.Remove(GetPdfObject().GetIndirectReference());
-				}
-				else
-				{
-					parent.kids.Remove(GetPdfObject());
-				}
-				if (parent.GetCount() == 0)
-				{
-					parent.RemoveFromParent();
-				}
-			}
-		}
+        // remove empty PdfPage.
+        public virtual void RemoveFromParent()
+        {
+            if (parent != null)
+            {
+                System.Diagnostics.Debug.Assert(GetCount() == 0);
+                if (parent.kids.Contains(GetPdfObject().GetIndirectReference()))
+                {
+                    parent.kids.Remove(GetPdfObject().GetIndirectReference());
+                }
+                else
+                {
+                    parent.kids.Remove(GetPdfObject());
+                }
+                if (parent.GetCount() == 0)
+                {
+                    parent.RemoveFromParent();
+                }
+            }
+        }
 
-		public virtual int GetFrom()
-		{
-			return from;
-		}
+        public virtual int GetFrom()
+        {
+            return from;
+        }
 
-		public virtual int GetCount()
-		{
-			return count.IntValue();
-		}
+        public virtual int GetCount()
+        {
+            return count.IntValue();
+        }
 
-		public virtual void CorrectFrom(int correction)
-		{
-			from += correction;
-		}
+        public virtual void CorrectFrom(int correction)
+        {
+            from += correction;
+        }
 
-		public virtual PdfArray GetKids()
-		{
-			return GetPdfObject().GetAsArray(PdfName.Kids);
-		}
+        public virtual PdfArray GetKids()
+        {
+            return GetPdfObject().GetAsArray(PdfName.Kids);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfPages GetParent()
-		{
-			return parent;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfPages GetParent()
+        {
+            return parent;
+        }
 
-		public virtual void IncrementCount()
-		{
-			count.Increment();
-			SetModified();
-			if (parent != null)
-			{
-				parent.IncrementCount();
-			}
-		}
+        public virtual void IncrementCount()
+        {
+            count.Increment();
+            SetModified();
+            if (parent != null)
+            {
+                parent.IncrementCount();
+            }
+        }
 
-		public virtual void DecrementCount()
-		{
-			count.Decrement();
-			SetModified();
-			if (parent != null)
-			{
-				parent.DecrementCount();
-			}
-		}
+        public virtual void DecrementCount()
+        {
+            count.Decrement();
+            SetModified();
+            if (parent != null)
+            {
+                parent.DecrementCount();
+            }
+        }
 
-		public virtual int CompareTo(int index)
-		{
-			if (index < from)
-			{
-				return 1;
-			}
-			if (index >= from + GetCount())
-			{
-				return -1;
-			}
-			return 0;
-		}
+        public virtual int CompareTo(int index)
+        {
+            if (index < from)
+            {
+                return 1;
+            }
+            if (index >= from + GetCount())
+            {
+                return -1;
+            }
+            return 0;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
+    }
 }

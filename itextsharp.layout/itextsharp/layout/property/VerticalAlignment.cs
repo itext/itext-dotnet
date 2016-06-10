@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum VerticalAlignment
-	{
-		TOP,
-		MIDDLE,
-		BOTTOM
-	}
+    public enum VerticalAlignment
+    {
+        TOP,
+        MIDDLE,
+        BOTTOM
+    }
 }

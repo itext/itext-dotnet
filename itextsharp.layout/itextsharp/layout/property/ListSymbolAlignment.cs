@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	/// <summary>A specialized enum containing alignment properties for list symbols.</summary>
-	public enum ListSymbolAlignment
-	{
-		RIGHT,
-		LEFT
-	}
+    /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
+    public enum ListSymbolAlignment
+    {
+        RIGHT,
+        LEFT
+    }
 }

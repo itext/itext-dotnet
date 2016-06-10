@@ -48,75 +48,75 @@ using iTextSharp.Layout.Layout;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class CanvasRenderer : RootRenderer
-	{
-		protected internal Canvas canvas;
+    public class CanvasRenderer : RootRenderer
+    {
+        protected internal Canvas canvas;
 
-		public CanvasRenderer(Canvas canvas)
-			: this(canvas, true)
-		{
-		}
+        public CanvasRenderer(Canvas canvas)
+            : this(canvas, true)
+        {
+        }
 
-		public CanvasRenderer(Canvas canvas, bool immediateFlush)
-		{
-			this.canvas = canvas;
-			this.modelElement = canvas;
-			this.immediateFlush = immediateFlush;
-		}
+        public CanvasRenderer(Canvas canvas, bool immediateFlush)
+        {
+            this.canvas = canvas;
+            this.modelElement = canvas;
+            this.immediateFlush = immediateFlush;
+        }
 
-		public override void AddChild(IRenderer renderer)
-		{
-			if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FULL)))
-			{
-				LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
-					);
-			}
-			else
-			{
-				base.AddChild(renderer);
-			}
-		}
+        public override void AddChild(IRenderer renderer)
+        {
+            if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FULL)))
+            {
+                LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
+                    );
+            }
+            else
+            {
+                base.AddChild(renderer);
+            }
+        }
 
-		protected internal override void FlushSingleRenderer(IRenderer resultRenderer)
-		{
-			if (!resultRenderer.IsFlushed())
-			{
-				bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();
-				TagTreePointer tagPointer = null;
-				if (toTag)
-				{
-					tagPointer = canvas.GetPdfDocument().GetTagStructureContext().GetAutoTaggingPointer
-						();
-					tagPointer.SetPageForTagging(canvas.GetPage());
-					tagPointer.SetContentStreamForTagging(canvas.GetPdfCanvas().GetContentStream());
-				}
-				resultRenderer.Draw(new DrawContext(canvas.GetPdfDocument(), canvas.GetPdfCanvas(
-					), toTag));
-				if (toTag)
-				{
-					tagPointer.SetContentStreamForTagging(null);
-				}
-			}
-		}
+        protected internal override void FlushSingleRenderer(IRenderer resultRenderer)
+        {
+            if (!resultRenderer.IsFlushed())
+            {
+                bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();
+                TagTreePointer tagPointer = null;
+                if (toTag)
+                {
+                    tagPointer = canvas.GetPdfDocument().GetTagStructureContext().GetAutoTaggingPointer
+                        ();
+                    tagPointer.SetPageForTagging(canvas.GetPage());
+                    tagPointer.SetContentStreamForTagging(canvas.GetPdfCanvas().GetContentStream());
+                }
+                resultRenderer.Draw(new DrawContext(canvas.GetPdfDocument(), canvas.GetPdfCanvas(
+                    ), toTag));
+                if (toTag)
+                {
+                    tagPointer.SetContentStreamForTagging(null);
+                }
+            }
+        }
 
-		protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-			)
-		{
-			if (currentArea == null)
-			{
-				currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
-			}
-			else
-			{
-				SetProperty(iTextSharp.Layout.Property.Property.FULL, true);
-				currentArea = null;
-			}
-			return currentArea;
-		}
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
+            )
+        {
+            if (currentArea == null)
+            {
+                currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
+            }
+            else
+            {
+                SetProperty(iTextSharp.Layout.Property.Property.FULL, true);
+                currentArea = null;
+            }
+            return currentArea;
+        }
 
-		public override IRenderer GetNextRenderer()
-		{
-			return null;
-		}
-	}
+        public override IRenderer GetNextRenderer()
+        {
+            return null;
+        }
+    }
 }

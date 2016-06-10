@@ -51,94 +51,94 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-	public class SimpleTextExtractionStrategy : ITextExtractionStrategy
-	{
-		private Vector lastStart;
+    public class SimpleTextExtractionStrategy : ITextExtractionStrategy
+    {
+        private Vector lastStart;
 
-		private Vector lastEnd;
+        private Vector lastEnd;
 
-		/// <summary>used to store the resulting String.</summary>
-		private readonly StringBuilder result = new StringBuilder();
+        /// <summary>used to store the resulting String.</summary>
+        private readonly StringBuilder result = new StringBuilder();
 
-		public virtual void EventOccurred(IEventData data, EventType type)
-		{
-			if (type.Equals(EventType.RENDER_TEXT))
-			{
-				TextRenderInfo renderInfo = (TextRenderInfo)data;
-				bool firstRender = result.Length == 0;
-				bool hardReturn = false;
-				LineSegment segment = renderInfo.GetBaseline();
-				Vector start = segment.GetStartPoint();
-				Vector end = segment.GetEndPoint();
-				if (!firstRender)
-				{
-					Vector x1 = lastStart;
-					Vector x2 = lastEnd;
-					// see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-					float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract
-						(x1).LengthSquared();
-					float sameLineThreshold = 1f;
-					// we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
-					if (dist > sameLineThreshold)
-					{
-						hardReturn = true;
-					}
-				}
-				// Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
-				// but this sort of thing probably doesn't happen much in reality, so we'll leave it alone for now
-				if (hardReturn)
-				{
-					//System.out.println("<< Hard Return >>");
-					AppendTextChunk("\n");
-				}
-				else
-				{
-					if (!firstRender)
-					{
-						if (result[result.Length - 1] != ' ' && renderInfo.GetText().Length > 0 && renderInfo
-							.GetText()[0] != ' ')
-						{
-							// we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
-							float spacing = lastEnd.Subtract(start).Length();
-							if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
-							{
-								AppendTextChunk(" ");
-							}
-						}
-					}
-				}
-				//System.out.println("Inserting implied space before '" + renderInfo.getText() + "'");
-				//System.out.println("Displaying first string of content '" + text + "' :: x1 = " + x1);
-				//System.out.println("[" + renderInfo.getStartPoint() + "]->[" + renderInfo.getEndPoint() + "] " + renderInfo.getText());
-				AppendTextChunk(renderInfo.GetText());
-				lastStart = start;
-				lastEnd = end;
-			}
-		}
+        public virtual void EventOccurred(IEventData data, EventType type)
+        {
+            if (type.Equals(EventType.RENDER_TEXT))
+            {
+                TextRenderInfo renderInfo = (TextRenderInfo)data;
+                bool firstRender = result.Length == 0;
+                bool hardReturn = false;
+                LineSegment segment = renderInfo.GetBaseline();
+                Vector start = segment.GetStartPoint();
+                Vector end = segment.GetEndPoint();
+                if (!firstRender)
+                {
+                    Vector x1 = lastStart;
+                    Vector x2 = lastEnd;
+                    // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
+                    float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract
+                        (x1).LengthSquared();
+                    float sameLineThreshold = 1f;
+                    // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
+                    if (dist > sameLineThreshold)
+                    {
+                        hardReturn = true;
+                    }
+                }
+                // Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
+                // but this sort of thing probably doesn't happen much in reality, so we'll leave it alone for now
+                if (hardReturn)
+                {
+                    //System.out.println("<< Hard Return >>");
+                    AppendTextChunk("\n");
+                }
+                else
+                {
+                    if (!firstRender)
+                    {
+                        if (result[result.Length - 1] != ' ' && renderInfo.GetText().Length > 0 && renderInfo
+                            .GetText()[0] != ' ')
+                        {
+                            // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
+                            float spacing = lastEnd.Subtract(start).Length();
+                            if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
+                            {
+                                AppendTextChunk(" ");
+                            }
+                        }
+                    }
+                }
+                //System.out.println("Inserting implied space before '" + renderInfo.getText() + "'");
+                //System.out.println("Displaying first string of content '" + text + "' :: x1 = " + x1);
+                //System.out.println("[" + renderInfo.getStartPoint() + "]->[" + renderInfo.getEndPoint() + "] " + renderInfo.getText());
+                AppendTextChunk(renderInfo.GetText());
+                lastStart = start;
+                lastEnd = end;
+            }
+        }
 
-		public virtual ICollection<EventType> GetSupportedEvents()
-		{
-			return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil
-				.SingletonList(EventType.RENDER_TEXT)));
-		}
+        public virtual ICollection<EventType> GetSupportedEvents()
+        {
+            return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil
+                .SingletonList(EventType.RENDER_TEXT)));
+        }
 
-		/// <summary>Returns the result so far.</summary>
-		/// <returns>a String with the resulting text.</returns>
-		public virtual String GetResultantText()
-		{
-			return result.ToString();
-		}
+        /// <summary>Returns the result so far.</summary>
+        /// <returns>a String with the resulting text.</returns>
+        public virtual String GetResultantText()
+        {
+            return result.ToString();
+        }
 
-		/// <summary>Used to actually append text to the text results.</summary>
-		/// <remarks>
-		/// Used to actually append text to the text results.  Subclasses can use this to insert
-		/// text that wouldn't normally be included in text parsing (e.g. result of OCR performed against
-		/// image content)
-		/// </remarks>
-		/// <param name="text">the text to append to the text results accumulated so far</param>
-		protected internal void AppendTextChunk(String text)
-		{
-			result.Append(text);
-		}
-	}
+        /// <summary>Used to actually append text to the text results.</summary>
+        /// <remarks>
+        /// Used to actually append text to the text results.  Subclasses can use this to insert
+        /// text that wouldn't normally be included in text parsing (e.g. result of OCR performed against
+        /// image content)
+        /// </remarks>
+        /// <param name="text">the text to append to the text results accumulated so far</param>
+        protected internal void AppendTextChunk(String text)
+        {
+            result.Append(text);
+        }
+    }
 }

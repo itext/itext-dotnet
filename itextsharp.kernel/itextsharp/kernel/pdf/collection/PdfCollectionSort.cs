@@ -47,77 +47,77 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Collection
 {
-	public class PdfCollectionSort : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfCollectionSort(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public class PdfCollectionSort : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfCollectionSort(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <summary>Constructs a PDF Collection Sort Dictionary.</summary>
-		/// <param name="key">the key of the field that will be used to sort entries</param>
-		public PdfCollectionSort(String key)
-			: this(new PdfDictionary())
-		{
-			GetPdfObject().Put(PdfName.S, new PdfName(key));
-		}
+        /// <summary>Constructs a PDF Collection Sort Dictionary.</summary>
+        /// <param name="key">the key of the field that will be used to sort entries</param>
+        public PdfCollectionSort(String key)
+            : this(new PdfDictionary())
+        {
+            GetPdfObject().Put(PdfName.S, new PdfName(key));
+        }
 
-		/// <summary>Constructs a PDF Collection Sort Dictionary.</summary>
-		/// <param name="keys">the keys of the fields that will be used to sort entries</param>
-		public PdfCollectionSort(String[] keys)
-			: this(new PdfDictionary())
-		{
-			GetPdfObject().Put(PdfName.S, new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-				(keys), true));
-		}
+        /// <summary>Constructs a PDF Collection Sort Dictionary.</summary>
+        /// <param name="keys">the keys of the fields that will be used to sort entries</param>
+        public PdfCollectionSort(String[] keys)
+            : this(new PdfDictionary())
+        {
+            GetPdfObject().Put(PdfName.S, new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+                (keys), true));
+        }
 
-		/// <summary>Defines the sort order of the field (ascending or descending).</summary>
-		/// <param name="ascending">true is the default, use false for descending order</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
-			 ascending)
-		{
-			PdfObject obj = GetPdfObject().Get(PdfName.S);
-			if (obj.IsName())
-			{
-				GetPdfObject().Put(PdfName.A, new PdfBoolean(ascending));
-			}
-			else
-			{
-				throw new PdfException(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary
-					);
-			}
-			return this;
-		}
+        /// <summary>Defines the sort order of the field (ascending or descending).</summary>
+        /// <param name="ascending">true is the default, use false for descending order</param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
+             ascending)
+        {
+            PdfObject obj = GetPdfObject().Get(PdfName.S);
+            if (obj.IsName())
+            {
+                GetPdfObject().Put(PdfName.A, new PdfBoolean(ascending));
+            }
+            else
+            {
+                throw new PdfException(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary
+                    );
+            }
+            return this;
+        }
 
-		/// <summary>Defines the sort order of the field (ascending or descending).</summary>
-		/// <param name="ascending">an array with every element corresponding with a name of a field.
-		/// 	</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
-			[] ascending)
-		{
-			PdfObject obj = GetPdfObject().Get(PdfName.S);
-			if (obj.IsArray())
-			{
-				if (((PdfArray)obj).Size() != ascending.Length)
-				{
-					throw new PdfException(PdfException.TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields
-						);
-				}
-				GetPdfObject().Put(PdfName.A, new PdfArray(ascending));
-				return this;
-			}
-			else
-			{
-				throw new PdfException(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary
-					);
-			}
-		}
+        /// <summary>Defines the sort order of the field (ascending or descending).</summary>
+        /// <param name="ascending">an array with every element corresponding with a name of a field.
+        ///     </param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool
+            [] ascending)
+        {
+            PdfObject obj = GetPdfObject().Get(PdfName.S);
+            if (obj.IsArray())
+            {
+                if (((PdfArray)obj).Size() != ascending.Length)
+                {
+                    throw new PdfException(PdfException.TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields
+                        );
+                }
+                GetPdfObject().Put(PdfName.A, new PdfArray(ascending));
+                return this;
+            }
+            else
+            {
+                throw new PdfException(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary
+                    );
+            }
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

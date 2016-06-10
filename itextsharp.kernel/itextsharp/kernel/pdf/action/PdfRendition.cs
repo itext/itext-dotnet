@@ -47,26 +47,26 @@ using iTextSharp.Kernel.Pdf.Filespec;
 
 namespace iTextSharp.Kernel.Pdf.Action
 {
-	public class PdfRendition : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfRendition(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public class PdfRendition : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfRendition(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public PdfRendition(String file, PdfFileSpec fs, String mimeType)
-			: this(new PdfDictionary())
-		{
-			GetPdfObject().Put(PdfName.S, PdfName.MR);
-			GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Rendition for {0}", file
-				)));
-			GetPdfObject().Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType).GetPdfObject
-				());
-		}
+        public PdfRendition(String file, PdfFileSpec fs, String mimeType)
+            : this(new PdfDictionary())
+        {
+            GetPdfObject().Put(PdfName.S, PdfName.MR);
+            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Rendition for {0}", file
+                )));
+            GetPdfObject().Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType).GetPdfObject
+                ());
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
+    }
 }

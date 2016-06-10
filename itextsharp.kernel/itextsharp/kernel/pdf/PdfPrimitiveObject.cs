@@ -47,104 +47,104 @@ using iTextSharp.IO.Log;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public abstract class PdfPrimitiveObject : PdfObject
-	{
-		protected internal byte[] content = null;
+    public abstract class PdfPrimitiveObject : PdfObject
+    {
+        protected internal byte[] content = null;
 
-		protected internal bool directOnly;
+        protected internal bool directOnly;
 
-		protected internal PdfPrimitiveObject()
-			: base()
-		{
-		}
+        protected internal PdfPrimitiveObject()
+            : base()
+        {
+        }
 
-		protected internal PdfPrimitiveObject(bool directOnly)
-			: base()
-		{
-			this.directOnly = directOnly;
-		}
+        protected internal PdfPrimitiveObject(bool directOnly)
+            : base()
+        {
+            this.directOnly = directOnly;
+        }
 
-		protected internal PdfPrimitiveObject(byte[] content)
-			: this()
-		{
-			this.content = content;
-		}
+        protected internal PdfPrimitiveObject(byte[] content)
+            : this()
+        {
+            this.content = content;
+        }
 
-		protected internal byte[] GetInternalContent()
-		{
-			if (content == null)
-			{
-				GenerateContent();
-			}
-			return content;
-		}
+        protected internal byte[] GetInternalContent()
+        {
+            if (content == null)
+            {
+                GenerateContent();
+            }
+            return content;
+        }
 
-		protected internal virtual bool HasContent()
-		{
-			return content != null;
-		}
+        protected internal virtual bool HasContent()
+        {
+            return content != null;
+        }
 
-		protected internal abstract void GenerateContent();
+        protected internal abstract void GenerateContent();
 
-		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-			 reference)
-		{
-			if (!directOnly)
-			{
-				return base.MakeIndirect(document, reference);
-			}
-			else
-			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-				logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
-			}
-			return this;
-		}
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
+             reference)
+        {
+            if (!directOnly)
+            {
+                return base.MakeIndirect(document, reference);
+            }
+            else
+            {
+                ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+            }
+            return this;
+        }
 
-		protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference
-			)
-		{
-			if (!directOnly)
-			{
-				base.SetIndirectReference(indirectReference);
-			}
-			else
-			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-				logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
-			}
-			return this;
-		}
+        protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference
+            )
+        {
+            if (!directOnly)
+            {
+                base.SetIndirectReference(indirectReference);
+            }
+            else
+            {
+                ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+            }
+            return this;
+        }
 
-		protected internal override void CopyContent(PdfObject from, PdfDocument document
-			)
-		{
-			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject
-				)from;
-			if (@object.content != null)
-			{
-				content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content
-					.Length);
-			}
-		}
+        protected internal override void CopyContent(PdfObject from, PdfDocument document
+            )
+        {
+            base.CopyContent(from, document);
+            iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject
+                )from;
+            if (@object.content != null)
+            {
+                content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content
+                    .Length);
+            }
+        }
 
-		protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject
-			 o)
-		{
-			for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++)
-			{
-				if (content[i] > o.content[i])
-				{
-					return 1;
-				}
-				if (content[i] < o.content[i])
-				{
-					return -1;
-				}
-			}
-			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length
-				);
-		}
-	}
+        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject
+             o)
+        {
+            for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++)
+            {
+                if (content[i] > o.content[i])
+                {
+                    return 1;
+                }
+                if (content[i] < o.content[i])
+                {
+                    return -1;
+                }
+            }
+            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length
+                );
+        }
+    }
 }

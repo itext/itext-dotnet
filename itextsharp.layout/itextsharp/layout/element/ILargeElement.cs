@@ -45,44 +45,44 @@ using iTextSharp.Layout;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A
-	/// <see cref="ILargeElement"/>
-	/// is a layout element which may get added to
-	/// indefinitely, making the object prohibitively large.
-	/// In order to avoid consuming and holding on to undesirable amounts of
-	/// resources, the contents of a
-	/// <see cref="ILargeElement"/>
-	/// can be flushed regularly
-	/// by client code, e.g. at page boundaries or after a certain amount of additions.
-	/// </summary>
-	public interface ILargeElement : IElement
-	{
-		/// <summary>Checks whether an element has already been marked as complete.</summary>
-		/// <returns>the completion marker boolean</returns>
-		bool IsComplete();
+    /// <summary>
+    /// A
+    /// <see cref="ILargeElement"/>
+    /// is a layout element which may get added to
+    /// indefinitely, making the object prohibitively large.
+    /// In order to avoid consuming and holding on to undesirable amounts of
+    /// resources, the contents of a
+    /// <see cref="ILargeElement"/>
+    /// can be flushed regularly
+    /// by client code, e.g. at page boundaries or after a certain amount of additions.
+    /// </summary>
+    public interface ILargeElement : IElement
+    {
+        /// <summary>Checks whether an element has already been marked as complete.</summary>
+        /// <returns>the completion marker boolean</returns>
+        bool IsComplete();
 
-		/// <summary>Indicates that all the desired content has been added to this large element.
-		/// 	</summary>
-		void Complete();
+        /// <summary>Indicates that all the desired content has been added to this large element.
+        ///     </summary>
+        void Complete();
 
-		/// <summary>Writes the newly added content to the document.</summary>
-		void Flush();
+        /// <summary>Writes the newly added content to the document.</summary>
+        void Flush();
 
-		/// <summary>Flushes the content which has just been added to the document.</summary>
-		/// <remarks>
-		/// Flushes the content which has just been added to the document.
-		/// This is a method for internal usage and is called automatically by the document.
-		/// </remarks>
-		void FlushContent();
+        /// <summary>Flushes the content which has just been added to the document.</summary>
+        /// <remarks>
+        /// Flushes the content which has just been added to the document.
+        /// This is a method for internal usage and is called automatically by the document.
+        /// </remarks>
+        void FlushContent();
 
-		/// <summary>Sets the document this element is bound to.</summary>
-		/// <remarks>
-		/// Sets the document this element is bound to.
-		/// We cannot write a large element into several documents simultaneously because we would need
-		/// more bulky interfaces for this feature. For now we went for simplicity.
-		/// </remarks>
-		/// <param name="document">the document</param>
-		void SetDocument(Document document);
-	}
+        /// <summary>Sets the document this element is bound to.</summary>
+        /// <remarks>
+        /// Sets the document this element is bound to.
+        /// We cannot write a large element into several documents simultaneously because we would need
+        /// more bulky interfaces for this feature. For now we went for simplicity.
+        /// </remarks>
+        /// <param name="document">the document</param>
+        void SetDocument(Document document);
+    }
 }

@@ -43,97 +43,97 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	/// <summary>
-	/// A specialized class holding configurable properties related to an
-	/// <see cref="iTextSharp.Layout.Element.IElement"/>
-	/// 's background. This class is meant to be used as the value for the
-	/// <see cref="Property.BACKGROUND"/>
-	/// key in an
-	/// <see cref="iTextSharp.Layout.IPropertyContainer"/>
-	/// . Allows
-	/// to define a background color, and positive or negative changes to the
-	/// location of the edges of the background coloring.
-	/// </summary>
-	public class Background
-	{
-		protected internal iTextSharp.Kernel.Color.Color color;
+    /// <summary>
+    /// A specialized class holding configurable properties related to an
+    /// <see cref="iTextSharp.Layout.Element.IElement"/>
+    /// 's background. This class is meant to be used as the value for the
+    /// <see cref="Property.BACKGROUND"/>
+    /// key in an
+    /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+    /// . Allows
+    /// to define a background color, and positive or negative changes to the
+    /// location of the edges of the background coloring.
+    /// </summary>
+    public class Background
+    {
+        protected internal iTextSharp.Kernel.Color.Color color;
 
-		protected internal float extraLeft;
+        protected internal float extraLeft;
 
-		protected internal float extraRight;
+        protected internal float extraRight;
 
-		protected internal float extraTop;
+        protected internal float extraTop;
 
-		protected internal float extraBottom;
+        protected internal float extraBottom;
 
-		/// <summary>Creates a background with a specified color.</summary>
-		/// <param name="color">the background color</param>
-		public Background(iTextSharp.Kernel.Color.Color color)
-			: this(color, 0, 0, 0, 0)
-		{
-		}
+        /// <summary>Creates a background with a specified color.</summary>
+        /// <param name="color">the background color</param>
+        public Background(iTextSharp.Kernel.Color.Color color)
+            : this(color, 0, 0, 0, 0)
+        {
+        }
 
-		/// <summary>
-		/// Creates a background with a specified color, and extra space that
-		/// must be counted as part of the background and therefore colored.
-		/// </summary>
-		/// <remarks>
-		/// Creates a background with a specified color, and extra space that
-		/// must be counted as part of the background and therefore colored.
-		/// These values are allowed to be negative.
-		/// </remarks>
-		/// <param name="color">the background color</param>
-		/// <param name="extraLeft">extra coloring to the left side</param>
-		/// <param name="extraTop">extra coloring at the top</param>
-		/// <param name="extraRight">extra coloring to the right side</param>
-		/// <param name="extraBottom">extra coloring at the bottom</param>
-		public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop
-			, float extraRight, float extraBottom)
-		{
-			this.color = color;
-			this.extraLeft = extraLeft;
-			this.extraRight = extraRight;
-			this.extraTop = extraTop;
-			this.extraBottom = extraBottom;
-		}
+        /// <summary>
+        /// Creates a background with a specified color, and extra space that
+        /// must be counted as part of the background and therefore colored.
+        /// </summary>
+        /// <remarks>
+        /// Creates a background with a specified color, and extra space that
+        /// must be counted as part of the background and therefore colored.
+        /// These values are allowed to be negative.
+        /// </remarks>
+        /// <param name="color">the background color</param>
+        /// <param name="extraLeft">extra coloring to the left side</param>
+        /// <param name="extraTop">extra coloring at the top</param>
+        /// <param name="extraRight">extra coloring to the right side</param>
+        /// <param name="extraBottom">extra coloring at the bottom</param>
+        public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop
+            , float extraRight, float extraBottom)
+        {
+            this.color = color;
+            this.extraLeft = extraLeft;
+            this.extraRight = extraRight;
+            this.extraTop = extraTop;
+            this.extraBottom = extraBottom;
+        }
 
-		/// <summary>Gets the background's color.</summary>
-		/// <returns>
-		/// a
-		/// <see cref="iTextSharp.Kernel.Color.Color"/>
-		/// of any supported kind
-		/// </returns>
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
+        /// <summary>Gets the background's color.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="iTextSharp.Kernel.Color.Color"/>
+        /// of any supported kind
+        /// </returns>
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
 
-		/// <summary>Gets the extra space that must be filled to the left of the Element.</summary>
-		/// <returns>a float value</returns>
-		public virtual float GetExtraLeft()
-		{
-			return extraLeft;
-		}
+        /// <summary>Gets the extra space that must be filled to the left of the Element.</summary>
+        /// <returns>a float value</returns>
+        public virtual float GetExtraLeft()
+        {
+            return extraLeft;
+        }
 
-		/// <summary>Gets the extra space that must be filled to the right of the Element.</summary>
-		/// <returns>a float value</returns>
-		public virtual float GetExtraRight()
-		{
-			return extraRight;
-		}
+        /// <summary>Gets the extra space that must be filled to the right of the Element.</summary>
+        /// <returns>a float value</returns>
+        public virtual float GetExtraRight()
+        {
+            return extraRight;
+        }
 
-		/// <summary>Gets the extra space that must be filled at the top of the Element.</summary>
-		/// <returns>a float value</returns>
-		public virtual float GetExtraTop()
-		{
-			return extraTop;
-		}
+        /// <summary>Gets the extra space that must be filled at the top of the Element.</summary>
+        /// <returns>a float value</returns>
+        public virtual float GetExtraTop()
+        {
+            return extraTop;
+        }
 
-		/// <summary>Gets the extra space that must be filled at the bottom of the Element.</summary>
-		/// <returns>a float value</returns>
-		public virtual float GetExtraBottom()
-		{
-			return extraBottom;
-		}
-	}
+        /// <summary>Gets the extra space that must be filled at the bottom of the Element.</summary>
+        /// <returns>a float value</returns>
+        public virtual float GetExtraBottom()
+        {
+            return extraBottom;
+        }
+    }
 }

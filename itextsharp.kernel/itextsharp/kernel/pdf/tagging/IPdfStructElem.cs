@@ -46,12 +46,12 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Tagging
 {
-	public interface IPdfStructElem
-	{
-		IPdfStructElem GetParent();
+    public interface IPdfStructElem
+    {
+        IPdfStructElem GetParent();
 
-		IList<IPdfStructElem> GetKids();
+        IList<IPdfStructElem> GetKids();
 
-		PdfName GetRole();
-	}
+        PdfName GetRole();
+    }
 }

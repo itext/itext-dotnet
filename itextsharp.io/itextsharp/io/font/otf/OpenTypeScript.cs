@@ -46,128 +46,128 @@ using System.Collections.Generic;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	public class OpenTypeScript
-	{
-		public readonly String DEFAULT_SCRIPT = "DFLT";
+    public class OpenTypeScript
+    {
+        public readonly String DEFAULT_SCRIPT = "DFLT";
 
-		private OpenTypeFontTableReader openTypeReader;
+        private OpenTypeFontTableReader openTypeReader;
 
-		private IList<ScriptRecord> records;
+        private IList<ScriptRecord> records;
 
-		/// <exception cref="System.IO.IOException"/>
-		public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable
-			)
-		{
-			this.openTypeReader = openTypeReader;
-			records = new List<ScriptRecord>();
-			openTypeReader.rf.Seek(locationScriptTable);
-			TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationScriptTable
-				);
-			foreach (TagAndLocation tagLoc in tagsLocs)
-			{
-				ReadScriptRecord(tagLoc);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable
+            )
+        {
+            this.openTypeReader = openTypeReader;
+            records = new List<ScriptRecord>();
+            openTypeReader.rf.Seek(locationScriptTable);
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationScriptTable
+                );
+            foreach (TagAndLocation tagLoc in tagsLocs)
+            {
+                ReadScriptRecord(tagLoc);
+            }
+        }
 
-		public virtual IList<ScriptRecord> GetScriptRecords()
-		{
-			return records;
-		}
+        public virtual IList<ScriptRecord> GetScriptRecords()
+        {
+            return records;
+        }
 
-		public virtual LanguageRecord GetLanguageRecord(String[] scripts, String language
-			)
-		{
-			ScriptRecord scriptFound = null;
-			ScriptRecord scriptDefault = null;
-			foreach (ScriptRecord sr in records)
-			{
-				if (DEFAULT_SCRIPT.Equals(sr.tag))
-				{
-					scriptDefault = sr;
-					break;
-				}
-			}
-			foreach (String script in scripts)
-			{
-				foreach (ScriptRecord sr_1 in records)
-				{
-					if (sr_1.tag.Equals(script))
-					{
-						scriptFound = sr_1;
-						break;
-					}
-					if (DEFAULT_SCRIPT.Equals(script))
-					{
-						scriptDefault = sr_1;
-					}
-				}
-				if (scriptFound != null)
-				{
-					break;
-				}
-			}
-			if (scriptFound == null)
-			{
-				scriptFound = scriptDefault;
-			}
-			if (scriptFound == null)
-			{
-				return null;
-			}
-			LanguageRecord lang = null;
-			foreach (LanguageRecord lr in scriptFound.languages)
-			{
-				if (lr.tag.Equals(language))
-				{
-					lang = lr;
-					break;
-				}
-			}
-			if (lang == null)
-			{
-				lang = scriptFound.defaultLanguage;
-			}
-			return lang;
-		}
+        public virtual LanguageRecord GetLanguageRecord(String[] scripts, String language
+            )
+        {
+            ScriptRecord scriptFound = null;
+            ScriptRecord scriptDefault = null;
+            foreach (ScriptRecord sr in records)
+            {
+                if (DEFAULT_SCRIPT.Equals(sr.tag))
+                {
+                    scriptDefault = sr;
+                    break;
+                }
+            }
+            foreach (String script in scripts)
+            {
+                foreach (ScriptRecord sr_1 in records)
+                {
+                    if (sr_1.tag.Equals(script))
+                    {
+                        scriptFound = sr_1;
+                        break;
+                    }
+                    if (DEFAULT_SCRIPT.Equals(script))
+                    {
+                        scriptDefault = sr_1;
+                    }
+                }
+                if (scriptFound != null)
+                {
+                    break;
+                }
+            }
+            if (scriptFound == null)
+            {
+                scriptFound = scriptDefault;
+            }
+            if (scriptFound == null)
+            {
+                return null;
+            }
+            LanguageRecord lang = null;
+            foreach (LanguageRecord lr in scriptFound.languages)
+            {
+                if (lr.tag.Equals(language))
+                {
+                    lang = lr;
+                    break;
+                }
+            }
+            if (lang == null)
+            {
+                lang = scriptFound.defaultLanguage;
+            }
+            return lang;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private void ReadScriptRecord(TagAndLocation tagLoc)
-		{
-			openTypeReader.rf.Seek(tagLoc.location);
-			int locationDefaultLanguage = openTypeReader.rf.ReadUnsignedShort();
-			if (locationDefaultLanguage > 0)
-			{
-				locationDefaultLanguage += tagLoc.location;
-			}
-			TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(tagLoc.location);
-			ScriptRecord srec = new ScriptRecord();
-			srec.tag = tagLoc.tag;
-			srec.languages = new LanguageRecord[tagsLocs.Length];
-			for (int k = 0; k < tagsLocs.Length; ++k)
-			{
-				srec.languages[k] = ReadLanguageRecord(tagsLocs[k]);
-			}
-			if (locationDefaultLanguage > 0)
-			{
-				TagAndLocation t = new TagAndLocation();
-				t.tag = "";
-				t.location = locationDefaultLanguage;
-				srec.defaultLanguage = ReadLanguageRecord(t);
-			}
-			records.Add(srec);
-		}
+        /// <exception cref="System.IO.IOException"/>
+        private void ReadScriptRecord(TagAndLocation tagLoc)
+        {
+            openTypeReader.rf.Seek(tagLoc.location);
+            int locationDefaultLanguage = openTypeReader.rf.ReadUnsignedShort();
+            if (locationDefaultLanguage > 0)
+            {
+                locationDefaultLanguage += tagLoc.location;
+            }
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(tagLoc.location);
+            ScriptRecord srec = new ScriptRecord();
+            srec.tag = tagLoc.tag;
+            srec.languages = new LanguageRecord[tagsLocs.Length];
+            for (int k = 0; k < tagsLocs.Length; ++k)
+            {
+                srec.languages[k] = ReadLanguageRecord(tagsLocs[k]);
+            }
+            if (locationDefaultLanguage > 0)
+            {
+                TagAndLocation t = new TagAndLocation();
+                t.tag = "";
+                t.location = locationDefaultLanguage;
+                srec.defaultLanguage = ReadLanguageRecord(t);
+            }
+            records.Add(srec);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private LanguageRecord ReadLanguageRecord(TagAndLocation tagLoc)
-		{
-			LanguageRecord rec = new LanguageRecord();
-			//skip lookup order
-			openTypeReader.rf.Seek(tagLoc.location + 2);
-			rec.featureRequired = openTypeReader.rf.ReadUnsignedShort();
-			int count = openTypeReader.rf.ReadUnsignedShort();
-			rec.features = openTypeReader.ReadUShortArray(count);
-			rec.tag = tagLoc.tag;
-			return rec;
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        private LanguageRecord ReadLanguageRecord(TagAndLocation tagLoc)
+        {
+            LanguageRecord rec = new LanguageRecord();
+            //skip lookup order
+            openTypeReader.rf.Seek(tagLoc.location + 2);
+            rec.featureRequired = openTypeReader.rf.ReadUnsignedShort();
+            int count = openTypeReader.rf.ReadUnsignedShort();
+            rec.features = openTypeReader.ReadUShortArray(count);
+            rec.tag = tagLoc.tag;
+            return rec;
+        }
+    }
 }

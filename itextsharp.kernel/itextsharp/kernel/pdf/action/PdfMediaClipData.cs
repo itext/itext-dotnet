@@ -47,33 +47,33 @@ using iTextSharp.Kernel.Pdf.Filespec;
 
 namespace iTextSharp.Kernel.Pdf.Action
 {
-	public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary>
-	{
-		private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
+    public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary>
+    {
+        private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
 
-		public PdfMediaClipData(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfMediaClipData(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public PdfMediaClipData(String file, PdfFileSpec fs, String mimeType)
-			: this(new PdfDictionary())
-		{
-			PdfDictionary dic = new PdfDictionary();
-			MarkObjectAsIndirect(dic);
-			dic.Put(PdfName.TF, TEMPACCESS);
-			GetPdfObject().Put(PdfName.Type, PdfName.MediaClip);
-			GetPdfObject().Put(PdfName.S, PdfName.MCD);
-			GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Media clip for {0}", file
-				)));
-			GetPdfObject().Put(PdfName.CT, new PdfString(mimeType));
-			GetPdfObject().Put(PdfName.P, dic);
-			GetPdfObject().Put(PdfName.D, fs.GetPdfObject());
-		}
+        public PdfMediaClipData(String file, PdfFileSpec fs, String mimeType)
+            : this(new PdfDictionary())
+        {
+            PdfDictionary dic = new PdfDictionary();
+            MarkObjectAsIndirect(dic);
+            dic.Put(PdfName.TF, TEMPACCESS);
+            GetPdfObject().Put(PdfName.Type, PdfName.MediaClip);
+            GetPdfObject().Put(PdfName.S, PdfName.MCD);
+            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Media clip for {0}", file
+                )));
+            GetPdfObject().Put(PdfName.CT, new PdfString(mimeType));
+            GetPdfObject().Put(PdfName.P, dic);
+            GetPdfObject().Put(PdfName.D, fs.GetPdfObject());
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
+    }
 }

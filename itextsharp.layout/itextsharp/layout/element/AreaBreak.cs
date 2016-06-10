@@ -47,89 +47,89 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A layout object that terminates the current content area and creates a new
-	/// one.
-	/// </summary>
-	/// <remarks>
-	/// A layout object that terminates the current content area and creates a new
-	/// one. If no
-	/// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
-	/// is given, the new content area will have the same
-	/// size as the current one.
-	/// </remarks>
-	public class AreaBreak : AbstractElement<iTextSharp.Layout.Element.AreaBreak>
-	{
-		protected internal PageSize pageSize;
+    /// <summary>
+    /// A layout object that terminates the current content area and creates a new
+    /// one.
+    /// </summary>
+    /// <remarks>
+    /// A layout object that terminates the current content area and creates a new
+    /// one. If no
+    /// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
+    /// is given, the new content area will have the same
+    /// size as the current one.
+    /// </remarks>
+    public class AreaBreak : AbstractElement<iTextSharp.Layout.Element.AreaBreak>
+    {
+        protected internal PageSize pageSize;
 
-		/// <summary>Creates an AreaBreak.</summary>
-		/// <remarks>
-		/// Creates an AreaBreak. The new content area will have the same size as the
-		/// current one.
-		/// </remarks>
-		public AreaBreak()
-			: this(AreaBreakType.NEXT_AREA)
-		{
-		}
+        /// <summary>Creates an AreaBreak.</summary>
+        /// <remarks>
+        /// Creates an AreaBreak. The new content area will have the same size as the
+        /// current one.
+        /// </remarks>
+        public AreaBreak()
+            : this(AreaBreakType.NEXT_AREA)
+        {
+        }
 
-		/// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
-		/// <param name="areaBreakType">
-		/// an
-		/// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
-		/// </param>
-		public AreaBreak(AreaBreakType? areaBreakType)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE, areaBreakType);
-		}
+        /// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
+        /// <param name="areaBreakType">
+        /// an
+        /// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
+        /// </param>
+        public AreaBreak(AreaBreakType? areaBreakType)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE, areaBreakType);
+        }
 
-		/// <summary>Creates an AreaBreak.</summary>
-		/// <remarks>
-		/// Creates an AreaBreak. The new content area will have the specified page
-		/// size.
-		/// </remarks>
-		/// <param name="pageSize">the size of the new content area</param>
-		public AreaBreak(PageSize pageSize)
-			: this(AreaBreakType.NEXT_PAGE)
-		{
-			this.pageSize = pageSize;
-		}
+        /// <summary>Creates an AreaBreak.</summary>
+        /// <remarks>
+        /// Creates an AreaBreak. The new content area will have the specified page
+        /// size.
+        /// </remarks>
+        /// <param name="pageSize">the size of the new content area</param>
+        public AreaBreak(PageSize pageSize)
+            : this(AreaBreakType.NEXT_PAGE)
+        {
+            this.pageSize = pageSize;
+        }
 
-		/// <summary>Gets the page size.</summary>
-		/// <returns>
-		/// the
-		/// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
-		/// of the next content area.
-		/// </returns>
-		public virtual PageSize GetPageSize()
-		{
-			return pageSize;
-		}
+        /// <summary>Gets the page size.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
+        /// of the next content area.
+        /// </returns>
+        public virtual PageSize GetPageSize()
+        {
+            return pageSize;
+        }
 
-		/// <summary>Sets the page size.</summary>
-		/// <param name="pageSize">
-		/// the new
-		/// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
-		/// of the next content area.
-		/// </param>
-		public virtual void SetPageSize(PageSize pageSize)
-		{
-			this.pageSize = pageSize;
-		}
+        /// <summary>Sets the page size.</summary>
+        /// <param name="pageSize">
+        /// the new
+        /// <see cref="iTextSharp.Kernel.Geom.PageSize">page size</see>
+        /// of the next content area.
+        /// </param>
+        public virtual void SetPageSize(PageSize pageSize)
+        {
+            this.pageSize = pageSize;
+        }
 
-		/// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
-		/// <returns>
-		/// the current
-		/// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
-		/// </returns>
-		public virtual AreaBreakType? GetAreaType()
-		{
-			return this.GetProperty<AreaBreakType?>(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
-				);
-		}
+        /// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
+        /// <returns>
+        /// the current
+        /// <see cref="iTextSharp.Layout.Property.AreaBreakType?">area break type</see>
+        /// </returns>
+        public virtual AreaBreakType? GetAreaType()
+        {
+            return this.GetProperty<AreaBreakType?>(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
+                );
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new AreaBreakRenderer(this);
-		}
-	}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new AreaBreakRenderer(this);
+        }
+    }
 }

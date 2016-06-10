@@ -45,68 +45,68 @@ using iTextSharp.Kernel.Color;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
-	/// <summary>A Pen object of the WMF format.</summary>
-	/// <remarks>A Pen object of the WMF format. Holds the color, style and width information of the pen.
-	/// 	</remarks>
-	public class MetaPen : MetaObject
-	{
-		public const int PS_SOLID = 0;
+    /// <summary>A Pen object of the WMF format.</summary>
+    /// <remarks>A Pen object of the WMF format. Holds the color, style and width information of the pen.
+    ///     </remarks>
+    public class MetaPen : MetaObject
+    {
+        public const int PS_SOLID = 0;
 
-		public const int PS_DASH = 1;
+        public const int PS_DASH = 1;
 
-		public const int PS_DOT = 2;
+        public const int PS_DOT = 2;
 
-		public const int PS_DASHDOT = 3;
+        public const int PS_DASHDOT = 3;
 
-		public const int PS_DASHDOTDOT = 4;
+        public const int PS_DASHDOTDOT = 4;
 
-		public const int PS_NULL = 5;
+        public const int PS_NULL = 5;
 
-		public const int PS_INSIDEFRAME = 6;
+        public const int PS_INSIDEFRAME = 6;
 
-		internal int style = PS_SOLID;
+        internal int style = PS_SOLID;
 
-		internal int penWidth = 1;
+        internal int penWidth = 1;
 
-		internal iTextSharp.Kernel.Color.Color color = DeviceRgb.BLACK;
+        internal iTextSharp.Kernel.Color.Color color = DeviceRgb.BLACK;
 
-		/// <summary>Creates a MetaPen object.</summary>
-		public MetaPen()
-			: base(META_PEN)
-		{
-		}
+        /// <summary>Creates a MetaPen object.</summary>
+        public MetaPen()
+            : base(META_PEN)
+        {
+        }
 
-		/// <summary>Initializes a MetaPen object.</summary>
-		/// <param name="in">the InputMeta object that holds the inputstream of the WMF image
-		/// 	</param>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Init(InputMeta @in)
-		{
-			style = @in.ReadWord();
-			penWidth = @in.ReadShort();
-			@in.ReadWord();
-			color = @in.ReadColor();
-		}
+        /// <summary>Initializes a MetaPen object.</summary>
+        /// <param name="in">the InputMeta object that holds the inputstream of the WMF image
+        ///     </param>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Init(InputMeta @in)
+        {
+            style = @in.ReadWord();
+            penWidth = @in.ReadShort();
+            @in.ReadWord();
+            color = @in.ReadColor();
+        }
 
-		/// <summary>Get the style of the MetaPen.</summary>
-		/// <returns>style of the pen</returns>
-		public virtual int GetStyle()
-		{
-			return style;
-		}
+        /// <summary>Get the style of the MetaPen.</summary>
+        /// <returns>style of the pen</returns>
+        public virtual int GetStyle()
+        {
+            return style;
+        }
 
-		/// <summary>Get the width of the MetaPen.</summary>
-		/// <returns>width of the pen</returns>
-		public virtual int GetPenWidth()
-		{
-			return penWidth;
-		}
+        /// <summary>Get the width of the MetaPen.</summary>
+        /// <returns>width of the pen</returns>
+        public virtual int GetPenWidth()
+        {
+            return penWidth;
+        }
 
-		/// <summary>Get the color of the MetaPen.</summary>
-		/// <returns>color of the pen</returns>
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
-	}
+        /// <summary>Get the color of the MetaPen.</summary>
+        /// <returns>color of the pen</returns>
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
+    }
 }

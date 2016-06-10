@@ -45,11 +45,11 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	public class Tab : AbstractElement<Tab>, ILeafElement
-	{
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new TabRenderer(this);
-		}
-	}
+    public class Tab : AbstractElement<Tab>, ILeafElement
+    {
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new TabRenderer(this);
+        }
+    }
 }

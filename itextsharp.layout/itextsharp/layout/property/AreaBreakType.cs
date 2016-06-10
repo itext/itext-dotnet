@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum AreaBreakType
-	{
-		NEXT_AREA,
-		NEXT_PAGE,
-		LAST_PAGE
-	}
+    public enum AreaBreakType
+    {
+        NEXT_AREA,
+        NEXT_PAGE,
+        LAST_PAGE
+    }
 }

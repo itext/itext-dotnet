@@ -45,383 +45,383 @@ using System;
 
 namespace iTextSharp.Kernel.Numbering
 {
-	/// <summary>
-	/// This class is responsible for converting integer numbers to their
-	/// Greek alphabet letter representations.
-	/// </summary>
-	/// <remarks>
-	/// This class is responsible for converting integer numbers to their
-	/// Greek alphabet letter representations.
-	/// We are aware of the fact that the original Greek numbering is different.
-	/// See http://www.cogsci.indiana.edu/farg/harry/lan/grknum.htm#ancient
-	/// but this isn't implemented yet; the main reason being the fact that we
-	/// need a font that has the obsolete Greek characters qoppa and sampi.
-	/// So we use standard 24 letter Greek alphabet
-	/// </remarks>
-	public class GreekAlphabetNumbering
-	{
-		protected internal static readonly char[] ALPHABET_LOWERCASE;
+    /// <summary>
+    /// This class is responsible for converting integer numbers to their
+    /// Greek alphabet letter representations.
+    /// </summary>
+    /// <remarks>
+    /// This class is responsible for converting integer numbers to their
+    /// Greek alphabet letter representations.
+    /// We are aware of the fact that the original Greek numbering is different.
+    /// See http://www.cogsci.indiana.edu/farg/harry/lan/grknum.htm#ancient
+    /// but this isn't implemented yet; the main reason being the fact that we
+    /// need a font that has the obsolete Greek characters qoppa and sampi.
+    /// So we use standard 24 letter Greek alphabet
+    /// </remarks>
+    public class GreekAlphabetNumbering
+    {
+        protected internal static readonly char[] ALPHABET_LOWERCASE;
 
-		protected internal static readonly char[] ALPHABET_UPPERCASE;
+        protected internal static readonly char[] ALPHABET_UPPERCASE;
 
-		protected internal const int ALPHABET_LENGTH = 24;
+        protected internal const int ALPHABET_LENGTH = 24;
 
-		static GreekAlphabetNumbering()
-		{
-			ALPHABET_LOWERCASE = new char[ALPHABET_LENGTH];
-			ALPHABET_UPPERCASE = new char[ALPHABET_LENGTH];
-			for (int i = 0; i < ALPHABET_LENGTH; i++)
-			{
-				ALPHABET_LOWERCASE[i] = GetSymbolFontChar((char)(945 + i + (i > 16 ? 1 : 0)));
-				ALPHABET_UPPERCASE[i] = GetSymbolFontChar((char)(913 + i + (i > 16 ? 1 : 0)));
-			}
-		}
+        static GreekAlphabetNumbering()
+        {
+            ALPHABET_LOWERCASE = new char[ALPHABET_LENGTH];
+            ALPHABET_UPPERCASE = new char[ALPHABET_LENGTH];
+            for (int i = 0; i < ALPHABET_LENGTH; i++)
+            {
+                ALPHABET_LOWERCASE[i] = GetSymbolFontChar((char)(945 + i + (i > 16 ? 1 : 0)));
+                ALPHABET_UPPERCASE[i] = GetSymbolFontChar((char)(913 + i + (i > 16 ? 1 : 0)));
+            }
+        }
 
-		/// <summary>Converts the given number to its Greek alphabet lowercase string representation.
-		/// 	</summary>
-		/// <remarks>
-		/// Converts the given number to its Greek alphabet lowercase string representation.
-		/// E.g. 1 will be converted to "?", 2 to "?", and so on.
-		/// </remarks>
-		/// <param name="number">the number to be converted</param>
-		public static String ToGreekAlphabetNumberLowerCase(int number)
-		{
-			return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
-		}
+        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.
+        ///     </summary>
+        /// <remarks>
+        /// Converts the given number to its Greek alphabet lowercase string representation.
+        /// E.g. 1 will be converted to "?", 2 to "?", and so on.
+        /// </remarks>
+        /// <param name="number">the number to be converted</param>
+        public static String ToGreekAlphabetNumberLowerCase(int number)
+        {
+            return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
+        }
 
-		/// <summary>Converts the given number to its Greek alphabet lowercase string representation.
-		/// 	</summary>
-		/// <remarks>
-		/// Converts the given number to its Greek alphabet lowercase string representation.
-		/// E.g. 1 will be converted to "A", 2 to "B", and so on.
-		/// </remarks>
-		/// <param name="number">the number to be converted</param>
-		public static String ToGreekAlphabetNumberUpperCase(int number)
-		{
-			return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
-		}
+        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.
+        ///     </summary>
+        /// <remarks>
+        /// Converts the given number to its Greek alphabet lowercase string representation.
+        /// E.g. 1 will be converted to "A", 2 to "B", and so on.
+        /// </remarks>
+        /// <param name="number">the number to be converted</param>
+        public static String ToGreekAlphabetNumberUpperCase(int number)
+        {
+            return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
+        }
 
-		/// <summary>Converts the given number to its Greek alphabet string representation.</summary>
-		/// <remarks>
-		/// Converts the given number to its Greek alphabet string representation.
-		/// E.g. for <code>upperCase</code> set to false,
-		/// 1 will be converted to "?", 2 to "?", and so on.
-		/// </remarks>
-		/// <param name="number">the number to be converted</param>
-		/// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
-		public static String ToGreekAlphabetNumber(int number, bool upperCase)
-		{
-			return upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase
-				(number);
-		}
+        /// <summary>Converts the given number to its Greek alphabet string representation.</summary>
+        /// <remarks>
+        /// Converts the given number to its Greek alphabet string representation.
+        /// E.g. for <code>upperCase</code> set to false,
+        /// 1 will be converted to "?", 2 to "?", and so on.
+        /// </remarks>
+        /// <param name="number">the number to be converted</param>
+        /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
+        public static String ToGreekAlphabetNumber(int number, bool upperCase)
+        {
+            return upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase
+                (number);
+        }
 
-		/// <summary>Converts a given greek unicode character code into the code of the corresponding char Symbol font.
-		/// 	</summary>
-		/// <param name="unicodeChar">original unicode char</param>
-		/// <returns>the corresponding symbol code in Symbol standard font</returns>
-		private static char GetSymbolFontChar(char unicodeChar)
-		{
-			switch (unicodeChar)
-			{
-				case (char)913:
-				{
-					return 'A';
-				}
+        /// <summary>Converts a given greek unicode character code into the code of the corresponding char Symbol font.
+        ///     </summary>
+        /// <param name="unicodeChar">original unicode char</param>
+        /// <returns>the corresponding symbol code in Symbol standard font</returns>
+        private static char GetSymbolFontChar(char unicodeChar)
+        {
+            switch (unicodeChar)
+            {
+                case (char)913:
+                {
+                    return 'A';
+                }
 
-				case (char)914:
-				{
-					// ALFA
-					return 'B';
-				}
+                case (char)914:
+                {
+                    // ALFA
+                    return 'B';
+                }
 
-				case (char)915:
-				{
-					// BETA
-					return 'G';
-				}
+                case (char)915:
+                {
+                    // BETA
+                    return 'G';
+                }
 
-				case (char)916:
-				{
-					// GAMMA
-					return 'D';
-				}
+                case (char)916:
+                {
+                    // GAMMA
+                    return 'D';
+                }
 
-				case (char)917:
-				{
-					// DELTA
-					return 'E';
-				}
+                case (char)917:
+                {
+                    // DELTA
+                    return 'E';
+                }
 
-				case (char)918:
-				{
-					// EPSILON
-					return 'Z';
-				}
+                case (char)918:
+                {
+                    // EPSILON
+                    return 'Z';
+                }
 
-				case (char)919:
-				{
-					// ZETA
-					return 'H';
-				}
+                case (char)919:
+                {
+                    // ZETA
+                    return 'H';
+                }
 
-				case (char)920:
-				{
-					// ETA
-					return 'Q';
-				}
+                case (char)920:
+                {
+                    // ETA
+                    return 'Q';
+                }
 
-				case (char)921:
-				{
-					// THETA
-					return 'I';
-				}
+                case (char)921:
+                {
+                    // THETA
+                    return 'I';
+                }
 
-				case (char)922:
-				{
-					// IOTA
-					return 'K';
-				}
+                case (char)922:
+                {
+                    // IOTA
+                    return 'K';
+                }
 
-				case (char)923:
-				{
-					// KAPPA
-					return 'L';
-				}
+                case (char)923:
+                {
+                    // KAPPA
+                    return 'L';
+                }
 
-				case (char)924:
-				{
-					// LAMBDA
-					return 'M';
-				}
+                case (char)924:
+                {
+                    // LAMBDA
+                    return 'M';
+                }
 
-				case (char)925:
-				{
-					// MU
-					return 'N';
-				}
+                case (char)925:
+                {
+                    // MU
+                    return 'N';
+                }
 
-				case (char)926:
-				{
-					// NU
-					return 'X';
-				}
+                case (char)926:
+                {
+                    // NU
+                    return 'X';
+                }
 
-				case (char)927:
-				{
-					// XI
-					return 'O';
-				}
+                case (char)927:
+                {
+                    // XI
+                    return 'O';
+                }
 
-				case (char)928:
-				{
-					// OMICRON
-					return 'P';
-				}
+                case (char)928:
+                {
+                    // OMICRON
+                    return 'P';
+                }
 
-				case (char)929:
-				{
-					// PI
-					return 'R';
-				}
+                case (char)929:
+                {
+                    // PI
+                    return 'R';
+                }
 
-				case (char)931:
-				{
-					// RHO
-					return 'S';
-				}
+                case (char)931:
+                {
+                    // RHO
+                    return 'S';
+                }
 
-				case (char)932:
-				{
-					// SIGMA
-					return 'T';
-				}
+                case (char)932:
+                {
+                    // SIGMA
+                    return 'T';
+                }
 
-				case (char)933:
-				{
-					// TAU
-					return 'U';
-				}
+                case (char)933:
+                {
+                    // TAU
+                    return 'U';
+                }
 
-				case (char)934:
-				{
-					// UPSILON
-					return 'F';
-				}
+                case (char)934:
+                {
+                    // UPSILON
+                    return 'F';
+                }
 
-				case (char)935:
-				{
-					// PHI
-					return 'C';
-				}
+                case (char)935:
+                {
+                    // PHI
+                    return 'C';
+                }
 
-				case (char)936:
-				{
-					// CHI
-					return 'Y';
-				}
+                case (char)936:
+                {
+                    // CHI
+                    return 'Y';
+                }
 
-				case (char)937:
-				{
-					// PSI
-					return 'W';
-				}
+                case (char)937:
+                {
+                    // PSI
+                    return 'W';
+                }
 
-				case (char)945:
-				{
-					// OMEGA
-					return 'a';
-				}
+                case (char)945:
+                {
+                    // OMEGA
+                    return 'a';
+                }
 
-				case (char)946:
-				{
-					// alfa
-					return 'b';
-				}
+                case (char)946:
+                {
+                    // alfa
+                    return 'b';
+                }
 
-				case (char)947:
-				{
-					// beta
-					return 'g';
-				}
+                case (char)947:
+                {
+                    // beta
+                    return 'g';
+                }
 
-				case (char)948:
-				{
-					// gamma
-					return 'd';
-				}
+                case (char)948:
+                {
+                    // gamma
+                    return 'd';
+                }
 
-				case (char)949:
-				{
-					// delta
-					return 'e';
-				}
+                case (char)949:
+                {
+                    // delta
+                    return 'e';
+                }
 
-				case (char)950:
-				{
-					// epsilon
-					return 'z';
-				}
+                case (char)950:
+                {
+                    // epsilon
+                    return 'z';
+                }
 
-				case (char)951:
-				{
-					// zeta
-					return 'h';
-				}
+                case (char)951:
+                {
+                    // zeta
+                    return 'h';
+                }
 
-				case (char)952:
-				{
-					// eta
-					return 'q';
-				}
+                case (char)952:
+                {
+                    // eta
+                    return 'q';
+                }
 
-				case (char)953:
-				{
-					// theta
-					return 'i';
-				}
+                case (char)953:
+                {
+                    // theta
+                    return 'i';
+                }
 
-				case (char)954:
-				{
-					// iota
-					return 'k';
-				}
+                case (char)954:
+                {
+                    // iota
+                    return 'k';
+                }
 
-				case (char)955:
-				{
-					// kappa
-					return 'l';
-				}
+                case (char)955:
+                {
+                    // kappa
+                    return 'l';
+                }
 
-				case (char)956:
-				{
-					// lambda
-					return 'm';
-				}
+                case (char)956:
+                {
+                    // lambda
+                    return 'm';
+                }
 
-				case (char)957:
-				{
-					// mu
-					return 'n';
-				}
+                case (char)957:
+                {
+                    // mu
+                    return 'n';
+                }
 
-				case (char)958:
-				{
-					// nu
-					return 'x';
-				}
+                case (char)958:
+                {
+                    // nu
+                    return 'x';
+                }
 
-				case (char)959:
-				{
-					// xi
-					return 'o';
-				}
+                case (char)959:
+                {
+                    // xi
+                    return 'o';
+                }
 
-				case (char)960:
-				{
-					// omicron
-					return 'p';
-				}
+                case (char)960:
+                {
+                    // omicron
+                    return 'p';
+                }
 
-				case (char)961:
-				{
-					// pi
-					return 'r';
-				}
+                case (char)961:
+                {
+                    // pi
+                    return 'r';
+                }
 
-				case (char)962:
-				{
-					// rho
-					return 'V';
-				}
+                case (char)962:
+                {
+                    // rho
+                    return 'V';
+                }
 
-				case (char)963:
-				{
-					// sigma
-					return 's';
-				}
+                case (char)963:
+                {
+                    // sigma
+                    return 's';
+                }
 
-				case (char)964:
-				{
-					// sigma
-					return 't';
-				}
+                case (char)964:
+                {
+                    // sigma
+                    return 't';
+                }
 
-				case (char)965:
-				{
-					// tau
-					return 'u';
-				}
+                case (char)965:
+                {
+                    // tau
+                    return 'u';
+                }
 
-				case (char)966:
-				{
-					// upsilon
-					return 'f';
-				}
+                case (char)966:
+                {
+                    // upsilon
+                    return 'f';
+                }
 
-				case (char)967:
-				{
-					// phi
-					return 'c';
-				}
+                case (char)967:
+                {
+                    // phi
+                    return 'c';
+                }
 
-				case (char)968:
-				{
-					// chi
-					return 'y';
-				}
+                case (char)968:
+                {
+                    // chi
+                    return 'y';
+                }
 
-				case (char)969:
-				{
-					// psi
-					return 'w';
-				}
+                case (char)969:
+                {
+                    // psi
+                    return 'w';
+                }
 
-				default:
-				{
-					// omega
-					return ' ';
-				}
-			}
-		}
-	}
+                default:
+                {
+                    // omega
+                    return ' ';
+                }
+            }
+        }
+    }
 }

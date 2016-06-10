@@ -46,264 +46,264 @@ using iTextSharp.IO.Font;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
-	/// <summary>A Meta Font.</summary>
-	public class MetaFont : MetaObject
-	{
-		internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold"
-			, "Courier-Oblique", "Courier-BoldOblique", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique"
-			, "Helvetica-BoldOblique", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic"
-			, "Symbol", "ZapfDingbats" };
+    /// <summary>A Meta Font.</summary>
+    public class MetaFont : MetaObject
+    {
+        internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold"
+            , "Courier-Oblique", "Courier-BoldOblique", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique"
+            , "Helvetica-BoldOblique", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic"
+            , "Symbol", "ZapfDingbats" };
 
-		internal const int MARKER_BOLD = 1;
+        internal const int MARKER_BOLD = 1;
 
-		internal const int MARKER_ITALIC = 2;
+        internal const int MARKER_ITALIC = 2;
 
-		internal const int MARKER_COURIER = 0;
+        internal const int MARKER_COURIER = 0;
 
-		internal const int MARKER_HELVETICA = 4;
+        internal const int MARKER_HELVETICA = 4;
 
-		internal const int MARKER_TIMES = 8;
+        internal const int MARKER_TIMES = 8;
 
-		internal const int MARKER_SYMBOL = 12;
+        internal const int MARKER_SYMBOL = 12;
 
-		internal const int DEFAULT_PITCH = 0;
+        internal const int DEFAULT_PITCH = 0;
 
-		internal const int FIXED_PITCH = 1;
+        internal const int FIXED_PITCH = 1;
 
-		internal const int VARIABLE_PITCH = 2;
+        internal const int VARIABLE_PITCH = 2;
 
-		internal const int FF_DONTCARE = 0;
+        internal const int FF_DONTCARE = 0;
 
-		internal const int FF_ROMAN = 1;
+        internal const int FF_ROMAN = 1;
 
-		internal const int FF_SWISS = 2;
+        internal const int FF_SWISS = 2;
 
-		internal const int FF_MODERN = 3;
+        internal const int FF_MODERN = 3;
 
-		internal const int FF_SCRIPT = 4;
+        internal const int FF_SCRIPT = 4;
 
-		internal const int FF_DECORATIVE = 5;
+        internal const int FF_DECORATIVE = 5;
 
-		internal const int BOLDTHRESHOLD = 600;
+        internal const int BOLDTHRESHOLD = 600;
 
-		internal const int NAME_SIZE = 32;
+        internal const int NAME_SIZE = 32;
 
-		internal const int ETO_OPAQUE = 2;
+        internal const int ETO_OPAQUE = 2;
 
-		internal const int ETO_CLIPPED = 4;
+        internal const int ETO_CLIPPED = 4;
 
-		internal int height;
+        internal int height;
 
-		internal float angle;
+        internal float angle;
 
-		internal int bold;
+        internal int bold;
 
-		internal int italic;
+        internal int italic;
 
-		internal bool underline;
+        internal bool underline;
 
-		internal bool strikeout;
+        internal bool strikeout;
 
-		internal int charset;
+        internal int charset;
 
-		internal int pitchAndFamily;
+        internal int pitchAndFamily;
 
-		internal String faceName = "arial";
+        internal String faceName = "arial";
 
-		internal FontProgram font = null;
+        internal FontProgram font = null;
 
-		internal FontEncoding encoding = null;
+        internal FontEncoding encoding = null;
 
-		/// <summary>Creates a MetaFont instance.</summary>
-		public MetaFont()
-			: base(META_FONT)
-		{
-		}
+        /// <summary>Creates a MetaFont instance.</summary>
+        public MetaFont()
+            : base(META_FONT)
+        {
+        }
 
-		/// <summary>Initializes the MetaFont instance.</summary>
-		/// <param name="in">InputMeta containing the WMF data</param>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Init(InputMeta @in)
-		{
-			height = Math.Abs(@in.ReadShort());
-			@in.Skip(2);
-			angle = (float)(@in.ReadShort() / 1800.0 * Math.PI);
-			@in.Skip(2);
-			bold = (@in.ReadShort() >= BOLDTHRESHOLD ? MARKER_BOLD : 0);
-			italic = (@in.ReadByte() != 0 ? MARKER_ITALIC : 0);
-			underline = (@in.ReadByte() != 0);
-			strikeout = (@in.ReadByte() != 0);
-			charset = @in.ReadByte();
-			@in.Skip(3);
-			pitchAndFamily = @in.ReadByte();
-			byte[] name = new byte[NAME_SIZE];
-			int k;
-			for (k = 0; k < NAME_SIZE; ++k)
-			{
-				int c = @in.ReadByte();
-				if (c == 0)
-				{
-					break;
-				}
-				name[k] = (byte)c;
-			}
-			try
-			{
-				faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
-			}
-			catch (ArgumentException)
-			{
-				faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
-			}
-			faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-		}
+        /// <summary>Initializes the MetaFont instance.</summary>
+        /// <param name="in">InputMeta containing the WMF data</param>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Init(InputMeta @in)
+        {
+            height = Math.Abs(@in.ReadShort());
+            @in.Skip(2);
+            angle = (float)(@in.ReadShort() / 1800.0 * Math.PI);
+            @in.Skip(2);
+            bold = (@in.ReadShort() >= BOLDTHRESHOLD ? MARKER_BOLD : 0);
+            italic = (@in.ReadByte() != 0 ? MARKER_ITALIC : 0);
+            underline = (@in.ReadByte() != 0);
+            strikeout = (@in.ReadByte() != 0);
+            charset = @in.ReadByte();
+            @in.Skip(3);
+            pitchAndFamily = @in.ReadByte();
+            byte[] name = new byte[NAME_SIZE];
+            int k;
+            for (k = 0; k < NAME_SIZE; ++k)
+            {
+                int c = @in.ReadByte();
+                if (c == 0)
+                {
+                    break;
+                }
+                name[k] = (byte)c;
+            }
+            try
+            {
+                faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
+            }
+            catch (ArgumentException)
+            {
+                faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
+            }
+            faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+        }
 
-		/// <summary>Returns the Font.</summary>
-		/// <returns>the font</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual FontProgram GetFont()
-		{
-			if (font != null)
-			{
-				return font;
-			}
-			FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0
-				) ? FontConstants.ITALIC : 0) | ((bold != 0) ? FontConstants.BOLD : 0));
-			encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
-			font = ff2;
-			if (font != null)
-			{
-				return font;
-			}
-			String fontName;
-			if (faceName.Contains("courier") || faceName.Contains("terminal") || faceName.Contains
-				("fixedsys"))
-			{
-				fontName = fontNames[MARKER_COURIER + italic + bold];
-			}
-			else
-			{
-				if (faceName.Contains("ms sans serif") || faceName.Contains("arial") || faceName.
-					Contains("system"))
-				{
-					fontName = fontNames[MARKER_HELVETICA + italic + bold];
-				}
-				else
-				{
-					if (faceName.Contains("arial black"))
-					{
-						fontName = fontNames[MARKER_HELVETICA + italic + MARKER_BOLD];
-					}
-					else
-					{
-						if (faceName.Contains("times") || faceName.Contains("ms serif") || faceName.Contains
-							("roman"))
-						{
-							fontName = fontNames[MARKER_TIMES + italic + bold];
-						}
-						else
-						{
-							if (faceName.Contains("symbol"))
-							{
-								fontName = fontNames[MARKER_SYMBOL];
-							}
-							else
-							{
-								int pitch = pitchAndFamily & 3;
-								int family = (pitchAndFamily >> 4) & 7;
-								switch (family)
-								{
-									case FF_MODERN:
-									{
-										fontName = fontNames[MARKER_COURIER + italic + bold];
-										break;
-									}
+        /// <summary>Returns the Font.</summary>
+        /// <returns>the font</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual FontProgram GetFont()
+        {
+            if (font != null)
+            {
+                return font;
+            }
+            FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0
+                ) ? FontConstants.ITALIC : 0) | ((bold != 0) ? FontConstants.BOLD : 0));
+            encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
+            font = ff2;
+            if (font != null)
+            {
+                return font;
+            }
+            String fontName;
+            if (faceName.Contains("courier") || faceName.Contains("terminal") || faceName.Contains
+                ("fixedsys"))
+            {
+                fontName = fontNames[MARKER_COURIER + italic + bold];
+            }
+            else
+            {
+                if (faceName.Contains("ms sans serif") || faceName.Contains("arial") || faceName.
+                    Contains("system"))
+                {
+                    fontName = fontNames[MARKER_HELVETICA + italic + bold];
+                }
+                else
+                {
+                    if (faceName.Contains("arial black"))
+                    {
+                        fontName = fontNames[MARKER_HELVETICA + italic + MARKER_BOLD];
+                    }
+                    else
+                    {
+                        if (faceName.Contains("times") || faceName.Contains("ms serif") || faceName.Contains
+                            ("roman"))
+                        {
+                            fontName = fontNames[MARKER_TIMES + italic + bold];
+                        }
+                        else
+                        {
+                            if (faceName.Contains("symbol"))
+                            {
+                                fontName = fontNames[MARKER_SYMBOL];
+                            }
+                            else
+                            {
+                                int pitch = pitchAndFamily & 3;
+                                int family = (pitchAndFamily >> 4) & 7;
+                                switch (family)
+                                {
+                                    case FF_MODERN:
+                                    {
+                                        fontName = fontNames[MARKER_COURIER + italic + bold];
+                                        break;
+                                    }
 
-									case FF_ROMAN:
-									{
-										fontName = fontNames[MARKER_TIMES + italic + bold];
-										break;
-									}
+                                    case FF_ROMAN:
+                                    {
+                                        fontName = fontNames[MARKER_TIMES + italic + bold];
+                                        break;
+                                    }
 
-									case FF_SWISS:
-									case FF_SCRIPT:
-									case FF_DECORATIVE:
-									{
-										fontName = fontNames[MARKER_HELVETICA + italic + bold];
-										break;
-									}
+                                    case FF_SWISS:
+                                    case FF_SCRIPT:
+                                    case FF_DECORATIVE:
+                                    {
+                                        fontName = fontNames[MARKER_HELVETICA + italic + bold];
+                                        break;
+                                    }
 
-									default:
-									{
-										switch (pitch)
-										{
-											case FIXED_PITCH:
-											{
-												fontName = fontNames[MARKER_COURIER + italic + bold];
-												break;
-											}
+                                    default:
+                                    {
+                                        switch (pitch)
+                                        {
+                                            case FIXED_PITCH:
+                                            {
+                                                fontName = fontNames[MARKER_COURIER + italic + bold];
+                                                break;
+                                            }
 
-											default:
-											{
-												fontName = fontNames[MARKER_HELVETICA + italic + bold];
-												break;
-											}
-										}
-										break;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			try
-			{
-				font = FontProgramFactory.CreateFont(fontName);
-				encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
-			}
-			catch (System.IO.IOException e)
-			{
-				throw new Exception(e.Message, e);
-			}
-			return font;
-		}
+                                            default:
+                                            {
+                                                fontName = fontNames[MARKER_HELVETICA + italic + bold];
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            try
+            {
+                font = FontProgramFactory.CreateFont(fontName);
+                encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
+            }
+            catch (System.IO.IOException e)
+            {
+                throw new Exception(e.Message, e);
+            }
+            return font;
+        }
 
-		/// <summary>Returns the encoding used in the MetaFont.</summary>
-		/// <returns>the font encoding</returns>
-		public virtual FontEncoding GetEncoding()
-		{
-			return encoding;
-		}
+        /// <summary>Returns the encoding used in the MetaFont.</summary>
+        /// <returns>the font encoding</returns>
+        public virtual FontEncoding GetEncoding()
+        {
+            return encoding;
+        }
 
-		/// <summary>Returns the angle of the MetaFont.</summary>
-		/// <returns>the angle</returns>
-		public virtual float GetAngle()
-		{
-			return angle;
-		}
+        /// <summary>Returns the angle of the MetaFont.</summary>
+        /// <returns>the angle</returns>
+        public virtual float GetAngle()
+        {
+            return angle;
+        }
 
-		/// <summary>Returns a boolean value indicating if the font is underlined or not.</summary>
-		/// <returns>true if the font is underlined</returns>
-		public virtual bool IsUnderline()
-		{
-			return underline;
-		}
+        /// <summary>Returns a boolean value indicating if the font is underlined or not.</summary>
+        /// <returns>true if the font is underlined</returns>
+        public virtual bool IsUnderline()
+        {
+            return underline;
+        }
 
-		/// <summary>Returns a boolean value indicating if a font has a strikeout.</summary>
-		/// <returns>true if the font set strikeout</returns>
-		public virtual bool IsStrikeout()
-		{
-			return strikeout;
-		}
+        /// <summary>Returns a boolean value indicating if a font has a strikeout.</summary>
+        /// <returns>true if the font set strikeout</returns>
+        public virtual bool IsStrikeout()
+        {
+            return strikeout;
+        }
 
-		/// <summary>Returns the font size.</summary>
-		/// <param name="state">the MetaState</param>
-		/// <returns>font size</returns>
-		public virtual float GetFontSize(MetaState state)
-		{
-			return Math.Abs(state.TransformY(height) - state.TransformY(0)) * WmfImageHelper.
-				wmfFontCorrection;
-		}
-	}
+        /// <summary>Returns the font size.</summary>
+        /// <param name="state">the MetaState</param>
+        /// <returns>font size</returns>
+        public virtual float GetFontSize(MetaState state)
+        {
+            return Math.Abs(state.TransformY(height) - state.TransformY(0)) * WmfImageHelper.
+                wmfFontCorrection;
+        }
+    }
 }

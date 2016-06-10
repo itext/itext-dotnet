@@ -46,33 +46,33 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfWatermarkAnnotation : PdfAnnotation
-	{
-		public PdfWatermarkAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfWatermarkAnnotation : PdfAnnotation
+    {
+        public PdfWatermarkAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfWatermarkAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfWatermarkAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Watermark;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Watermark;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint
-			 fixedPrint)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint
-				, fixedPrint.GetPdfObject());
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint
+             fixedPrint)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint
+                , fixedPrint.GetPdfObject());
+        }
 
-		public virtual PdfDictionary GetFixedPrint()
-		{
-			return GetPdfObject().GetAsDictionary(PdfName.FixedPrint);
-		}
-	}
+        public virtual PdfDictionary GetFixedPrint()
+        {
+            return GetPdfObject().GetAsDictionary(PdfName.FixedPrint);
+        }
+    }
 }

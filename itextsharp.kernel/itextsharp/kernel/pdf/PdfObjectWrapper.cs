@@ -45,139 +45,139 @@ using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public abstract class PdfObjectWrapper<T>
-		where T : PdfObject
-	{
-		private T pdfObject = null;
+    public abstract class PdfObjectWrapper<T>
+        where T : PdfObject
+    {
+        private T pdfObject = null;
 
-		protected internal PdfObjectWrapper(T pdfObject)
-		{
-			this.pdfObject = pdfObject;
-			if (IsWrappedObjectMustBeIndirect())
-			{
-				MarkObjectAsIndirect(this.pdfObject);
-			}
-		}
+        protected internal PdfObjectWrapper(T pdfObject)
+        {
+            this.pdfObject = pdfObject;
+            if (IsWrappedObjectMustBeIndirect())
+            {
+                MarkObjectAsIndirect(this.pdfObject);
+            }
+        }
 
-		public virtual T GetPdfObject()
-		{
-			return pdfObject;
-		}
+        public virtual T GetPdfObject()
+        {
+            return pdfObject;
+        }
 
-		/// <summary>Marks object behind wrapper to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
-			 document, PdfIndirectReference reference)
-		{
-			GetPdfObject().MakeIndirect(document, reference);
-			return this;
-		}
+        /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
+             document, PdfIndirectReference reference)
+        {
+            GetPdfObject().MakeIndirect(document, reference);
+            return this;
+        }
 
-		/// <summary>Marks object behind wrapper to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
-			 document)
-		{
-			return MakeIndirect(document, null);
-		}
+        /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
+             document)
+        {
+            return MakeIndirect(document, null);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> SetModified()
-		{
-			if (pdfObject != null)
-			{
-				pdfObject.SetModified();
-			}
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> SetModified()
+        {
+            if (pdfObject != null)
+            {
+                pdfObject.SetModified();
+            }
+            return this;
+        }
 
-		public virtual void Flush()
-		{
-			pdfObject.Flush();
-		}
+        public virtual void Flush()
+        {
+            pdfObject.Flush();
+        }
 
-		public virtual bool IsFlushed()
-		{
-			return pdfObject.IsFlushed();
-		}
+        public virtual bool IsFlushed()
+        {
+            return pdfObject.IsFlushed();
+        }
 
-		/// <summary>
-		/// Defines if the object behind this wrapper must be an indirect object in the
-		/// resultant document.
-		/// </summary>
-		/// <remarks>
-		/// Defines if the object behind this wrapper must be an indirect object in the
-		/// resultant document.
-		/// <br /><br />
-		/// If this method returns <i>true</i> it doesn't necessarily mean that object
-		/// must be in the indirect state at any moment, but rather defines that
-		/// when the object will be written to the document it will be transformed into
-		/// indirect object if it's not indirect yet.
-		/// <br /><br />
-		/// Return value of this method shouldn't depend on any logic, it should return
-		/// always <i>true</i> or <i>false</i>.
-		/// </remarks>
-		/// <returns>
-		/// <i>true</i> if in the resultant document the object behind the wrapper
-		/// must be indirect, otherwise <i>false</i>.
-		/// </returns>
-		protected internal abstract bool IsWrappedObjectMustBeIndirect();
+        /// <summary>
+        /// Defines if the object behind this wrapper must be an indirect object in the
+        /// resultant document.
+        /// </summary>
+        /// <remarks>
+        /// Defines if the object behind this wrapper must be an indirect object in the
+        /// resultant document.
+        /// <br /><br />
+        /// If this method returns <i>true</i> it doesn't necessarily mean that object
+        /// must be in the indirect state at any moment, but rather defines that
+        /// when the object will be written to the document it will be transformed into
+        /// indirect object if it's not indirect yet.
+        /// <br /><br />
+        /// Return value of this method shouldn't depend on any logic, it should return
+        /// always <i>true</i> or <i>false</i>.
+        /// </remarks>
+        /// <returns>
+        /// <i>true</i> if in the resultant document the object behind the wrapper
+        /// must be indirect, otherwise <i>false</i>.
+        /// </returns>
+        protected internal abstract bool IsWrappedObjectMustBeIndirect();
 
-		protected internal virtual void SetPdfObject(T pdfObject)
-		{
-			this.pdfObject = pdfObject;
-		}
+        protected internal virtual void SetPdfObject(T pdfObject)
+        {
+            this.pdfObject = pdfObject;
+        }
 
-		protected internal virtual void SetForbidRelease()
-		{
-			if (pdfObject != null)
-			{
-				pdfObject.SetState(PdfObject.FORBID_RELEASE);
-			}
-		}
+        protected internal virtual void SetForbidRelease()
+        {
+            if (pdfObject != null)
+            {
+                pdfObject.SetState(PdfObject.FORBID_RELEASE);
+            }
+        }
 
-		protected internal virtual void UnsetForbidRelease()
-		{
-			if (pdfObject != null)
-			{
-				pdfObject.ClearState(PdfObject.FORBID_RELEASE);
-			}
-		}
+        protected internal virtual void UnsetForbidRelease()
+        {
+            if (pdfObject != null)
+            {
+                pdfObject.ClearState(PdfObject.FORBID_RELEASE);
+            }
+        }
 
-		protected internal static void MarkObjectAsIndirect(PdfObject pdfObject)
-		{
-			if (pdfObject.GetIndirectReference() == null)
-			{
-				pdfObject.SetState(PdfObject.MUST_BE_INDIRECT);
-			}
-		}
+        protected internal static void MarkObjectAsIndirect(PdfObject pdfObject)
+        {
+            if (pdfObject.GetIndirectReference() == null)
+            {
+                pdfObject.SetState(PdfObject.MUST_BE_INDIRECT);
+            }
+        }
 
-		/// <summary>
-		/// Some wrappers use object's indirect reference to obtain the
-		/// <c>PdfDocument</c>
-		/// to which the object belongs to. For this matter, for these wrappers it is implicitly defined
-		/// that they work with indirect objects only. Commonly these wrappers have two constructors: one with
-		/// <c>PdfDocument</c>
-		/// as parameter to create a new object, and the other one which
-		/// wraps around the given
-		/// <c>PdfObject</c>
-		/// . This method should be used in the second
-		/// type of constructors to ensure that wrapper will able to obtain the
-		/// <c>PdfDocument</c>
-		/// instance.
-		/// </summary>
-		/// <param name="object">
-		/// the
-		/// <c>PdfObject</c>
-		/// to be checked if it is indirect.
-		/// </param>
-		protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object)
-		{
-			if (@object.GetIndirectReference() == null)
-			{
-				throw new PdfException(PdfException.ObjectMustBeIndirectToWorkWithThisWrapper);
-			}
-		}
-	}
+        /// <summary>
+        /// Some wrappers use object's indirect reference to obtain the
+        /// <c>PdfDocument</c>
+        /// to which the object belongs to. For this matter, for these wrappers it is implicitly defined
+        /// that they work with indirect objects only. Commonly these wrappers have two constructors: one with
+        /// <c>PdfDocument</c>
+        /// as parameter to create a new object, and the other one which
+        /// wraps around the given
+        /// <c>PdfObject</c>
+        /// . This method should be used in the second
+        /// type of constructors to ensure that wrapper will able to obtain the
+        /// <c>PdfDocument</c>
+        /// instance.
+        /// </summary>
+        /// <param name="object">
+        /// the
+        /// <c>PdfObject</c>
+        /// to be checked if it is indirect.
+        /// </param>
+        protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object)
+        {
+            if (@object.GetIndirectReference() == null)
+            {
+                throw new PdfException(PdfException.ObjectMustBeIndirectToWorkWithThisWrapper);
+            }
+        }
+    }
 }

@@ -46,186 +46,186 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Border
 {
-	public abstract class Border
-	{
-		public static readonly iTextSharp.Layout.Border.Border NO_BORDER = null;
+    public abstract class Border
+    {
+        public static readonly iTextSharp.Layout.Border.Border NO_BORDER = null;
 
-		public const int SOLID = 0;
+        public const int SOLID = 0;
 
-		public const int DASHED = 1;
+        public const int DASHED = 1;
 
-		public const int DOTTED = 2;
+        public const int DOTTED = 2;
 
-		public const int DOUBLE = 3;
+        public const int DOUBLE = 3;
 
-		public const int ROUND_DOTS = 4;
+        public const int ROUND_DOTS = 4;
 
-		public const int _3D_GROOVE = 5;
+        public const int _3D_GROOVE = 5;
 
-		public const int _3D_INSET = 6;
+        public const int _3D_INSET = 6;
 
-		public const int _3D_OUTSET = 7;
+        public const int _3D_OUTSET = 7;
 
-		public const int _3D_RIDGE = 8;
+        public const int _3D_RIDGE = 8;
 
-		protected internal iTextSharp.Kernel.Color.Color color;
+        protected internal iTextSharp.Kernel.Color.Color color;
 
-		protected internal float width;
+        protected internal float width;
 
-		protected internal int type;
+        protected internal int type;
 
-		private int hash;
+        private int hash;
 
-		protected internal Border(float width)
-			: this(iTextSharp.Kernel.Color.Color.BLACK, width)
-		{
-		}
+        protected internal Border(float width)
+            : this(iTextSharp.Kernel.Color.Color.BLACK, width)
+        {
+        }
 
-		protected internal Border(iTextSharp.Kernel.Color.Color color, float width)
-		{
-			this.color = color;
-			this.width = width;
-		}
+        protected internal Border(iTextSharp.Kernel.Color.Color color, float width)
+        {
+            this.color = color;
+            this.width = width;
+        }
 
-		/// <summary>
-		/// <p>
-		/// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
-		/// drawing direction.
-		/// </summary>
-		/// <remarks>
-		/// <p>
-		/// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
-		/// drawing direction. Borders are drawn in this order: top, right, bottom, left.
-		/// </p>
-		/// <p>
-		/// Given points specify the line which lies on the border of the content area,
-		/// therefore the border itself should be drawn to the left from the drawing direction.
-		/// </p>
-		/// <p>
-		/// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
-		/// define the widths of the borders that are before and after the current border, e.g. for
-		/// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
-		/// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
-		/// of border joins.
-		/// </p>
-		/// </remarks>
-		/// <param name="canvas">PdfCanvas to be written to</param>
-		/// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered
-		/// 	</param>
-		/// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered
-		/// 	</param>
-		/// <param name="x2">x coordinate of the ending point of the element side, that should be bordered
-		/// 	</param>
-		/// <param name="y2">y coordinate of the ending point of the element side, that should be bordered
-		/// 	</param>
-		/// <param name="borderWidthBefore">defines width of the border that is before the current one
-		/// 	</param>
-		/// <param name="borderWidthAfter">defines width of the border that is after the current one
-		/// 	</param>
-		public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-			, float borderWidthBefore, float borderWidthAfter);
+        /// <summary>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
+        /// </p>
+        /// <p>
+        /// Given points specify the line which lies on the border of the content area,
+        /// therefore the border itself should be drawn to the left from the drawing direction.
+        /// </p>
+        /// <p>
+        /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
+        /// define the widths of the borders that are before and after the current border, e.g. for
+        /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
+        /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
+        /// of border joins.
+        /// </p>
+        /// </remarks>
+        /// <param name="canvas">PdfCanvas to be written to</param>
+        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered
+        ///     </param>
+        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered
+        ///     </param>
+        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered
+        ///     </param>
+        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered
+        ///     </param>
+        /// <param name="borderWidthBefore">defines width of the border that is before the current one
+        ///     </param>
+        /// <param name="borderWidthAfter">defines width of the border that is after the current one
+        ///     </param>
+        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
+            , float borderWidthBefore, float borderWidthAfter);
 
-		public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-			, float y2);
+        public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
+            , float y2);
 
-		public abstract int GetBorderType();
+        public abstract int GetBorderType();
 
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
 
-		public virtual float GetWidth()
-		{
-			return width;
-		}
+        public virtual float GetWidth()
+        {
+            return width;
+        }
 
-		public override bool Equals(Object anObject)
-		{
-			if (this == anObject)
-			{
-				return true;
-			}
-			if (anObject is iTextSharp.Layout.Border.Border)
-			{
-				iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)
-					anObject;
-				if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() 
-					!= GetColor() || anotherBorder.GetWidth() != GetWidth())
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-			return true;
-		}
+        public override bool Equals(Object anObject)
+        {
+            if (this == anObject)
+            {
+                return true;
+            }
+            if (anObject is iTextSharp.Layout.Border.Border)
+            {
+                iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)
+                    anObject;
+                if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() 
+                    != GetColor() || anotherBorder.GetWidth() != GetWidth())
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
 
-		public override int GetHashCode()
-		{
-			int h = hash;
-			if (h == 0)
-			{
-				h = (int)GetWidth() * 31 + GetColor().GetHashCode();
-				hash = h;
-			}
-			return h;
-		}
+        public override int GetHashCode()
+        {
+            int h = hash;
+            if (h == 0)
+            {
+                h = (int)GetWidth() * 31 + GetColor().GetHashCode();
+                hash = h;
+            }
+            return h;
+        }
 
-		protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2
-			, float y2)
-		{
-			bool isLeft = false;
-			bool isRight = false;
-			if (Math.Abs(y2 - y1) > 0.0005f)
-			{
-				isLeft = y2 - y1 > 0;
-				isRight = y2 - y1 < 0;
-			}
-			bool isTop = false;
-			bool isBottom = false;
-			if (Math.Abs(x2 - x1) > 0.0005f)
-			{
-				isTop = x2 - x1 > 0;
-				isBottom = x2 - x1 < 0;
-			}
-			if (isTop)
-			{
-				return Border.Side.TOP;
-			}
-			else
-			{
-				if (isRight)
-				{
-					return Border.Side.RIGHT;
-				}
-				else
-				{
-					if (isBottom)
-					{
-						return Border.Side.BOTTOM;
-					}
-					else
-					{
-						if (isLeft)
-						{
-							return Border.Side.LEFT;
-						}
-					}
-				}
-			}
-			return Border.Side.NONE;
-		}
+        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2
+            , float y2)
+        {
+            bool isLeft = false;
+            bool isRight = false;
+            if (Math.Abs(y2 - y1) > 0.0005f)
+            {
+                isLeft = y2 - y1 > 0;
+                isRight = y2 - y1 < 0;
+            }
+            bool isTop = false;
+            bool isBottom = false;
+            if (Math.Abs(x2 - x1) > 0.0005f)
+            {
+                isTop = x2 - x1 > 0;
+                isBottom = x2 - x1 < 0;
+            }
+            if (isTop)
+            {
+                return Border.Side.TOP;
+            }
+            else
+            {
+                if (isRight)
+                {
+                    return Border.Side.RIGHT;
+                }
+                else
+                {
+                    if (isBottom)
+                    {
+                        return Border.Side.BOTTOM;
+                    }
+                    else
+                    {
+                        if (isLeft)
+                        {
+                            return Border.Side.LEFT;
+                        }
+                    }
+                }
+            }
+            return Border.Side.NONE;
+        }
 
-		protected internal enum Side
-		{
-			NONE,
-			TOP,
-			RIGHT,
-			BOTTOM,
-			LEFT
-		}
-	}
+        protected internal enum Side
+        {
+            NONE,
+            TOP,
+            RIGHT,
+            BOTTOM,
+            LEFT
+        }
+    }
 }

@@ -48,53 +48,53 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// This is a line separator element which is basically just a horizontal line with
-	/// a style specified by
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
-	/// custom drawing interface instance.
-	/// This might be thought of as an HTML's <hr> element alternative.
-	/// </summary>
-	public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator
-		>
-	{
-		protected internal PdfName role = PdfName.Artifact;
+    /// <summary>
+    /// This is a line separator element which is basically just a horizontal line with
+    /// a style specified by
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
+    /// custom drawing interface instance.
+    /// This might be thought of as an HTML's <hr> element alternative.
+    /// </summary>
+    public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator
+        >
+    {
+        protected internal PdfName role = PdfName.Artifact;
 
-		protected internal AccessibilityProperties tagProperties;
+        protected internal AccessibilityProperties tagProperties;
 
-		/// <summary>
-		/// Creates a custom line separator with line style defined by custom
-		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
-		/// interface instance
-		/// </summary>
-		/// <param name="lineDrawer">line drawer instance</param>
-		public LineSeparator(ILineDrawer lineDrawer)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER, lineDrawer);
-		}
+        /// <summary>
+        /// Creates a custom line separator with line style defined by custom
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
+        /// interface instance
+        /// </summary>
+        /// <param name="lineDrawer">line drawer instance</param>
+        public LineSeparator(ILineDrawer lineDrawer)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER, lineDrawer);
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new LineSeparatorRenderer(this);
-		}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new LineSeparatorRenderer(this);
+        }
 
-		public override PdfName GetRole()
-		{
-			return role;
-		}
+        public override PdfName GetRole()
+        {
+            return role;
+        }
 
-		public override void SetRole(PdfName role)
-		{
-			this.role = role;
-		}
+        public override void SetRole(PdfName role)
+        {
+            this.role = role;
+        }
 
-		public override AccessibilityProperties GetAccessibilityProperties()
-		{
-			if (tagProperties == null)
-			{
-				tagProperties = new AccessibilityProperties();
-			}
-			return tagProperties;
-		}
-	}
+        public override AccessibilityProperties GetAccessibilityProperties()
+        {
+            if (tagProperties == null)
+            {
+                tagProperties = new AccessibilityProperties();
+            }
+            return tagProperties;
+        }
+    }
 }

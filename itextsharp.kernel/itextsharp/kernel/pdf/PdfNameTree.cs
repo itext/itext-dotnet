@@ -47,245 +47,245 @@ using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfNameTree
-	{
-		private const int NODE_SIZE = 40;
+    public class PdfNameTree
+    {
+        private const int NODE_SIZE = 40;
 
-		private PdfCatalog catalog;
+        private PdfCatalog catalog;
 
-		private IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>(
-			);
+        private IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>(
+            );
 
-		private PdfName treeType;
+        private PdfName treeType;
 
-		private bool modified;
+        private bool modified;
 
-		/// <summary>Creates the NameTree of current Document</summary>
-		/// <param name="catalog">Document catalog</param>
-		/// <param name="treeType">the type of tree. Dests Tree, AP Tree etc.</param>
-		public PdfNameTree(PdfCatalog catalog, PdfName treeType)
-		{
-			this.treeType = treeType;
-			this.catalog = catalog;
-			items = GetNames();
-		}
+        /// <summary>Creates the NameTree of current Document</summary>
+        /// <param name="catalog">Document catalog</param>
+        /// <param name="treeType">the type of tree. Dests Tree, AP Tree etc.</param>
+        public PdfNameTree(PdfCatalog catalog, PdfName treeType)
+        {
+            this.treeType = treeType;
+            this.catalog = catalog;
+            items = GetNames();
+        }
 
-		public virtual IDictionary<String, PdfObject> GetNames()
-		{
-			if (items.Count > 0)
-			{
-				return items;
-			}
-			PdfDictionary dictionary = catalog.GetPdfObject().GetAsDictionary(PdfName.Names);
-			if (dictionary != null)
-			{
-				dictionary = dictionary.GetAsDictionary(treeType);
-				if (dictionary != null)
-				{
-					items = ReadTree(dictionary);
-					//@TODO It's done for auto porting to itextsharp, cuz u cannot change collection which you iterate
-					// in for loop (even if you change only value of a Map entry) in .NET. Java doesn't have such a problem.
-					// We should find a better solution in the future.
-					ICollection<String> keys = new HashSet<String>();
-					keys.AddAll(items.Keys);
-					foreach (String key in keys)
-					{
-						PdfArray arr = GetNameArray(items.Get(key));
-						if (arr != null)
-						{
-							items[key] = arr;
-						}
-						else
-						{
-							items.JRemove(key);
-						}
-					}
-				}
-			}
-			if (treeType.Equals(PdfName.Dests))
-			{
-				PdfDictionary destinations = catalog.GetPdfObject().GetAsDictionary(PdfName.Dests
-					);
-				if (destinations != null)
-				{
-					ICollection<PdfName> keys = destinations.KeySet();
-					foreach (PdfName key in keys)
-					{
-						PdfArray array = GetNameArray(destinations.Get(key));
-						if (array == null)
-						{
-							continue;
-						}
-						items[key.GetValue()] = array;
-					}
-				}
-			}
-			return items;
-		}
+        public virtual IDictionary<String, PdfObject> GetNames()
+        {
+            if (items.Count > 0)
+            {
+                return items;
+            }
+            PdfDictionary dictionary = catalog.GetPdfObject().GetAsDictionary(PdfName.Names);
+            if (dictionary != null)
+            {
+                dictionary = dictionary.GetAsDictionary(treeType);
+                if (dictionary != null)
+                {
+                    items = ReadTree(dictionary);
+                    //@TODO It's done for auto porting to itextsharp, cuz u cannot change collection which you iterate
+                    // in for loop (even if you change only value of a Map entry) in .NET. Java doesn't have such a problem.
+                    // We should find a better solution in the future.
+                    ICollection<String> keys = new HashSet<String>();
+                    keys.AddAll(items.Keys);
+                    foreach (String key in keys)
+                    {
+                        PdfArray arr = GetNameArray(items.Get(key));
+                        if (arr != null)
+                        {
+                            items[key] = arr;
+                        }
+                        else
+                        {
+                            items.JRemove(key);
+                        }
+                    }
+                }
+            }
+            if (treeType.Equals(PdfName.Dests))
+            {
+                PdfDictionary destinations = catalog.GetPdfObject().GetAsDictionary(PdfName.Dests
+                    );
+                if (destinations != null)
+                {
+                    ICollection<PdfName> keys = destinations.KeySet();
+                    foreach (PdfName key in keys)
+                    {
+                        PdfArray array = GetNameArray(destinations.Get(key));
+                        if (array == null)
+                        {
+                            continue;
+                        }
+                        items[key.GetValue()] = array;
+                    }
+                }
+            }
+            return items;
+        }
 
-		public virtual void AddEntry(String key, PdfObject value)
-		{
-			if (items.Keys.Contains(key))
-			{
-				throw new PdfException(PdfException.NameAlreadyExistsInTheNameTree);
-			}
-			modified = true;
-			items[key] = value;
-		}
+        public virtual void AddEntry(String key, PdfObject value)
+        {
+            if (items.Keys.Contains(key))
+            {
+                throw new PdfException(PdfException.NameAlreadyExistsInTheNameTree);
+            }
+            modified = true;
+            items[key] = value;
+        }
 
-		public virtual bool IsModified()
-		{
-			return modified;
-		}
+        public virtual bool IsModified()
+        {
+            return modified;
+        }
 
-		public virtual PdfDictionary BuildTree()
-		{
-			String[] names = new String[items.Count];
-			names = items.Keys.ToArray(names);
-			iTextSharp.IO.Util.JavaUtil.Sort(names);
-			if (names.Length <= NODE_SIZE)
-			{
-				PdfDictionary dic = new PdfDictionary();
-				PdfArray ar = new PdfArray();
-				foreach (String name in names)
-				{
-					ar.Add(new PdfString(name, null));
-					ar.Add(items.Get(name));
-				}
-				dic.Put(PdfName.Names, ar);
-				return dic;
-			}
-			int skip = NODE_SIZE;
-			PdfDictionary[] kids = new PdfDictionary[(names.Length + NODE_SIZE - 1) / NODE_SIZE
-				];
-			for (int k = 0; k < kids.Length; ++k)
-			{
-				int offset = k * NODE_SIZE;
-				int end = Math.Min(offset + NODE_SIZE, names.Length);
-				PdfDictionary dic = new PdfDictionary();
-				PdfArray arr = new PdfArray();
-				arr.Add(new PdfString(names[offset], null));
-				arr.Add(new PdfString(names[end - 1], null));
-				dic.Put(PdfName.Limits, arr);
-				arr = new PdfArray();
-				for (; offset < end; ++offset)
-				{
-					arr.Add(new PdfString(names[offset], null));
-					arr.Add(items.Get(names[offset]));
-				}
-				dic.Put(PdfName.Names, arr);
-				dic.MakeIndirect(catalog.GetDocument());
-				kids[k] = dic;
-			}
-			int top = kids.Length;
-			while (true)
-			{
-				if (top <= NODE_SIZE)
-				{
-					PdfArray arr = new PdfArray();
-					for (int i = 0; i < top; ++i)
-					{
-						arr.Add(kids[i]);
-					}
-					PdfDictionary dic = new PdfDictionary();
-					dic.Put(PdfName.Kids, arr);
-					return dic;
-				}
-				skip *= NODE_SIZE;
-				int tt = (names.Length + skip - 1) / skip;
-				for (int i_1 = 0; i_1 < tt; ++i_1)
-				{
-					int offset = i_1 * NODE_SIZE;
-					int end = Math.Min(offset + NODE_SIZE, top);
-					PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument
-						()));
-					PdfArray arr = new PdfArray();
-					arr.Add(new PdfString(names[i_1 * skip], null));
-					arr.Add(new PdfString(names[Math.Min((i_1 + 1) * skip, names.Length) - 1], null));
-					dic.Put(PdfName.Limits, arr);
-					arr = new PdfArray();
-					for (; offset < end; ++offset)
-					{
-						arr.Add(kids[offset]);
-					}
-					dic.Put(PdfName.Kids, arr);
-					kids[i_1] = dic;
-				}
-				top = tt;
-			}
-		}
+        public virtual PdfDictionary BuildTree()
+        {
+            String[] names = new String[items.Count];
+            names = items.Keys.ToArray(names);
+            iTextSharp.IO.Util.JavaUtil.Sort(names);
+            if (names.Length <= NODE_SIZE)
+            {
+                PdfDictionary dic = new PdfDictionary();
+                PdfArray ar = new PdfArray();
+                foreach (String name in names)
+                {
+                    ar.Add(new PdfString(name, null));
+                    ar.Add(items.Get(name));
+                }
+                dic.Put(PdfName.Names, ar);
+                return dic;
+            }
+            int skip = NODE_SIZE;
+            PdfDictionary[] kids = new PdfDictionary[(names.Length + NODE_SIZE - 1) / NODE_SIZE
+                ];
+            for (int k = 0; k < kids.Length; ++k)
+            {
+                int offset = k * NODE_SIZE;
+                int end = Math.Min(offset + NODE_SIZE, names.Length);
+                PdfDictionary dic = new PdfDictionary();
+                PdfArray arr = new PdfArray();
+                arr.Add(new PdfString(names[offset], null));
+                arr.Add(new PdfString(names[end - 1], null));
+                dic.Put(PdfName.Limits, arr);
+                arr = new PdfArray();
+                for (; offset < end; ++offset)
+                {
+                    arr.Add(new PdfString(names[offset], null));
+                    arr.Add(items.Get(names[offset]));
+                }
+                dic.Put(PdfName.Names, arr);
+                dic.MakeIndirect(catalog.GetDocument());
+                kids[k] = dic;
+            }
+            int top = kids.Length;
+            while (true)
+            {
+                if (top <= NODE_SIZE)
+                {
+                    PdfArray arr = new PdfArray();
+                    for (int i = 0; i < top; ++i)
+                    {
+                        arr.Add(kids[i]);
+                    }
+                    PdfDictionary dic = new PdfDictionary();
+                    dic.Put(PdfName.Kids, arr);
+                    return dic;
+                }
+                skip *= NODE_SIZE;
+                int tt = (names.Length + skip - 1) / skip;
+                for (int i_1 = 0; i_1 < tt; ++i_1)
+                {
+                    int offset = i_1 * NODE_SIZE;
+                    int end = Math.Min(offset + NODE_SIZE, top);
+                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument
+                        ()));
+                    PdfArray arr = new PdfArray();
+                    arr.Add(new PdfString(names[i_1 * skip], null));
+                    arr.Add(new PdfString(names[Math.Min((i_1 + 1) * skip, names.Length) - 1], null));
+                    dic.Put(PdfName.Limits, arr);
+                    arr = new PdfArray();
+                    for (; offset < end; ++offset)
+                    {
+                        arr.Add(kids[offset]);
+                    }
+                    dic.Put(PdfName.Kids, arr);
+                    kids[i_1] = dic;
+                }
+                top = tt;
+            }
+        }
 
-		private IDictionary<String, PdfObject> ReadTree(PdfDictionary dictionary)
-		{
-			IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>();
-			if (dictionary != null)
-			{
-				IterateItems(dictionary, items, null);
-			}
-			return items;
-		}
+        private IDictionary<String, PdfObject> ReadTree(PdfDictionary dictionary)
+        {
+            IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>();
+            if (dictionary != null)
+            {
+                IterateItems(dictionary, items, null);
+            }
+            return items;
+        }
 
-		private PdfString IterateItems(PdfDictionary dictionary, IDictionary<String, PdfObject
-			> items, PdfString leftOver)
-		{
-			PdfArray names = dictionary.GetAsArray(PdfName.Names);
-			if (names != null)
-			{
-				for (int k = 0; k < names.Size(); k++)
-				{
-					PdfString name;
-					if (leftOver == null)
-					{
-						name = names.GetAsString(k++);
-					}
-					else
-					{
-						name = leftOver;
-						leftOver = null;
-					}
-					if (k < names.Size())
-					{
-						items[name.ToUnicodeString()] = names.Get(k);
-					}
-					else
-					{
-						return name;
-					}
-				}
-			}
-			else
-			{
-				if ((names = dictionary.GetAsArray(PdfName.Kids)) != null)
-				{
-					for (int k = 0; k < names.Size(); k++)
-					{
-						PdfDictionary kid = names.GetAsDictionary(k);
-						leftOver = IterateItems(kid, items, leftOver);
-					}
-				}
-			}
-			return null;
-		}
+        private PdfString IterateItems(PdfDictionary dictionary, IDictionary<String, PdfObject
+            > items, PdfString leftOver)
+        {
+            PdfArray names = dictionary.GetAsArray(PdfName.Names);
+            if (names != null)
+            {
+                for (int k = 0; k < names.Size(); k++)
+                {
+                    PdfString name;
+                    if (leftOver == null)
+                    {
+                        name = names.GetAsString(k++);
+                    }
+                    else
+                    {
+                        name = leftOver;
+                        leftOver = null;
+                    }
+                    if (k < names.Size())
+                    {
+                        items[name.ToUnicodeString()] = names.Get(k);
+                    }
+                    else
+                    {
+                        return name;
+                    }
+                }
+            }
+            else
+            {
+                if ((names = dictionary.GetAsArray(PdfName.Kids)) != null)
+                {
+                    for (int k = 0; k < names.Size(); k++)
+                    {
+                        PdfDictionary kid = names.GetAsDictionary(k);
+                        leftOver = IterateItems(kid, items, leftOver);
+                    }
+                }
+            }
+            return null;
+        }
 
-		private PdfArray GetNameArray(PdfObject obj)
-		{
-			if (obj == null)
-			{
-				return null;
-			}
-			if (obj.IsArray())
-			{
-				return (PdfArray)obj;
-			}
-			else
-			{
-				if (obj.IsDictionary())
-				{
-					PdfArray arr = ((PdfDictionary)obj).GetAsArray(PdfName.D);
-					return arr;
-				}
-			}
-			return null;
-		}
-	}
+        private PdfArray GetNameArray(PdfObject obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            if (obj.IsArray())
+            {
+                return (PdfArray)obj;
+            }
+            else
+            {
+                if (obj.IsDictionary())
+                {
+                    PdfArray arr = ((PdfDictionary)obj).GetAsArray(PdfName.D);
+                    return arr;
+                }
+            }
+            return null;
+        }
+    }
 }

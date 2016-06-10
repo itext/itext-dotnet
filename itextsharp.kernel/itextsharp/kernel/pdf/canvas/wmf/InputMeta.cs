@@ -47,105 +47,105 @@ using iTextSharp.Kernel.Color;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
-	/// <summary>Helper class to read nt, short, words, etc.</summary>
-	/// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
-	public class InputMeta
-	{
-		internal Stream @in;
+    /// <summary>Helper class to read nt, short, words, etc.</summary>
+    /// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
+    public class InputMeta
+    {
+        internal Stream @in;
 
-		internal int length;
+        internal int length;
 
-		/// <summary>Creates an InputMeta object.</summary>
-		/// <param name="in">InputStream containing the WMF data</param>
-		public InputMeta(Stream @in)
-		{
-			this.@in = @in;
-		}
+        /// <summary>Creates an InputMeta object.</summary>
+        /// <param name="in">InputStream containing the WMF data</param>
+        public InputMeta(Stream @in)
+        {
+            this.@in = @in;
+        }
 
-		/// <summary>Read the next word from the InputStream.</summary>
-		/// <returns>the next word or 0 if the end of the stream has been reached</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int ReadWord()
-		{
-			length += 2;
-			int k1 = @in.Read();
-			if (k1 < 0)
-			{
-				return 0;
-			}
-			return (k1 + (@in.Read() << 8)) & 0xffff;
-		}
+        /// <summary>Read the next word from the InputStream.</summary>
+        /// <returns>the next word or 0 if the end of the stream has been reached</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int ReadWord()
+        {
+            length += 2;
+            int k1 = @in.Read();
+            if (k1 < 0)
+            {
+                return 0;
+            }
+            return (k1 + (@in.Read() << 8)) & 0xffff;
+        }
 
-		/// <summary>Read the next short from the InputStream.</summary>
-		/// <returns>the next short value</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int ReadShort()
-		{
-			int k = ReadWord();
-			if (k > 0x7fff)
-			{
-				k -= 0x10000;
-			}
-			return k;
-		}
+        /// <summary>Read the next short from the InputStream.</summary>
+        /// <returns>the next short value</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int ReadShort()
+        {
+            int k = ReadWord();
+            if (k > 0x7fff)
+            {
+                k -= 0x10000;
+            }
+            return k;
+        }
 
-		/// <summary>Read the next int from the InputStream.</summary>
-		/// <returns>the next int</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int ReadInt()
-		{
-			length += 4;
-			int k1 = @in.Read();
-			if (k1 < 0)
-			{
-				return 0;
-			}
-			int k2 = @in.Read() << 8;
-			int k3 = @in.Read() << 16;
-			return k1 + k2 + k3 + (@in.Read() << 24);
-		}
+        /// <summary>Read the next int from the InputStream.</summary>
+        /// <returns>the next int</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int ReadInt()
+        {
+            length += 4;
+            int k1 = @in.Read();
+            if (k1 < 0)
+            {
+                return 0;
+            }
+            int k2 = @in.Read() << 8;
+            int k3 = @in.Read() << 16;
+            return k1 + k2 + k3 + (@in.Read() << 24);
+        }
 
-		/// <summary>Read the next byte from the InputStream.</summary>
-		/// <returns>the next byte</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int ReadByte()
-		{
-			++length;
-			return @in.Read() & 0xff;
-		}
+        /// <summary>Read the next byte from the InputStream.</summary>
+        /// <returns>the next byte</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int ReadByte()
+        {
+            ++length;
+            return @in.Read() & 0xff;
+        }
 
-		/// <summary>Skips "len" amount of bytes from the InputStream.</summary>
-		/// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.
-		/// 	</remarks>
-		/// <param name="len">amount of bytes needed to skip</param>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Skip(int len)
-		{
-			length += len;
-			StreamUtil.Skip(@in, len);
-		}
+        /// <summary>Skips "len" amount of bytes from the InputStream.</summary>
+        /// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.
+        ///     </remarks>
+        /// <param name="len">amount of bytes needed to skip</param>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Skip(int len)
+        {
+            length += len;
+            StreamUtil.Skip(@in, len);
+        }
 
-		/// <summary>Get the amount of bytes read and/or skipped from the InputStream.</summary>
-		/// <returns>number of bytes read</returns>
-		public virtual int GetLength()
-		{
-			return length;
-		}
+        /// <summary>Get the amount of bytes read and/or skipped from the InputStream.</summary>
+        /// <returns>number of bytes read</returns>
+        public virtual int GetLength()
+        {
+            return length;
+        }
 
-		/// <summary>
-		/// Read the next
-		/// <see cref="iTextSharp.Kernel.Color.Color"/>
-		/// from the InputStream. This reads 4 bytes.
-		/// </summary>
-		/// <returns>the next Color</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual iTextSharp.Kernel.Color.Color ReadColor()
-		{
-			int red = ReadByte();
-			int green = ReadByte();
-			int blue = ReadByte();
-			ReadByte();
-			return new DeviceRgb(red, green, blue);
-		}
-	}
+        /// <summary>
+        /// Read the next
+        /// <see cref="iTextSharp.Kernel.Color.Color"/>
+        /// from the InputStream. This reads 4 bytes.
+        /// </summary>
+        /// <returns>the next Color</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual iTextSharp.Kernel.Color.Color ReadColor()
+        {
+            int red = ReadByte();
+            int green = ReadByte();
+            int blue = ReadByte();
+            ReadByte();
+            return new DeviceRgb(red, green, blue);
+        }
+    }
 }

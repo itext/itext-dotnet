@@ -45,72 +45,72 @@ using System;
 
 namespace iTextSharp.IO.Image
 {
-	public class RawImageData : ImageData
-	{
-		/// <summary>Pure two-dimensional encoding (Group 4)</summary>
-		public const int CCITTG4 = 0x100;
+    public class RawImageData : ImageData
+    {
+        /// <summary>Pure two-dimensional encoding (Group 4)</summary>
+        public const int CCITTG4 = 0x100;
 
-		/// <summary>Pure one-dimensional encoding (Group 3, 1-D)</summary>
-		public const int CCITTG3_1D = 0x101;
+        /// <summary>Pure one-dimensional encoding (Group 3, 1-D)</summary>
+        public const int CCITTG3_1D = 0x101;
 
-		/// <summary>Mixed one- and two-dimensional encoding (Group 3, 2-D)</summary>
-		public const int CCITTG3_2D = 0x102;
+        /// <summary>Mixed one- and two-dimensional encoding (Group 3, 2-D)</summary>
+        public const int CCITTG3_2D = 0x102;
 
-		/// <summary>
-		/// A flag indicating whether 1-bits are to be interpreted as black pixels
-		/// and 0-bits as white pixels,
-		/// </summary>
-		public const int CCITT_BLACKIS1 = 1;
+        /// <summary>
+        /// A flag indicating whether 1-bits are to be interpreted as black pixels
+        /// and 0-bits as white pixels,
+        /// </summary>
+        public const int CCITT_BLACKIS1 = 1;
 
-		/// <summary>
-		/// A flag indicating whether the filter expects extra 0-bits before each
-		/// encoded line so that the line begins on a byte boundary.
-		/// </summary>
-		public const int CCITT_ENCODEDBYTEALIGN = 2;
+        /// <summary>
+        /// A flag indicating whether the filter expects extra 0-bits before each
+        /// encoded line so that the line begins on a byte boundary.
+        /// </summary>
+        public const int CCITT_ENCODEDBYTEALIGN = 2;
 
-		/// <summary>
-		/// A flag indicating whether end-of-line bit patterns are required to be
-		/// present in the encoding.
-		/// </summary>
-		public const int CCITT_ENDOFLINE = 4;
+        /// <summary>
+        /// A flag indicating whether end-of-line bit patterns are required to be
+        /// present in the encoding.
+        /// </summary>
+        public const int CCITT_ENDOFLINE = 4;
 
-		/// <summary>
-		/// A flag indicating whether the filter expects the encoded data to be
-		/// terminated by an end-of-block pattern, overriding the Rows parameter.
-		/// </summary>
-		/// <remarks>
-		/// A flag indicating whether the filter expects the encoded data to be
-		/// terminated by an end-of-block pattern, overriding the Rows parameter. The
-		/// use of this flag will set the key /EndOfBlock to false.
-		/// </remarks>
-		public const int CCITT_ENDOFBLOCK = 8;
+        /// <summary>
+        /// A flag indicating whether the filter expects the encoded data to be
+        /// terminated by an end-of-block pattern, overriding the Rows parameter.
+        /// </summary>
+        /// <remarks>
+        /// A flag indicating whether the filter expects the encoded data to be
+        /// terminated by an end-of-block pattern, overriding the Rows parameter. The
+        /// use of this flag will set the key /EndOfBlock to false.
+        /// </remarks>
+        public const int CCITT_ENDOFBLOCK = 8;
 
-		protected internal int typeCcitt;
+        protected internal int typeCcitt;
 
-		protected internal RawImageData(Uri url, ImageType type)
-			: base(url, type)
-		{
-		}
+        protected internal RawImageData(Uri url, ImageType type)
+            : base(url, type)
+        {
+        }
 
-		protected internal RawImageData(byte[] bytes, ImageType type)
-			: base(bytes, type)
-		{
-		}
+        protected internal RawImageData(byte[] bytes, ImageType type)
+            : base(bytes, type)
+        {
+        }
 
-		//NOTE in itext5 instead of typeCcitt bpc property was using for both bpc and type CCITT.
-		public override bool IsRawImage()
-		{
-			return true;
-		}
+        //NOTE in itext5 instead of typeCcitt bpc property was using for both bpc and type CCITT.
+        public override bool IsRawImage()
+        {
+            return true;
+        }
 
-		public virtual int GetTypeCcitt()
-		{
-			return typeCcitt;
-		}
+        public virtual int GetTypeCcitt()
+        {
+            return typeCcitt;
+        }
 
-		public virtual void SetTypeCcitt(int typeCcitt)
-		{
-			this.typeCcitt = typeCcitt;
-		}
-	}
+        public virtual void SetTypeCcitt(int typeCcitt)
+        {
+            this.typeCcitt = typeCcitt;
+        }
+    }
 }

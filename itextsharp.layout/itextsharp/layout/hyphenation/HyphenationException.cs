@@ -18,18 +18,18 @@ using System;
 
 namespace iTextSharp.Layout.Hyphenation
 {
-	/// <summary>
-	/// <p>An hyphenation exception.</p>
-	/// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
-	/// </summary>
-	public class HyphenationException : Exception
-	{
-		/// <summary>Construct a hyphenation exception.</summary>
-		/// <param name="msg">a message string</param>
-		/// <seealso cref="System.Exception.Throwable(System.String)"/>
-		public HyphenationException(String msg)
-			: base(msg)
-		{
-		}
-	}
+    /// <summary>
+    /// <p>An hyphenation exception.</p>
+    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// </summary>
+    public class HyphenationException : Exception
+    {
+        /// <summary>Construct a hyphenation exception.</summary>
+        /// <param name="msg">a message string</param>
+        /// <seealso cref="System.Exception.Throwable(System.String)"/>
+        public HyphenationException(String msg)
+            : base(msg)
+        {
+        }
+    }
 }

@@ -48,78 +48,78 @@ using iTextSharp.IO.Log;
 
 namespace iTextSharp.IO.Image
 {
-	public class Jpeg2000ImageData : ImageData
-	{
-		public class Parameters
-		{
-			public int numOfComps;
+    public class Jpeg2000ImageData : ImageData
+    {
+        public class Parameters
+        {
+            public int numOfComps;
 
-			public IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes = null;
+            public IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes = null;
 
-			public bool isJp2 = false;
+            public bool isJp2 = false;
 
-			public bool isJpxBaseline = false;
+            public bool isJpxBaseline = false;
 
-			public byte[] bpcBoxData;
-		}
+            public byte[] bpcBoxData;
+        }
 
-		public class ColorSpecBox : List<int>
-		{
-			private byte[] colorProfile;
+        public class ColorSpecBox : List<int>
+        {
+            private byte[] colorProfile;
 
-			public virtual int GetMeth()
-			{
-				return (int)this[0];
-			}
+            public virtual int GetMeth()
+            {
+                return (int)this[0];
+            }
 
-			public virtual int GetPrec()
-			{
-				return (int)this[1];
-			}
+            public virtual int GetPrec()
+            {
+                return (int)this[1];
+            }
 
-			public virtual int GetApprox()
-			{
-				return (int)this[2];
-			}
+            public virtual int GetApprox()
+            {
+                return (int)this[2];
+            }
 
-			public virtual int GetEnumCs()
-			{
-				return (int)this[3];
-			}
+            public virtual int GetEnumCs()
+            {
+                return (int)this[3];
+            }
 
-			public virtual byte[] GetColorProfile()
-			{
-				return colorProfile;
-			}
+            public virtual byte[] GetColorProfile()
+            {
+                return colorProfile;
+            }
 
-			internal virtual void SetColorProfile(byte[] colorProfile)
-			{
-				this.colorProfile = colorProfile;
-			}
-		}
+            internal virtual void SetColorProfile(byte[] colorProfile)
+            {
+                this.colorProfile = colorProfile;
+            }
+        }
 
-		protected internal Jpeg2000ImageData.Parameters parameters;
+        protected internal Jpeg2000ImageData.Parameters parameters;
 
-		protected internal Jpeg2000ImageData(Uri url)
-			: base(url, ImageType.JPEG2000)
-		{
-		}
+        protected internal Jpeg2000ImageData(Uri url)
+            : base(url, ImageType.JPEG2000)
+        {
+        }
 
-		protected internal Jpeg2000ImageData(byte[] bytes)
-			: base(bytes, ImageType.JPEG2000)
-		{
-		}
+        protected internal Jpeg2000ImageData(byte[] bytes)
+            : base(bytes, ImageType.JPEG2000)
+        {
+        }
 
-		public override bool CanImageBeInline()
-		{
-			ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
-			logger.Warn(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
-			return false;
-		}
+        public override bool CanImageBeInline()
+        {
+            ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
+            logger.Warn(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
+            return false;
+        }
 
-		public virtual Jpeg2000ImageData.Parameters GetParameters()
-		{
-			return parameters;
-		}
-	}
+        public virtual Jpeg2000ImageData.Parameters GetParameters()
+        {
+            return parameters;
+        }
+    }
 }

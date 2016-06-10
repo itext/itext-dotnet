@@ -47,41 +47,41 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Navigation
 {
-	public class PdfStringDestination : PdfDestination
-	{
-		public PdfStringDestination(String @string)
-			: this(new PdfString(@string))
-		{
-		}
+    public class PdfStringDestination : PdfDestination
+    {
+        public PdfStringDestination(String @string)
+            : this(new PdfString(@string))
+        {
+        }
 
-		public PdfStringDestination(PdfString pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfStringDestination(PdfString pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
-			)
-		{
-			PdfArray array = (PdfArray)names.Get(((PdfString)GetPdfObject()).ToUnicodeString(
-				));
-			return array != null ? array.Get(0) : null;
-		}
+        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
+            )
+        {
+            PdfArray array = (PdfArray)names.Get(((PdfString)GetPdfObject()).ToUnicodeString(
+                ));
+            return array != null ? array.Get(0) : null;
+        }
 
-		public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
-			> names)
-		{
-			PdfArray array = (PdfArray)names.Get(((PdfString)GetPdfObject()).ToUnicodeString(
-				));
-			if (array != null)
-			{
-				return PdfDestination.MakeDestination(array);
-			}
-			return null;
-		}
+        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
+            > names)
+        {
+            PdfArray array = (PdfArray)names.Get(((PdfString)GetPdfObject()).ToUnicodeString(
+                ));
+            if (array != null)
+            {
+                return PdfDestination.MakeDestination(array);
+            }
+            return null;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

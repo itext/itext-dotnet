@@ -43,45 +43,45 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	public class StampingProperties
-	{
-		protected internal bool appendMode;
+    public class StampingProperties
+    {
+        protected internal bool appendMode;
 
-		protected internal bool preserveEncryption;
+        protected internal bool preserveEncryption;
 
-		public StampingProperties()
-		{
-			appendMode = false;
-			preserveEncryption = false;
-		}
+        public StampingProperties()
+        {
+            appendMode = false;
+            preserveEncryption = false;
+        }
 
-		/// <summary>Defines if the document will be edited in append mode.</summary>
-		/// <returns>
-		/// this
-		/// <see cref="StampingProperties"/>
-		/// instance
-		/// </returns>
-		public virtual iTextSharp.Kernel.Pdf.StampingProperties UseAppendMode()
-		{
-			appendMode = true;
-			return this;
-		}
+        /// <summary>Defines if the document will be edited in append mode.</summary>
+        /// <returns>
+        /// this
+        /// <see cref="StampingProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iTextSharp.Kernel.Pdf.StampingProperties UseAppendMode()
+        {
+            appendMode = true;
+            return this;
+        }
 
-		/// <summary>Defines if the encryption of the original document (if it was encrypted) will be preserved.
-		/// 	</summary>
-		/// <remarks>
-		/// Defines if the encryption of the original document (if it was encrypted) will be preserved.
-		/// By default, the resultant document doesn't preserve the original encryption.
-		/// </remarks>
-		/// <returns>
-		/// this
-		/// <see cref="StampingProperties"/>
-		/// instance
-		/// </returns>
-		public virtual iTextSharp.Kernel.Pdf.StampingProperties PreserveEncryption()
-		{
-			this.preserveEncryption = true;
-			return this;
-		}
-	}
+        /// <summary>Defines if the encryption of the original document (if it was encrypted) will be preserved.
+        ///     </summary>
+        /// <remarks>
+        /// Defines if the encryption of the original document (if it was encrypted) will be preserved.
+        /// By default, the resultant document doesn't preserve the original encryption.
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <see cref="StampingProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iTextSharp.Kernel.Pdf.StampingProperties PreserveEncryption()
+        {
+            this.preserveEncryption = true;
+            return this;
+        }
+    }
 }

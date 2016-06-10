@@ -47,57 +47,57 @@ using iTextSharp.Pdfa;
 
 namespace iTextSharp.Pdfa.Checker
 {
-	public class PdfA3Checker : PdfA2Checker
-	{
-		protected internal static readonly ICollection<PdfName> allowedAFRelationships = 
-			new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Source, PdfName
-			.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
+    public class PdfA3Checker : PdfA2Checker
+    {
+        protected internal static readonly ICollection<PdfName> allowedAFRelationships = 
+            new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Source, 
+            PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
 
-		public PdfA3Checker(PdfAConformanceLevel conformanceLevel)
-			: base(conformanceLevel)
-		{
-		}
+        public PdfA3Checker(PdfAConformanceLevel conformanceLevel)
+            : base(conformanceLevel)
+        {
+        }
 
-		protected internal override void CheckFileSpec(PdfDictionary fileSpec)
-		{
-			PdfName relationship = fileSpec.GetAsName(PdfName.AFRelationship);
-			if (relationship == null || !allowedAFRelationships.Contains(relationship))
-			{
-				throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainOneOfThePredefinedAFRelationshipKeys
-					);
-			}
-			if (fileSpec.ContainsKey(PdfName.EF))
-			{
-				if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec
-					.ContainsKey(PdfName.Desc))
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainFKeyUFKeyAndDescKey
-						);
-				}
-				PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
-				PdfStream embeddedFile = ef.GetAsStream(PdfName.F);
-				if (embeddedFile == null)
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.EFKeyOfFileSpecificationDictionaryShallContainDictionaryWithValidFKey
-						);
-				}
-				if (!embeddedFile.ContainsKey(PdfName.Subtype))
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.MimeTypeShallBeSpecifiedUsingTheSubtypeKeyOfTheFileSpecificationStreamDictionary
-						);
-				}
-				PdfDictionary @params = embeddedFile.GetAsDictionary(PdfName.Params);
-				if (@params == null)
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallContainParamsKeyWithDictionaryAsValue
-						);
-				}
-				if (@params.GetAsString(PdfName.ModDate) == null)
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallContainParamsKeyWithValidModdateKey
-						);
-				}
-			}
-		}
-	}
+        protected internal override void CheckFileSpec(PdfDictionary fileSpec)
+        {
+            PdfName relationship = fileSpec.GetAsName(PdfName.AFRelationship);
+            if (relationship == null || !allowedAFRelationships.Contains(relationship))
+            {
+                throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainOneOfThePredefinedAFRelationshipKeys
+                    );
+            }
+            if (fileSpec.ContainsKey(PdfName.EF))
+            {
+                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec
+                    .ContainsKey(PdfName.Desc))
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainFKeyUFKeyAndDescKey
+                        );
+                }
+                PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
+                PdfStream embeddedFile = ef.GetAsStream(PdfName.F);
+                if (embeddedFile == null)
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.EFKeyOfFileSpecificationDictionaryShallContainDictionaryWithValidFKey
+                        );
+                }
+                if (!embeddedFile.ContainsKey(PdfName.Subtype))
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.MimeTypeShallBeSpecifiedUsingTheSubtypeKeyOfTheFileSpecificationStreamDictionary
+                        );
+                }
+                PdfDictionary @params = embeddedFile.GetAsDictionary(PdfName.Params);
+                if (@params == null)
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallContainParamsKeyWithDictionaryAsValue
+                        );
+                }
+                if (@params.GetAsString(PdfName.ModDate) == null)
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallContainParamsKeyWithValidModdateKey
+                        );
+                }
+            }
+        }
+    }
 }

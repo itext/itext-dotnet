@@ -46,36 +46,36 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Action
 {
-	/// <summary>USed in Set OCG State actions.</summary>
-	public class PdfActionOcgState
-	{
-		/// <summary>Can be: OFF, ON, Toggle</summary>
-		private PdfName state;
+    /// <summary>USed in Set OCG State actions.</summary>
+    public class PdfActionOcgState
+    {
+        /// <summary>Can be: OFF, ON, Toggle</summary>
+        private PdfName state;
 
-		private IList<PdfDictionary> ocgs;
+        private IList<PdfDictionary> ocgs;
 
-		public PdfActionOcgState(PdfName state, IList<PdfDictionary> ocgs)
-		{
-			this.state = state;
-			this.ocgs = ocgs;
-		}
+        public PdfActionOcgState(PdfName state, IList<PdfDictionary> ocgs)
+        {
+            this.state = state;
+            this.ocgs = ocgs;
+        }
 
-		public virtual PdfName GetState()
-		{
-			return state;
-		}
+        public virtual PdfName GetState()
+        {
+            return state;
+        }
 
-		public virtual IList<PdfDictionary> GetOcgs()
-		{
-			return ocgs;
-		}
+        public virtual IList<PdfDictionary> GetOcgs()
+        {
+            return ocgs;
+        }
 
-		public virtual IList<PdfObject> GetObjectList()
-		{
-			IList<PdfObject> states = new List<PdfObject>();
-			states.Add(state);
-			states.AddAll(ocgs);
-			return states;
-		}
-	}
+        public virtual IList<PdfObject> GetObjectList()
+        {
+            IList<PdfObject> states = new List<PdfObject>();
+            states.Add(state);
+            states.AddAll(ocgs);
+            return states;
+        }
+    }
 }

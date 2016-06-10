@@ -46,176 +46,176 @@ using System.Text;
 
 namespace iTextSharp.Barcodes.Qrcode
 {
-	/// <summary>
-	/// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
-	/// dynamically resizeable.
-	/// </summary>
-	/// <remarks>
-	/// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
-	/// dynamically resizeable. This implementation is reasonable but there is a lot of function calling
-	/// in loops I'd like to get rid of.
-	/// </remarks>
-	/// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
-	/// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
-	internal sealed class BitVector
-	{
-		private int sizeInBits;
+    /// <summary>
+    /// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
+    /// dynamically resizeable.
+    /// </summary>
+    /// <remarks>
+    /// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
+    /// dynamically resizeable. This implementation is reasonable but there is a lot of function calling
+    /// in loops I'd like to get rid of.
+    /// </remarks>
+    /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
+    /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
+    internal sealed class BitVector
+    {
+        private int sizeInBits;
 
-		private byte[] array;
+        private byte[] array;
 
-		private const int DEFAULT_SIZE_IN_BYTES = 32;
+        private const int DEFAULT_SIZE_IN_BYTES = 32;
 
-		public BitVector()
-		{
-			// For efficiency, start out with some room to work.
-			sizeInBits = 0;
-			array = new byte[DEFAULT_SIZE_IN_BYTES];
-		}
+        public BitVector()
+        {
+            // For efficiency, start out with some room to work.
+            sizeInBits = 0;
+            array = new byte[DEFAULT_SIZE_IN_BYTES];
+        }
 
-		// Return the bit value at "index".
-		public int At(int index)
-		{
-			if (index < 0 || index >= sizeInBits)
-			{
-				throw new ArgumentException("Bad index: " + index);
-			}
-			int value = array[index >> 3] & 0xff;
-			return (value >> (7 - (index & 0x7))) & 1;
-		}
+        // Return the bit value at "index".
+        public int At(int index)
+        {
+            if (index < 0 || index >= sizeInBits)
+            {
+                throw new ArgumentException("Bad index: " + index);
+            }
+            int value = array[index >> 3] & 0xff;
+            return (value >> (7 - (index & 0x7))) & 1;
+        }
 
-		// Return the number of bits in the bit vector.
-		public int Size()
-		{
-			return sizeInBits;
-		}
+        // Return the number of bits in the bit vector.
+        public int Size()
+        {
+            return sizeInBits;
+        }
 
-		// Return the number of bytes in the bit vector.
-		public int SizeInBytes()
-		{
-			return (sizeInBits + 7) >> 3;
-		}
+        // Return the number of bytes in the bit vector.
+        public int SizeInBytes()
+        {
+            return (sizeInBits + 7) >> 3;
+        }
 
-		// Append one bit to the bit vector.
-		public void AppendBit(int bit)
-		{
-			if (!(bit == 0 || bit == 1))
-			{
-				throw new ArgumentException("Bad bit");
-			}
-			int numBitsInLastByte = sizeInBits & 0x7;
-			// We'll expand array if we don't have bits in the last byte.
-			if (numBitsInLastByte == 0)
-			{
-				AppendByte(0);
-				sizeInBits -= 8;
-			}
-			// Modify the last byte.
-			array[sizeInBits >> 3] |= (byte)(bit << (7 - numBitsInLastByte));
-			++sizeInBits;
-		}
+        // Append one bit to the bit vector.
+        public void AppendBit(int bit)
+        {
+            if (!(bit == 0 || bit == 1))
+            {
+                throw new ArgumentException("Bad bit");
+            }
+            int numBitsInLastByte = sizeInBits & 0x7;
+            // We'll expand array if we don't have bits in the last byte.
+            if (numBitsInLastByte == 0)
+            {
+                AppendByte(0);
+                sizeInBits -= 8;
+            }
+            // Modify the last byte.
+            array[sizeInBits >> 3] |= (byte)(bit << (7 - numBitsInLastByte));
+            ++sizeInBits;
+        }
 
-		// Append "numBits" bits in "value" to the bit vector.
-		// REQUIRES: 0<= numBits <= 32.
-		//
-		// Examples:
-		// - appendBits(0x00, 1) adds 0.
-		// - appendBits(0x00, 4) adds 0000.
-		// - appendBits(0xff, 8) adds 11111111.
-		public void AppendBits(int value, int numBits)
-		{
-			if (numBits < 0 || numBits > 32)
-			{
-				throw new ArgumentException("Num bits must be between 0 and 32");
-			}
-			int numBitsLeft = numBits;
-			while (numBitsLeft > 0)
-			{
-				// Optimization for byte-oriented appending.
-				if ((sizeInBits & 0x7) == 0 && numBitsLeft >= 8)
-				{
-					int newByte = (value >> (numBitsLeft - 8)) & 0xff;
-					AppendByte(newByte);
-					numBitsLeft -= 8;
-				}
-				else
-				{
-					int bit = (value >> (numBitsLeft - 1)) & 1;
-					AppendBit(bit);
-					--numBitsLeft;
-				}
-			}
-		}
+        // Append "numBits" bits in "value" to the bit vector.
+        // REQUIRES: 0<= numBits <= 32.
+        //
+        // Examples:
+        // - appendBits(0x00, 1) adds 0.
+        // - appendBits(0x00, 4) adds 0000.
+        // - appendBits(0xff, 8) adds 11111111.
+        public void AppendBits(int value, int numBits)
+        {
+            if (numBits < 0 || numBits > 32)
+            {
+                throw new ArgumentException("Num bits must be between 0 and 32");
+            }
+            int numBitsLeft = numBits;
+            while (numBitsLeft > 0)
+            {
+                // Optimization for byte-oriented appending.
+                if ((sizeInBits & 0x7) == 0 && numBitsLeft >= 8)
+                {
+                    int newByte = (value >> (numBitsLeft - 8)) & 0xff;
+                    AppendByte(newByte);
+                    numBitsLeft -= 8;
+                }
+                else
+                {
+                    int bit = (value >> (numBitsLeft - 1)) & 1;
+                    AppendBit(bit);
+                    --numBitsLeft;
+                }
+            }
+        }
 
-		// Append "bits".
-		public void AppendBitVector(iTextSharp.Barcodes.Qrcode.BitVector bits)
-		{
-			int size = bits.Size();
-			for (int i = 0; i < size; ++i)
-			{
-				AppendBit(bits.At(i));
-			}
-		}
+        // Append "bits".
+        public void AppendBitVector(iTextSharp.Barcodes.Qrcode.BitVector bits)
+        {
+            int size = bits.Size();
+            for (int i = 0; i < size; ++i)
+            {
+                AppendBit(bits.At(i));
+            }
+        }
 
-		// Modify the bit vector by XOR'ing with "other"
-		public void Xor(iTextSharp.Barcodes.Qrcode.BitVector other)
-		{
-			if (sizeInBits != other.Size())
-			{
-				throw new ArgumentException("BitVector sizes don't match");
-			}
-			int sizeInBytes = (sizeInBits + 7) >> 3;
-			for (int i = 0; i < sizeInBytes; ++i)
-			{
-				// The last byte could be incomplete (i.e. not have 8 bits in
-				// it) but there is no problem since 0 XOR 0 == 0.
-				array[i] ^= other.array[i];
-			}
-		}
+        // Modify the bit vector by XOR'ing with "other"
+        public void Xor(iTextSharp.Barcodes.Qrcode.BitVector other)
+        {
+            if (sizeInBits != other.Size())
+            {
+                throw new ArgumentException("BitVector sizes don't match");
+            }
+            int sizeInBytes = (sizeInBits + 7) >> 3;
+            for (int i = 0; i < sizeInBytes; ++i)
+            {
+                // The last byte could be incomplete (i.e. not have 8 bits in
+                // it) but there is no problem since 0 XOR 0 == 0.
+                array[i] ^= other.array[i];
+            }
+        }
 
-		// Return String like "01110111" for debugging.
-		public override String ToString()
-		{
-			StringBuilder result = new StringBuilder(sizeInBits);
-			for (int i = 0; i < sizeInBits; ++i)
-			{
-				if (At(i) == 0)
-				{
-					result.Append('0');
-				}
-				else
-				{
-					if (At(i) == 1)
-					{
-						result.Append('1');
-					}
-					else
-					{
-						throw new ArgumentException("Byte isn't 0 or 1");
-					}
-				}
-			}
-			return result.ToString();
-		}
+        // Return String like "01110111" for debugging.
+        public override String ToString()
+        {
+            StringBuilder result = new StringBuilder(sizeInBits);
+            for (int i = 0; i < sizeInBits; ++i)
+            {
+                if (At(i) == 0)
+                {
+                    result.Append('0');
+                }
+                else
+                {
+                    if (At(i) == 1)
+                    {
+                        result.Append('1');
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Byte isn't 0 or 1");
+                    }
+                }
+            }
+            return result.ToString();
+        }
 
-		// Callers should not assume that array.length is the exact number of bytes needed to hold
-		// sizeInBits - it will typically be larger for efficiency.
-		public byte[] GetArray()
-		{
-			return array;
-		}
+        // Callers should not assume that array.length is the exact number of bytes needed to hold
+        // sizeInBits - it will typically be larger for efficiency.
+        public byte[] GetArray()
+        {
+            return array;
+        }
 
-		// Add a new byte to the end, possibly reallocating and doubling the size of the array if we've
-		// run out of room.
-		private void AppendByte(int value)
-		{
-			if ((sizeInBits >> 3) == array.Length)
-			{
-				byte[] newArray = new byte[(array.Length << 1)];
-				System.Array.Copy(array, 0, newArray, 0, array.Length);
-				array = newArray;
-			}
-			array[sizeInBits >> 3] = (byte)value;
-			sizeInBits += 8;
-		}
-	}
+        // Add a new byte to the end, possibly reallocating and doubling the size of the array if we've
+        // run out of room.
+        private void AppendByte(int value)
+        {
+            if ((sizeInBits >> 3) == array.Length)
+            {
+                byte[] newArray = new byte[(array.Length << 1)];
+                System.Array.Copy(array, 0, newArray, 0, array.Length);
+                array = newArray;
+            }
+            array[sizeInBits >> 3] = (byte)value;
+            sizeInBits += 8;
+        }
+    }
 }

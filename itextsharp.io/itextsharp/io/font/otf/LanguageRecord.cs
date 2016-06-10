@@ -45,12 +45,12 @@ using System;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	public class LanguageRecord
-	{
-		public String tag;
+    public class LanguageRecord
+    {
+        public String tag;
 
-		public int featureRequired;
+        public int featureRequired;
 
-		public int[] features;
-	}
+        public int[] features;
+    }
 }

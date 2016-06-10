@@ -45,17 +45,17 @@ using System;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	/// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
-	public class FontReadingException : System.IO.IOException
-	{
-		public FontReadingException(String message)
-			: base(message)
-		{
-		}
+    /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
+    public class FontReadingException : System.IO.IOException
+    {
+        public FontReadingException(String message)
+            : base(message)
+        {
+        }
 
-		public FontReadingException(String message, Exception e)
-			: base(message, e)
-		{
-		}
-	}
+        public FontReadingException(String message, Exception e)
+            : base(message, e)
+        {
+        }
+    }
 }

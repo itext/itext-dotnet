@@ -49,188 +49,188 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <summary>This class represents a CMap file.</summary>
-	/// <author>Ben Litchfield (ben@benlitchfield.com)</author>
-	public class CMapToUnicode : AbstractCMap
-	{
-		public static iTextSharp.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iTextSharp.IO.Font.Cmap.CMapToUnicode
-			(true);
+    /// <summary>This class represents a CMap file.</summary>
+    /// <author>Ben Litchfield (ben@benlitchfield.com)</author>
+    public class CMapToUnicode : AbstractCMap
+    {
+        public static iTextSharp.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iTextSharp.IO.Font.Cmap.CMapToUnicode
+            (true);
 
-		private IDictionary<int, char[]> byteMappings;
+        private IDictionary<int, char[]> byteMappings;
 
-		private CMapToUnicode(bool emptyCMap)
-		{
-			byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
-		}
+        private CMapToUnicode(bool emptyCMap)
+        {
+            byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
+        }
 
-		/// <summary>Creates a new instance of CMap.</summary>
-		public CMapToUnicode()
-		{
-			byteMappings = new Dictionary<int, char[]>();
-		}
+        /// <summary>Creates a new instance of CMap.</summary>
+        public CMapToUnicode()
+        {
+            byteMappings = new Dictionary<int, char[]>();
+        }
 
-		public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity()
-		{
-			iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode
-				();
-			for (int i = 0; i < 65537; i++)
-			{
-				uni.AddChar(i, TextUtil.ConvertFromUtf32(i));
-			}
-			return uni;
-		}
+        public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity()
+        {
+            iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode
+                ();
+            for (int i = 0; i < 65537; i++)
+            {
+                uni.AddChar(i, TextUtil.ConvertFromUtf32(i));
+            }
+            return uni;
+        }
 
-		/// <summary>This will tell if this cmap has any two byte mappings.</summary>
-		/// <returns>true If there are any two byte mappings, false otherwise.</returns>
-		public virtual bool HasByteMappings()
-		{
-			return byteMappings.Count != 0;
-		}
+        /// <summary>This will tell if this cmap has any two byte mappings.</summary>
+        /// <returns>true If there are any two byte mappings, false otherwise.</returns>
+        public virtual bool HasByteMappings()
+        {
+            return byteMappings.Count != 0;
+        }
 
-		/// <summary>This will perform a lookup into the map.</summary>
-		/// <param name="code">The code used to lookup.</param>
-		/// <param name="offset">The offset into the byte array.</param>
-		/// <param name="length">The length of the data we are getting.</param>
-		/// <returns>The string that matches the lookup.</returns>
-		public virtual char[] Lookup(byte[] code, int offset, int length)
-		{
-			char[] result = null;
-			int key;
-			if (length == 1)
-			{
-				key = code[offset] & 0xff;
-				result = byteMappings.Get(key);
-			}
-			else
-			{
-				if (length == 2)
-				{
-					int intKey = code[offset] & 0xff;
-					intKey <<= 8;
-					intKey += code[offset + 1] & 0xff;
-					key = intKey;
-					result = byteMappings.Get(key);
-				}
-			}
-			return result;
-		}
+        /// <summary>This will perform a lookup into the map.</summary>
+        /// <param name="code">The code used to lookup.</param>
+        /// <param name="offset">The offset into the byte array.</param>
+        /// <param name="length">The length of the data we are getting.</param>
+        /// <returns>The string that matches the lookup.</returns>
+        public virtual char[] Lookup(byte[] code, int offset, int length)
+        {
+            char[] result = null;
+            int key;
+            if (length == 1)
+            {
+                key = code[offset] & 0xff;
+                result = byteMappings.Get(key);
+            }
+            else
+            {
+                if (length == 2)
+                {
+                    int intKey = code[offset] & 0xff;
+                    intKey <<= 8;
+                    intKey += code[offset + 1] & 0xff;
+                    key = intKey;
+                    result = byteMappings.Get(key);
+                }
+            }
+            return result;
+        }
 
-		public virtual char[] Lookup(byte[] code)
-		{
-			return Lookup(code, 0, code.Length);
-		}
+        public virtual char[] Lookup(byte[] code)
+        {
+            return Lookup(code, 0, code.Length);
+        }
 
-		public virtual char[] Lookup(int code)
-		{
-			return byteMappings.Get(code);
-		}
+        public virtual char[] Lookup(int code)
+        {
+            return byteMappings.Get(code);
+        }
 
-		public virtual ICollection<int> GetCodes()
-		{
-			return byteMappings.Keys;
-		}
+        public virtual ICollection<int> GetCodes()
+        {
+            return byteMappings.Keys;
+        }
 
-		public virtual IntHashtable CreateDirectMapping()
-		{
-			IntHashtable result = new IntHashtable();
-			foreach (KeyValuePair<int, char[]> entry in byteMappings)
-			{
-				if (entry.Value.Length <= 2)
-				{
-					result.Put((int)entry.Key, ConvertToInt(entry.Value));
-				}
-			}
-			return result;
-		}
+        public virtual IntHashtable CreateDirectMapping()
+        {
+            IntHashtable result = new IntHashtable();
+            foreach (KeyValuePair<int, char[]> entry in byteMappings)
+            {
+                if (entry.Value.Length <= 2)
+                {
+                    result.Put((int)entry.Key, ConvertToInt(entry.Value));
+                }
+            }
+            return result;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual IDictionary<int, int?> CreateReverseMapping()
-		{
-			IDictionary<int, int?> result = new Dictionary<int, int?>();
-			foreach (KeyValuePair<int, char[]> entry in byteMappings)
-			{
-				if (entry.Value.Length <= 2)
-				{
-					result[ConvertToInt(entry.Value)] = entry.Key;
-				}
-			}
-			return result;
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual IDictionary<int, int?> CreateReverseMapping()
+        {
+            IDictionary<int, int?> result = new Dictionary<int, int?>();
+            foreach (KeyValuePair<int, char[]> entry in byteMappings)
+            {
+                if (entry.Value.Length <= 2)
+                {
+                    result[ConvertToInt(entry.Value)] = entry.Key;
+                }
+            }
+            return result;
+        }
 
-		private int ConvertToInt(char[] s)
-		{
-			int value = 0;
-			for (int i = 0; i < s.Length - 1; i++)
-			{
-				value += s[i];
-				value <<= 8;
-			}
-			value += s[s.Length - 1];
-			return value;
-		}
+        private int ConvertToInt(char[] s)
+        {
+            int value = 0;
+            for (int i = 0; i < s.Length - 1; i++)
+            {
+                value += s[i];
+                value <<= 8;
+            }
+            value += s[s.Length - 1];
+            return value;
+        }
 
-		internal virtual void AddChar(int cid, char[] uni)
-		{
-			byteMappings[cid] = uni;
-		}
+        internal virtual void AddChar(int cid, char[] uni)
+        {
+            byteMappings[cid] = uni;
+        }
 
-		internal override void AddChar(String mark, CMapObject code)
-		{
-			try
-			{
-				if (mark.Length == 1)
-				{
-					char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-					byteMappings[(int)mark[0]] = dest;
-				}
-				else
-				{
-					if (mark.Length == 2)
-					{
-						char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-						byteMappings[(mark[0] << 8) + mark[1]] = dest;
-					}
-					else
-					{
-						ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
-							));
-						logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
-					}
-				}
-			}
-			catch (System.IO.IOException)
-			{
-				throw new Exception();
-			}
-		}
+        internal override void AddChar(String mark, CMapObject code)
+        {
+            try
+            {
+                if (mark.Length == 1)
+                {
+                    char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
+                    byteMappings[(int)mark[0]] = dest;
+                }
+                else
+                {
+                    if (mark.Length == 2)
+                    {
+                        char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
+                        byteMappings[(mark[0] << 8) + mark[1]] = dest;
+                    }
+                    else
+                    {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
+                            ));
+                        logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
+                    }
+                }
+            }
+            catch (System.IO.IOException)
+            {
+                throw new Exception();
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private char[] CreateCharsFromSingleBytes(byte[] bytes)
-		{
-			if (bytes.Length == 1)
-			{
-				return new char[] { (char)(bytes[0] & 0xff) };
-			}
-			else
-			{
-				char[] chars = new char[bytes.Length];
-				for (int i = 0; i < bytes.Length; i++)
-				{
-					chars[i] = (char)(bytes[i] & 0xff);
-				}
-				return chars;
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        private char[] CreateCharsFromSingleBytes(byte[] bytes)
+        {
+            if (bytes.Length == 1)
+            {
+                return new char[] { (char)(bytes[0] & 0xff) };
+            }
+            else
+            {
+                char[] chars = new char[bytes.Length];
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    chars[i] = (char)(bytes[i] & 0xff);
+                }
+                return chars;
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private char[] CreateCharsFromDoubleBytes(byte[] bytes)
-		{
-			char[] chars = new char[bytes.Length / 2];
-			for (int i = 0; i < bytes.Length; i += 2)
-			{
-				chars[i / 2] = (char)(((bytes[i] & 0xff) << 8) + (bytes[i + 1] & 0xff));
-			}
-			return chars;
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        private char[] CreateCharsFromDoubleBytes(byte[] bytes)
+        {
+            char[] chars = new char[bytes.Length / 2];
+            for (int i = 0; i < bytes.Length; i += 2)
+            {
+                chars[i / 2] = (char)(((bytes[i] & 0xff) << 8) + (bytes[i + 1] & 0xff));
+            }
+            return chars;
+        }
+    }
 }

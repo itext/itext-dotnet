@@ -51,424 +51,424 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Barcodes
 {
-	public abstract class Barcode1D
-	{
-		public const int ALIGN_LEFT = 1;
+    public abstract class Barcode1D
+    {
+        public const int ALIGN_LEFT = 1;
 
-		public const int ALIGN_RIGHT = 2;
+        public const int ALIGN_RIGHT = 2;
 
-		public const int ALIGN_CENTER = 3;
+        public const int ALIGN_CENTER = 3;
 
-		protected internal PdfDocument document;
+        protected internal PdfDocument document;
 
-		/// <summary>The minimum bar width.</summary>
-		protected internal float x;
+        /// <summary>The minimum bar width.</summary>
+        protected internal float x;
 
-		/// <summary>
-		/// The bar multiplier for wide bars or the distance between
-		/// bars for Postnet and Planet.
-		/// </summary>
-		protected internal float n;
+        /// <summary>
+        /// The bar multiplier for wide bars or the distance between
+        /// bars for Postnet and Planet.
+        /// </summary>
+        protected internal float n;
 
-		/// <summary>The text font.</summary>
-		/// <remarks>The text font. <CODE>null</CODE> if no text.</remarks>
-		protected internal PdfFont font;
+        /// <summary>The text font.</summary>
+        /// <remarks>The text font. <CODE>null</CODE> if no text.</remarks>
+        protected internal PdfFont font;
 
-		/// <summary>
-		/// The size of the text or the height of the shorter bar
-		/// in Postnet.
-		/// </summary>
-		protected internal float size;
+        /// <summary>
+        /// The size of the text or the height of the shorter bar
+        /// in Postnet.
+        /// </summary>
+        protected internal float size;
 
-		/// <summary>If positive, the text distance under the bars.</summary>
-		/// <remarks>
-		/// If positive, the text distance under the bars. If zero or negative,
-		/// the text distance above the bars.
-		/// </remarks>
-		protected internal float baseline;
+        /// <summary>If positive, the text distance under the bars.</summary>
+        /// <remarks>
+        /// If positive, the text distance under the bars. If zero or negative,
+        /// the text distance above the bars.
+        /// </remarks>
+        protected internal float baseline;
 
-		/// <summary>The height of the bars.</summary>
-		protected internal float barHeight;
+        /// <summary>The height of the bars.</summary>
+        protected internal float barHeight;
 
-		/// <summary>The text alignment.</summary>
-		protected internal int textAlignment;
+        /// <summary>The text alignment.</summary>
+        protected internal int textAlignment;
 
-		/// <summary>The optional checksum generation.</summary>
-		protected internal bool generateChecksum;
+        /// <summary>The optional checksum generation.</summary>
+        protected internal bool generateChecksum;
 
-		/// <summary>Shows the generated checksum in the the text.</summary>
-		protected internal bool checksumText;
+        /// <summary>Shows the generated checksum in the the text.</summary>
+        protected internal bool checksumText;
 
-		/// <summary>
-		/// Show the start and stop character '*' in the text for
-		/// the barcode 39 or 'ABCD' for codabar.
-		/// </summary>
-		protected internal bool startStopText;
+        /// <summary>
+        /// Show the start and stop character '*' in the text for
+        /// the barcode 39 or 'ABCD' for codabar.
+        /// </summary>
+        protected internal bool startStopText;
 
-		/// <summary>Generates extended barcode 39.</summary>
-		protected internal bool extended;
+        /// <summary>Generates extended barcode 39.</summary>
+        protected internal bool extended;
 
-		/// <summary>The code to generate.</summary>
-		protected internal String code = "";
+        /// <summary>The code to generate.</summary>
+        protected internal String code = "";
 
-		/// <summary>Show the guard bars for barcode EAN.</summary>
-		protected internal bool guardBars;
+        /// <summary>Show the guard bars for barcode EAN.</summary>
+        protected internal bool guardBars;
 
-		/// <summary>The code type.</summary>
-		protected internal int codeType;
+        /// <summary>The code type.</summary>
+        protected internal int codeType;
 
-		/// <summary>The ink spreading.</summary>
-		protected internal float inkSpreading = 0;
+        /// <summary>The ink spreading.</summary>
+        protected internal float inkSpreading = 0;
 
-		/// <summary>The alternate text to be used, if present.</summary>
-		protected internal String altText;
+        /// <summary>The alternate text to be used, if present.</summary>
+        protected internal String altText;
 
-		protected internal Barcode1D(PdfDocument document)
-		{
-			this.document = document;
-		}
+        protected internal Barcode1D(PdfDocument document)
+        {
+            this.document = document;
+        }
 
-		/// <summary>Gets the minimum bar width.</summary>
-		/// <returns>the minimum bar width</returns>
-		public virtual float GetX()
-		{
-			return x;
-		}
+        /// <summary>Gets the minimum bar width.</summary>
+        /// <returns>the minimum bar width</returns>
+        public virtual float GetX()
+        {
+            return x;
+        }
 
-		/// <summary>Sets the minimum bar width.</summary>
-		/// <param name="x">the minimum bar width</param>
-		public virtual void SetX(float x)
-		{
-			this.x = x;
-		}
+        /// <summary>Sets the minimum bar width.</summary>
+        /// <param name="x">the minimum bar width</param>
+        public virtual void SetX(float x)
+        {
+            this.x = x;
+        }
 
-		/// <summary>Gets the bar multiplier for wide bars.</summary>
-		/// <returns>the bar multiplier for wide bars</returns>
-		public virtual float GetN()
-		{
-			return n;
-		}
+        /// <summary>Gets the bar multiplier for wide bars.</summary>
+        /// <returns>the bar multiplier for wide bars</returns>
+        public virtual float GetN()
+        {
+            return n;
+        }
 
-		/// <summary>Sets the bar multiplier for wide bars.</summary>
-		/// <param name="n">the bar multiplier for wide bars</param>
-		public virtual void SetN(float n)
-		{
-			this.n = n;
-		}
+        /// <summary>Sets the bar multiplier for wide bars.</summary>
+        /// <param name="n">the bar multiplier for wide bars</param>
+        public virtual void SetN(float n)
+        {
+            this.n = n;
+        }
 
-		/// <summary>Gets the text font.</summary>
-		/// <remarks>Gets the text font. <CODE>null</CODE> if no text.</remarks>
-		/// <returns>the text font. <CODE>null</CODE> if no text</returns>
-		public virtual PdfFont GetFont()
-		{
-			return font;
-		}
+        /// <summary>Gets the text font.</summary>
+        /// <remarks>Gets the text font. <CODE>null</CODE> if no text.</remarks>
+        /// <returns>the text font. <CODE>null</CODE> if no text</returns>
+        public virtual PdfFont GetFont()
+        {
+            return font;
+        }
 
-		/// <summary>Sets the text font.</summary>
-		/// <param name="font">the text font. Set to <CODE>null</CODE> to suppress any text</param>
-		public virtual void SetFont(PdfFont font)
-		{
-			this.font = font;
-		}
+        /// <summary>Sets the text font.</summary>
+        /// <param name="font">the text font. Set to <CODE>null</CODE> to suppress any text</param>
+        public virtual void SetFont(PdfFont font)
+        {
+            this.font = font;
+        }
 
-		public virtual float GetSize()
-		{
-			return size;
-		}
+        public virtual float GetSize()
+        {
+            return size;
+        }
 
-		/// <summary>Sets the size of the text.</summary>
-		/// <param name="size">the size of the text</param>
-		public virtual void SetSize(float size)
-		{
-			this.size = size;
-		}
+        /// <summary>Sets the size of the text.</summary>
+        /// <param name="size">the size of the text</param>
+        public virtual void SetSize(float size)
+        {
+            this.size = size;
+        }
 
-		/// <summary>Gets the text baseline.</summary>
-		/// <remarks>
-		/// Gets the text baseline.
-		/// If positive, the text distance under the bars. If zero or negative,
-		/// the text distance above the bars.
-		/// </remarks>
-		/// <returns>the baseline.</returns>
-		public virtual float GetBaseline()
-		{
-			return baseline;
-		}
+        /// <summary>Gets the text baseline.</summary>
+        /// <remarks>
+        /// Gets the text baseline.
+        /// If positive, the text distance under the bars. If zero or negative,
+        /// the text distance above the bars.
+        /// </remarks>
+        /// <returns>the baseline.</returns>
+        public virtual float GetBaseline()
+        {
+            return baseline;
+        }
 
-		/// <summary>Sets the text baseline.</summary>
-		/// <remarks>
-		/// Sets the text baseline.
-		/// If positive, the text distance under the bars. If zero or negative,
-		/// the text distance above the bars.
-		/// </remarks>
-		/// <param name="baseline">the baseline.</param>
-		public virtual void SetBaseline(float baseline)
-		{
-			this.baseline = baseline;
-		}
+        /// <summary>Sets the text baseline.</summary>
+        /// <remarks>
+        /// Sets the text baseline.
+        /// If positive, the text distance under the bars. If zero or negative,
+        /// the text distance above the bars.
+        /// </remarks>
+        /// <param name="baseline">the baseline.</param>
+        public virtual void SetBaseline(float baseline)
+        {
+            this.baseline = baseline;
+        }
 
-		/// <summary>Gets the height of the bars.</summary>
-		/// <returns>the height of the bars</returns>
-		public virtual float GetBarHeight()
-		{
-			return barHeight;
-		}
+        /// <summary>Gets the height of the bars.</summary>
+        /// <returns>the height of the bars</returns>
+        public virtual float GetBarHeight()
+        {
+            return barHeight;
+        }
 
-		/// <summary>Sets the height of the bars.</summary>
-		/// <param name="barHeight">the height of the bars</param>
-		public virtual void SetBarHeight(float barHeight)
-		{
-			this.barHeight = barHeight;
-		}
+        /// <summary>Sets the height of the bars.</summary>
+        /// <param name="barHeight">the height of the bars</param>
+        public virtual void SetBarHeight(float barHeight)
+        {
+            this.barHeight = barHeight;
+        }
 
-		/// <summary>Gets the text alignment.</summary>
-		/// <returns>the text alignment</returns>
-		public virtual int GetTextAlignment()
-		{
-			return textAlignment;
-		}
+        /// <summary>Gets the text alignment.</summary>
+        /// <returns>the text alignment</returns>
+        public virtual int GetTextAlignment()
+        {
+            return textAlignment;
+        }
 
-		/// <summary>Sets the text alignment.</summary>
-		/// <param name="textAlignment">the text alignment</param>
-		public virtual void SetTextAlignment(int textAlignment)
-		{
-			this.textAlignment = textAlignment;
-		}
+        /// <summary>Sets the text alignment.</summary>
+        /// <param name="textAlignment">the text alignment</param>
+        public virtual void SetTextAlignment(int textAlignment)
+        {
+            this.textAlignment = textAlignment;
+        }
 
-		/// <summary>Gets the optional checksum generation.</summary>
-		/// <returns>the optional checksum generation</returns>
-		public virtual bool IsGenerateChecksum()
-		{
-			return generateChecksum;
-		}
+        /// <summary>Gets the optional checksum generation.</summary>
+        /// <returns>the optional checksum generation</returns>
+        public virtual bool IsGenerateChecksum()
+        {
+            return generateChecksum;
+        }
 
-		/// <summary>Setter for property generateChecksum.</summary>
-		/// <param name="generateChecksum">New value of property generateChecksum.</param>
-		public virtual void SetGenerateChecksum(bool generateChecksum)
-		{
-			this.generateChecksum = generateChecksum;
-		}
+        /// <summary>Setter for property generateChecksum.</summary>
+        /// <param name="generateChecksum">New value of property generateChecksum.</param>
+        public virtual void SetGenerateChecksum(bool generateChecksum)
+        {
+            this.generateChecksum = generateChecksum;
+        }
 
-		/// <summary>Gets the property to show the generated checksum in the the text.</summary>
-		/// <returns>value of property checksumText</returns>
-		public virtual bool IsChecksumText()
-		{
-			return checksumText;
-		}
+        /// <summary>Gets the property to show the generated checksum in the the text.</summary>
+        /// <returns>value of property checksumText</returns>
+        public virtual bool IsChecksumText()
+        {
+            return checksumText;
+        }
 
-		/// <summary>Sets the property to show the generated checksum in the the text.</summary>
-		/// <param name="checksumText">new value of property checksumText</param>
-		public virtual void SetChecksumText(bool checksumText)
-		{
-			this.checksumText = checksumText;
-		}
+        /// <summary>Sets the property to show the generated checksum in the the text.</summary>
+        /// <param name="checksumText">new value of property checksumText</param>
+        public virtual void SetChecksumText(bool checksumText)
+        {
+            this.checksumText = checksumText;
+        }
 
-		/// <summary>
-		/// Sets the property to show the start and stop character '*' in the text for
-		/// the barcode 39.
-		/// </summary>
-		/// <returns>value of property startStopText</returns>
-		public virtual bool IsStartStopText()
-		{
-			return startStopText;
-		}
+        /// <summary>
+        /// Sets the property to show the start and stop character '*' in the text for
+        /// the barcode 39.
+        /// </summary>
+        /// <returns>value of property startStopText</returns>
+        public virtual bool IsStartStopText()
+        {
+            return startStopText;
+        }
 
-		/// <summary>
-		/// Gets the property to show the start and stop character '*' in the text for
-		/// the barcode 39.
-		/// </summary>
-		/// <param name="startStopText">new value of property startStopText</param>
-		public virtual void SetStartStopText(bool startStopText)
-		{
-			this.startStopText = startStopText;
-		}
+        /// <summary>
+        /// Gets the property to show the start and stop character '*' in the text for
+        /// the barcode 39.
+        /// </summary>
+        /// <param name="startStopText">new value of property startStopText</param>
+        public virtual void SetStartStopText(bool startStopText)
+        {
+            this.startStopText = startStopText;
+        }
 
-		/// <summary>Gets the property to generate extended barcode 39.</summary>
-		/// <returns>value of property extended.</returns>
-		public virtual bool IsExtended()
-		{
-			return extended;
-		}
+        /// <summary>Gets the property to generate extended barcode 39.</summary>
+        /// <returns>value of property extended.</returns>
+        public virtual bool IsExtended()
+        {
+            return extended;
+        }
 
-		/// <summary>Sets the property to generate extended barcode 39.</summary>
-		/// <param name="extended">new value of property extended</param>
-		public virtual void SetExtended(bool extended)
-		{
-			this.extended = extended;
-		}
+        /// <summary>Sets the property to generate extended barcode 39.</summary>
+        /// <param name="extended">new value of property extended</param>
+        public virtual void SetExtended(bool extended)
+        {
+            this.extended = extended;
+        }
 
-		/// <summary>Gets the code to generate.</summary>
-		/// <returns>the code to generate</returns>
-		public virtual String GetCode()
-		{
-			return code;
-		}
+        /// <summary>Gets the code to generate.</summary>
+        /// <returns>the code to generate</returns>
+        public virtual String GetCode()
+        {
+            return code;
+        }
 
-		/// <summary>Sets the code to generate.</summary>
-		/// <param name="code">the code to generate</param>
-		public virtual void SetCode(String code)
-		{
-			this.code = code;
-		}
+        /// <summary>Sets the code to generate.</summary>
+        /// <param name="code">the code to generate</param>
+        public virtual void SetCode(String code)
+        {
+            this.code = code;
+        }
 
-		/// <summary>Gets the property to show the guard bars for barcode EAN.</summary>
-		/// <returns>value of property guardBars</returns>
-		public virtual bool IsGuardBars()
-		{
-			return guardBars;
-		}
+        /// <summary>Gets the property to show the guard bars for barcode EAN.</summary>
+        /// <returns>value of property guardBars</returns>
+        public virtual bool IsGuardBars()
+        {
+            return guardBars;
+        }
 
-		/// <summary>Sets the property to show the guard bars for barcode EAN.</summary>
-		/// <param name="guardBars">new value of property guardBars</param>
-		public virtual void SetGuardBars(bool guardBars)
-		{
-			this.guardBars = guardBars;
-		}
+        /// <summary>Sets the property to show the guard bars for barcode EAN.</summary>
+        /// <param name="guardBars">new value of property guardBars</param>
+        public virtual void SetGuardBars(bool guardBars)
+        {
+            this.guardBars = guardBars;
+        }
 
-		/// <summary>Gets the code type.</summary>
-		/// <returns>the code type</returns>
-		public virtual int GetCodeType()
-		{
-			return codeType;
-		}
+        /// <summary>Gets the code type.</summary>
+        /// <returns>the code type</returns>
+        public virtual int GetCodeType()
+        {
+            return codeType;
+        }
 
-		/// <summary>Sets the code type.</summary>
-		/// <param name="codeType">the code type</param>
-		public virtual void SetCodeType(int codeType)
-		{
-			this.codeType = codeType;
-		}
+        /// <summary>Sets the code type.</summary>
+        /// <param name="codeType">the code type</param>
+        public virtual void SetCodeType(int codeType)
+        {
+            this.codeType = codeType;
+        }
 
-		/// <summary>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy.
-		/// </summary>
-		/// <remarks>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy. The lower left corner is always (0, 0).
-		/// </remarks>
-		/// <returns>the size the barcode occupies.</returns>
-		public abstract Rectangle GetBarcodeSize();
+        /// <summary>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy.
+        /// </summary>
+        /// <remarks>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy. The lower left corner is always (0, 0).
+        /// </remarks>
+        /// <returns>the size the barcode occupies.</returns>
+        public abstract Rectangle GetBarcodeSize();
 
-		/// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
-		/// <remarks>
-		/// Places the barcode in a <CODE>PdfCanvas</CODE>. The
-		/// barcode is always placed at coordinates (0, 0). Use the
-		/// translation matrix to move it elsewhere.<p>
-		/// The bars and text are written in the following colors:<p>
-		/// <P><TABLE BORDER=1>
-		/// <TR>
-		/// <TH><P><CODE>barColor</CODE></TH>
-		/// <TH><P><CODE>textColor</CODE></TH>
-		/// <TH><P>Result</TH>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with current fill color</TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// </TABLE>
-		/// </remarks>
-		/// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
-		/// <returns>the dimensions the barcode occupies</returns>
-		public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 barColor, iTextSharp.Kernel.Color.Color textColor);
+        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <remarks>
+        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// barcode is always placed at coordinates (0, 0). Use the
+        /// translation matrix to move it elsewhere.<p>
+        /// The bars and text are written in the following colors:<p>
+        /// <P><TABLE BORDER=1>
+        /// <TR>
+        /// <TH><P><CODE>barColor</CODE></TH>
+        /// <TH><P><CODE>textColor</CODE></TH>
+        /// <TH><P>Result</TH>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with current fill color</TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// </TABLE>
+        /// </remarks>
+        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
+        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <returns>the dimensions the barcode occupies</returns>
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             barColor, iTextSharp.Kernel.Color.Color textColor);
 
-		/// <summary>Gets the amount of ink spreading.</summary>
-		/// <returns>the ink spreading</returns>
-		public virtual float GetInkSpreading()
-		{
-			return this.inkSpreading;
-		}
+        /// <summary>Gets the amount of ink spreading.</summary>
+        /// <returns>the ink spreading</returns>
+        public virtual float GetInkSpreading()
+        {
+            return this.inkSpreading;
+        }
 
-		/// <summary>Sets the amount of ink spreading.</summary>
-		/// <remarks>
-		/// Sets the amount of ink spreading. This value will be subtracted
-		/// to the width of each bar. The actual value will depend on the ink
-		/// and the printing medium.
-		/// </remarks>
-		/// <param name="inkSpreading">the ink spreading</param>
-		public virtual void SetInkSpreading(float inkSpreading)
-		{
-			this.inkSpreading = inkSpreading;
-		}
+        /// <summary>Sets the amount of ink spreading.</summary>
+        /// <remarks>
+        /// Sets the amount of ink spreading. This value will be subtracted
+        /// to the width of each bar. The actual value will depend on the ink
+        /// and the printing medium.
+        /// </remarks>
+        /// <param name="inkSpreading">the ink spreading</param>
+        public virtual void SetInkSpreading(float inkSpreading)
+        {
+            this.inkSpreading = inkSpreading;
+        }
 
-		/// <summary>Gets the alternate text.</summary>
-		/// <returns>the alternate text</returns>
-		public virtual String GetAltText()
-		{
-			return this.altText;
-		}
+        /// <summary>Gets the alternate text.</summary>
+        /// <returns>the alternate text</returns>
+        public virtual String GetAltText()
+        {
+            return this.altText;
+        }
 
-		/// <summary>Sets the alternate text.</summary>
-		/// <remarks>
-		/// Sets the alternate text. If present, this text will be used instead of the
-		/// text derived from the supplied code.
-		/// </remarks>
-		/// <param name="altText">the alternate text</param>
-		public virtual void SetAltText(String altText)
-		{
-			this.altText = altText;
-		}
+        /// <summary>Sets the alternate text.</summary>
+        /// <remarks>
+        /// Sets the alternate text. If present, this text will be used instead of the
+        /// text derived from the supplied code.
+        /// </remarks>
+        /// <param name="altText">the alternate text</param>
+        public virtual void SetAltText(String altText)
+        {
+            this.altText = altText;
+        }
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.
-		/// 	</remarks>
-		/// <returns>the XObject</returns>
-		/// <seealso cref="CreateFormXObject(iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Pdf.PdfDocument)
-		/// 	"/>
-		public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
-		{
-			return CreateFormXObject(null, null, document);
-		}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.
+        ///     </remarks>
+        /// <returns>the XObject</returns>
+        /// <seealso cref="CreateFormXObject(iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Pdf.PdfDocument)
+        ///     "/>
+        public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
+        {
+            return CreateFormXObject(null, null, document);
+        }
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
-		/// <returns>the XObject</returns>
-		/// <seealso cref="PlaceBarcode(iTextSharp.Kernel.Pdf.Canvas.PdfCanvas, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color)
-		/// 	"/>
-		public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor
-			, iTextSharp.Kernel.Color.Color textColor, PdfDocument document)
-		{
-			PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
-			Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor
-				);
-			xObject.SetBBox(new PdfArray(rect));
-			return xObject;
-		}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
+        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <returns>the XObject</returns>
+        /// <seealso cref="PlaceBarcode(iTextSharp.Kernel.Pdf.Canvas.PdfCanvas, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color)
+        ///     "/>
+        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor
+            , iTextSharp.Kernel.Color.Color textColor, PdfDocument document)
+        {
+            PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
+            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor
+                );
+            xObject.SetBBox(new PdfArray(rect));
+            return xObject;
+        }
 
-		/// <summary>Make the barcode occupy the specified width.</summary>
-		/// <remarks>
-		/// Make the barcode occupy the specified width.
-		/// Usually this is achieved by adjusting bar widths.
-		/// </remarks>
-		public virtual void FitWidth(float width)
-		{
-			SetX(x * width / GetBarcodeSize().GetWidth());
-		}
+        /// <summary>Make the barcode occupy the specified width.</summary>
+        /// <remarks>
+        /// Make the barcode occupy the specified width.
+        /// Usually this is achieved by adjusting bar widths.
+        /// </remarks>
+        public virtual void FitWidth(float width)
+        {
+            SetX(x * width / GetBarcodeSize().GetWidth());
+        }
 
-		protected internal virtual float GetDescender()
-		{
-			float sizeCoef = size / FontProgram.UNITS_NORMALIZATION;
-			return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoef;
-		}
-	}
+        protected internal virtual float GetDescender()
+        {
+            float sizeCoef = size / FontProgram.UNITS_NORMALIZATION;
+            return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoef;
+        }
+    }
 }

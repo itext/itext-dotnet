@@ -46,107 +46,107 @@ using System.Text;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	public class CMapObject
-	{
-		protected internal const int STRING = 1;
+    public class CMapObject
+    {
+        protected internal const int STRING = 1;
 
-		protected internal const int HEX_STRING = 2;
+        protected internal const int HEX_STRING = 2;
 
-		protected internal const int NAME = 3;
+        protected internal const int NAME = 3;
 
-		protected internal const int NUMBER = 4;
+        protected internal const int NUMBER = 4;
 
-		protected internal const int LITERAL = 5;
+        protected internal const int LITERAL = 5;
 
-		protected internal const int ARRAY = 6;
+        protected internal const int ARRAY = 6;
 
-		protected internal const int DICTIONARY = 7;
+        protected internal const int DICTIONARY = 7;
 
-		protected internal const int TOKEN = 8;
+        protected internal const int TOKEN = 8;
 
-		private int type;
+        private int type;
 
-		private Object value;
+        private Object value;
 
-		public CMapObject(int objectType, Object value)
-		{
-			this.type = objectType;
-			this.value = value;
-		}
+        public CMapObject(int objectType, Object value)
+        {
+            this.type = objectType;
+            this.value = value;
+        }
 
-		public virtual Object GetValue()
-		{
-			return value;
-		}
+        public virtual Object GetValue()
+        {
+            return value;
+        }
 
-		public virtual int GetObjectType()
-		{
-			return type;
-		}
+        public virtual int GetObjectType()
+        {
+            return type;
+        }
 
-		public virtual void SetValue(Object value)
-		{
-			this.value = value;
-		}
+        public virtual void SetValue(Object value)
+        {
+            this.value = value;
+        }
 
-		public virtual bool IsString()
-		{
-			return type == STRING || type == HEX_STRING;
-		}
+        public virtual bool IsString()
+        {
+            return type == STRING || type == HEX_STRING;
+        }
 
-		public virtual bool IsHexString()
-		{
-			return type == HEX_STRING;
-		}
+        public virtual bool IsHexString()
+        {
+            return type == HEX_STRING;
+        }
 
-		public virtual bool IsName()
-		{
-			return type == NAME;
-		}
+        public virtual bool IsName()
+        {
+            return type == NAME;
+        }
 
-		public virtual bool IsNumber()
-		{
-			return type == NUMBER;
-		}
+        public virtual bool IsNumber()
+        {
+            return type == NUMBER;
+        }
 
-		public virtual bool IsLiteral()
-		{
-			return type == LITERAL;
-		}
+        public virtual bool IsLiteral()
+        {
+            return type == LITERAL;
+        }
 
-		public virtual bool IsArray()
-		{
-			return type == ARRAY;
-		}
+        public virtual bool IsArray()
+        {
+            return type == ARRAY;
+        }
 
-		public virtual bool IsDictionary()
-		{
-			return type == DICTIONARY;
-		}
+        public virtual bool IsDictionary()
+        {
+            return type == DICTIONARY;
+        }
 
-		public virtual bool IsToken()
-		{
-			return type == TOKEN;
-		}
+        public virtual bool IsToken()
+        {
+            return type == TOKEN;
+        }
 
-		/// <summary>
-		/// Return String representation of
-		/// <c>value</c>
-		/// field.
-		/// </summary>
-		public override String ToString()
-		{
-			if (type == STRING || type == HEX_STRING)
-			{
-				byte[] content = (byte[])value;
-				StringBuilder str = new StringBuilder(content.Length);
-				foreach (byte b in content)
-				{
-					str.Append((char)(b & 0xff));
-				}
-				return str.ToString();
-			}
-			return value.ToString();
-		}
-	}
+        /// <summary>
+        /// Return String representation of
+        /// <c>value</c>
+        /// field.
+        /// </summary>
+        public override String ToString()
+        {
+            if (type == STRING || type == HEX_STRING)
+            {
+                byte[] content = (byte[])value;
+                StringBuilder str = new StringBuilder(content.Length);
+                foreach (byte b in content)
+                {
+                    str.Append((char)(b & 0xff));
+                }
+                return str.ToString();
+            }
+            return value.ToString();
+        }
+    }
 }

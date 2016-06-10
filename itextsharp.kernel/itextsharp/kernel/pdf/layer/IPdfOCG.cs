@@ -45,16 +45,16 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Layer
 {
-	/// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).
-	/// 	</summary>
-	public interface IPdfOCG
-	{
-		/// <summary>Gets the object representing the layer.</summary>
-		/// <returns>the object representing the layer</returns>
-		PdfDictionary GetPdfObject();
+    /// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).
+    ///     </summary>
+    public interface IPdfOCG
+    {
+        /// <summary>Gets the object representing the layer.</summary>
+        /// <returns>the object representing the layer</returns>
+        PdfDictionary GetPdfObject();
 
-		/// <summary>Gets the <CODE>PdfIndirectReference</CODE> that represents this layer.</summary>
-		/// <returns>the <CODE>PdfIndirectReference</CODE> that represents this layer</returns>
-		PdfIndirectReference GetIndirectReference();
-	}
+        /// <summary>Gets the <CODE>PdfIndirectReference</CODE> that represents this layer.</summary>
+        /// <returns>the <CODE>PdfIndirectReference</CODE> that represents this layer</returns>
+        PdfIndirectReference GetIndirectReference();
+    }
 }

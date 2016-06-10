@@ -46,45 +46,45 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>This class represents a layout element, i.e.</summary>
-	/// <remarks>
-	/// This class represents a layout element, i.e. a piece of content that will
-	/// take up 'physical' space on a canvas or document. Its presence and positioning
-	/// may influence the position of other
-	/// <see cref="IElement"/>
-	/// s on the layout surface.
-	/// </remarks>
-	public interface IElement : IPropertyContainer
-	{
-		/// <summary>
-		/// Overrides the
-		/// <seealso>IRenderer</seealso>
-		/// instance which will be returned by the next call to the
-		/// <see cref="GetRenderer()"/>
-		/// .
-		/// </summary>
-		/// <param name="renderer">the renderer instance</param>
-		void SetNextRenderer(IRenderer renderer);
+    /// <summary>This class represents a layout element, i.e.</summary>
+    /// <remarks>
+    /// This class represents a layout element, i.e. a piece of content that will
+    /// take up 'physical' space on a canvas or document. Its presence and positioning
+    /// may influence the position of other
+    /// <see cref="IElement"/>
+    /// s on the layout surface.
+    /// </remarks>
+    public interface IElement : IPropertyContainer
+    {
+        /// <summary>
+        /// Overrides the
+        /// <seealso>IRenderer</seealso>
+        /// instance which will be returned by the next call to the
+        /// <see cref="GetRenderer()"/>
+        /// .
+        /// </summary>
+        /// <param name="renderer">the renderer instance</param>
+        void SetNextRenderer(IRenderer renderer);
 
-		/// <summary>Gets a renderer for this element.</summary>
-		/// <remarks>
-		/// Gets a renderer for this element. Note that this method can be called more than once.
-		/// By default each element should define its own renderer, but the renderer can be overridden by
-		/// <see cref="SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)"/>
-		/// method call.
-		/// </remarks>
-		/// <returns>a renderer for this element</returns>
-		IRenderer GetRenderer();
+        /// <summary>Gets a renderer for this element.</summary>
+        /// <remarks>
+        /// Gets a renderer for this element. Note that this method can be called more than once.
+        /// By default each element should define its own renderer, but the renderer can be overridden by
+        /// <see cref="SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)"/>
+        /// method call.
+        /// </remarks>
+        /// <returns>a renderer for this element</returns>
+        IRenderer GetRenderer();
 
-		/// <summary>Creates a renderer subtree with root in the current element.</summary>
-		/// <remarks>
-		/// Creates a renderer subtree with root in the current element.
-		/// Compared to
-		/// <see cref="GetRenderer()"/>
-		/// , the renderer returned by this method should contain all the child
-		/// renderers for children of the current element.
-		/// </remarks>
-		/// <returns>a renderer subtree for this element</returns>
-		IRenderer CreateRendererSubTree();
-	}
+        /// <summary>Creates a renderer subtree with root in the current element.</summary>
+        /// <remarks>
+        /// Creates a renderer subtree with root in the current element.
+        /// Compared to
+        /// <see cref="GetRenderer()"/>
+        /// , the renderer returned by this method should contain all the child
+        /// renderers for children of the current element.
+        /// </remarks>
+        /// <returns>a renderer subtree for this element</returns>
+        IRenderer CreateRendererSubTree();
+    }
 }

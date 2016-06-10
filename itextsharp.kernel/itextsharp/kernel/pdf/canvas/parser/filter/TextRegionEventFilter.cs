@@ -47,41 +47,41 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter
 {
-	/// <summary>
-	/// This
-	/// <see cref="IEventFilter"/>
-	/// implementation only accepts text render events within the specified
-	/// rectangular region.
-	/// </summary>
-	public class TextRegionEventFilter : IEventFilter
-	{
-		private readonly Rectangle filterRect;
+    /// <summary>
+    /// This
+    /// <see cref="IEventFilter"/>
+    /// implementation only accepts text render events within the specified
+    /// rectangular region.
+    /// </summary>
+    public class TextRegionEventFilter : IEventFilter
+    {
+        private readonly Rectangle filterRect;
 
-		/// <summary>Constructs a filter instance.</summary>
-		/// <param name="filterRect">the rectangle to filter text against</param>
-		public TextRegionEventFilter(Rectangle filterRect)
-		{
-			this.filterRect = filterRect;
-		}
+        /// <summary>Constructs a filter instance.</summary>
+        /// <param name="filterRect">the rectangle to filter text against</param>
+        public TextRegionEventFilter(Rectangle filterRect)
+        {
+            this.filterRect = filterRect;
+        }
 
-		public virtual bool Accept(IEventData data, EventType type)
-		{
-			if (type.Equals(EventType.RENDER_TEXT))
-			{
-				TextRenderInfo renderInfo = (TextRenderInfo)data;
-				LineSegment segment = renderInfo.GetBaseline();
-				Vector startPoint = segment.GetStartPoint();
-				Vector endPoint = segment.GetEndPoint();
-				float x1 = startPoint.Get(Vector.I1);
-				float y1 = startPoint.Get(Vector.I2);
-				float x2 = endPoint.Get(Vector.I1);
-				float y2 = endPoint.Get(Vector.I2);
-				return filterRect == null || filterRect.IntersectsLine(x1, y1, x2, y2);
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
+        public virtual bool Accept(IEventData data, EventType type)
+        {
+            if (type.Equals(EventType.RENDER_TEXT))
+            {
+                TextRenderInfo renderInfo = (TextRenderInfo)data;
+                LineSegment segment = renderInfo.GetBaseline();
+                Vector startPoint = segment.GetStartPoint();
+                Vector endPoint = segment.GetEndPoint();
+                float x1 = startPoint.Get(Vector.I1);
+                float y1 = startPoint.Get(Vector.I2);
+                float x2 = endPoint.Get(Vector.I1);
+                float y2 = endPoint.Get(Vector.I2);
+                return filterRect == null || filterRect.IntersectsLine(x1, y1, x2, y2);
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }

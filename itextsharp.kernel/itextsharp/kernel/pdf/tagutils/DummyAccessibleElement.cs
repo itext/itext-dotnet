@@ -45,31 +45,31 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Tagutils
 {
-	internal class DummyAccessibleElement : IAccessibleElement
-	{
-		private PdfName role;
+    internal class DummyAccessibleElement : IAccessibleElement
+    {
+        private PdfName role;
 
-		private AccessibilityProperties properties;
+        private AccessibilityProperties properties;
 
-		internal DummyAccessibleElement(PdfName role, AccessibilityProperties properties)
-		{
-			this.role = role;
-			this.properties = properties;
-		}
+        internal DummyAccessibleElement(PdfName role, AccessibilityProperties properties)
+        {
+            this.role = role;
+            this.properties = properties;
+        }
 
-		public virtual PdfName GetRole()
-		{
-			return role;
-		}
+        public virtual PdfName GetRole()
+        {
+            return role;
+        }
 
-		public virtual void SetRole(PdfName role)
-		{
-			this.role = role;
-		}
+        public virtual void SetRole(PdfName role)
+        {
+            this.role = role;
+        }
 
-		public virtual AccessibilityProperties GetAccessibilityProperties()
-		{
-			return properties;
-		}
-	}
+        public virtual AccessibilityProperties GetAccessibilityProperties()
+        {
+            return properties;
+        }
+    }
 }

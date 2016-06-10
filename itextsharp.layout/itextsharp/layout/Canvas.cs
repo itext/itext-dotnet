@@ -51,163 +51,163 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout
 {
-	/// <summary>
-	/// This class is used for adding content directly onto a specified
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
-	/// .
-	/// <see cref="Canvas"/>
-	/// does not know the concept of a page, so it can't reflow to a 'next'
-	/// <see cref="Canvas"/>
-	/// .
-	/// This class effectively acts as a bridge between the high-level <em>layout</em>
-	/// API and the low-level <em>kernel</em> API.
-	/// </summary>
-	public class Canvas : RootElement<iTextSharp.Layout.Canvas>
-	{
-		protected internal PdfCanvas pdfCanvas;
+    /// <summary>
+    /// This class is used for adding content directly onto a specified
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// .
+    /// <see cref="Canvas"/>
+    /// does not know the concept of a page, so it can't reflow to a 'next'
+    /// <see cref="Canvas"/>
+    /// .
+    /// This class effectively acts as a bridge between the high-level <em>layout</em>
+    /// API and the low-level <em>kernel</em> API.
+    /// </summary>
+    public class Canvas : RootElement<iTextSharp.Layout.Canvas>
+    {
+        protected internal PdfCanvas pdfCanvas;
 
-		protected internal Rectangle rootArea;
+        protected internal Rectangle rootArea;
 
-		/// <summary>
-		/// Is initialized and used only when Canvas element autotagging is enabled, see
-		/// <see cref="EnableAutoTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
-		/// .
-		/// It is also used to determine if autotagging is enabled.
-		/// </summary>
-		protected internal PdfPage page;
+        /// <summary>
+        /// Is initialized and used only when Canvas element autotagging is enabled, see
+        /// <see cref="EnableAutoTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
+        /// .
+        /// It is also used to determine if autotagging is enabled.
+        /// </summary>
+        protected internal PdfPage page;
 
-		/// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
-		/// <param name="pdfCanvas">the low-level content stream writer</param>
-		/// <param name="pdfDocument">the document that the resulting content stream will be written to
-		/// 	</param>
-		/// <param name="rootArea">the maximum area that the Canvas may write upon</param>
-		public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
-			: base()
-		{
-			this.pdfDocument = pdfDocument;
-			this.pdfCanvas = pdfCanvas;
-			this.rootArea = rootArea;
-		}
+        /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
+        /// <param name="pdfCanvas">the low-level content stream writer</param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to
+        ///     </param>
+        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
+            : base()
+        {
+            this.pdfDocument = pdfDocument;
+            this.pdfCanvas = pdfCanvas;
+            this.rootArea = rootArea;
+        }
 
-		/// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
-		/// <param name="pdfCanvas">the low-level content stream writer</param>
-		/// <param name="pdfDocument">the document that the resulting content stream will be written to
-		/// 	</param>
-		/// <param name="rootArea">the maximum area that the Canvas may write upon</param>
-		public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool
-			 immediateFlush)
-			: this(pdfCanvas, pdfDocument, rootArea)
-		{
-			this.immediateFlush = immediateFlush;
-		}
+        /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
+        /// <param name="pdfCanvas">the low-level content stream writer</param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to
+        ///     </param>
+        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool
+             immediateFlush)
+            : this(pdfCanvas, pdfDocument, rootArea)
+        {
+            this.immediateFlush = immediateFlush;
+        }
 
-		/// <summary>
-		/// Creates a new Canvas to manipulate a specific
-		/// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
-		/// .
-		/// </summary>
-		/// <param name="formXObject">the form</param>
-		/// <param name="pdfDocument">the document that the resulting content stream will be written to
-		/// 	</param>
-		public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
-			: this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox(
-				).ToRectangle())
-		{
-		}
+        /// <summary>
+        /// Creates a new Canvas to manipulate a specific
+        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// .
+        /// </summary>
+        /// <param name="formXObject">the form</param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to
+        ///     </param>
+        public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
+            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox(
+                ).ToRectangle())
+        {
+        }
 
-		/// <summary>
-		/// Gets the
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
-		/// for this canvas.
-		/// </summary>
-		/// <returns>the document that the resulting content stream will be written to</returns>
-		public virtual PdfDocument GetPdfDocument()
-		{
-			return pdfDocument;
-		}
+        /// <summary>
+        /// Gets the
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// for this canvas.
+        /// </summary>
+        /// <returns>the document that the resulting content stream will be written to</returns>
+        public virtual PdfDocument GetPdfDocument()
+        {
+            return pdfDocument;
+        }
 
-		/// <summary>Gets the root area rectangle.</summary>
-		/// <returns>the maximum area that the Canvas may write upon</returns>
-		public virtual Rectangle GetRootArea()
-		{
-			return rootArea;
-		}
+        /// <summary>Gets the root area rectangle.</summary>
+        /// <returns>the maximum area that the Canvas may write upon</returns>
+        public virtual Rectangle GetRootArea()
+        {
+            return rootArea;
+        }
 
-		/// <summary>
-		/// Gets the
-		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
-		/// .
-		/// </summary>
-		/// <returns>the low-level content stream writer</returns>
-		public virtual PdfCanvas GetPdfCanvas()
-		{
-			return pdfCanvas;
-		}
+        /// <summary>
+        /// Gets the
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// .
+        /// </summary>
+        /// <returns>the low-level content stream writer</returns>
+        public virtual PdfCanvas GetPdfCanvas()
+        {
+            return pdfCanvas;
+        }
 
-		/// <summary>
-		/// Sets the
-		/// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
-		/// for this Canvas.
-		/// </summary>
-		/// <param name="canvasRenderer">a renderer specific for canvas operations</param>
-		public virtual void SetRenderer(CanvasRenderer canvasRenderer)
-		{
-			this.rootRenderer = canvasRenderer;
-		}
+        /// <summary>
+        /// Sets the
+        /// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
+        /// for this Canvas.
+        /// </summary>
+        /// <param name="canvasRenderer">a renderer specific for canvas operations</param>
+        public virtual void SetRenderer(CanvasRenderer canvasRenderer)
+        {
+            this.rootRenderer = canvasRenderer;
+        }
 
-		/// <summary>Returned value is not null only in case when autotagging is enabled.</summary>
-		/// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.
-		/// 	</returns>
-		public virtual PdfPage GetPage()
-		{
-			return page;
-		}
+        /// <summary>Returned value is not null only in case when autotagging is enabled.</summary>
+        /// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.
+        ///     </returns>
+        public virtual PdfPage GetPage()
+        {
+            return page;
+        }
 
-		/// <summary>Enables canvas content autotagging.</summary>
-		/// <remarks>Enables canvas content autotagging. By default it is disabled.</remarks>
-		/// <param name="page">the page, on which this canvas will be rendered.</param>
-		public virtual void EnableAutoTagging(PdfPage page)
-		{
-			this.page = page;
-		}
+        /// <summary>Enables canvas content autotagging.</summary>
+        /// <remarks>Enables canvas content autotagging. By default it is disabled.</remarks>
+        /// <param name="page">the page, on which this canvas will be rendered.</param>
+        public virtual void EnableAutoTagging(PdfPage page)
+        {
+            this.page = page;
+        }
 
-		/// <returns>true if autotagging of canvas content is enabled. Default value - false.
-		/// 	</returns>
-		public virtual bool IsAutoTaggingEnabled()
-		{
-			return page != null;
-		}
+        /// <returns>true if autotagging of canvas content is enabled. Default value - false.
+        ///     </returns>
+        public virtual bool IsAutoTaggingEnabled()
+        {
+            return page != null;
+        }
 
-		public virtual void Relayout()
-		{
-			if (immediateFlush)
-			{
-				throw new InvalidOperationException("Operation not supported with immediate flush"
-					);
-			}
-			rootRenderer = new CanvasRenderer(this, immediateFlush);
-			foreach (IElement element in childElements)
-			{
-				rootRenderer.AddChild(element.CreateRendererSubTree());
-			}
-		}
+        public virtual void Relayout()
+        {
+            if (immediateFlush)
+            {
+                throw new InvalidOperationException("Operation not supported with immediate flush"
+                    );
+            }
+            rootRenderer = new CanvasRenderer(this, immediateFlush);
+            foreach (IElement element in childElements)
+            {
+                rootRenderer.AddChild(element.CreateRendererSubTree());
+            }
+        }
 
-		/// <summary>
-		/// Forces all registered renderers (including child element renderers) to
-		/// flush their contents to the content stream.
-		/// </summary>
-		public virtual void Flush()
-		{
-			rootRenderer.Flush();
-		}
+        /// <summary>
+        /// Forces all registered renderers (including child element renderers) to
+        /// flush their contents to the content stream.
+        /// </summary>
+        public virtual void Flush()
+        {
+            rootRenderer.Flush();
+        }
 
-		protected internal override RootRenderer EnsureRootRendererNotNull()
-		{
-			if (rootRenderer == null)
-			{
-				rootRenderer = new CanvasRenderer(this, immediateFlush);
-			}
-			return rootRenderer;
-		}
-	}
+        protected internal override RootRenderer EnsureRootRendererNotNull()
+        {
+            if (rootRenderer == null)
+            {
+                rootRenderer = new CanvasRenderer(this, immediateFlush);
+            }
+            return rootRenderer;
+        }
+    }
 }

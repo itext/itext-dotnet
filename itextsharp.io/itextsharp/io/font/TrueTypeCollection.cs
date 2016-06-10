@@ -47,95 +47,95 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font
 {
-	/// <summary>Use this class for working with true type collection font (*.ttc)</summary>
-	public class TrueTypeCollection
-	{
-		protected internal RandomAccessFileOrArray raf;
+    /// <summary>Use this class for working with true type collection font (*.ttc)</summary>
+    public class TrueTypeCollection
+    {
+        protected internal RandomAccessFileOrArray raf;
 
-		internal String encoding;
+        internal String encoding;
 
-		internal int TTCSize = 0;
+        internal int TTCSize = 0;
 
-		internal String ttcPath;
+        internal String ttcPath;
 
-		internal byte[] ttc;
+        internal byte[] ttc;
 
-		internal bool cached = false;
+        internal bool cached = false;
 
-		/// <exception cref="System.IO.IOException"/>
-		public TrueTypeCollection(byte[] ttc, String encoding)
-		{
-			raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc
-				));
-			this.ttc = ttc;
-			this.encoding = encoding;
-			InitFontSize();
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public TrueTypeCollection(byte[] ttc, String encoding)
+        {
+            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc
+                ));
+            this.ttc = ttc;
+            this.encoding = encoding;
+            InitFontSize();
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public TrueTypeCollection(String ttcPath, String encoding)
-		{
-			if (!FileUtil.FileExists(ttcPath))
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
-					SetMessageParams(ttcPath);
-			}
-			raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
-				(ttcPath));
-			this.ttcPath = ttcPath;
-			this.encoding = encoding;
-			InitFontSize();
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public TrueTypeCollection(String ttcPath, String encoding)
+        {
+            if (!FileUtil.FileExists(ttcPath))
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
+                    SetMessageParams(ttcPath);
+            }
+            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
+                (ttcPath));
+            this.ttcPath = ttcPath;
+            this.encoding = encoding;
+            InitFontSize();
+        }
 
-		/// <summary>method return TrueTypeFont by ttc index</summary>
-		/// <param name="ttcIndex">the index for the TTC font</param>
-		/// <returns>TrueTypeFont</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual FontProgram GetFontByTccIndex(int ttcIndex)
-		{
-			if (ttcIndex > TTCSize - 1)
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile
-					);
-			}
-			if (ttcPath != null)
-			{
-				return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
-			}
-			else
-			{
-				return FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
-			}
-		}
+        /// <summary>method return TrueTypeFont by ttc index</summary>
+        /// <param name="ttcIndex">the index for the TTC font</param>
+        /// <returns>TrueTypeFont</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual FontProgram GetFontByTccIndex(int ttcIndex)
+        {
+            if (ttcIndex > TTCSize - 1)
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile
+                    );
+            }
+            if (ttcPath != null)
+            {
+                return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
+            }
+            else
+            {
+                return FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
+            }
+        }
 
-		/// <summary>returns the number of fonts in True Type Collection (file or bytes array)
-		/// 	</summary>
-		/// <returns>returns the number of fonts</returns>
-		public virtual int GetTTCSize()
-		{
-			return TTCSize;
-		}
+        /// <summary>returns the number of fonts in True Type Collection (file or bytes array)
+        ///     </summary>
+        /// <returns>returns the number of fonts</returns>
+        public virtual int GetTTCSize()
+        {
+            return TTCSize;
+        }
 
-		public virtual bool IsCached()
-		{
-			return cached;
-		}
+        public virtual bool IsCached()
+        {
+            return cached;
+        }
 
-		public virtual void SetCached(bool cached)
-		{
-			this.cached = cached;
-		}
+        public virtual void SetCached(bool cached)
+        {
+            this.cached = cached;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private void InitFontSize()
-		{
-			String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
-			if (!mainTag.Equals("ttcf"))
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidTTCFile);
-			}
-			raf.SkipBytes(4);
-			TTCSize = raf.ReadInt();
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        private void InitFontSize()
+        {
+            String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
+            if (!mainTag.Equals("ttcf"))
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidTTCFile);
+            }
+            raf.SkipBytes(4);
+            TTCSize = raf.ReadInt();
+        }
+    }
 }

@@ -47,105 +47,105 @@ using System.Text;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <author>psoares</author>
-	public class CMapByteCid : AbstractCMap
-	{
-		protected internal class Cursor
-		{
-			public int offset;
+    /// <author>psoares</author>
+    public class CMapByteCid : AbstractCMap
+    {
+        protected internal class Cursor
+        {
+            public int offset;
 
-			public int length;
+            public int length;
 
-			public Cursor(int offset, int length)
-			{
-				this.offset = offset;
-				this.length = length;
-			}
-		}
+            public Cursor(int offset, int length)
+            {
+                this.offset = offset;
+                this.length = length;
+            }
+        }
 
-		private IList<char[]> planes = new List<char[]>();
+        private IList<char[]> planes = new List<char[]>();
 
-		public CMapByteCid()
-		{
-			planes.Add(new char[256]);
-		}
+        public CMapByteCid()
+        {
+            planes.Add(new char[256]);
+        }
 
-		internal override void AddChar(String mark, CMapObject code)
-		{
-			if (code.IsNumber())
-			{
-				EncodeSequence(DecodeStringToByte(mark), (char)code.GetValue());
-			}
-		}
+        internal override void AddChar(String mark, CMapObject code)
+        {
+            if (code.IsNumber())
+            {
+                EncodeSequence(DecodeStringToByte(mark), (char)code.GetValue());
+            }
+        }
 
-		/// <param name="cidBytes"/>
-		/// <param name="offset"/>
-		/// <param name="length"/>
-		/// <returns/>
-		public virtual String DecodeSequence(byte[] cidBytes, int offset, int length)
-		{
-			StringBuilder sb = new StringBuilder();
-			CMapByteCid.Cursor cursor = new CMapByteCid.Cursor(offset, length);
-			int cid;
-			while ((cid = DecodeSingle(cidBytes, cursor)) >= 0)
-			{
-				sb.Append((char)cid);
-			}
-			return sb.ToString();
-		}
+        /// <param name="cidBytes"/>
+        /// <param name="offset"/>
+        /// <param name="length"/>
+        /// <returns/>
+        public virtual String DecodeSequence(byte[] cidBytes, int offset, int length)
+        {
+            StringBuilder sb = new StringBuilder();
+            CMapByteCid.Cursor cursor = new CMapByteCid.Cursor(offset, length);
+            int cid;
+            while ((cid = DecodeSingle(cidBytes, cursor)) >= 0)
+            {
+                sb.Append((char)cid);
+            }
+            return sb.ToString();
+        }
 
-		protected internal virtual int DecodeSingle(byte[] cidBytes, CMapByteCid.Cursor cursor
-			)
-		{
-			int end = cursor.offset + cursor.length;
-			int currentPlane = 0;
-			while (cursor.offset < end)
-			{
-				int one = cidBytes[cursor.offset++] & 0xff;
-				cursor.length--;
-				char[] plane = planes[currentPlane];
-				int cid = plane[one];
-				if ((cid & 0x8000) == 0)
-				{
-					return cid;
-				}
-				else
-				{
-					currentPlane = cid & 0x7fff;
-				}
-			}
-			return -1;
-		}
+        protected internal virtual int DecodeSingle(byte[] cidBytes, CMapByteCid.Cursor cursor
+            )
+        {
+            int end = cursor.offset + cursor.length;
+            int currentPlane = 0;
+            while (cursor.offset < end)
+            {
+                int one = cidBytes[cursor.offset++] & 0xff;
+                cursor.length--;
+                char[] plane = planes[currentPlane];
+                int cid = plane[one];
+                if ((cid & 0x8000) == 0)
+                {
+                    return cid;
+                }
+                else
+                {
+                    currentPlane = cid & 0x7fff;
+                }
+            }
+            return -1;
+        }
 
-		private void EncodeSequence(byte[] seq, char cid)
-		{
-			int size = seq.Length - 1;
-			int nextPlane = 0;
-			for (int idx = 0; idx < size; ++idx)
-			{
-				char[] plane = planes[nextPlane];
-				int one = seq[idx] & 0xff;
-				char c = plane[one];
-				if (c != 0 && (c & 0x8000) == 0)
-				{
-					throw new iTextSharp.IO.IOException("inconsistent.mapping");
-				}
-				if (c == 0)
-				{
-					planes.Add(new char[256]);
-					c = (char)(planes.Count - 1 | 0x8000);
-					plane[one] = c;
-				}
-				nextPlane = c & 0x7fff;
-			}
-			char[] plane_1 = planes[nextPlane];
-			int one_1 = seq[size] & 0xff;
-			char c_1 = plane_1[one_1];
-			if ((c_1 & 0x8000) != 0)
-			{
-				throw new iTextSharp.IO.IOException("inconsistent.mapping");
-			}
-			plane_1[one_1] = cid;
-		}
-	}
+        private void EncodeSequence(byte[] seq, char cid)
+        {
+            int size = seq.Length - 1;
+            int nextPlane = 0;
+            for (int idx = 0; idx < size; ++idx)
+            {
+                char[] plane = planes[nextPlane];
+                int one = seq[idx] & 0xff;
+                char c = plane[one];
+                if (c != 0 && (c & 0x8000) == 0)
+                {
+                    throw new iTextSharp.IO.IOException("inconsistent.mapping");
+                }
+                if (c == 0)
+                {
+                    planes.Add(new char[256]);
+                    c = (char)(planes.Count - 1 | 0x8000);
+                    plane[one] = c;
+                }
+                nextPlane = c & 0x7fff;
+            }
+            char[] plane_1 = planes[nextPlane];
+            int one_1 = seq[size] & 0xff;
+            char c_1 = plane_1[one_1];
+            if ((c_1 & 0x8000) != 0)
+            {
+                throw new iTextSharp.IO.IOException("inconsistent.mapping");
+            }
+            plane_1[one_1] = cid;
+        }
+    }
 }

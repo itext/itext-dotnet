@@ -45,40 +45,40 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Layout
 {
-	public class TextLayoutResult : LayoutResult
-	{
-		protected internal bool wordHasBeenSplit;
+    public class TextLayoutResult : LayoutResult
+    {
+        protected internal bool wordHasBeenSplit;
 
-		protected internal bool splitForcedByNewline;
+        protected internal bool splitForcedByNewline;
 
-		public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
-			, IRenderer overflowRenderer)
-			: base(status, occupiedArea, splitRenderer, overflowRenderer)
-		{
-		}
+        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
+            , IRenderer overflowRenderer)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer)
+        {
+        }
 
-		public virtual bool IsWordHasBeenSplit()
-		{
-			return wordHasBeenSplit;
-		}
+        public virtual bool IsWordHasBeenSplit()
+        {
+            return wordHasBeenSplit;
+        }
 
-		public virtual iTextSharp.Layout.Layout.TextLayoutResult SetWordHasBeenSplit(bool
-			 wordHasBeenSplit)
-		{
-			this.wordHasBeenSplit = wordHasBeenSplit;
-			return this;
-		}
+        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetWordHasBeenSplit(bool
+             wordHasBeenSplit)
+        {
+            this.wordHasBeenSplit = wordHasBeenSplit;
+            return this;
+        }
 
-		public virtual bool IsSplitForcedByNewline()
-		{
-			return splitForcedByNewline;
-		}
+        public virtual bool IsSplitForcedByNewline()
+        {
+            return splitForcedByNewline;
+        }
 
-		public virtual iTextSharp.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(
-			bool isSplitForcedByNewline)
-		{
-			this.splitForcedByNewline = isSplitForcedByNewline;
-			return this;
-		}
-	}
+        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(
+            bool isSplitForcedByNewline)
+        {
+            this.splitForcedByNewline = isSplitForcedByNewline;
+            return this;
+        }
+    }
 }

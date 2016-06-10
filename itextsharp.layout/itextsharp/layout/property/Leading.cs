@@ -45,71 +45,71 @@ using System;
 
 namespace iTextSharp.Layout.Property
 {
-	/// <summary>
-	/// A specialized class that specifies the leading, "the vertical distance between
-	/// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
-	/// </summary>
-	/// <remarks>
-	/// A specialized class that specifies the leading, "the vertical distance between
-	/// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
-	/// Allows to use either an absolute (constant) leading value, or one
-	/// determined by font size. Pronounce as 'ledding' (cfr. Led Zeppelin).
-	/// This class is meant to be used as the value for the
-	/// <see cref="Property.LEADING"/>
-	/// key in an
-	/// <see cref="iTextSharp.Layout.IPropertyContainer"/>
-	/// .
-	/// </remarks>
-	public class Leading
-	{
-		/// <summary>A leading type independent of font size.</summary>
-		public const int FIXED = 1;
+    /// <summary>
+    /// A specialized class that specifies the leading, "the vertical distance between
+    /// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
+    /// </summary>
+    /// <remarks>
+    /// A specialized class that specifies the leading, "the vertical distance between
+    /// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
+    /// Allows to use either an absolute (constant) leading value, or one
+    /// determined by font size. Pronounce as 'ledding' (cfr. Led Zeppelin).
+    /// This class is meant to be used as the value for the
+    /// <see cref="Property.LEADING"/>
+    /// key in an
+    /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+    /// .
+    /// </remarks>
+    public class Leading
+    {
+        /// <summary>A leading type independent of font size.</summary>
+        public const int FIXED = 1;
 
-		/// <summary>A leading type related to the font size and the resulting bounding box.</summary>
-		public const int MULTIPLIED = 2;
+        /// <summary>A leading type related to the font size and the resulting bounding box.</summary>
+        public const int MULTIPLIED = 2;
 
-		protected internal int type;
+        protected internal int type;
 
-		protected internal float value;
+        protected internal float value;
 
-		/// <summary>Creates a Leading object.</summary>
-		/// <param name="type">
-		/// a constant type that defines the calculation of actual
-		/// leading distance. Either
-		/// <see cref="FIXED"/>
-		/// or
-		/// <see cref="MULTIPLIED"/>
-		/// </param>
-		/// <param name="value">to be used as a basis for the leading calculation.</param>
-		public Leading(int type, float value)
-		{
-			this.type = type;
-			this.value = value;
-		}
+        /// <summary>Creates a Leading object.</summary>
+        /// <param name="type">
+        /// a constant type that defines the calculation of actual
+        /// leading distance. Either
+        /// <see cref="FIXED"/>
+        /// or
+        /// <see cref="MULTIPLIED"/>
+        /// </param>
+        /// <param name="value">to be used as a basis for the leading calculation.</param>
+        public Leading(int type, float value)
+        {
+            this.type = type;
+            this.value = value;
+        }
 
-		/// <summary>Gets the calculation type of the Leading object.</summary>
-		/// <returns>
-		/// the calculation type. Either
-		/// <see cref="FIXED"/>
-		/// or
-		/// <see cref="MULTIPLIED"/>
-		/// </returns>
-		public virtual int GetLeadingType()
-		{
-			return type;
-		}
+        /// <summary>Gets the calculation type of the Leading object.</summary>
+        /// <returns>
+        /// the calculation type. Either
+        /// <see cref="FIXED"/>
+        /// or
+        /// <see cref="MULTIPLIED"/>
+        /// </returns>
+        public virtual int GetLeadingType()
+        {
+            return type;
+        }
 
-		/// <summary>Gets the value to be used as the basis for the leading calculation.</summary>
-		/// <returns>a calculation value</returns>
-		public virtual float GetValue()
-		{
-			return value;
-		}
+        /// <summary>Gets the value to be used as the basis for the leading calculation.</summary>
+        /// <returns>a calculation value</returns>
+        public virtual float GetValue()
+        {
+            return value;
+        }
 
-		public override bool Equals(Object obj)
-		{
-			return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading
-				)obj).type && value == ((iTextSharp.Layout.Property.Leading)obj).value;
-		}
-	}
+        public override bool Equals(Object obj)
+        {
+            return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading
+                )obj).type && value == ((iTextSharp.Layout.Property.Leading)obj).value;
+        }
+    }
 }

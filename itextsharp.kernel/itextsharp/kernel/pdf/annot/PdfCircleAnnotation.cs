@@ -46,21 +46,21 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfCircleAnnotation : PdfMarkupAnnotation
-	{
-		public PdfCircleAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfCircleAnnotation : PdfMarkupAnnotation
+    {
+        public PdfCircleAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfCircleAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfCircleAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Circle;
-		}
-	}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Circle;
+        }
+    }
 }

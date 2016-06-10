@@ -45,61 +45,61 @@ using System;
 
 namespace iTextSharp.Kernel.Crypto
 {
-	public class AesDecryptor : IDecryptor
-	{
-		private AESCipher cipher;
+    public class AesDecryptor : IDecryptor
+    {
+        private AESCipher cipher;
 
-		private byte[] key;
+        private byte[] key;
 
-		private bool initiated;
+        private bool initiated;
 
-		private byte[] iv = new byte[16];
+        private byte[] iv = new byte[16];
 
-		private int ivptr;
+        private int ivptr;
 
-		/// <summary>Creates a new instance of AesDecryption</summary>
-		public AesDecryptor(byte[] key, int off, int len)
-		{
-			this.key = new byte[len];
-			System.Array.Copy(key, off, this.key, 0, len);
-		}
+        /// <summary>Creates a new instance of AesDecryption</summary>
+        public AesDecryptor(byte[] key, int off, int len)
+        {
+            this.key = new byte[len];
+            System.Array.Copy(key, off, this.key, 0, len);
+        }
 
-		public virtual byte[] Update(byte[] b, int off, int len)
-		{
-			if (initiated)
-			{
-				return cipher.Update(b, off, len);
-			}
-			else
-			{
-				int left = Math.Min(iv.Length - ivptr, len);
-				System.Array.Copy(b, off, iv, ivptr, left);
-				off += left;
-				len -= left;
-				ivptr += left;
-				if (ivptr == iv.Length)
-				{
-					cipher = new AESCipher(false, key, iv);
-					initiated = true;
-					if (len > 0)
-					{
-						return cipher.Update(b, off, len);
-					}
-				}
-				return null;
-			}
-		}
+        public virtual byte[] Update(byte[] b, int off, int len)
+        {
+            if (initiated)
+            {
+                return cipher.Update(b, off, len);
+            }
+            else
+            {
+                int left = Math.Min(iv.Length - ivptr, len);
+                System.Array.Copy(b, off, iv, ivptr, left);
+                off += left;
+                len -= left;
+                ivptr += left;
+                if (ivptr == iv.Length)
+                {
+                    cipher = new AESCipher(false, key, iv);
+                    initiated = true;
+                    if (len > 0)
+                    {
+                        return cipher.Update(b, off, len);
+                    }
+                }
+                return null;
+            }
+        }
 
-		public virtual byte[] Finish()
-		{
-			if (cipher != null)
-			{
-				return cipher.DoFinal();
-			}
-			else
-			{
-				return null;
-			}
-		}
-	}
+        public virtual byte[] Finish()
+        {
+            if (cipher != null)
+            {
+                return cipher.DoFinal();
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
 }

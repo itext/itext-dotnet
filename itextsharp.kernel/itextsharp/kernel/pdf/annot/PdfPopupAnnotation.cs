@@ -46,41 +46,41 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfPopupAnnotation : PdfAnnotation
-	{
-		protected internal PdfAnnotation parent;
+    public class PdfPopupAnnotation : PdfAnnotation
+    {
+        protected internal PdfAnnotation parent;
 
-		public PdfPopupAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+        public PdfPopupAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfPopupAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfPopupAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Popup;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Popup;
+        }
 
-		public virtual PdfDictionary GetParentObject()
-		{
-			return GetPdfObject().GetAsDictionary(PdfName.Parent);
-		}
+        public virtual PdfDictionary GetParentObject()
+        {
+            return GetPdfObject().GetAsDictionary(PdfName.Parent);
+        }
 
-		public virtual PdfAnnotation GetParent()
-		{
-			return parent;
-		}
+        public virtual PdfAnnotation GetParent()
+        {
+            return parent;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation
-			 parent)
-		{
-			this.parent = parent;
-			return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent
-				.GetPdfObject());
-		}
-	}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation
+             parent)
+        {
+            this.parent = parent;
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent
+                .GetPdfObject());
+        }
+    }
 }

@@ -46,70 +46,70 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class Pdf3DAnnotation : PdfAnnotation
-	{
-		public Pdf3DAnnotation(Rectangle rect, PdfObject artwork)
-			: base(rect)
-		{
-			Put(PdfName._3DD, artwork);
-		}
+    public class Pdf3DAnnotation : PdfAnnotation
+    {
+        public Pdf3DAnnotation(Rectangle rect, PdfObject artwork)
+            : base(rect)
+        {
+            Put(PdfName._3DD, artwork);
+        }
 
-		public Pdf3DAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public Pdf3DAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName._3D;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName._3D;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(
-			PdfObject initialView)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(
+            PdfObject initialView)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView
+                );
+        }
 
-		public virtual PdfObject GetDefaultInitialView()
-		{
-			return GetPdfObject().Get(PdfName._3DV);
-		}
+        public virtual PdfObject GetDefaultInitialView()
+        {
+            return GetPdfObject().Get(PdfName._3DV);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary
-			(PdfDictionary activationDictionary)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary
+            (PdfDictionary activationDictionary)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary
+                );
+        }
 
-		public virtual PdfDictionary GetActivationDictionary()
-		{
-			return GetPdfObject().GetAsDictionary(PdfName._3DA);
-		}
+        public virtual PdfDictionary GetActivationDictionary()
+        {
+            return GetPdfObject().GetAsDictionary(PdfName._3DA);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive
-			)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean
-				(interactive));
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive
+            )
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean
+                (interactive));
+        }
 
-		public virtual PdfBoolean IsInteractive()
-		{
-			return GetPdfObject().GetAsBoolean(PdfName._3DI);
-		}
+        public virtual PdfBoolean IsInteractive()
+        {
+            return GetPdfObject().GetAsBoolean(PdfName._3DI);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox
-			)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray
-				(viewBox));
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox
+            )
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray
+                (viewBox));
+        }
 
-		public virtual Rectangle GetViewBox()
-		{
-			return GetPdfObject().GetAsRectangle(PdfName._3DB);
-		}
-	}
+        public virtual Rectangle GetViewBox()
+        {
+            return GetPdfObject().GetAsRectangle(PdfName._3DB);
+        }
+    }
 }

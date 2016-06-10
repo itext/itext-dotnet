@@ -45,55 +45,55 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Colorspace
 {
-	public abstract class PdfDeviceCs : PdfColorSpace
-	{
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
+    public abstract class PdfDeviceCs : PdfColorSpace
+    {
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
 
-		protected internal PdfDeviceCs(PdfName pdfObject)
-			: base(pdfObject)
-		{
-		}
+        protected internal PdfDeviceCs(PdfName pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public class Gray : PdfDeviceCs
-		{
-			public Gray()
-				: base(PdfName.DeviceGray)
-			{
-			}
+        public class Gray : PdfDeviceCs
+        {
+            public Gray()
+                : base(PdfName.DeviceGray)
+            {
+            }
 
-			public override int GetNumberOfComponents()
-			{
-				return 1;
-			}
-		}
+            public override int GetNumberOfComponents()
+            {
+                return 1;
+            }
+        }
 
-		public class Rgb : PdfDeviceCs
-		{
-			public Rgb()
-				: base(PdfName.DeviceRGB)
-			{
-			}
+        public class Rgb : PdfDeviceCs
+        {
+            public Rgb()
+                : base(PdfName.DeviceRGB)
+            {
+            }
 
-			public override int GetNumberOfComponents()
-			{
-				return 3;
-			}
-		}
+            public override int GetNumberOfComponents()
+            {
+                return 3;
+            }
+        }
 
-		public class Cmyk : PdfDeviceCs
-		{
-			public Cmyk()
-				: base(PdfName.DeviceCMYK)
-			{
-			}
+        public class Cmyk : PdfDeviceCs
+        {
+            public Cmyk()
+                : base(PdfName.DeviceCMYK)
+            {
+            }
 
-			public override int GetNumberOfComponents()
-			{
-				return 4;
-			}
-		}
-	}
+            public override int GetNumberOfComponents()
+            {
+                return 4;
+            }
+        }
+    }
 }

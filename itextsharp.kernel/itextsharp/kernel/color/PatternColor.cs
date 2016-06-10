@@ -46,67 +46,67 @@ using iTextSharp.Kernel.Pdf.Colorspace;
 
 namespace iTextSharp.Kernel.Color
 {
-	public class PatternColor : iTextSharp.Kernel.Color.Color
-	{
-		private PdfPattern pattern;
+    public class PatternColor : iTextSharp.Kernel.Color.Color
+    {
+        private PdfPattern pattern;
 
-		private iTextSharp.Kernel.Color.Color underlyingColor;
+        private iTextSharp.Kernel.Color.Color underlyingColor;
 
-		public PatternColor(PdfPattern coloredPattern)
-			: base(new PdfSpecialCs.Pattern(), null)
-		{
-			// The underlying color for uncolored patterns. Will be null for colored ones.
-			this.pattern = coloredPattern;
-		}
+        public PatternColor(PdfPattern coloredPattern)
+            : base(new PdfSpecialCs.Pattern(), null)
+        {
+            // The underlying color for uncolored patterns. Will be null for colored ones.
+            this.pattern = coloredPattern;
+        }
 
-		public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color
-			 color)
-			: this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue())
-		{
-		}
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color
+             color)
+            : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue())
+        {
+        }
 
-		public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS
-			, float[] colorValue)
-			: base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue)
-		{
-			if (underlyingCS is PdfSpecialCs.Pattern)
-			{
-				throw new ArgumentException("underlyingCS");
-			}
-			this.pattern = uncoloredPattern;
-			this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(underlyingCS, colorValue
-				);
-		}
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS
+            , float[] colorValue)
+            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue)
+        {
+            if (underlyingCS is PdfSpecialCs.Pattern)
+            {
+                throw new ArgumentException("underlyingCS");
+            }
+            this.pattern = uncoloredPattern;
+            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(underlyingCS, colorValue
+                );
+        }
 
-		public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern
-			 uncoloredTilingCS, float[] colorValue)
-			: base(uncoloredTilingCS, colorValue)
-		{
-			this.pattern = uncoloredPattern;
-			this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.
-				GetUnderlyingColorSpace(), colorValue);
-		}
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern
+             uncoloredTilingCS, float[] colorValue)
+            : base(uncoloredTilingCS, colorValue)
+        {
+            this.pattern = uncoloredPattern;
+            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.
+                GetUnderlyingColorSpace(), colorValue);
+        }
 
-		public virtual PdfPattern GetPattern()
-		{
-			return pattern;
-		}
+        public virtual PdfPattern GetPattern()
+        {
+            return pattern;
+        }
 
-		public virtual void SetPattern(PdfPattern pattern)
-		{
-			this.pattern = pattern;
-		}
+        public virtual void SetPattern(PdfPattern pattern)
+        {
+            this.pattern = pattern;
+        }
 
-		public override bool Equals(Object o)
-		{
-			if (!base.Equals(o))
-			{
-				return false;
-			}
-			iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor
-				)o;
-			return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor
-				.Equals(color.underlyingColor) : color.underlyingColor == null);
-		}
-	}
+        public override bool Equals(Object o)
+        {
+            if (!base.Equals(o))
+            {
+                return false;
+            }
+            iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor
+                )o;
+            return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor
+                .Equals(color.underlyingColor) : color.underlyingColor == null);
+        }
+    }
 }

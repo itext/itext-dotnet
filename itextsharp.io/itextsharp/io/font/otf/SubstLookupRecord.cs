@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Font.Otf
 {
-	public class SubstLookupRecord
-	{
-		internal int sequenceIndex;
+    public class SubstLookupRecord
+    {
+        internal int sequenceIndex;
 
-		internal int lookupListIndex;
-	}
+        internal int lookupListIndex;
+    }
 }

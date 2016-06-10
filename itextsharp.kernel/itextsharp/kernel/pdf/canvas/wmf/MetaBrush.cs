@@ -45,75 +45,75 @@ using iTextSharp.Kernel.Color;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
-	/// <summary>
-	/// A Brush bject that holds information about the style, the hatch and the color of
-	/// the brush.
-	/// </summary>
-	public class MetaBrush : MetaObject
-	{
-		public const int BS_SOLID = 0;
+    /// <summary>
+    /// A Brush bject that holds information about the style, the hatch and the color of
+    /// the brush.
+    /// </summary>
+    public class MetaBrush : MetaObject
+    {
+        public const int BS_SOLID = 0;
 
-		public const int BS_NULL = 1;
+        public const int BS_NULL = 1;
 
-		public const int BS_HATCHED = 2;
+        public const int BS_HATCHED = 2;
 
-		public const int BS_PATTERN = 3;
+        public const int BS_PATTERN = 3;
 
-		public const int BS_DIBPATTERN = 5;
+        public const int BS_DIBPATTERN = 5;
 
-		public const int HS_HORIZONTAL = 0;
+        public const int HS_HORIZONTAL = 0;
 
-		public const int HS_VERTICAL = 1;
+        public const int HS_VERTICAL = 1;
 
-		public const int HS_FDIAGONAL = 2;
+        public const int HS_FDIAGONAL = 2;
 
-		public const int HS_BDIAGONAL = 3;
+        public const int HS_BDIAGONAL = 3;
 
-		public const int HS_CROSS = 4;
+        public const int HS_CROSS = 4;
 
-		public const int HS_DIAGCROSS = 5;
+        public const int HS_DIAGCROSS = 5;
 
-		internal int style = BS_SOLID;
+        internal int style = BS_SOLID;
 
-		internal int hatch;
+        internal int hatch;
 
-		internal iTextSharp.Kernel.Color.Color color = DeviceRgb.WHITE;
+        internal iTextSharp.Kernel.Color.Color color = DeviceRgb.WHITE;
 
-		/// <summary>Creates a MetaBrush object.</summary>
-		public MetaBrush()
-			: base(META_BRUSH)
-		{
-		}
+        /// <summary>Creates a MetaBrush object.</summary>
+        public MetaBrush()
+            : base(META_BRUSH)
+        {
+        }
 
-		/// <summary>Initializes this MetaBrush object.</summary>
-		/// <param name="in">the InputMeta</param>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Init(InputMeta @in)
-		{
-			style = @in.ReadWord();
-			color = @in.ReadColor();
-			hatch = @in.ReadWord();
-		}
+        /// <summary>Initializes this MetaBrush object.</summary>
+        /// <param name="in">the InputMeta</param>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Init(InputMeta @in)
+        {
+            style = @in.ReadWord();
+            color = @in.ReadColor();
+            hatch = @in.ReadWord();
+        }
 
-		/// <summary>Get the style of the MetaBrush.</summary>
-		/// <returns>style of the brush</returns>
-		public virtual int GetStyle()
-		{
-			return style;
-		}
+        /// <summary>Get the style of the MetaBrush.</summary>
+        /// <returns>style of the brush</returns>
+        public virtual int GetStyle()
+        {
+            return style;
+        }
 
-		/// <summary>Get the hatch pattern of the MetaBrush</summary>
-		/// <returns>hatch of the brush</returns>
-		public virtual int GetHatch()
-		{
-			return hatch;
-		}
+        /// <summary>Get the hatch pattern of the MetaBrush</summary>
+        /// <returns>hatch of the brush</returns>
+        public virtual int GetHatch()
+        {
+            return hatch;
+        }
 
-		/// <summary>Get the color of the MetaBrush.</summary>
-		/// <returns>color of the brush</returns>
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
-	}
+        /// <summary>Get the color of the MetaBrush.</summary>
+        /// <returns>color of the brush</returns>
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
+    }
 }

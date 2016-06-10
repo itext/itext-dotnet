@@ -48,48 +48,48 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Barcodes
 {
-	public abstract class Barcode2D
-	{
-		protected internal const float DEFAULT_MODULE_SIZE = 1;
+    public abstract class Barcode2D
+    {
+        protected internal const float DEFAULT_MODULE_SIZE = 1;
 
-		/// <summary>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy.
-		/// </summary>
-		/// <remarks>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy. The lower left corner is always (0, 0).
-		/// </remarks>
-		/// <returns>the size the barcode occupies.</returns>
-		public abstract Rectangle GetBarcodeSize();
+        /// <summary>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy.
+        /// </summary>
+        /// <remarks>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy. The lower left corner is always (0, 0).
+        /// </remarks>
+        /// <returns>the size the barcode occupies.</returns>
+        public abstract Rectangle GetBarcodeSize();
 
-		/// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
-		/// <remarks>
-		/// Places the barcode in a <CODE>PdfCanvas</CODE>. The
-		/// barcode is always placed at coordinates (0, 0). Use the
-		/// translation matrix to move it elsewhere.
-		/// </remarks>
-		/// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-		/// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
-		/// <returns>the dimensions the barcode occupies</returns>
-		public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 foreground);
+        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <remarks>
+        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// barcode is always placed at coordinates (0, 0). Use the
+        /// translation matrix to move it elsewhere.
+        /// </remarks>
+        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
+        /// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
+        /// <returns>the dimensions the barcode occupies</returns>
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             foreground);
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <remarks>
-		/// Creates a PdfFormXObject with the barcode.
-		/// Default foreground color will be used.
-		/// </remarks>
-		/// <returns>the XObject.</returns>
-		public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
-		{
-			return CreateFormXObject(null, document);
-		}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <remarks>
+        /// Creates a PdfFormXObject with the barcode.
+        /// Default foreground color will be used.
+        /// </remarks>
+        /// <returns>the XObject.</returns>
+        public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
+        {
+            return CreateFormXObject(null, document);
+        }
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-		/// <returns>the XObject.</returns>
-		public abstract PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
-			, PdfDocument document);
-	}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
+        /// <returns>the XObject.</returns>
+        public abstract PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+            , PdfDocument document);
+    }
 }

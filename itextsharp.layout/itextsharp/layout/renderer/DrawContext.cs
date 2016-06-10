@@ -46,44 +46,44 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class DrawContext
-	{
-		private PdfDocument document;
+    public class DrawContext
+    {
+        private PdfDocument document;
 
-		private PdfCanvas canvas;
+        private PdfCanvas canvas;
 
-		private bool taggingEnabled;
+        private bool taggingEnabled;
 
-		public DrawContext(PdfDocument document, PdfCanvas canvas)
-			: this(document, canvas, false)
-		{
-		}
+        public DrawContext(PdfDocument document, PdfCanvas canvas)
+            : this(document, canvas, false)
+        {
+        }
 
-		public DrawContext(PdfDocument document, PdfCanvas canvas, bool enableTagging)
-		{
-			this.document = document;
-			this.canvas = canvas;
-			this.taggingEnabled = enableTagging;
-		}
+        public DrawContext(PdfDocument document, PdfCanvas canvas, bool enableTagging)
+        {
+            this.document = document;
+            this.canvas = canvas;
+            this.taggingEnabled = enableTagging;
+        }
 
-		public virtual PdfDocument GetDocument()
-		{
-			return document;
-		}
+        public virtual PdfDocument GetDocument()
+        {
+            return document;
+        }
 
-		public virtual PdfCanvas GetCanvas()
-		{
-			return canvas;
-		}
+        public virtual PdfCanvas GetCanvas()
+        {
+            return canvas;
+        }
 
-		public virtual bool IsTaggingEnabled()
-		{
-			return taggingEnabled;
-		}
+        public virtual bool IsTaggingEnabled()
+        {
+            return taggingEnabled;
+        }
 
-		public virtual void SetTaggingEnabled(bool taggingEnabled)
-		{
-			this.taggingEnabled = taggingEnabled;
-		}
-	}
+        public virtual void SetTaggingEnabled(bool taggingEnabled)
+        {
+            this.taggingEnabled = taggingEnabled;
+        }
+    }
 }

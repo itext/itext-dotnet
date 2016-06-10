@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum TextAlignment
-	{
-		LEFT,
-		CENTER,
-		RIGHT,
-		JUSTIFIED,
-		JUSTIFIED_ALL
-	}
+    public enum TextAlignment
+    {
+        LEFT,
+        CENTER,
+        RIGHT,
+        JUSTIFIED,
+        JUSTIFIED_ALL
+    }
 }

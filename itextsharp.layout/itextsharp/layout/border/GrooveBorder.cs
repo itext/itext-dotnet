@@ -46,73 +46,73 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Border
 {
-	public class GrooveBorder : Border3D
-	{
-		public GrooveBorder(float width)
-			: base(width)
-		{
-		}
+    public class GrooveBorder : Border3D
+    {
+        public GrooveBorder(float width)
+            : base(width)
+        {
+        }
 
-		public GrooveBorder(DeviceRgb color, float width)
-			: base(color, width)
-		{
-		}
+        public GrooveBorder(DeviceRgb color, float width)
+            : base(color, width)
+        {
+        }
 
-		public GrooveBorder(DeviceCmyk color, float width)
-			: base(color, width)
-		{
-		}
+        public GrooveBorder(DeviceCmyk color, float width)
+            : base(color, width)
+        {
+        }
 
-		public GrooveBorder(DeviceGray color, float width)
-			: base(color, width)
-		{
-		}
+        public GrooveBorder(DeviceGray color, float width)
+            : base(color, width)
+        {
+        }
 
-		public override int GetBorderType()
-		{
-			return iTextSharp.Layout.Border.Border._3D_GROOVE;
-		}
+        public override int GetBorderType()
+        {
+            return iTextSharp.Layout.Border.Border._3D_GROOVE;
+        }
 
-		protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side 
-			side)
-		{
-			switch (side)
-			{
-				case Border.Side.TOP:
-				case Border.Side.LEFT:
-				{
-					canvas.SetFillColor(GetColor());
-					break;
-				}
+        protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side 
+            side)
+        {
+            switch (side)
+            {
+                case Border.Side.TOP:
+                case Border.Side.LEFT:
+                {
+                    canvas.SetFillColor(GetColor());
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				case Border.Side.RIGHT:
-				{
-					canvas.SetFillColor(GetDarkerColor());
-					break;
-				}
-			}
-		}
+                case Border.Side.BOTTOM:
+                case Border.Side.RIGHT:
+                {
+                    canvas.SetFillColor(GetDarkerColor());
+                    break;
+                }
+            }
+        }
 
-		protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side 
-			side)
-		{
-			switch (side)
-			{
-				case Border.Side.TOP:
-				case Border.Side.LEFT:
-				{
-					canvas.SetFillColor(GetDarkerColor());
-					break;
-				}
+        protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side 
+            side)
+        {
+            switch (side)
+            {
+                case Border.Side.TOP:
+                case Border.Side.LEFT:
+                {
+                    canvas.SetFillColor(GetDarkerColor());
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				case Border.Side.RIGHT:
-				{
-					canvas.SetFillColor(GetColor());
-					break;
-				}
-			}
-		}
-	}
+                case Border.Side.BOTTOM:
+                case Border.Side.RIGHT:
+                {
+                    canvas.SetFillColor(GetColor());
+                    break;
+                }
+            }
+        }
+    }
 }

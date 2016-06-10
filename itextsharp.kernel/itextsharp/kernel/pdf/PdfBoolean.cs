@@ -46,113 +46,113 @@ using iTextSharp.IO.Source;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfBoolean : PdfPrimitiveObject
-	{
-		public static readonly iTextSharp.Kernel.Pdf.PdfBoolean TRUE = new iTextSharp.Kernel.Pdf.PdfBoolean
-			(true, true);
+    public class PdfBoolean : PdfPrimitiveObject
+    {
+        public static readonly iTextSharp.Kernel.Pdf.PdfBoolean TRUE = new iTextSharp.Kernel.Pdf.PdfBoolean
+            (true, true);
 
-		public static readonly iTextSharp.Kernel.Pdf.PdfBoolean FALSE = new iTextSharp.Kernel.Pdf.PdfBoolean
-			(false, true);
+        public static readonly iTextSharp.Kernel.Pdf.PdfBoolean FALSE = new iTextSharp.Kernel.Pdf.PdfBoolean
+            (false, true);
 
-		private static readonly byte[] True = ByteUtils.GetIsoBytes("true");
+        private static readonly byte[] True = ByteUtils.GetIsoBytes("true");
 
-		private static readonly byte[] False = ByteUtils.GetIsoBytes("false");
+        private static readonly byte[] False = ByteUtils.GetIsoBytes("false");
 
-		private bool value;
+        private bool value;
 
-		public PdfBoolean(bool value)
-			: this(value, false)
-		{
-		}
+        public PdfBoolean(bool value)
+            : this(value, false)
+        {
+        }
 
-		private PdfBoolean(bool value, bool directOnly)
-			: base(directOnly)
-		{
-			this.value = value;
-		}
+        private PdfBoolean(bool value, bool directOnly)
+            : base(directOnly)
+        {
+            this.value = value;
+        }
 
-		private PdfBoolean()
-			: base()
-		{
-		}
+        private PdfBoolean()
+            : base()
+        {
+        }
 
-		public virtual bool GetValue()
-		{
-			return value;
-		}
+        public virtual bool GetValue()
+        {
+            return value;
+        }
 
-		public override byte GetObjectType()
-		{
-			return BOOLEAN;
-		}
+        public override byte GetObjectType()
+        {
+            return BOOLEAN;
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-			 reference)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document, reference);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
+             reference)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document, reference);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, true);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, true);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <param name="allowDuplicating">
-		/// indicates if to allow copy objects which already have been copied.
-		/// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-		/// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-		/// </param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, allowDuplicating);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="allowDuplicating">
+        /// indicates if to allow copy objects which already have been copied.
+        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
+        /// </param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, allowDuplicating);
+        }
 
-		public override String ToString()
-		{
-			return value ? "true" : "false";
-		}
+        public override String ToString()
+        {
+            return value ? "true" : "false";
+        }
 
-		protected internal override void GenerateContent()
-		{
-			content = value ? True : False;
-		}
+        protected internal override void GenerateContent()
+        {
+            content = value ? True : False;
+        }
 
-		protected internal override PdfObject NewInstance()
-		{
-			return new iTextSharp.Kernel.Pdf.PdfBoolean();
-		}
+        protected internal override PdfObject NewInstance()
+        {
+            return new iTextSharp.Kernel.Pdf.PdfBoolean();
+        }
 
-		protected internal override void CopyContent(PdfObject from, PdfDocument document
-			)
-		{
-			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfBoolean @bool = (iTextSharp.Kernel.Pdf.PdfBoolean)from;
-			value = @bool.value;
-		}
-	}
+        protected internal override void CopyContent(PdfObject from, PdfDocument document
+            )
+        {
+            base.CopyContent(from, document);
+            iTextSharp.Kernel.Pdf.PdfBoolean @bool = (iTextSharp.Kernel.Pdf.PdfBoolean)from;
+            value = @bool.value;
+        }
+    }
 }

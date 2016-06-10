@@ -47,104 +47,104 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Barcodes
 {
-	public class BarcodeEANSUPP : Barcode1D
-	{
-		/// <summary>The barcode with the EAN/UPC.</summary>
-		protected internal Barcode1D ean;
+    public class BarcodeEANSUPP : Barcode1D
+    {
+        /// <summary>The barcode with the EAN/UPC.</summary>
+        protected internal Barcode1D ean;
 
-		/// <summary>The barcode with the supplemental.</summary>
-		protected internal Barcode1D supp;
+        /// <summary>The barcode with the supplemental.</summary>
+        protected internal Barcode1D supp;
 
-		/// <summary>Creates new combined barcode.</summary>
-		/// <param name="ean">the EAN/UPC barcode</param>
-		/// <param name="supp">the supplemental barcode</param>
-		public BarcodeEANSUPP(Barcode1D ean, Barcode1D supp)
-			: base(ean.document)
-		{
-			n = 8;
-			// horizontal distance between the two barcodes
-			this.ean = ean;
-			this.supp = supp;
-		}
+        /// <summary>Creates new combined barcode.</summary>
+        /// <param name="ean">the EAN/UPC barcode</param>
+        /// <param name="supp">the supplemental barcode</param>
+        public BarcodeEANSUPP(Barcode1D ean, Barcode1D supp)
+            : base(ean.document)
+        {
+            n = 8;
+            // horizontal distance between the two barcodes
+            this.ean = ean;
+            this.supp = supp;
+        }
 
-		/// <summary>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy.
-		/// </summary>
-		/// <remarks>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy. The lower left corner is always (0, 0).
-		/// </remarks>
-		/// <returns>the size the barcode occupies.</returns>
-		public override Rectangle GetBarcodeSize()
-		{
-			Rectangle rect = ean.GetBarcodeSize();
-			rect.SetWidth(rect.GetWidth() + supp.GetBarcodeSize().GetWidth() + n);
-			return rect;
-		}
+        /// <summary>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy.
+        /// </summary>
+        /// <remarks>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy. The lower left corner is always (0, 0).
+        /// </remarks>
+        /// <returns>the size the barcode occupies.</returns>
+        public override Rectangle GetBarcodeSize()
+        {
+            Rectangle rect = ean.GetBarcodeSize();
+            rect.SetWidth(rect.GetWidth() + supp.GetBarcodeSize().GetWidth() + n);
+            return rect;
+        }
 
-		/// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
-		/// <remarks>
-		/// Places the barcode in a <CODE>PdfCanvas</CODE>. The
-		/// barcode is always placed at coordinates (0, 0). Use the
-		/// translation matrix to move it elsewhere.<p>
-		/// The bars and text are written in the following colors:<p>
-		/// <P><TABLE BORDER=1>
-		/// <TR>
-		/// <TH><P><CODE>barColor</CODE></TH>
-		/// <TH><P><CODE>textColor</CODE></TH>
-		/// <TH><P>Result</TH>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with current fill color</TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// </TABLE>
-		/// </remarks>
-		/// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
-		/// <returns>the dimensions the barcode occupies</returns>
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 barColor, iTextSharp.Kernel.Color.Color textColor)
-		{
-			if (supp.GetFont() != null)
-			{
-				float sizeCoef = supp.GetSize() / FontProgram.UNITS_NORMALIZATION;
-				supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram
-					().GetFontMetrics().GetCapHeight() * sizeCoef);
-			}
-			else
-			{
-				supp.SetBarHeight(ean.GetBarHeight());
-			}
-			Rectangle eanR = ean.GetBarcodeSize();
-			canvas.SaveState();
-			ean.PlaceBarcode(canvas, barColor, textColor);
-			canvas.RestoreState();
-			canvas.SaveState();
-			canvas.ConcatMatrix(1, 0, 0, 1, eanR.GetWidth() + n, eanR.GetHeight() - ean.GetBarHeight
-				());
-			supp.PlaceBarcode(canvas, barColor, textColor);
-			canvas.RestoreState();
-			return GetBarcodeSize();
-		}
-		// AWT related methods (remove this if you port to Android / GAE)
-	}
+        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <remarks>
+        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// barcode is always placed at coordinates (0, 0). Use the
+        /// translation matrix to move it elsewhere.<p>
+        /// The bars and text are written in the following colors:<p>
+        /// <P><TABLE BORDER=1>
+        /// <TR>
+        /// <TH><P><CODE>barColor</CODE></TH>
+        /// <TH><P><CODE>textColor</CODE></TH>
+        /// <TH><P>Result</TH>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with current fill color</TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// </TABLE>
+        /// </remarks>
+        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
+        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <returns>the dimensions the barcode occupies</returns>
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             barColor, iTextSharp.Kernel.Color.Color textColor)
+        {
+            if (supp.GetFont() != null)
+            {
+                float sizeCoef = supp.GetSize() / FontProgram.UNITS_NORMALIZATION;
+                supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram
+                    ().GetFontMetrics().GetCapHeight() * sizeCoef);
+            }
+            else
+            {
+                supp.SetBarHeight(ean.GetBarHeight());
+            }
+            Rectangle eanR = ean.GetBarcodeSize();
+            canvas.SaveState();
+            ean.PlaceBarcode(canvas, barColor, textColor);
+            canvas.RestoreState();
+            canvas.SaveState();
+            canvas.ConcatMatrix(1, 0, 0, 1, eanR.GetWidth() + n, eanR.GetHeight() - ean.GetBarHeight
+                ());
+            supp.PlaceBarcode(canvas, barColor, textColor);
+            canvas.RestoreState();
+            return GetBarcodeSize();
+        }
+        // AWT related methods (remove this if you port to Android / GAE)
+    }
 }

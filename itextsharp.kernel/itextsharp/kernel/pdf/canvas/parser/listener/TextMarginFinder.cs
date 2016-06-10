@@ -50,52 +50,52 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-	/// <summary>This class allows you to find the rectangle which contains all the text in the given content stream.
-	/// 	</summary>
-	public class TextMarginFinder : IEventListener
-	{
-		private Rectangle textRectangle = null;
+    /// <summary>This class allows you to find the rectangle which contains all the text in the given content stream.
+    ///     </summary>
+    public class TextMarginFinder : IEventListener
+    {
+        private Rectangle textRectangle = null;
 
-		public virtual void EventOccurred(IEventData data, EventType type)
-		{
-			if (type == EventType.RENDER_TEXT)
-			{
-				TextRenderInfo info = (TextRenderInfo)data;
-				if (textRectangle == null)
-				{
-					textRectangle = info.GetDescentLine().GetBoundingRectange();
-				}
-				else
-				{
-					textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine()
-						.GetBoundingRectange());
-				}
-				textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().
-					GetBoundingRectange());
-			}
-			else
-			{
-				throw new InvalidOperationException(String.Format("Event type not supported: {0}"
-					, type));
-			}
-		}
+        public virtual void EventOccurred(IEventData data, EventType type)
+        {
+            if (type == EventType.RENDER_TEXT)
+            {
+                TextRenderInfo info = (TextRenderInfo)data;
+                if (textRectangle == null)
+                {
+                    textRectangle = info.GetDescentLine().GetBoundingRectange();
+                }
+                else
+                {
+                    textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine()
+                        .GetBoundingRectange());
+                }
+                textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().
+                    GetBoundingRectange());
+            }
+            else
+            {
+                throw new InvalidOperationException(String.Format("Event type not supported: {0}"
+                    , type));
+            }
+        }
 
-		public virtual ICollection<EventType> GetSupportedEvents()
-		{
-			return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
-				));
-		}
+        public virtual ICollection<EventType> GetSupportedEvents()
+        {
+            return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
+                ));
+        }
 
-		/// <summary>
-		/// Returns the common text rectangle, containing all the text found in the stream so far, ot
-		/// <see langword="null"/>
-		/// , if no
-		/// text has been found yet.
-		/// </summary>
-		/// <returns>common text rectangle</returns>
-		public virtual Rectangle GetTextRectangle()
-		{
-			return textRectangle;
-		}
-	}
+        /// <summary>
+        /// Returns the common text rectangle, containing all the text found in the stream so far, ot
+        /// <see langword="null"/>
+        /// , if no
+        /// text has been found yet.
+        /// </summary>
+        /// <returns>common text rectangle</returns>
+        public virtual Rectangle GetTextRectangle()
+        {
+            return textRectangle;
+        }
+    }
 }

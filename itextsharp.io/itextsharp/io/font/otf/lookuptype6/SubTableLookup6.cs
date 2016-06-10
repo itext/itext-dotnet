@@ -46,72 +46,72 @@ using iTextSharp.IO.Font.Otf;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
-	public abstract class SubTableLookup6 : ContextualSubTable
-	{
-		protected internal SubTableLookup6(OpenTypeFontTableReader openReader, int lookupFlag
-			)
-			: base(openReader, lookupFlag)
-		{
-		}
+    public abstract class SubTableLookup6 : ContextualSubTable
+    {
+        protected internal SubTableLookup6(OpenTypeFontTableReader openReader, int lookupFlag
+            )
+            : base(openReader, lookupFlag)
+        {
+        }
 
-		public override ContextualSubstRule GetMatchingContextRule(GlyphLine line)
-		{
-			if (line.idx >= line.end)
-			{
-				return null;
-			}
-			Glyph g = line.Get(line.idx);
-			IList<ContextualSubstRule> rules = GetSetOfRulesForStartGlyph(g.GetCode());
-			foreach (ContextualSubstRule rule in rules)
-			{
-				int lastGlyphIndex = CheckIfContextMatch(line, rule);
-				if (lastGlyphIndex != -1 && CheckIfLookaheadContextMatch(line, rule, lastGlyphIndex
-					) && CheckIfBacktrackContextMatch(line, rule))
-				{
-					line.start = line.idx;
-					line.end = lastGlyphIndex + 1;
-					return rule;
-				}
-			}
-			return null;
-		}
+        public override ContextualSubstRule GetMatchingContextRule(GlyphLine line)
+        {
+            if (line.idx >= line.end)
+            {
+                return null;
+            }
+            Glyph g = line.Get(line.idx);
+            IList<ContextualSubstRule> rules = GetSetOfRulesForStartGlyph(g.GetCode());
+            foreach (ContextualSubstRule rule in rules)
+            {
+                int lastGlyphIndex = CheckIfContextMatch(line, rule);
+                if (lastGlyphIndex != -1 && CheckIfLookaheadContextMatch(line, rule, lastGlyphIndex
+                    ) && CheckIfBacktrackContextMatch(line, rule))
+                {
+                    line.start = line.idx;
+                    line.end = lastGlyphIndex + 1;
+                    return rule;
+                }
+            }
+            return null;
+        }
 
-		/// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-		protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, ContextualSubstRule
-			 rule, int startIdx)
-		{
-			int j;
-			OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-			gidx.line = line;
-			gidx.idx = startIdx;
-			for (j = 0; j < rule.GetLookaheadContextLength(); ++j)
-			{
-				gidx.NextGlyph(openReader, lookupFlag);
-				if (gidx.glyph == null || !rule.IsGlyphMatchesLookahead(gidx.glyph.GetCode(), j))
-				{
-					break;
-				}
-			}
-			return j == rule.GetLookaheadContextLength();
-		}
+        /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
+        protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, ContextualSubstRule
+             rule, int startIdx)
+        {
+            int j;
+            OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
+            gidx.line = line;
+            gidx.idx = startIdx;
+            for (j = 0; j < rule.GetLookaheadContextLength(); ++j)
+            {
+                gidx.NextGlyph(openReader, lookupFlag);
+                if (gidx.glyph == null || !rule.IsGlyphMatchesLookahead(gidx.glyph.GetCode(), j))
+                {
+                    break;
+                }
+            }
+            return j == rule.GetLookaheadContextLength();
+        }
 
-		/// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-		protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, ContextualSubstRule
-			 rule)
-		{
-			int j;
-			OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-			gidx.line = line;
-			gidx.idx = line.idx;
-			for (j = 0; j < rule.GetBacktrackContextLength(); ++j)
-			{
-				gidx.PreviousGlyph(openReader, lookupFlag);
-				if (gidx.glyph == null || !rule.IsGlyphMatchesBacktrack(gidx.glyph.GetCode(), j))
-				{
-					break;
-				}
-			}
-			return j == rule.GetBacktrackContextLength();
-		}
-	}
+        /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
+        protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, ContextualSubstRule
+             rule)
+        {
+            int j;
+            OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
+            gidx.line = line;
+            gidx.idx = line.idx;
+            for (j = 0; j < rule.GetBacktrackContextLength(); ++j)
+            {
+                gidx.PreviousGlyph(openReader, lookupFlag);
+                if (gidx.glyph == null || !rule.IsGlyphMatchesBacktrack(gidx.glyph.GetCode(), j))
+                {
+                    break;
+                }
+            }
+            return j == rule.GetBacktrackContextLength();
+        }
+    }
 }

@@ -47,46 +47,46 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfSoundAnnotation : PdfMarkupAnnotation
-	{
-		public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
-			: base(rect)
-		{
-			/*
-			There is a problem playing *.wav files via internal player in Acrobat.
-			The first byte of the audio stream data should be deleted, then wav file will be played correctly.
-			Otherwise it will be broken. Other supporting file types don't have such problem.
-			*/
-			Put(PdfName.Sound, sound);
-		}
+    public class PdfSoundAnnotation : PdfMarkupAnnotation
+    {
+        public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
+            : base(rect)
+        {
+            /*
+            There is a problem playing *.wav files via internal player in Acrobat.
+            The first byte of the audio stream data should be deleted, then wav file will be played correctly.
+            Otherwise it will be broken. Other supporting file types don't have such problem.
+            */
+            Put(PdfName.Sound, sound);
+        }
 
-		public PdfSoundAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfSoundAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream
-			, float sampleRate, PdfName encoding, int channels, int sampleSizeInBits)
-			: base(rect)
-		{
-			PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile
-				(soundStream));
-			sound.Put(PdfName.R, new PdfNumber(sampleRate));
-			sound.Put(PdfName.E, encoding);
-			sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));
-			sound.Put(PdfName.C, new PdfNumber(channels));
-			Put(PdfName.Sound, sound);
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream
+            , float sampleRate, PdfName encoding, int channels, int sampleSizeInBits)
+            : base(rect)
+        {
+            PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile
+                (soundStream));
+            sound.Put(PdfName.R, new PdfNumber(sampleRate));
+            sound.Put(PdfName.E, encoding);
+            sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));
+            sound.Put(PdfName.C, new PdfNumber(channels));
+            Put(PdfName.Sound, sound);
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Sound;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Sound;
+        }
 
-		public virtual PdfStream GetSound()
-		{
-			return GetPdfObject().GetAsStream(PdfName.Sound);
-		}
-	}
+        public virtual PdfStream GetSound()
+        {
+            return GetPdfObject().GetAsStream(PdfName.Sound);
+        }
+    }
 }

@@ -46,21 +46,21 @@ using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <author>psoares</author>
-	public class CMapLocationFromBytes : ICMapLocation
-	{
-		private byte[] data;
+    /// <author>psoares</author>
+    public class CMapLocationFromBytes : ICMapLocation
+    {
+        private byte[] data;
 
-		public CMapLocationFromBytes(byte[] data)
-		{
-			this.data = data;
-		}
+        public CMapLocationFromBytes(byte[] data)
+        {
+            this.data = data;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual PdfTokenizer GetLocation(String location)
-		{
-			return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
-				().CreateSource(data)));
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual PdfTokenizer GetLocation(String location)
+        {
+            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
+                ().CreateSource(data)));
+        }
+    }
 }

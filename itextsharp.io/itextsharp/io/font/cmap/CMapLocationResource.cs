@@ -49,21 +49,21 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <author>psoares</author>
-	public class CMapLocationResource : ICMapLocation
-	{
-		/// <exception cref="System.IO.IOException"/>
-		public virtual PdfTokenizer GetLocation(String location)
-		{
-			String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
-			Stream inp = ResourceUtil.GetResourceStream(fullName);
-			if (inp == null)
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound
-					).SetMessageParams(fullName);
-			}
-			return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
-				().CreateSource(inp)));
-		}
-	}
+    /// <author>psoares</author>
+    public class CMapLocationResource : ICMapLocation
+    {
+        /// <exception cref="System.IO.IOException"/>
+        public virtual PdfTokenizer GetLocation(String location)
+        {
+            String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
+            Stream inp = ResourceUtil.GetResourceStream(fullName);
+            if (inp == null)
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound
+                    ).SetMessageParams(fullName);
+            }
+            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
+                ().CreateSource(inp)));
+        }
+    }
 }

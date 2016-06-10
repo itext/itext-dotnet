@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Font.Otf
 {
-	public class GposValueRecord
-	{
-		public int XPlacement;
+    public class GposValueRecord
+    {
+        public int XPlacement;
 
-		public int YPlacement;
+        public int YPlacement;
 
-		public int XAdvance;
+        public int XAdvance;
 
-		public int YAdvance;
-	}
+        public int YAdvance;
+    }
 }

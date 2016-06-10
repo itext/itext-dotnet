@@ -45,63 +45,63 @@ using System;
 
 namespace iTextSharp.IO.Font
 {
-	public class FontIdentification
-	{
-		private String ttfVersion;
+    public class FontIdentification
+    {
+        private String ttfVersion;
 
-		private String ttfUniqueId;
+        private String ttfUniqueId;
 
-		private int? type1Xuid;
+        private int? type1Xuid;
 
-		private String panose;
+        private String panose;
 
-		// name ID 5
-		// name ID 3
-		// /UniqueID
-		// OS/2.panose
-		public virtual String GetTtfVersion()
-		{
-			return ttfVersion;
-		}
+        // name ID 5
+        // name ID 3
+        // /UniqueID
+        // OS/2.panose
+        public virtual String GetTtfVersion()
+        {
+            return ttfVersion;
+        }
 
-		public virtual String GetTtfUniqueId()
-		{
-			return ttfUniqueId;
-		}
+        public virtual String GetTtfUniqueId()
+        {
+            return ttfUniqueId;
+        }
 
-		public virtual int? GetType1Xuid()
-		{
-			return type1Xuid;
-		}
+        public virtual int? GetType1Xuid()
+        {
+            return type1Xuid;
+        }
 
-		public virtual String GetPanose()
-		{
-			return panose;
-		}
+        public virtual String GetPanose()
+        {
+            return panose;
+        }
 
-		protected internal virtual void SetTtfVersion(String ttfVersion)
-		{
-			this.ttfVersion = ttfVersion;
-		}
+        protected internal virtual void SetTtfVersion(String ttfVersion)
+        {
+            this.ttfVersion = ttfVersion;
+        }
 
-		protected internal virtual void SetTtfUniqueId(String ttfUniqueId)
-		{
-			this.ttfUniqueId = ttfUniqueId;
-		}
+        protected internal virtual void SetTtfUniqueId(String ttfUniqueId)
+        {
+            this.ttfUniqueId = ttfUniqueId;
+        }
 
-		protected internal virtual void SetType1Xuid(int? type1Xuid)
-		{
-			this.type1Xuid = type1Xuid;
-		}
+        protected internal virtual void SetType1Xuid(int? type1Xuid)
+        {
+            this.type1Xuid = type1Xuid;
+        }
 
-		protected internal virtual void SetPanose(byte[] panose)
-		{
-			this.panose = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(panose);
-		}
+        protected internal virtual void SetPanose(byte[] panose)
+        {
+            this.panose = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(panose);
+        }
 
-		protected internal virtual void SetPanose(String panose)
-		{
-			this.panose = panose;
-		}
-	}
+        protected internal virtual void SetPanose(String panose)
+        {
+            this.panose = panose;
+        }
+    }
 }

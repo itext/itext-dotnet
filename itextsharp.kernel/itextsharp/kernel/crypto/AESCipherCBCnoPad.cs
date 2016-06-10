@@ -49,37 +49,37 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace iTextSharp.Kernel.Crypto
 {
-	/// <summary>Creates an AES Cipher with CBC and no padding.</summary>
-	/// <author>Paulo Soares</author>
-	public class AESCipherCBCnoPad
-	{
-		private IBlockCipher cbc;
+    /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
+    /// <author>Paulo Soares</author>
+    public class AESCipherCBCnoPad
+    {
+        private IBlockCipher cbc;
 
-		/// <summary>Creates a new instance of AESCipher</summary>
-		public AESCipherCBCnoPad(bool forEncryption, byte[] key)
-		{
-			IBlockCipher aes = new AesFastEngine();
-			cbc = new CbcBlockCipher(aes);
-			KeyParameter kp = new KeyParameter(key);
-			cbc.Init(forEncryption, kp);
-		}
+        /// <summary>Creates a new instance of AESCipher</summary>
+        public AESCipherCBCnoPad(bool forEncryption, byte[] key)
+        {
+            IBlockCipher aes = new AesFastEngine();
+            cbc = new CbcBlockCipher(aes);
+            KeyParameter kp = new KeyParameter(key);
+            cbc.Init(forEncryption, kp);
+        }
 
-		public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen)
-		{
-			if ((inpLen % cbc.GetBlockSize()) != 0)
-			{
-				throw new ArgumentException("Not multiple of block: " + inpLen);
-			}
-			byte[] outp = new byte[inpLen];
-			int baseOffset = 0;
-			while (inpLen > 0)
-			{
-				cbc.ProcessBlock(inp, inpOff, outp, baseOffset);
-				inpLen -= cbc.GetBlockSize();
-				baseOffset += cbc.GetBlockSize();
-				inpOff += cbc.GetBlockSize();
-			}
-			return outp;
-		}
-	}
+        public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen)
+        {
+            if ((inpLen % cbc.GetBlockSize()) != 0)
+            {
+                throw new ArgumentException("Not multiple of block: " + inpLen);
+            }
+            byte[] outp = new byte[inpLen];
+            int baseOffset = 0;
+            while (inpLen > 0)
+            {
+                cbc.ProcessBlock(inp, inpOff, outp, baseOffset);
+                inpLen -= cbc.GetBlockSize();
+                baseOffset += cbc.GetBlockSize();
+                inpOff += cbc.GetBlockSize();
+            }
+            return outp;
+        }
+    }
 }

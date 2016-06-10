@@ -47,71 +47,71 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfFreeTextAnnotation : PdfMarkupAnnotation
-	{
-		/// <summary>Text justification options.</summary>
-		public const int LEFT_JUSTIFIED = 0;
+    public class PdfFreeTextAnnotation : PdfMarkupAnnotation
+    {
+        /// <summary>Text justification options.</summary>
+        public const int LEFT_JUSTIFIED = 0;
 
-		public const int CENTERED = 1;
+        public const int CENTERED = 1;
 
-		public const int RIGHT_JUSTIFIED = 2;
+        public const int RIGHT_JUSTIFIED = 2;
 
-		public PdfFreeTextAnnotation(Rectangle rect, String appearanceString)
-			: base(rect)
-		{
-			SetDefaultAppearance(new PdfString(appearanceString));
-		}
+        public PdfFreeTextAnnotation(Rectangle rect, String appearanceString)
+            : base(rect)
+        {
+            SetDefaultAppearance(new PdfString(appearanceString));
+        }
 
-		public PdfFreeTextAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfFreeTextAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.FreeText;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.FreeText;
+        }
 
-		public virtual PdfString GetDefaultStyleString()
-		{
-			return GetPdfObject().GetAsString(PdfName.DS);
-		}
+        public virtual PdfString GetDefaultStyleString()
+        {
+            return GetPdfObject().GetAsString(PdfName.DS);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString
-			(PdfString defaultStyleString)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString
+            (PdfString defaultStyleString)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString
+                );
+        }
 
-		public virtual PdfArray GetCalloutLine()
-		{
-			return GetPdfObject().GetAsArray(PdfName.CL);
-		}
+        public virtual PdfArray GetCalloutLine()
+        {
+            return GetPdfObject().GetAsArray(PdfName.CL);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(float
-			[] calloutLine)
-		{
-			return SetCalloutLine(new PdfArray(calloutLine));
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(float
+            [] calloutLine)
+        {
+            return SetCalloutLine(new PdfArray(calloutLine));
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(PdfArray
-			 calloutLine)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(PdfArray
+             calloutLine)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine
+                );
+        }
 
-		public virtual PdfName GetLineEndingStyle()
-		{
-			return GetPdfObject().GetAsName(PdfName.LE);
-		}
+        public virtual PdfName GetLineEndingStyle()
+        {
+            return GetPdfObject().GetAsName(PdfName.LE);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle
-			(PdfName lineEndingStyle)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle
-				);
-		}
-	}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle
+            (PdfName lineEndingStyle)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle
+                );
+        }
+    }
 }

@@ -49,91 +49,91 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Image
 {
-	public class GifImageData
-	{
-		private float logicalHeight;
+    public class GifImageData
+    {
+        private float logicalHeight;
 
-		private float logicalWidth;
+        private float logicalWidth;
 
-		private IList<ImageData> frames = new List<ImageData>();
+        private IList<ImageData> frames = new List<ImageData>();
 
-		private byte[] data;
+        private byte[] data;
 
-		private Uri url;
+        private Uri url;
 
-		protected internal GifImageData(Uri url)
-		{
-			this.url = url;
-		}
+        protected internal GifImageData(Uri url)
+        {
+            this.url = url;
+        }
 
-		protected internal GifImageData(byte[] data)
-		{
-			this.data = data;
-		}
+        protected internal GifImageData(byte[] data)
+        {
+            this.data = data;
+        }
 
-		public virtual float GetLogicalHeight()
-		{
-			return logicalHeight;
-		}
+        public virtual float GetLogicalHeight()
+        {
+            return logicalHeight;
+        }
 
-		public virtual void SetLogicalHeight(float logicalHeight)
-		{
-			this.logicalHeight = logicalHeight;
-		}
+        public virtual void SetLogicalHeight(float logicalHeight)
+        {
+            this.logicalHeight = logicalHeight;
+        }
 
-		public virtual float GetLogicalWidth()
-		{
-			return logicalWidth;
-		}
+        public virtual float GetLogicalWidth()
+        {
+            return logicalWidth;
+        }
 
-		public virtual void SetLogicalWidth(float logicalWidth)
-		{
-			this.logicalWidth = logicalWidth;
-		}
+        public virtual void SetLogicalWidth(float logicalWidth)
+        {
+            this.logicalWidth = logicalWidth;
+        }
 
-		public virtual IList<ImageData> GetFrames()
-		{
-			return frames;
-		}
+        public virtual IList<ImageData> GetFrames()
+        {
+            return frames;
+        }
 
-		protected internal virtual byte[] GetData()
-		{
-			return data;
-		}
+        protected internal virtual byte[] GetData()
+        {
+            return data;
+        }
 
-		protected internal virtual Uri GetUrl()
-		{
-			return url;
-		}
+        protected internal virtual Uri GetUrl()
+        {
+            return url;
+        }
 
-		protected internal virtual void AddFrame(ImageData frame)
-		{
-			frames.Add(frame);
-		}
+        protected internal virtual void AddFrame(ImageData frame)
+        {
+            frames.Add(frame);
+        }
 
-		/// <summary>Load data by URL.</summary>
-		/// <remarks>
-		/// Load data by URL. url must be not null.
-		/// Note, this method doesn't check if data or url is null.
-		/// </remarks>
-		/// <exception cref="System.IO.IOException"/>
-		internal virtual void LoadData()
-		{
-			Stream input = null;
-			try
-			{
-				input = UrlUtil.OpenStream(url);
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				StreamUtil.TransferBytes(UrlUtil.OpenStream(url), stream);
-				data = stream.ToArray();
-			}
-			finally
-			{
-				if (input != null)
-				{
-					input.Close();
-				}
-			}
-		}
-	}
+        /// <summary>Load data by URL.</summary>
+        /// <remarks>
+        /// Load data by URL. url must be not null.
+        /// Note, this method doesn't check if data or url is null.
+        /// </remarks>
+        /// <exception cref="System.IO.IOException"/>
+        internal virtual void LoadData()
+        {
+            Stream input = null;
+            try
+            {
+                input = UrlUtil.OpenStream(url);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                StreamUtil.TransferBytes(UrlUtil.OpenStream(url), stream);
+                data = stream.ToArray();
+            }
+            finally
+            {
+                if (input != null)
+                {
+                    input.Close();
+                }
+            }
+        }
+    }
 }

@@ -43,38 +43,38 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
-	/// <summary>A meta object.</summary>
-	public class MetaObject
-	{
-		public const int META_NOT_SUPPORTED = 0;
+    /// <summary>A meta object.</summary>
+    public class MetaObject
+    {
+        public const int META_NOT_SUPPORTED = 0;
 
-		public const int META_PEN = 1;
+        public const int META_PEN = 1;
 
-		public const int META_BRUSH = 2;
+        public const int META_BRUSH = 2;
 
-		public const int META_FONT = 3;
+        public const int META_FONT = 3;
 
-		private int type = META_NOT_SUPPORTED;
+        private int type = META_NOT_SUPPORTED;
 
-		/// <summary>Creates a new MetaObject.</summary>
-		/// <remarks>Creates a new MetaObject. This constructor doesn't set the type.</remarks>
-		public MetaObject()
-		{
-		}
+        /// <summary>Creates a new MetaObject.</summary>
+        /// <remarks>Creates a new MetaObject. This constructor doesn't set the type.</remarks>
+        public MetaObject()
+        {
+        }
 
-		/// <summary>Creates a MetaObject with a type.</summary>
-		/// <param name="type">the type of meta object</param>
-		public MetaObject(int type)
-		{
-			// Empty body
-			this.type = type;
-		}
+        /// <summary>Creates a MetaObject with a type.</summary>
+        /// <param name="type">the type of meta object</param>
+        public MetaObject(int type)
+        {
+            // Empty body
+            this.type = type;
+        }
 
-		/// <summary>Get the type of this MetaObject.</summary>
-		/// <returns>type of MetaObject</returns>
-		public virtual int GetObjectType()
-		{
-			return type;
-		}
-	}
+        /// <summary>Get the type of this MetaObject.</summary>
+        /// <returns>type of MetaObject</returns>
+        public virtual int GetObjectType()
+        {
+            return type;
+        }
+    }
 }

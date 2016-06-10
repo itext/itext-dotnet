@@ -46,122 +46,122 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Action
 {
-	public class PdfTargetDictionary : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfTargetDictionary(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public class PdfTargetDictionary : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfTargetDictionary(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public PdfTargetDictionary(PdfName r)
-			: this(new PdfDictionary())
-		{
-			Put(PdfName.R, r);
-		}
+        public PdfTargetDictionary(PdfName r)
+            : this(new PdfDictionary())
+        {
+            Put(PdfName.R, r);
+        }
 
-		public PdfTargetDictionary(PdfName r, PdfString n, PdfObject p, PdfObject a, iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary
-			 t)
-			: this(new PdfDictionary())
-		{
-			Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName
-				.T, t.GetPdfObject());
-		}
+        public PdfTargetDictionary(PdfName r, PdfString n, PdfObject p, PdfObject a, iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary
+             t)
+            : this(new PdfDictionary())
+        {
+            Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName
+                .T, t.GetPdfObject());
+        }
 
-		/// <summary>Sets the name of the file in the EmbeddedFiles name tree.</summary>
-		/// <param name="name">the name of the file</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetName(String name
-			)
-		{
-			return Put(PdfName.N, new PdfString(name));
-		}
+        /// <summary>Sets the name of the file in the EmbeddedFiles name tree.</summary>
+        /// <param name="name">the name of the file</param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetName(String name
+            )
+        {
+            return Put(PdfName.N, new PdfString(name));
+        }
 
-		/// <summary>Gets name of the file</summary>
-		/// <returns/>
-		public virtual PdfString GetName()
-		{
-			return GetPdfObject().GetAsString(PdfName.N);
-		}
+        /// <summary>Gets name of the file</summary>
+        /// <returns/>
+        public virtual PdfString GetName()
+        {
+            return GetPdfObject().GetAsString(PdfName.N);
+        }
 
-		/// <summary>Sets the page number in the current document containing the file attachment annotation.
-		/// 	</summary>
-		/// <param name="pageNumber"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetPage(int pageNumber
-			)
-		{
-			return Put(PdfName.P, new PdfNumber(pageNumber));
-		}
+        /// <summary>Sets the page number in the current document containing the file attachment annotation.
+        ///     </summary>
+        /// <param name="pageNumber"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetPage(int pageNumber
+            )
+        {
+            return Put(PdfName.P, new PdfNumber(pageNumber));
+        }
 
-		/// <summary>Sets a named destination in the current document that provides the page number of the file attachment annotation.
-		/// 	</summary>
-		/// <param name="namedDestination"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetPage(String namedDestination
-			)
-		{
-			return Put(PdfName.P, new PdfString(namedDestination));
-		}
+        /// <summary>Sets a named destination in the current document that provides the page number of the file attachment annotation.
+        ///     </summary>
+        /// <param name="namedDestination"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetPage(String namedDestination
+            )
+        {
+            return Put(PdfName.P, new PdfString(namedDestination));
+        }
 
-		/// <summary>Get the page number or a named destination that provides the page number containing the file attachment annotation
-		/// 	</summary>
-		/// <returns/>
-		public virtual PdfObject GetPage()
-		{
-			return GetPdfObject().Get(PdfName.P);
-		}
+        /// <summary>Get the page number or a named destination that provides the page number containing the file attachment annotation
+        ///     </summary>
+        /// <returns/>
+        public virtual PdfObject GetPage()
+        {
+            return GetPdfObject().Get(PdfName.P);
+        }
 
-		/// <summary>Sets the index of the annotation in Annots array of the page specified by /P entry.
-		/// 	</summary>
-		/// <param name="annotNumber"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(int
-			 annotNumber)
-		{
-			return Put(PdfName.A, new PdfNumber(annotNumber));
-		}
+        /// <summary>Sets the index of the annotation in Annots array of the page specified by /P entry.
+        ///     </summary>
+        /// <param name="annotNumber"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(int
+             annotNumber)
+        {
+            return Put(PdfName.A, new PdfNumber(annotNumber));
+        }
 
-		/// <summary>Sets the text value, which specifies the value of the /NM entry in the annotation dictionary.
-		/// 	</summary>
-		/// <param name="annotationName"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(String
-			 annotationName)
-		{
-			return Put(PdfName.A, new PdfString(annotationName));
-		}
+        /// <summary>Sets the text value, which specifies the value of the /NM entry in the annotation dictionary.
+        ///     </summary>
+        /// <param name="annotationName"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(String
+             annotationName)
+        {
+            return Put(PdfName.A, new PdfString(annotationName));
+        }
 
-		public virtual PdfObject GetAnnotation()
-		{
-			return GetPdfObject().Get(PdfName.A);
-		}
+        public virtual PdfObject GetAnnotation()
+        {
+            return GetPdfObject().Get(PdfName.A);
+        }
 
-		/// <summary>Sets a target dictionary specifying additional path information to the target document.
-		/// 	</summary>
-		/// <param name="target"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetTarget(iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary
-			 target)
-		{
-			return Put(PdfName.T, target.GetPdfObject());
-		}
+        /// <summary>Sets a target dictionary specifying additional path information to the target document.
+        ///     </summary>
+        /// <param name="target"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary SetTarget(iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary
+             target)
+        {
+            return Put(PdfName.T, target.GetPdfObject());
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary GetTarget()
-		{
-			return new iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary(GetPdfObject().GetAsDictionary
-				(PdfName.T));
-		}
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary GetTarget()
+        {
+            return new iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary(GetPdfObject().GetAsDictionary
+                (PdfName.T));
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary Put(PdfName key, 
-			PdfObject value)
-		{
-			GetPdfObject().Put(key, value);
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.Action.PdfTargetDictionary Put(PdfName key, 
+            PdfObject value)
+        {
+            GetPdfObject().Put(key, value);
+            return this;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

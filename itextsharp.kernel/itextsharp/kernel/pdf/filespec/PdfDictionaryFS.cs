@@ -45,11 +45,11 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filespec
 {
-	public class PdfDictionaryFS : PdfFileSpec
-	{
-		public PdfDictionaryFS(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
-	}
+    public class PdfDictionaryFS : PdfFileSpec
+    {
+        public PdfDictionaryFS(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
+    }
 }

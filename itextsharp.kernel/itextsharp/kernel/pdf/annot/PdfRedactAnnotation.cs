@@ -46,56 +46,56 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfRedactAnnotation : PdfMarkupAnnotation
-	{
-		public PdfRedactAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfRedactAnnotation : PdfMarkupAnnotation
+    {
+        public PdfRedactAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfRedactAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfRedactAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Redact;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Redact;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString
-			 text)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, 
-				text);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString
+             text)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, 
+                text);
+        }
 
-		public virtual PdfString GetOverlayText()
-		{
-			return GetPdfObject().GetAsString(PdfName.OverlayText);
-		}
+        public virtual PdfString GetOverlayText()
+        {
+            return GetPdfObject().GetAsString(PdfName.OverlayText);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance
-			(PdfStream stream)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance
+            (PdfStream stream)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
+        }
 
-		public virtual PdfStream GetRedactRolloverAppearance()
-		{
-			return GetPdfObject().GetAsStream(PdfName.RO);
-		}
+        public virtual PdfStream GetRedactRolloverAppearance()
+        {
+            return GetPdfObject().GetAsStream(PdfName.RO);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean
-			 repeat)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean
+             repeat)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat
+                );
+        }
 
-		public virtual PdfBoolean GetRepeat()
-		{
-			return GetPdfObject().GetAsBoolean(PdfName.Repeat);
-		}
-	}
+        public virtual PdfBoolean GetRepeat()
+        {
+            return GetPdfObject().GetAsBoolean(PdfName.Repeat);
+        }
+    }
 }

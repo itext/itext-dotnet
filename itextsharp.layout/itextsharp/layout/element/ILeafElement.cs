@@ -43,16 +43,16 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A marker subinterface of
-	/// <see cref="IElement"/>
-	/// that specifies that the layout object
-	/// is, by definition, on the lowest tier in the object hierarchy. A
-	/// <see cref="ILeafElement">leaf element</see>
-	/// must not act as a container for other
-	/// elements.
-	/// </summary>
-	public interface ILeafElement : IElement
-	{
-	}
+    /// <summary>
+    /// A marker subinterface of
+    /// <see cref="IElement"/>
+    /// that specifies that the layout object
+    /// is, by definition, on the lowest tier in the object hierarchy. A
+    /// <see cref="ILeafElement">leaf element</see>
+    /// must not act as a container for other
+    /// elements.
+    /// </summary>
+    public interface ILeafElement : IElement
+    {
+    }
 }

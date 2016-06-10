@@ -45,42 +45,42 @@ using System;
 
 namespace iTextSharp.IO.Font
 {
-	/// <summary>
-	/// Classes implementing this interface can create custom encodings or
-	/// replace existing ones.
-	/// </summary>
-	/// <remarks>
-	/// Classes implementing this interface can create custom encodings or
-	/// replace existing ones. It is used in the context of <code>PdfEncoding</code>.
-	/// </remarks>
-	/// <author>Paulo Soares</author>
-	public interface IExtraEncoding
-	{
-		/// <summary>Converts an Unicode string to a byte array according to some encoding.</summary>
-		/// <param name="text">the Unicode string</param>
-		/// <param name="encoding">
-		/// the requested encoding. It's mainly of use if the same class
-		/// supports more than one encoding.
-		/// </param>
-		/// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
-		byte[] CharToByte(String text, String encoding);
+    /// <summary>
+    /// Classes implementing this interface can create custom encodings or
+    /// replace existing ones.
+    /// </summary>
+    /// <remarks>
+    /// Classes implementing this interface can create custom encodings or
+    /// replace existing ones. It is used in the context of <code>PdfEncoding</code>.
+    /// </remarks>
+    /// <author>Paulo Soares</author>
+    public interface IExtraEncoding
+    {
+        /// <summary>Converts an Unicode string to a byte array according to some encoding.</summary>
+        /// <param name="text">the Unicode string</param>
+        /// <param name="encoding">
+        /// the requested encoding. It's mainly of use if the same class
+        /// supports more than one encoding.
+        /// </param>
+        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        byte[] CharToByte(String text, String encoding);
 
-		/// <summary>Converts an Unicode char to a byte array according to some encoding.</summary>
-		/// <param name="char1">the Unicode char</param>
-		/// <param name="encoding">
-		/// the requested encoding. It's mainly of use if the same class
-		/// supports more than one encoding.
-		/// </param>
-		/// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
-		byte[] CharToByte(char char1, String encoding);
+        /// <summary>Converts an Unicode char to a byte array according to some encoding.</summary>
+        /// <param name="char1">the Unicode char</param>
+        /// <param name="encoding">
+        /// the requested encoding. It's mainly of use if the same class
+        /// supports more than one encoding.
+        /// </param>
+        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        byte[] CharToByte(char char1, String encoding);
 
-		/// <summary>Converts a byte array to an Unicode string according to some encoding.</summary>
-		/// <param name="b">the input byte array</param>
-		/// <param name="encoding">
-		/// the requested encoding. It's mainly of use if the same class
-		/// supports more than one encoding.
-		/// </param>
-		/// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
-		String ByteToChar(byte[] b, String encoding);
-	}
+        /// <summary>Converts a byte array to an Unicode string according to some encoding.</summary>
+        /// <param name="b">the input byte array</param>
+        /// <param name="encoding">
+        /// the requested encoding. It's mainly of use if the same class
+        /// supports more than one encoding.
+        /// </param>
+        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        String ByteToChar(byte[] b, String encoding);
+    }
 }

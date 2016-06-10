@@ -46,68 +46,68 @@ using iTextSharp.Layout.Property;
 
 namespace iTextSharp.Layout.Element
 {
-	public class TabStop
-	{
-		private float tabPosition;
+    public class TabStop
+    {
+        private float tabPosition;
 
-		private TabAlignment tabAlignment;
+        private TabAlignment tabAlignment;
 
-		private char? tabAnchor;
+        private char? tabAnchor;
 
-		private ILineDrawer tabLeader;
+        private ILineDrawer tabLeader;
 
-		public TabStop(float tabPosition)
-			: this(tabPosition, TabAlignment.LEFT)
-		{
-		}
+        public TabStop(float tabPosition)
+            : this(tabPosition, TabAlignment.LEFT)
+        {
+        }
 
-		public TabStop(float tabPosition, TabAlignment tabAlignment)
-			: this(tabPosition, tabAlignment, null)
-		{
-		}
+        public TabStop(float tabPosition, TabAlignment tabAlignment)
+            : this(tabPosition, tabAlignment, null)
+        {
+        }
 
-		public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader
-			)
-		{
-			this.tabPosition = tabPosition;
-			this.tabAlignment = tabAlignment;
-			this.tabLeader = tabLeader;
-			this.tabAnchor = '.';
-		}
+        public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader
+            )
+        {
+            this.tabPosition = tabPosition;
+            this.tabAlignment = tabAlignment;
+            this.tabLeader = tabLeader;
+            this.tabAnchor = '.';
+        }
 
-		public virtual float GetTabPosition()
-		{
-			return tabPosition;
-		}
+        public virtual float GetTabPosition()
+        {
+            return tabPosition;
+        }
 
-		public virtual TabAlignment GetTabAlignment()
-		{
-			return tabAlignment;
-		}
+        public virtual TabAlignment GetTabAlignment()
+        {
+            return tabAlignment;
+        }
 
-		public virtual void SetTabAlignment(TabAlignment tabAlignment)
-		{
-			this.tabAlignment = tabAlignment;
-		}
+        public virtual void SetTabAlignment(TabAlignment tabAlignment)
+        {
+            this.tabAlignment = tabAlignment;
+        }
 
-		public virtual char? GetTabAnchor()
-		{
-			return tabAnchor;
-		}
+        public virtual char? GetTabAnchor()
+        {
+            return tabAnchor;
+        }
 
-		public virtual void SetTabAnchor(char? tabAnchor)
-		{
-			this.tabAnchor = tabAnchor;
-		}
+        public virtual void SetTabAnchor(char? tabAnchor)
+        {
+            this.tabAnchor = tabAnchor;
+        }
 
-		public virtual ILineDrawer GetTabLeader()
-		{
-			return tabLeader;
-		}
+        public virtual ILineDrawer GetTabLeader()
+        {
+            return tabLeader;
+        }
 
-		public virtual void SetTabLeader(ILineDrawer tabLeader)
-		{
-			this.tabLeader = tabLeader;
-		}
-	}
+        public virtual void SetTabLeader(ILineDrawer tabLeader)
+        {
+            this.tabLeader = tabLeader;
+        }
+    }
 }

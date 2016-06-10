@@ -47,44 +47,44 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Navigation
 {
-	public abstract class PdfDestination : PdfObjectWrapper<PdfObject>
-	{
-		protected internal PdfDestination(PdfObject pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public abstract class PdfDestination : PdfObjectWrapper<PdfObject>
+    {
+        protected internal PdfDestination(PdfObject pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
-			);
+        public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
+            );
 
-		public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination
-			(IDictionary<Object, PdfObject> names);
+        public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination
+            (IDictionary<Object, PdfObject> names);
 
-		public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject
-			 pdfObject)
-		{
-			if (pdfObject.GetObjectType() == PdfObject.STRING)
-			{
-				return new PdfStringDestination((PdfString)pdfObject);
-			}
-			else
-			{
-				if (pdfObject.GetObjectType() == PdfObject.NAME)
-				{
-					return new PdfNamedDestination((PdfName)pdfObject);
-				}
-				else
-				{
-					if (pdfObject.GetObjectType() == PdfObject.ARRAY)
-					{
-						return new PdfExplicitDestination((PdfArray)pdfObject);
-					}
-					else
-					{
-						throw new NotSupportedException();
-					}
-				}
-			}
-		}
-	}
+        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject
+             pdfObject)
+        {
+            if (pdfObject.GetObjectType() == PdfObject.STRING)
+            {
+                return new PdfStringDestination((PdfString)pdfObject);
+            }
+            else
+            {
+                if (pdfObject.GetObjectType() == PdfObject.NAME)
+                {
+                    return new PdfNamedDestination((PdfName)pdfObject);
+                }
+                else
+                {
+                    if (pdfObject.GetObjectType() == PdfObject.ARRAY)
+                    {
+                        return new PdfExplicitDestination((PdfArray)pdfObject);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
+                }
+            }
+        }
+    }
 }

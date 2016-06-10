@@ -47,45 +47,45 @@ using iTextSharp.Layout.Layout;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class LineSeparatorRenderer : BlockRenderer
-	{
-		public LineSeparatorRenderer(LineSeparator lineSeparator)
-			: base(lineSeparator)
-		{
-		}
+    public class LineSeparatorRenderer : BlockRenderer
+    {
+        public LineSeparatorRenderer(LineSeparator lineSeparator)
+            : base(lineSeparator)
+        {
+        }
 
-		public override LayoutResult Layout(LayoutContext layoutContext)
-		{
-			ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
-				.LINE_DRAWER);
-			float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
-			occupiedArea = layoutContext.GetArea().Clone();
-			ApplyMargins(occupiedArea.GetBBox(), false);
-			if (occupiedArea.GetBBox().GetHeight() < height)
-			{
-				return new LayoutResult(LayoutResult.NOTHING, null, null, this);
-			}
-			occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight
-				(height);
-			ApplyMargins(occupiedArea.GetBBox(), true);
-			return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
-		}
+        public override LayoutResult Layout(LayoutContext layoutContext)
+        {
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+                .LINE_DRAWER);
+            float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
+            occupiedArea = layoutContext.GetArea().Clone();
+            ApplyMargins(occupiedArea.GetBBox(), false);
+            if (occupiedArea.GetBBox().GetHeight() < height)
+            {
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+            }
+            occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight
+                (height);
+            ApplyMargins(occupiedArea.GetBBox(), true);
+            return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
+        }
 
-		public override IRenderer GetNextRenderer()
-		{
-			return new iTextSharp.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement
-				);
-		}
+        public override IRenderer GetNextRenderer()
+        {
+            return new iTextSharp.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement
+                );
+        }
 
-		public override void Draw(DrawContext drawContext)
-		{
-			base.Draw(drawContext);
-			ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
-				.LINE_DRAWER);
-			if (lineDrawer != null)
-			{
-				lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
-			}
-		}
-	}
+        public override void Draw(DrawContext drawContext)
+        {
+            base.Draw(drawContext);
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+                .LINE_DRAWER);
+            if (lineDrawer != null)
+            {
+                lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+            }
+        }
+    }
 }

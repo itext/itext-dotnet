@@ -46,70 +46,70 @@ using System.Collections.Generic;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	/// <summary>LookupType 2: Multiple Substitution Subtable</summary>
-	public class GsubLookupType2 : OpenTableLookup
-	{
-		private IDictionary<int, int[]> substMap;
+    /// <summary>LookupType 2: Multiple Substitution Subtable</summary>
+    public class GsubLookupType2 : OpenTableLookup
+    {
+        private IDictionary<int, int[]> substMap;
 
-		/// <exception cref="System.IO.IOException"/>
-		public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-			subTableLocations)
-			: base(openReader, lookupFlag, subTableLocations)
-		{
-			substMap = new Dictionary<int, int[]>();
-			ReadSubTables();
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
+            subTableLocations)
+            : base(openReader, lookupFlag, subTableLocations)
+        {
+            substMap = new Dictionary<int, int[]>();
+            ReadSubTables();
+        }
 
-		public override bool TransformOne(GlyphLine line)
-		{
-			if (line.idx >= line.end)
-			{
-				return false;
-			}
-			Glyph g = line.Get(line.idx);
-			bool changed = false;
-			if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-			{
-				int[] substSequence = substMap.Get(g.GetCode());
-				if (substSequence != null)
-				{
-					line.SubstituteOneToMany(openReader, substSequence);
-					changed = true;
-				}
-			}
-			line.idx++;
-			return changed;
-		}
+        public override bool TransformOne(GlyphLine line)
+        {
+            if (line.idx >= line.end)
+            {
+                return false;
+            }
+            Glyph g = line.Get(line.idx);
+            bool changed = false;
+            if (!openReader.IsSkip(g.GetCode(), lookupFlag))
+            {
+                int[] substSequence = substMap.Get(g.GetCode());
+                if (substSequence != null)
+                {
+                    line.SubstituteOneToMany(openReader, substSequence);
+                    changed = true;
+                }
+            }
+            line.idx++;
+            return changed;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		protected internal override void ReadSubTable(int subTableLocation)
-		{
-			openReader.rf.Seek(subTableLocation);
-			int substFormat = openReader.rf.ReadShort();
-			if (substFormat == 1)
-			{
-				int coverage = openReader.rf.ReadUnsignedShort();
-				int sequenceCount = openReader.rf.ReadUnsignedShort();
-				int[] sequenceLocations = openReader.ReadUShortArray(sequenceCount, subTableLocation
-					);
-				IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
-					);
-				for (int i = 0; i < sequenceCount; ++i)
-				{
-					openReader.rf.Seek(sequenceLocations[i]);
-					int glyphCount = openReader.rf.ReadUnsignedShort();
-					substMap[coverageGlyphIds[i]] = openReader.ReadUShortArray(glyphCount);
-				}
-			}
-			else
-			{
-				throw new ArgumentException("Bad substFormat: " + substFormat);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        protected internal override void ReadSubTable(int subTableLocation)
+        {
+            openReader.rf.Seek(subTableLocation);
+            int substFormat = openReader.rf.ReadShort();
+            if (substFormat == 1)
+            {
+                int coverage = openReader.rf.ReadUnsignedShort();
+                int sequenceCount = openReader.rf.ReadUnsignedShort();
+                int[] sequenceLocations = openReader.ReadUShortArray(sequenceCount, subTableLocation
+                    );
+                IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
+                    );
+                for (int i = 0; i < sequenceCount; ++i)
+                {
+                    openReader.rf.Seek(sequenceLocations[i]);
+                    int glyphCount = openReader.rf.ReadUnsignedShort();
+                    substMap[coverageGlyphIds[i]] = openReader.ReadUShortArray(glyphCount);
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Bad substFormat: " + substFormat);
+            }
+        }
 
-		public override bool HasSubstitution(int index)
-		{
-			return substMap.ContainsKey(index);
-		}
-	}
+        public override bool HasSubstitution(int index)
+        {
+            return substMap.ContainsKey(index);
+        }
+    }
 }

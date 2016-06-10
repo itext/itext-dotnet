@@ -48,56 +48,56 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
-	/// <summary>
-	/// A utility class that makes it cleaner to process content from pages of a
-	/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
-	/// through a specified RenderListener.
-	/// </summary>
-	public class PdfDocumentContentParser
-	{
-		private readonly PdfDocument pdfDocument;
+    /// <summary>
+    /// A utility class that makes it cleaner to process content from pages of a
+    /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+    /// through a specified RenderListener.
+    /// </summary>
+    public class PdfDocumentContentParser
+    {
+        private readonly PdfDocument pdfDocument;
 
-		public PdfDocumentContentParser(PdfDocument pdfDocument)
-		{
-			this.pdfDocument = pdfDocument;
-		}
+        public PdfDocumentContentParser(PdfDocument pdfDocument)
+        {
+            this.pdfDocument = pdfDocument;
+        }
 
-		/// <summary>Processes content from the specified page number using the specified listener.
-		/// 	</summary>
-		/// <remarks>
-		/// Processes content from the specified page number using the specified listener.
-		/// Also allows registration of custom ContentOperators
-		/// </remarks>
-		/// 
-		/// <param name="pageNumber">the page number to process</param>
-		/// <param name="renderListener">the listener that will receive render callbacks</param>
-		/// <param name="additionalContentOperators">an optional map of custom ContentOperators for rendering instructions
-		/// 	</param>
-		/// <returns>the provided renderListener</returns>
-		public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<
-			String, IContentOperator> additionalContentOperators)
-			where E : IEventListener
-		{
-			PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
-			foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators)
-			{
-				processor.RegisterContentOperator(entry.Key, entry.Value);
-			}
-			processor.ProcessPageContent(pdfDocument.GetPage(pageNumber));
-			return renderListener;
-		}
+        /// <summary>Processes content from the specified page number using the specified listener.
+        ///     </summary>
+        /// <remarks>
+        /// Processes content from the specified page number using the specified listener.
+        /// Also allows registration of custom ContentOperators
+        /// </remarks>
+        /// 
+        /// <param name="pageNumber">the page number to process</param>
+        /// <param name="renderListener">the listener that will receive render callbacks</param>
+        /// <param name="additionalContentOperators">an optional map of custom ContentOperators for rendering instructions
+        ///     </param>
+        /// <returns>the provided renderListener</returns>
+        public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<
+            String, IContentOperator> additionalContentOperators)
+            where E : IEventListener
+        {
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
+            foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators)
+            {
+                processor.RegisterContentOperator(entry.Key, entry.Value);
+            }
+            processor.ProcessPageContent(pdfDocument.GetPage(pageNumber));
+            return renderListener;
+        }
 
-		/// <summary>Processes content from the specified page number using the specified listener
-		/// 	</summary>
-		/// 
-		/// <param name="pageNumber">the page number to process</param>
-		/// <param name="renderListener">the listener that will receive render callbacks</param>
-		/// <returns>the provided renderListener</returns>
-		public virtual E ProcessContent<E>(int pageNumber, E renderListener)
-			where E : IEventListener
-		{
-			return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator
-				>());
-		}
-	}
+        /// <summary>Processes content from the specified page number using the specified listener
+        ///     </summary>
+        /// 
+        /// <param name="pageNumber">the page number to process</param>
+        /// <param name="renderListener">the listener that will receive render callbacks</param>
+        /// <returns>the provided renderListener</returns>
+        public virtual E ProcessContent<E>(int pageNumber, E renderListener)
+            where E : IEventListener
+        {
+            return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator
+                >());
+        }
+    }
 }

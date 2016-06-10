@@ -43,25 +43,25 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	/// <summary>
-	/// This interface defines logic which can be used to perform a custom copying
-	/// operation of a
-	/// <see cref="PdfPage"/>
-	/// .
-	/// </summary>
-	public interface IPdfPageExtraCopier
-	{
-		/// <summary>Copies a page.</summary>
-		/// <remarks>
-		/// Copies a page.
-		/// The new page must already be created before calling this, either in a new
-		/// <see cref="PdfDocument"/>
-		/// or in the same
-		/// <see cref="PdfDocument"/>
-		/// as the old page.
-		/// </remarks>
-		/// <param name="fromPage">the source page</param>
-		/// <param name="toPage">the target page in a target document</param>
-		void Copy(PdfPage fromPage, PdfPage toPage);
-	}
+    /// <summary>
+    /// This interface defines logic which can be used to perform a custom copying
+    /// operation of a
+    /// <see cref="PdfPage"/>
+    /// .
+    /// </summary>
+    public interface IPdfPageExtraCopier
+    {
+        /// <summary>Copies a page.</summary>
+        /// <remarks>
+        /// Copies a page.
+        /// The new page must already be created before calling this, either in a new
+        /// <see cref="PdfDocument"/>
+        /// or in the same
+        /// <see cref="PdfDocument"/>
+        /// as the old page.
+        /// </remarks>
+        /// <param name="fromPage">the source page</param>
+        /// <param name="toPage">the target page in a target document</param>
+        void Copy(PdfPage fromPage, PdfPage toPage);
+    }
 }

@@ -49,166 +49,166 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
-	/// <summary>
-	/// Internal class which is essentially a
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
-	/// which supports tracking of
-	/// clipping path state and changes.
-	/// </summary>
-	public class ParserGraphicsState : CanvasGraphicsState
-	{
-		private Path clippingPath;
+    /// <summary>
+    /// Internal class which is essentially a
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
+    /// which supports tracking of
+    /// clipping path state and changes.
+    /// </summary>
+    public class ParserGraphicsState : CanvasGraphicsState
+    {
+        private Path clippingPath;
 
-		/// <summary>Internal empty & default constructor.</summary>
-		internal ParserGraphicsState()
-		{
-		}
+        /// <summary>Internal empty & default constructor.</summary>
+        internal ParserGraphicsState()
+        {
+        }
 
-		/// <summary>Copy constructor.</summary>
-		/// <param name="source">the Graphics State to copy from</param>
-		internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState
-			 source)
-			: base(source)
-		{
-			// NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
-			if (source.clippingPath != null)
-			{
-				clippingPath = new Path(source.clippingPath);
-			}
-		}
+        /// <summary>Copy constructor.</summary>
+        /// <param name="source">the Graphics State to copy from</param>
+        internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState
+             source)
+            : base(source)
+        {
+            // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
+            if (source.clippingPath != null)
+            {
+                clippingPath = new Path(source.clippingPath);
+            }
+        }
 
-		/// <summary>Sets the current clipping path to the specified path.</summary>
-		/// <remarks>
-		/// Sets the current clipping path to the specified path.
-		/// <br/>
-		/// <strong>Note:</strong>This method doesn't modify existing clipping path,
-		/// it simply replaces it with the new one instead.
-		/// </remarks>
-		/// <param name="clippingPath">New clipping path.</param>
-		public virtual void SetClippingPath(Path clippingPath)
-		{
-			Path pathCopy = new Path(clippingPath);
-			pathCopy.CloseAllSubpaths();
-			this.clippingPath = pathCopy;
-		}
+        /// <summary>Sets the current clipping path to the specified path.</summary>
+        /// <remarks>
+        /// Sets the current clipping path to the specified path.
+        /// <br/>
+        /// <strong>Note:</strong>This method doesn't modify existing clipping path,
+        /// it simply replaces it with the new one instead.
+        /// </remarks>
+        /// <param name="clippingPath">New clipping path.</param>
+        public virtual void SetClippingPath(Path clippingPath)
+        {
+            Path pathCopy = new Path(clippingPath);
+            pathCopy.CloseAllSubpaths();
+            this.clippingPath = pathCopy;
+        }
 
-		public override void UpdateCtm(Matrix newCtm)
-		{
-			base.UpdateCtm(newCtm);
-			if (clippingPath != null)
-			{
-				TransformClippingPath(newCtm);
-			}
-		}
+        public override void UpdateCtm(Matrix newCtm)
+        {
+            base.UpdateCtm(newCtm);
+            if (clippingPath != null)
+            {
+                TransformClippingPath(newCtm);
+            }
+        }
 
-		/// <summary>Intersects the current clipping path with the given path.</summary>
-		/// <remarks>
-		/// Intersects the current clipping path with the given path.
-		/// <br/>
-		/// <strong>Note:</strong> Coordinates of the given path should be in
-		/// the transformed user space.
-		/// </remarks>
-		/// <param name="path">The path to be intersected with the current clipping path.</param>
-		/// <param name="fillingRule">
-		/// The filling rule which should be applied to the given path.
-		/// It should be either
-		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-		/// 	>
-		/// or
-		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-		/// 	"/>
-		/// </param>
-		public virtual void Clip(Path path, int fillingRule)
-		{
-			if (clippingPath == null || clippingPath.IsEmpty())
-			{
-				return;
-			}
-			Path pathCopy = new Path(path);
-			pathCopy.CloseAllSubpaths();
-			Clipper clipper = new Clipper();
-			ClipperBridge.AddPath(clipper, clippingPath, PolyType.SUBJECT);
-			ClipperBridge.AddPath(clipper, pathCopy, PolyType.CLIP);
-			PolyTree resultTree = new PolyTree();
-			clipper.Execute(ClipType.INTERSECTION, resultTree, PolyFillType.NON_ZERO, ClipperBridge
-				.GetFillType(fillingRule));
-			clippingPath = ClipperBridge.ConvertToPath(resultTree);
-		}
+        /// <summary>Intersects the current clipping path with the given path.</summary>
+        /// <remarks>
+        /// Intersects the current clipping path with the given path.
+        /// <br/>
+        /// <strong>Note:</strong> Coordinates of the given path should be in
+        /// the transformed user space.
+        /// </remarks>
+        /// <param name="path">The path to be intersected with the current clipping path.</param>
+        /// <param name="fillingRule">
+        /// The filling rule which should be applied to the given path.
+        /// It should be either
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
+        ///     >
+        /// or
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
+        ///     "/>
+        /// </param>
+        public virtual void Clip(Path path, int fillingRule)
+        {
+            if (clippingPath == null || clippingPath.IsEmpty())
+            {
+                return;
+            }
+            Path pathCopy = new Path(path);
+            pathCopy.CloseAllSubpaths();
+            Clipper clipper = new Clipper();
+            ClipperBridge.AddPath(clipper, clippingPath, PolyType.SUBJECT);
+            ClipperBridge.AddPath(clipper, pathCopy, PolyType.CLIP);
+            PolyTree resultTree = new PolyTree();
+            clipper.Execute(ClipType.INTERSECTION, resultTree, PolyFillType.NON_ZERO, ClipperBridge
+                .GetFillType(fillingRule));
+            clippingPath = ClipperBridge.ConvertToPath(resultTree);
+        }
 
-		/// <summary>Getter for the current clipping path.</summary>
-		/// <remarks>
-		/// Getter for the current clipping path.
-		/// <br/>
-		/// <strong>Note:</strong> The returned clipping path is in the transformed user space, so
-		/// if you want to get it in default user space, apply transformation matrix (
-		/// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState.GetCtm()"/>
-		/// ).
-		/// </remarks>
-		/// <returns>The current clipping path.</returns>
-		public virtual Path GetClippingPath()
-		{
-			return clippingPath;
-		}
+        /// <summary>Getter for the current clipping path.</summary>
+        /// <remarks>
+        /// Getter for the current clipping path.
+        /// <br/>
+        /// <strong>Note:</strong> The returned clipping path is in the transformed user space, so
+        /// if you want to get it in default user space, apply transformation matrix (
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState.GetCtm()"/>
+        /// ).
+        /// </remarks>
+        /// <returns>The current clipping path.</returns>
+        public virtual Path GetClippingPath()
+        {
+            return clippingPath;
+        }
 
-		private void TransformClippingPath(Matrix newCtm)
-		{
-			Path path = new Path();
-			foreach (Subpath subpath in clippingPath.GetSubpaths())
-			{
-				Subpath transformedSubpath = TransformSubpath(subpath, newCtm);
-				path.AddSubpath(transformedSubpath);
-			}
-			clippingPath = path;
-		}
+        private void TransformClippingPath(Matrix newCtm)
+        {
+            Path path = new Path();
+            foreach (Subpath subpath in clippingPath.GetSubpaths())
+            {
+                Subpath transformedSubpath = TransformSubpath(subpath, newCtm);
+                path.AddSubpath(transformedSubpath);
+            }
+            clippingPath = path;
+        }
 
-		private Subpath TransformSubpath(Subpath subpath, Matrix newCtm)
-		{
-			Subpath newSubpath = new Subpath();
-			newSubpath.SetClosed(subpath.IsClosed());
-			foreach (IShape segment in subpath.GetSegments())
-			{
-				IShape transformedSegment = TransformSegment(segment, newCtm);
-				newSubpath.AddSegment(transformedSegment);
-			}
-			return newSubpath;
-		}
+        private Subpath TransformSubpath(Subpath subpath, Matrix newCtm)
+        {
+            Subpath newSubpath = new Subpath();
+            newSubpath.SetClosed(subpath.IsClosed());
+            foreach (IShape segment in subpath.GetSegments())
+            {
+                IShape transformedSegment = TransformSegment(segment, newCtm);
+                newSubpath.AddSegment(transformedSegment);
+            }
+            return newSubpath;
+        }
 
-		private IShape TransformSegment(IShape segment, Matrix newCtm)
-		{
-			IShape newSegment;
-			IList<Point> segBasePts = segment.GetBasePoints();
-			Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[
-				segBasePts.Count]));
-			if (segment is BezierCurve)
-			{
-				newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints
-					));
-			}
-			else
-			{
-				newSegment = new Line(transformedPoints[0], transformedPoints[1]);
-			}
-			return newSegment;
-		}
+        private IShape TransformSegment(IShape segment, Matrix newCtm)
+        {
+            IShape newSegment;
+            IList<Point> segBasePts = segment.GetBasePoints();
+            Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[
+                segBasePts.Count]));
+            if (segment is BezierCurve)
+            {
+                newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints
+                    ));
+            }
+            else
+            {
+                newSegment = new Line(transformedPoints[0], transformedPoints[1]);
+            }
+            return newSegment;
+        }
 
-		private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points
-			)
-		{
-			try
-			{
-				AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix
-					.Get(Matrix.I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.Get
-					(Matrix.I22), transformationMatrix.Get(Matrix.I31), transformationMatrix.Get(Matrix
-					.I32));
-				t = t.CreateInverse();
-				Point[] transformed = new Point[points.Length];
-				t.Transform(points, 0, transformed, 0, points.Length);
-				return transformed;
-			}
-			catch (NoninvertibleTransformException e)
-			{
-				throw new Exception(e.Message, e);
-			}
-		}
-	}
+        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points
+            )
+        {
+            try
+            {
+                AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix
+                    .Get(Matrix.I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.
+                    Get(Matrix.I22), transformationMatrix.Get(Matrix.I31), transformationMatrix.Get
+                    (Matrix.I32));
+                t = t.CreateInverse();
+                Point[] transformed = new Point[points.Length];
+                t.Transform(points, 0, transformed, 0, points.Length);
+                return transformed;
+            }
+            catch (NoninvertibleTransformException e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+    }
 }

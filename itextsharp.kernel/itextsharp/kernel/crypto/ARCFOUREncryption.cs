@@ -43,75 +43,75 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Crypto
 {
-	public class ARCFOUREncryption
-	{
-		private byte[] state = new byte[256];
+    public class ARCFOUREncryption
+    {
+        private byte[] state = new byte[256];
 
-		private int x;
+        private int x;
 
-		private int y;
+        private int y;
 
-		/// <summary>Creates a new instance of ARCFOUREncryption</summary>
-		public ARCFOUREncryption()
-		{
-		}
+        /// <summary>Creates a new instance of ARCFOUREncryption</summary>
+        public ARCFOUREncryption()
+        {
+        }
 
-		public virtual void PrepareARCFOURKey(byte[] key)
-		{
-			PrepareARCFOURKey(key, 0, key.Length);
-		}
+        public virtual void PrepareARCFOURKey(byte[] key)
+        {
+            PrepareARCFOURKey(key, 0, key.Length);
+        }
 
-		public virtual void PrepareARCFOURKey(byte[] key, int off, int len)
-		{
-			int index1 = 0;
-			int index2 = 0;
-			for (int k = 0; k < 256; ++k)
-			{
-				state[k] = (byte)k;
-			}
-			x = 0;
-			y = 0;
-			byte tmp;
-			for (int k_1 = 0; k_1 < 256; ++k_1)
-			{
-				index2 = (key[index1 + off] + state[k_1] + index2) & 255;
-				tmp = state[k_1];
-				state[k_1] = state[index2];
-				state[index2] = tmp;
-				index1 = (index1 + 1) % len;
-			}
-		}
+        public virtual void PrepareARCFOURKey(byte[] key, int off, int len)
+        {
+            int index1 = 0;
+            int index2 = 0;
+            for (int k = 0; k < 256; ++k)
+            {
+                state[k] = (byte)k;
+            }
+            x = 0;
+            y = 0;
+            byte tmp;
+            for (int k_1 = 0; k_1 < 256; ++k_1)
+            {
+                index2 = (key[index1 + off] + state[k_1] + index2) & 255;
+                tmp = state[k_1];
+                state[k_1] = state[index2];
+                state[index2] = tmp;
+                index1 = (index1 + 1) % len;
+            }
+        }
 
-		public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut
-			, int offOut)
-		{
-			int length = len + off;
-			byte tmp;
-			for (int k = off; k < length; ++k)
-			{
-				x = (x + 1) & 255;
-				y = (state[x] + y) & 255;
-				tmp = state[x];
-				state[x] = state[y];
-				state[y] = tmp;
-				dataOut[k - off + offOut] = (byte)(dataIn[k] ^ state[(state[x] + state[y]) & 255]
-					);
-			}
-		}
+        public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut
+            , int offOut)
+        {
+            int length = len + off;
+            byte tmp;
+            for (int k = off; k < length; ++k)
+            {
+                x = (x + 1) & 255;
+                y = (state[x] + y) & 255;
+                tmp = state[x];
+                state[x] = state[y];
+                state[y] = tmp;
+                dataOut[k - off + offOut] = (byte)(dataIn[k] ^ state[(state[x] + state[y]) & 255]
+                    );
+            }
+        }
 
-		public virtual void EncryptARCFOUR(byte[] data, int off, int len)
-		{
-			EncryptARCFOUR(data, off, len, data, off);
-		}
+        public virtual void EncryptARCFOUR(byte[] data, int off, int len)
+        {
+            EncryptARCFOUR(data, off, len, data, off);
+        }
 
-		public virtual void EncryptARCFOUR(byte[] dataIn, byte[] dataOut)
-		{
-			EncryptARCFOUR(dataIn, 0, dataIn.Length, dataOut, 0);
-		}
+        public virtual void EncryptARCFOUR(byte[] dataIn, byte[] dataOut)
+        {
+            EncryptARCFOUR(dataIn, 0, dataIn.Length, dataOut, 0);
+        }
 
-		public virtual void EncryptARCFOUR(byte[] data)
-		{
-			EncryptARCFOUR(data, 0, data.Length, data, 0);
-		}
-	}
+        public virtual void EncryptARCFOUR(byte[] data)
+        {
+            EncryptARCFOUR(data, 0, data.Length, data, 0);
+        }
+    }
 }

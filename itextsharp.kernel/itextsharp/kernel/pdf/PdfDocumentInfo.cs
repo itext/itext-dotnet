@@ -47,144 +47,144 @@ using iTextSharp.IO.Font;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument)
-			: base(pdfObject == null ? new PdfDictionary() : pdfObject)
-		{
-			if (pdfDocument.GetWriter() != null)
-			{
-				this.GetPdfObject().MakeIndirect(pdfDocument);
-			}
-			SetForbidRelease();
-		}
+    public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument)
+            : base(pdfObject == null ? new PdfDictionary() : pdfObject)
+        {
+            if (pdfDocument.GetWriter() != null)
+            {
+                this.GetPdfObject().MakeIndirect(pdfDocument);
+            }
+            SetForbidRelease();
+        }
 
-		public PdfDocumentInfo(PdfDictionary pdfObject)
-			: this(pdfObject, null)
-		{
-		}
+        public PdfDocumentInfo(PdfDictionary pdfObject)
+            : this(pdfObject, null)
+        {
+        }
 
-		public PdfDocumentInfo(PdfDocument pdfDocument)
-			: this(new PdfDictionary(), pdfDocument)
-		{
-		}
+        public PdfDocumentInfo(PdfDocument pdfDocument)
+            : this(new PdfDictionary(), pdfDocument)
+        {
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetTitle(String title)
-		{
-			GetPdfObject().Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetTitle(String title)
+        {
+            GetPdfObject().Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author)
-		{
-			GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG
-				));
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author)
+        {
+            GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG
+                ));
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject)
-		{
-			GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG
-				));
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject)
+        {
+            GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG
+                ));
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords)
-		{
-			GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG
-				));
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords)
+        {
+            GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG
+                ));
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator)
-		{
-			GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG
-				));
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator)
+        {
+            GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG
+                ));
+            return this;
+        }
 
-		public virtual String GetTitle()
-		{
-			return GetStringValue(PdfName.Title);
-		}
+        public virtual String GetTitle()
+        {
+            return GetStringValue(PdfName.Title);
+        }
 
-		public virtual String GetAuthor()
-		{
-			return GetStringValue(PdfName.Author);
-		}
+        public virtual String GetAuthor()
+        {
+            return GetStringValue(PdfName.Author);
+        }
 
-		public virtual String GetSubject()
-		{
-			return GetStringValue(PdfName.Subject);
-		}
+        public virtual String GetSubject()
+        {
+            return GetStringValue(PdfName.Subject);
+        }
 
-		public virtual String GetKeywords()
-		{
-			return GetStringValue(PdfName.Keywords);
-		}
+        public virtual String GetKeywords()
+        {
+            return GetStringValue(PdfName.Keywords);
+        }
 
-		public virtual String GetCreator()
-		{
-			return GetStringValue(PdfName.Creator);
-		}
+        public virtual String GetCreator()
+        {
+            return GetStringValue(PdfName.Creator);
+        }
 
-		public virtual String GetProducer()
-		{
-			return GetStringValue(PdfName.Producer);
-		}
+        public virtual String GetProducer()
+        {
+            return GetStringValue(PdfName.Producer);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddCreationDate()
-		{
-			this.GetPdfObject().Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddCreationDate()
+        {
+            this.GetPdfObject().Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddModDate()
-		{
-			this.GetPdfObject().Put(PdfName.ModDate, new PdfDate().GetPdfObject());
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo AddModDate()
+        {
+            this.GetPdfObject().Put(PdfName.ModDate, new PdfDate().GetPdfObject());
+            return this;
+        }
 
-		public virtual void SetMoreInfo(IDictionary<String, String> moreInfo)
-		{
-			if (moreInfo != null)
-			{
-				foreach (KeyValuePair<String, String> entry in moreInfo)
-				{
-					String key = entry.Key;
-					String value = entry.Value;
-					SetMoreInfo(key, value);
-				}
-			}
-		}
+        public virtual void SetMoreInfo(IDictionary<String, String> moreInfo)
+        {
+            if (moreInfo != null)
+            {
+                foreach (KeyValuePair<String, String> entry in moreInfo)
+                {
+                    String key = entry.Key;
+                    String value = entry.Value;
+                    SetMoreInfo(key, value);
+                }
+            }
+        }
 
-		public virtual void SetMoreInfo(String key, String value)
-		{
-			PdfName keyName = new PdfName(key);
-			if (value == null)
-			{
-				GetPdfObject().Remove(keyName);
-			}
-			else
-			{
-				GetPdfObject().Put(keyName, new PdfString(value, PdfEncodings.UNICODE_BIG));
-			}
-		}
+        public virtual void SetMoreInfo(String key, String value)
+        {
+            PdfName keyName = new PdfName(key);
+            if (value == null)
+            {
+                GetPdfObject().Remove(keyName);
+            }
+            else
+            {
+                GetPdfObject().Put(keyName, new PdfString(value, PdfEncodings.UNICODE_BIG));
+            }
+        }
 
-		public override void Flush()
-		{
-			GetPdfObject().Flush(false);
-		}
+        public override void Flush()
+        {
+            GetPdfObject().Flush(false);
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
 
-		private String GetStringValue(PdfName name)
-		{
-			PdfString pdfString = GetPdfObject().GetAsString(name);
-			return pdfString != null ? pdfString.ToUnicodeString() : null;
-		}
-	}
+        private String GetStringValue(PdfName name)
+        {
+            PdfString pdfString = GetPdfObject().GetAsString(name);
+            return pdfString != null ? pdfString.ToUnicodeString() : null;
+        }
+    }
 }

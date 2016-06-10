@@ -32,24 +32,24 @@ using iTextSharp.Kernel.XMP.Options;
 
 namespace iTextSharp.Kernel.XMP.Properties
 {
-	/// <summary>This interface is used to return a text property together with its and options.
-	/// 	</summary>
-	/// <since>23.01.2006</since>
-	public interface XMPProperty
-	{
-		/// <returns>Returns the value of the property.</returns>
-		String GetValue();
+    /// <summary>This interface is used to return a text property together with its and options.
+    ///     </summary>
+    /// <since>23.01.2006</since>
+    public interface XMPProperty
+    {
+        /// <returns>Returns the value of the property.</returns>
+        String GetValue();
 
-		/// <returns>Returns the options of the property.</returns>
-		PropertyOptions GetOptions();
+        /// <returns>Returns the options of the property.</returns>
+        PropertyOptions GetOptions();
 
-		/// <summary>
-		/// Only set by
-		/// <see cref="iTextSharp.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
-		/// 	"/>
-		/// .
-		/// </summary>
-		/// <returns>Returns the language of the alt-text item.</returns>
-		String GetLanguage();
-	}
+        /// <summary>
+        /// Only set by
+        /// <see cref="iTextSharp.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
+        ///     "/>
+        /// .
+        /// </summary>
+        /// <returns>Returns the language of the alt-text item.</returns>
+        String GetLanguage();
+    }
 }

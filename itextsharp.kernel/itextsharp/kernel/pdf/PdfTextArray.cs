@@ -48,129 +48,129 @@ using iTextSharp.Kernel.Font;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	/// <summary><CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
-	/// 	</summary>
-	/// <remarks>
-	/// <CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
-	/// <P>
-	/// A <CODE>PdfTextArray</CODE> is used with the operator <VAR>TJ</VAR> in <CODE>PdfCanvas</CODE>.
-	/// The first object in this array has to be a <CODE>PdfString</CODE>;
-	/// see reference manual version 1.3 section 8.7.5, pages 346-347.
-	/// OR
-	/// see reference manual version 1.6 section 5.3.2, pages 378-379.
-	/// To emit a more efficient array, we consolidate repeated numbers or strings into single array entries.
-	/// "add( 50 ); add( -50 );" will REMOVE the combined zero from the array.
-	/// </remarks>
-	public class PdfTextArray : PdfArray
-	{
-		private float lastNumber = float.NaN;
+    /// <summary><CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
+    ///     </summary>
+    /// <remarks>
+    /// <CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
+    /// <P>
+    /// A <CODE>PdfTextArray</CODE> is used with the operator <VAR>TJ</VAR> in <CODE>PdfCanvas</CODE>.
+    /// The first object in this array has to be a <CODE>PdfString</CODE>;
+    /// see reference manual version 1.3 section 8.7.5, pages 346-347.
+    /// OR
+    /// see reference manual version 1.6 section 5.3.2, pages 378-379.
+    /// To emit a more efficient array, we consolidate repeated numbers or strings into single array entries.
+    /// "add( 50 ); add( -50 );" will REMOVE the combined zero from the array.
+    /// </remarks>
+    public class PdfTextArray : PdfArray
+    {
+        private float lastNumber = float.NaN;
 
-		private StringBuilder lastString;
+        private StringBuilder lastString;
 
-		public override void Add(PdfObject pdfObject)
-		{
-			if (pdfObject.IsNumber())
-			{
-				Add(((PdfNumber)pdfObject).FloatValue());
-			}
-			else
-			{
-				if (pdfObject is PdfString)
-				{
-					Add(((PdfString)pdfObject).GetValueBytes());
-				}
-			}
-		}
+        public override void Add(PdfObject pdfObject)
+        {
+            if (pdfObject.IsNumber())
+            {
+                Add(((PdfNumber)pdfObject).FloatValue());
+            }
+            else
+            {
+                if (pdfObject is PdfString)
+                {
+                    Add(((PdfString)pdfObject).GetValueBytes());
+                }
+            }
+        }
 
-		/// <summary>
-		/// Adds content of the
-		/// <c>PdfArray</c>
-		/// .
-		/// </summary>
-		/// <param name="a">
-		/// the
-		/// <c>PdfArray</c>
-		/// to be added
-		/// </param>
-		/// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
-		/// 	"/>
-		public override void AddAll(PdfArray a)
-		{
-			if (a != null)
-			{
-				AddAll(a.list);
-			}
-		}
+        /// <summary>
+        /// Adds content of the
+        /// <c>PdfArray</c>
+        /// .
+        /// </summary>
+        /// <param name="a">
+        /// the
+        /// <c>PdfArray</c>
+        /// to be added
+        /// </param>
+        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
+        ///     "/>
+        public override void AddAll(PdfArray a)
+        {
+            if (a != null)
+            {
+                AddAll(a.list);
+            }
+        }
 
-		/// <summary>Adds the Collection of PdfObjects.</summary>
-		/// <param name="c">the Collection of PdfObjects to be added</param>
-		/// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
-		/// 	"/>
-		public override void AddAll(ICollection<PdfObject> c)
-		{
-			foreach (PdfObject obj in c)
-			{
-				Add(obj);
-			}
-		}
+        /// <summary>Adds the Collection of PdfObjects.</summary>
+        /// <param name="c">the Collection of PdfObjects to be added</param>
+        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
+        ///     "/>
+        public override void AddAll(ICollection<PdfObject> c)
+        {
+            foreach (PdfObject obj in c)
+            {
+                Add(obj);
+            }
+        }
 
-		public virtual bool Add(float number)
-		{
-			// adding zero doesn't modify the TextArray at all
-			if (number != 0)
-			{
-				if (!float.IsNaN(lastNumber))
-				{
-					lastNumber = number + lastNumber;
-					if (lastNumber != 0)
-					{
-						Set(Size() - 1, new PdfNumber(lastNumber));
-					}
-					else
-					{
-						Remove(Size() - 1);
-					}
-				}
-				else
-				{
-					lastNumber = number;
-					base.Add(new PdfNumber(lastNumber));
-				}
-				lastString = null;
-				return true;
-			}
-			return false;
-		}
+        public virtual bool Add(float number)
+        {
+            // adding zero doesn't modify the TextArray at all
+            if (number != 0)
+            {
+                if (!float.IsNaN(lastNumber))
+                {
+                    lastNumber = number + lastNumber;
+                    if (lastNumber != 0)
+                    {
+                        Set(Size() - 1, new PdfNumber(lastNumber));
+                    }
+                    else
+                    {
+                        Remove(Size() - 1);
+                    }
+                }
+                else
+                {
+                    lastNumber = number;
+                    base.Add(new PdfNumber(lastNumber));
+                }
+                lastString = null;
+                return true;
+            }
+            return false;
+        }
 
-		public virtual bool Add(String text, PdfFont font)
-		{
-			// adding an empty string doesn't modify the TextArray at all
-			return Add(font.ConvertToBytes(text));
-		}
+        public virtual bool Add(String text, PdfFont font)
+        {
+            // adding an empty string doesn't modify the TextArray at all
+            return Add(font.ConvertToBytes(text));
+        }
 
-		public virtual bool Add(byte[] text)
-		{
-			return Add(new PdfString(text).GetValue());
-		}
+        public virtual bool Add(byte[] text)
+        {
+            return Add(new PdfString(text).GetValue());
+        }
 
-		protected internal virtual bool Add(String text)
-		{
-			if (text.Length > 0)
-			{
-				if (lastString != null)
-				{
-					lastString.Append(text);
-					Set(Size() - 1, new PdfString(lastString.ToString()));
-				}
-				else
-				{
-					lastString = new StringBuilder(text);
-					base.Add(new PdfString(lastString.ToString()));
-				}
-				lastNumber = float.NaN;
-				return true;
-			}
-			return false;
-		}
-	}
+        protected internal virtual bool Add(String text)
+        {
+            if (text.Length > 0)
+            {
+                if (lastString != null)
+                {
+                    lastString.Append(text);
+                    Set(Size() - 1, new PdfString(lastString.ToString()));
+                }
+                else
+                {
+                    lastString = new StringBuilder(text);
+                    base.Add(new PdfString(lastString.ToString()));
+                }
+                lastNumber = float.NaN;
+                return true;
+            }
+            return false;
+        }
+    }
 }

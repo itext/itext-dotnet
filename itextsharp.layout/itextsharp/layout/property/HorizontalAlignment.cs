@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum HorizontalAlignment
-	{
-		LEFT,
-		CENTER,
-		RIGHT
-	}
+    public enum HorizontalAlignment
+    {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
 }

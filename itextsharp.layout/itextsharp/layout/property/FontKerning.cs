@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum FontKerning
-	{
-		YES,
-		NO
-	}
+    public enum FontKerning
+    {
+        YES,
+        NO
+    }
 }

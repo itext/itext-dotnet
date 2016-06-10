@@ -46,204 +46,204 @@ using iTextSharp.IO.Source;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	public class PdfNumber : PdfPrimitiveObject
-	{
-		private double value;
+    public class PdfNumber : PdfPrimitiveObject
+    {
+        private double value;
 
-		private bool isDouble;
+        private bool isDouble;
 
-		public PdfNumber(double value)
-			: base()
-		{
-			SetValue(value);
-		}
+        public PdfNumber(double value)
+            : base()
+        {
+            SetValue(value);
+        }
 
-		public PdfNumber(int value)
-			: base()
-		{
-			SetValue(value);
-		}
+        public PdfNumber(int value)
+            : base()
+        {
+            SetValue(value);
+        }
 
-		public PdfNumber(byte[] content)
-			: base(content)
-		{
-			this.isDouble = true;
-			this.value = double.NaN;
-		}
+        public PdfNumber(byte[] content)
+            : base(content)
+        {
+            this.isDouble = true;
+            this.value = double.NaN;
+        }
 
-		private PdfNumber()
-			: base()
-		{
-		}
+        private PdfNumber()
+            : base()
+        {
+        }
 
-		public override byte GetObjectType()
-		{
-			return NUMBER;
-		}
+        public override byte GetObjectType()
+        {
+            return NUMBER;
+        }
 
-		public virtual double GetValue()
-		{
-			if (double.IsNaN(value))
-			{
-				GenerateValue();
-			}
-			return value;
-		}
+        public virtual double GetValue()
+        {
+            if (double.IsNaN(value))
+            {
+                GenerateValue();
+            }
+            return value;
+        }
 
-		public virtual double DoubleValue()
-		{
-			return GetValue();
-		}
+        public virtual double DoubleValue()
+        {
+            return GetValue();
+        }
 
-		public virtual float FloatValue()
-		{
-			return (float)GetValue();
-		}
+        public virtual float FloatValue()
+        {
+            return (float)GetValue();
+        }
 
-		public virtual long LongValue()
-		{
-			return (long)GetValue();
-		}
+        public virtual long LongValue()
+        {
+            return (long)GetValue();
+        }
 
-		public virtual int IntValue()
-		{
-			return (int)GetValue();
-		}
+        public virtual int IntValue()
+        {
+            return (int)GetValue();
+        }
 
-		public virtual void SetValue(int value)
-		{
-			this.value = value;
-			this.isDouble = false;
-			this.content = null;
-		}
+        public virtual void SetValue(int value)
+        {
+            this.value = value;
+            this.isDouble = false;
+            this.content = null;
+        }
 
-		public virtual void SetValue(double value)
-		{
-			this.value = value;
-			this.isDouble = true;
-			this.content = null;
-		}
+        public virtual void SetValue(double value)
+        {
+            this.value = value;
+            this.isDouble = true;
+            this.content = null;
+        }
 
-		public virtual void Increment()
-		{
-			SetValue(++value);
-		}
+        public virtual void Increment()
+        {
+            SetValue(++value);
+        }
 
-		public virtual void Decrement()
-		{
-			SetValue(--value);
-		}
+        public virtual void Decrement()
+        {
+            SetValue(--value);
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
+        }
 
-		/// <summary>Marks object to be saved as indirect.</summary>
-		/// <param name="document">a document the indirect reference will belong to.</param>
-		/// <returns>object itself.</returns>
-		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-			 reference)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
-		}
+        /// <summary>Marks object to be saved as indirect.</summary>
+        /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <returns>object itself.</returns>
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
+             reference)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
+        }
 
-		/// <summary>Copies object to a specified document.</summary>
-		/// <remarks>
-		/// Copies object to a specified document.
-		/// Works only for objects that are read from existing document, otherwise an exception is thrown.
-		/// </remarks>
-		/// <param name="document">document to copy object to.</param>
-		/// <param name="allowDuplicating">
-		/// indicates if to allow copy objects which already have been copied.
-		/// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
-		/// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
-		/// </param>
-		/// <returns>copied object.</returns>
-		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-		{
-			return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
-		}
+        /// <summary>Copies object to a specified document.</summary>
+        /// <remarks>
+        /// Copies object to a specified document.
+        /// Works only for objects that are read from existing document, otherwise an exception is thrown.
+        /// </remarks>
+        /// <param name="document">document to copy object to.</param>
+        /// <param name="allowDuplicating">
+        /// indicates if to allow copy objects which already have been copied.
+        /// If object is associated with any indirect reference and allowDuplicating is false then already existing reference will be returned instead of copying object.
+        /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
+        /// </param>
+        /// <returns>copied object.</returns>
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
+        {
+            return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
+        }
 
-		public override String ToString()
-		{
-			if (content != null)
-			{
-				return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
-			}
-			else
-			{
-				if (isDouble)
-				{
-					return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue
-						()));
-				}
-				else
-				{
-					return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue
-						()));
-				}
-			}
-		}
+        public override String ToString()
+        {
+            if (content != null)
+            {
+                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
+            }
+            else
+            {
+                if (isDouble)
+                {
+                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue
+                        ()));
+                }
+                else
+                {
+                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue
+                        ()));
+                }
+            }
+        }
 
-		protected internal override PdfObject NewInstance()
-		{
-			return new iTextSharp.Kernel.Pdf.PdfNumber();
-		}
+        protected internal override PdfObject NewInstance()
+        {
+            return new iTextSharp.Kernel.Pdf.PdfNumber();
+        }
 
-		protected internal virtual bool IsDoubleNumber()
-		{
-			return isDouble;
-		}
+        protected internal virtual bool IsDoubleNumber()
+        {
+            return isDouble;
+        }
 
-		protected internal override void GenerateContent()
-		{
-			if (isDouble)
-			{
-				content = ByteUtils.GetIsoBytes(value);
-			}
-			else
-			{
-				content = ByteUtils.GetIsoBytes((int)value);
-			}
-		}
+        protected internal override void GenerateContent()
+        {
+            if (isDouble)
+            {
+                content = ByteUtils.GetIsoBytes(value);
+            }
+            else
+            {
+                content = ByteUtils.GetIsoBytes((int)value);
+            }
+        }
 
-		protected internal virtual void GenerateValue()
-		{
-			try
-			{
-				value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content
-					), System.Globalization.CultureInfo.InvariantCulture);
-			}
-			catch (FormatException)
-			{
-				value = double.NaN;
-			}
-			isDouble = true;
-		}
+        protected internal virtual void GenerateValue()
+        {
+            try
+            {
+                value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content
+                    ), System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                value = double.NaN;
+            }
+            isDouble = true;
+        }
 
-		protected internal override void CopyContent(PdfObject from, PdfDocument document
-			)
-		{
-			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfNumber number = (iTextSharp.Kernel.Pdf.PdfNumber)from;
-			value = number.value;
-			isDouble = number.isDouble;
-		}
-	}
+        protected internal override void CopyContent(PdfObject from, PdfDocument document
+            )
+        {
+            base.CopyContent(from, document);
+            iTextSharp.Kernel.Pdf.PdfNumber number = (iTextSharp.Kernel.Pdf.PdfNumber)from;
+            value = number.value;
+            isDouble = number.isDouble;
+        }
+    }
 }

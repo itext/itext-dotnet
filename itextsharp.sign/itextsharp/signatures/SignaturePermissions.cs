@@ -47,155 +47,155 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>
-	/// A helper class that tells you more about the type of signature
-	/// (certification or approval) and the signature's DMP settings.
-	/// </summary>
-	public class SignaturePermissions
-	{
-		/// <summary>
-		/// Class that contains a field lock action and
-		/// an array of the fields that are involved.
-		/// </summary>
-		public class FieldLock
-		{
-			/// <summary>Can be /All, /Exclude or /Include</summary>
-			internal PdfName action;
+    /// <summary>
+    /// A helper class that tells you more about the type of signature
+    /// (certification or approval) and the signature's DMP settings.
+    /// </summary>
+    public class SignaturePermissions
+    {
+        /// <summary>
+        /// Class that contains a field lock action and
+        /// an array of the fields that are involved.
+        /// </summary>
+        public class FieldLock
+        {
+            /// <summary>Can be /All, /Exclude or /Include</summary>
+            internal PdfName action;
 
-			/// <summary>An array of PdfString values with fieldnames</summary>
-			internal PdfArray fields;
+            /// <summary>An array of PdfString values with fieldnames</summary>
+            internal PdfArray fields;
 
-			/// <summary>Creates a FieldLock instance</summary>
-			public FieldLock(SignaturePermissions _enclosing, PdfName action, PdfArray fields
-				)
-			{
-				this._enclosing = _enclosing;
-				this.action = action;
-				this.fields = fields;
-			}
+            /// <summary>Creates a FieldLock instance</summary>
+            public FieldLock(SignaturePermissions _enclosing, PdfName action, PdfArray fields
+                )
+            {
+                this._enclosing = _enclosing;
+                this.action = action;
+                this.fields = fields;
+            }
 
-			/// <summary>Getter for the field lock action.</summary>
-			public virtual PdfName GetAction()
-			{
-				return this.action;
-			}
+            /// <summary>Getter for the field lock action.</summary>
+            public virtual PdfName GetAction()
+            {
+                return this.action;
+            }
 
-			/// <summary>Getter for the fields involved in the lock action.</summary>
-			public virtual PdfArray GetFields()
-			{
-				return this.fields;
-			}
+            /// <summary>Getter for the fields involved in the lock action.</summary>
+            public virtual PdfArray GetFields()
+            {
+                return this.fields;
+            }
 
-			/// <summary>toString method</summary>
-			public override String ToString()
-			{
-				return this.action.ToString() + (this.fields == null ? "" : this.fields.ToString(
-					));
-			}
+            /// <summary>toString method</summary>
+            public override String ToString()
+            {
+                return this.action.ToString() + (this.fields == null ? "" : this.fields.ToString(
+                    ));
+            }
 
-			private readonly SignaturePermissions _enclosing;
-		}
+            private readonly SignaturePermissions _enclosing;
+        }
 
-		/// <summary>Is the signature a cerification signature (true) or an approval signature (false)?
-		/// 	</summary>
-		internal bool certification = false;
+        /// <summary>Is the signature a cerification signature (true) or an approval signature (false)?
+        ///     </summary>
+        internal bool certification = false;
 
-		/// <summary>Is form filling allowed by this signature?</summary>
-		internal bool fillInAllowed = true;
+        /// <summary>Is form filling allowed by this signature?</summary>
+        internal bool fillInAllowed = true;
 
-		/// <summary>Is adding annotations allowed by this signature?</summary>
-		internal bool annotationsAllowed = true;
+        /// <summary>Is adding annotations allowed by this signature?</summary>
+        internal bool annotationsAllowed = true;
 
-		/// <summary>Does this signature lock specific fields?</summary>
-		internal IList<SignaturePermissions.FieldLock> fieldLocks = new List<SignaturePermissions.FieldLock
-			>();
+        /// <summary>Does this signature lock specific fields?</summary>
+        internal IList<SignaturePermissions.FieldLock> fieldLocks = new List<SignaturePermissions.FieldLock
+            >();
 
-		/// <summary>
-		/// Creates an object that can inform you about the type of signature
-		/// in a signature dictionary as well as some of the permissions
-		/// defined by the signature.
-		/// </summary>
-		public SignaturePermissions(PdfDictionary sigDict, SignaturePermissions previous)
-		{
-			if (previous != null)
-			{
-				annotationsAllowed &= previous.IsAnnotationsAllowed();
-				fillInAllowed &= previous.IsFillInAllowed();
-				fieldLocks.AddAll(previous.GetFieldLocks());
-			}
-			PdfArray @ref = sigDict.GetAsArray(PdfName.Reference);
-			if (@ref != null)
-			{
-				for (int i = 0; i < @ref.Size(); i++)
-				{
-					PdfDictionary dict = @ref.GetAsDictionary(i);
-					PdfDictionary @params = dict.GetAsDictionary(PdfName.TransformParams);
-					if (PdfName.DocMDP.Equals(dict.GetAsName(PdfName.TransformMethod)))
-					{
-						certification = true;
-					}
-					PdfName action = @params.GetAsName(PdfName.Action);
-					if (action != null)
-					{
-						fieldLocks.Add(new SignaturePermissions.FieldLock(this, action, @params.GetAsArray
-							(PdfName.Fields)));
-					}
-					PdfNumber p = @params.GetAsNumber(PdfName.P);
-					if (p == null)
-					{
-						continue;
-					}
-					switch (p.IntValue())
-					{
-						default:
-						{
-							break;
-						}
+        /// <summary>
+        /// Creates an object that can inform you about the type of signature
+        /// in a signature dictionary as well as some of the permissions
+        /// defined by the signature.
+        /// </summary>
+        public SignaturePermissions(PdfDictionary sigDict, SignaturePermissions previous)
+        {
+            if (previous != null)
+            {
+                annotationsAllowed &= previous.IsAnnotationsAllowed();
+                fillInAllowed &= previous.IsFillInAllowed();
+                fieldLocks.AddAll(previous.GetFieldLocks());
+            }
+            PdfArray @ref = sigDict.GetAsArray(PdfName.Reference);
+            if (@ref != null)
+            {
+                for (int i = 0; i < @ref.Size(); i++)
+                {
+                    PdfDictionary dict = @ref.GetAsDictionary(i);
+                    PdfDictionary @params = dict.GetAsDictionary(PdfName.TransformParams);
+                    if (PdfName.DocMDP.Equals(dict.GetAsName(PdfName.TransformMethod)))
+                    {
+                        certification = true;
+                    }
+                    PdfName action = @params.GetAsName(PdfName.Action);
+                    if (action != null)
+                    {
+                        fieldLocks.Add(new SignaturePermissions.FieldLock(this, action, @params.GetAsArray
+                            (PdfName.Fields)));
+                    }
+                    PdfNumber p = @params.GetAsNumber(PdfName.P);
+                    if (p == null)
+                    {
+                        continue;
+                    }
+                    switch (p.IntValue())
+                    {
+                        default:
+                        {
+                            break;
+                        }
 
-						case 1:
-						{
-							fillInAllowed &= false;
-							goto case 2;
-						}
+                        case 1:
+                        {
+                            fillInAllowed &= false;
+                            goto case 2;
+                        }
 
-						case 2:
-						{
-							annotationsAllowed &= false;
-							break;
-						}
-					}
-				}
-			}
-		}
+                        case 2:
+                        {
+                            annotationsAllowed &= false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-		/// <summary>Getter to find out if the signature is a certification signature.</summary>
-		/// <returns>true if the signature is a certification signature, false for an approval signature.
-		/// 	</returns>
-		public virtual bool IsCertification()
-		{
-			return certification;
-		}
+        /// <summary>Getter to find out if the signature is a certification signature.</summary>
+        /// <returns>true if the signature is a certification signature, false for an approval signature.
+        ///     </returns>
+        public virtual bool IsCertification()
+        {
+            return certification;
+        }
 
-		/// <summary>Getter to find out if filling out fields is allowed after signing.</summary>
-		/// <returns>true if filling out fields is allowed</returns>
-		public virtual bool IsFillInAllowed()
-		{
-			return fillInAllowed;
-		}
+        /// <summary>Getter to find out if filling out fields is allowed after signing.</summary>
+        /// <returns>true if filling out fields is allowed</returns>
+        public virtual bool IsFillInAllowed()
+        {
+            return fillInAllowed;
+        }
 
-		/// <summary>Getter to find out if adding annotations is allowed after signing.</summary>
-		/// <returns>true if adding annotations is allowed</returns>
-		public virtual bool IsAnnotationsAllowed()
-		{
-			return annotationsAllowed;
-		}
+        /// <summary>Getter to find out if adding annotations is allowed after signing.</summary>
+        /// <returns>true if adding annotations is allowed</returns>
+        public virtual bool IsAnnotationsAllowed()
+        {
+            return annotationsAllowed;
+        }
 
-		/// <summary>Getter for the field lock actions, and fields that are impacted by the action
-		/// 	</summary>
-		/// <returns>an Array with field names</returns>
-		public virtual IList<SignaturePermissions.FieldLock> GetFieldLocks()
-		{
-			return fieldLocks;
-		}
-	}
+        /// <summary>Getter for the field lock actions, and fields that are impacted by the action
+        ///     </summary>
+        /// <returns>an Array with field names</returns>
+        public virtual IList<SignaturePermissions.FieldLock> GetFieldLocks()
+        {
+            return fieldLocks;
+        }
+    }
 }

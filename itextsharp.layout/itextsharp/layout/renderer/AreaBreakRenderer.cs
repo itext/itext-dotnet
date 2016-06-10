@@ -49,118 +49,118 @@ using iTextSharp.Layout.Layout;
 
 namespace iTextSharp.Layout.Renderer
 {
-	/// <summary>
-	/// Renderer object for the
-	/// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
-	/// layout element. Will terminate the
-	/// current content area and initialize a new one.
-	/// </summary>
-	public class AreaBreakRenderer : IRenderer
-	{
-		protected internal AreaBreak areaBreak;
+    /// <summary>
+    /// Renderer object for the
+    /// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
+    /// layout element. Will terminate the
+    /// current content area and initialize a new one.
+    /// </summary>
+    public class AreaBreakRenderer : IRenderer
+    {
+        protected internal AreaBreak areaBreak;
 
-		/// <summary>Creates an AreaBreakRenderer.</summary>
-		/// <param name="areaBreak">
-		/// the
-		/// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
-		/// that will be rendered by this object
-		/// </param>
-		public AreaBreakRenderer(AreaBreak areaBreak)
-		{
-			this.areaBreak = areaBreak;
-		}
+        /// <summary>Creates an AreaBreakRenderer.</summary>
+        /// <param name="areaBreak">
+        /// the
+        /// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
+        /// that will be rendered by this object
+        /// </param>
+        public AreaBreakRenderer(AreaBreak areaBreak)
+        {
+            this.areaBreak = areaBreak;
+        }
 
-		public virtual void AddChild(IRenderer renderer)
-		{
-			throw new Exception();
-		}
+        public virtual void AddChild(IRenderer renderer)
+        {
+            throw new Exception();
+        }
 
-		public virtual LayoutResult Layout(LayoutContext layoutContext)
-		{
-			LayoutArea occupiedArea = layoutContext.GetArea().Clone();
-			occupiedArea.GetBBox().SetHeight(0);
-			occupiedArea.GetBBox().SetWidth(0);
-			return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, null).SetAreaBreak
-				(areaBreak);
-		}
+        public virtual LayoutResult Layout(LayoutContext layoutContext)
+        {
+            LayoutArea occupiedArea = layoutContext.GetArea().Clone();
+            occupiedArea.GetBBox().SetHeight(0);
+            occupiedArea.GetBBox().SetWidth(0);
+            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, null).SetAreaBreak
+                (areaBreak);
+        }
 
-		public virtual void Draw(DrawContext drawContext)
-		{
-			throw new NotSupportedException();
-		}
+        public virtual void Draw(DrawContext drawContext)
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual LayoutArea GetOccupiedArea()
-		{
-			throw new NotSupportedException();
-		}
+        public virtual LayoutArea GetOccupiedArea()
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual bool HasProperty(int property)
-		{
-			return false;
-		}
+        public virtual bool HasProperty(int property)
+        {
+            return false;
+        }
 
-		public virtual bool HasOwnProperty(int property)
-		{
-			return false;
-		}
+        public virtual bool HasOwnProperty(int property)
+        {
+            return false;
+        }
 
-		public virtual T1 GetProperty<T1>(int key)
-		{
-			return (T1)(Object)null;
-		}
+        public virtual T1 GetProperty<T1>(int key)
+        {
+            return (T1)(Object)null;
+        }
 
-		public virtual T1 GetOwnProperty<T1>(int property)
-		{
-			return (T1)(Object)null;
-		}
+        public virtual T1 GetOwnProperty<T1>(int property)
+        {
+            return (T1)(Object)null;
+        }
 
-		public virtual T1 GetDefaultProperty<T1>(int property)
-		{
-			return (T1)(Object)null;
-		}
+        public virtual T1 GetDefaultProperty<T1>(int property)
+        {
+            return (T1)(Object)null;
+        }
 
-		public virtual T1 GetProperty<T1>(int property, T1 defaultValue)
-		{
-			throw new NotSupportedException();
-		}
+        public virtual T1 GetProperty<T1>(int property, T1 defaultValue)
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual void SetProperty(int property, Object value)
-		{
-			throw new NotSupportedException();
-		}
+        public virtual void SetProperty(int property, Object value)
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual void DeleteOwnProperty(int property)
-		{
-		}
+        public virtual void DeleteOwnProperty(int property)
+        {
+        }
 
-		public virtual IRenderer SetParent(IRenderer parent)
-		{
-			return this;
-		}
+        public virtual IRenderer SetParent(IRenderer parent)
+        {
+            return this;
+        }
 
-		public virtual IPropertyContainer GetModelElement()
-		{
-			return null;
-		}
+        public virtual IPropertyContainer GetModelElement()
+        {
+            return null;
+        }
 
-		public virtual IList<IRenderer> GetChildRenderers()
-		{
-			return null;
-		}
+        public virtual IList<IRenderer> GetChildRenderers()
+        {
+            return null;
+        }
 
-		public virtual bool IsFlushed()
-		{
-			return false;
-		}
+        public virtual bool IsFlushed()
+        {
+            return false;
+        }
 
-		public virtual void Move(float dx, float dy)
-		{
-			throw new NotSupportedException();
-		}
+        public virtual void Move(float dx, float dy)
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual IRenderer GetNextRenderer()
-		{
-			return null;
-		}
-	}
+        public virtual IRenderer GetNextRenderer()
+        {
+            return null;
+        }
+    }
 }

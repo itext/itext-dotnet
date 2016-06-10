@@ -47,50 +47,50 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <author>psoares</author>
-	public class CMapCidByte : AbstractCMap
-	{
-		private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
+    /// <author>psoares</author>
+    public class CMapCidByte : AbstractCMap
+    {
+        private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
 
-		private readonly byte[] EMPTY = new byte[] {  };
+        private readonly byte[] EMPTY = new byte[] {  };
 
-		internal override void AddChar(String mark, CMapObject code)
-		{
-			if (code.IsNumber())
-			{
-				byte[] ser = DecodeStringToByte(mark);
-				map[(int)code.GetValue()] = ser;
-			}
-		}
+        internal override void AddChar(String mark, CMapObject code)
+        {
+            if (code.IsNumber())
+            {
+                byte[] ser = DecodeStringToByte(mark);
+                map[(int)code.GetValue()] = ser;
+            }
+        }
 
-		public virtual byte[] Lookup(int cid)
-		{
-			byte[] ser = map.Get(cid);
-			if (ser == null)
-			{
-				return EMPTY;
-			}
-			else
-			{
-				return ser;
-			}
-		}
+        public virtual byte[] Lookup(int cid)
+        {
+            byte[] ser = map.Get(cid);
+            if (ser == null)
+            {
+                return EMPTY;
+            }
+            else
+            {
+                return ser;
+            }
+        }
 
-		public virtual IntHashtable GetReversMap()
-		{
-			IntHashtable code2cid = new IntHashtable(map.Count);
-			foreach (int cid in map.Keys)
-			{
-				byte[] bytes = map.Get(cid);
-				int byteCode = 0;
-				foreach (byte b in bytes)
-				{
-					byteCode <<= 8;
-					byteCode += b & 0xff;
-				}
-				code2cid.Put(byteCode, cid);
-			}
-			return code2cid;
-		}
-	}
+        public virtual IntHashtable GetReversMap()
+        {
+            IntHashtable code2cid = new IntHashtable(map.Count);
+            foreach (int cid in map.Keys)
+            {
+                byte[] bytes = map.Get(cid);
+                int byteCode = 0;
+                foreach (byte b in bytes)
+                {
+                    byteCode <<= 8;
+                    byteCode += b & 0xff;
+                }
+                code2cid.Put(byteCode, cid);
+            }
+            return code2cid;
+        }
+    }
 }

@@ -46,26 +46,26 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>Handles LZWDECODE filter</summary>
-	public class LZWDecodeFilter : IFilterHandler
-	{
-		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-			, PdfDictionary streamDictionary)
-		{
-			b = LZWDecode(b);
-			b = FlateDecodeFilter.DecodePredictor(b, decodeParams);
-			return b;
-		}
+    /// <summary>Handles LZWDECODE filter</summary>
+    public class LZWDecodeFilter : IFilterHandler
+    {
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
+            , PdfDictionary streamDictionary)
+        {
+            b = LZWDecode(b);
+            b = FlateDecodeFilter.DecodePredictor(b, decodeParams);
+            return b;
+        }
 
-		/// <summary>Decodes a byte[] according to the LZW encoding.</summary>
-		/// <param name="in">byte[] to be decoded</param>
-		/// <returns>decoded byte[]</returns>
-		public static byte[] LZWDecode(byte[] @in)
-		{
-			MemoryStream @out = new MemoryStream();
-			LZWDecoder lzw = new LZWDecoder();
-			lzw.Decode(@in, @out);
-			return @out.ToArray();
-		}
-	}
+        /// <summary>Decodes a byte[] according to the LZW encoding.</summary>
+        /// <param name="in">byte[] to be decoded</param>
+        /// <returns>decoded byte[]</returns>
+        public static byte[] LZWDecode(byte[] @in)
+        {
+            MemoryStream @out = new MemoryStream();
+            LZWDecoder lzw = new LZWDecoder();
+            lzw.Decode(@in, @out);
+            return @out.ToArray();
+        }
+    }
 }

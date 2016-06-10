@@ -48,49 +48,49 @@ using iTextSharp.Layout.Element;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class LinkRenderer : TextRenderer
-	{
-		public LinkRenderer(Link link)
-			: this(link, link.GetText())
-		{
-		}
+    public class LinkRenderer : TextRenderer
+    {
+        public LinkRenderer(Link link)
+            : this(link, link.GetText())
+        {
+        }
 
-		public LinkRenderer(Link linkElement, String text)
-			: base(linkElement, text)
-		{
-		}
+        public LinkRenderer(Link linkElement, String text)
+            : base(linkElement, text)
+        {
+        }
 
-		public override void Draw(DrawContext drawContext)
-		{
-			base.Draw(drawContext);
-			bool isRelativePosition = IsRelativePosition();
-			if (isRelativePosition)
-			{
-				ApplyAbsolutePositioningTranslation(false);
-			}
-			PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
-			linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-			iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER);
-			if (border != null)
-			{
-				linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
-			}
-			else
-			{
-				linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
-			}
-			if (isRelativePosition)
-			{
-				ApplyAbsolutePositioningTranslation(true);
-			}
-			PdfPage page = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber());
-			page.AddAnnotation(linkAnnotation);
-		}
+        public override void Draw(DrawContext drawContext)
+        {
+            base.Draw(drawContext);
+            bool isRelativePosition = IsRelativePosition();
+            if (isRelativePosition)
+            {
+                ApplyAbsolutePositioningTranslation(false);
+            }
+            PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
+            linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
+            iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border
+                >(iTextSharp.Layout.Property.Property.BORDER);
+            if (border != null)
+            {
+                linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
+            }
+            else
+            {
+                linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
+            }
+            if (isRelativePosition)
+            {
+                ApplyAbsolutePositioningTranslation(true);
+            }
+            PdfPage page = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber());
+            page.AddAnnotation(linkAnnotation);
+        }
 
-		public override IRenderer GetNextRenderer()
-		{
-			return new iTextSharp.Layout.Renderer.LinkRenderer((Link)modelElement, null);
-		}
-	}
+        public override IRenderer GetNextRenderer()
+        {
+            return new iTextSharp.Layout.Renderer.LinkRenderer((Link)modelElement, null);
+        }
+    }
 }

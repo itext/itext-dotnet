@@ -51,189 +51,189 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Barcodes
 {
-	/// <summary>A QRCode implementation based on the zxing code.</summary>
-	public class BarcodeQRCode : Barcode2D
-	{
-		internal ByteMatrix bm;
+    /// <summary>A QRCode implementation based on the zxing code.</summary>
+    public class BarcodeQRCode : Barcode2D
+    {
+        internal ByteMatrix bm;
 
-		/// <summary>modifiers to change the way the barcode is create.</summary>
-		internal IDictionary<EncodeHintType, Object> hints;
+        /// <summary>modifiers to change the way the barcode is create.</summary>
+        internal IDictionary<EncodeHintType, Object> hints;
 
-		internal String code;
+        internal String code;
 
-		/// <summary>Creates the QR barcode.</summary>
-		/// <param name="code">the text to be encoded</param>
-		/// <param name="hints">barcode hints. See #setHints for description.</param>
-		public BarcodeQRCode(String code, IDictionary<EncodeHintType, Object> hints)
-		{
-			this.code = code;
-			this.hints = hints;
-			Regenerate();
-		}
+        /// <summary>Creates the QR barcode.</summary>
+        /// <param name="code">the text to be encoded</param>
+        /// <param name="hints">barcode hints. See #setHints for description.</param>
+        public BarcodeQRCode(String code, IDictionary<EncodeHintType, Object> hints)
+        {
+            this.code = code;
+            this.hints = hints;
+            Regenerate();
+        }
 
-		/// <summary>
-		/// Creates the QR barcode with default error correction level (ErrorCorrectionLevel.L)
-		/// and default character set (ISO-8859-1).
-		/// </summary>
-		/// <param name="content">the text to be encoded</param>
-		public BarcodeQRCode(String content)
-			: this(content, null)
-		{
-		}
+        /// <summary>
+        /// Creates the QR barcode with default error correction level (ErrorCorrectionLevel.L)
+        /// and default character set (ISO-8859-1).
+        /// </summary>
+        /// <param name="content">the text to be encoded</param>
+        public BarcodeQRCode(String content)
+            : this(content, null)
+        {
+        }
 
-		public BarcodeQRCode()
-		{
-		}
+        public BarcodeQRCode()
+        {
+        }
 
-		/// <summary>Gets the current data.</summary>
-		public virtual String GetCode()
-		{
-			return code;
-		}
+        /// <summary>Gets the current data.</summary>
+        public virtual String GetCode()
+        {
+            return code;
+        }
 
-		/// <summary>Sets the data to be encoded by the barcode.</summary>
-		/// <remarks>Sets the data to be encoded by the barcode. If not specified in hints otherwise, the character set should be ISO-8859-1.
-		/// 	</remarks>
-		public virtual void SetCode(String code)
-		{
-			this.code = code;
-			Regenerate();
-		}
+        /// <summary>Sets the data to be encoded by the barcode.</summary>
+        /// <remarks>Sets the data to be encoded by the barcode. If not specified in hints otherwise, the character set should be ISO-8859-1.
+        ///     </remarks>
+        public virtual void SetCode(String code)
+        {
+            this.code = code;
+            Regenerate();
+        }
 
-		/// <returns>modifiers to change the way the barcode is created.</returns>
-		public virtual IDictionary<EncodeHintType, Object> GetHints()
-		{
-			return hints;
-		}
+        /// <returns>modifiers to change the way the barcode is created.</returns>
+        public virtual IDictionary<EncodeHintType, Object> GetHints()
+        {
+            return hints;
+        }
 
-		/// <param name="hints">
-		/// modifiers to change the way the barcode is created. They can be EncodeHintType.ERROR_CORRECTION
-		/// and EncodeHintType.CHARACTER_SET. For EncodeHintType.ERROR_CORRECTION the values can be ErrorCorrectionLevel.L, M, Q, H.
-		/// For EncodeHintType.CHARACTER_SET the values are strings and can be Cp437, Shift_JIS and ISO-8859-1 to ISO-8859-16.
-		/// You can also use UTF-8, but correct behaviour is not guaranteed as Unicode is not supported in QRCodes.
-		/// The default value is ISO-8859-1.
-		/// </param>
-		public virtual void SetHints(IDictionary<EncodeHintType, Object> hints)
-		{
-			this.hints = hints;
-			Regenerate();
-		}
+        /// <param name="hints">
+        /// modifiers to change the way the barcode is created. They can be EncodeHintType.ERROR_CORRECTION
+        /// and EncodeHintType.CHARACTER_SET. For EncodeHintType.ERROR_CORRECTION the values can be ErrorCorrectionLevel.L, M, Q, H.
+        /// For EncodeHintType.CHARACTER_SET the values are strings and can be Cp437, Shift_JIS and ISO-8859-1 to ISO-8859-16.
+        /// You can also use UTF-8, but correct behaviour is not guaranteed as Unicode is not supported in QRCodes.
+        /// The default value is ISO-8859-1.
+        /// </param>
+        public virtual void SetHints(IDictionary<EncodeHintType, Object> hints)
+        {
+            this.hints = hints;
+            Regenerate();
+        }
 
-		/// <summary>Regenerates barcode after changes in hints or code.</summary>
-		public virtual void Regenerate()
-		{
-			if (code != null)
-			{
-				try
-				{
-					QRCodeWriter qc = new QRCodeWriter();
-					bm = qc.Encode(code, 1, 1, hints);
-				}
-				catch (WriterException ex)
-				{
-					throw new ArgumentException(ex.Message, ex.InnerException);
-				}
-			}
-		}
+        /// <summary>Regenerates barcode after changes in hints or code.</summary>
+        public virtual void Regenerate()
+        {
+            if (code != null)
+            {
+                try
+                {
+                    QRCodeWriter qc = new QRCodeWriter();
+                    bm = qc.Encode(code, 1, 1, hints);
+                }
+                catch (WriterException ex)
+                {
+                    throw new ArgumentException(ex.Message, ex.InnerException);
+                }
+            }
+        }
 
-		/// <summary>Gets the size of the barcode grid</summary>
-		public override Rectangle GetBarcodeSize()
-		{
-			return new Rectangle(0, 0, bm.GetWidth(), bm.GetHeight());
-		}
+        /// <summary>Gets the size of the barcode grid</summary>
+        public override Rectangle GetBarcodeSize()
+        {
+            return new Rectangle(0, 0, bm.GetWidth(), bm.GetHeight());
+        }
 
-		/// <summary>Gets the barcode size</summary>
-		public virtual Rectangle GetBarcodeSize(float moduleSize)
-		{
-			return new Rectangle(0, 0, bm.GetWidth() * moduleSize, bm.GetHeight() * moduleSize
-				);
-		}
+        /// <summary>Gets the barcode size</summary>
+        public virtual Rectangle GetBarcodeSize(float moduleSize)
+        {
+            return new Rectangle(0, 0, bm.GetWidth() * moduleSize, bm.GetHeight() * moduleSize
+                );
+        }
 
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 foreground)
-		{
-			return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
-		}
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             foreground)
+        {
+            return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
+        }
 
-		/// <summary>* Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
-		/// <remarks>
-		/// * Places the barcode in a <CODE>PdfCanvas</CODE>. The
-		/// barcode is always placed at coordinates (0, 0). Use the
-		/// translation matrix to move it elsewhere.
-		/// </remarks>
-		/// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-		/// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
-		/// <param name="moduleSide">the size of the square grid cell</param>
-		/// <returns>the dimensions the barcode occupies</returns>
-		public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 foreground, float moduleSide)
-		{
-			int width = bm.GetWidth();
-			int height = bm.GetHeight();
-			byte[][] mt = bm.GetArray();
-			if (foreground != null)
-			{
-				canvas.SetFillColor(foreground);
-			}
-			for (int y = 0; y < height; ++y)
-			{
-				byte[] line = mt[y];
-				for (int x = 0; x < width; ++x)
-				{
-					if (line[x] == 0)
-					{
-						canvas.Rectangle(x * moduleSide, (height - y - 1) * moduleSide, moduleSide, moduleSide
-							);
-					}
-				}
-			}
-			canvas.Fill();
-			return GetBarcodeSize(moduleSide);
-		}
+        /// <summary>* Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <remarks>
+        /// * Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// barcode is always placed at coordinates (0, 0). Use the
+        /// translation matrix to move it elsewhere.
+        /// </remarks>
+        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
+        /// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
+        /// <param name="moduleSide">the size of the square grid cell</param>
+        /// <returns>the dimensions the barcode occupies</returns>
+        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             foreground, float moduleSide)
+        {
+            int width = bm.GetWidth();
+            int height = bm.GetHeight();
+            byte[][] mt = bm.GetArray();
+            if (foreground != null)
+            {
+                canvas.SetFillColor(foreground);
+            }
+            for (int y = 0; y < height; ++y)
+            {
+                byte[] line = mt[y];
+                for (int x = 0; x < width; ++x)
+                {
+                    if (line[x] == 0)
+                    {
+                        canvas.Rectangle(x * moduleSide, (height - y - 1) * moduleSide, moduleSide, moduleSide
+                            );
+                    }
+                }
+            }
+            canvas.Fill();
+            return GetBarcodeSize(moduleSide);
+        }
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-		/// <returns>the XObject.</returns>
-		public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
-			, PdfDocument document)
-		{
-			return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
-		}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
+        /// <returns>the XObject.</returns>
+        public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+            , PdfDocument document)
+        {
+            return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
+        }
 
-		/// <summary>Creates a PdfFormXObject with the barcode.</summary>
-		/// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
-		/// <param name="moduleSize">the size of the pixels.</param>
-		/// <returns>the XObject.</returns>
-		public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
-			, float moduleSize, PdfDocument document)
-		{
-			PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
-			Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSize
-				);
-			xObject.SetBBox(new PdfArray(rect));
-			return xObject;
-		}
+        /// <summary>Creates a PdfFormXObject with the barcode.</summary>
+        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="moduleSize">the size of the pixels.</param>
+        /// <returns>the XObject.</returns>
+        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
+            , float moduleSize, PdfDocument document)
+        {
+            PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
+            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSize
+                );
+            xObject.SetBBox(new PdfArray(rect));
+            return xObject;
+        }
 
-		private byte[] GetBitMatrix()
-		{
-			int width = bm.GetWidth();
-			int height = bm.GetHeight();
-			int stride = (width + 7) / 8;
-			byte[] b = new byte[stride * height];
-			byte[][] mt = bm.GetArray();
-			for (int y = 0; y < height; ++y)
-			{
-				byte[] line = mt[y];
-				for (int x = 0; x < width; ++x)
-				{
-					if (line[x] != 0)
-					{
-						int offset = stride * y + x / 8;
-						b[offset] |= (byte)(0x80 >> (x % 8));
-					}
-				}
-			}
-			return b;
-		}
-	}
+        private byte[] GetBitMatrix()
+        {
+            int width = bm.GetWidth();
+            int height = bm.GetHeight();
+            int stride = (width + 7) / 8;
+            byte[] b = new byte[stride * height];
+            byte[][] mt = bm.GetArray();
+            for (int y = 0; y < height; ++y)
+            {
+                byte[] line = mt[y];
+                for (int x = 0; x < width; ++x)
+                {
+                    if (line[x] != 0)
+                    {
+                        int offset = stride * y + x / 8;
+                        b[offset] |= (byte)(0x80 >> (x % 8));
+                    }
+                }
+            }
+            return b;
+        }
+    }
 }

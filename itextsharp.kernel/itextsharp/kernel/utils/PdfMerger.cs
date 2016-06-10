@@ -46,151 +46,151 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Utils
 {
-	public class PdfMerger
-	{
-		private PdfDocument pdfDocument;
+    public class PdfMerger
+    {
+        private PdfDocument pdfDocument;
 
-		private bool closeSrcDocuments;
+        private bool closeSrcDocuments;
 
-		private bool mergeTags;
+        private bool mergeTags;
 
-		private bool mergeOutlines;
+        private bool mergeOutlines;
 
-		/// <summary>This class is used to merge a number of existing documents into one.</summary>
-		/// <remarks>
-		/// This class is used to merge a number of existing documents into one. By default, if source document
-		/// contains tags and outlines, they will be also copied to the destination document.
-		/// </remarks>
-		/// <param name="pdfDocument">the document into which source documents will be merged.
-		/// 	</param>
-		public PdfMerger(PdfDocument pdfDocument)
-			: this(pdfDocument, true, true)
-		{
-		}
+        /// <summary>This class is used to merge a number of existing documents into one.</summary>
+        /// <remarks>
+        /// This class is used to merge a number of existing documents into one. By default, if source document
+        /// contains tags and outlines, they will be also copied to the destination document.
+        /// </remarks>
+        /// <param name="pdfDocument">the document into which source documents will be merged.
+        ///     </param>
+        public PdfMerger(PdfDocument pdfDocument)
+            : this(pdfDocument, true, true)
+        {
+        }
 
-		/// <summary>This class is used to merge a number of existing documents into one.</summary>
-		/// <param name="pdfDocument">the document into which source documents will be merged.
-		/// 	</param>
-		/// <param name="mergeTags">
-		/// if true, then tags from the source document are copied even if destination document is not set as
-		/// tagged. Note, that if false, tag structure is still could be copied if the destination document
-		/// is explicitly marked as tagged with
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.SetTagged()"/>
-		/// .
-		/// </param>
-		/// <param name="mergeOutlines">
-		/// if true, then outlines from the source document are copied even if in destination document
-		/// outlines are not initialized. Note, that if false, outlines are still could be copied if the
-		/// destination document outlines were explicitly initialized with
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
-		/// .
-		/// </param>
-		public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines)
-		{
-			this.pdfDocument = pdfDocument;
-			this.mergeTags = mergeTags;
-			this.mergeOutlines = mergeOutlines;
-		}
+        /// <summary>This class is used to merge a number of existing documents into one.</summary>
+        /// <param name="pdfDocument">the document into which source documents will be merged.
+        ///     </param>
+        /// <param name="mergeTags">
+        /// if true, then tags from the source document are copied even if destination document is not set as
+        /// tagged. Note, that if false, tag structure is still could be copied if the destination document
+        /// is explicitly marked as tagged with
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.SetTagged()"/>
+        /// .
+        /// </param>
+        /// <param name="mergeOutlines">
+        /// if true, then outlines from the source document are copied even if in destination document
+        /// outlines are not initialized. Note, that if false, outlines are still could be copied if the
+        /// destination document outlines were explicitly initialized with
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
+        /// .
+        /// </param>
+        public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines)
+        {
+            this.pdfDocument = pdfDocument;
+            this.mergeTags = mergeTags;
+            this.mergeOutlines = mergeOutlines;
+        }
 
-		/// <summary>
-		/// If set to <i>true</i> then passed to the <i>
-		/// <c>PdfMerger#merge</c>
-		/// </i> method source documents will be closed
-		/// immediately after merging specified pages into current document. If <i>false</i> - PdfDocuments are left open.
-		/// Default value - <i>false</i>.
-		/// </summary>
-		/// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.
-		/// 	</param>
-		/// <returns>
-		/// this
-		/// <c>PdfMerger</c>
-		/// instance.
-		/// </returns>
-		public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments
-			)
-		{
-			this.closeSrcDocuments = closeSourceDocuments;
-			return this;
-		}
+        /// <summary>
+        /// If set to <i>true</i> then passed to the <i>
+        /// <c>PdfMerger#merge</c>
+        /// </i> method source documents will be closed
+        /// immediately after merging specified pages into current document. If <i>false</i> - PdfDocuments are left open.
+        /// Default value - <i>false</i>.
+        /// </summary>
+        /// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.
+        ///     </param>
+        /// <returns>
+        /// this
+        /// <c>PdfMerger</c>
+        /// instance.
+        /// </returns>
+        public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments
+            )
+        {
+            this.closeSrcDocuments = closeSourceDocuments;
+            return this;
+        }
 
-		/// <summary>This method merges pages from the source document to the current one.</summary>
-		/// <remarks>
-		/// This method merges pages from the source document to the current one.
-		/// <br/><br/>
-		/// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
-		/// <see cref="SetCloseSourceDocuments(bool)"/>
-		/// ),
-		/// passed
-		/// <c>PdfDocument</c>
-		/// will be closed after pages are merged.
-		/// </remarks>
-		/// <param name="from">- document, from which pages will be copied.</param>
-		/// <param name="fromPage">- start page in the range of pages to be copied.</param>
-		/// <param name="toPage">- end page in the range to be copied.</param>
-		/// <returns>
-		/// this
-		/// <c>PdfMerger</c>
-		/// instance.
-		/// </returns>
-		public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage
-			, int toPage)
-		{
-			IList<int> pages = new List<int>(toPage - fromPage);
-			for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
-			{
-				pages.Add(pageNum);
-			}
-			return Merge(from, pages);
-		}
+        /// <summary>This method merges pages from the source document to the current one.</summary>
+        /// <remarks>
+        /// This method merges pages from the source document to the current one.
+        /// <br/><br/>
+        /// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
+        /// <see cref="SetCloseSourceDocuments(bool)"/>
+        /// ),
+        /// passed
+        /// <c>PdfDocument</c>
+        /// will be closed after pages are merged.
+        /// </remarks>
+        /// <param name="from">- document, from which pages will be copied.</param>
+        /// <param name="fromPage">- start page in the range of pages to be copied.</param>
+        /// <param name="toPage">- end page in the range to be copied.</param>
+        /// <returns>
+        /// this
+        /// <c>PdfMerger</c>
+        /// instance.
+        /// </returns>
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage
+            , int toPage)
+        {
+            IList<int> pages = new List<int>(toPage - fromPage);
+            for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
+            {
+                pages.Add(pageNum);
+            }
+            return Merge(from, pages);
+        }
 
-		/// <summary>This method merges pages from the source document to the current one.</summary>
-		/// <remarks>
-		/// This method merges pages from the source document to the current one.
-		/// <br/><br/>
-		/// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
-		/// <see cref="SetCloseSourceDocuments(bool)"/>
-		/// ),
-		/// passed
-		/// <c>PdfDocument</c>
-		/// will be closed after pages are merged.
-		/// </remarks>
-		/// <param name="from">- document, from which pages will be copied.</param>
-		/// <param name="pages">- List of numbers of pages which will be copied.</param>
-		/// <returns>
-		/// this
-		/// <c>PdfMerger</c>
-		/// instance.
-		/// </returns>
-		public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int
-			> pages)
-		{
-			if (mergeTags && from.IsTagged())
-			{
-				pdfDocument.SetTagged();
-			}
-			if (mergeOutlines && from.HasOutlines())
-			{
-				pdfDocument.InitializeOutlines();
-			}
-			from.CopyPagesTo(pages, pdfDocument);
-			if (closeSrcDocuments)
-			{
-				from.Close();
-			}
-			return this;
-		}
+        /// <summary>This method merges pages from the source document to the current one.</summary>
+        /// <remarks>
+        /// This method merges pages from the source document to the current one.
+        /// <br/><br/>
+        /// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
+        /// <see cref="SetCloseSourceDocuments(bool)"/>
+        /// ),
+        /// passed
+        /// <c>PdfDocument</c>
+        /// will be closed after pages are merged.
+        /// </remarks>
+        /// <param name="from">- document, from which pages will be copied.</param>
+        /// <param name="pages">- List of numbers of pages which will be copied.</param>
+        /// <returns>
+        /// this
+        /// <c>PdfMerger</c>
+        /// instance.
+        /// </returns>
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int
+            > pages)
+        {
+            if (mergeTags && from.IsTagged())
+            {
+                pdfDocument.SetTagged();
+            }
+            if (mergeOutlines && from.HasOutlines())
+            {
+                pdfDocument.InitializeOutlines();
+            }
+            from.CopyPagesTo(pages, pdfDocument);
+            if (closeSrcDocuments)
+            {
+                from.Close();
+            }
+            return this;
+        }
 
-		/// <summary>Closes the current document.</summary>
-		/// <remarks>
-		/// Closes the current document. It is a complete equivalent of calling
-		/// <c>PdfDocument#close</c>
-		/// on the PdfDocument
-		/// passed to the constructor of this PdfMerger instance. This means that it is enough to call <i>close</i> either on
-		/// passed PdfDocument or on this PdfMerger instance, but there is no need to call them both.
-		/// </remarks>
-		public virtual void Close()
-		{
-			pdfDocument.Close();
-		}
-	}
+        /// <summary>Closes the current document.</summary>
+        /// <remarks>
+        /// Closes the current document. It is a complete equivalent of calling
+        /// <c>PdfDocument#close</c>
+        /// on the PdfDocument
+        /// passed to the constructor of this PdfMerger instance. This means that it is enough to call <i>close</i> either on
+        /// passed PdfDocument or on this PdfMerger instance, but there is no need to call them both.
+        /// </remarks>
+        public virtual void Close()
+        {
+            pdfDocument.Close();
+        }
+    }
 }

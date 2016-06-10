@@ -45,38 +45,38 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Tagutils
 {
-	/// <summary>A layout element which can have a <em>role</em>.</summary>
-	/// <remarks>
-	/// A layout element which can have a <em>role</em>. The name of the role will be
-	/// used to tag the element if it is added to a Tagged PDF document. It can also
-	/// have
-	/// <see cref="AccessibilityProperties"/>
-	/// , metadata for the tag dictionary.
-	/// </remarks>
-	public interface IAccessibleElement
-	{
-		/// <summary>Gets the element's role.</summary>
-		/// <returns>
-		/// a
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
-		/// containing the name of the role
-		/// </returns>
-		PdfName GetRole();
+    /// <summary>A layout element which can have a <em>role</em>.</summary>
+    /// <remarks>
+    /// A layout element which can have a <em>role</em>. The name of the role will be
+    /// used to tag the element if it is added to a Tagged PDF document. It can also
+    /// have
+    /// <see cref="AccessibilityProperties"/>
+    /// , metadata for the tag dictionary.
+    /// </remarks>
+    public interface IAccessibleElement
+    {
+        /// <summary>Gets the element's role.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
+        /// containing the name of the role
+        /// </returns>
+        PdfName GetRole();
 
-		/// <summary>Sets the element's role.</summary>
-		/// <param name="role">
-		/// the new role which the
-		/// <see cref="IAccessibleElement"/>
-		/// should take
-		/// </param>
-		void SetRole(PdfName role);
+        /// <summary>Sets the element's role.</summary>
+        /// <param name="role">
+        /// the new role which the
+        /// <see cref="IAccessibleElement"/>
+        /// should take
+        /// </param>
+        void SetRole(PdfName role);
 
-		/// <summary>
-		/// Gets the
-		/// <see cref="AccessibilityProperties">accessibility properties</see>
-		/// .
-		/// </summary>
-		/// <returns>a properties wrapper object specific to a tagged element in Tagged PDF</returns>
-		AccessibilityProperties GetAccessibilityProperties();
-	}
+        /// <summary>
+        /// Gets the
+        /// <see cref="AccessibilityProperties">accessibility properties</see>
+        /// .
+        /// </summary>
+        /// <returns>a properties wrapper object specific to a tagged element in Tagged PDF</returns>
+        AccessibilityProperties GetAccessibilityProperties();
+    }
 }

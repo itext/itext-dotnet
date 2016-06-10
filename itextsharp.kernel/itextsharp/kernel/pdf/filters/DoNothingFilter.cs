@@ -45,21 +45,21 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>A filter that doesn't modify the stream at all</summary>
-	public class DoNothingFilter : IFilterHandler
-	{
-		private PdfName lastFilterName;
+    /// <summary>A filter that doesn't modify the stream at all</summary>
+    public class DoNothingFilter : IFilterHandler
+    {
+        private PdfName lastFilterName;
 
-		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-			, PdfDictionary streamDictionary)
-		{
-			lastFilterName = filterName;
-			return b;
-		}
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
+            , PdfDictionary streamDictionary)
+        {
+            lastFilterName = filterName;
+            return b;
+        }
 
-		public virtual PdfName GetLastFilterName()
-		{
-			return lastFilterName;
-		}
-	}
+        public virtual PdfName GetLastFilterName()
+        {
+            return lastFilterName;
+        }
+    }
 }

@@ -23,137 +23,137 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.Geom
 {
-	public class Point : ICloneable
-	{
-		public double x;
+    public class Point : ICloneable
+    {
+        public double x;
 
-		public double y;
+        public double y;
 
-		public Point()
-		{
-			SetLocation(0, 0);
-		}
+        public Point()
+        {
+            SetLocation(0, 0);
+        }
 
-		public Point(int x, int y)
-		{
-			SetLocation(x, y);
-		}
+        public Point(int x, int y)
+        {
+            SetLocation(x, y);
+        }
 
-		public Point(double x, double y)
-		{
-			SetLocation(x, y);
-		}
+        public Point(double x, double y)
+        {
+            SetLocation(x, y);
+        }
 
-		public Point(iTextSharp.Kernel.Geom.Point p)
-		{
-			SetLocation(p.x, p.y);
-		}
+        public Point(iTextSharp.Kernel.Geom.Point p)
+        {
+            SetLocation(p.x, p.y);
+        }
 
-		public override bool Equals(Object obj)
-		{
-			if (obj == this)
-			{
-				return true;
-			}
-			if (obj is iTextSharp.Kernel.Geom.Point)
-			{
-				iTextSharp.Kernel.Geom.Point p = (iTextSharp.Kernel.Geom.Point)obj;
-				return x == p.x && y == p.y;
-			}
-			return false;
-		}
+        public override bool Equals(Object obj)
+        {
+            if (obj == this)
+            {
+                return true;
+            }
+            if (obj is iTextSharp.Kernel.Geom.Point)
+            {
+                iTextSharp.Kernel.Geom.Point p = (iTextSharp.Kernel.Geom.Point)obj;
+                return x == p.x && y == p.y;
+            }
+            return false;
+        }
 
-		public override String ToString()
-		{
-			return String.Format("Point: [x={0},y={1}]", x, y);
-		}
+        public override String ToString()
+        {
+            return String.Format("Point: [x={0},y={1}]", x, y);
+        }
 
-		//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		public virtual double GetX()
-		{
-			return x;
-		}
+        //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        public virtual double GetX()
+        {
+            return x;
+        }
 
-		public virtual double GetY()
-		{
-			return y;
-		}
+        public virtual double GetY()
+        {
+            return y;
+        }
 
-		public virtual iTextSharp.Kernel.Geom.Point GetLocation()
-		{
-			return new iTextSharp.Kernel.Geom.Point(x, y);
-		}
+        public virtual iTextSharp.Kernel.Geom.Point GetLocation()
+        {
+            return new iTextSharp.Kernel.Geom.Point(x, y);
+        }
 
-		public virtual void SetLocation(iTextSharp.Kernel.Geom.Point p)
-		{
-			SetLocation(p.x, p.y);
-		}
+        public virtual void SetLocation(iTextSharp.Kernel.Geom.Point p)
+        {
+            SetLocation(p.x, p.y);
+        }
 
-		public virtual void SetLocation(int x, int y)
-		{
-			SetLocation((double)x, (double)y);
-		}
+        public virtual void SetLocation(int x, int y)
+        {
+            SetLocation((double)x, (double)y);
+        }
 
-		public virtual void SetLocation(double x, double y)
-		{
-			this.x = x;
-			this.y = y;
-		}
+        public virtual void SetLocation(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
 
-		public virtual void Move(double x, double y)
-		{
-			SetLocation(x, y);
-		}
+        public virtual void Move(double x, double y)
+        {
+            SetLocation(x, y);
+        }
 
-		public virtual void Translate(double dx, double dy)
-		{
-			x += dx;
-			y += dy;
-		}
+        public virtual void Translate(double dx, double dy)
+        {
+            x += dx;
+            y += dy;
+        }
 
-		public override int GetHashCode()
-		{
-			HashCode hash = new HashCode();
-			hash.Append(GetX());
-			hash.Append(GetY());
-			return hash.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Append(GetX());
+            hash.Append(GetY());
+            return hash.GetHashCode();
+        }
 
-		public static double DistanceSq(double x1, double y1, double x2, double y2)
-		{
-			x2 -= x1;
-			y2 -= y1;
-			return x2 * x2 + y2 * y2;
-		}
+        public static double DistanceSq(double x1, double y1, double x2, double y2)
+        {
+            x2 -= x1;
+            y2 -= y1;
+            return x2 * x2 + y2 * y2;
+        }
 
-		public virtual double DistanceSq(double px, double py)
-		{
-			return DistanceSq(GetX(), GetY(), px, py);
-		}
+        public virtual double DistanceSq(double px, double py)
+        {
+            return DistanceSq(GetX(), GetY(), px, py);
+        }
 
-		public virtual double DistanceSq(iTextSharp.Kernel.Geom.Point p)
-		{
-			return DistanceSq(GetX(), GetY(), p.GetX(), p.GetY());
-		}
+        public virtual double DistanceSq(iTextSharp.Kernel.Geom.Point p)
+        {
+            return DistanceSq(GetX(), GetY(), p.GetX(), p.GetY());
+        }
 
-		public static double Distance(double x1, double y1, double x2, double y2)
-		{
-			return Math.Sqrt(DistanceSq(x1, y1, x2, y2));
-		}
+        public static double Distance(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(DistanceSq(x1, y1, x2, y2));
+        }
 
-		public virtual double Distance(double px, double py)
-		{
-			return Math.Sqrt(DistanceSq(px, py));
-		}
+        public virtual double Distance(double px, double py)
+        {
+            return Math.Sqrt(DistanceSq(px, py));
+        }
 
-		public virtual double Distance(iTextSharp.Kernel.Geom.Point p)
-		{
-			return Math.Sqrt(DistanceSq(p));
-		}
+        public virtual double Distance(iTextSharp.Kernel.Geom.Point p)
+        {
+            return Math.Sqrt(DistanceSq(p));
+        }
 
-		public virtual Object Clone()
-		{
-			return new iTextSharp.Kernel.Geom.Point(x, y);
-		}
-	}
+        public virtual Object Clone()
+        {
+            return new iTextSharp.Kernel.Geom.Point(x, y);
+        }
+    }
 }

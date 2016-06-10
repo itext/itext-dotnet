@@ -47,32 +47,32 @@ using iTextSharp.Kernel.Pdf.Filespec;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfFileAttachmentAnnotation : PdfMarkupAnnotation
-	{
-		public PdfFileAttachmentAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfFileAttachmentAnnotation : PdfMarkupAnnotation
+    {
+        public PdfFileAttachmentAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfFileAttachmentAnnotation(Rectangle rect, PdfFileSpec file)
-			: this(rect)
-		{
-			Put(PdfName.FS, file.GetPdfObject());
-		}
+        public PdfFileAttachmentAnnotation(Rectangle rect, PdfFileSpec file)
+            : this(rect)
+        {
+            Put(PdfName.FS, file.GetPdfObject());
+        }
 
-		public PdfFileAttachmentAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfFileAttachmentAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.FileAttachment;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.FileAttachment;
+        }
 
-		public virtual PdfObject GetFileSpecObject()
-		{
-			return GetPdfObject().Get(PdfName.FS);
-		}
-	}
+        public virtual PdfObject GetFileSpecObject()
+        {
+            return GetPdfObject().Get(PdfName.FS);
+        }
+    }
 }

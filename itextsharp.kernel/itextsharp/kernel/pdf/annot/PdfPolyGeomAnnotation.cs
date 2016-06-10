@@ -46,90 +46,90 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfPolyGeomAnnotation : PdfMarkupAnnotation
-	{
-		/// <summary>Subtypes</summary>
-		public static readonly PdfName Polygon = PdfName.Polygon;
+    public class PdfPolyGeomAnnotation : PdfMarkupAnnotation
+    {
+        /// <summary>Subtypes</summary>
+        public static readonly PdfName Polygon = PdfName.Polygon;
 
-		public static readonly PdfName PolyLine = PdfName.PolyLine;
+        public static readonly PdfName PolyLine = PdfName.PolyLine;
 
-		public PdfPolyGeomAnnotation(Rectangle rect, PdfName subtype, float[] vertices)
-			: base(rect)
-		{
-			SetSubtype(subtype);
-			SetVertices(vertices);
-		}
+        public PdfPolyGeomAnnotation(Rectangle rect, PdfName subtype, float[] vertices)
+            : base(rect)
+        {
+            SetSubtype(subtype);
+            SetVertices(vertices);
+        }
 
-		public PdfPolyGeomAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfPolyGeomAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle
-			 rect, float[] vertices)
-		{
-			return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, Polygon, vertices
-				);
-		}
+        public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle
+             rect, float[] vertices)
+        {
+            return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, Polygon, vertices
+                );
+        }
 
-		public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolyLine(Rectangle
-			 rect, float[] vertices)
-		{
-			return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices
-				);
-		}
+        public static iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolyLine(Rectangle
+             rect, float[] vertices)
+        {
+            return new iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices
+                );
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return GetPdfObject().GetAsName(PdfName.Subtype);
-		}
+        public override PdfName GetSubtype()
+        {
+            return GetPdfObject().GetAsName(PdfName.Subtype);
+        }
 
-		public virtual PdfArray GetVertices()
-		{
-			return GetPdfObject().GetAsArray(PdfName.Vertices);
-		}
+        public virtual PdfArray GetVertices()
+        {
+            return GetPdfObject().GetAsArray(PdfName.Vertices);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray
-			 vertices)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray
+             vertices)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices
+                );
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float
-			[] vertices)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new 
-				PdfArray(vertices));
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float
+            [] vertices)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new 
+                PdfArray(vertices));
+        }
 
-		public virtual PdfArray GetLineEndingStyles()
-		{
-			return GetPdfObject().GetAsArray(PdfName.LE);
-		}
+        public virtual PdfArray GetLineEndingStyles()
+        {
+            return GetPdfObject().GetAsArray(PdfName.LE);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetLineEndingStyles
-			(PdfArray lineEndingStyles)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.LE, lineEndingStyles
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetLineEndingStyles
+            (PdfArray lineEndingStyles)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.LE, lineEndingStyles
+                );
+        }
 
-		public virtual PdfDictionary GetMeasure()
-		{
-			return GetPdfObject().GetAsDictionary(PdfName.Measure);
-		}
+        public virtual PdfDictionary GetMeasure()
+        {
+            return GetPdfObject().GetAsDictionary(PdfName.Measure);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetMeasure(PdfDictionary
-			 measure)
-		{
-			return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Measure, measure
-				);
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetMeasure(PdfDictionary
+             measure)
+        {
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Measure, measure
+                );
+        }
 
-		private void SetSubtype(PdfName subtype)
-		{
-			Put(PdfName.Subtype, subtype);
-		}
-	}
+        private void SetSubtype(PdfName subtype)
+        {
+            Put(PdfName.Subtype, subtype);
+        }
+    }
 }

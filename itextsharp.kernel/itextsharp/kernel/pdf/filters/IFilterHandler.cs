@@ -45,20 +45,20 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>
-	/// The main interface for creating a new
-	/// <c>FilterHandler</c>
-	/// </summary>
-	public interface IFilterHandler
-	{
-		/// <summary>Decode the byte[] using the provided filterName.</summary>
-		/// <param name="b">the bytes that need to be decoded</param>
-		/// <param name="filterName">PdfName of the filter</param>
-		/// <param name="decodeParams">decode parameters</param>
-		/// <param name="streamDictionary">the dictionary of the stream. Can contain additional information needed to decode the byte[].
-		/// 	</param>
-		/// <returns>decoded byte array</returns>
-		byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary
-			 streamDictionary);
-	}
+    /// <summary>
+    /// The main interface for creating a new
+    /// <c>FilterHandler</c>
+    /// </summary>
+    public interface IFilterHandler
+    {
+        /// <summary>Decode the byte[] using the provided filterName.</summary>
+        /// <param name="b">the bytes that need to be decoded</param>
+        /// <param name="filterName">PdfName of the filter</param>
+        /// <param name="decodeParams">decode parameters</param>
+        /// <param name="streamDictionary">the dictionary of the stream. Can contain additional information needed to decode the byte[].
+        ///     </param>
+        /// <returns>decoded byte array</returns>
+        byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary
+             streamDictionary);
+    }
 }

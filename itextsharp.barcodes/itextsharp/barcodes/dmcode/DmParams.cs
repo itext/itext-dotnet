@@ -43,32 +43,32 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Barcodes.Dmcode
 {
-	public class DmParams
-	{
-		public DmParams(int height, int width, int heightSection, int widthSection, int dataSize
-			, int dataBlock, int errorBlock)
-		{
-			this.height = height;
-			this.width = width;
-			this.heightSection = heightSection;
-			this.widthSection = widthSection;
-			this.dataSize = dataSize;
-			this.dataBlock = dataBlock;
-			this.errorBlock = errorBlock;
-		}
+    public class DmParams
+    {
+        public DmParams(int height, int width, int heightSection, int widthSection, int dataSize
+            , int dataBlock, int errorBlock)
+        {
+            this.height = height;
+            this.width = width;
+            this.heightSection = heightSection;
+            this.widthSection = widthSection;
+            this.dataSize = dataSize;
+            this.dataBlock = dataBlock;
+            this.errorBlock = errorBlock;
+        }
 
-		public int height;
+        public int height;
 
-		public int width;
+        public int width;
 
-		public int heightSection;
+        public int heightSection;
 
-		public int widthSection;
+        public int widthSection;
 
-		public int dataSize;
+        public int dataSize;
 
-		public int dataBlock;
+        public int dataBlock;
 
-		public int errorBlock;
-	}
+        public int errorBlock;
+    }
 }

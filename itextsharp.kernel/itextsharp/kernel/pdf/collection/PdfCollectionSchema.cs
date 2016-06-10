@@ -46,38 +46,38 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Collection
 {
-	public class PdfCollectionSchema : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfCollectionSchema(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public class PdfCollectionSchema : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfCollectionSchema(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <summary>Creates a Collection Schema dictionary.</summary>
-		public PdfCollectionSchema()
-			: this(new PdfDictionary())
-		{
-		}
+        /// <summary>Creates a Collection Schema dictionary.</summary>
+        public PdfCollectionSchema()
+            : this(new PdfDictionary())
+        {
+        }
 
-		/// <summary>Adds a Collection field to the Schema.</summary>
-		/// <param name="name">the name of the collection field</param>
-		/// <param name="field">a Collection Field</param>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSchema AddField(String
-			 name, PdfCollectionField field)
-		{
-			GetPdfObject().Put(new PdfName(name), field.GetPdfObject());
-			return this;
-		}
+        /// <summary>Adds a Collection field to the Schema.</summary>
+        /// <param name="name">the name of the collection field</param>
+        /// <param name="field">a Collection Field</param>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSchema AddField(String
+             name, PdfCollectionField field)
+        {
+            GetPdfObject().Put(new PdfName(name), field.GetPdfObject());
+            return this;
+        }
 
-		public virtual PdfCollectionField GetField(String name)
-		{
-			return new PdfCollectionField(GetPdfObject().GetAsDictionary(new PdfName(name)));
-		}
+        public virtual PdfCollectionField GetField(String name)
+        {
+            return new PdfCollectionField(GetPdfObject().GetAsDictionary(new PdfName(name)));
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

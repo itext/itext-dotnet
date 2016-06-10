@@ -46,63 +46,63 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 {
-	/// <summary>
-	/// Implementation of
-	/// <see cref="ILineDrawer"/>
-	/// which draws a dashed horizontal line over
-	/// the middle of the specified rectangle.
-	/// </summary>
-	public class DashedLine : ILineDrawer
-	{
-		private float lineWidth = 1;
+    /// <summary>
+    /// Implementation of
+    /// <see cref="ILineDrawer"/>
+    /// which draws a dashed horizontal line over
+    /// the middle of the specified rectangle.
+    /// </summary>
+    public class DashedLine : ILineDrawer
+    {
+        private float lineWidth = 1;
 
-		private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
+        private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
 
-		public DashedLine()
-		{
-		}
+        public DashedLine()
+        {
+        }
 
-		/// <summary>
-		/// Creates an instance of
-		/// <see cref="DashedLine"/>
-		/// with the specified line width.
-		/// </summary>
-		/// <param name="lineWidth"/>
-		public DashedLine(float lineWidth)
-		{
-			this.lineWidth = lineWidth;
-		}
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="DashedLine"/>
+        /// with the specified line width.
+        /// </summary>
+        /// <param name="lineWidth"/>
+        public DashedLine(float lineWidth)
+        {
+            this.lineWidth = lineWidth;
+        }
 
-		public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
-		{
-			canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(2, 2
-				).MoveTo(drawArea.GetX(), drawArea.GetY() + drawArea.GetHeight() / 2).LineTo(drawArea
-				.GetX() + drawArea.GetWidth(), drawArea.GetY() + drawArea.GetHeight() / 2).Stroke
-				().RestoreState();
-		}
+        public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
+        {
+            canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(2, 2
+                ).MoveTo(drawArea.GetX(), drawArea.GetY() + drawArea.GetHeight() / 2).LineTo(
+                drawArea.GetX() + drawArea.GetWidth(), drawArea.GetY() + drawArea.GetHeight()
+                 / 2).Stroke().RestoreState();
+        }
 
-		/// <summary>Gets line width in points</summary>
-		/// <returns>line thickness</returns>
-		public virtual float GetLineWidth()
-		{
-			return lineWidth;
-		}
+        /// <summary>Gets line width in points</summary>
+        /// <returns>line thickness</returns>
+        public virtual float GetLineWidth()
+        {
+            return lineWidth;
+        }
 
-		/// <summary>Sets line width in points</summary>
-		/// <param name="lineWidth">new line width</param>
-		public virtual void SetLineWidth(float lineWidth)
-		{
-			this.lineWidth = lineWidth;
-		}
+        /// <summary>Sets line width in points</summary>
+        /// <param name="lineWidth">new line width</param>
+        public virtual void SetLineWidth(float lineWidth)
+        {
+            this.lineWidth = lineWidth;
+        }
 
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
 
-		public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
-		{
-			this.color = color;
-		}
-	}
+        public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
+        {
+            this.color = color;
+        }
+    }
 }

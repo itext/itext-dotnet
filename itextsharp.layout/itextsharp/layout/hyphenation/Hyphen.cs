@@ -19,57 +19,57 @@ using System.Text;
 
 namespace iTextSharp.Layout.Hyphenation
 {
-	/// <summary>Represents a hyphen.</summary>
-	public class Hyphen
-	{
-		/// <summary>pre break string</summary>
-		public String preBreak;
+    /// <summary>Represents a hyphen.</summary>
+    public class Hyphen
+    {
+        /// <summary>pre break string</summary>
+        public String preBreak;
 
-		/// <summary>no break string</summary>
-		public String noBreak;
+        /// <summary>no break string</summary>
+        public String noBreak;
 
-		/// <summary>post break string</summary>
-		public String postBreak;
+        /// <summary>post break string</summary>
+        public String postBreak;
 
-		/// <summary>Construct a hyphen.</summary>
-		/// <param name="pre">break string</param>
-		/// <param name="no">break string</param>
-		/// <param name="post">break string</param>
-		internal Hyphen(String pre, String no, String post)
-		{
-			preBreak = pre;
-			noBreak = no;
-			postBreak = post;
-		}
+        /// <summary>Construct a hyphen.</summary>
+        /// <param name="pre">break string</param>
+        /// <param name="no">break string</param>
+        /// <param name="post">break string</param>
+        internal Hyphen(String pre, String no, String post)
+        {
+            preBreak = pre;
+            noBreak = no;
+            postBreak = post;
+        }
 
-		/// <summary>Construct a hyphen.</summary>
-		/// <param name="pre">break string</param>
-		internal Hyphen(String pre)
-		{
-			preBreak = pre;
-			noBreak = null;
-			postBreak = null;
-		}
+        /// <summary>Construct a hyphen.</summary>
+        /// <param name="pre">break string</param>
+        internal Hyphen(String pre)
+        {
+            preBreak = pre;
+            noBreak = null;
+            postBreak = null;
+        }
 
-		/// <summary>
-		/// <inheritDoc/>
-		/// 
-		/// </summary>
-		public override String ToString()
-		{
-			if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-"
-				))
-			{
-				return "-";
-			}
-			StringBuilder res = new StringBuilder("{");
-			res.Append(preBreak);
-			res.Append("}{");
-			res.Append(postBreak);
-			res.Append("}{");
-			res.Append(noBreak);
-			res.Append('}');
-			return res.ToString();
-		}
-	}
+        /// <summary>
+        /// <inheritDoc/>
+        /// 
+        /// </summary>
+        public override String ToString()
+        {
+            if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-"
+                ))
+            {
+                return "-";
+            }
+            StringBuilder res = new StringBuilder("{");
+            res.Append(preBreak);
+            res.Append("}{");
+            res.Append(postBreak);
+            res.Append("}{");
+            res.Append(noBreak);
+            res.Append('}');
+            return res.ToString();
+        }
+    }
 }

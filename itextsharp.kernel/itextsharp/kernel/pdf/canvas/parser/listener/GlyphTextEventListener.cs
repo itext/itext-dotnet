@@ -45,53 +45,53 @@ using System;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-	/// <summary>
-	/// This class expands each
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
-	/// for
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
-	/// event types into
-	/// multiple
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
-	/// instances for each glyph occurred.
-	/// The only difference from
-	/// <see cref="GlyphEventListener"/>
-	/// is that this class conveniently implements
-	/// <see cref="ITextExtractionStrategy"/>
-	/// and can therefore used as a strategy on its own.
-	/// </summary>
-	public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy
-	{
-		/// <summary>
-		/// Constructs a
-		/// <see cref="GlyphEventListener"/>
-		/// instance by a
-		/// <see cref="ITextExtractionStrategy"/>
-		/// delegate to which
-		/// the expanded text events for each glyph occurred will be passed on.
-		/// </summary>
-		/// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
-		public GlyphTextEventListener(ITextExtractionStrategy delegate_)
-			: base(delegate_)
-		{
-		}
+    /// <summary>
+    /// This class expands each
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// for
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
+    /// event types into
+    /// multiple
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// instances for each glyph occurred.
+    /// The only difference from
+    /// <see cref="GlyphEventListener"/>
+    /// is that this class conveniently implements
+    /// <see cref="ITextExtractionStrategy"/>
+    /// and can therefore used as a strategy on its own.
+    /// </summary>
+    public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy
+    {
+        /// <summary>
+        /// Constructs a
+        /// <see cref="GlyphEventListener"/>
+        /// instance by a
+        /// <see cref="ITextExtractionStrategy"/>
+        /// delegate to which
+        /// the expanded text events for each glyph occurred will be passed on.
+        /// </summary>
+        /// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
+        public GlyphTextEventListener(ITextExtractionStrategy delegate_)
+            : base(delegate_)
+        {
+        }
 
-		/// <summary>
-		/// As an resultant text we use the the resultant text of the delegate that implement
-		/// <see cref="ITextExtractionStrategy"/>
-		/// and was passed to this class.
-		/// </summary>
-		/// <returns>the resulting text extracted from the delegate</returns>
-		public virtual String GetResultantText()
-		{
-			if (delegate_ is ITextExtractionStrategy)
-			{
-				return ((ITextExtractionStrategy)delegate_).GetResultantText();
-			}
-			else
-			{
-				return null;
-			}
-		}
-	}
+        /// <summary>
+        /// As an resultant text we use the the resultant text of the delegate that implement
+        /// <see cref="ITextExtractionStrategy"/>
+        /// and was passed to this class.
+        /// </summary>
+        /// <returns>the resulting text extracted from the delegate</returns>
+        public virtual String GetResultantText()
+        {
+            if (delegate_ is ITextExtractionStrategy)
+            {
+                return ((ITextExtractionStrategy)delegate_).GetResultantText();
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
 }

@@ -32,224 +32,224 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.XMP.Impl
 {
-	/// <since>22.08.2006</since>
-	public class FixASCIIControlsReader : PushbackReader
-	{
-		private const int STATE_START = 0;
+    /// <since>22.08.2006</since>
+    public class FixASCIIControlsReader : PushbackReader
+    {
+        private const int STATE_START = 0;
 
-		private const int STATE_AMP = 1;
+        private const int STATE_AMP = 1;
 
-		private const int STATE_HASH = 2;
+        private const int STATE_HASH = 2;
 
-		private const int STATE_HEX = 3;
+        private const int STATE_HEX = 3;
 
-		private const int STATE_DIG1 = 4;
+        private const int STATE_DIG1 = 4;
 
-		private const int STATE_ERROR = 5;
+        private const int STATE_ERROR = 5;
 
-		private const int BUFFER_SIZE = 8;
+        private const int BUFFER_SIZE = 8;
 
-		/// <summary>the state of the automaton</summary>
-		private int state = STATE_START;
+        /// <summary>the state of the automaton</summary>
+        private int state = STATE_START;
 
-		/// <summary>the result of the escaping sequence</summary>
-		private int control = 0;
+        /// <summary>the result of the escaping sequence</summary>
+        private int control = 0;
 
-		/// <summary>count the digits of the sequence</summary>
-		private int digits = 0;
+        /// <summary>count the digits of the sequence</summary>
+        private int digits = 0;
 
-		/// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-		/// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)
-		/// 	"/>
-		/// <param name="input">a Reader</param>
-		public FixASCIIControlsReader(TextReader input)
-			: base(input, BUFFER_SIZE)
-		{
-		}
+        /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
+        /// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)
+        ///     "/>
+        /// <param name="input">a Reader</param>
+        public FixASCIIControlsReader(TextReader input)
+            : base(input, BUFFER_SIZE)
+        {
+        }
 
-		/// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
-		/// <exception cref="System.IO.IOException"/>
-		public override int Read(char[] cbuf, int off, int len)
-		{
-			int readAhead = 0;
-			int read = 0;
-			int pos = off;
-			char[] readAheadBuffer = new char[BUFFER_SIZE];
-			bool available = true;
-			while (available && read < len)
-			{
-				available = base.Read(readAheadBuffer, readAhead, 1) == 1;
-				if (available)
-				{
-					char c = ProcessChar(readAheadBuffer[readAhead]);
-					if (state == STATE_START)
-					{
-						// replace control chars with space
-						if (Utils.IsControlChar(c))
-						{
-							c = ' ';
-						}
-						cbuf[pos++] = c;
-						readAhead = 0;
-						read++;
-					}
-					else
-					{
-						if (state == STATE_ERROR)
-						{
-							Unread(readAheadBuffer, 0, readAhead + 1);
-							readAhead = 0;
-						}
-						else
-						{
-							readAhead++;
-						}
-					}
-				}
-				else
-				{
-					if (readAhead > 0)
-					{
-						// handles case when file ends within excaped sequence
-						Unread(readAheadBuffer, 0, readAhead);
-						state = STATE_ERROR;
-						readAhead = 0;
-						available = true;
-					}
-				}
-			}
-			return read > 0 || available ? read : -1;
-		}
+        /// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
+        /// <exception cref="System.IO.IOException"/>
+        public override int Read(char[] cbuf, int off, int len)
+        {
+            int readAhead = 0;
+            int read = 0;
+            int pos = off;
+            char[] readAheadBuffer = new char[BUFFER_SIZE];
+            bool available = true;
+            while (available && read < len)
+            {
+                available = base.Read(readAheadBuffer, readAhead, 1) == 1;
+                if (available)
+                {
+                    char c = ProcessChar(readAheadBuffer[readAhead]);
+                    if (state == STATE_START)
+                    {
+                        // replace control chars with space
+                        if (Utils.IsControlChar(c))
+                        {
+                            c = ' ';
+                        }
+                        cbuf[pos++] = c;
+                        readAhead = 0;
+                        read++;
+                    }
+                    else
+                    {
+                        if (state == STATE_ERROR)
+                        {
+                            Unread(readAheadBuffer, 0, readAhead + 1);
+                            readAhead = 0;
+                        }
+                        else
+                        {
+                            readAhead++;
+                        }
+                    }
+                }
+                else
+                {
+                    if (readAhead > 0)
+                    {
+                        // handles case when file ends within excaped sequence
+                        Unread(readAheadBuffer, 0, readAhead);
+                        state = STATE_ERROR;
+                        readAhead = 0;
+                        available = true;
+                    }
+                }
+            }
+            return read > 0 || available ? read : -1;
+        }
 
-		/// <summary>Processes numeric escaped chars to find out if they are a control character.
-		/// 	</summary>
-		/// <param name="ch">a char</param>
-		/// <returns>Returns the char directly or as replacement for the escaped sequence.</returns>
-		private char ProcessChar(char ch)
-		{
-			switch (state)
-			{
-				case STATE_START:
-				{
-					if (ch == '&')
-					{
-						state = STATE_AMP;
-					}
-					return ch;
-				}
+        /// <summary>Processes numeric escaped chars to find out if they are a control character.
+        ///     </summary>
+        /// <param name="ch">a char</param>
+        /// <returns>Returns the char directly or as replacement for the escaped sequence.</returns>
+        private char ProcessChar(char ch)
+        {
+            switch (state)
+            {
+                case STATE_START:
+                {
+                    if (ch == '&')
+                    {
+                        state = STATE_AMP;
+                    }
+                    return ch;
+                }
 
-				case STATE_AMP:
-				{
-					if (ch == '#')
-					{
-						state = STATE_HASH;
-					}
-					else
-					{
-						state = STATE_ERROR;
-					}
-					return ch;
-				}
+                case STATE_AMP:
+                {
+                    if (ch == '#')
+                    {
+                        state = STATE_HASH;
+                    }
+                    else
+                    {
+                        state = STATE_ERROR;
+                    }
+                    return ch;
+                }
 
-				case STATE_HASH:
-				{
-					if (ch == 'x')
-					{
-						control = 0;
-						digits = 0;
-						state = STATE_HEX;
-					}
-					else
-					{
-						if ('0' <= ch && ch <= '9')
-						{
-							control = iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
-							digits = 1;
-							state = STATE_DIG1;
-						}
-						else
-						{
-							state = STATE_ERROR;
-						}
-					}
-					return ch;
-				}
+                case STATE_HASH:
+                {
+                    if (ch == 'x')
+                    {
+                        control = 0;
+                        digits = 0;
+                        state = STATE_HEX;
+                    }
+                    else
+                    {
+                        if ('0' <= ch && ch <= '9')
+                        {
+                            control = iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                            digits = 1;
+                            state = STATE_DIG1;
+                        }
+                        else
+                        {
+                            state = STATE_ERROR;
+                        }
+                    }
+                    return ch;
+                }
 
-				case STATE_DIG1:
-				{
-					if ('0' <= ch && ch <= '9')
-					{
-						control = control * 10 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
-						digits++;
-						if (digits <= 5)
-						{
-							state = STATE_DIG1;
-						}
-						else
-						{
-							state = STATE_ERROR;
-						}
-					}
-					else
-					{
-						// sequence too long
-						if (ch == ';' && Utils.IsControlChar((char)control))
-						{
-							state = STATE_START;
-							return (char)control;
-						}
-						else
-						{
-							state = STATE_ERROR;
-						}
-					}
-					return ch;
-				}
+                case STATE_DIG1:
+                {
+                    if ('0' <= ch && ch <= '9')
+                    {
+                        control = control * 10 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                        digits++;
+                        if (digits <= 5)
+                        {
+                            state = STATE_DIG1;
+                        }
+                        else
+                        {
+                            state = STATE_ERROR;
+                        }
+                    }
+                    else
+                    {
+                        // sequence too long
+                        if (ch == ';' && Utils.IsControlChar((char)control))
+                        {
+                            state = STATE_START;
+                            return (char)control;
+                        }
+                        else
+                        {
+                            state = STATE_ERROR;
+                        }
+                    }
+                    return ch;
+                }
 
-				case STATE_HEX:
-				{
-					if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'
-						))
-					{
-						control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
-						digits++;
-						if (digits <= 4)
-						{
-							state = STATE_HEX;
-						}
-						else
-						{
-							state = STATE_ERROR;
-						}
-					}
-					else
-					{
-						// sequence too long
-						if (ch == ';' && Utils.IsControlChar((char)control))
-						{
-							state = STATE_START;
-							return (char)control;
-						}
-						else
-						{
-							state = STATE_ERROR;
-						}
-					}
-					return ch;
-				}
+                case STATE_HEX:
+                {
+                    if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'
+                        ))
+                    {
+                        control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
+                        digits++;
+                        if (digits <= 4)
+                        {
+                            state = STATE_HEX;
+                        }
+                        else
+                        {
+                            state = STATE_ERROR;
+                        }
+                    }
+                    else
+                    {
+                        // sequence too long
+                        if (ch == ';' && Utils.IsControlChar((char)control))
+                        {
+                            state = STATE_START;
+                            return (char)control;
+                        }
+                        else
+                        {
+                            state = STATE_ERROR;
+                        }
+                    }
+                    return ch;
+                }
 
-				case STATE_ERROR:
-				{
-					state = STATE_START;
-					return ch;
-				}
+                case STATE_ERROR:
+                {
+                    state = STATE_START;
+                    return ch;
+                }
 
-				default:
-				{
-					// not reachable
-					return ch;
-				}
-			}
-		}
-	}
+                default:
+                {
+                    // not reachable
+                    return ch;
+                }
+            }
+        }
+    }
 }

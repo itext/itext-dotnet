@@ -45,11 +45,11 @@ using System;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	/// <author>psoares</author>
-	public class FeatureRecord
-	{
-		public String tag;
+    /// <author>psoares</author>
+    public class FeatureRecord
+    {
+        public String tag;
 
-		public int[] lookups;
-	}
+        public int[] lookups;
+    }
 }

@@ -45,212 +45,212 @@ using System;
 
 namespace iTextSharp.IO.Source
 {
-	public class ByteBuffer
-	{
-		private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55
-			, 56, 57, 97, 98, 99, 100, 101, 102 };
+    public class ByteBuffer
+    {
+        private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55
+            , 56, 57, 97, 98, 99, 100, 101, 102 };
 
-		protected internal int count;
+        protected internal int count;
 
-		private byte[] buffer;
+        private byte[] buffer;
 
-		public ByteBuffer()
-			: this(128)
-		{
-		}
+        public ByteBuffer()
+            : this(128)
+        {
+        }
 
-		public ByteBuffer(int size)
-		{
-			if (size < 1)
-			{
-				size = 128;
-			}
-			buffer = new byte[size];
-		}
+        public ByteBuffer(int size)
+        {
+            if (size < 1)
+            {
+                size = 128;
+            }
+            buffer = new byte[size];
+        }
 
-		public static int GetHex(int v)
-		{
-			if (v >= '0' && v <= '9')
-			{
-				return v - '0';
-			}
-			if (v >= 'A' && v <= 'F')
-			{
-				return v - 'A' + 10;
-			}
-			if (v >= 'a' && v <= 'f')
-			{
-				return v - 'a' + 10;
-			}
-			return -1;
-		}
+        public static int GetHex(int v)
+        {
+            if (v >= '0' && v <= '9')
+            {
+                return v - '0';
+            }
+            if (v >= 'A' && v <= 'F')
+            {
+                return v - 'A' + 10;
+            }
+            if (v >= 'a' && v <= 'f')
+            {
+                return v - 'a' + 10;
+            }
+            return -1;
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte b)
-		{
-			int newCount = count + 1;
-			if (newCount > buffer.Length)
-			{
-				byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
-				System.Array.Copy(buffer, 0, newBuffer, 0, count);
-				buffer = newBuffer;
-			}
-			buffer[count] = b;
-			count = newCount;
-			return this;
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Append(byte b)
+        {
+            int newCount = count + 1;
+            if (newCount > buffer.Length)
+            {
+                byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
+                System.Array.Copy(buffer, 0, newBuffer, 0, count);
+                buffer = newBuffer;
+            }
+            buffer[count] = b;
+            count = newCount;
+            return this;
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b, int off, int len)
-		{
-			if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off
-				 + len) < 0) || len == 0)
-			{
-				return this;
-			}
-			int newCount = count + len;
-			if (newCount > buffer.Length)
-			{
-				byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
-				System.Array.Copy(buffer, 0, newBuffer, 0, count);
-				buffer = newBuffer;
-			}
-			System.Array.Copy(b, off, buffer, count, len);
-			count = newCount;
-			return this;
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b, int off, int len)
+        {
+            if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off
+                 + len) < 0) || len == 0)
+            {
+                return this;
+            }
+            int newCount = count + len;
+            if (newCount > buffer.Length)
+            {
+                byte[] newBuffer = new byte[Math.Max(buffer.Length << 1, newCount)];
+                System.Array.Copy(buffer, 0, newBuffer, 0, count);
+                buffer = newBuffer;
+            }
+            System.Array.Copy(b, off, buffer, count, len);
+            count = newCount;
+            return this;
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b)
-		{
-			return Append(b, 0, b.Length);
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b)
+        {
+            return Append(b, 0, b.Length);
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Append(int b)
-		{
-			return Append((byte)b);
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Append(int b)
+        {
+            return Append((byte)b);
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Append(String str)
-		{
-			return Append(ByteUtils.GetIsoBytes(str));
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Append(String str)
+        {
+            return Append(ByteUtils.GetIsoBytes(str));
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer AppendHex(byte b)
-		{
-			Append(bytes[(b >> 4) & 0x0f]);
-			return Append(bytes[b & 0x0f]);
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer AppendHex(byte b)
+        {
+            Append(bytes[(b >> 4) & 0x0f]);
+            return Append(bytes[b & 0x0f]);
+        }
 
-		public virtual byte Get(int index)
-		{
-			if (index >= count)
-			{
-				throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, 
-					count));
-			}
-			return buffer[index];
-		}
+        public virtual byte Get(int index)
+        {
+            if (index >= count)
+            {
+                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, 
+                    count));
+            }
+            return buffer[index];
+        }
 
-		public virtual byte[] GetInternalBuffer()
-		{
-			return buffer;
-		}
+        public virtual byte[] GetInternalBuffer()
+        {
+            return buffer;
+        }
 
-		public virtual int Size()
-		{
-			return count;
-		}
+        public virtual int Size()
+        {
+            return count;
+        }
 
-		public virtual bool IsEmpty()
-		{
-			return Size() == 0;
-		}
+        public virtual bool IsEmpty()
+        {
+            return Size() == 0;
+        }
 
-		public virtual int Capacity()
-		{
-			return buffer.Length;
-		}
+        public virtual int Capacity()
+        {
+            return buffer.Length;
+        }
 
-		public virtual iTextSharp.IO.Source.ByteBuffer Reset()
-		{
-			count = 0;
-			return this;
-		}
+        public virtual iTextSharp.IO.Source.ByteBuffer Reset()
+        {
+            count = 0;
+            return this;
+        }
 
-		public virtual byte[] ToByteArray(int off, int len)
-		{
-			byte[] newBuf = new byte[len];
-			System.Array.Copy(buffer, off, newBuf, 0, len);
-			return newBuf;
-		}
+        public virtual byte[] ToByteArray(int off, int len)
+        {
+            byte[] newBuf = new byte[len];
+            System.Array.Copy(buffer, off, newBuf, 0, len);
+            return newBuf;
+        }
 
-		public virtual byte[] ToByteArray()
-		{
-			return ToByteArray(0, count);
-		}
+        public virtual byte[] ToByteArray()
+        {
+            return ToByteArray(0, count);
+        }
 
-		public virtual bool StartsWith(byte[] b)
-		{
-			if (Size() < b.Length)
-			{
-				return false;
-			}
-			for (int k = 0; k < b.Length; ++k)
-			{
-				if (buffer[k] != b[k])
-				{
-					return false;
-				}
-			}
-			return true;
-		}
+        public virtual bool StartsWith(byte[] b)
+        {
+            if (Size() < b.Length)
+            {
+                return false;
+            }
+            for (int k = 0; k < b.Length; ++k)
+            {
+                if (buffer[k] != b[k])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-		/// <summary>
-		/// Fill
-		/// <c>ByteBuffer</c>
-		/// from the end.
-		/// Set byte at
-		/// <c>capacity() - size() - 1</c>
-		/// position.
-		/// </summary>
-		/// <param name="b">
-		/// 
-		/// <c>byte</c>
-		/// .
-		/// </param>
-		/// <returns>
-		/// 
-		/// <c>ByteBuffer</c>
-		/// .
-		/// </returns>
-		internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte b)
-		{
-			buffer[buffer.Length - count - 1] = b;
-			count++;
-			return this;
-		}
+        /// <summary>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
+        /// Set byte at
+        /// <c>capacity() - size() - 1</c>
+        /// position.
+        /// </summary>
+        /// <param name="b">
+        /// 
+        /// <c>byte</c>
+        /// .
+        /// </param>
+        /// <returns>
+        /// 
+        /// <c>ByteBuffer</c>
+        /// .
+        /// </returns>
+        internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte b)
+        {
+            buffer[buffer.Length - count - 1] = b;
+            count++;
+            return this;
+        }
 
-		/// <summary>
-		/// Fill
-		/// <c>ByteBuffer</c>
-		/// from the end.
-		/// Set bytes from
-		/// <c>capacity() - size() - b.length</c>
-		/// position.
-		/// </summary>
-		/// <param name="b">
-		/// 
-		/// <c>byte</c>
-		/// .
-		/// </param>
-		/// <returns>
-		/// 
-		/// <c>ByteBuffer</c>
-		/// .
-		/// </returns>
-		internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte[] b)
-		{
-			System.Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);
-			count += b.Length;
-			return this;
-		}
-	}
+        /// <summary>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
+        /// Set bytes from
+        /// <c>capacity() - size() - b.length</c>
+        /// position.
+        /// </summary>
+        /// <param name="b">
+        /// 
+        /// <c>byte</c>
+        /// .
+        /// </param>
+        /// <returns>
+        /// 
+        /// <c>ByteBuffer</c>
+        /// .
+        /// </returns>
+        internal virtual iTextSharp.IO.Source.ByteBuffer Prepend(byte[] b)
+        {
+            System.Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);
+            count += b.Length;
+            return this;
+        }
+    }
 }

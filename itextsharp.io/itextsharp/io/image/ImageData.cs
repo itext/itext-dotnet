@@ -51,363 +51,363 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Image
 {
-	public abstract class ImageData
-	{
-		protected internal Uri url;
+    public abstract class ImageData
+    {
+        protected internal Uri url;
 
-		protected internal int[] transparency;
+        protected internal int[] transparency;
 
-		protected internal ImageType originalType;
+        protected internal ImageType originalType;
 
-		protected internal float width;
+        protected internal float width;
 
-		protected internal float height;
+        protected internal float height;
 
-		protected internal byte[] data;
+        protected internal byte[] data;
 
-		protected internal int imageSize;
+        protected internal int imageSize;
 
-		protected internal int bpc = 1;
+        protected internal int bpc = 1;
 
-		protected internal int colorSpace = -1;
+        protected internal int colorSpace = -1;
 
-		protected internal float[] decode;
+        protected internal float[] decode;
 
-		protected internal IDictionary<String, Object> decodeParms;
+        protected internal IDictionary<String, Object> decodeParms;
 
-		protected internal bool inverted = false;
+        protected internal bool inverted = false;
 
-		protected internal float rotation;
+        protected internal float rotation;
 
-		protected internal IccProfile profile;
+        protected internal IccProfile profile;
 
-		protected internal int dpiX = 0;
+        protected internal int dpiX = 0;
 
-		protected internal int dpiY = 0;
+        protected internal int dpiY = 0;
 
-		protected internal int colorTransform = 1;
+        protected internal int colorTransform = 1;
 
-		protected internal bool deflated;
+        protected internal bool deflated;
 
-		protected internal bool mask = false;
+        protected internal bool mask = false;
 
-		protected internal iTextSharp.IO.Image.ImageData imageMask;
+        protected internal iTextSharp.IO.Image.ImageData imageMask;
 
-		protected internal bool interpolation;
+        protected internal bool interpolation;
 
-		protected internal float XYRatio = 0;
+        protected internal float XYRatio = 0;
 
-		protected internal String filter;
+        protected internal String filter;
 
-		protected internal IDictionary<String, Object> imageAttributes;
+        protected internal IDictionary<String, Object> imageAttributes;
 
-		protected internal long? mySerialId = GetSerialId();
+        protected internal long? mySerialId = GetSerialId();
 
-		protected internal ImageData(Uri url, ImageType type)
-		{
-			this.url = url;
-			this.originalType = type;
-		}
+        protected internal ImageData(Uri url, ImageType type)
+        {
+            this.url = url;
+            this.originalType = type;
+        }
 
-		protected internal ImageData(byte[] bytes, ImageType type)
-		{
-			this.data = bytes;
-			this.originalType = type;
-		}
+        protected internal ImageData(byte[] bytes, ImageType type)
+        {
+            this.data = bytes;
+            this.originalType = type;
+        }
 
-		public virtual bool IsRawImage()
-		{
-			return false;
-		}
+        public virtual bool IsRawImage()
+        {
+            return false;
+        }
 
-		public virtual Uri GetUrl()
-		{
-			return url;
-		}
+        public virtual Uri GetUrl()
+        {
+            return url;
+        }
 
-		public virtual void SetUrl(Uri url)
-		{
-			this.url = url;
-		}
+        public virtual void SetUrl(Uri url)
+        {
+            this.url = url;
+        }
 
-		public virtual int[] GetTransparency()
-		{
-			return transparency;
-		}
+        public virtual int[] GetTransparency()
+        {
+            return transparency;
+        }
 
-		public virtual void SetTransparency(int[] transparency)
-		{
-			this.transparency = transparency;
-		}
+        public virtual void SetTransparency(int[] transparency)
+        {
+            this.transparency = transparency;
+        }
 
-		public virtual bool IsInverted()
-		{
-			return inverted;
-		}
+        public virtual bool IsInverted()
+        {
+            return inverted;
+        }
 
-		public virtual void SetInverted(bool inverted)
-		{
-			this.inverted = inverted;
-		}
+        public virtual void SetInverted(bool inverted)
+        {
+            this.inverted = inverted;
+        }
 
-		public virtual float GetRotation()
-		{
-			return rotation;
-		}
-
-		public virtual void SetRotation(float rotation)
-		{
-			this.rotation = rotation;
-		}
-
-		public virtual IccProfile GetProfile()
-		{
-			return profile;
-		}
-
-		public virtual void SetProfile(IccProfile profile)
-		{
-			this.profile = profile;
-		}
-
-		public virtual int GetDpiX()
-		{
-			return dpiX;
-		}
-
-		public virtual int GetDpiY()
-		{
-			return dpiY;
-		}
-
-		public virtual void SetDpi(int dpiX, int dpiY)
-		{
-			this.dpiX = dpiX;
-			this.dpiY = dpiY;
-		}
-
-		public virtual int GetColorTransform()
-		{
-			return colorTransform;
-		}
-
-		public virtual void SetColorTransform(int colorTransform)
-		{
-			this.colorTransform = colorTransform;
-		}
-
-		public virtual bool IsDeflated()
-		{
-			return deflated;
-		}
-
-		public virtual void SetDeflated(bool deflated)
-		{
-			this.deflated = deflated;
-		}
-
-		public virtual ImageType GetOriginalType()
-		{
-			return originalType;
-		}
-
-		public virtual int GetColorSpace()
-		{
-			return colorSpace;
-		}
-
-		public virtual void SetColorSpace(int colorSpace)
-		{
-			this.colorSpace = colorSpace;
-		}
-
-		public virtual byte[] GetData()
-		{
-			return data;
-		}
-
-		public virtual bool CanBeMask()
-		{
-			if (IsRawImage())
-			{
-				if (bpc > 0xff)
-				{
-					return true;
-				}
-			}
-			return colorSpace == 1;
-		}
-
-		public virtual bool IsMask()
-		{
-			return mask;
-		}
-
-		public virtual iTextSharp.IO.Image.ImageData GetImageMask()
-		{
-			return imageMask;
-		}
-
-		public virtual void SetImageMask(iTextSharp.IO.Image.ImageData imageMask)
-		{
-			if (this.mask)
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask
-					);
-			}
-			if (!imageMask.mask)
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask
-					);
-			}
-			this.imageMask = imageMask;
-		}
-
-		public virtual bool IsSoftMask()
-		{
-			return mask && bpc > 1 && bpc <= 8;
-		}
-
-		public virtual void MakeMask()
-		{
-			if (!CanBeMask())
-			{
-				throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask
-					);
-			}
-			mask = true;
-		}
-
-		public virtual float GetWidth()
-		{
-			return width;
-		}
-
-		public virtual void SetWidth(float width)
-		{
-			this.width = width;
-		}
-
-		public virtual float GetHeight()
-		{
-			return height;
-		}
-
-		public virtual void SetHeight(float height)
-		{
-			this.height = height;
-		}
-
-		public virtual int GetBpc()
-		{
-			return bpc;
-		}
-
-		public virtual void SetBpc(int bpc)
-		{
-			this.bpc = bpc;
-		}
-
-		public virtual bool IsInterpolation()
-		{
-			return interpolation;
-		}
-
-		public virtual void SetInterpolation(bool interpolation)
-		{
-			this.interpolation = interpolation;
-		}
-
-		public virtual float GetXYRatio()
-		{
-			return XYRatio;
-		}
-
-		public virtual void SetXYRatio(float XYRatio)
-		{
-			this.XYRatio = XYRatio;
-		}
-
-		public virtual IDictionary<String, Object> GetImageAttributes()
-		{
-			return imageAttributes;
-		}
-
-		public virtual void SetImageAttributes(IDictionary<String, Object> imageAttributes
-			)
-		{
-			this.imageAttributes = imageAttributes;
-		}
-
-		public virtual String GetFilter()
-		{
-			return filter;
-		}
-
-		public virtual void SetFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		public virtual IDictionary<String, Object> GetDecodeParms()
-		{
-			return decodeParms;
-		}
-
-		public virtual float[] GetDecode()
-		{
-			return decode;
-		}
-
-		public virtual void SetDecode(float[] decode)
-		{
-			this.decode = decode;
-		}
-
-		/// <summary>Checks if image can be inline</summary>
-		/// <returns>if the image can be inline</returns>
-		public virtual bool CanImageBeInline()
-		{
-			ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
-			if (imageSize > 4096)
-			{
-				logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
-				return false;
-			}
-			if (imageMask != null)
-			{
-				logger.Warn(LogMessageConstant.IMAGE_HAS_MASK);
-				return false;
-			}
-			return true;
-		}
-
-		/// <summary>Load data from URL.</summary>
-		/// <remarks>
-		/// Load data from URL. url must be not null.
-		/// Note, this method doesn't check if data or url is null.
-		/// </remarks>
-		/// <exception cref="System.IO.IOException"/>
-		internal virtual void LoadData()
-		{
-			RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory
-				().CreateSource(url));
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			StreamUtil.TransferBytes(raf, stream);
-			raf.Close();
-			data = stream.ToArray();
-		}
-
-		/// <summary>a static that is used for attributing a unique id to each image.</summary>
-		private static long serialId = 0;
-
-		/// <summary>Creates a new serial id.</summary>
-		/// <returns>the new serialId</returns>
-		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
-			.Synchronized)]
-		private static long? GetSerialId()
-		{
-			return ++serialId;
-		}
-	}
+        public virtual float GetRotation()
+        {
+            return rotation;
+        }
+
+        public virtual void SetRotation(float rotation)
+        {
+            this.rotation = rotation;
+        }
+
+        public virtual IccProfile GetProfile()
+        {
+            return profile;
+        }
+
+        public virtual void SetProfile(IccProfile profile)
+        {
+            this.profile = profile;
+        }
+
+        public virtual int GetDpiX()
+        {
+            return dpiX;
+        }
+
+        public virtual int GetDpiY()
+        {
+            return dpiY;
+        }
+
+        public virtual void SetDpi(int dpiX, int dpiY)
+        {
+            this.dpiX = dpiX;
+            this.dpiY = dpiY;
+        }
+
+        public virtual int GetColorTransform()
+        {
+            return colorTransform;
+        }
+
+        public virtual void SetColorTransform(int colorTransform)
+        {
+            this.colorTransform = colorTransform;
+        }
+
+        public virtual bool IsDeflated()
+        {
+            return deflated;
+        }
+
+        public virtual void SetDeflated(bool deflated)
+        {
+            this.deflated = deflated;
+        }
+
+        public virtual ImageType GetOriginalType()
+        {
+            return originalType;
+        }
+
+        public virtual int GetColorSpace()
+        {
+            return colorSpace;
+        }
+
+        public virtual void SetColorSpace(int colorSpace)
+        {
+            this.colorSpace = colorSpace;
+        }
+
+        public virtual byte[] GetData()
+        {
+            return data;
+        }
+
+        public virtual bool CanBeMask()
+        {
+            if (IsRawImage())
+            {
+                if (bpc > 0xff)
+                {
+                    return true;
+                }
+            }
+            return colorSpace == 1;
+        }
+
+        public virtual bool IsMask()
+        {
+            return mask;
+        }
+
+        public virtual iTextSharp.IO.Image.ImageData GetImageMask()
+        {
+            return imageMask;
+        }
+
+        public virtual void SetImageMask(iTextSharp.IO.Image.ImageData imageMask)
+        {
+            if (this.mask)
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask
+                    );
+            }
+            if (!imageMask.mask)
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask
+                    );
+            }
+            this.imageMask = imageMask;
+        }
+
+        public virtual bool IsSoftMask()
+        {
+            return mask && bpc > 1 && bpc <= 8;
+        }
+
+        public virtual void MakeMask()
+        {
+            if (!CanBeMask())
+            {
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask
+                    );
+            }
+            mask = true;
+        }
+
+        public virtual float GetWidth()
+        {
+            return width;
+        }
+
+        public virtual void SetWidth(float width)
+        {
+            this.width = width;
+        }
+
+        public virtual float GetHeight()
+        {
+            return height;
+        }
+
+        public virtual void SetHeight(float height)
+        {
+            this.height = height;
+        }
+
+        public virtual int GetBpc()
+        {
+            return bpc;
+        }
+
+        public virtual void SetBpc(int bpc)
+        {
+            this.bpc = bpc;
+        }
+
+        public virtual bool IsInterpolation()
+        {
+            return interpolation;
+        }
+
+        public virtual void SetInterpolation(bool interpolation)
+        {
+            this.interpolation = interpolation;
+        }
+
+        public virtual float GetXYRatio()
+        {
+            return XYRatio;
+        }
+
+        public virtual void SetXYRatio(float XYRatio)
+        {
+            this.XYRatio = XYRatio;
+        }
+
+        public virtual IDictionary<String, Object> GetImageAttributes()
+        {
+            return imageAttributes;
+        }
+
+        public virtual void SetImageAttributes(IDictionary<String, Object> imageAttributes
+            )
+        {
+            this.imageAttributes = imageAttributes;
+        }
+
+        public virtual String GetFilter()
+        {
+            return filter;
+        }
+
+        public virtual void SetFilter(String filter)
+        {
+            this.filter = filter;
+        }
+
+        public virtual IDictionary<String, Object> GetDecodeParms()
+        {
+            return decodeParms;
+        }
+
+        public virtual float[] GetDecode()
+        {
+            return decode;
+        }
+
+        public virtual void SetDecode(float[] decode)
+        {
+            this.decode = decode;
+        }
+
+        /// <summary>Checks if image can be inline</summary>
+        /// <returns>if the image can be inline</returns>
+        public virtual bool CanImageBeInline()
+        {
+            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
+            if (imageSize > 4096)
+            {
+                logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                return false;
+            }
+            if (imageMask != null)
+            {
+                logger.Warn(LogMessageConstant.IMAGE_HAS_MASK);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>Load data from URL.</summary>
+        /// <remarks>
+        /// Load data from URL. url must be not null.
+        /// Note, this method doesn't check if data or url is null.
+        /// </remarks>
+        /// <exception cref="System.IO.IOException"/>
+        internal virtual void LoadData()
+        {
+            RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory
+                ().CreateSource(url));
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            StreamUtil.TransferBytes(raf, stream);
+            raf.Close();
+            data = stream.ToArray();
+        }
+
+        /// <summary>a static that is used for attributing a unique id to each image.</summary>
+        private static long serialId = 0;
+
+        /// <summary>Creates a new serial id.</summary>
+        /// <returns>the new serialId</returns>
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
+            .Synchronized)]
+        private static long? GetSerialId()
+        {
+            return ++serialId;
+        }
+    }
 }

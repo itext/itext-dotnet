@@ -45,38 +45,38 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Kernel.Geom
 {
-	/// <summary>Represents a line.</summary>
-	public class Line : IShape
-	{
-		private readonly Point p1;
+    /// <summary>Represents a line.</summary>
+    public class Line : IShape
+    {
+        private readonly Point p1;
 
-		private readonly Point p2;
+        private readonly Point p2;
 
-		/// <summary>Constructs a new zero-length line starting at zero.</summary>
-		public Line()
-			: this(0, 0, 0, 0)
-		{
-		}
+        /// <summary>Constructs a new zero-length line starting at zero.</summary>
+        public Line()
+            : this(0, 0, 0, 0)
+        {
+        }
 
-		/// <summary>Constructs a new line based on the given coordinates.</summary>
-		public Line(float x1, float y1, float x2, float y2)
-		{
-			p1 = new Point(x1, y1);
-			p2 = new Point(x2, y2);
-		}
+        /// <summary>Constructs a new line based on the given coordinates.</summary>
+        public Line(float x1, float y1, float x2, float y2)
+        {
+            p1 = new Point(x1, y1);
+            p2 = new Point(x2, y2);
+        }
 
-		/// <summary>Constructs a new line based on the given coordinates.</summary>
-		public Line(Point p1, Point p2)
-			: this((float)p1.GetX(), (float)p1.GetY(), (float)p2.GetX(), (float)p2.GetY())
-		{
-		}
+        /// <summary>Constructs a new line based on the given coordinates.</summary>
+        public Line(Point p1, Point p2)
+            : this((float)p1.GetX(), (float)p1.GetY(), (float)p2.GetX(), (float)p2.GetY())
+        {
+        }
 
-		public virtual IList<Point> GetBasePoints()
-		{
-			IList<Point> basePoints = new List<Point>(2);
-			basePoints.Add(p1);
-			basePoints.Add(p2);
-			return basePoints;
-		}
-	}
+        public virtual IList<Point> GetBasePoints()
+        {
+            IList<Point> basePoints = new List<Point>(2);
+            basePoints.Add(p1);
+            basePoints.Add(p2);
+            return basePoints;
+        }
+    }
 }

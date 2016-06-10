@@ -47,45 +47,45 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfAnnotationAppearance : PdfObjectWrapper<PdfDictionary>
-	{
-		public PdfAnnotationAppearance(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+    public class PdfAnnotationAppearance : PdfObjectWrapper<PdfDictionary>
+    {
+        public PdfAnnotationAppearance(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public PdfAnnotationAppearance()
-			: this(new PdfDictionary())
-		{
-		}
+        public PdfAnnotationAppearance()
+            : this(new PdfDictionary())
+        {
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetState(PdfName
-			 stateName, PdfFormXObject state)
-		{
-			GetPdfObject().Put(stateName, state.GetPdfObject());
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetState(PdfName
+             stateName, PdfFormXObject state)
+        {
+            GetPdfObject().Put(stateName, state.GetPdfObject());
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetStateObject
-			(PdfName stateName, PdfStream state)
-		{
-			GetPdfObject().Put(stateName, state);
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetStateObject
+            (PdfName stateName, PdfStream state)
+        {
+            GetPdfObject().Put(stateName, state);
+            return this;
+        }
 
-		public virtual PdfStream GetStateObject(PdfName stateName)
-		{
-			return GetPdfObject().GetAsStream(stateName);
-		}
+        public virtual PdfStream GetStateObject(PdfName stateName)
+        {
+            return GetPdfObject().GetAsStream(stateName);
+        }
 
-		public virtual ICollection<PdfName> GetStates()
-		{
-			return GetPdfObject().KeySet();
-		}
+        public virtual ICollection<PdfName> GetStates()
+        {
+            return GetPdfObject().KeySet();
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

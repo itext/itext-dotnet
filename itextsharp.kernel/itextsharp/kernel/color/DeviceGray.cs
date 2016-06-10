@@ -46,45 +46,45 @@ using iTextSharp.Kernel.Pdf.Colorspace;
 
 namespace iTextSharp.Kernel.Color
 {
-	public class DeviceGray : iTextSharp.Kernel.Color.Color
-	{
-		public static readonly iTextSharp.Kernel.Color.DeviceGray WHITE = new iTextSharp.Kernel.Color.DeviceGray
-			(1f);
+    public class DeviceGray : iTextSharp.Kernel.Color.Color
+    {
+        public static readonly iTextSharp.Kernel.Color.DeviceGray WHITE = new iTextSharp.Kernel.Color.DeviceGray
+            (1f);
 
-		public static readonly iTextSharp.Kernel.Color.DeviceGray GRAY = new iTextSharp.Kernel.Color.DeviceGray
-			(.5f);
+        public static readonly iTextSharp.Kernel.Color.DeviceGray GRAY = new iTextSharp.Kernel.Color.DeviceGray
+            (.5f);
 
-		public static readonly iTextSharp.Kernel.Color.DeviceGray BLACK = new iTextSharp.Kernel.Color.DeviceGray
-			();
+        public static readonly iTextSharp.Kernel.Color.DeviceGray BLACK = new iTextSharp.Kernel.Color.DeviceGray
+            ();
 
-		public DeviceGray(float value)
-			: base(new PdfDeviceCs.Gray(), new float[] { value })
-		{
-		}
+        public DeviceGray(float value)
+            : base(new PdfDeviceCs.Gray(), new float[] { value })
+        {
+        }
 
-		public DeviceGray()
-			: this(0f)
-		{
-		}
+        public DeviceGray()
+            : this(0f)
+        {
+        }
 
-		public static iTextSharp.Kernel.Color.DeviceGray MakeLighter(iTextSharp.Kernel.Color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			if (v == 0f)
-			{
-				return new iTextSharp.Kernel.Color.DeviceGray(0.3f);
-			}
-			float multiplier = Math.Min(1f, v + 0.33f) / v;
-			return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
-		}
+        public static iTextSharp.Kernel.Color.DeviceGray MakeLighter(iTextSharp.Kernel.Color.DeviceGray
+             grayColor)
+        {
+            float v = grayColor.GetColorValue()[0];
+            if (v == 0f)
+            {
+                return new iTextSharp.Kernel.Color.DeviceGray(0.3f);
+            }
+            float multiplier = Math.Min(1f, v + 0.33f) / v;
+            return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
+        }
 
-		public static iTextSharp.Kernel.Color.DeviceGray MakeDarker(iTextSharp.Kernel.Color.DeviceGray
-			 grayColor)
-		{
-			float v = grayColor.GetColorValue()[0];
-			float multiplier = Math.Max(0f, (v - 0.33f) / v);
-			return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
-		}
-	}
+        public static iTextSharp.Kernel.Color.DeviceGray MakeDarker(iTextSharp.Kernel.Color.DeviceGray
+             grayColor)
+        {
+            float v = grayColor.GetColorValue()[0];
+            float multiplier = Math.Max(0f, (v - 0.33f) / v);
+            return new iTextSharp.Kernel.Color.DeviceGray(v * multiplier);
+        }
+    }
 }

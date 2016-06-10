@@ -45,16 +45,16 @@ using System;
 
 namespace iTextSharp.IO.Image
 {
-	public class PngImageData : RawImageData
-	{
-		protected internal PngImageData(byte[] bytes)
-			: base(bytes, ImageType.PNG)
-		{
-		}
+    public class PngImageData : RawImageData
+    {
+        protected internal PngImageData(byte[] bytes)
+            : base(bytes, ImageType.PNG)
+        {
+        }
 
-		protected internal PngImageData(Uri url)
-			: base(url, ImageType.PNG)
-		{
-		}
-	}
+        protected internal PngImageData(Uri url)
+            : base(url, ImageType.PNG)
+        {
+        }
+    }
 }

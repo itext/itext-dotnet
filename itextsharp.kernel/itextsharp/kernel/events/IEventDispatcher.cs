@@ -45,40 +45,40 @@ using System;
 
 namespace iTextSharp.Kernel.Events
 {
-	/// <summary>Event dispatcher interface.</summary>
-	public interface IEventDispatcher
-	{
-		/// <summary>Adds new event handler.</summary>
-		/// <param name="type">a type of event to be handled.</param>
-		/// <param name="handler">event handler.</param>
-		void AddEventHandler(String type, IEventHandler handler);
+    /// <summary>Event dispatcher interface.</summary>
+    public interface IEventDispatcher
+    {
+        /// <summary>Adds new event handler.</summary>
+        /// <param name="type">a type of event to be handled.</param>
+        /// <param name="handler">event handler.</param>
+        void AddEventHandler(String type, IEventHandler handler);
 
-		/// <summary>Dispatches an event.</summary>
-		/// <param name="event"/>
-		void DispatchEvent(Event @event);
+        /// <summary>Dispatches an event.</summary>
+        /// <param name="event"/>
+        void DispatchEvent(Event @event);
 
-		/// <summary>Dispatches a delayed event.</summary>
-		/// <remarks>
-		/// Dispatches a delayed event.
-		/// Sometimes event cannot be handled immediately because event handler has not been set yet.
-		/// In this case event is placed into event ques of dispatcher and is waiting until handler is assigned.
-		/// </remarks>
-		/// <param name="event"/>
-		/// <param name="delayed"/>
-		void DispatchEvent(Event @event, bool delayed);
+        /// <summary>Dispatches a delayed event.</summary>
+        /// <remarks>
+        /// Dispatches a delayed event.
+        /// Sometimes event cannot be handled immediately because event handler has not been set yet.
+        /// In this case event is placed into event ques of dispatcher and is waiting until handler is assigned.
+        /// </remarks>
+        /// <param name="event"/>
+        /// <param name="delayed"/>
+        void DispatchEvent(Event @event, bool delayed);
 
-		/// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.
-		/// 	</summary>
-		/// <param name="type"/>
-		/// <returns/>
-		bool HasEventHandler(String type);
+        /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.
+        ///     </summary>
+        /// <param name="type"/>
+        /// <returns/>
+        bool HasEventHandler(String type);
 
-		/// <summary>Removes event handler.</summary>
-		/// <param name="type"/>
-		/// <param name="handler"/>
-		void RemoveEventHandler(String type, IEventHandler handler);
+        /// <summary>Removes event handler.</summary>
+        /// <param name="type"/>
+        /// <param name="handler"/>
+        void RemoveEventHandler(String type, IEventHandler handler);
 
-		/// <summary>Remove all event handlers.</summary>
-		void RemoveAllHandlers();
-	}
+        /// <summary>Remove all event handlers.</summary>
+        void RemoveAllHandlers();
+    }
 }

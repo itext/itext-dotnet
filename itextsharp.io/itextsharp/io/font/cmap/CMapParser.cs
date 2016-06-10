@@ -49,174 +49,174 @@ using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	public class CMapParser
-	{
-		private const String def = "def";
+    public class CMapParser
+    {
+        private const String def = "def";
 
-		private const String endcidrange = "endcidrange";
+        private const String endcidrange = "endcidrange";
 
-		private const String endcidchar = "endcidchar";
+        private const String endcidchar = "endcidchar";
 
-		private const String endbfrange = "endbfrange";
+        private const String endbfrange = "endbfrange";
 
-		private const String endbfchar = "endbfchar";
+        private const String endbfchar = "endbfchar";
 
-		private const String usecmap = "usecmap";
+        private const String usecmap = "usecmap";
 
-		private const String Registry = "Registry";
+        private const String Registry = "Registry";
 
-		private const String Ordering = "Ordering";
+        private const String Ordering = "Ordering";
 
-		private const String Supplement = "Supplement";
+        private const String Supplement = "Supplement";
 
-		private const String CMapName = "CMapName";
+        private const String CMapName = "CMapName";
 
-		private const int MAX_LEVEL = 10;
+        private const int MAX_LEVEL = 10;
 
-		/// <exception cref="System.IO.IOException"/>
-		public static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
-			)
-		{
-			ParseCid(cmapName, cmap, location, 0);
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
+            )
+        {
+            ParseCid(cmapName, cmap, location, 0);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		private static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
-			, int level)
-		{
-			if (level >= MAX_LEVEL)
-			{
-				return;
-			}
-			PdfTokenizer inp = location.GetLocation(cmapName);
-			try
-			{
-				IList<CMapObject> list = new List<CMapObject>();
-				CMapContentParser cp = new CMapContentParser(inp);
-				int maxExc = 50;
-				while (true)
-				{
-					try
-					{
-						cp.Parse(list);
-					}
-					catch (Exception)
-					{
-						if (--maxExc < 0)
-						{
-							break;
-						}
-						continue;
-					}
-					if (list.Count == 0)
-					{
-						break;
-					}
-					String last = list[list.Count - 1].ToString();
-					if (level == 0 && list.Count == 3 && last.Equals(def))
-					{
-						CMapObject cmapObject = list[0];
-						if (Registry.Equals(cmapObject.ToString()))
-						{
-							cmap.SetRegistry(list[1].ToString());
-						}
-						else
-						{
-							if (Ordering.Equals(cmapObject.ToString()))
-							{
-								cmap.SetOrdering(list[1].ToString());
-							}
-							else
-							{
-								if (CMapName.Equals(cmapObject.ToString()))
-								{
-									cmap.SetName(list[1].ToString());
-								}
-								else
-								{
-									if (Supplement.Equals(cmapObject.ToString()))
-									{
-										try
-										{
-											cmap.SetSupplement((int)list[1].GetValue());
-										}
-										catch (Exception)
-										{
-										}
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						if ((last.Equals(endcidchar) || last.Equals(endbfchar)) && list.Count >= 3)
-						{
-							int lMax = list.Count - 2;
-							for (int k = 0; k < lMax; k += 2)
-							{
-								if (list[k].IsString())
-								{
-									cmap.AddChar(list[k].ToString(), list[k + 1]);
-								}
-							}
-						}
-						else
-						{
-							if ((last.Equals(endcidrange) || last.Equals(endbfrange)) && list.Count >= 4)
-							{
-								int lMax = list.Count - 3;
-								for (int k = 0; k < lMax; k += 3)
-								{
-									if (list[k].IsString() && list[k + 1].IsString())
-									{
-										cmap.AddRange(list[k].ToString(), list[k + 1].ToString(), list[k + 2]);
-									}
-								}
-							}
-							else
-							{
-								if (last.Equals(usecmap) && list.Count == 2 && list[0].IsName())
-								{
-									ParseCid(list[0].ToString(), cmap, location, level + 1);
-								}
-							}
-						}
-					}
-				}
-			}
-			catch (Exception)
-			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(CMapParser));
-				logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
-			}
-			finally
-			{
-				inp.Close();
-			}
-		}
-		//    private static void encodeSequence(int size, byte[] seqs, char cid, ArrayList<char[]> planes) {
-		//        --size;
-		//        int nextPlane = 0;
-		//        for (int idx = 0; idx < size; ++idx) {
-		//            char[] plane = planes.get(nextPlane);
-		//            int one = seqs[idx] & 0xff;
-		//            char c = plane[one];
-		//            if (c != 0 && (c & 0x8000) == 0)
-		//                throw new PdfRuntimeException("inconsistent.mapping");
-		//            if (c == 0) {
-		//                planes.add(new char[256]);
-		//                c = (char) (planes.size() - 1 | 0x8000);
-		//                plane[one] = c;
-		//            }
-		//            nextPlane = c & 0x7fff;
-		//        }
-		//        char[] plane = planes.get(nextPlane);
-		//        int one = seqs[size] & 0xff;
-		//        char c = plane[one];
-		//        if ((c & 0x8000) != 0)
-		//            throw new PdfRuntimeException("inconsistent.mapping");
-		//        plane[one] = cid;
-		//    }
-	}
+        /// <exception cref="System.IO.IOException"/>
+        private static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location
+            , int level)
+        {
+            if (level >= MAX_LEVEL)
+            {
+                return;
+            }
+            PdfTokenizer inp = location.GetLocation(cmapName);
+            try
+            {
+                IList<CMapObject> list = new List<CMapObject>();
+                CMapContentParser cp = new CMapContentParser(inp);
+                int maxExc = 50;
+                while (true)
+                {
+                    try
+                    {
+                        cp.Parse(list);
+                    }
+                    catch (Exception)
+                    {
+                        if (--maxExc < 0)
+                        {
+                            break;
+                        }
+                        continue;
+                    }
+                    if (list.Count == 0)
+                    {
+                        break;
+                    }
+                    String last = list[list.Count - 1].ToString();
+                    if (level == 0 && list.Count == 3 && last.Equals(def))
+                    {
+                        CMapObject cmapObject = list[0];
+                        if (Registry.Equals(cmapObject.ToString()))
+                        {
+                            cmap.SetRegistry(list[1].ToString());
+                        }
+                        else
+                        {
+                            if (Ordering.Equals(cmapObject.ToString()))
+                            {
+                                cmap.SetOrdering(list[1].ToString());
+                            }
+                            else
+                            {
+                                if (CMapName.Equals(cmapObject.ToString()))
+                                {
+                                    cmap.SetName(list[1].ToString());
+                                }
+                                else
+                                {
+                                    if (Supplement.Equals(cmapObject.ToString()))
+                                    {
+                                        try
+                                        {
+                                            cmap.SetSupplement((int)list[1].GetValue());
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((last.Equals(endcidchar) || last.Equals(endbfchar)) && list.Count >= 3)
+                        {
+                            int lMax = list.Count - 2;
+                            for (int k = 0; k < lMax; k += 2)
+                            {
+                                if (list[k].IsString())
+                                {
+                                    cmap.AddChar(list[k].ToString(), list[k + 1]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ((last.Equals(endcidrange) || last.Equals(endbfrange)) && list.Count >= 4)
+                            {
+                                int lMax = list.Count - 3;
+                                for (int k = 0; k < lMax; k += 3)
+                                {
+                                    if (list[k].IsString() && list[k + 1].IsString())
+                                    {
+                                        cmap.AddRange(list[k].ToString(), list[k + 1].ToString(), list[k + 2]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (last.Equals(usecmap) && list.Count == 2 && list[0].IsName())
+                                {
+                                    ParseCid(list[0].ToString(), cmap, location, level + 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                ILogger logger = LoggerFactory.GetLogger(typeof(CMapParser));
+                logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+            }
+            finally
+            {
+                inp.Close();
+            }
+        }
+        //    private static void encodeSequence(int size, byte[] seqs, char cid, ArrayList<char[]> planes) {
+        //        --size;
+        //        int nextPlane = 0;
+        //        for (int idx = 0; idx < size; ++idx) {
+        //            char[] plane = planes.get(nextPlane);
+        //            int one = seqs[idx] & 0xff;
+        //            char c = plane[one];
+        //            if (c != 0 && (c & 0x8000) == 0)
+        //                throw new PdfRuntimeException("inconsistent.mapping");
+        //            if (c == 0) {
+        //                planes.add(new char[256]);
+        //                c = (char) (planes.size() - 1 | 0x8000);
+        //                plane[one] = c;
+        //            }
+        //            nextPlane = c & 0x7fff;
+        //        }
+        //        char[] plane = planes.get(nextPlane);
+        //        int one = seqs[size] & 0xff;
+        //        char c = plane[one];
+        //        if ((c & 0x8000) != 0)
+        //            throw new PdfRuntimeException("inconsistent.mapping");
+        //        plane[one] = cid;
+        //    }
+    }
 }

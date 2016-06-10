@@ -49,48 +49,48 @@ using iTextSharp.Layout.Layout;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class TabRenderer : AbstractRenderer
-	{
-		public TabRenderer(Tab tab)
-			: base(tab)
-		{
-		}
+    public class TabRenderer : AbstractRenderer
+    {
+        public TabRenderer(Tab tab)
+            : base(tab)
+        {
+        }
 
-		public override LayoutResult Layout(LayoutContext layoutContext)
-		{
-			LayoutArea area = layoutContext.GetArea();
-			float? width = RetrieveWidth(area.GetBBox().GetWidth());
-			float? height = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
-				);
-			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().
-				GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), (float)width, (float
-				)height));
-			return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
-		}
+        public override LayoutResult Layout(LayoutContext layoutContext)
+        {
+            LayoutArea area = layoutContext.GetArea();
+            float? width = RetrieveWidth(area.GetBBox().GetWidth());
+            float? height = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT
+                );
+            occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().
+                GetX(), area.GetBBox().GetY() + area.GetBBox().GetHeight(), (float)width, (float
+                )height));
+            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+        }
 
-		public override void Draw(DrawContext drawContext)
-		{
-			ILineDrawer leader = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
-				.TAB_LEADER);
-			if (leader == null)
-			{
-				return;
-			}
-			bool isTagged = drawContext.IsTaggingEnabled();
-			if (isTagged)
-			{
-				drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-			}
-			leader.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
-			if (isTagged)
-			{
-				drawContext.GetCanvas().CloseTag();
-			}
-		}
+        public override void Draw(DrawContext drawContext)
+        {
+            ILineDrawer leader = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property
+                .TAB_LEADER);
+            if (leader == null)
+            {
+                return;
+            }
+            bool isTagged = drawContext.IsTaggingEnabled();
+            if (isTagged)
+            {
+                drawContext.GetCanvas().OpenTag(new CanvasArtifact());
+            }
+            leader.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+            if (isTagged)
+            {
+                drawContext.GetCanvas().CloseTag();
+            }
+        }
 
-		public override IRenderer GetNextRenderer()
-		{
-			return new iTextSharp.Layout.Renderer.TabRenderer((Tab)modelElement);
-		}
-	}
+        public override IRenderer GetNextRenderer()
+        {
+            return new iTextSharp.Layout.Renderer.TabRenderer((Tab)modelElement);
+        }
+    }
 }

@@ -46,27 +46,27 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfInkAnnotation : PdfMarkupAnnotation
-	{
-		public PdfInkAnnotation(Rectangle rect)
-			: base(rect)
-		{
-		}
+    public class PdfInkAnnotation : PdfMarkupAnnotation
+    {
+        public PdfInkAnnotation(Rectangle rect)
+            : base(rect)
+        {
+        }
 
-		public PdfInkAnnotation(Rectangle rect, PdfArray inkList)
-			: this(rect)
-		{
-			Put(PdfName.InkList, inkList);
-		}
+        public PdfInkAnnotation(Rectangle rect, PdfArray inkList)
+            : this(rect)
+        {
+            Put(PdfName.InkList, inkList);
+        }
 
-		public PdfInkAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfInkAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.Ink;
-		}
-	}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.Ink;
+        }
+    }
 }

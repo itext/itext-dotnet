@@ -49,106 +49,107 @@ using iTextSharp.Kernel.Pdf.Tagging;
 
 namespace iTextSharp.Kernel.Pdf.Tagutils
 {
-	internal class BackedAccessibleProperties : AccessibilityProperties
-	{
-		private PdfStructElem backingElem;
+    internal class BackedAccessibleProperties : AccessibilityProperties
+    {
+        private PdfStructElem backingElem;
 
-		internal BackedAccessibleProperties(PdfStructElem backingElem)
-		{
-			this.backingElem = backingElem;
-		}
+        internal BackedAccessibleProperties(PdfStructElem backingElem)
+        {
+            this.backingElem = backingElem;
+        }
 
-		public override String GetLanguage()
-		{
-			return backingElem.GetLang().GetValue();
-		}
+        public override String GetLanguage()
+        {
+            return backingElem.GetLang().GetValue();
+        }
 
-		public override AccessibilityProperties SetLanguage(String language)
-		{
-			backingElem.SetLang(new PdfString(language));
-			return this;
-		}
+        public override AccessibilityProperties SetLanguage(String language)
+        {
+            backingElem.SetLang(new PdfString(language));
+            return this;
+        }
 
-		public override String GetActualText()
-		{
-			return backingElem.GetActualText().GetValue();
-		}
+        public override String GetActualText()
+        {
+            return backingElem.GetActualText().GetValue();
+        }
 
-		public override AccessibilityProperties SetActualText(String actualText)
-		{
-			backingElem.SetActualText(new PdfString(actualText));
-			return this;
-		}
+        public override AccessibilityProperties SetActualText(String actualText)
+        {
+            backingElem.SetActualText(new PdfString(actualText));
+            return this;
+        }
 
-		public override String GetAlternateDescription()
-		{
-			return backingElem.GetAlt().GetValue();
-		}
+        public override String GetAlternateDescription()
+        {
+            return backingElem.GetAlt().GetValue();
+        }
 
-		public override AccessibilityProperties SetAlternateDescription(String alternateDescription
-			)
-		{
-			backingElem.SetAlt(new PdfString(alternateDescription));
-			return this;
-		}
+        public override AccessibilityProperties SetAlternateDescription(String alternateDescription
+            )
+        {
+            backingElem.SetAlt(new PdfString(alternateDescription));
+            return this;
+        }
 
-		public override String GetExpansion()
-		{
-			return backingElem.GetE().GetValue();
-		}
+        public override String GetExpansion()
+        {
+            return backingElem.GetE().GetValue();
+        }
 
-		public override AccessibilityProperties SetExpansion(String expansion)
-		{
-			backingElem.SetE(new PdfString(expansion));
-			return this;
-		}
+        public override AccessibilityProperties SetExpansion(String expansion)
+        {
+            backingElem.SetE(new PdfString(expansion));
+            return this;
+        }
 
-		public override AccessibilityProperties AddAttributes(PdfDictionary attributes)
-		{
-			PdfObject attributesObject = backingElem.GetAttributes(false);
-			PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil
-				.SingletonList(attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
-			backingElem.SetAttributes(combinedAttributes);
-			return this;
-		}
+        public override AccessibilityProperties AddAttributes(PdfDictionary attributes)
+        {
+            PdfObject attributesObject = backingElem.GetAttributes(false);
+            PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil
+                .SingletonList(attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R)
+                );
+            backingElem.SetAttributes(combinedAttributes);
+            return this;
+        }
 
-		public override AccessibilityProperties ClearAttributes()
-		{
-			backingElem.GetPdfObject().Remove(PdfName.A);
-			return this;
-		}
+        public override AccessibilityProperties ClearAttributes()
+        {
+            backingElem.GetPdfObject().Remove(PdfName.A);
+            return this;
+        }
 
-		public override IList<PdfDictionary> GetAttributesList()
-		{
-			List<PdfDictionary> attributesList = new List<PdfDictionary>();
-			PdfObject elemAttributesObj = backingElem.GetAttributes(false);
-			if (elemAttributesObj != null)
-			{
-				if (elemAttributesObj.IsDictionary())
-				{
-					attributesList.Add((PdfDictionary)elemAttributesObj);
-				}
-				else
-				{
-					if (elemAttributesObj.IsArray())
-					{
-						PdfArray attributesArray = (PdfArray)elemAttributesObj;
-						foreach (PdfObject attributeObj in attributesArray)
-						{
-							if (attributeObj.IsDictionary())
-							{
-								attributesList.Add((PdfDictionary)attributeObj);
-							}
-						}
-					}
-				}
-			}
-			return attributesList;
-		}
+        public override IList<PdfDictionary> GetAttributesList()
+        {
+            List<PdfDictionary> attributesList = new List<PdfDictionary>();
+            PdfObject elemAttributesObj = backingElem.GetAttributes(false);
+            if (elemAttributesObj != null)
+            {
+                if (elemAttributesObj.IsDictionary())
+                {
+                    attributesList.Add((PdfDictionary)elemAttributesObj);
+                }
+                else
+                {
+                    if (elemAttributesObj.IsArray())
+                    {
+                        PdfArray attributesArray = (PdfArray)elemAttributesObj;
+                        foreach (PdfObject attributeObj in attributesArray)
+                        {
+                            if (attributeObj.IsDictionary())
+                            {
+                                attributesList.Add((PdfDictionary)attributeObj);
+                            }
+                        }
+                    }
+                }
+            }
+            return attributesList;
+        }
 
-		internal override void SetToStructElem(PdfStructElem elem)
-		{
-		}
-		// ignore, because all attributes are directly set to the structElem
-	}
+        internal override void SetToStructElem(PdfStructElem elem)
+        {
+        }
+        // ignore, because all attributes are directly set to the structElem
+    }
 }

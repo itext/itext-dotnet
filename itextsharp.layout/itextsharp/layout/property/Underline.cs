@@ -43,54 +43,54 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public class Underline
-	{
-		protected internal iTextSharp.Kernel.Color.Color color;
+    public class Underline
+    {
+        protected internal iTextSharp.Kernel.Color.Color color;
 
-		protected internal float thickness;
+        protected internal float thickness;
 
-		protected internal float thicknessMul;
+        protected internal float thicknessMul;
 
-		protected internal float yPosition;
+        protected internal float yPosition;
 
-		protected internal float yPositionMul;
+        protected internal float yPositionMul;
 
-		protected internal int lineCapStyle;
+        protected internal int lineCapStyle;
 
-		public Underline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul
-			, float yPosition, float yPositionMul, int lineCapStyle)
-		{
-			this.color = color;
-			this.thickness = thickness;
-			this.thicknessMul = thicknessMul;
-			this.yPosition = yPosition;
-			this.yPositionMul = yPositionMul;
-			this.lineCapStyle = lineCapStyle;
-		}
+        public Underline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul
+            , float yPosition, float yPositionMul, int lineCapStyle)
+        {
+            this.color = color;
+            this.thickness = thickness;
+            this.thicknessMul = thicknessMul;
+            this.yPosition = yPosition;
+            this.yPositionMul = yPositionMul;
+            this.lineCapStyle = lineCapStyle;
+        }
 
-		public virtual iTextSharp.Kernel.Color.Color GetColor()
-		{
-			return color;
-		}
+        public virtual iTextSharp.Kernel.Color.Color GetColor()
+        {
+            return color;
+        }
 
-		public virtual float GetThickness(float fontSize)
-		{
-			return thickness + thicknessMul * fontSize;
-		}
+        public virtual float GetThickness(float fontSize)
+        {
+            return thickness + thicknessMul * fontSize;
+        }
 
-		public virtual float GetYPosition(float fontSize)
-		{
-			return yPosition + yPositionMul * fontSize;
-		}
+        public virtual float GetYPosition(float fontSize)
+        {
+            return yPosition + yPositionMul * fontSize;
+        }
 
-		public virtual float GetYPositionMul()
-		{
-			return yPositionMul;
-		}
+        public virtual float GetYPositionMul()
+        {
+            return yPositionMul;
+        }
 
-		public virtual int GetLineCapStyle()
-		{
-			return lineCapStyle;
-		}
-	}
+        public virtual int GetLineCapStyle()
+        {
+            return lineCapStyle;
+        }
+    }
 }

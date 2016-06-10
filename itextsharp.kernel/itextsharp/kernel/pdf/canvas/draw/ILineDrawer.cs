@@ -46,44 +46,44 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 {
-	/// <summary>
-	/// The
-	/// <see cref="ILineDrawer"/>
-	/// defines a drawing operation on a
-	/// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
-	/// <p/>
-	/// This interface allows to customize the 'empty' space in a
-	/// <see cref="com.itextpdf.layout.element.Tabstop">TabStop</see>
-	/// through a Strategy design
-	/// pattern
-	/// </summary>
-	public interface ILineDrawer
-	{
-		/// <summary>
-		/// Performs configurable drawing operations related to specific region
-		/// coordinates on a canvas.
-		/// </summary>
-		/// <param name="canvas">the canvas to draw on</param>
-		/// <param name="drawArea">
-		/// the rectangle in relation to which to fulfill drawing
-		/// instructions
-		/// </param>
-		void Draw(PdfCanvas canvas, Rectangle drawArea);
+    /// <summary>
+    /// The
+    /// <see cref="ILineDrawer"/>
+    /// defines a drawing operation on a
+    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// <p/>
+    /// This interface allows to customize the 'empty' space in a
+    /// <see cref="com.itextpdf.layout.element.Tabstop">TabStop</see>
+    /// through a Strategy design
+    /// pattern
+    /// </summary>
+    public interface ILineDrawer
+    {
+        /// <summary>
+        /// Performs configurable drawing operations related to specific region
+        /// coordinates on a canvas.
+        /// </summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="drawArea">
+        /// the rectangle in relation to which to fulfill drawing
+        /// instructions
+        /// </param>
+        void Draw(PdfCanvas canvas, Rectangle drawArea);
 
-		/// <summary>Gets the width of the line</summary>
-		/// <returns>width of the line</returns>
-		float GetLineWidth();
+        /// <summary>Gets the width of the line</summary>
+        /// <returns>width of the line</returns>
+        float GetLineWidth();
 
-		/// <summary>Sets line width in points</summary>
-		/// <param name="lineWidth">new line width</param>
-		void SetLineWidth(float lineWidth);
+        /// <summary>Sets line width in points</summary>
+        /// <param name="lineWidth">new line width</param>
+        void SetLineWidth(float lineWidth);
 
-		/// <summary>Gets the color of the line</summary>
-		/// <returns>color of the line</returns>
-		iTextSharp.Kernel.Color.Color GetColor();
+        /// <summary>Gets the color of the line</summary>
+        /// <returns>color of the line</returns>
+        iTextSharp.Kernel.Color.Color GetColor();
 
-		/// <summary>Sets line color</summary>
-		/// <param name="color">new line color</param>
-		void SetColor(iTextSharp.Kernel.Color.Color color);
-	}
+        /// <summary>Sets line color</summary>
+        /// <param name="color">new line color</param>
+        void SetColor(iTextSharp.Kernel.Color.Color color);
+    }
 }

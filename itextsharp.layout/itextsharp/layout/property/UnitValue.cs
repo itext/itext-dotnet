@@ -45,106 +45,106 @@ using System;
 
 namespace iTextSharp.Layout.Property
 {
-	/// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
-	public class UnitValue
-	{
-		public const int POINT = 1;
+    /// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
+    public class UnitValue
+    {
+        public const int POINT = 1;
 
-		public const int PERCENT = 2;
+        public const int PERCENT = 2;
 
-		protected internal int unitType;
+        protected internal int unitType;
 
-		protected internal float value;
+        protected internal float value;
 
-		/// <summary>Creates a UnitValue object with a specified type and value.</summary>
-		/// <param name="unitType">
-		/// either
-		/// <see cref="POINT"/>
-		/// or a
-		/// <see cref="PERCENT"/>
-		/// </param>
-		/// <param name="value">the value to be stored.</param>
-		public UnitValue(int unitType, float value)
-		{
-			this.unitType = unitType;
-			this.value = value;
-		}
+        /// <summary>Creates a UnitValue object with a specified type and value.</summary>
+        /// <param name="unitType">
+        /// either
+        /// <see cref="POINT"/>
+        /// or a
+        /// <see cref="PERCENT"/>
+        /// </param>
+        /// <param name="value">the value to be stored.</param>
+        public UnitValue(int unitType, float value)
+        {
+            this.unitType = unitType;
+            this.value = value;
+        }
 
-		/// <summary>Creates a UnitValue POINT object with a specified value.</summary>
-		/// <param name="value">the value to be stored.</param>
-		/// <returns>
-		/// a new
-		/// <see cref="POINT"/>
-		/// 
-		/// <see cref="UnitValue"/>
-		/// </returns>
-		public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value)
-		{
-			return new iTextSharp.Layout.Property.UnitValue(POINT, value);
-		}
+        /// <summary>Creates a UnitValue POINT object with a specified value.</summary>
+        /// <param name="value">the value to be stored.</param>
+        /// <returns>
+        /// a new
+        /// <see cref="POINT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// </returns>
+        public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value)
+        {
+            return new iTextSharp.Layout.Property.UnitValue(POINT, value);
+        }
 
-		/// <summary>Creates a UnitValue PERCENT object with a specified value.</summary>
-		/// <param name="value">the value to be stored.</param>
-		/// <returns>
-		/// a new
-		/// <see cref="PERCENT"/>
-		/// 
-		/// <see cref="UnitValue"/>
-		/// </returns>
-		public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value
-			)
-		{
-			return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
-		}
+        /// <summary>Creates a UnitValue PERCENT object with a specified value.</summary>
+        /// <param name="value">the value to be stored.</param>
+        /// <returns>
+        /// a new
+        /// <see cref="PERCENT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// </returns>
+        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value
+            )
+        {
+            return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
+        }
 
-		public virtual int GetUnitType()
-		{
-			return unitType;
-		}
+        public virtual int GetUnitType()
+        {
+            return unitType;
+        }
 
-		public virtual void SetUnitType(int unitType)
-		{
-			this.unitType = unitType;
-		}
+        public virtual void SetUnitType(int unitType)
+        {
+            this.unitType = unitType;
+        }
 
-		public virtual float GetValue()
-		{
-			return value;
-		}
+        public virtual float GetValue()
+        {
+            return value;
+        }
 
-		public virtual void SetValue(float value)
-		{
-			this.value = value;
-		}
+        public virtual void SetValue(float value)
+        {
+            this.value = value;
+        }
 
-		public virtual bool IsPointValue()
-		{
-			return unitType == POINT;
-		}
+        public virtual bool IsPointValue()
+        {
+            return unitType == POINT;
+        }
 
-		public virtual bool IsPercentValue()
-		{
-			return unitType == PERCENT;
-		}
+        public virtual bool IsPercentValue()
+        {
+            return unitType == PERCENT;
+        }
 
-		public override bool Equals(Object obj)
-		{
-			if (!(obj is iTextSharp.Layout.Property.UnitValue))
-			{
-				return false;
-			}
-			iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue
-				)obj;
-			return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 
-				&& iTextSharp.IO.Util.JavaUtil.FloatCompare(value, other.value) == 0;
-		}
+        public override bool Equals(Object obj)
+        {
+            if (!(obj is iTextSharp.Layout.Property.UnitValue))
+            {
+                return false;
+            }
+            iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue
+                )obj;
+            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 
+                && iTextSharp.IO.Util.JavaUtil.FloatCompare(value, other.value) == 0;
+        }
 
-		public override int GetHashCode()
-		{
-			int hash = 7;
-			hash = 71 * hash + this.unitType;
-			hash = 71 * hash + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(this.value);
-			return hash;
-		}
-	}
+        public override int GetHashCode()
+        {
+            int hash = 7;
+            hash = 71 * hash + this.unitType;
+            hash = 71 * hash + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(this.value);
+            return hash;
+        }
+    }
 }

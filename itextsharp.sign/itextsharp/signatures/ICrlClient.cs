@@ -47,18 +47,18 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>
-	/// Interface that needs to be implemented if you want to embed
-	/// Certificate Revocation Lists (CRL) into your PDF.
-	/// </summary>
-	/// <author>Paulo Soares</author>
-	public interface ICrlClient
-	{
-		/// <summary>Gets an encoded byte array.</summary>
-		/// <param name="checkCert">The certificate which a CRL URL can be obtained from.</param>
-		/// <param name="url">A CRL url if you don't want to obtain it from the certificate.</param>
-		/// <returns>A collection of byte array each representing a crl. It may return null or an empty collection.
-		/// 	</returns>
-		ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url);
-	}
+    /// <summary>
+    /// Interface that needs to be implemented if you want to embed
+    /// Certificate Revocation Lists (CRL) into your PDF.
+    /// </summary>
+    /// <author>Paulo Soares</author>
+    public interface ICrlClient
+    {
+        /// <summary>Gets an encoded byte array.</summary>
+        /// <param name="checkCert">The certificate which a CRL URL can be obtained from.</param>
+        /// <param name="url">A CRL url if you don't want to obtain it from the certificate.</param>
+        /// <returns>A collection of byte array each representing a crl. It may return null or an empty collection.
+        ///     </returns>
+        ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url);
+    }
 }

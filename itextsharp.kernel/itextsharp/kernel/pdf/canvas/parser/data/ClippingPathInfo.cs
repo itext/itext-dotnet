@@ -45,34 +45,34 @@ using iTextSharp.Kernel.Geom;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 {
-	public class ClippingPathInfo : IEventData
-	{
-		private Path path;
+    public class ClippingPathInfo : IEventData
+    {
+        private Path path;
 
-		private Matrix ctm;
+        private Matrix ctm;
 
-		/// <param name="path">The path to be rendered.</param>
-		/// <param name="ctm">The path to be rendered.</param>
-		public ClippingPathInfo(Path path, Matrix ctm)
-		{
-			this.path = path;
-			this.ctm = ctm;
-		}
+        /// <param name="path">The path to be rendered.</param>
+        /// <param name="ctm">The path to be rendered.</param>
+        public ClippingPathInfo(Path path, Matrix ctm)
+        {
+            this.path = path;
+            this.ctm = ctm;
+        }
 
-		/// <returns>
-		/// The
-		/// <see cref="iTextSharp.Kernel.Geom.Path"/>
-		/// which represents current clipping path.
-		/// </returns>
-		public virtual Path GetClippingPath()
-		{
-			return path;
-		}
+        /// <returns>
+        /// The
+        /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+        /// which represents current clipping path.
+        /// </returns>
+        public virtual Path GetClippingPath()
+        {
+            return path;
+        }
 
-		/// <returns>Current transformation matrix.</returns>
-		public virtual Matrix GetCtm()
-		{
-			return ctm;
-		}
-	}
+        /// <returns>Current transformation matrix.</returns>
+        public virtual Matrix GetCtm()
+        {
+            return ctm;
+        }
+    }
 }

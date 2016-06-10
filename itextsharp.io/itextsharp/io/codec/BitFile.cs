@@ -45,126 +45,126 @@ using System.IO;
 
 namespace iTextSharp.IO.Codec
 {
-	/// <summary>Came from GIFEncoder initially.</summary>
-	/// <remarks>
-	/// Came from GIFEncoder initially.
-	/// Modified - to allow for output compressed data without the block counts
-	/// which breakup the compressed data stream for GIF.
-	/// </remarks>
-	internal class BitFile
-	{
-		internal Stream output;
+    /// <summary>Came from GIFEncoder initially.</summary>
+    /// <remarks>
+    /// Came from GIFEncoder initially.
+    /// Modified - to allow for output compressed data without the block counts
+    /// which breakup the compressed data stream for GIF.
+    /// </remarks>
+    internal class BitFile
+    {
+        internal Stream output;
 
-		internal byte[] buffer;
+        internal byte[] buffer;
 
-		internal int index;
+        internal int index;
 
-		internal int bitsLeft;
+        internal int bitsLeft;
 
-		/// <summary>note this also indicates gif format BITFile.</summary>
-		internal bool blocks = false;
+        /// <summary>note this also indicates gif format BITFile.</summary>
+        internal bool blocks = false;
 
-		/// <param name="output">destination for output data</param>
-		/// <param name="blocks">GIF LZW requires block counts for output data</param>
-		public BitFile(Stream output, bool blocks)
-		{
-			// bits left at current index that are avail.
-			this.output = output;
-			this.blocks = blocks;
-			buffer = new byte[256];
-			index = 0;
-			bitsLeft = 8;
-		}
+        /// <param name="output">destination for output data</param>
+        /// <param name="blocks">GIF LZW requires block counts for output data</param>
+        public BitFile(Stream output, bool blocks)
+        {
+            // bits left at current index that are avail.
+            this.output = output;
+            this.blocks = blocks;
+            buffer = new byte[256];
+            index = 0;
+            bitsLeft = 8;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Flush()
-		{
-			int numBytes = index + (bitsLeft == 8 ? 0 : 1);
-			if (numBytes > 0)
-			{
-				if (blocks)
-				{
-					output.Write(numBytes);
-				}
-				output.Write(buffer, 0, numBytes);
-				buffer[0] = 0;
-				index = 0;
-				bitsLeft = 8;
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Flush()
+        {
+            int numBytes = index + (bitsLeft == 8 ? 0 : 1);
+            if (numBytes > 0)
+            {
+                if (blocks)
+                {
+                    output.Write(numBytes);
+                }
+                output.Write(buffer, 0, numBytes);
+                buffer[0] = 0;
+                index = 0;
+                bitsLeft = 8;
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void WriteBits(int bits, int numbits)
-		{
-			int bitsWritten = 0;
-			int numBytes = 255;
-			do
-			{
-				// gif block count
-				// This handles the GIF block count stuff
-				if ((index == 254 && bitsLeft == 0) || index > 254)
-				{
-					if (blocks)
-					{
-						output.Write(numBytes);
-					}
-					output.Write(buffer, 0, numBytes);
-					buffer[0] = 0;
-					index = 0;
-					bitsLeft = 8;
-				}
-				if (numbits <= bitsLeft)
-				{
-					// bits contents fit in current index byte
-					if (blocks)
-					{
-						// GIF
-						buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (8 - bitsLeft));
-						bitsWritten += numbits;
-						bitsLeft -= numbits;
-						numbits = 0;
-					}
-					else
-					{
-						buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (bitsLeft - numbits));
-						bitsWritten += numbits;
-						bitsLeft -= numbits;
-						numbits = 0;
-					}
-				}
-				else
-				{
-					// bits overflow from current byte to next.
-					if (blocks)
-					{
-						// GIF
-						// if bits  > space left in current byte then the lowest order bits
-						// of code are taken and put in current byte and rest put in next.
-						buffer[index] |= (byte)((bits & ((1 << bitsLeft) - 1)) << (8 - bitsLeft));
-						bitsWritten += bitsLeft;
-						bits >>= bitsLeft;
-						numbits -= bitsLeft;
-						buffer[++index] = 0;
-						bitsLeft = 8;
-					}
-					else
-					{
-						// if bits  > space left in current byte then the highest order bits
-						// of code are taken and put in current byte and rest put in next.
-						// at highest order bit location !!
-						int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 
-							1);
-						buffer[index] |= (byte)topbits;
-						numbits -= bitsLeft;
-						// ok this many bits gone off the top
-						bitsWritten += bitsLeft;
-						buffer[++index] = 0;
-						// next index
-						bitsLeft = 8;
-					}
-				}
-			}
-			while (numbits != 0);
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void WriteBits(int bits, int numbits)
+        {
+            int bitsWritten = 0;
+            int numBytes = 255;
+            do
+            {
+                // gif block count
+                // This handles the GIF block count stuff
+                if ((index == 254 && bitsLeft == 0) || index > 254)
+                {
+                    if (blocks)
+                    {
+                        output.Write(numBytes);
+                    }
+                    output.Write(buffer, 0, numBytes);
+                    buffer[0] = 0;
+                    index = 0;
+                    bitsLeft = 8;
+                }
+                if (numbits <= bitsLeft)
+                {
+                    // bits contents fit in current index byte
+                    if (blocks)
+                    {
+                        // GIF
+                        buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (8 - bitsLeft));
+                        bitsWritten += numbits;
+                        bitsLeft -= numbits;
+                        numbits = 0;
+                    }
+                    else
+                    {
+                        buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (bitsLeft - numbits));
+                        bitsWritten += numbits;
+                        bitsLeft -= numbits;
+                        numbits = 0;
+                    }
+                }
+                else
+                {
+                    // bits overflow from current byte to next.
+                    if (blocks)
+                    {
+                        // GIF
+                        // if bits  > space left in current byte then the lowest order bits
+                        // of code are taken and put in current byte and rest put in next.
+                        buffer[index] |= (byte)((bits & ((1 << bitsLeft) - 1)) << (8 - bitsLeft));
+                        bitsWritten += bitsLeft;
+                        bits >>= bitsLeft;
+                        numbits -= bitsLeft;
+                        buffer[++index] = 0;
+                        bitsLeft = 8;
+                    }
+                    else
+                    {
+                        // if bits  > space left in current byte then the highest order bits
+                        // of code are taken and put in current byte and rest put in next.
+                        // at highest order bit location !!
+                        int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 
+                            1);
+                        buffer[index] |= (byte)topbits;
+                        numbits -= bitsLeft;
+                        // ok this many bits gone off the top
+                        bitsWritten += bitsLeft;
+                        buffer[++index] = 0;
+                        // next index
+                        bitsLeft = 8;
+                    }
+                }
+            }
+            while (numbits != 0);
+        }
+    }
 }

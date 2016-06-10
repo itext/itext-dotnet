@@ -43,20 +43,20 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Events
 {
-	/// <summary>Interface for handling events.</summary>
-	/// <remarks>
-	/// Interface for handling events. EventHandlers are added to the
-	/// <see cref="EventDispatcher"/>
-	/// .
-	/// </remarks>
-	public interface IEventHandler
-	{
-		/// <summary>Hook for handling events.</summary>
-		/// <remarks>
-		/// Hook for handling events. Implementations can access the PdfDocument instance
-		/// associated to the specified Event or, if available, the PdfPage instance.
-		/// </remarks>
-		/// <param name="event">the Event that needs to be processed</param>
-		void HandleEvent(Event @event);
-	}
+    /// <summary>Interface for handling events.</summary>
+    /// <remarks>
+    /// Interface for handling events. EventHandlers are added to the
+    /// <see cref="EventDispatcher"/>
+    /// .
+    /// </remarks>
+    public interface IEventHandler
+    {
+        /// <summary>Hook for handling events.</summary>
+        /// <remarks>
+        /// Hook for handling events. Implementations can access the PdfDocument instance
+        /// associated to the specified Event or, if available, the PdfPage instance.
+        /// </remarks>
+        /// <param name="event">the Event that needs to be processed</param>
+        void HandleEvent(Event @event);
+    }
 }

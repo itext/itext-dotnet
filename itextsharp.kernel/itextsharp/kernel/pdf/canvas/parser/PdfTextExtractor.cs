@@ -47,39 +47,39 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
-	public sealed class PdfTextExtractor
-	{
-		private PdfTextExtractor()
-		{
-		}
+    public sealed class PdfTextExtractor
+    {
+        private PdfTextExtractor()
+        {
+        }
 
-		/// <summary>Extract text from a specified page using an extraction strategy.</summary>
-		/// <param name="page">the page for the text to be extracted from</param>
-		/// <param name="strategy">the strategy to use for extracting text</param>
-		/// <returns>the extracted text</returns>
-		public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy
-			)
-		{
-			PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
-			parser.ProcessPageContent(page);
-			return strategy.GetResultantText();
-		}
+        /// <summary>Extract text from a specified page using an extraction strategy.</summary>
+        /// <param name="page">the page for the text to be extracted from</param>
+        /// <param name="strategy">the strategy to use for extracting text</param>
+        /// <returns>the extracted text</returns>
+        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy
+            )
+        {
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
+            parser.ProcessPageContent(page);
+            return strategy.GetResultantText();
+        }
 
-		/// <summary>Extract text from a specified page using the default strategy.</summary>
-		/// <remarks>
-		/// Extract text from a specified page using the default strategy.
-		/// Node: the default strategy is subject to change. If using a specific strategy
-		/// is important, please use
-		/// <see cref="GetTextFromPage(iTextSharp.Kernel.Pdf.PdfPage, iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.ITextExtractionStrategy)
-		/// 	"/>
-		/// .
-		/// </remarks>
-		/// <param name="page">the page for the text to be extracted from</param>
-		/// <returns>the extracted text</returns>
-		/// <exception cref="System.IO.IOException"/>
-		public static String GetTextFromPage(PdfPage page)
-		{
-			return GetTextFromPage(page, new LocationTextExtractionStrategy());
-		}
-	}
+        /// <summary>Extract text from a specified page using the default strategy.</summary>
+        /// <remarks>
+        /// Extract text from a specified page using the default strategy.
+        /// Node: the default strategy is subject to change. If using a specific strategy
+        /// is important, please use
+        /// <see cref="GetTextFromPage(iTextSharp.Kernel.Pdf.PdfPage, iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.ITextExtractionStrategy)
+        ///     "/>
+        /// .
+        /// </remarks>
+        /// <param name="page">the page for the text to be extracted from</param>
+        /// <returns>the extracted text</returns>
+        /// <exception cref="System.IO.IOException"/>
+        public static String GetTextFromPage(PdfPage page)
+        {
+            return GetTextFromPage(page, new LocationTextExtractionStrategy());
+        }
+    }
 }

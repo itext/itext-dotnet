@@ -49,200 +49,200 @@ using iTextSharp.Layout.Layout;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public abstract class RootRenderer : AbstractRenderer
-	{
-		protected internal bool immediateFlush = true;
+    public abstract class RootRenderer : AbstractRenderer
+    {
+        protected internal bool immediateFlush = true;
 
-		protected internal LayoutArea currentArea;
+        protected internal LayoutArea currentArea;
 
-		protected internal int currentPageNumber;
+        protected internal int currentPageNumber;
 
-		public override void AddChild(IRenderer renderer)
-		{
-			base.AddChild(renderer);
-			if (currentArea == null)
-			{
-				UpdateCurrentArea(null);
-			}
-			// Static layout
-			if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers
-				.Count - 1] == renderer)
-			{
-				childRenderers.JRemoveAt(childRenderers.Count - 1);
-				IList<IRenderer> resultRenderers = new List<IRenderer>();
-				LayoutResult result = null;
-				LayoutArea storedArea = null;
-				LayoutArea nextStoredArea = null;
-				while (currentArea != null && renderer != null && (result = renderer.SetParent(this
-					).Layout(new LayoutContext(currentArea.Clone()))).GetStatus() != LayoutResult.FULL
-					)
-				{
-					if (result.GetStatus() == LayoutResult.PARTIAL)
-					{
-						if (result.GetOverflowRenderer() is ImageRenderer)
-						{
-							((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
-						}
-						else
-						{
-							ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
-							if (nextStoredArea != null)
-							{
-								currentArea = nextStoredArea;
-								currentPageNumber = nextStoredArea.GetPageNumber();
-								nextStoredArea = null;
-							}
-							else
-							{
-								UpdateCurrentArea(result);
-							}
-						}
-					}
-					else
-					{
-						if (result.GetStatus() == LayoutResult.NOTHING)
-						{
-							if (result.GetOverflowRenderer() is ImageRenderer)
-							{
-								if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer
-									()).imageHeight && !currentArea.IsEmptyArea())
-								{
-									UpdateCurrentArea(result);
-								}
-								((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
-							}
-							else
-							{
-								if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
-								{
-									if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>
-										(iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
-									{
-										result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
-											.KEEP_TOGETHER, false);
-										ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
-											));
-										if (storedArea != null)
-										{
-											nextStoredArea = currentArea;
-											currentArea = storedArea;
-											currentPageNumber = storedArea.GetPageNumber();
-										}
-										storedArea = currentArea;
-									}
-									else
-									{
-										result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
-											, true);
-										ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-										logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
-									}
-									renderer = result.GetOverflowRenderer();
-									continue;
-								}
-								storedArea = currentArea;
-								if (nextStoredArea != null)
-								{
-									currentArea = nextStoredArea;
-									currentPageNumber = nextStoredArea.GetPageNumber();
-									nextStoredArea = null;
-								}
-								else
-								{
-									UpdateCurrentArea(result);
-								}
-							}
-						}
-					}
-					renderer = result.GetOverflowRenderer();
-				}
-				if (currentArea != null)
-				{
-					System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null
-						);
-					currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea
-						().GetBBox().GetHeight());
-					currentArea.SetEmptyArea(false);
-					if (renderer != null)
-					{
-						ProcessRenderer(renderer, resultRenderers);
-					}
-				}
-				if (!immediateFlush)
-				{
-					childRenderers.AddAll(resultRenderers);
-				}
-			}
-			else
-			{
-				if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
-					 - 1] == renderer)
-				{
-					int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
-						.PAGE_NUMBER);
-					if (positionedPageNumber == null)
-					{
-						positionedPageNumber = currentPageNumber;
-					}
-					renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber
-						, currentArea.GetBBox().Clone())));
-					if (immediateFlush)
-					{
-						FlushSingleRenderer(renderer);
-						positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
-					}
-				}
-			}
-		}
+        public override void AddChild(IRenderer renderer)
+        {
+            base.AddChild(renderer);
+            if (currentArea == null)
+            {
+                UpdateCurrentArea(null);
+            }
+            // Static layout
+            if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers
+                .Count - 1] == renderer)
+            {
+                childRenderers.JRemoveAt(childRenderers.Count - 1);
+                IList<IRenderer> resultRenderers = new List<IRenderer>();
+                LayoutResult result = null;
+                LayoutArea storedArea = null;
+                LayoutArea nextStoredArea = null;
+                while (currentArea != null && renderer != null && (result = renderer.SetParent(this
+                    ).Layout(new LayoutContext(currentArea.Clone()))).GetStatus() != LayoutResult
+                    .FULL)
+                {
+                    if (result.GetStatus() == LayoutResult.PARTIAL)
+                    {
+                        if (result.GetOverflowRenderer() is ImageRenderer)
+                        {
+                            ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                        }
+                        else
+                        {
+                            ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
+                            if (nextStoredArea != null)
+                            {
+                                currentArea = nextStoredArea;
+                                currentPageNumber = nextStoredArea.GetPageNumber();
+                                nextStoredArea = null;
+                            }
+                            else
+                            {
+                                UpdateCurrentArea(result);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (result.GetStatus() == LayoutResult.NOTHING)
+                        {
+                            if (result.GetOverflowRenderer() is ImageRenderer)
+                            {
+                                if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer
+                                    ()).imageHeight && !currentArea.IsEmptyArea())
+                                {
+                                    UpdateCurrentArea(result);
+                                }
+                                ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                            }
+                            else
+                            {
+                                if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
+                                {
+                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>
+                                        (iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
+                                    {
+                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
+                                            .KEEP_TOGETHER, false);
+                                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                        logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
+                                            ));
+                                        if (storedArea != null)
+                                        {
+                                            nextStoredArea = currentArea;
+                                            currentArea = storedArea;
+                                            currentPageNumber = storedArea.GetPageNumber();
+                                        }
+                                        storedArea = currentArea;
+                                    }
+                                    else
+                                    {
+                                        result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
+                                            , true);
+                                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                        logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                    }
+                                    renderer = result.GetOverflowRenderer();
+                                    continue;
+                                }
+                                storedArea = currentArea;
+                                if (nextStoredArea != null)
+                                {
+                                    currentArea = nextStoredArea;
+                                    currentPageNumber = nextStoredArea.GetPageNumber();
+                                    nextStoredArea = null;
+                                }
+                                else
+                                {
+                                    UpdateCurrentArea(result);
+                                }
+                            }
+                        }
+                    }
+                    renderer = result.GetOverflowRenderer();
+                }
+                if (currentArea != null)
+                {
+                    System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null
+                        );
+                    currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea
+                        ().GetBBox().GetHeight());
+                    currentArea.SetEmptyArea(false);
+                    if (renderer != null)
+                    {
+                        ProcessRenderer(renderer, resultRenderers);
+                    }
+                }
+                if (!immediateFlush)
+                {
+                    childRenderers.AddAll(resultRenderers);
+                }
+            }
+            else
+            {
+                if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
+                     - 1] == renderer)
+                {
+                    int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
+                        .PAGE_NUMBER);
+                    if (positionedPageNumber == null)
+                    {
+                        positionedPageNumber = currentPageNumber;
+                    }
+                    renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber
+                        , currentArea.GetBBox().Clone())));
+                    if (immediateFlush)
+                    {
+                        FlushSingleRenderer(renderer);
+                        positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
+                    }
+                }
+            }
+        }
 
-		// Drawing of content. Might need to rename.
-		public virtual void Flush()
-		{
-			foreach (IRenderer resultRenderer in childRenderers)
-			{
-				FlushSingleRenderer(resultRenderer);
-			}
-			foreach (IRenderer resultRenderer_1 in positionedRenderers)
-			{
-				FlushSingleRenderer(resultRenderer_1);
-			}
-			childRenderers.Clear();
-			positionedRenderers.Clear();
-		}
+        // Drawing of content. Might need to rename.
+        public virtual void Flush()
+        {
+            foreach (IRenderer resultRenderer in childRenderers)
+            {
+                FlushSingleRenderer(resultRenderer);
+            }
+            foreach (IRenderer resultRenderer_1 in positionedRenderers)
+            {
+                FlushSingleRenderer(resultRenderer_1);
+            }
+            childRenderers.Clear();
+            positionedRenderers.Clear();
+        }
 
-		public override LayoutResult Layout(LayoutContext layoutContext)
-		{
-			throw new InvalidOperationException("Layout is not supported for root renderers."
-				);
-		}
+        public override LayoutResult Layout(LayoutContext layoutContext)
+        {
+            throw new InvalidOperationException("Layout is not supported for root renderers."
+                );
+        }
 
-		public virtual LayoutArea GetCurrentArea()
-		{
-			if (currentArea == null)
-			{
-				UpdateCurrentArea(null);
-			}
-			return currentArea;
-		}
+        public virtual LayoutArea GetCurrentArea()
+        {
+            if (currentArea == null)
+            {
+                UpdateCurrentArea(null);
+            }
+            return currentArea;
+        }
 
-		protected internal abstract void FlushSingleRenderer(IRenderer resultRenderer);
+        protected internal abstract void FlushSingleRenderer(IRenderer resultRenderer);
 
-		protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-			);
+        protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult
+            );
 
-		private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
-			)
-		{
-			AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
-			if (immediateFlush)
-			{
-				FlushSingleRenderer(renderer);
-			}
-			else
-			{
-				resultRenderers.Add(renderer);
-			}
-		}
-	}
+        private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
+            )
+        {
+            AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
+            if (immediateFlush)
+            {
+                FlushSingleRenderer(renderer);
+            }
+            else
+            {
+                resultRenderers.Add(renderer);
+            }
+        }
+    }
 }

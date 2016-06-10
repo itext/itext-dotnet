@@ -43,20 +43,20 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Font.Otf
 {
-	public class GposAnchor
-	{
-		public int XCoordinate;
+    public class GposAnchor
+    {
+        public int XCoordinate;
 
-		public int YCoordinate;
+        public int YCoordinate;
 
-		public GposAnchor()
-		{
-		}
+        public GposAnchor()
+        {
+        }
 
-		public GposAnchor(iTextSharp.IO.Font.Otf.GposAnchor other)
-		{
-			this.XCoordinate = other.XCoordinate;
-			this.YCoordinate = other.YCoordinate;
-		}
-	}
+        public GposAnchor(iTextSharp.IO.Font.Otf.GposAnchor other)
+        {
+            this.XCoordinate = other.XCoordinate;
+            this.YCoordinate = other.YCoordinate;
+        }
+    }
 }

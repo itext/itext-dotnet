@@ -45,93 +45,93 @@ using System;
 
 namespace iTextSharp.Layout
 {
-	/// <summary>
-	/// A generic Map-like interface that defines methods for storing and retrieving
-	/// objects by an enum key of the
-	/// <see cref="iTextSharp.Layout.Property.Property"/>
-	/// type.
-	/// </summary>
-	public interface IPropertyContainer
-	{
-		/// <summary>Checks if this entity has the specified property.</summary>
-		/// <remarks>
-		/// Checks if this entity has the specified property. Compared to
-		/// <see cref="HasOwnProperty(int)"/>
-		/// ,
-		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
-		/// </remarks>
-		/// <param name="property">the property to be checked</param>
-		/// <returns>
-		/// 
-		/// <see langword="true"/>
-		/// if this instance has given property,
-		/// <see langword="false"/>
-		/// otherwise
-		/// </returns>
-		bool HasProperty(int property);
+    /// <summary>
+    /// A generic Map-like interface that defines methods for storing and retrieving
+    /// objects by an enum key of the
+    /// <see cref="iTextSharp.Layout.Property.Property"/>
+    /// type.
+    /// </summary>
+    public interface IPropertyContainer
+    {
+        /// <summary>Checks if this entity has the specified property.</summary>
+        /// <remarks>
+        /// Checks if this entity has the specified property. Compared to
+        /// <see cref="HasOwnProperty(int)"/>
+        /// ,
+        /// this method can check parent's properties, styles, etc, depending on the origin of the instance
+        /// </remarks>
+        /// <param name="property">the property to be checked</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this instance has given property,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        bool HasProperty(int property);
 
-		/// <summary>Checks if this entity has the specified property, i.e.</summary>
-		/// <remarks>Checks if this entity has the specified property, i.e. if it was set to this very element earlier
-		/// 	</remarks>
-		/// <param name="property">the property to be checked</param>
-		/// <returns>
-		/// 
-		/// <see langword="true"/>
-		/// if this instance has given own property,
-		/// <see langword="false"/>
-		/// otherwise
-		/// </returns>
-		bool HasOwnProperty(int property);
+        /// <summary>Checks if this entity has the specified property, i.e.</summary>
+        /// <remarks>Checks if this entity has the specified property, i.e. if it was set to this very element earlier
+        ///     </remarks>
+        /// <param name="property">the property to be checked</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this instance has given own property,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        bool HasOwnProperty(int property);
 
-		/// <summary>Gets the property from this entity.</summary>
-		/// <remarks>
-		/// Gets the property from this entity. Compared to
-		/// <see cref="GetOwnProperty{T1}(int)"/>
-		/// ,
-		/// this method can check parent's properties, styles, etc, depending on the origin of the instance
-		/// </remarks>
-		/// 
-		/// <param name="property">the property to be retrieved</param>
-		/// <returns>
-		/// the value of the given property.
-		/// <see langword="null"/>
-		/// will be returned if the property value was not found
-		/// </returns>
-		T1 GetProperty<T1>(int property);
+        /// <summary>Gets the property from this entity.</summary>
+        /// <remarks>
+        /// Gets the property from this entity. Compared to
+        /// <see cref="GetOwnProperty{T1}(int)"/>
+        /// ,
+        /// this method can check parent's properties, styles, etc, depending on the origin of the instance
+        /// </remarks>
+        /// 
+        /// <param name="property">the property to be retrieved</param>
+        /// <returns>
+        /// the value of the given property.
+        /// <see langword="null"/>
+        /// will be returned if the property value was not found
+        /// </returns>
+        T1 GetProperty<T1>(int property);
 
-		/// <summary>Gets own property from this entity.</summary>
-		/// <remarks>
-		/// Gets own property from this entity. The property must have been set earlier to this entity.
-		/// If the property is not found,
-		/// <see langword="null"/>
-		/// will be returned.
-		/// </remarks>
-		/// 
-		/// <param name="property">the property to be retrieved</param>
-		/// <returns>
-		/// the value of the given own property.
-		/// <see langword="null"/>
-		/// will be returned if the property value was not found
-		/// </returns>
-		T1 GetOwnProperty<T1>(int property);
+        /// <summary>Gets own property from this entity.</summary>
+        /// <remarks>
+        /// Gets own property from this entity. The property must have been set earlier to this entity.
+        /// If the property is not found,
+        /// <see langword="null"/>
+        /// will be returned.
+        /// </remarks>
+        /// 
+        /// <param name="property">the property to be retrieved</param>
+        /// <returns>
+        /// the value of the given own property.
+        /// <see langword="null"/>
+        /// will be returned if the property value was not found
+        /// </returns>
+        T1 GetOwnProperty<T1>(int property);
 
-		/// <summary>Gets the default property from this entity.</summary>
-		/// 
-		/// <param name="property">the property to be retrieved</param>
-		/// <returns>
-		/// the default property value. If the default property is not defined,
-		/// <see langword="null"/>
-		/// will be returned
-		/// </returns>
-		T1 GetDefaultProperty<T1>(int property);
+        /// <summary>Gets the default property from this entity.</summary>
+        /// 
+        /// <param name="property">the property to be retrieved</param>
+        /// <returns>
+        /// the default property value. If the default property is not defined,
+        /// <see langword="null"/>
+        /// will be returned
+        /// </returns>
+        T1 GetDefaultProperty<T1>(int property);
 
-		/// <summary>Sets a property for this entity.</summary>
-		/// <param name="property">the property to be set</param>
-		/// <param name="value">the value of the property</param>
-		void SetProperty(int property, Object value);
+        /// <summary>Sets a property for this entity.</summary>
+        /// <param name="property">the property to be set</param>
+        /// <param name="value">the value of the property</param>
+        void SetProperty(int property, Object value);
 
-		/// <summary>Deletes the own property of this entity.</summary>
-		/// <param name="property">the property to be deleted</param>
-		void DeleteOwnProperty(int property);
-	}
+        /// <summary>Deletes the own property of this entity.</summary>
+        /// <param name="property">the property to be deleted</param>
+        void DeleteOwnProperty(int property);
+    }
 }

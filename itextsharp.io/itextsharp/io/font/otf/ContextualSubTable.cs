@@ -45,86 +45,86 @@ using System.Collections.Generic;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	public abstract class ContextualSubTable
-	{
-		protected internal OpenTypeFontTableReader openReader;
+    public abstract class ContextualSubTable
+    {
+        protected internal OpenTypeFontTableReader openReader;
 
-		protected internal int lookupFlag;
+        protected internal int lookupFlag;
 
-		protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag
-			)
-		{
-			this.openReader = openReader;
-			this.lookupFlag = lookupFlag;
-		}
+        protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag
+            )
+        {
+            this.openReader = openReader;
+            this.lookupFlag = lookupFlag;
+        }
 
-		/// <summary>Gets a most preferable context rule that matches the line at current position.
-		/// 	</summary>
-		/// <remarks>
-		/// Gets a most preferable context rule that matches the line at current position. If no matching context rule is found,
-		/// it returns null.
-		/// <br /><br />
-		/// NOTE: if matching context rule is found, the <code>GlyphLine.start</code> and <code>GlyphLine.end</code> will be
-		/// changed in such way, that they will point at start and end of the matching context glyph sequence inside the glyph line.
-		/// </remarks>
-		/// <param name="line">a line, which is to be checked if it matches some context.</param>
-		/// <returns>matching context rule or null, if none was found.</returns>
-		public virtual ContextualSubstRule GetMatchingContextRule(GlyphLine line)
-		{
-			if (line.idx >= line.end)
-			{
-				return null;
-			}
-			Glyph g = line.Get(line.idx);
-			IList<ContextualSubstRule> rules = GetSetOfRulesForStartGlyph(g.GetCode());
-			foreach (ContextualSubstRule rule in rules)
-			{
-				int lastGlyphIndex = CheckIfContextMatch(line, rule);
-				if (lastGlyphIndex != -1)
-				{
-					line.start = line.idx;
-					line.end = lastGlyphIndex + 1;
-					return rule;
-				}
-			}
-			return null;
-		}
+        /// <summary>Gets a most preferable context rule that matches the line at current position.
+        ///     </summary>
+        /// <remarks>
+        /// Gets a most preferable context rule that matches the line at current position. If no matching context rule is found,
+        /// it returns null.
+        /// <br /><br />
+        /// NOTE: if matching context rule is found, the <code>GlyphLine.start</code> and <code>GlyphLine.end</code> will be
+        /// changed in such way, that they will point at start and end of the matching context glyph sequence inside the glyph line.
+        /// </remarks>
+        /// <param name="line">a line, which is to be checked if it matches some context.</param>
+        /// <returns>matching context rule or null, if none was found.</returns>
+        public virtual ContextualSubstRule GetMatchingContextRule(GlyphLine line)
+        {
+            if (line.idx >= line.end)
+            {
+                return null;
+            }
+            Glyph g = line.Get(line.idx);
+            IList<ContextualSubstRule> rules = GetSetOfRulesForStartGlyph(g.GetCode());
+            foreach (ContextualSubstRule rule in rules)
+            {
+                int lastGlyphIndex = CheckIfContextMatch(line, rule);
+                if (lastGlyphIndex != -1)
+                {
+                    line.start = line.idx;
+                    line.end = lastGlyphIndex + 1;
+                    return rule;
+                }
+            }
+            return null;
+        }
 
-		/// <summary>Gets a set of rules, which start with given glyph id.</summary>
-		/// <param name="startId">id of the first glyph in the sequence.</param>
-		protected internal abstract IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-			(int startId);
+        /// <summary>Gets a set of rules, which start with given glyph id.</summary>
+        /// <param name="startId">id of the first glyph in the sequence.</param>
+        protected internal abstract IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
+            (int startId);
 
-		/// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-		/// <returns>
-		/// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
-		/// or -1 if context doesn't match.
-		/// </returns>
-		protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule
-			 rule)
-		{
-			int j;
-			OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-			gidx.line = line;
-			gidx.idx = line.idx;
-			//Note, that starting index shall be 1
-			for (j = 1; j < rule.GetContextLength(); ++j)
-			{
-				gidx.NextGlyph(openReader, lookupFlag);
-				if (gidx.glyph == null || !rule.IsGlyphMatchesInput(gidx.glyph.GetCode(), j))
-				{
-					break;
-				}
-			}
-			bool isMatch = j == rule.GetContextLength();
-			if (isMatch)
-			{
-				return gidx.idx;
-			}
-			else
-			{
-				return -1;
-			}
-		}
-	}
+        /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
+        /// <returns>
+        /// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
+        /// or -1 if context doesn't match.
+        /// </returns>
+        protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule
+             rule)
+        {
+            int j;
+            OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
+            gidx.line = line;
+            gidx.idx = line.idx;
+            //Note, that starting index shall be 1
+            for (j = 1; j < rule.GetContextLength(); ++j)
+            {
+                gidx.NextGlyph(openReader, lookupFlag);
+                if (gidx.glyph == null || !rule.IsGlyphMatchesInput(gidx.glyph.GetCode(), j))
+                {
+                    break;
+                }
+            }
+            bool isMatch = j == rule.GetContextLength();
+            if (isMatch)
+            {
+                return gidx.idx;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
 }

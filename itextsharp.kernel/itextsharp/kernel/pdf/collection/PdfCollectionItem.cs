@@ -47,77 +47,77 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Collection
 {
-	public class PdfCollectionItem : PdfObjectWrapper<PdfDictionary>
-	{
-		private PdfCollectionSchema schema;
+    public class PdfCollectionItem : PdfObjectWrapper<PdfDictionary>
+    {
+        private PdfCollectionSchema schema;
 
-		public PdfCollectionItem(PdfCollectionSchema schema)
-			: base(new PdfDictionary())
-		{
-			this.schema = schema;
-		}
+        public PdfCollectionItem(PdfCollectionSchema schema)
+            : base(new PdfDictionary())
+        {
+            this.schema = schema;
+        }
 
-		/// <summary>Sets the value of the collection item.</summary>
-		/// <param name="key"/>
-		/// <param name="value"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String 
-			key, String value)
-		{
-			PdfCollectionField field = schema.GetField(key);
-			GetPdfObject().Put(new PdfName(key), field.GetValue(value));
-			return this;
-		}
+        /// <summary>Sets the value of the collection item.</summary>
+        /// <param name="key"/>
+        /// <param name="value"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String 
+            key, String value)
+        {
+            PdfCollectionField field = schema.GetField(key);
+            GetPdfObject().Put(new PdfName(key), field.GetValue(value));
+            return this;
+        }
 
-		/// <summary>Sets the value of the collection item.</summary>
-		/// <param name="d"/>
-		public virtual void AddItem(String key, PdfDate d)
-		{
-			PdfCollectionField field = schema.GetField(key);
-			if (field.subType == PdfCollectionField.DATE)
-			{
-				GetPdfObject().Put(new PdfName(key), d.GetPdfObject());
-			}
-		}
+        /// <summary>Sets the value of the collection item.</summary>
+        /// <param name="d"/>
+        public virtual void AddItem(String key, PdfDate d)
+        {
+            PdfCollectionField field = schema.GetField(key);
+            if (field.subType == PdfCollectionField.DATE)
+            {
+                GetPdfObject().Put(new PdfName(key), d.GetPdfObject());
+            }
+        }
 
-		/// <summary>Sets the value of the collection item.</summary>
-		/// <param name="n"/>
-		public virtual void AddItem(String key, PdfNumber n)
-		{
-			PdfCollectionField field = schema.GetField(key);
-			if (field.subType == PdfCollectionField.NUMBER)
-			{
-				GetPdfObject().Put(new PdfName(key), n);
-			}
-		}
+        /// <summary>Sets the value of the collection item.</summary>
+        /// <param name="n"/>
+        public virtual void AddItem(String key, PdfNumber n)
+        {
+            PdfCollectionField field = schema.GetField(key);
+            if (field.subType == PdfCollectionField.NUMBER)
+            {
+                GetPdfObject().Put(new PdfName(key), n);
+            }
+        }
 
-		/// <summary>Adds a prefix for the Collection item.</summary>
-		/// <remarks>
-		/// Adds a prefix for the Collection item.
-		/// You can only use this method after you have set the value of the item.
-		/// </remarks>
-		/// <param name="key"/>
-		/// <param name="prefix"/>
-		/// <returns/>
-		public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String
-			 key, String prefix)
-		{
-			PdfName fieldName = new PdfName(key);
-			PdfObject obj = GetPdfObject().Get(fieldName);
-			if (obj == null)
-			{
-				throw new PdfException(PdfException.YouMustSetAValueBeforeAddingAPrefix);
-			}
-			PdfDictionary subItem = new PdfDictionary();
-			subItem.Put(PdfName.D, obj);
-			subItem.Put(PdfName.P, new PdfString(prefix));
-			GetPdfObject().Put(fieldName, subItem);
-			return this;
-		}
+        /// <summary>Adds a prefix for the Collection item.</summary>
+        /// <remarks>
+        /// Adds a prefix for the Collection item.
+        /// You can only use this method after you have set the value of the item.
+        /// </remarks>
+        /// <param name="key"/>
+        /// <param name="prefix"/>
+        /// <returns/>
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String
+             key, String prefix)
+        {
+            PdfName fieldName = new PdfName(key);
+            PdfObject obj = GetPdfObject().Get(fieldName);
+            if (obj == null)
+            {
+                throw new PdfException(PdfException.YouMustSetAValueBeforeAddingAPrefix);
+            }
+            PdfDictionary subItem = new PdfDictionary();
+            subItem.Put(PdfName.D, obj);
+            subItem.Put(PdfName.P, new PdfString(prefix));
+            GetPdfObject().Put(fieldName, subItem);
+            return this;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

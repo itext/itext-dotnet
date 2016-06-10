@@ -47,39 +47,39 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Navigation
 {
-	public class PdfNamedDestination : PdfDestination
-	{
-		public PdfNamedDestination(String name)
-			: this(new PdfName(name))
-		{
-		}
+    public class PdfNamedDestination : PdfDestination
+    {
+        public PdfNamedDestination(String name)
+            : this(new PdfName(name))
+        {
+        }
 
-		public PdfNamedDestination(PdfName pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfNamedDestination(PdfName pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
-			)
-		{
-			PdfArray array = (PdfArray)names.Get(((PdfName)GetPdfObject()).GetValue());
-			return array != null ? array.Get(0) : null;
-		}
+        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
+            )
+        {
+            PdfArray array = (PdfArray)names.Get(((PdfName)GetPdfObject()).GetValue());
+            return array != null ? array.Get(0) : null;
+        }
 
-		public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
-			> names)
-		{
-			PdfArray array = (PdfArray)names.Get(GetPdfObject());
-			if (array != null)
-			{
-				return PdfDestination.MakeDestination(array);
-			}
-			return null;
-		}
+        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
+            > names)
+        {
+            PdfArray array = (PdfArray)names.Get(GetPdfObject());
+            if (array != null)
+            {
+                return PdfDestination.MakeDestination(array);
+            }
+            return null;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

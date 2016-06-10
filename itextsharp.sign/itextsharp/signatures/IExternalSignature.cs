@@ -45,30 +45,30 @@ using System;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>Interface that needs to be implemented to do the actual signing.</summary>
-	/// <remarks>
-	/// Interface that needs to be implemented to do the actual signing.
-	/// For instance: you'll have to implement this interface if you want
-	/// to sign a PDF using a smart card.
-	/// </remarks>
-	/// <author>Paulo Soares</author>
-	public interface IExternalSignature
-	{
-		/// <summary>Returns the hash algorithm.</summary>
-		/// <returns>The hash algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
-		String GetHashAlgorithm();
+    /// <summary>Interface that needs to be implemented to do the actual signing.</summary>
+    /// <remarks>
+    /// Interface that needs to be implemented to do the actual signing.
+    /// For instance: you'll have to implement this interface if you want
+    /// to sign a PDF using a smart card.
+    /// </remarks>
+    /// <author>Paulo Soares</author>
+    public interface IExternalSignature
+    {
+        /// <summary>Returns the hash algorithm.</summary>
+        /// <returns>The hash algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
+        String GetHashAlgorithm();
 
-		/// <summary>Returns the encryption algorithm used for signing.</summary>
-		/// <returns>The encryption algorithm ("RSA" or "DSA").</returns>
-		String GetEncryptionAlgorithm();
+        /// <summary>Returns the encryption algorithm used for signing.</summary>
+        /// <returns>The encryption algorithm ("RSA" or "DSA").</returns>
+        String GetEncryptionAlgorithm();
 
-		/// <summary>
-		/// Signs the given message using the encryption algorithm in combination
-		/// with the hash algorithm.
-		/// </summary>
-		/// <param name="message">The message you want to be hashed and signed.</param>
-		/// <returns>A signed message digest.</returns>
-		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-		byte[] Sign(byte[] message);
-	}
+        /// <summary>
+        /// Signs the given message using the encryption algorithm in combination
+        /// with the hash algorithm.
+        /// </summary>
+        /// <param name="message">The message you want to be hashed and signed.</param>
+        /// <returns>A signed message digest.</returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        byte[] Sign(byte[] message);
+    }
 }

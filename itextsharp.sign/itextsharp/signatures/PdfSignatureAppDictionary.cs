@@ -47,36 +47,36 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>A dictionary that stores the name of the application that signs the PDF.
-	/// 	</summary>
-	public class PdfSignatureAppDictionary : PdfObjectWrapper<PdfDictionary>
-	{
-		/// <summary>Creates a new PdfSignatureAppDictionary</summary>
-		public PdfSignatureAppDictionary()
-			: base(new PdfDictionary())
-		{
-		}
+    /// <summary>A dictionary that stores the name of the application that signs the PDF.
+    ///     </summary>
+    public class PdfSignatureAppDictionary : PdfObjectWrapper<PdfDictionary>
+    {
+        /// <summary>Creates a new PdfSignatureAppDictionary</summary>
+        public PdfSignatureAppDictionary()
+            : base(new PdfDictionary())
+        {
+        }
 
-		/// <summary>Creates a new PdfSignatureAppDictionary.</summary>
-		/// <param name="pdfObject">PdfDictionary containing initial values</param>
-		public PdfSignatureAppDictionary(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        /// <summary>Creates a new PdfSignatureAppDictionary.</summary>
+        /// <param name="pdfObject">PdfDictionary containing initial values</param>
+        public PdfSignatureAppDictionary(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <summary>
-		/// Sets the signature created property in the Prop_Build dictionary's App
-		/// dictionary.
-		/// </summary>
-		/// <param name="name">String name of the application creating the signature</param>
-		public virtual void SetSignatureCreator(String name)
-		{
-			GetPdfObject().Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
-		}
+        /// <summary>
+        /// Sets the signature created property in the Prop_Build dictionary's App
+        /// dictionary.
+        /// </summary>
+        /// <param name="name">String name of the application creating the signature</param>
+        public virtual void SetSignatureCreator(String name)
+        {
+            GetPdfObject().Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
+        }
 
-		protected override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

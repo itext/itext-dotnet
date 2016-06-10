@@ -47,138 +47,138 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font
 {
-	public class CMapEncoding
-	{
-		private String cmap;
+    public class CMapEncoding
+    {
+        private String cmap;
 
-		private String uniMap;
+        private String uniMap;
 
-		private bool isDirect;
+        private bool isDirect;
 
-		private CMapCidUni cid2Uni;
+        private CMapCidUni cid2Uni;
 
-		private CMapCidByte cid2Code;
+        private CMapCidByte cid2Code;
 
-		private IntHashtable code2Cid;
+        private IntHashtable code2Cid;
 
-		/// <param name="cmap">CMap name.</param>
-		public CMapEncoding(String cmap)
-		{
-			// true if CMap is Identity-H/V
-			this.cmap = cmap;
-			if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
-			{
-				isDirect = true;
-			}
-		}
+        /// <param name="cmap">CMap name.</param>
+        public CMapEncoding(String cmap)
+        {
+            // true if CMap is Identity-H/V
+            this.cmap = cmap;
+            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
+            {
+                isDirect = true;
+            }
+        }
 
-		/// <param name="cmap">CMap name.</param>
-		/// <param name="uniMap">CMap to convert Unicode value to CID.</param>
-		public CMapEncoding(String cmap, String uniMap)
-		{
-			this.cmap = cmap;
-			this.uniMap = uniMap;
-			if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
-			{
-				cid2Uni = FontCache.GetCid2UniCmap(uniMap);
-				isDirect = true;
-			}
-			else
-			{
-				cid2Code = FontCache.GetCid2Byte(cmap);
-				code2Cid = cid2Code.GetReversMap();
-			}
-		}
+        /// <param name="cmap">CMap name.</param>
+        /// <param name="uniMap">CMap to convert Unicode value to CID.</param>
+        public CMapEncoding(String cmap, String uniMap)
+        {
+            this.cmap = cmap;
+            this.uniMap = uniMap;
+            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
+            {
+                cid2Uni = FontCache.GetCid2UniCmap(uniMap);
+                isDirect = true;
+            }
+            else
+            {
+                cid2Code = FontCache.GetCid2Byte(cmap);
+                code2Cid = cid2Code.GetReversMap();
+            }
+        }
 
-		public virtual bool IsDirect()
-		{
-			return isDirect;
-		}
+        public virtual bool IsDirect()
+        {
+            return isDirect;
+        }
 
-		public virtual bool HasUniMap()
-		{
-			return uniMap != null && uniMap.Length > 0;
-		}
+        public virtual bool HasUniMap()
+        {
+            return uniMap != null && uniMap.Length > 0;
+        }
 
-		public virtual String GetRegistry()
-		{
-			if (IsDirect())
-			{
-				return "Adobe";
-			}
-			else
-			{
-				return cid2Code.GetRegistry();
-			}
-		}
+        public virtual String GetRegistry()
+        {
+            if (IsDirect())
+            {
+                return "Adobe";
+            }
+            else
+            {
+                return cid2Code.GetRegistry();
+            }
+        }
 
-		public virtual String GetOrdering()
-		{
-			if (IsDirect())
-			{
-				return "Identity";
-			}
-			else
-			{
-				return cid2Code.GetOrdering();
-			}
-		}
+        public virtual String GetOrdering()
+        {
+            if (IsDirect())
+            {
+                return "Identity";
+            }
+            else
+            {
+                return cid2Code.GetOrdering();
+            }
+        }
 
-		public virtual int GetSupplement()
-		{
-			if (IsDirect())
-			{
-				return 0;
-			}
-			else
-			{
-				return cid2Code.GetSupplement();
-			}
-		}
+        public virtual int GetSupplement()
+        {
+            if (IsDirect())
+            {
+                return 0;
+            }
+            else
+            {
+                return cid2Code.GetSupplement();
+            }
+        }
 
-		public virtual String GetUniMapName()
-		{
-			return uniMap;
-		}
+        public virtual String GetUniMapName()
+        {
+            return uniMap;
+        }
 
-		public virtual String GetCmapName()
-		{
-			return cmap;
-		}
+        public virtual String GetCmapName()
+        {
+            return cmap;
+        }
 
-		public virtual int GetCmapCode(int cid)
-		{
-			if (isDirect)
-			{
-				return cid;
-			}
-			else
-			{
-				return ToInteger(cid2Code.Lookup(cid));
-			}
-		}
+        public virtual int GetCmapCode(int cid)
+        {
+            if (isDirect)
+            {
+                return cid;
+            }
+            else
+            {
+                return ToInteger(cid2Code.Lookup(cid));
+            }
+        }
 
-		public virtual int GetCidCode(int cmapCode)
-		{
-			if (isDirect)
-			{
-				return cmapCode;
-			}
-			else
-			{
-				return code2Cid.Get(cmapCode);
-			}
-		}
+        public virtual int GetCidCode(int cmapCode)
+        {
+            if (isDirect)
+            {
+                return cmapCode;
+            }
+            else
+            {
+                return code2Cid.Get(cmapCode);
+            }
+        }
 
-		private static int ToInteger(byte[] bytes)
-		{
-			int result = 0;
-			foreach (byte b in bytes)
-			{
-				result <<= 8;
-				result += b & 0xff;
-			}
-			return result;
-		}
-	}
+        private static int ToInteger(byte[] bytes)
+        {
+            int result = 0;
+            foreach (byte b in bytes)
+            {
+                result <<= 8;
+                result += b & 0xff;
+            }
+            return result;
+        }
+    }
 }

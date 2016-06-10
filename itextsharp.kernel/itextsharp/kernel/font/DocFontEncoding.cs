@@ -49,155 +49,155 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Font
 {
-	/// <summary>This class allow to parse document font's encoding.</summary>
-	internal class DocFontEncoding : FontEncoding
-	{
-		protected internal DocFontEncoding()
-		{
-		}
+    /// <summary>This class allow to parse document font's encoding.</summary>
+    internal class DocFontEncoding : FontEncoding
+    {
+        protected internal DocFontEncoding()
+        {
+        }
 
-		public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
-			 toUnicode, bool fillBaseEncoding)
-		{
-			if (encoding != null)
-			{
-				if (encoding.IsName())
-				{
-					return FontEncoding.CreateFontEncoding(((PdfName)encoding).GetValue());
-				}
-				else
-				{
-					if (encoding.IsDictionary())
-					{
-						iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
-							();
-						fontEncoding.differences = new String[256];
-						if (fillBaseEncoding)
-						{
-							FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding
-								));
-						}
-						FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences
-							), toUnicode);
-						return fontEncoding;
-					}
-				}
-			}
-			if (toUnicode != null)
-			{
-				iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
-					();
-				fontEncoding.differences = new String[256];
-				FillDifferences(fontEncoding, toUnicode);
-				return fontEncoding;
-			}
-			else
-			{
-				return FontEncoding.CreateFontSpecificEncoding();
-			}
-		}
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
+             toUnicode, bool fillBaseEncoding)
+        {
+            if (encoding != null)
+            {
+                if (encoding.IsName())
+                {
+                    return FontEncoding.CreateFontEncoding(((PdfName)encoding).GetValue());
+                }
+                else
+                {
+                    if (encoding.IsDictionary())
+                    {
+                        iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
+                            ();
+                        fontEncoding.differences = new String[256];
+                        if (fillBaseEncoding)
+                        {
+                            FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding
+                                ));
+                        }
+                        FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences
+                            ), toUnicode);
+                        return fontEncoding;
+                    }
+                }
+            }
+            if (toUnicode != null)
+            {
+                iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
+                    ();
+                fontEncoding.differences = new String[256];
+                FillDifferences(fontEncoding, toUnicode);
+                return fontEncoding;
+            }
+            else
+            {
+                return FontEncoding.CreateFontSpecificEncoding();
+            }
+        }
 
-		public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
-			 toUnicode)
-		{
-			return CreateDocFontEncoding(encoding, toUnicode, true);
-		}
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
+             toUnicode)
+        {
+            return CreateDocFontEncoding(encoding, toUnicode, true);
+        }
 
-		private static void FillBaseEncoding(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-			, PdfName baseEncodingName)
-		{
-			if (baseEncodingName != null)
-			{
-				fontEncoding.baseEncoding = baseEncodingName.GetValue();
-			}
-			if (PdfName.MacRomanEncoding.Equals(baseEncodingName) || PdfName.WinAnsiEncoding.
-				Equals(baseEncodingName) || PdfName.Symbol.Equals(baseEncodingName) || PdfName.ZapfDingbats
-				.Equals(baseEncodingName))
-			{
-				String enc = PdfEncodings.WINANSI;
-				if (PdfName.MacRomanEncoding.Equals(baseEncodingName))
-				{
-					enc = PdfEncodings.MACROMAN;
-				}
-				else
-				{
-					if (PdfName.Symbol.Equals(baseEncodingName))
-					{
-						enc = PdfEncodings.SYMBOL;
-					}
-					else
-					{
-						if (PdfName.ZapfDingbats.Equals(baseEncodingName))
-						{
-							enc = PdfEncodings.ZAPFDINGBATS;
-						}
-					}
-				}
-				fontEncoding.baseEncoding = enc;
-				fontEncoding.FillNamedEncoding();
-			}
-			else
-			{
-				fontEncoding.FillStandardEncoding();
-			}
-		}
+        private static void FillBaseEncoding(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
+            , PdfName baseEncodingName)
+        {
+            if (baseEncodingName != null)
+            {
+                fontEncoding.baseEncoding = baseEncodingName.GetValue();
+            }
+            if (PdfName.MacRomanEncoding.Equals(baseEncodingName) || PdfName.WinAnsiEncoding.
+                Equals(baseEncodingName) || PdfName.Symbol.Equals(baseEncodingName) || PdfName
+                .ZapfDingbats.Equals(baseEncodingName))
+            {
+                String enc = PdfEncodings.WINANSI;
+                if (PdfName.MacRomanEncoding.Equals(baseEncodingName))
+                {
+                    enc = PdfEncodings.MACROMAN;
+                }
+                else
+                {
+                    if (PdfName.Symbol.Equals(baseEncodingName))
+                    {
+                        enc = PdfEncodings.SYMBOL;
+                    }
+                    else
+                    {
+                        if (PdfName.ZapfDingbats.Equals(baseEncodingName))
+                        {
+                            enc = PdfEncodings.ZAPFDINGBATS;
+                        }
+                    }
+                }
+                fontEncoding.baseEncoding = enc;
+                fontEncoding.FillNamedEncoding();
+            }
+            else
+            {
+                fontEncoding.FillStandardEncoding();
+            }
+        }
 
-		private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-			, PdfArray diffs, CMapToUnicode toUnicode)
-		{
-			IntHashtable byte2uni = toUnicode != null ? toUnicode.CreateDirectMapping() : new 
-				IntHashtable();
-			if (diffs != null)
-			{
-				int currentNumber = 0;
-				for (int k = 0; k < diffs.Size(); ++k)
-				{
-					PdfObject obj = diffs.Get(k);
-					if (obj.IsNumber())
-					{
-						currentNumber = ((PdfNumber)obj).IntValue();
-					}
-					else
-					{
-						String glyphName = ((PdfName)obj).GetValue();
-						int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName);
-						if (unicode != -1)
-						{
-							fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
-							fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
-							fontEncoding.differences[currentNumber] = glyphName;
-							fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
-						}
-						else
-						{
-							if (byte2uni.Contains(currentNumber))
-							{
-								unicode = byte2uni.Get(currentNumber);
-								fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
-								fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
-								fontEncoding.differences[currentNumber] = glyphName;
-								fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
-							}
-						}
-						currentNumber++;
-					}
-				}
-			}
-		}
+        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
+            , PdfArray diffs, CMapToUnicode toUnicode)
+        {
+            IntHashtable byte2uni = toUnicode != null ? toUnicode.CreateDirectMapping() : new 
+                IntHashtable();
+            if (diffs != null)
+            {
+                int currentNumber = 0;
+                for (int k = 0; k < diffs.Size(); ++k)
+                {
+                    PdfObject obj = diffs.Get(k);
+                    if (obj.IsNumber())
+                    {
+                        currentNumber = ((PdfNumber)obj).IntValue();
+                    }
+                    else
+                    {
+                        String glyphName = ((PdfName)obj).GetValue();
+                        int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName);
+                        if (unicode != -1)
+                        {
+                            fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
+                            fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
+                            fontEncoding.differences[currentNumber] = glyphName;
+                            fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
+                        }
+                        else
+                        {
+                            if (byte2uni.Contains(currentNumber))
+                            {
+                                unicode = byte2uni.Get(currentNumber);
+                                fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
+                                fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);
+                                fontEncoding.differences[currentNumber] = glyphName;
+                                fontEncoding.unicodeDifferences.Put((int)unicode, (int)unicode);
+                            }
+                        }
+                        currentNumber++;
+                    }
+                }
+            }
+        }
 
-		private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-			, CMapToUnicode toUnicode)
-		{
-			IntHashtable byte2uni = toUnicode.CreateDirectMapping();
-			foreach (int? code in byte2uni.GetKeys())
-			{
-				int unicode = byte2uni.Get((int)code);
-				String glyphName = AdobeGlyphList.UnicodeToName(unicode);
-				fontEncoding.codeToUnicode[(int)code] = unicode;
-				fontEncoding.unicodeToCode.Put(unicode, (int)code);
-				fontEncoding.differences[(int)code] = glyphName;
-				fontEncoding.unicodeDifferences.Put(unicode, unicode);
-			}
-		}
-	}
+        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
+            , CMapToUnicode toUnicode)
+        {
+            IntHashtable byte2uni = toUnicode.CreateDirectMapping();
+            foreach (int? code in byte2uni.GetKeys())
+            {
+                int unicode = byte2uni.Get((int)code);
+                String glyphName = AdobeGlyphList.UnicodeToName(unicode);
+                fontEncoding.codeToUnicode[(int)code] = unicode;
+                fontEncoding.unicodeToCode.Put(unicode, (int)code);
+                fontEncoding.differences[(int)code] = glyphName;
+                fontEncoding.unicodeDifferences.Put(unicode, unicode);
+            }
+        }
+    }
 }

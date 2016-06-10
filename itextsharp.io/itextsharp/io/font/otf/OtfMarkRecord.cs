@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Font.Otf
 {
-	public class OtfMarkRecord
-	{
-		public int markClass;
+    public class OtfMarkRecord
+    {
+        public int markClass;
 
-		public GposAnchor anchor;
-	}
+        public GposAnchor anchor;
+    }
 }

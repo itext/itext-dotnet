@@ -47,57 +47,57 @@ using iTextSharp.Kernel.Pdf.Annot;
 
 namespace iTextSharp.Forms.Fields
 {
-	/// <summary>An AcroForm field containing signature data.</summary>
-	public class PdfSignatureFormField : PdfFormField
-	{
-		protected internal PdfSignatureFormField(PdfDocument pdfDocument)
-			: base(pdfDocument)
-		{
-		}
+    /// <summary>An AcroForm field containing signature data.</summary>
+    public class PdfSignatureFormField : PdfFormField
+    {
+        protected internal PdfSignatureFormField(PdfDocument pdfDocument)
+            : base(pdfDocument)
+        {
+        }
 
-		protected internal PdfSignatureFormField(PdfWidgetAnnotation widget, PdfDocument 
-			pdfDocument)
-			: base(widget, pdfDocument)
-		{
-		}
+        protected internal PdfSignatureFormField(PdfWidgetAnnotation widget, PdfDocument 
+            pdfDocument)
+            : base(widget, pdfDocument)
+        {
+        }
 
-		protected internal PdfSignatureFormField(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        protected internal PdfSignatureFormField(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		/// <summary>Returns <code>Sig</code>, the form type for signature form fields.</summary>
-		/// <returns>
-		/// the form type, as a
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
-		/// </returns>
-		public override PdfName GetFormType()
-		{
-			return PdfName.Sig;
-		}
+        /// <summary>Returns <code>Sig</code>, the form type for signature form fields.</summary>
+        /// <returns>
+        /// the form type, as a
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
+        /// </returns>
+        public override PdfName GetFormType()
+        {
+            return PdfName.Sig;
+        }
 
-		/// <summary>Adds the signature to the signature field.</summary>
-		/// <param name="value">the signature to be contained in the signature field, or an indirect reference to it
-		/// 	</param>
-		/// <returns>the edited field</returns>
-		public virtual iTextSharp.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value
-			)
-		{
-			return (iTextSharp.Forms.Fields.PdfSignatureFormField)Put(PdfName.V, value);
-		}
+        /// <summary>Adds the signature to the signature field.</summary>
+        /// <param name="value">the signature to be contained in the signature field, or an indirect reference to it
+        ///     </param>
+        /// <returns>the edited field</returns>
+        public virtual iTextSharp.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value
+            )
+        {
+            return (iTextSharp.Forms.Fields.PdfSignatureFormField)Put(PdfName.V, value);
+        }
 
-		/// <summary>
-		/// Gets the
-		/// <see cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
-		/// , which contains fields that
-		/// must be locked if the document is signed.
-		/// </summary>
-		/// <returns>a dictionary containing locked fields.</returns>
-		/// <seealso cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
-		public virtual PdfSigFieldLockDictionary GetSigFieldLockDictionary()
-		{
-			PdfDictionary sigLockDict = (PdfDictionary)GetPdfObject().Get(PdfName.Lock);
-			return sigLockDict == null ? null : new PdfSigFieldLockDictionary(sigLockDict);
-		}
-	}
+        /// <summary>
+        /// Gets the
+        /// <see cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
+        /// , which contains fields that
+        /// must be locked if the document is signed.
+        /// </summary>
+        /// <returns>a dictionary containing locked fields.</returns>
+        /// <seealso cref="iTextSharp.Forms.PdfSigFieldLockDictionary"/>
+        public virtual PdfSigFieldLockDictionary GetSigFieldLockDictionary()
+        {
+            PdfDictionary sigLockDict = (PdfDictionary)GetPdfObject().Get(PdfName.Lock);
+            return sigLockDict == null ? null : new PdfSigFieldLockDictionary(sigLockDict);
+        }
+    }
 }

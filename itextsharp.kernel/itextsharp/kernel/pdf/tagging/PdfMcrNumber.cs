@@ -45,26 +45,26 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Tagging
 {
-	public class PdfMcrNumber : PdfMcr
-	{
-		public PdfMcrNumber(PdfNumber pdfObject, PdfStructElem parent)
-			: base(pdfObject, parent)
-		{
-		}
+    public class PdfMcrNumber : PdfMcr
+    {
+        public PdfMcrNumber(PdfNumber pdfObject, PdfStructElem parent)
+            : base(pdfObject, parent)
+        {
+        }
 
-		public PdfMcrNumber(PdfPage page, PdfStructElem parent)
-			: base(new PdfNumber(page.GetNextMcid()), parent)
-		{
-		}
+        public PdfMcrNumber(PdfPage page, PdfStructElem parent)
+            : base(new PdfNumber(page.GetNextMcid()), parent)
+        {
+        }
 
-		public override int GetMcid()
-		{
-			return ((PdfNumber)GetPdfObject()).IntValue();
-		}
+        public override int GetMcid()
+        {
+            return ((PdfNumber)GetPdfObject()).IntValue();
+        }
 
-		public override PdfDictionary GetPageObject()
-		{
-			return parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
-		}
-	}
+        public override PdfDictionary GetPageObject()
+        {
+            return parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
+        }
+    }
 }

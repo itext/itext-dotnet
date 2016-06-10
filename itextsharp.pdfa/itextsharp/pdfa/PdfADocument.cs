@@ -54,313 +54,313 @@ using iTextSharp.Pdfa.Checker;
 
 namespace iTextSharp.Pdfa
 {
-	public class PdfADocument : PdfDocument
-	{
-		protected internal PdfAChecker checker;
+    public class PdfADocument : PdfDocument
+    {
+        protected internal PdfAChecker checker;
 
-		public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent
-			 outputIntent)
-			: base(writer)
-		{
-			SetChecker(conformanceLevel);
-			AddOutputIntent(outputIntent);
-		}
+        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent
+             outputIntent)
+            : base(writer)
+        {
+            SetChecker(conformanceLevel);
+            AddOutputIntent(outputIntent);
+        }
 
-		public PdfADocument(PdfReader reader, PdfWriter writer)
-			: this(reader, writer, new StampingProperties())
-		{
-		}
+        public PdfADocument(PdfReader reader, PdfWriter writer)
+            : this(reader, writer, new StampingProperties())
+        {
+        }
 
-		public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties
-			)
-			: base(reader, writer, properties)
-		{
-			byte[] existingXmpMetadata = GetXmpMetadata();
-			if (existingXmpMetadata == null)
-			{
-				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
-					);
-			}
-			XMPMeta meta;
-			try
-			{
-				meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
-			}
-			catch (XMPException)
-			{
-				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
-					);
-			}
-			PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(
-				meta);
-			if (conformanceLevel == null)
-			{
-				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
-					);
-			}
-			SetChecker(conformanceLevel);
-		}
+        public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties
+            )
+            : base(reader, writer, properties)
+        {
+            byte[] existingXmpMetadata = GetXmpMetadata();
+            if (existingXmpMetadata == null)
+            {
+                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                    );
+            }
+            XMPMeta meta;
+            try
+            {
+                meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
+            }
+            catch (XMPException)
+            {
+                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                    );
+            }
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(
+                meta);
+            if (conformanceLevel == null)
+            {
+                throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
+                    );
+            }
+            SetChecker(conformanceLevel);
+        }
 
-		public override void CheckIsoConformance(Object obj, IsoKey key)
-		{
-			CheckIsoConformance(obj, key, null);
-		}
+        public override void CheckIsoConformance(Object obj, IsoKey key)
+        {
+            CheckIsoConformance(obj, key, null);
+        }
 
-		public override void CheckShowTextIsoConformance(Object obj, PdfResources resources
-			)
-		{
-			CanvasGraphicsState gState = (CanvasGraphicsState)obj;
-			bool fill = false;
-			bool stroke = false;
-			switch (gState.GetTextRenderingMode())
-			{
-				case PdfCanvasConstants.TextRenderingMode.STROKE:
-				case PdfCanvasConstants.TextRenderingMode.STROKE_CLIP:
-				{
-					stroke = true;
-					break;
-				}
+        public override void CheckShowTextIsoConformance(Object obj, PdfResources resources
+            )
+        {
+            CanvasGraphicsState gState = (CanvasGraphicsState)obj;
+            bool fill = false;
+            bool stroke = false;
+            switch (gState.GetTextRenderingMode())
+            {
+                case PdfCanvasConstants.TextRenderingMode.STROKE:
+                case PdfCanvasConstants.TextRenderingMode.STROKE_CLIP:
+                {
+                    stroke = true;
+                    break;
+                }
 
-				case PdfCanvasConstants.TextRenderingMode.FILL:
-				case PdfCanvasConstants.TextRenderingMode.FILL_CLIP:
-				{
-					fill = true;
-					break;
-				}
+                case PdfCanvasConstants.TextRenderingMode.FILL:
+                case PdfCanvasConstants.TextRenderingMode.FILL_CLIP:
+                {
+                    fill = true;
+                    break;
+                }
 
-				case PdfCanvasConstants.TextRenderingMode.FILL_STROKE:
-				case PdfCanvasConstants.TextRenderingMode.FILL_STROKE_CLIP:
-				{
-					stroke = true;
-					fill = true;
-					break;
-				}
-			}
-			IsoKey drawMode = IsoKey.DRAWMODE_FILL;
-			if (fill && stroke)
-			{
-				drawMode = IsoKey.DRAWMODE_FILL_STROKE;
-			}
-			else
-			{
-				if (fill)
-				{
-					drawMode = IsoKey.DRAWMODE_FILL;
-				}
-				else
-				{
-					if (stroke)
-					{
-						drawMode = IsoKey.DRAWMODE_STROKE;
-					}
-				}
-			}
-			if (fill || stroke)
-			{
-				CheckIsoConformance(gState, drawMode, resources);
-			}
-		}
+                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE:
+                case PdfCanvasConstants.TextRenderingMode.FILL_STROKE_CLIP:
+                {
+                    stroke = true;
+                    fill = true;
+                    break;
+                }
+            }
+            IsoKey drawMode = IsoKey.DRAWMODE_FILL;
+            if (fill && stroke)
+            {
+                drawMode = IsoKey.DRAWMODE_FILL_STROKE;
+            }
+            else
+            {
+                if (fill)
+                {
+                    drawMode = IsoKey.DRAWMODE_FILL;
+                }
+                else
+                {
+                    if (stroke)
+                    {
+                        drawMode = IsoKey.DRAWMODE_STROKE;
+                    }
+                }
+            }
+            if (fill || stroke)
+            {
+                CheckIsoConformance(gState, drawMode, resources);
+            }
+        }
 
-		public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources
-			)
-		{
-			CanvasGraphicsState gState;
-			PdfDictionary currentColorSpaces = null;
-			if (resources != null)
-			{
-				currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
-			}
-			switch (key)
-			{
-				case IsoKey.CANVAS_STACK:
-				{
-					checker.CheckCanvasStack((char)obj);
-					break;
-				}
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources
+            )
+        {
+            CanvasGraphicsState gState;
+            PdfDictionary currentColorSpaces = null;
+            if (resources != null)
+            {
+                currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
+            }
+            switch (key)
+            {
+                case IsoKey.CANVAS_STACK:
+                {
+                    checker.CheckCanvasStack((char)obj);
+                    break;
+                }
 
-				case IsoKey.PDF_OBJECT:
-				{
-					checker.CheckPdfObject((PdfObject)obj);
-					break;
-				}
+                case IsoKey.PDF_OBJECT:
+                {
+                    checker.CheckPdfObject((PdfObject)obj);
+                    break;
+                }
 
-				case IsoKey.RENDERING_INTENT:
-				{
-					checker.CheckRenderingIntent((PdfName)obj);
-					break;
-				}
+                case IsoKey.RENDERING_INTENT:
+                {
+                    checker.CheckRenderingIntent((PdfName)obj);
+                    break;
+                }
 
-				case IsoKey.INLINE_IMAGE:
-				{
-					checker.CheckInlineImage((PdfStream)obj, currentColorSpaces);
-					break;
-				}
+                case IsoKey.INLINE_IMAGE:
+                {
+                    checker.CheckInlineImage((PdfStream)obj, currentColorSpaces);
+                    break;
+                }
 
-				case IsoKey.GRAPHIC_STATE_ONLY:
-				{
-					gState = (CanvasGraphicsState)obj;
-					checker.CheckExtGState(gState);
-					break;
-				}
+                case IsoKey.GRAPHIC_STATE_ONLY:
+                {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckExtGState(gState);
+                    break;
+                }
 
-				case IsoKey.DRAWMODE_FILL:
-				{
-					gState = (CanvasGraphicsState)obj;
-					checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-					checker.CheckExtGState(gState);
-					break;
-				}
+                case IsoKey.DRAWMODE_FILL:
+                {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
+                    checker.CheckExtGState(gState);
+                    break;
+                }
 
-				case IsoKey.DRAWMODE_STROKE:
-				{
-					gState = (CanvasGraphicsState)obj;
-					checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-					checker.CheckExtGState(gState);
-					break;
-				}
+                case IsoKey.DRAWMODE_STROKE:
+                {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
+                    checker.CheckExtGState(gState);
+                    break;
+                }
 
-				case IsoKey.DRAWMODE_FILL_STROKE:
-				{
-					gState = (CanvasGraphicsState)obj;
-					checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
-					checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
-					checker.CheckExtGState(gState);
-					break;
-				}
+                case IsoKey.DRAWMODE_FILL_STROKE:
+                {
+                    gState = (CanvasGraphicsState)obj;
+                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true);
+                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false);
+                    checker.CheckExtGState(gState);
+                    break;
+                }
 
-				case IsoKey.PAGE:
-				{
-					checker.CheckSinglePage((PdfPage)obj);
-					break;
-				}
-			}
-		}
+                case IsoKey.PAGE:
+                {
+                    checker.CheckSinglePage((PdfPage)obj);
+                    break;
+                }
+            }
+        }
 
-		public virtual PdfAConformanceLevel GetConformanceLevel()
-		{
-			return checker.GetConformanceLevel();
-		}
+        public virtual PdfAConformanceLevel GetConformanceLevel()
+        {
+            return checker.GetConformanceLevel();
+        }
 
-		protected override void UpdateXmpMetadata()
-		{
-			try
-			{
-				XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
-				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel
-					().GetPart());
-				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel
-					().GetConformance());
-				if (this.IsTagged())
-				{
-					XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
-						);
-					XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
-				}
-				SetXmpMetadata(xmpMeta);
-			}
-			catch (XMPException e)
-			{
-				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Pdfa.PdfADocument));
-				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
-			}
-		}
+        protected override void UpdateXmpMetadata()
+        {
+            try
+            {
+                XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
+                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel
+                    ().GetPart());
+                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel
+                    ().GetConformance());
+                if (this.IsTagged())
+                {
+                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
+                        );
+                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                }
+                SetXmpMetadata(xmpMeta);
+            }
+            catch (XMPException e)
+            {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Pdfa.PdfADocument));
+                logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+            }
+        }
 
-		protected override void CheckIsoConformance()
-		{
-			checker.CheckDocument(catalog);
-		}
+        protected override void CheckIsoConformance()
+        {
+            checker.CheckDocument(catalog);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm)
-		{
-			MarkObjectAsMustBeFlushed(pdfObject);
-			if (isClosing || checker.ObjectIsChecked(pdfObject))
-			{
-				base.FlushObject(pdfObject, canBeInObjStm);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm)
+        {
+            MarkObjectAsMustBeFlushed(pdfObject);
+            if (isClosing || checker.ObjectIsChecked(pdfObject))
+            {
+                base.FlushObject(pdfObject, canBeInObjStm);
+            }
+        }
 
-		//suppress the call
-		//TODO log unsuccessful call
-		protected override void FlushFonts()
-		{
-			foreach (PdfFont pdfFont in GetDocumentFonts())
-			{
-				if (!pdfFont.IsEmbedded())
-				{
-					throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1
-						).SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
-				}
-			}
-			base.FlushFonts();
-		}
+        //suppress the call
+        //TODO log unsuccessful call
+        protected override void FlushFonts()
+        {
+            foreach (PdfFont pdfFont in GetDocumentFonts())
+            {
+                if (!pdfFont.IsEmbedded())
+                {
+                    throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1
+                        ).SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
+                }
+            }
+            base.FlushFonts();
+        }
 
-		protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel)
-		{
-			switch (conformanceLevel.GetPart())
-			{
-				case "1":
-				{
-					checker = new PdfA1Checker(conformanceLevel);
-					break;
-				}
+        protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel)
+        {
+            switch (conformanceLevel.GetPart())
+            {
+                case "1":
+                {
+                    checker = new PdfA1Checker(conformanceLevel);
+                    break;
+                }
 
-				case "2":
-				{
-					checker = new PdfA2Checker(conformanceLevel);
-					break;
-				}
+                case "2":
+                {
+                    checker = new PdfA2Checker(conformanceLevel);
+                    break;
+                }
 
-				case "3":
-				{
-					checker = new PdfA3Checker(conformanceLevel);
-					break;
-				}
-			}
-		}
+                case "3":
+                {
+                    checker = new PdfA3Checker(conformanceLevel);
+                    break;
+                }
+            }
+        }
 
-		protected override void InitTagStructureContext()
-		{
-			tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.
-				GetConformanceLevel()));
-		}
+        protected override void InitTagStructureContext()
+        {
+            tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.
+                GetConformanceLevel()));
+        }
 
-		protected override Counter GetCounter()
-		{
-			return CounterFactory.GetCounter(typeof(iTextSharp.Pdfa.PdfADocument));
-		}
+        protected override Counter GetCounter()
+        {
+            return CounterFactory.GetCounter(typeof(iTextSharp.Pdfa.PdfADocument));
+        }
 
-		private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel
-			)
-		{
-			PdfVersion version;
-			switch (conformanceLevel.GetPart())
-			{
-				case "1":
-				{
-					version = PdfVersion.PDF_1_4;
-					break;
-				}
+        private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel
+            )
+        {
+            PdfVersion version;
+            switch (conformanceLevel.GetPart())
+            {
+                case "1":
+                {
+                    version = PdfVersion.PDF_1_4;
+                    break;
+                }
 
-				case "2":
-				{
-					version = PdfVersion.PDF_1_7;
-					break;
-				}
+                case "2":
+                {
+                    version = PdfVersion.PDF_1_7;
+                    break;
+                }
 
-				case "3":
-				{
-					version = PdfVersion.PDF_1_7;
-					break;
-				}
+                case "3":
+                {
+                    version = PdfVersion.PDF_1_7;
+                    break;
+                }
 
-				default:
-				{
-					version = PdfVersion.PDF_1_4;
-					break;
-				}
-			}
-			return version;
-		}
-	}
+                default:
+                {
+                    version = PdfVersion.PDF_1_4;
+                    break;
+                }
+            }
+            return version;
+        }
+    }
 }

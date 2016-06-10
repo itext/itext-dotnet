@@ -45,228 +45,228 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Border
 {
-	/// <summary>Creates a double border around the element it's set to.</summary>
-	/// <remarks>
-	/// Creates a double border around the element it's set to. The space between the two border lines has
-	/// the same width as the two borders. If a background has been set on the element the color will show in
-	/// between the two borders.
-	/// </remarks>
-	public class DoubleBorder : iTextSharp.Layout.Border.Border
-	{
-		/// <summary>Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
-		/// 	</summary>
-		/// <remarks>
-		/// Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
-		/// The color is set to the default: black.
-		/// </remarks>
-		/// <param name="width">width of the borders and the space between them</param>
-		public DoubleBorder(float width)
-			: base(width)
-		{
-		}
+    /// <summary>Creates a double border around the element it's set to.</summary>
+    /// <remarks>
+    /// Creates a double border around the element it's set to. The space between the two border lines has
+    /// the same width as the two borders. If a background has been set on the element the color will show in
+    /// between the two borders.
+    /// </remarks>
+    public class DoubleBorder : iTextSharp.Layout.Border.Border
+    {
+        /// <summary>Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
+        ///     </summary>
+        /// <remarks>
+        /// Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
+        /// The color is set to the default: black.
+        /// </remarks>
+        /// <param name="width">width of the borders and the space between them</param>
+        public DoubleBorder(float width)
+            : base(width)
+        {
+        }
 
-		/// <summary>
-		/// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
-		/// the specified color for the two borders.
-		/// </summary>
-		/// <remarks>
-		/// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
-		/// the specified color for the two borders. The space in between the two borders is either colorless or will
-		/// be filled with the background color of the element, if a color has been set.
-		/// </remarks>
-		/// <param name="width">width of the borders and the space between them</param>
-		public DoubleBorder(iTextSharp.Kernel.Color.Color color, float width)
-			: base(color, width)
-		{
-		}
+        /// <summary>
+        /// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
+        /// the specified color for the two borders.
+        /// </summary>
+        /// <remarks>
+        /// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
+        /// the specified color for the two borders. The space in between the two borders is either colorless or will
+        /// be filled with the background color of the element, if a color has been set.
+        /// </remarks>
+        /// <param name="width">width of the borders and the space between them</param>
+        public DoubleBorder(iTextSharp.Kernel.Color.Color color, float width)
+            : base(color, width)
+        {
+        }
 
-		public override int GetBorderType()
-		{
-			return iTextSharp.Layout.Border.Border.DOUBLE;
-		}
+        public override int GetBorderType()
+        {
+            return iTextSharp.Layout.Border.Border.DOUBLE;
+        }
 
-		public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-			, float borderWidthBefore, float borderWidthAfter)
-		{
-			float x3 = 0;
-			float y3 = 0;
-			float x4 = 0;
-			float y4 = 0;
-			float thirdOfWidth = width / 3;
-			float thirdOfWidthBefore = borderWidthBefore / 3;
-			float thirdOfWidthAfter = borderWidthAfter / 3;
-			Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					x3 = x2 + thirdOfWidthAfter;
-					y3 = y2 + thirdOfWidth;
-					x4 = x1 - thirdOfWidthBefore;
-					y4 = y1 + thirdOfWidth;
-					break;
-				}
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
+            , float borderWidthBefore, float borderWidthAfter)
+        {
+            float x3 = 0;
+            float y3 = 0;
+            float x4 = 0;
+            float y4 = 0;
+            float thirdOfWidth = width / 3;
+            float thirdOfWidthBefore = borderWidthBefore / 3;
+            float thirdOfWidthAfter = borderWidthAfter / 3;
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    x3 = x2 + thirdOfWidthAfter;
+                    y3 = y2 + thirdOfWidth;
+                    x4 = x1 - thirdOfWidthBefore;
+                    y4 = y1 + thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x3 = x2 + thirdOfWidth;
-					y3 = y2 - thirdOfWidthAfter;
-					x4 = x1 + thirdOfWidth;
-					y4 = y1 + thirdOfWidthBefore;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x3 = x2 + thirdOfWidth;
+                    y3 = y2 - thirdOfWidthAfter;
+                    x4 = x1 + thirdOfWidth;
+                    y4 = y1 + thirdOfWidthBefore;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					x3 = x2 - thirdOfWidthAfter;
-					y3 = y2 - thirdOfWidth;
-					x4 = x1 + thirdOfWidthBefore;
-					y4 = y1 - thirdOfWidth;
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    x3 = x2 - thirdOfWidthAfter;
+                    y3 = y2 - thirdOfWidth;
+                    x4 = x1 + thirdOfWidthBefore;
+                    y4 = y1 - thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					x3 = x2 - thirdOfWidth;
-					y3 = y2 + thirdOfWidthAfter;
-					x4 = x1 - thirdOfWidth;
-					y4 = y1 - thirdOfWidthBefore;
-					break;
-				}
-			}
-			canvas.SetFillColor(color);
-			canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-				.Fill();
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					x2 += 2 * thirdOfWidthAfter;
-					y2 += 2 * thirdOfWidth;
-					x3 += 2 * thirdOfWidthAfter;
-					y3 += 2 * thirdOfWidth;
-					x4 -= 2 * thirdOfWidthBefore;
-					y4 += 2 * thirdOfWidth;
-					x1 -= 2 * thirdOfWidthBefore;
-					y1 += 2 * thirdOfWidth;
-					break;
-				}
+                case Border.Side.LEFT:
+                {
+                    x3 = x2 - thirdOfWidth;
+                    y3 = y2 + thirdOfWidthAfter;
+                    x4 = x1 - thirdOfWidth;
+                    y4 = y1 - thirdOfWidthBefore;
+                    break;
+                }
+            }
+            canvas.SetFillColor(color);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
+                .Fill();
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    x2 += 2 * thirdOfWidthAfter;
+                    y2 += 2 * thirdOfWidth;
+                    x3 += 2 * thirdOfWidthAfter;
+                    y3 += 2 * thirdOfWidth;
+                    x4 -= 2 * thirdOfWidthBefore;
+                    y4 += 2 * thirdOfWidth;
+                    x1 -= 2 * thirdOfWidthBefore;
+                    y1 += 2 * thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x2 += 2 * thirdOfWidth;
-					y2 -= 2 * thirdOfWidthAfter;
-					x3 += 2 * thirdOfWidth;
-					y3 -= 2 * thirdOfWidthAfter;
-					x4 += 2 * thirdOfWidth;
-					y4 += 2 * thirdOfWidthBefore;
-					x1 += 2 * thirdOfWidth;
-					y1 += 2 * thirdOfWidthBefore;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x2 += 2 * thirdOfWidth;
+                    y2 -= 2 * thirdOfWidthAfter;
+                    x3 += 2 * thirdOfWidth;
+                    y3 -= 2 * thirdOfWidthAfter;
+                    x4 += 2 * thirdOfWidth;
+                    y4 += 2 * thirdOfWidthBefore;
+                    x1 += 2 * thirdOfWidth;
+                    y1 += 2 * thirdOfWidthBefore;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					x2 -= 2 * thirdOfWidthAfter;
-					y2 -= 2 * thirdOfWidth;
-					x3 -= 2 * thirdOfWidthAfter;
-					y3 -= 2 * thirdOfWidth;
-					x4 += 2 * thirdOfWidthBefore;
-					y4 -= 2 * thirdOfWidth;
-					x1 += 2 * thirdOfWidthBefore;
-					y1 -= 2 * thirdOfWidth;
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    x2 -= 2 * thirdOfWidthAfter;
+                    y2 -= 2 * thirdOfWidth;
+                    x3 -= 2 * thirdOfWidthAfter;
+                    y3 -= 2 * thirdOfWidth;
+                    x4 += 2 * thirdOfWidthBefore;
+                    y4 -= 2 * thirdOfWidth;
+                    x1 += 2 * thirdOfWidthBefore;
+                    y1 -= 2 * thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					x2 -= 2 * thirdOfWidth;
-					y2 += 2 * thirdOfWidthAfter;
-					x3 -= 2 * thirdOfWidth;
-					y3 += 2 * thirdOfWidthAfter;
-					x4 -= 2 * thirdOfWidth;
-					y4 -= 2 * thirdOfWidthBefore;
-					x1 -= 2 * thirdOfWidth;
-					y1 -= 2 * thirdOfWidthBefore;
-					break;
-				}
-			}
-			canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-				.Fill();
-		}
+                case Border.Side.LEFT:
+                {
+                    x2 -= 2 * thirdOfWidth;
+                    y2 += 2 * thirdOfWidthAfter;
+                    x3 -= 2 * thirdOfWidth;
+                    y3 += 2 * thirdOfWidthAfter;
+                    x4 -= 2 * thirdOfWidth;
+                    y4 -= 2 * thirdOfWidthBefore;
+                    x1 -= 2 * thirdOfWidth;
+                    y1 -= 2 * thirdOfWidthBefore;
+                    break;
+                }
+            }
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
+                .Fill();
+        }
 
-		public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-			, float y2)
-		{
-			float thirdOfWidth = width / 3;
-			Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					y1 -= thirdOfWidth;
-					y2 = y1;
-					break;
-				}
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
+            , float y2)
+        {
+            float thirdOfWidth = width / 3;
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    y1 -= thirdOfWidth;
+                    y2 = y1;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x1 -= thirdOfWidth;
-					x2 -= thirdOfWidth;
-					y1 += thirdOfWidth;
-					y2 -= thirdOfWidth;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x1 -= thirdOfWidth;
+                    x2 -= thirdOfWidth;
+                    y1 += thirdOfWidth;
+                    y2 -= thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					break;
-				}
-			}
-			canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
-				).LineTo(x2, y2).Stroke().RestoreState();
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					//                x1 -= 2*thirdOfWidth;
-					y2 += 2 * thirdOfWidth;
-					y1 += 2 * thirdOfWidth;
-					break;
-				}
+                case Border.Side.LEFT:
+                {
+                    break;
+                }
+            }
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
+                ).LineTo(x2, y2).Stroke().RestoreState();
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    //                x1 -= 2*thirdOfWidth;
+                    y2 += 2 * thirdOfWidth;
+                    y1 += 2 * thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x2 += 2 * thirdOfWidth;
-					x1 += 2 * thirdOfWidth;
-					//                y1 -= 2*thirdOfWidth;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x2 += 2 * thirdOfWidth;
+                    x1 += 2 * thirdOfWidth;
+                    //                y1 -= 2*thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					x2 -= 2 * thirdOfWidth;
-					y2 -= 2 * thirdOfWidth;
-					x1 += 2 * thirdOfWidth;
-					y1 -= 2 * thirdOfWidth;
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    x2 -= 2 * thirdOfWidth;
+                    y2 -= 2 * thirdOfWidth;
+                    x1 += 2 * thirdOfWidth;
+                    y1 -= 2 * thirdOfWidth;
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					y2 += 2 * thirdOfWidth;
-					x1 -= 2 * thirdOfWidth;
-					y1 -= 2 * thirdOfWidth;
-					break;
-				}
-			}
-			canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
-				).LineTo(x2, y2).Stroke().RestoreState();
-		}
-	}
+                case Border.Side.LEFT:
+                {
+                    y2 += 2 * thirdOfWidth;
+                    x1 -= 2 * thirdOfWidth;
+                    y1 -= 2 * thirdOfWidth;
+                    break;
+                }
+            }
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
+                ).LineTo(x2, y2).Stroke().RestoreState();
+        }
+    }
 }

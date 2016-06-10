@@ -31,19 +31,19 @@ using System;
 
 namespace iTextSharp.Kernel.XMP.Properties
 {
-	/// <summary>This interface is used to return a property together with its path and namespace.
-	/// 	</summary>
-	/// <remarks>
-	/// This interface is used to return a property together with its path and namespace.
-	/// It is returned when properties are iterated with the <code>XMPIterator</code>.
-	/// </remarks>
-	/// <since>06.07.2006</since>
-	public interface XMPPropertyInfo : XMPProperty
-	{
-		/// <returns>Returns the namespace of the property</returns>
-		String GetNamespace();
+    /// <summary>This interface is used to return a property together with its path and namespace.
+    ///     </summary>
+    /// <remarks>
+    /// This interface is used to return a property together with its path and namespace.
+    /// It is returned when properties are iterated with the <code>XMPIterator</code>.
+    /// </remarks>
+    /// <since>06.07.2006</since>
+    public interface XMPPropertyInfo : XMPProperty
+    {
+        /// <returns>Returns the namespace of the property</returns>
+        String GetNamespace();
 
-		/// <returns>Returns the path of the property, but only if returned by the iterator.</returns>
-		String GetPath();
-	}
+        /// <returns>Returns the path of the property, but only if returned by the iterator.</returns>
+        String GetPath();
+    }
 }

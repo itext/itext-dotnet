@@ -31,151 +31,151 @@ using System;
 
 namespace iTextSharp.Kernel.XMP.Options
 {
-	/// <summary>
-	/// Options for
-	/// <see cref="iTextSharp.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
-	/// 	"/>
-	/// .
-	/// </summary>
-	/// <since>24.01.2006</since>
-	public sealed class ParseOptions : iTextSharp.Kernel.XMP.Options.Options
-	{
-		/// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.
-		/// 	</summary>
-		public const int REQUIRE_XMP_META = 0x0001;
+    /// <summary>
+    /// Options for
+    /// <see cref="iTextSharp.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
+    ///     "/>
+    /// .
+    /// </summary>
+    /// <since>24.01.2006</since>
+    public sealed class ParseOptions : iTextSharp.Kernel.XMP.Options.Options
+    {
+        /// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.
+        ///     </summary>
+        public const int REQUIRE_XMP_META = 0x0001;
 
-		/// <summary>Do not reconcile alias differences, throw an exception instead.</summary>
-		public const int STRICT_ALIASING = 0x0004;
+        /// <summary>Do not reconcile alias differences, throw an exception instead.</summary>
+        public const int STRICT_ALIASING = 0x0004;
 
-		/// <summary>Convert ASCII control characters 0x01 - 0x1F (except tab, cr, and lf) to spaces.
-		/// 	</summary>
-		public const int FIX_CONTROL_CHARS = 0x0008;
+        /// <summary>Convert ASCII control characters 0x01 - 0x1F (except tab, cr, and lf) to spaces.
+        ///     </summary>
+        public const int FIX_CONTROL_CHARS = 0x0008;
 
-		/// <summary>If the input is not unicode, try to parse it as ISO-8859-1.</summary>
-		public const int ACCEPT_LATIN_1 = 0x0010;
+        /// <summary>If the input is not unicode, try to parse it as ISO-8859-1.</summary>
+        public const int ACCEPT_LATIN_1 = 0x0010;
 
-		/// <summary>Do not carry run the XMPNormalizer on a packet, leave it as it is.</summary>
-		public const int OMIT_NORMALIZATION = 0x0020;
+        /// <summary>Do not carry run the XMPNormalizer on a packet, leave it as it is.</summary>
+        public const int OMIT_NORMALIZATION = 0x0020;
 
-		/// <summary>Sets the options to the default values.</summary>
-		public ParseOptions()
-		{
-			SetOption(FIX_CONTROL_CHARS | ACCEPT_LATIN_1, true);
-		}
+        /// <summary>Sets the options to the default values.</summary>
+        public ParseOptions()
+        {
+            SetOption(FIX_CONTROL_CHARS | ACCEPT_LATIN_1, true);
+        }
 
-		/// <returns>Returns the requireXMPMeta.</returns>
-		public bool GetRequireXMPMeta()
-		{
-			return GetOption(REQUIRE_XMP_META);
-		}
+        /// <returns>Returns the requireXMPMeta.</returns>
+        public bool GetRequireXMPMeta()
+        {
+            return GetOption(REQUIRE_XMP_META);
+        }
 
-		/// <param name="value">the value to set</param>
-		/// <returns>Returns the instance to call more set-methods.</returns>
-		public iTextSharp.Kernel.XMP.Options.ParseOptions SetRequireXMPMeta(bool value)
-		{
-			SetOption(REQUIRE_XMP_META, value);
-			return this;
-		}
+        /// <param name="value">the value to set</param>
+        /// <returns>Returns the instance to call more set-methods.</returns>
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetRequireXMPMeta(bool value)
+        {
+            SetOption(REQUIRE_XMP_META, value);
+            return this;
+        }
 
-		/// <returns>Returns the strictAliasing.</returns>
-		public bool GetStrictAliasing()
-		{
-			return GetOption(STRICT_ALIASING);
-		}
+        /// <returns>Returns the strictAliasing.</returns>
+        public bool GetStrictAliasing()
+        {
+            return GetOption(STRICT_ALIASING);
+        }
 
-		/// <param name="value">the value to set</param>
-		/// <returns>Returns the instance to call more set-methods.</returns>
-		public iTextSharp.Kernel.XMP.Options.ParseOptions SetStrictAliasing(bool value)
-		{
-			SetOption(STRICT_ALIASING, value);
-			return this;
-		}
+        /// <param name="value">the value to set</param>
+        /// <returns>Returns the instance to call more set-methods.</returns>
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetStrictAliasing(bool value)
+        {
+            SetOption(STRICT_ALIASING, value);
+            return this;
+        }
 
-		/// <returns>Returns the strictAliasing.</returns>
-		public bool GetFixControlChars()
-		{
-			return GetOption(FIX_CONTROL_CHARS);
-		}
+        /// <returns>Returns the strictAliasing.</returns>
+        public bool GetFixControlChars()
+        {
+            return GetOption(FIX_CONTROL_CHARS);
+        }
 
-		/// <param name="value">the value to set</param>
-		/// <returns>Returns the instance to call more set-methods.</returns>
-		public iTextSharp.Kernel.XMP.Options.ParseOptions SetFixControlChars(bool value)
-		{
-			SetOption(FIX_CONTROL_CHARS, value);
-			return this;
-		}
+        /// <param name="value">the value to set</param>
+        /// <returns>Returns the instance to call more set-methods.</returns>
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetFixControlChars(bool value)
+        {
+            SetOption(FIX_CONTROL_CHARS, value);
+            return this;
+        }
 
-		/// <returns>Returns the strictAliasing.</returns>
-		public bool GetAcceptLatin1()
-		{
-			return GetOption(ACCEPT_LATIN_1);
-		}
+        /// <returns>Returns the strictAliasing.</returns>
+        public bool GetAcceptLatin1()
+        {
+            return GetOption(ACCEPT_LATIN_1);
+        }
 
-		/// <param name="value">the value to set</param>
-		/// <returns>Returns the instance to call more set-methods.</returns>
-		public iTextSharp.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value
-			)
-		{
-			SetOption(OMIT_NORMALIZATION, value);
-			return this;
-		}
+        /// <param name="value">the value to set</param>
+        /// <returns>Returns the instance to call more set-methods.</returns>
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value
+            )
+        {
+            SetOption(OMIT_NORMALIZATION, value);
+            return this;
+        }
 
-		/// <returns>Returns the option "omit normalization".</returns>
-		public bool GetOmitNormalization()
-		{
-			return GetOption(OMIT_NORMALIZATION);
-		}
+        /// <returns>Returns the option "omit normalization".</returns>
+        public bool GetOmitNormalization()
+        {
+            return GetOption(OMIT_NORMALIZATION);
+        }
 
-		/// <param name="value">the value to set</param>
-		/// <returns>Returns the instance to call more set-methods.</returns>
-		public iTextSharp.Kernel.XMP.Options.ParseOptions SetAcceptLatin1(bool value)
-		{
-			SetOption(ACCEPT_LATIN_1, value);
-			return this;
-		}
+        /// <param name="value">the value to set</param>
+        /// <returns>Returns the instance to call more set-methods.</returns>
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetAcceptLatin1(bool value)
+        {
+            SetOption(ACCEPT_LATIN_1, value);
+            return this;
+        }
 
-		/// <seealso cref="Options.DefineOptionName(int)"/>
-		protected internal override String DefineOptionName(int option)
-		{
-			switch (option)
-			{
-				case REQUIRE_XMP_META:
-				{
-					return "REQUIRE_XMP_META";
-				}
+        /// <seealso cref="Options.DefineOptionName(int)"/>
+        protected internal override String DefineOptionName(int option)
+        {
+            switch (option)
+            {
+                case REQUIRE_XMP_META:
+                {
+                    return "REQUIRE_XMP_META";
+                }
 
-				case STRICT_ALIASING:
-				{
-					return "STRICT_ALIASING";
-				}
+                case STRICT_ALIASING:
+                {
+                    return "STRICT_ALIASING";
+                }
 
-				case FIX_CONTROL_CHARS:
-				{
-					return "FIX_CONTROL_CHARS";
-				}
+                case FIX_CONTROL_CHARS:
+                {
+                    return "FIX_CONTROL_CHARS";
+                }
 
-				case ACCEPT_LATIN_1:
-				{
-					return "ACCEPT_LATIN_1";
-				}
+                case ACCEPT_LATIN_1:
+                {
+                    return "ACCEPT_LATIN_1";
+                }
 
-				case OMIT_NORMALIZATION:
-				{
-					return "OMIT_NORMALIZATION";
-				}
+                case OMIT_NORMALIZATION:
+                {
+                    return "OMIT_NORMALIZATION";
+                }
 
-				default:
-				{
-					return null;
-				}
-			}
-		}
+                default:
+                {
+                    return null;
+                }
+            }
+        }
 
-		/// <seealso cref="Options.GetValidOptions()"/>
-		protected internal override int GetValidOptions()
-		{
-			return REQUIRE_XMP_META | STRICT_ALIASING | FIX_CONTROL_CHARS | ACCEPT_LATIN_1 | 
-				OMIT_NORMALIZATION;
-		}
-	}
+        /// <seealso cref="Options.GetValidOptions()"/>
+        protected internal override int GetValidOptions()
+        {
+            return REQUIRE_XMP_META | STRICT_ALIASING | FIX_CONTROL_CHARS | ACCEPT_LATIN_1 | 
+                OMIT_NORMALIZATION;
+        }
+    }
 }

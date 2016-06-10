@@ -46,10 +46,10 @@ using iTextSharp.IO.Source;
 
 namespace iTextSharp.IO.Font.Cmap
 {
-	/// <author>psoares</author>
-	public interface ICMapLocation
-	{
-		/// <exception cref="System.IO.IOException"/>
-		PdfTokenizer GetLocation(String location);
-	}
+    /// <author>psoares</author>
+    public interface ICMapLocation
+    {
+        /// <exception cref="System.IO.IOException"/>
+        PdfTokenizer GetLocation(String location);
+    }
 }

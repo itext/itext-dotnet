@@ -47,72 +47,72 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A
-	/// <see cref="Div"/>
-	/// is a container object that defines a section in a document,
-	/// which will have some shared layout properties. Like all
-	/// <see cref="BlockElement{T}"/>
-	/// types, it will try to take up as much horizontal space as possible.
-	/// The concept is very similar to that of the div tag in HTML.
-	/// </summary>
-	public class Div : BlockElement<Div>
-	{
-		protected internal PdfName role = PdfName.Div;
+    /// <summary>
+    /// A
+    /// <see cref="Div"/>
+    /// is a container object that defines a section in a document,
+    /// which will have some shared layout properties. Like all
+    /// <see cref="BlockElement{T}"/>
+    /// types, it will try to take up as much horizontal space as possible.
+    /// The concept is very similar to that of the div tag in HTML.
+    /// </summary>
+    public class Div : BlockElement<Div>
+    {
+        protected internal PdfName role = PdfName.Div;
 
-		protected internal AccessibilityProperties tagProperties;
+        protected internal AccessibilityProperties tagProperties;
 
-		/// <summary>Adds any block element to the div's contents.</summary>
-		/// <param name="element">
-		/// a
-		/// <see cref="BlockElement{T}"/>
-		/// </param>
-		/// <returns>this Element</returns>
-		public virtual Div Add<T>(BlockElement<T> element)
-			where T : IElement
-		{
-			childElements.Add(element);
-			return this;
-		}
+        /// <summary>Adds any block element to the div's contents.</summary>
+        /// <param name="element">
+        /// a
+        /// <see cref="BlockElement{T}"/>
+        /// </param>
+        /// <returns>this Element</returns>
+        public virtual Div Add<T>(BlockElement<T> element)
+            where T : IElement
+        {
+            childElements.Add(element);
+            return this;
+        }
 
-		/// <summary>Adds an image to the div's contents.</summary>
-		/// <param name="element">
-		/// an
-		/// <see cref="Image"/>
-		/// </param>
-		/// <returns>this Element</returns>
-		public virtual Div Add(Image element)
-		{
-			childElements.Add(element);
-			return this;
-		}
+        /// <summary>Adds an image to the div's contents.</summary>
+        /// <param name="element">
+        /// an
+        /// <see cref="Image"/>
+        /// </param>
+        /// <returns>this Element</returns>
+        public virtual Div Add(Image element)
+        {
+            childElements.Add(element);
+            return this;
+        }
 
-		public override PdfName GetRole()
-		{
-			return role;
-		}
+        public override PdfName GetRole()
+        {
+            return role;
+        }
 
-		public override void SetRole(PdfName role)
-		{
-			this.role = role;
-			if (PdfName.Artifact.Equals(role))
-			{
-				PropagateArtifactRoleToChildElements();
-			}
-		}
+        public override void SetRole(PdfName role)
+        {
+            this.role = role;
+            if (PdfName.Artifact.Equals(role))
+            {
+                PropagateArtifactRoleToChildElements();
+            }
+        }
 
-		public override AccessibilityProperties GetAccessibilityProperties()
-		{
-			if (tagProperties == null)
-			{
-				tagProperties = new AccessibilityProperties();
-			}
-			return tagProperties;
-		}
+        public override AccessibilityProperties GetAccessibilityProperties()
+        {
+            if (tagProperties == null)
+            {
+                tagProperties = new AccessibilityProperties();
+            }
+            return tagProperties;
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new DivRenderer(this);
-		}
-	}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new DivRenderer(this);
+        }
+    }
 }

@@ -45,89 +45,89 @@ using System;
 
 namespace iTextSharp.IO.Source
 {
-	/// <summary>
-	/// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
-	/// a specific length.
-	/// </summary>
-	/// <remarks>
-	/// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
-	/// a specific length.  Position 0 becomes the offset position in the underlying source.
-	/// </remarks>
-	public class WindowRandomAccessSource : IRandomAccessSource
-	{
-		/// <summary>The source</summary>
-		private readonly IRandomAccessSource source;
+    /// <summary>
+    /// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
+    /// a specific length.
+    /// </summary>
+    /// <remarks>
+    /// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
+    /// a specific length.  Position 0 becomes the offset position in the underlying source.
+    /// </remarks>
+    public class WindowRandomAccessSource : IRandomAccessSource
+    {
+        /// <summary>The source</summary>
+        private readonly IRandomAccessSource source;
 
-		/// <summary>The amount to offset the source by</summary>
-		private readonly long offset;
+        /// <summary>The amount to offset the source by</summary>
+        private readonly long offset;
 
-		/// <summary>The length</summary>
-		private readonly long length;
+        /// <summary>The length</summary>
+        private readonly long length;
 
-		/// <summary>Constructs a new OffsetRandomAccessSource that extends to the end of the underlying source
-		/// 	</summary>
-		/// <param name="source">the source</param>
-		/// <param name="offset">the amount of the offset to use</param>
-		public WindowRandomAccessSource(IRandomAccessSource source, long offset)
-			: this(source, offset, source.Length() - offset)
-		{
-		}
+        /// <summary>Constructs a new OffsetRandomAccessSource that extends to the end of the underlying source
+        ///     </summary>
+        /// <param name="source">the source</param>
+        /// <param name="offset">the amount of the offset to use</param>
+        public WindowRandomAccessSource(IRandomAccessSource source, long offset)
+            : this(source, offset, source.Length() - offset)
+        {
+        }
 
-		/// <summary>Constructs a new OffsetRandomAccessSource with an explicit length</summary>
-		/// <param name="source">the source</param>
-		/// <param name="offset">the amount of the offset to use</param>
-		/// <param name="length">the number of bytes to be included in this RAS</param>
-		public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length
-			)
-		{
-			this.source = source;
-			this.offset = offset;
-			this.length = length;
-		}
+        /// <summary>Constructs a new OffsetRandomAccessSource with an explicit length</summary>
+        /// <param name="source">the source</param>
+        /// <param name="offset">the amount of the offset to use</param>
+        /// <param name="length">the number of bytes to be included in this RAS</param>
+        public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length
+            )
+        {
+            this.source = source;
+            this.offset = offset;
+            this.length = length;
+        }
 
-		/// <summary>
-		/// <inheritDoc/>
-		/// Note that the position will be adjusted to read from the corrected location in the underlying source
-		/// </summary>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int Get(long position)
-		{
-			if (position >= length)
-			{
-				return -1;
-			}
-			return source.Get(offset + position);
-		}
+        /// <summary>
+        /// <inheritDoc/>
+        /// Note that the position will be adjusted to read from the corrected location in the underlying source
+        /// </summary>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int Get(long position)
+        {
+            if (position >= length)
+            {
+                return -1;
+            }
+            return source.Get(offset + position);
+        }
 
-		/// <summary>
-		/// <inheritDoc/>
-		/// Note that the position will be adjusted to read from the corrected location in the underlying source
-		/// </summary>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual int Get(long position, byte[] bytes, int off, int len)
-		{
-			if (position >= length)
-			{
-				return -1;
-			}
-			long toRead = Math.Min(len, length - position);
-			return source.Get(offset + position, bytes, off, (int)toRead);
-		}
+        /// <summary>
+        /// <inheritDoc/>
+        /// Note that the position will be adjusted to read from the corrected location in the underlying source
+        /// </summary>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual int Get(long position, byte[] bytes, int off, int len)
+        {
+            if (position >= length)
+            {
+                return -1;
+            }
+            long toRead = Math.Min(len, length - position);
+            return source.Get(offset + position, bytes, off, (int)toRead);
+        }
 
-		/// <summary>
-		/// <inheritDoc/>
-		/// Note that the length will be adjusted to read from the corrected location in the underlying source
-		/// </summary>
-		public virtual long Length()
-		{
-			return length;
-		}
+        /// <summary>
+        /// <inheritDoc/>
+        /// Note that the length will be adjusted to read from the corrected location in the underlying source
+        /// </summary>
+        public virtual long Length()
+        {
+            return length;
+        }
 
-		/// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void Close()
-		{
-			source.Close();
-		}
-	}
+        /// <summary><inheritDoc/></summary>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Close()
+        {
+            source.Close();
+        }
+    }
 }

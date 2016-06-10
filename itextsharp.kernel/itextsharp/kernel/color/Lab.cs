@@ -45,27 +45,27 @@ using iTextSharp.Kernel.Pdf.Colorspace;
 
 namespace iTextSharp.Kernel.Color
 {
-	public class Lab : iTextSharp.Kernel.Color.Color
-	{
-		public Lab(PdfCieBasedCs.Lab cs)
-			: this(cs, new float[cs.GetNumberOfComponents()])
-		{
-		}
+    public class Lab : iTextSharp.Kernel.Color.Color
+    {
+        public Lab(PdfCieBasedCs.Lab cs)
+            : this(cs, new float[cs.GetNumberOfComponents()])
+        {
+        }
 
-		public Lab(PdfCieBasedCs.Lab cs, float[] value)
-			: base(cs, value)
-		{
-		}
+        public Lab(PdfCieBasedCs.Lab cs, float[] value)
+            : base(cs, value)
+        {
+        }
 
-		public Lab(float[] whitePoint, float[] value)
-			: base(new PdfCieBasedCs.Lab(whitePoint), value)
-		{
-		}
+        public Lab(float[] whitePoint, float[] value)
+            : base(new PdfCieBasedCs.Lab(whitePoint), value)
+        {
+        }
 
-		public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
-			: this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value)
-		{
-		}
-		// TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
-	}
+        public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
+            : this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value)
+        {
+        }
+        // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
+    }
 }

@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Layout.Property
 {
-	public enum TabAlignment
-	{
-		LEFT,
-		RIGHT,
-		CENTER,
-		ANCHOR
-	}
+    public enum TabAlignment
+    {
+        LEFT,
+        RIGHT,
+        CENTER,
+        ANCHOR
+    }
 }

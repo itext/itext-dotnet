@@ -47,282 +47,282 @@ using System.IO;
 
 namespace iTextSharp.IO.Codec
 {
-	/// <summary>Exports images as TIFF.</summary>
-	public class TiffWriter
-	{
-		private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int
-			, TiffWriter.FieldBase>();
+    /// <summary>Exports images as TIFF.</summary>
+    public class TiffWriter
+    {
+        private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int
+            , TiffWriter.FieldBase>();
 
-		public virtual void AddField(TiffWriter.FieldBase field)
-		{
-			ifd[System.Convert.ToInt32(field.GetTag())] = field;
-		}
+        public virtual void AddField(TiffWriter.FieldBase field)
+        {
+            ifd[System.Convert.ToInt32(field.GetTag())] = field;
+        }
 
-		public virtual int GetIfdSize()
-		{
-			return 6 + ifd.Count * 12;
-		}
+        public virtual int GetIfdSize()
+        {
+            return 6 + ifd.Count * 12;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public virtual void WriteFile(Stream stream)
-		{
-			stream.Write(0x4d);
-			stream.Write(0x4d);
-			stream.Write(0);
-			stream.Write(42);
-			WriteLong(8, stream);
-			WriteShort(ifd.Count, stream);
-			int offset = 8 + GetIfdSize();
-			foreach (TiffWriter.FieldBase field in ifd.Values)
-			{
-				int size = field.GetValueSize();
-				if (size > 4)
-				{
-					field.SetOffset(offset);
-					offset += size;
-				}
-				field.WriteField(stream);
-			}
-			WriteLong(0, stream);
-			foreach (TiffWriter.FieldBase field_1 in ifd.Values)
-			{
-				field_1.WriteValue(stream);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void WriteFile(Stream stream)
+        {
+            stream.Write(0x4d);
+            stream.Write(0x4d);
+            stream.Write(0);
+            stream.Write(42);
+            WriteLong(8, stream);
+            WriteShort(ifd.Count, stream);
+            int offset = 8 + GetIfdSize();
+            foreach (TiffWriter.FieldBase field in ifd.Values)
+            {
+                int size = field.GetValueSize();
+                if (size > 4)
+                {
+                    field.SetOffset(offset);
+                    offset += size;
+                }
+                field.WriteField(stream);
+            }
+            WriteLong(0, stream);
+            foreach (TiffWriter.FieldBase field_1 in ifd.Values)
+            {
+                field_1.WriteValue(stream);
+            }
+        }
 
-		/// <summary>Inner class class containing information about a field.</summary>
-		public abstract class FieldBase
-		{
-			private int tag;
+        /// <summary>Inner class class containing information about a field.</summary>
+        public abstract class FieldBase
+        {
+            private int tag;
 
-			private int fieldType;
+            private int fieldType;
 
-			private int count;
+            private int count;
 
-			protected internal byte[] data;
+            protected internal byte[] data;
 
-			private int offset;
+            private int offset;
 
-			protected internal FieldBase(int tag, int fieldType, int count)
-			{
-				this.tag = tag;
-				this.fieldType = fieldType;
-				this.count = count;
-			}
+            protected internal FieldBase(int tag, int fieldType, int count)
+            {
+                this.tag = tag;
+                this.fieldType = fieldType;
+                this.count = count;
+            }
 
-			public virtual int GetValueSize()
-			{
-				return (int)((data.Length + 1) & unchecked((int)(0xfffffffe)));
-			}
+            public virtual int GetValueSize()
+            {
+                return (int)((data.Length + 1) & unchecked((int)(0xfffffffe)));
+            }
 
-			public virtual int GetTag()
-			{
-				return tag;
-			}
+            public virtual int GetTag()
+            {
+                return tag;
+            }
 
-			public virtual void SetOffset(int offset)
-			{
-				this.offset = offset;
-			}
+            public virtual void SetOffset(int offset)
+            {
+                this.offset = offset;
+            }
 
-			/// <exception cref="System.IO.IOException"/>
-			public virtual void WriteField(Stream stream)
-			{
-				WriteShort(tag, stream);
-				WriteShort(fieldType, stream);
-				WriteLong(count, stream);
-				if (data.Length <= 4)
-				{
-					stream.Write(data);
-					for (int k = data.Length; k < 4; ++k)
-					{
-						stream.Write(0);
-					}
-				}
-				else
-				{
-					WriteLong(offset, stream);
-				}
-			}
+            /// <exception cref="System.IO.IOException"/>
+            public virtual void WriteField(Stream stream)
+            {
+                WriteShort(tag, stream);
+                WriteShort(fieldType, stream);
+                WriteLong(count, stream);
+                if (data.Length <= 4)
+                {
+                    stream.Write(data);
+                    for (int k = data.Length; k < 4; ++k)
+                    {
+                        stream.Write(0);
+                    }
+                }
+                else
+                {
+                    WriteLong(offset, stream);
+                }
+            }
 
-			/// <exception cref="System.IO.IOException"/>
-			public virtual void WriteValue(Stream stream)
-			{
-				if (data.Length <= 4)
-				{
-					return;
-				}
-				stream.Write(data);
-				if ((data.Length & 1) == 1)
-				{
-					stream.Write(0);
-				}
-			}
-		}
+            /// <exception cref="System.IO.IOException"/>
+            public virtual void WriteValue(Stream stream)
+            {
+                if (data.Length <= 4)
+                {
+                    return;
+                }
+                stream.Write(data);
+                if ((data.Length & 1) == 1)
+                {
+                    stream.Write(0);
+                }
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldShort : TiffWriter.FieldBase
-		{
-			public FieldShort(int tag, int value)
-				: base(tag, 3, 1)
-			{
-				data = new byte[2];
-				data[0] = (byte)(value >> 8);
-				data[1] = (byte)value;
-			}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldShort : TiffWriter.FieldBase
+        {
+            public FieldShort(int tag, int value)
+                : base(tag, 3, 1)
+            {
+                data = new byte[2];
+                data[0] = (byte)(value >> 8);
+                data[1] = (byte)value;
+            }
 
-			public FieldShort(int tag, int[] values)
-				: base(tag, 3, values.Length)
-			{
-				data = new byte[values.Length * 2];
-				int ptr = 0;
-				foreach (int value in values)
-				{
-					data[ptr++] = (byte)(value >> 8);
-					data[ptr++] = (byte)value;
-				}
-			}
-		}
+            public FieldShort(int tag, int[] values)
+                : base(tag, 3, values.Length)
+            {
+                data = new byte[values.Length * 2];
+                int ptr = 0;
+                foreach (int value in values)
+                {
+                    data[ptr++] = (byte)(value >> 8);
+                    data[ptr++] = (byte)value;
+                }
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldLong : TiffWriter.FieldBase
-		{
-			public FieldLong(int tag, int value)
-				: base(tag, 4, 1)
-			{
-				data = new byte[4];
-				data[0] = (byte)(value >> 24);
-				data[1] = (byte)(value >> 16);
-				data[2] = (byte)(value >> 8);
-				data[3] = (byte)value;
-			}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldLong : TiffWriter.FieldBase
+        {
+            public FieldLong(int tag, int value)
+                : base(tag, 4, 1)
+            {
+                data = new byte[4];
+                data[0] = (byte)(value >> 24);
+                data[1] = (byte)(value >> 16);
+                data[2] = (byte)(value >> 8);
+                data[3] = (byte)value;
+            }
 
-			public FieldLong(int tag, int[] values)
-				: base(tag, 4, values.Length)
-			{
-				data = new byte[values.Length * 4];
-				int ptr = 0;
-				foreach (int value in values)
-				{
-					data[ptr++] = (byte)(value >> 24);
-					data[ptr++] = (byte)(value >> 16);
-					data[ptr++] = (byte)(value >> 8);
-					data[ptr++] = (byte)value;
-				}
-			}
-		}
+            public FieldLong(int tag, int[] values)
+                : base(tag, 4, values.Length)
+            {
+                data = new byte[values.Length * 4];
+                int ptr = 0;
+                foreach (int value in values)
+                {
+                    data[ptr++] = (byte)(value >> 24);
+                    data[ptr++] = (byte)(value >> 16);
+                    data[ptr++] = (byte)(value >> 8);
+                    data[ptr++] = (byte)value;
+                }
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldRational : TiffWriter.FieldBase
-		{
-			public FieldRational(int tag, int[] value)
-				: this(tag, new int[][] { value })
-			{
-			}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldRational : TiffWriter.FieldBase
+        {
+            public FieldRational(int tag, int[] value)
+                : this(tag, new int[][] { value })
+            {
+            }
 
-			public FieldRational(int tag, int[][] values)
-				: base(tag, 5, values.Length)
-			{
-				data = new byte[values.Length * 8];
-				int ptr = 0;
-				foreach (int[] value in values)
-				{
-					data[ptr++] = (byte)(value[0] >> 24);
-					data[ptr++] = (byte)(value[0] >> 16);
-					data[ptr++] = (byte)(value[0] >> 8);
-					data[ptr++] = (byte)value[0];
-					data[ptr++] = (byte)(value[1] >> 24);
-					data[ptr++] = (byte)(value[1] >> 16);
-					data[ptr++] = (byte)(value[1] >> 8);
-					data[ptr++] = (byte)value[1];
-				}
-			}
-		}
+            public FieldRational(int tag, int[][] values)
+                : base(tag, 5, values.Length)
+            {
+                data = new byte[values.Length * 8];
+                int ptr = 0;
+                foreach (int[] value in values)
+                {
+                    data[ptr++] = (byte)(value[0] >> 24);
+                    data[ptr++] = (byte)(value[0] >> 16);
+                    data[ptr++] = (byte)(value[0] >> 8);
+                    data[ptr++] = (byte)value[0];
+                    data[ptr++] = (byte)(value[1] >> 24);
+                    data[ptr++] = (byte)(value[1] >> 16);
+                    data[ptr++] = (byte)(value[1] >> 8);
+                    data[ptr++] = (byte)value[1];
+                }
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldByte : TiffWriter.FieldBase
-		{
-			public FieldByte(int tag, byte[] values)
-				: base(tag, 1, values.Length)
-			{
-				data = values;
-			}
-		}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldByte : TiffWriter.FieldBase
+        {
+            public FieldByte(int tag, byte[] values)
+                : base(tag, 1, values.Length)
+            {
+                data = values;
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldUndefined : TiffWriter.FieldBase
-		{
-			public FieldUndefined(int tag, byte[] values)
-				: base(tag, 7, values.Length)
-			{
-				data = values;
-			}
-		}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldUndefined : TiffWriter.FieldBase
+        {
+            public FieldUndefined(int tag, byte[] values)
+                : base(tag, 7, values.Length)
+            {
+                data = values;
+            }
+        }
 
-		/// <summary>Inner class containing info about a field.</summary>
-		public class FieldImage : TiffWriter.FieldBase
-		{
-			public FieldImage(byte[] values)
-				: base(TIFFConstants.TIFFTAG_STRIPOFFSETS, 4, 1)
-			{
-				data = values;
-			}
-		}
+        /// <summary>Inner class containing info about a field.</summary>
+        public class FieldImage : TiffWriter.FieldBase
+        {
+            public FieldImage(byte[] values)
+                : base(TIFFConstants.TIFFTAG_STRIPOFFSETS, 4, 1)
+            {
+                data = values;
+            }
+        }
 
-		/// <summary>Inner class containing info about an ASCII field.</summary>
-		public class FieldAscii : TiffWriter.FieldBase
-		{
-			public FieldAscii(int tag, String values)
-				: base(tag, 2, values.GetBytes().Length + 1)
-			{
-				byte[] b = values.GetBytes();
-				data = new byte[b.Length + 1];
-				System.Array.Copy(b, 0, data, 0, b.Length);
-			}
-		}
+        /// <summary>Inner class containing info about an ASCII field.</summary>
+        public class FieldAscii : TiffWriter.FieldBase
+        {
+            public FieldAscii(int tag, String values)
+                : base(tag, 2, values.GetBytes().Length + 1)
+            {
+                byte[] b = values.GetBytes();
+                data = new byte[b.Length + 1];
+                System.Array.Copy(b, 0, data, 0, b.Length);
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public static void WriteShort(int v, Stream stream)
-		{
-			stream.Write((v >> 8) & 0xff);
-			stream.Write(v & 0xff);
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public static void WriteShort(int v, Stream stream)
+        {
+            stream.Write((v >> 8) & 0xff);
+            stream.Write(v & 0xff);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public static void WriteLong(int v, Stream stream)
-		{
-			stream.Write((v >> 24) & 0xff);
-			stream.Write((v >> 16) & 0xff);
-			stream.Write((v >> 8) & 0xff);
-			stream.Write(v & 0xff);
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public static void WriteLong(int v, Stream stream)
+        {
+            stream.Write((v >> 24) & 0xff);
+            stream.Write((v >> 16) & 0xff);
+            stream.Write((v >> 8) & 0xff);
+            stream.Write(v & 0xff);
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		public static void CompressLZW(Stream stream, int predictor, byte[] b, int height
-			, int samplesPerPixel, int stride)
-		{
-			LZWCompressor lzwCompressor = new LZWCompressor(stream, 8, true);
-			bool usePredictor = predictor == TIFFConstants.PREDICTOR_HORIZONTAL_DIFFERENCING;
-			if (!usePredictor)
-			{
-				lzwCompressor.Compress(b, 0, b.Length);
-			}
-			else
-			{
-				int off = 0;
-				byte[] rowBuf = usePredictor ? new byte[stride] : null;
-				for (int i = 0; i < height; i++)
-				{
-					System.Array.Copy(b, off, rowBuf, 0, stride);
-					for (int j = stride - 1; j >= samplesPerPixel; j--)
-					{
-						rowBuf[j] -= rowBuf[j - samplesPerPixel];
-					}
-					lzwCompressor.Compress(rowBuf, 0, stride);
-					off += stride;
-				}
-			}
-			lzwCompressor.Flush();
-		}
-	}
+        /// <exception cref="System.IO.IOException"/>
+        public static void CompressLZW(Stream stream, int predictor, byte[] b, int height
+            , int samplesPerPixel, int stride)
+        {
+            LZWCompressor lzwCompressor = new LZWCompressor(stream, 8, true);
+            bool usePredictor = predictor == TIFFConstants.PREDICTOR_HORIZONTAL_DIFFERENCING;
+            if (!usePredictor)
+            {
+                lzwCompressor.Compress(b, 0, b.Length);
+            }
+            else
+            {
+                int off = 0;
+                byte[] rowBuf = usePredictor ? new byte[stride] : null;
+                for (int i = 0; i < height; i++)
+                {
+                    System.Array.Copy(b, off, rowBuf, 0, stride);
+                    for (int j = stride - 1; j >= samplesPerPixel; j--)
+                    {
+                        rowBuf[j] -= rowBuf[j - samplesPerPixel];
+                    }
+                    lzwCompressor.Compress(rowBuf, 0, stride);
+                    off += stride;
+                }
+            }
+            lzwCompressor.Flush();
+        }
+    }
 }

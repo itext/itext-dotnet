@@ -48,106 +48,106 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-	/// <summary>An event listener which filters events on the fly before passing them on to the delegate.
-	/// 	</summary>
-	public class FilteredEventListener : IEventListener
-	{
-		protected internal readonly IList<IEventListener> delegates;
+    /// <summary>An event listener which filters events on the fly before passing them on to the delegate.
+    ///     </summary>
+    public class FilteredEventListener : IEventListener
+    {
+        protected internal readonly IList<IEventListener> delegates;
 
-		protected internal readonly IList<IEventFilter[]> filters;
+        protected internal readonly IList<IEventFilter[]> filters;
 
-		/// <summary>
-		/// Constructs a
-		/// <see cref="FilteredEventListener"/>
-		/// empty instance.
-		/// Use
-		/// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
-		/// 	"/>
-		/// to add an event listener along with its filters.
-		/// </summary>
-		public FilteredEventListener()
-		{
-			this.delegates = new List<IEventListener>();
-			this.filters = new List<IEventFilter[]>();
-		}
+        /// <summary>
+        /// Constructs a
+        /// <see cref="FilteredEventListener"/>
+        /// empty instance.
+        /// Use
+        /// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
+        ///     "/>
+        /// to add an event listener along with its filters.
+        /// </summary>
+        public FilteredEventListener()
+        {
+            this.delegates = new List<IEventListener>();
+            this.filters = new List<IEventFilter[]>();
+        }
 
-		/// <summary>
-		/// Constructs a
-		/// <see cref="FilteredEventListener"/>
-		/// instance with one delegate.
-		/// Use
-		/// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
-		/// 	"/>
-		/// to add more
-		/// <see cref="IEventListener"/>
-		/// delegates
-		/// along with their filters.
-		/// </summary>
-		/// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
-		/// 	</param>
-		/// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
-		/// 	</param>
-		public FilteredEventListener(IEventListener delegate_, params IEventFilter[] filterSet
-			)
-			: this()
-		{
-			AttachEventListener(delegate_, filterSet);
-		}
+        /// <summary>
+        /// Constructs a
+        /// <see cref="FilteredEventListener"/>
+        /// instance with one delegate.
+        /// Use
+        /// <see cref="AttachEventListener{T}(IEventListener, iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])
+        ///     "/>
+        /// to add more
+        /// <see cref="IEventListener"/>
+        /// delegates
+        /// along with their filters.
+        /// </summary>
+        /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
+        ///     </param>
+        /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
+        ///     </param>
+        public FilteredEventListener(IEventListener delegate_, params IEventFilter[] filterSet
+            )
+            : this()
+        {
+            AttachEventListener(delegate_, filterSet);
+        }
 
-		/// <summary>
-		/// Attaches another
-		/// <see cref="IEventListener"/>
-		/// delegate with its filters.
-		/// When all the filters attached to the delegate for an event accept the event, the event will be passed on to
-		/// the delegate.
-		/// You can attach multiple delegates to this
-		/// <see cref="FilteredEventListener"/>
-		/// instance. The content stream will
-		/// be parsed just once, so it is better for performance than creating multiple
-		/// <see cref="FilteredEventListener"/>
-		/// instances and parsing the content stream multiple times. This is useful, for instance, when you want
-		/// to extract content from multiple regions of a page.
-		/// </summary>
-		/// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
-		/// 	</param>
-		/// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
-		/// 	</param>
-		/// <returns>delegate that has been passed to the method, used for convenient call chaining
-		/// 	</returns>
-		public virtual T AttachEventListener<T>(T delegate_, params IEventFilter[] filterSet
-			)
-			where T : IEventListener
-		{
-			delegates.Add(delegate_);
-			filters.Add(filterSet);
-			return delegate_;
-		}
+        /// <summary>
+        /// Attaches another
+        /// <see cref="IEventListener"/>
+        /// delegate with its filters.
+        /// When all the filters attached to the delegate for an event accept the event, the event will be passed on to
+        /// the delegate.
+        /// You can attach multiple delegates to this
+        /// <see cref="FilteredEventListener"/>
+        /// instance. The content stream will
+        /// be parsed just once, so it is better for performance than creating multiple
+        /// <see cref="FilteredEventListener"/>
+        /// instances and parsing the content stream multiple times. This is useful, for instance, when you want
+        /// to extract content from multiple regions of a page.
+        /// </summary>
+        /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
+        ///     </param>
+        /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
+        ///     </param>
+        /// <returns>delegate that has been passed to the method, used for convenient call chaining
+        ///     </returns>
+        public virtual T AttachEventListener<T>(T delegate_, params IEventFilter[] filterSet
+            )
+            where T : IEventListener
+        {
+            delegates.Add(delegate_);
+            filters.Add(filterSet);
+            return delegate_;
+        }
 
-		public virtual void EventOccurred(IEventData data, EventType type)
-		{
-			for (int i = 0; i < delegates.Count; i++)
-			{
-				IEventListener delegate_ = delegates[i];
-				bool filtersPassed = delegate_.GetSupportedEvents() == null || delegate_.GetSupportedEvents
-					().Contains(type);
-				foreach (IEventFilter filter in filters[i])
-				{
-					if (!filter.Accept(data, type))
-					{
-						filtersPassed = false;
-						break;
-					}
-				}
-				if (filtersPassed)
-				{
-					delegate_.EventOccurred(data, type);
-				}
-			}
-		}
+        public virtual void EventOccurred(IEventData data, EventType type)
+        {
+            for (int i = 0; i < delegates.Count; i++)
+            {
+                IEventListener delegate_ = delegates[i];
+                bool filtersPassed = delegate_.GetSupportedEvents() == null || delegate_.GetSupportedEvents
+                    ().Contains(type);
+                foreach (IEventFilter filter in filters[i])
+                {
+                    if (!filter.Accept(data, type))
+                    {
+                        filtersPassed = false;
+                        break;
+                    }
+                }
+                if (filtersPassed)
+                {
+                    delegate_.EventOccurred(data, type);
+                }
+            }
+        }
 
-		public virtual ICollection<EventType> GetSupportedEvents()
-		{
-			return null;
-		}
-	}
+        public virtual ICollection<EventType> GetSupportedEvents()
+        {
+            return null;
+        }
+    }
 }

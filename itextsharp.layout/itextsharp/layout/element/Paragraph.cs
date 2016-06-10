@@ -50,274 +50,274 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A layout element that represents a self-contained block of textual and
-	/// grpahical information.
-	/// </summary>
-	/// <remarks>
-	/// A layout element that represents a self-contained block of textual and
-	/// grpahical information.
-	/// It is a
-	/// <see cref="BlockElement{T}"/>
-	/// which essentially acts as a container for
-	/// <see cref="ILeafElement">leaf elements</see>
-	/// .
-	/// </remarks>
-	public class Paragraph : BlockElement<iTextSharp.Layout.Element.Paragraph>
-	{
-		protected internal PdfName role = PdfName.P;
+    /// <summary>
+    /// A layout element that represents a self-contained block of textual and
+    /// grpahical information.
+    /// </summary>
+    /// <remarks>
+    /// A layout element that represents a self-contained block of textual and
+    /// grpahical information.
+    /// It is a
+    /// <see cref="BlockElement{T}"/>
+    /// which essentially acts as a container for
+    /// <see cref="ILeafElement">leaf elements</see>
+    /// .
+    /// </remarks>
+    public class Paragraph : BlockElement<iTextSharp.Layout.Element.Paragraph>
+    {
+        protected internal PdfName role = PdfName.P;
 
-		protected internal AccessibilityProperties tagProperties;
+        protected internal AccessibilityProperties tagProperties;
 
-		/// <summary>Creates a Paragraph.</summary>
-		public Paragraph()
-		{
-		}
+        /// <summary>Creates a Paragraph.</summary>
+        public Paragraph()
+        {
+        }
 
-		/// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
-		/// <param name="text">
-		/// the initial textual content, as a
-		/// <see cref="System.String"/>
-		/// </param>
-		public Paragraph(String text)
-			: this(new Text(text))
-		{
-		}
+        /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
+        /// <param name="text">
+        /// the initial textual content, as a
+        /// <see cref="System.String"/>
+        /// </param>
+        public Paragraph(String text)
+            : this(new Text(text))
+        {
+        }
 
-		/// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
-		/// <param name="text">
-		/// the initial textual content, as a
-		/// <see cref="Text"/>
-		/// </param>
-		public Paragraph(Text text)
-		{
-			Add(text);
-		}
+        /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
+        /// <param name="text">
+        /// the initial textual content, as a
+        /// <see cref="Text"/>
+        /// </param>
+        public Paragraph(Text text)
+        {
+            Add(text);
+        }
 
-		/// <summary>Adds a piece of text to the Paragraph</summary>
-		/// <param name="text">
-		/// the content to be added, as a
-		/// <see cref="System.String"/>
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		public virtual iTextSharp.Layout.Element.Paragraph Add(String text)
-		{
-			return Add(new Text(text));
-		}
+        /// <summary>Adds a piece of text to the Paragraph</summary>
+        /// <param name="text">
+        /// the content to be added, as a
+        /// <see cref="System.String"/>
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        public virtual iTextSharp.Layout.Element.Paragraph Add(String text)
+        {
+            return Add(new Text(text));
+        }
 
-		/// <summary>Adds a layout element to the Paragraph.</summary>
-		/// <param name="element">
-		/// the content to be added, any
-		/// <see cref="ILeafElement"/>
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		public virtual iTextSharp.Layout.Element.Paragraph Add(ILeafElement element)
-		{
-			childElements.Add(element);
-			return this;
-		}
+        /// <summary>Adds a layout element to the Paragraph.</summary>
+        /// <param name="element">
+        /// the content to be added, any
+        /// <see cref="ILeafElement"/>
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        public virtual iTextSharp.Layout.Element.Paragraph Add(ILeafElement element)
+        {
+            childElements.Add(element);
+            return this;
+        }
 
-		/// <summary>
-		/// Adds a
-		/// <see cref="System.Collections.IList{E}"/>
-		/// of layout elements to the Paragraph.
-		/// </summary>
-		/// <param name="elements">
-		/// the content to be added, any
-		/// <see cref="ILeafElement"/>
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		public virtual iTextSharp.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
-			where T2 : ILeafElement
-		{
-			foreach (ILeafElement element in elements)
-			{
-				Add(element);
-			}
-			return this;
-		}
+        /// <summary>
+        /// Adds a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of layout elements to the Paragraph.
+        /// </summary>
+        /// <param name="elements">
+        /// the content to be added, any
+        /// <see cref="ILeafElement"/>
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        public virtual iTextSharp.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
+            where T2 : ILeafElement
+        {
+            foreach (ILeafElement element in elements)
+            {
+                Add(element);
+            }
+            return this;
+        }
 
-		/// <summary>Adds an unspecified amount of tabstop elements as properties to the Paragraph.
-		/// 	</summary>
-		/// <param name="tabStops">
-		/// the
-		/// <see cref="TabStop">tabstop(s)</see>
-		/// to be added as properties
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		/// <seealso cref="TabStop"/>
-		public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops
-			)
-		{
-			AddTabStopsAsProperty(iTextSharp.IO.Util.JavaUtil.ArraysAsList(tabStops));
-			return this;
-		}
+        /// <summary>Adds an unspecified amount of tabstop elements as properties to the Paragraph.
+        ///     </summary>
+        /// <param name="tabStops">
+        /// the
+        /// <see cref="TabStop">tabstop(s)</see>
+        /// to be added as properties
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        /// <seealso cref="TabStop"/>
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops
+            )
+        {
+            AddTabStopsAsProperty(iTextSharp.IO.Util.JavaUtil.ArraysAsList(tabStops));
+            return this;
+        }
 
-		/// <summary>
-		/// Adds a
-		/// <see cref="System.Collections.IList{E}"/>
-		/// of tabstop elements as properties to the Paragraph.
-		/// </summary>
-		/// <param name="tabStops">
-		/// the list of
-		/// <see cref="TabStop"/>
-		/// s to be added as properties
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		/// <seealso cref="TabStop"/>
-		public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops
-			)
-		{
-			AddTabStopsAsProperty(tabStops);
-			return this;
-		}
+        /// <summary>
+        /// Adds a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of tabstop elements as properties to the Paragraph.
+        /// </summary>
+        /// <param name="tabStops">
+        /// the list of
+        /// <see cref="TabStop"/>
+        /// s to be added as properties
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        /// <seealso cref="TabStop"/>
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops
+            )
+        {
+            AddTabStopsAsProperty(tabStops);
+            return this;
+        }
 
-		/// <summary>
-		/// Removes a tabstop position from the Paragraph, if it is present in the
-		/// <see cref="iTextSharp.Layout.Property.Property.TAB_STOPS"/>
-		/// property.
-		/// </summary>
-		/// <param name="tabStopPosition">
-		/// the
-		/// <see cref="TabStop"/>
-		/// position to be removed.
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		/// <seealso cref="TabStop"/>
-		public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition
-			)
-		{
-			IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
-				>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
-			if (tabStops != null)
-			{
-				tabStops.JRemove(tabStopPosition);
-			}
-			return this;
-		}
+        /// <summary>
+        /// Removes a tabstop position from the Paragraph, if it is present in the
+        /// <see cref="iTextSharp.Layout.Property.Property.TAB_STOPS"/>
+        /// property.
+        /// </summary>
+        /// <param name="tabStopPosition">
+        /// the
+        /// <see cref="TabStop"/>
+        /// position to be removed.
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        /// <seealso cref="TabStop"/>
+        public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition
+            )
+        {
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
+                >>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+            if (tabStops != null)
+            {
+                tabStops.JRemove(tabStopPosition);
+            }
+            return this;
+        }
 
-		public override T1 GetDefaultProperty<T1>(int property)
-		{
-			switch (property)
-			{
-				case iTextSharp.Layout.Property.Property.LEADING:
-				{
-					return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements
-						[0] is Image ? 1 : 1.35f);
-				}
+        public override T1 GetDefaultProperty<T1>(int property)
+        {
+            switch (property)
+            {
+                case iTextSharp.Layout.Property.Property.LEADING:
+                {
+                    return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements
+                        [0] is Image ? 1 : 1.35f);
+                }
 
-				case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT:
-				{
-					return (T1)(Object)0f;
-				}
+                case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT:
+                {
+                    return (T1)(Object)0f;
+                }
 
-				case iTextSharp.Layout.Property.Property.MARGIN_TOP:
-				case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
-				{
-					return (T1)(Object)4f;
-				}
+                case iTextSharp.Layout.Property.Property.MARGIN_TOP:
+                case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
+                {
+                    return (T1)(Object)4f;
+                }
 
-				case iTextSharp.Layout.Property.Property.TAB_DEFAULT:
-				{
-					return (T1)(Object)50f;
-				}
+                case iTextSharp.Layout.Property.Property.TAB_DEFAULT:
+                {
+                    return (T1)(Object)50f;
+                }
 
-				default:
-				{
-					return base.GetDefaultProperty<T1>(property);
-				}
-			}
-		}
+                default:
+                {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
+        }
 
-		/// <summary>
-		/// Sets the indent value for the first line of the
-		/// <see cref="Paragraph"/>
-		/// .
-		/// </summary>
-		/// <param name="indent">
-		/// the indent value that must be applied to the first line of
-		/// the Paragraph, as a <code>float</code>
-		/// </param>
-		/// <returns>this Paragraph</returns>
-		public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent
-			)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, indent);
-			return this;
-		}
+        /// <summary>
+        /// Sets the indent value for the first line of the
+        /// <see cref="Paragraph"/>
+        /// .
+        /// </summary>
+        /// <param name="indent">
+        /// the indent value that must be applied to the first line of
+        /// the Paragraph, as a <code>float</code>
+        /// </param>
+        /// <returns>this Paragraph</returns>
+        public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent
+            )
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, indent);
+            return this;
+        }
 
-		/// <summary>
-		/// Sets the leading value, using the
-		/// <see cref="iTextSharp.Layout.Property.Leading.FIXED"/>
-		/// strategy.
-		/// </summary>
-		/// <param name="leading">the new leading value</param>
-		/// <returns>this Paragraph</returns>
-		/// <seealso cref="iTextSharp.Layout.Property.Leading"/>
-		public virtual iTextSharp.Layout.Element.Paragraph SetFixedLeading(float leading)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.FIXED
-				, leading));
-			return this;
-		}
+        /// <summary>
+        /// Sets the leading value, using the
+        /// <see cref="iTextSharp.Layout.Property.Leading.FIXED"/>
+        /// strategy.
+        /// </summary>
+        /// <param name="leading">the new leading value</param>
+        /// <returns>this Paragraph</returns>
+        /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
+        public virtual iTextSharp.Layout.Element.Paragraph SetFixedLeading(float leading)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.FIXED
+                , leading));
+            return this;
+        }
 
-		/// <summary>
-		/// Sets the leading value, using the
-		/// <see cref="iTextSharp.Layout.Property.Leading.MULTIPLIED"/>
-		/// strategy.
-		/// </summary>
-		/// <param name="leading">the new leading value</param>
-		/// <returns>this Paragraph</returns>
-		/// <seealso cref="iTextSharp.Layout.Property.Leading"/>
-		public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading
-			)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED
-				, leading));
-			return this;
-		}
+        /// <summary>
+        /// Sets the leading value, using the
+        /// <see cref="iTextSharp.Layout.Property.Leading.MULTIPLIED"/>
+        /// strategy.
+        /// </summary>
+        /// <param name="leading">the new leading value</param>
+        /// <returns>this Paragraph</returns>
+        /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
+        public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading
+            )
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED
+                , leading));
+            return this;
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new ParagraphRenderer(this);
-		}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new ParagraphRenderer(this);
+        }
 
-		private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
-		{
-			IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
-				>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
-			if (tabStops == null)
-			{
-				tabStops = new SortedDictionary<float, TabStop>();
-				SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, tabStops);
-			}
-			foreach (TabStop tabStop in newTabStops)
-			{
-				tabStops[tabStop.GetTabPosition()] = tabStop;
-			}
-		}
+        private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
+        {
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
+                >>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+            if (tabStops == null)
+            {
+                tabStops = new SortedDictionary<float, TabStop>();
+                SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, tabStops);
+            }
+            foreach (TabStop tabStop in newTabStops)
+            {
+                tabStops[tabStop.GetTabPosition()] = tabStop;
+            }
+        }
 
-		public override PdfName GetRole()
-		{
-			return role;
-		}
+        public override PdfName GetRole()
+        {
+            return role;
+        }
 
-		public override void SetRole(PdfName role)
-		{
-			this.role = role;
-			if (PdfName.Artifact.Equals(role))
-			{
-				PropagateArtifactRoleToChildElements();
-			}
-		}
+        public override void SetRole(PdfName role)
+        {
+            this.role = role;
+            if (PdfName.Artifact.Equals(role))
+            {
+                PropagateArtifactRoleToChildElements();
+            }
+        }
 
-		public override AccessibilityProperties GetAccessibilityProperties()
-		{
-			if (tagProperties == null)
-			{
-				tagProperties = new AccessibilityProperties();
-			}
-			return tagProperties;
-		}
-	}
+        public override AccessibilityProperties GetAccessibilityProperties()
+        {
+            if (tagProperties == null)
+            {
+                tagProperties = new AccessibilityProperties();
+            }
+            return tagProperties;
+        }
+    }
 }

@@ -47,52 +47,52 @@ using iTextSharp.Kernel.Pdf.Layer;
 
 namespace iTextSharp.Kernel.Pdf.Xobject
 {
-	public class PdfXObject : PdfObjectWrapper<PdfStream>
-	{
-		public PdfXObject()
-			: this(new PdfStream())
-		{
-		}
+    public class PdfXObject : PdfObjectWrapper<PdfStream>
+    {
+        public PdfXObject()
+            : this(new PdfStream())
+        {
+        }
 
-		public PdfXObject(PdfStream pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfXObject(PdfStream pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream
-			)
-		{
-			if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(
-				PdfName.BBox))
-			{
-				return new PdfFormXObject(stream);
-			}
-			else
-			{
-				return new PdfImageXObject(stream);
-			}
-		}
+        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream
+            )
+        {
+            if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(
+                PdfName.BBox))
+            {
+                return new PdfFormXObject(stream);
+            }
+            else
+            {
+                return new PdfImageXObject(stream);
+            }
+        }
 
-		/// <summary>Sets the layer this XObject belongs to.</summary>
-		/// <param name="layer">the layer this XObject belongs to</param>
-		public virtual void SetLayer(IPdfOCG layer)
-		{
-			GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
-		}
+        /// <summary>Sets the layer this XObject belongs to.</summary>
+        /// <param name="layer">the layer this XObject belongs to</param>
+        public virtual void SetLayer(IPdfOCG layer)
+        {
+            GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
+        }
 
-		public virtual float GetWidth()
-		{
-			throw new NotSupportedException();
-		}
+        public virtual float GetWidth()
+        {
+            throw new NotSupportedException();
+        }
 
-		public virtual float GetHeight()
-		{
-			throw new NotSupportedException();
-		}
+        public virtual float GetHeight()
+        {
+            throw new NotSupportedException();
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
+    }
 }

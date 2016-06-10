@@ -43,94 +43,94 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Font.Otf
 {
-	/// <author>psoares</author>
-	public abstract class OpenTableLookup
-	{
-		protected internal int lookupFlag;
+    /// <author>psoares</author>
+    public abstract class OpenTableLookup
+    {
+        protected internal int lookupFlag;
 
-		protected internal int[] subTableLocations;
+        protected internal int[] subTableLocations;
 
-		protected internal OpenTypeFontTableReader openReader;
+        protected internal OpenTypeFontTableReader openReader;
 
-		protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag
-			, int[] subTableLocations)
-		{
-			this.lookupFlag = lookupFlag;
-			this.subTableLocations = subTableLocations;
-			this.openReader = openReader;
-		}
+        protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag
+            , int[] subTableLocations)
+        {
+            this.lookupFlag = lookupFlag;
+            this.subTableLocations = subTableLocations;
+            this.openReader = openReader;
+        }
 
-		public virtual int GetLookupFlag()
-		{
-			return lookupFlag;
-		}
+        public virtual int GetLookupFlag()
+        {
+            return lookupFlag;
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		protected internal virtual void ReadSubTables()
-		{
-			foreach (int subTableLocation in subTableLocations)
-			{
-				ReadSubTable(subTableLocation);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual void ReadSubTables()
+        {
+            foreach (int subTableLocation in subTableLocations)
+            {
+                ReadSubTable(subTableLocation);
+            }
+        }
 
-		/// <exception cref="System.IO.IOException"/>
-		protected internal abstract void ReadSubTable(int subTableLocation);
+        /// <exception cref="System.IO.IOException"/>
+        protected internal abstract void ReadSubTable(int subTableLocation);
 
-		public abstract bool TransformOne(GlyphLine line);
+        public abstract bool TransformOne(GlyphLine line);
 
-		public virtual bool TransformLine(GlyphLine line)
-		{
-			bool changed = false;
-			line.idx = line.start;
-			while (line.idx < line.end && line.idx >= line.start)
-			{
-				changed = TransformOne(line) || changed;
-			}
-			return changed;
-		}
+        public virtual bool TransformLine(GlyphLine line)
+        {
+            bool changed = false;
+            line.idx = line.start;
+            while (line.idx < line.end && line.idx >= line.start)
+            {
+                changed = TransformOne(line) || changed;
+            }
+            return changed;
+        }
 
-		public class GlyphIndexer
-		{
-			public GlyphLine line;
+        public class GlyphIndexer
+        {
+            public GlyphLine line;
 
-			public Glyph glyph;
+            public Glyph glyph;
 
-			public int idx;
+            public int idx;
 
-			public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag)
-			{
-				glyph = null;
-				while (++idx < line.end)
-				{
-					Glyph g = line.Get(idx);
-					if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-					{
-						glyph = g;
-						break;
-					}
-				}
-			}
+            public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag)
+            {
+                glyph = null;
+                while (++idx < line.end)
+                {
+                    Glyph g = line.Get(idx);
+                    if (!openReader.IsSkip(g.GetCode(), lookupFlag))
+                    {
+                        glyph = g;
+                        break;
+                    }
+                }
+            }
 
-			public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag
-				)
-			{
-				glyph = null;
-				while (--idx >= line.start)
-				{
-					Glyph g = line.Get(idx);
-					if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-					{
-						glyph = g;
-						break;
-					}
-				}
-			}
-		}
+            public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag
+                )
+            {
+                glyph = null;
+                while (--idx >= line.start)
+                {
+                    Glyph g = line.Get(idx);
+                    if (!openReader.IsSkip(g.GetCode(), lookupFlag))
+                    {
+                        glyph = g;
+                        break;
+                    }
+                }
+            }
+        }
 
-		public virtual bool HasSubstitution(int index)
-		{
-			return false;
-		}
-	}
+        public virtual bool HasSubstitution(int index)
+        {
+            return false;
+        }
+    }
 }

@@ -46,188 +46,188 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Forms
 {
-	/// <summary>A signature field lock dictionary.</summary>
-	/// <remarks>
-	/// A signature field lock dictionary. Specifies a set of form
-	/// fields that shall be locked when this signature field is
-	/// signed.
-	/// </remarks>
-	public class PdfSigFieldLockDictionary : PdfObjectWrapper<PdfDictionary>
-	{
-		/// <summary>
-		/// Creates an instance of
-		/// <see cref="PdfSigFieldLockDictionary"/>
-		/// .
-		/// </summary>
-		public PdfSigFieldLockDictionary()
-			: this(new PdfDictionary())
-		{
-		}
+    /// <summary>A signature field lock dictionary.</summary>
+    /// <remarks>
+    /// A signature field lock dictionary. Specifies a set of form
+    /// fields that shall be locked when this signature field is
+    /// signed.
+    /// </remarks>
+    public class PdfSigFieldLockDictionary : PdfObjectWrapper<PdfDictionary>
+    {
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// .
+        /// </summary>
+        public PdfSigFieldLockDictionary()
+            : this(new PdfDictionary())
+        {
+        }
 
-		/// <summary>
-		/// Creates an instance of
-		/// <see cref="PdfSigFieldLockDictionary"/>
-		/// .
-		/// </summary>
-		/// <param name="dict">
-		/// The dictionary whose entries should be added to
-		/// the signature field lock dictionary.
-		/// </param>
-		public PdfSigFieldLockDictionary(PdfDictionary dict)
-			: base(dict)
-		{
-			GetPdfObject().Put(PdfName.Type, PdfName.SigFieldLock);
-		}
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// .
+        /// </summary>
+        /// <param name="dict">
+        /// The dictionary whose entries should be added to
+        /// the signature field lock dictionary.
+        /// </param>
+        public PdfSigFieldLockDictionary(PdfDictionary dict)
+            : base(dict)
+        {
+            GetPdfObject().Put(PdfName.Type, PdfName.SigFieldLock);
+        }
 
-		/// <summary>
-		/// Sets the permissions granted for the document when the corresponding signature
-		/// field is signed.
-		/// </summary>
-		/// <remarks>
-		/// Sets the permissions granted for the document when the corresponding signature
-		/// field is signed. See
-		/// <see cref="LockPermissions"/>
-		/// for getting more info.
-		/// </remarks>
-		/// <param name="permissions">The permissions granted for the document.</param>
-		/// <returns>
-		/// This
-		/// <see cref="PdfSigFieldLockDictionary"/>
-		/// object.
-		/// </returns>
-		public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(
-			PdfSigFieldLockDictionary.LockPermissions permissions)
-		{
-			GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
-			return this;
-		}
+        /// <summary>
+        /// Sets the permissions granted for the document when the corresponding signature
+        /// field is signed.
+        /// </summary>
+        /// <remarks>
+        /// Sets the permissions granted for the document when the corresponding signature
+        /// field is signed. See
+        /// <see cref="LockPermissions"/>
+        /// for getting more info.
+        /// </remarks>
+        /// <param name="permissions">The permissions granted for the document.</param>
+        /// <returns>
+        /// This
+        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// object.
+        /// </returns>
+        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(
+            PdfSigFieldLockDictionary.LockPermissions permissions)
+        {
+            GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
+            return this;
+        }
 
-		/// <summary>Sets signature lock for specific fields in the document.</summary>
-		/// <param name="action">
-		/// Indicates the set of fields that should be locked after the actual
-		/// signing of the corresponding signature takes place.
-		/// </param>
-		/// <param name="fields">Names indicating the fields.</param>
-		/// <returns>
-		/// This
-		/// <see cref="PdfSigFieldLockDictionary"/>
-		/// object.
-		/// </returns>
-		public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
-			 action, params String[] fields)
-		{
-			PdfArray fieldsArray = new PdfArray();
-			foreach (String field in fields)
-			{
-				fieldsArray.Add(new PdfString(field));
-			}
-			GetPdfObject().Put(PdfName.Action, GetLockActionValue(action));
-			GetPdfObject().Put(PdfName.Fields, fieldsArray);
-			return this;
-		}
+        /// <summary>Sets signature lock for specific fields in the document.</summary>
+        /// <param name="action">
+        /// Indicates the set of fields that should be locked after the actual
+        /// signing of the corresponding signature takes place.
+        /// </param>
+        /// <param name="fields">Names indicating the fields.</param>
+        /// <returns>
+        /// This
+        /// <see cref="PdfSigFieldLockDictionary"/>
+        /// object.
+        /// </returns>
+        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
+             action, params String[] fields)
+        {
+            PdfArray fieldsArray = new PdfArray();
+            foreach (String field in fields)
+            {
+                fieldsArray.Add(new PdfString(field));
+            }
+            GetPdfObject().Put(PdfName.Action, GetLockActionValue(action));
+            GetPdfObject().Put(PdfName.Fields, fieldsArray);
+            return this;
+        }
 
-		public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action
-			)
-		{
-			switch (action)
-			{
-				case PdfSigFieldLockDictionary.LockAction.ALL:
-				{
-					return PdfName.All;
-				}
+        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action
+            )
+        {
+            switch (action)
+            {
+                case PdfSigFieldLockDictionary.LockAction.ALL:
+                {
+                    return PdfName.All;
+                }
 
-				case PdfSigFieldLockDictionary.LockAction.INCLUDE:
-				{
-					return PdfName.Include;
-				}
+                case PdfSigFieldLockDictionary.LockAction.INCLUDE:
+                {
+                    return PdfName.Include;
+                }
 
-				case PdfSigFieldLockDictionary.LockAction.EXCLUDE:
-				{
-					return PdfName.Exclude;
-				}
+                case PdfSigFieldLockDictionary.LockAction.EXCLUDE:
+                {
+                    return PdfName.Exclude;
+                }
 
-				default:
-				{
-					return PdfName.All;
-				}
-			}
-		}
+                default:
+                {
+                    return PdfName.All;
+                }
+            }
+        }
 
-		public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions
-			 permissions)
-		{
-			switch (permissions)
-			{
-				case PdfSigFieldLockDictionary.LockPermissions.NO_CHANGES_ALLOWED:
-				{
-					return new PdfNumber(1);
-				}
+        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions
+             permissions)
+        {
+            switch (permissions)
+            {
+                case PdfSigFieldLockDictionary.LockPermissions.NO_CHANGES_ALLOWED:
+                {
+                    return new PdfNumber(1);
+                }
 
-				case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING:
-				{
-					return new PdfNumber(2);
-				}
+                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING:
+                {
+                    return new PdfNumber(2);
+                }
 
-				case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING_AND_ANNOTATION:
-				{
-					return new PdfNumber(3);
-				}
+                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING_AND_ANNOTATION:
+                {
+                    return new PdfNumber(3);
+                }
 
-				default:
-				{
-					return new PdfNumber(0);
-				}
-			}
-		}
+                default:
+                {
+                    return new PdfNumber(0);
+                }
+            }
+        }
 
-		/// <summary>Enumerates the different actions of a signature field lock.</summary>
-		/// <remarks>
-		/// Enumerates the different actions of a signature field lock.
-		/// Indicates the set of fields that should be locked when the
-		/// corresponding signature field is signed:
-		/// <ul>
-		/// <li>all the fields in the document,</li>
-		/// <li>all the fields specified in the /Fields array,</li>
-		/// <li>all the fields except those specified in the /Fields array.</li>
-		/// </ul>
-		/// </remarks>
-		public enum LockAction
-		{
-			ALL,
-			INCLUDE,
-			EXCLUDE
-		}
+        /// <summary>Enumerates the different actions of a signature field lock.</summary>
+        /// <remarks>
+        /// Enumerates the different actions of a signature field lock.
+        /// Indicates the set of fields that should be locked when the
+        /// corresponding signature field is signed:
+        /// <ul>
+        /// <li>all the fields in the document,</li>
+        /// <li>all the fields specified in the /Fields array,</li>
+        /// <li>all the fields except those specified in the /Fields array.</li>
+        /// </ul>
+        /// </remarks>
+        public enum LockAction
+        {
+            ALL,
+            INCLUDE,
+            EXCLUDE
+        }
 
-		/// <summary>
-		/// Enumerates the different levels of access permissions granted for
-		/// the document when the corresponding signature field is signed:
-		/// <ul>
-		/// <li>
-		/// <see cref="LockPermissions.NO_CHANGES_ALLOWED"/>
-		/// - no changes to the document are
-		/// permitted; any change to the document invalidates the signature,</li>
-		/// <li>
-		/// <see cref="LockPermissions.FORM_FILLING"/>
-		/// - permitted changes are filling in forms,
-		/// instantiating page templates, and signing; other changes invalidate
-		/// the signature,</li>
-		/// <li>
-		/// <see cref="LockPermissions.FORM_FILLING_AND_ANNOTATION"/>
-		/// - permitted changes are the
-		/// same as for the previous, as well as annotation creation, deletion,
-		/// and modification; other changes invalidate the signature.</li>
-		/// </ul>
-		/// </summary>
-		public enum LockPermissions
-		{
-			NO_CHANGES_ALLOWED,
-			FORM_FILLING,
-			FORM_FILLING_AND_ANNOTATION
-		}
+        /// <summary>
+        /// Enumerates the different levels of access permissions granted for
+        /// the document when the corresponding signature field is signed:
+        /// <ul>
+        /// <li>
+        /// <see cref="LockPermissions.NO_CHANGES_ALLOWED"/>
+        /// - no changes to the document are
+        /// permitted; any change to the document invalidates the signature,</li>
+        /// <li>
+        /// <see cref="LockPermissions.FORM_FILLING"/>
+        /// - permitted changes are filling in forms,
+        /// instantiating page templates, and signing; other changes invalidate
+        /// the signature,</li>
+        /// <li>
+        /// <see cref="LockPermissions.FORM_FILLING_AND_ANNOTATION"/>
+        /// - permitted changes are the
+        /// same as for the previous, as well as annotation creation, deletion,
+        /// and modification; other changes invalidate the signature.</li>
+        /// </ul>
+        /// </summary>
+        public enum LockPermissions
+        {
+            NO_CHANGES_ALLOWED,
+            FORM_FILLING,
+            FORM_FILLING_AND_ANNOTATION
+        }
 
-		protected override bool IsWrappedObjectMustBeIndirect()
-		{
-			return true;
-		}
-	}
+        protected override bool IsWrappedObjectMustBeIndirect()
+        {
+            return true;
+        }
+    }
 }

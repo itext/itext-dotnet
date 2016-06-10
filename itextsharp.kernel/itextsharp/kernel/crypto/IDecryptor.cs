@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Crypto
 {
-	public interface IDecryptor
-	{
-		byte[] Update(byte[] b, int off, int len);
+    public interface IDecryptor
+    {
+        byte[] Update(byte[] b, int off, int len);
 
-		byte[] Finish();
-	}
+        byte[] Finish();
+    }
 }

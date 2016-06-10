@@ -45,18 +45,18 @@ using Org.BouncyCastle.Tsp;
 
 namespace iTextSharp.Signatures
 {
-	/// <summary>
-	/// Interface you can implement and pass to TSAClientBouncyCastle in case
-	/// you want to do something with the information returned
-	/// </summary>
-	public interface ITSAInfoBouncyCastle
-	{
-		/// <summary>
-		/// When a timestamp is created using TSAClientBouncyCastle,
-		/// this method is triggered passing an object that contains
-		/// info about the timestamp and the time stamping authority.
-		/// </summary>
-		/// <param name="info">a TimeStampTokenInfo object</param>
-		void InspectTimeStampTokenInfo(TimeStampTokenInfo info);
-	}
+    /// <summary>
+    /// Interface you can implement and pass to TSAClientBouncyCastle in case
+    /// you want to do something with the information returned
+    /// </summary>
+    public interface ITSAInfoBouncyCastle
+    {
+        /// <summary>
+        /// When a timestamp is created using TSAClientBouncyCastle,
+        /// this method is triggered passing an object that contains
+        /// info about the timestamp and the time stamping authority.
+        /// </summary>
+        /// <param name="info">a TimeStampTokenInfo object</param>
+        void InspectTimeStampTokenInfo(TimeStampTokenInfo info);
+    }
 }

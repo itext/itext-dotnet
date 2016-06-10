@@ -53,123 +53,123 @@ using iTextSharp.Layout.Property;
 
 namespace iTextSharp.Layout.Renderer
 {
-	public class DocumentRenderer : RootRenderer
-	{
-		protected internal Document document;
+    public class DocumentRenderer : RootRenderer
+    {
+        protected internal Document document;
 
-		protected internal IList<int> wrappedContentPage = new List<int>();
+        protected internal IList<int> wrappedContentPage = new List<int>();
 
-		public DocumentRenderer(Document document)
-			: this(document, true)
-		{
-		}
+        public DocumentRenderer(Document document)
+            : this(document, true)
+        {
+        }
 
-		public DocumentRenderer(Document document, bool immediateFlush)
-		{
-			this.document = document;
-			this.immediateFlush = immediateFlush;
-			this.modelElement = document;
-		}
+        public DocumentRenderer(Document document, bool immediateFlush)
+        {
+            this.document = document;
+            this.immediateFlush = immediateFlush;
+            this.modelElement = document;
+        }
 
-		public override LayoutArea GetOccupiedArea()
-		{
-			throw new InvalidOperationException("Not applicable for DocumentRenderer");
-		}
+        public override LayoutArea GetOccupiedArea()
+        {
+            throw new InvalidOperationException("Not applicable for DocumentRenderer");
+        }
 
-		public override IRenderer GetNextRenderer()
-		{
-			return null;
-		}
+        public override IRenderer GetNextRenderer()
+        {
+            return null;
+        }
 
-		protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-			)
-		{
-			AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != 
-				null ? overflowResult.GetAreaBreak() : null;
-			MoveToNextPage();
-			while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE &&
-				 currentPageNumber < document.GetPdfDocument().GetNumberOfPages())
-			{
-				MoveToNextPage();
-			}
-			PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
-			while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document
-				.GetPdfDocument().GetPage(currentPageNumber).IsFlushed())
-			{
-				currentPageNumber++;
-			}
-			PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize
-				);
-			if (lastPageSize == null)
-			{
-				lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).
-					GetPageSize());
-			}
-			return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea
-				(lastPageSize)));
-		}
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
+            )
+        {
+            AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != 
+                null ? overflowResult.GetAreaBreak() : null;
+            MoveToNextPage();
+            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE &&
+                 currentPageNumber < document.GetPdfDocument().GetNumberOfPages())
+            {
+                MoveToNextPage();
+            }
+            PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
+            while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document
+                .GetPdfDocument().GetPage(currentPageNumber).IsFlushed())
+            {
+                currentPageNumber++;
+            }
+            PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize
+                );
+            if (lastPageSize == null)
+            {
+                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).
+                    GetPageSize());
+            }
+            return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea
+                (lastPageSize)));
+        }
 
-		protected internal override void FlushSingleRenderer(IRenderer resultRenderer)
-		{
-			if (!resultRenderer.IsFlushed())
-			{
-				int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
-				PdfDocument pdfDocument = document.GetPdfDocument();
-				EnsureDocumentHasNPages(pageNum, null);
-				PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
-				bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() 
-					!= null && correspondingPage.GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream
-					().GetLength() > 0 && !wrappedContentPage.Contains(pageNum) && pdfDocument.GetNumberOfPages
-					() >= pageNum;
-				wrappedContentPage.Add(pageNum);
-				if (pdfDocument.IsTagged())
-				{
-					pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage
-						);
-				}
-				resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, 
-					wrapOldContent), pdfDocument.IsTagged()));
-			}
-		}
+        protected internal override void FlushSingleRenderer(IRenderer resultRenderer)
+        {
+            if (!resultRenderer.IsFlushed())
+            {
+                int pageNum = resultRenderer.GetOccupiedArea().GetPageNumber();
+                PdfDocument pdfDocument = document.GetPdfDocument();
+                EnsureDocumentHasNPages(pageNum, null);
+                PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
+                bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() 
+                    != null && correspondingPage.GetContentStreamCount() > 0 && correspondingPage
+                    .GetLastContentStream().GetLength() > 0 && !wrappedContentPage.Contains(pageNum
+                    ) && pdfDocument.GetNumberOfPages() >= pageNum;
+                wrappedContentPage.Add(pageNum);
+                if (pdfDocument.IsTagged())
+                {
+                    pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage
+                        );
+                }
+                resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, 
+                    wrapOldContent), pdfDocument.IsTagged()));
+            }
+        }
 
-		protected internal virtual PageSize AddNewPage(PageSize customPageSize)
-		{
-			if (customPageSize != null)
-			{
-				document.GetPdfDocument().AddNewPage(customPageSize);
-			}
-			else
-			{
-				document.GetPdfDocument().AddNewPage();
-			}
-			return customPageSize != null ? customPageSize : document.GetPdfDocument().GetDefaultPageSize
-				();
-		}
+        protected internal virtual PageSize AddNewPage(PageSize customPageSize)
+        {
+            if (customPageSize != null)
+            {
+                document.GetPdfDocument().AddNewPage(customPageSize);
+            }
+            else
+            {
+                document.GetPdfDocument().AddNewPage();
+            }
+            return customPageSize != null ? customPageSize : document.GetPdfDocument().GetDefaultPageSize
+                ();
+        }
 
-		/// <summary>Adds some pages so that the overall number is at least n.</summary>
-		/// <remarks>
-		/// Adds some pages so that the overall number is at least n.
-		/// Returns the page size of the n'th page.
-		/// </remarks>
-		private PageSize EnsureDocumentHasNPages(int n, PageSize customPageSize)
-		{
-			PageSize lastPageSize = null;
-			while (document.GetPdfDocument().GetNumberOfPages() < n)
-			{
-				lastPageSize = AddNewPage(customPageSize);
-			}
-			return lastPageSize;
-		}
+        /// <summary>Adds some pages so that the overall number is at least n.</summary>
+        /// <remarks>
+        /// Adds some pages so that the overall number is at least n.
+        /// Returns the page size of the n'th page.
+        /// </remarks>
+        private PageSize EnsureDocumentHasNPages(int n, PageSize customPageSize)
+        {
+            PageSize lastPageSize = null;
+            while (document.GetPdfDocument().GetNumberOfPages() < n)
+            {
+                lastPageSize = AddNewPage(customPageSize);
+            }
+            return lastPageSize;
+        }
 
-		private void MoveToNextPage()
-		{
-			// We don't flush this page immediately, but only flush previous one because of manipulations with areas in case
-			// of keepTogether property.
-			if (immediateFlush && currentPageNumber > 1)
-			{
-				document.GetPdfDocument().GetPage(currentPageNumber - 1).Flush();
-			}
-			currentPageNumber++;
-		}
-	}
+        private void MoveToNextPage()
+        {
+            // We don't flush this page immediately, but only flush previous one because of manipulations with areas in case
+            // of keepTogether property.
+            if (immediateFlush && currentPageNumber > 1)
+            {
+                document.GetPdfDocument().GetPage(currentPageNumber - 1).Flush();
+            }
+            currentPageNumber++;
+        }
+    }
 }

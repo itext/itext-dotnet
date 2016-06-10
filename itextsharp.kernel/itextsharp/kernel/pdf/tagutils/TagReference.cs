@@ -46,70 +46,70 @@ using iTextSharp.Kernel.Pdf.Tagging;
 
 namespace iTextSharp.Kernel.Pdf.Tagutils
 {
-	public class TagReference
-	{
-		protected internal TagTreePointer tagPointer;
+    public class TagReference
+    {
+        protected internal TagTreePointer tagPointer;
 
-		protected internal int insertIndex;
+        protected internal int insertIndex;
 
-		protected internal PdfStructElem referencedTag;
+        protected internal PdfStructElem referencedTag;
 
-		protected internal PdfName role;
+        protected internal PdfName role;
 
-		protected internal PdfDictionary properties;
+        protected internal PdfDictionary properties;
 
-		protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer
-			, int insertIndex)
-		{
-			this.role = referencedTag.GetRole();
-			this.referencedTag = referencedTag;
-			this.tagPointer = tagPointer;
-			this.insertIndex = insertIndex;
-		}
+        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer
+            , int insertIndex)
+        {
+            this.role = referencedTag.GetRole();
+            this.referencedTag = referencedTag;
+            this.tagPointer = tagPointer;
+            this.insertIndex = insertIndex;
+        }
 
-		public virtual PdfName GetRole()
-		{
-			return role;
-		}
+        public virtual PdfName GetRole()
+        {
+            return role;
+        }
 
-		public virtual int CreateNextMcid()
-		{
-			return tagPointer.CreateNextMcidForStructElem(referencedTag, insertIndex);
-		}
+        public virtual int CreateNextMcid()
+        {
+            return tagPointer.CreateNextMcidForStructElem(referencedTag, insertIndex);
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name
-			, PdfObject value)
-		{
-			if (properties == null)
-			{
-				properties = new PdfDictionary();
-			}
-			properties.Put(name, value);
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name
+            , PdfObject value)
+        {
+            if (properties == null)
+            {
+                properties = new PdfDictionary();
+            }
+            properties.Put(name, value);
+            return this;
+        }
 
-		public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName
-			 name)
-		{
-			if (properties != null)
-			{
-				properties.Remove(name);
-			}
-			return this;
-		}
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName
+             name)
+        {
+            if (properties != null)
+            {
+                properties.Remove(name);
+            }
+            return this;
+        }
 
-		public virtual PdfObject GetProperty(PdfName name)
-		{
-			if (properties == null)
-			{
-				return null;
-			}
-			return properties.Get(name);
-		}
+        public virtual PdfObject GetProperty(PdfName name)
+        {
+            if (properties == null)
+            {
+                return null;
+            }
+            return properties.Get(name);
+        }
 
-		public virtual PdfDictionary GetProperties()
-		{
-			return properties;
-		}
-	}
+        public virtual PdfDictionary GetProperties()
+        {
+            return properties;
+        }
+    }
 }

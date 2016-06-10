@@ -47,106 +47,106 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Layout
 {
-	public class LayoutResult
-	{
-		public const int FULL = 1;
+    public class LayoutResult
+    {
+        public const int FULL = 1;
 
-		public const int PARTIAL = 2;
+        public const int PARTIAL = 2;
 
-		public const int NOTHING = 3;
+        public const int NOTHING = 3;
 
-		protected internal int status;
+        protected internal int status;
 
-		protected internal LayoutArea occupiedArea;
+        protected internal LayoutArea occupiedArea;
 
-		protected internal IRenderer splitRenderer;
+        protected internal IRenderer splitRenderer;
 
-		protected internal IRenderer overflowRenderer;
+        protected internal IRenderer overflowRenderer;
 
-		protected internal AreaBreak areaBreak;
+        protected internal AreaBreak areaBreak;
 
-		public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, 
-			IRenderer overflowRenderer)
-		{
-			this.status = status;
-			this.occupiedArea = occupiedArea;
-			this.splitRenderer = splitRenderer;
-			this.overflowRenderer = overflowRenderer;
-		}
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, 
+            IRenderer overflowRenderer)
+        {
+            this.status = status;
+            this.occupiedArea = occupiedArea;
+            this.splitRenderer = splitRenderer;
+            this.overflowRenderer = overflowRenderer;
+        }
 
-		public virtual int GetStatus()
-		{
-			return status;
-		}
+        public virtual int GetStatus()
+        {
+            return status;
+        }
 
-		public virtual LayoutArea GetOccupiedArea()
-		{
-			return occupiedArea;
-		}
+        public virtual LayoutArea GetOccupiedArea()
+        {
+            return occupiedArea;
+        }
 
-		public virtual IRenderer GetSplitRenderer()
-		{
-			return splitRenderer;
-		}
+        public virtual IRenderer GetSplitRenderer()
+        {
+            return splitRenderer;
+        }
 
-		public virtual void SetSplitRenderer(IRenderer splitRenderer)
-		{
-			this.splitRenderer = splitRenderer;
-		}
+        public virtual void SetSplitRenderer(IRenderer splitRenderer)
+        {
+            this.splitRenderer = splitRenderer;
+        }
 
-		public virtual IRenderer GetOverflowRenderer()
-		{
-			return overflowRenderer;
-		}
+        public virtual IRenderer GetOverflowRenderer()
+        {
+            return overflowRenderer;
+        }
 
-		public virtual void SetOverflowRenderer(IRenderer overflowRenderer)
-		{
-			this.overflowRenderer = overflowRenderer;
-		}
+        public virtual void SetOverflowRenderer(IRenderer overflowRenderer)
+        {
+            this.overflowRenderer = overflowRenderer;
+        }
 
-		public virtual AreaBreak GetAreaBreak()
-		{
-			return areaBreak;
-		}
+        public virtual AreaBreak GetAreaBreak()
+        {
+            return areaBreak;
+        }
 
-		public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak
-			)
-		{
-			this.areaBreak = areaBreak;
-			return this;
-		}
+        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak
+            )
+        {
+            this.areaBreak = areaBreak;
+            return this;
+        }
 
-		public override String ToString()
-		{
-			String status;
-			switch (GetStatus())
-			{
-				case FULL:
-				{
-					status = "Full";
-					break;
-				}
+        public override String ToString()
+        {
+            String status;
+            switch (GetStatus())
+            {
+                case FULL:
+                {
+                    status = "Full";
+                    break;
+                }
 
-				case NOTHING:
-				{
-					status = "Nothing";
-					break;
-				}
+                case NOTHING:
+                {
+                    status = "Nothing";
+                    break;
+                }
 
-				case PARTIAL:
-				{
-					status = "Partial";
-					break;
-				}
+                case PARTIAL:
+                {
+                    status = "Partial";
+                    break;
+                }
 
-				default:
-				{
-					status = "None";
-					break;
-				}
-			}
-			return "LayoutResult{" + status + ", areaBreak=" + areaBreak + ", occupiedArea=" 
-				+ occupiedArea + '}';
-		}
-	}
+                default:
+                {
+                    status = "None";
+                    break;
+                }
+            }
+            return "LayoutResult{" + status + ", areaBreak=" + areaBreak + ", occupiedArea=" 
+                + occupiedArea + '}';
+        }
+    }
 }

@@ -47,93 +47,93 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 {
-	/// <summary>Represents image data from a PDF</summary>
-	public class ImageRenderInfo : IEventData
-	{
-		/// <summary>The coordinate transformation matrix that was in effect when the image was rendered
-		/// 	</summary>
-		private Matrix ctm;
+    /// <summary>Represents image data from a PDF</summary>
+    public class ImageRenderInfo : IEventData
+    {
+        /// <summary>The coordinate transformation matrix that was in effect when the image was rendered
+        ///     </summary>
+        private Matrix ctm;
 
-		private PdfImageXObject image;
+        private PdfImageXObject image;
 
-		/// <summary>the color space dictionary from resources which are associated with the image
-		/// 	</summary>
-		private PdfDictionary colorSpaceDictionary;
+        /// <summary>the color space dictionary from resources which are associated with the image
+        ///     </summary>
+        private PdfDictionary colorSpaceDictionary;
 
-		/// <summary>defines if the encountered image was inline</summary>
-		private bool isInline;
+        /// <summary>defines if the encountered image was inline</summary>
+        private bool isInline;
 
-		/// <summary>Create an ImageRenderInfo</summary>
-		/// <param name="ctm">the coordinate transformation matrix at the time the image is rendered
-		/// 	</param>
-		/// <param name="stream">image stream object</param>
-		/// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
-		/// 	</param>
-		/// <param name="isInline">defines if the encountered image was inline</param>
-		public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary
-			, bool isInline)
-		{
-			this.ctm = ctm;
-			this.image = new PdfImageXObject(stream);
-			this.colorSpaceDictionary = colorSpaceDictionary;
-			this.isInline = isInline;
-		}
+        /// <summary>Create an ImageRenderInfo</summary>
+        /// <param name="ctm">the coordinate transformation matrix at the time the image is rendered
+        ///     </param>
+        /// <param name="stream">image stream object</param>
+        /// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
+        ///     </param>
+        /// <param name="isInline">defines if the encountered image was inline</param>
+        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary
+            , bool isInline)
+        {
+            this.ctm = ctm;
+            this.image = new PdfImageXObject(stream);
+            this.colorSpaceDictionary = colorSpaceDictionary;
+            this.isInline = isInline;
+        }
 
-		/// <summary>Gets an image wrapped in ImageXObject.</summary>
-		/// <remarks>
-		/// Gets an image wrapped in ImageXObject.
-		/// You can:
-		/// <ul>
-		/// <li>get image bytes with
-		/// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
-		/// , these image bytes
-		/// represent native image, i.e you can write these bytes to disk and get just an usual image;</li>
-		/// <li>obtain PdfStream object which contains image dictionary with
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
-		/// method;</li>
-		/// <li>convert image to
-		/// <see cref="Java.Awt.Image.BufferedImage"/>
-		/// with
-		/// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
-		/// ;</li>
-		/// </ul>
-		/// </remarks>
-		public virtual PdfImageXObject GetImage()
-		{
-			return image;
-		}
+        /// <summary>Gets an image wrapped in ImageXObject.</summary>
+        /// <remarks>
+        /// Gets an image wrapped in ImageXObject.
+        /// You can:
+        /// <ul>
+        /// <li>get image bytes with
+        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
+        /// , these image bytes
+        /// represent native image, i.e you can write these bytes to disk and get just an usual image;</li>
+        /// <li>obtain PdfStream object which contains image dictionary with
+        /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
+        /// method;</li>
+        /// <li>convert image to
+        /// <see cref="Java.Awt.Image.BufferedImage"/>
+        /// with
+        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
+        /// ;</li>
+        /// </ul>
+        /// </remarks>
+        public virtual PdfImageXObject GetImage()
+        {
+            return image;
+        }
 
-		/// <returns>a vector in User space representing the start point of the image</returns>
-		public virtual Vector GetStartPoint()
-		{
-			return new Vector(0, 0, 1).Cross(ctm);
-		}
+        /// <returns>a vector in User space representing the start point of the image</returns>
+        public virtual Vector GetStartPoint()
+        {
+            return new Vector(0, 0, 1).Cross(ctm);
+        }
 
-		/// <returns>The coordinate transformation matrix which was active when this image was rendered. Coordinates are in User space.
-		/// 	</returns>
-		public virtual Matrix GetImageCtm()
-		{
-			return ctm;
-		}
+        /// <returns>The coordinate transformation matrix which was active when this image was rendered. Coordinates are in User space.
+        ///     </returns>
+        public virtual Matrix GetImageCtm()
+        {
+            return ctm;
+        }
 
-		/// <returns>the size of the image, in User space units</returns>
-		public virtual float GetArea()
-		{
-			// the image space area is 1, so we multiply that by the determinant of the CTM to get the transformed area
-			return ctm.GetDeterminant();
-		}
+        /// <returns>the size of the image, in User space units</returns>
+        public virtual float GetArea()
+        {
+            // the image space area is 1, so we multiply that by the determinant of the CTM to get the transformed area
+            return ctm.GetDeterminant();
+        }
 
-		/// <returns>true if image was inlined in original stream.</returns>
-		public virtual bool IsInline()
-		{
-			return isInline;
-		}
+        /// <returns>true if image was inlined in original stream.</returns>
+        public virtual bool IsInline()
+        {
+            return isInline;
+        }
 
-		/// <returns>the color space dictionary from resources which are associated with the image
-		/// 	</returns>
-		public virtual PdfDictionary GetColorSpaceDictionary()
-		{
-			return colorSpaceDictionary;
-		}
-	}
+        /// <returns>the color space dictionary from resources which are associated with the image
+        ///     </returns>
+        public virtual PdfDictionary GetColorSpaceDictionary()
+        {
+            return colorSpaceDictionary;
+        }
+    }
 }

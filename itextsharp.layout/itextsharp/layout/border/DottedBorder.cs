@@ -46,109 +46,110 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Layout.Border
 {
-	/// <summary>Draws a dotted border around the element it has been set to.</summary>
-	/// <remarks>
-	/// Draws a dotted border around the element it has been set to. Do note that this border draw square dots,
-	/// if you want to draw round dots, see
-	/// <see cref="RoundDotsBorder"/>
-	/// .
-	/// </remarks>
-	public class DottedBorder : iTextSharp.Layout.Border.Border
-	{
-		private const float GAP_MODIFIER = 1.5f;
+    /// <summary>Draws a dotted border around the element it has been set to.</summary>
+    /// <remarks>
+    /// Draws a dotted border around the element it has been set to. Do note that this border draw square dots,
+    /// if you want to draw round dots, see
+    /// <see cref="RoundDotsBorder"/>
+    /// .
+    /// </remarks>
+    public class DottedBorder : iTextSharp.Layout.Border.Border
+    {
+        private const float GAP_MODIFIER = 1.5f;
 
-		/// <summary>Creates a DottedBorder instance with the specified width.</summary>
-		/// <remarks>Creates a DottedBorder instance with the specified width. The color is set to the default: black.
-		/// 	</remarks>
-		/// <param name="width">width of the border</param>
-		public DottedBorder(float width)
-			: base(width)
-		{
-		}
+        /// <summary>Creates a DottedBorder instance with the specified width.</summary>
+        /// <remarks>Creates a DottedBorder instance with the specified width. The color is set to the default: black.
+        ///     </remarks>
+        /// <param name="width">width of the border</param>
+        public DottedBorder(float width)
+            : base(width)
+        {
+        }
 
-		/// <summary>Creates a DottedBorder instance with the specified width and color.</summary>
-		/// <param name="color">color of the border</param>
-		/// <param name="width">width of the border</param>
-		public DottedBorder(iTextSharp.Kernel.Color.Color color, float width)
-			: base(color, width)
-		{
-		}
+        /// <summary>Creates a DottedBorder instance with the specified width and color.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        public DottedBorder(iTextSharp.Kernel.Color.Color color, float width)
+            : base(color, width)
+        {
+        }
 
-		public override int GetBorderType()
-		{
-			return iTextSharp.Layout.Border.Border.DOTTED;
-		}
+        public override int GetBorderType()
+        {
+            return iTextSharp.Layout.Border.Border.DOTTED;
+        }
 
-		public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-			, float borderWidthBefore, float borderWidthAfter)
-		{
-			float initialGap = width * GAP_MODIFIER;
-			float dx = x2 - x1;
-			float dy = y2 - y1;
-			double borderLength = Math.Sqrt(dx * dx + dy * dy);
-			float adjustedGap = GetDotsGap(borderLength, initialGap + width);
-			if (adjustedGap > width)
-			{
-				adjustedGap -= width;
-			}
-			float widthHalf = width / 2;
-			Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-			switch (borderSide)
-			{
-				case Border.Side.TOP:
-				{
-					y1 += widthHalf;
-					y2 += widthHalf;
-					break;
-				}
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
+            , float borderWidthBefore, float borderWidthAfter)
+        {
+            float initialGap = width * GAP_MODIFIER;
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            double borderLength = Math.Sqrt(dx * dx + dy * dy);
+            float adjustedGap = GetDotsGap(borderLength, initialGap + width);
+            if (adjustedGap > width)
+            {
+                adjustedGap -= width;
+            }
+            float widthHalf = width / 2;
+            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
+            switch (borderSide)
+            {
+                case Border.Side.TOP:
+                {
+                    y1 += widthHalf;
+                    y2 += widthHalf;
+                    break;
+                }
 
-				case Border.Side.RIGHT:
-				{
-					x1 += widthHalf;
-					x2 += widthHalf;
-					break;
-				}
+                case Border.Side.RIGHT:
+                {
+                    x1 += widthHalf;
+                    x2 += widthHalf;
+                    break;
+                }
 
-				case Border.Side.BOTTOM:
-				{
-					y1 -= widthHalf;
-					y2 -= widthHalf;
-					break;
-				}
+                case Border.Side.BOTTOM:
+                {
+                    y1 -= widthHalf;
+                    y2 -= widthHalf;
+                    break;
+                }
 
-				case Border.Side.LEFT:
-				{
-					x1 -= widthHalf;
-					x2 -= widthHalf;
-					break;
-				}
-			}
-			canvas.SetLineWidth(width);
-			canvas.SetStrokeColor(color);
-			canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo
-				(x2, y2).Stroke();
-		}
+                case Border.Side.LEFT:
+                {
+                    x1 -= widthHalf;
+                    x2 -= widthHalf;
+                    break;
+                }
+            }
+            canvas.SetLineWidth(width);
+            canvas.SetStrokeColor(color);
+            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo
+                (x2, y2).Stroke();
+        }
 
-		public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-			, float y2)
-		{
-			float initialGap = width * GAP_MODIFIER;
-			float dx = x2 - x1;
-			float dy = y2 - y1;
-			double borderLength = Math.Sqrt(dx * dx + dy * dy);
-			float adjustedGap = GetDotsGap(borderLength, initialGap + width);
-			if (adjustedGap > width)
-			{
-				adjustedGap -= width;
-			}
-			canvas.SaveState().SetLineWidth(width).SetStrokeColor(color).SetLineDash(width, adjustedGap
-				, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
-		}
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
+            , float y2)
+        {
+            float initialGap = width * GAP_MODIFIER;
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            double borderLength = Math.Sqrt(dx * dx + dy * dy);
+            float adjustedGap = GetDotsGap(borderLength, initialGap + width);
+            if (adjustedGap > width)
+            {
+                adjustedGap -= width;
+            }
+            canvas.SaveState().SetLineWidth(width).SetStrokeColor(color).SetLineDash(width, adjustedGap
+                , width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
+        }
 
-		protected internal virtual float GetDotsGap(double distance, float initialGap)
-		{
-			double gapsNum = System.Math.Ceiling(distance / initialGap);
-			return (float)(distance / gapsNum);
-		}
-	}
+        protected internal virtual float GetDotsGap(double distance, float initialGap)
+        {
+            double gapsNum = System.Math.Ceiling(distance / initialGap);
+            return (float)(distance / gapsNum);
+        }
+    }
 }

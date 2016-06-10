@@ -47,164 +47,164 @@ using System.Text;
 
 namespace iTextSharp.IO.Util
 {
-	public sealed class TextUtil
-	{
-		private TextUtil()
-		{
-		}
+    public sealed class TextUtil
+    {
+        private TextUtil()
+        {
+        }
 
-		/// <summary>
-		/// Check if the value of a character belongs to a certain interval
-		/// that indicates it's the higher part of a surrogate pair.
-		/// </summary>
-		/// <param name="c">the character</param>
-		/// <returns>true if the character belongs to the interval</returns>
-		public static bool IsSurrogateHigh(char c)
-		{
-			return c >= '\ud800' && c <= '\udbff';
-		}
+        /// <summary>
+        /// Check if the value of a character belongs to a certain interval
+        /// that indicates it's the higher part of a surrogate pair.
+        /// </summary>
+        /// <param name="c">the character</param>
+        /// <returns>true if the character belongs to the interval</returns>
+        public static bool IsSurrogateHigh(char c)
+        {
+            return c >= '\ud800' && c <= '\udbff';
+        }
 
-		/// <summary>
-		/// Check if the value of a character belongs to a certain interval
-		/// that indicates it's the lower part of a surrogate pair.
-		/// </summary>
-		/// <param name="c">the character</param>
-		/// <returns>true if the character belongs to the interval</returns>
-		public static bool IsSurrogateLow(char c)
-		{
-			return c >= '\udc00' && c <= '\udfff';
-		}
+        /// <summary>
+        /// Check if the value of a character belongs to a certain interval
+        /// that indicates it's the lower part of a surrogate pair.
+        /// </summary>
+        /// <param name="c">the character</param>
+        /// <returns>true if the character belongs to the interval</returns>
+        public static bool IsSurrogateLow(char c)
+        {
+            return c >= '\udc00' && c <= '\udfff';
+        }
 
-		/// <summary>
-		/// Checks if two subsequent characters in a String are
-		/// are the higher and the lower character in a surrogate
-		/// pair (and therefore eligible for conversion to a UTF 32 character).
-		/// </summary>
-		/// <param name="text">the String with the high and low surrogate characters</param>
-		/// <param name="idx">the index of the 'high' character in the pair</param>
-		/// <returns>true if the characters are surrogate pairs</returns>
-		public static bool IsSurrogatePair(String text, int idx)
-		{
-			return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
-				(text[idx + 1]);
-		}
+        /// <summary>
+        /// Checks if two subsequent characters in a String are
+        /// are the higher and the lower character in a surrogate
+        /// pair (and therefore eligible for conversion to a UTF 32 character).
+        /// </summary>
+        /// <param name="text">the String with the high and low surrogate characters</param>
+        /// <param name="idx">the index of the 'high' character in the pair</param>
+        /// <returns>true if the characters are surrogate pairs</returns>
+        public static bool IsSurrogatePair(String text, int idx)
+        {
+            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
+                (text[idx + 1]);
+        }
 
-		/// <summary>
-		/// Checks if two subsequent characters in a character array are
-		/// are the higher and the lower character in a surrogate
-		/// pair (and therefore eligible for conversion to a UTF 32 character).
-		/// </summary>
-		/// <param name="text">the character array with the high and low surrogate characters
-		/// 	</param>
-		/// <param name="idx">the index of the 'high' character in the pair</param>
-		/// <returns>true if the characters are surrogate pairs</returns>
-		public static bool IsSurrogatePair(char[] text, int idx)
-		{
-			return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
-				(text[idx + 1]);
-		}
+        /// <summary>
+        /// Checks if two subsequent characters in a character array are
+        /// are the higher and the lower character in a surrogate
+        /// pair (and therefore eligible for conversion to a UTF 32 character).
+        /// </summary>
+        /// <param name="text">the character array with the high and low surrogate characters
+        ///     </param>
+        /// <param name="idx">the index of the 'high' character in the pair</param>
+        /// <returns>true if the characters are surrogate pairs</returns>
+        public static bool IsSurrogatePair(char[] text, int idx)
+        {
+            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
+                (text[idx + 1]);
+        }
 
-		/// <summary>
-		/// Returns the code point of a UTF32 character corresponding with
-		/// a high and a low surrogate value.
-		/// </summary>
-		/// <param name="highSurrogate">the high surrogate value</param>
-		/// <param name="lowSurrogate">the low surrogate value</param>
-		/// <returns>a code point value</returns>
-		public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
-		{
-			return (highSurrogate - 0xd800) * 0x400 + lowSurrogate - 0xdc00 + 0x10000;
-		}
+        /// <summary>
+        /// Returns the code point of a UTF32 character corresponding with
+        /// a high and a low surrogate value.
+        /// </summary>
+        /// <param name="highSurrogate">the high surrogate value</param>
+        /// <param name="lowSurrogate">the low surrogate value</param>
+        /// <returns>a code point value</returns>
+        public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
+        {
+            return (highSurrogate - 0xd800) * 0x400 + lowSurrogate - 0xdc00 + 0x10000;
+        }
 
-		/// <summary>Converts a unicode character in a character array to a UTF 32 code point value.
-		/// 	</summary>
-		/// <param name="text">a character array that has the unicode character(s)</param>
-		/// <param name="idx">the index of the 'high' character</param>
-		/// <returns>the code point value</returns>
-		public static int ConvertToUtf32(char[] text, int idx)
-		{
-			return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
-		}
+        /// <summary>Converts a unicode character in a character array to a UTF 32 code point value.
+        ///     </summary>
+        /// <param name="text">a character array that has the unicode character(s)</param>
+        /// <param name="idx">the index of the 'high' character</param>
+        /// <returns>the code point value</returns>
+        public static int ConvertToUtf32(char[] text, int idx)
+        {
+            return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
+        }
 
-		/// <summary>Converts a unicode character in a String to a UTF32 code point value</summary>
-		/// <param name="text">a String that has the unicode character(s)</param>
-		/// <param name="idx">the index of the 'high' character</param>
-		/// <returns>the codepoint value</returns>
-		public static int ConvertToUtf32(String text, int idx)
-		{
-			return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
-		}
+        /// <summary>Converts a unicode character in a String to a UTF32 code point value</summary>
+        /// <param name="text">a String that has the unicode character(s)</param>
+        /// <param name="idx">the index of the 'high' character</param>
+        /// <returns>the codepoint value</returns>
+        public static int ConvertToUtf32(String text, int idx)
+        {
+            return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
+        }
 
-		public static int[] ConvertToUtf32(String text)
-		{
-			if (text == null)
-			{
-				return null;
-			}
-			IList<int> charCodes = new List<int>(text.Length);
-			int pos = 0;
-			while (pos < text.Length)
-			{
-				if (IsSurrogatePair(text, pos))
-				{
-					charCodes.Add(ConvertToUtf32(text, pos));
-					pos += 2;
-				}
-				else
-				{
-					charCodes.Add((int)text[pos]);
-					pos++;
-				}
-			}
-			return ArrayUtil.ToArray(charCodes);
-		}
+        public static int[] ConvertToUtf32(String text)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+            IList<int> charCodes = new List<int>(text.Length);
+            int pos = 0;
+            while (pos < text.Length)
+            {
+                if (IsSurrogatePair(text, pos))
+                {
+                    charCodes.Add(ConvertToUtf32(text, pos));
+                    pos += 2;
+                }
+                else
+                {
+                    charCodes.Add((int)text[pos]);
+                    pos++;
+                }
+            }
+            return ArrayUtil.ToArray(charCodes);
+        }
 
-		/// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).
-		/// 	</summary>
-		/// <param name="codePoint">a Unicode value</param>
-		/// <returns>the corresponding characters in a String</returns>
-		public static char[] ConvertFromUtf32(int codePoint)
-		{
-			if (codePoint < 0x10000)
-			{
-				return new char[] { (char)codePoint };
-			}
-			codePoint -= 0x10000;
-			return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
-				+ 0xdc00) };
-		}
+        /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).
+        ///     </summary>
+        /// <param name="codePoint">a Unicode value</param>
+        /// <returns>the corresponding characters in a String</returns>
+        public static char[] ConvertFromUtf32(int codePoint)
+        {
+            if (codePoint < 0x10000)
+            {
+                return new char[] { (char)codePoint };
+            }
+            codePoint -= 0x10000;
+            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
+                + 0xdc00) };
+        }
 
-		/// <summary>
-		/// /
-		/// Converts a UTF32 code point sequence to a String with the corresponding character(s).
-		/// </summary>
-		/// <param name="text">a Unicode text sequence</param>
-		/// <param name="startPos">start position of text to convert, inclusive</param>
-		/// <param name="endPos">end position of txt to convert, exclusive</param>
-		/// <returns>the corresponding characters in a String</returns>
-		public static String ConvertFromUtf32(int[] text, int startPos, int endPos)
-		{
-			StringBuilder sb = new StringBuilder();
-			for (int i = startPos; i < endPos; i++)
-			{
-				sb.Append(ConvertFromUtf32ToCharArray(text[i]));
-			}
-			return sb.ToString();
-		}
+        /// <summary>
+        /// /
+        /// Converts a UTF32 code point sequence to a String with the corresponding character(s).
+        /// </summary>
+        /// <param name="text">a Unicode text sequence</param>
+        /// <param name="startPos">start position of text to convert, inclusive</param>
+        /// <param name="endPos">end position of txt to convert, exclusive</param>
+        /// <returns>the corresponding characters in a String</returns>
+        public static String ConvertFromUtf32(int[] text, int startPos, int endPos)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = startPos; i < endPos; i++)
+            {
+                sb.Append(ConvertFromUtf32ToCharArray(text[i]));
+            }
+            return sb.ToString();
+        }
 
-		/// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).
-		/// 	</summary>
-		/// <param name="codePoint">a Unicode value</param>
-		/// <returns>the corresponding characters in a char arrat</returns>
-		public static char[] ConvertFromUtf32ToCharArray(int codePoint)
-		{
-			if (codePoint < 0x10000)
-			{
-				return new char[] { (char)codePoint };
-			}
-			codePoint -= 0x10000;
-			return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
-				+ 0xdc00) };
-		}
-	}
+        /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).
+        ///     </summary>
+        /// <param name="codePoint">a Unicode value</param>
+        /// <returns>the corresponding characters in a char arrat</returns>
+        public static char[] ConvertFromUtf32ToCharArray(int codePoint)
+        {
+            if (codePoint < 0x10000)
+            {
+                return new char[] { (char)codePoint };
+            }
+            codePoint -= 0x10000;
+            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
+                + 0xdc00) };
+        }
+    }
 }

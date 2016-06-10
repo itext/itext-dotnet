@@ -46,39 +46,39 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Tagging
 {
-	/// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
-	public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem
-	{
-		protected internal PdfStructElem parent;
+    /// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
+    public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem
+    {
+        protected internal PdfStructElem parent;
 
-		protected internal PdfMcr(PdfObject pdfObject, PdfStructElem parent)
-			: base(pdfObject)
-		{
-			this.parent = parent;
-		}
+        protected internal PdfMcr(PdfObject pdfObject, PdfStructElem parent)
+            : base(pdfObject)
+        {
+            this.parent = parent;
+        }
 
-		public abstract int GetMcid();
+        public abstract int GetMcid();
 
-		public abstract PdfDictionary GetPageObject();
+        public abstract PdfDictionary GetPageObject();
 
-		public virtual PdfName GetRole()
-		{
-			return parent.GetRole();
-		}
+        public virtual PdfName GetRole()
+        {
+            return parent.GetRole();
+        }
 
-		public virtual IPdfStructElem GetParent()
-		{
-			return parent;
-		}
+        public virtual IPdfStructElem GetParent()
+        {
+            return parent;
+        }
 
-		public virtual IList<IPdfStructElem> GetKids()
-		{
-			return null;
-		}
+        public virtual IList<IPdfStructElem> GetKids()
+        {
+            return null;
+        }
 
-		protected internal override bool IsWrappedObjectMustBeIndirect()
-		{
-			return false;
-		}
-	}
+        protected internal override bool IsWrappedObjectMustBeIndirect()
+        {
+            return false;
+        }
+    }
 }

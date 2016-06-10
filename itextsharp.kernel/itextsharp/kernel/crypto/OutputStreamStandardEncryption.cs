@@ -46,96 +46,96 @@ using System.IO;
 
 namespace iTextSharp.Kernel.Crypto
 {
-	public class OutputStreamStandardEncryption : OutputStreamEncryption
-	{
-		protected internal ARCFOUREncryption arcfour;
+    public class OutputStreamStandardEncryption : OutputStreamEncryption
+    {
+        protected internal ARCFOUREncryption arcfour;
 
-		/// <summary>Creates a new instance of OutputStreamStandardEncryption</summary>
-		public OutputStreamStandardEncryption(Stream @out, byte[] key, int off, int len)
-			: base(@out)
-		{
-			arcfour = new ARCFOUREncryption();
-			arcfour.PrepareARCFOURKey(key, off, len);
-		}
+        /// <summary>Creates a new instance of OutputStreamStandardEncryption</summary>
+        public OutputStreamStandardEncryption(Stream @out, byte[] key, int off, int len)
+            : base(@out)
+        {
+            arcfour = new ARCFOUREncryption();
+            arcfour.PrepareARCFOURKey(key, off, len);
+        }
 
-		public OutputStreamStandardEncryption(Stream @out, byte[] key)
-			: this(@out, key, 0, key.Length)
-		{
-		}
+        public OutputStreamStandardEncryption(Stream @out, byte[] key)
+            : this(@out, key, 0, key.Length)
+        {
+        }
 
-		/// <summary>
-		/// Writes
-		/// <paramref name="len"/>
-		/// bytes from the specified byte array
-		/// starting at offset
-		/// <paramref name="off"/>
-		/// to this output stream.
-		/// The general contract for
-		/// <c>write(b, off, len)</c>
-		/// is that
-		/// some of the bytes in the array
-		/// <paramref name="b"/>
-		/// are written to the
-		/// output stream in order; element
-		/// <c>b[off]</c>
-		/// is the first
-		/// byte written and
-		/// <c>b[off+len-1]</c>
-		/// is the last byte written
-		/// by this operation.
-		/// <p/>
-		/// The
-		/// <c>write</c>
-		/// method of
-		/// <c>OutputStream</c>
-		/// calls
-		/// the write method of one argument on each of the bytes to be
-		/// written out. Subclasses are encouraged to override this method and
-		/// provide a more efficient implementation.
-		/// <p/>
-		/// If
-		/// <paramref name="b"/>
-		/// is
-		/// <see langword="null"/>
-		/// , a
-		/// <c>NullPointerException</c>
-		/// is thrown.
-		/// <p/>
-		/// If
-		/// <paramref name="off"/>
-		/// is negative, or
-		/// <paramref name="len"/>
-		/// is negative, or
-		/// <c>off+len</c>
-		/// is greater than the length of the array
-		/// <paramref name="b"/>
-		/// , then an <tt>IndexOutOfBoundsException</tt> is thrown.
-		/// </summary>
-		/// <param name="b">the data.</param>
-		/// <param name="off">the start offset in the data.</param>
-		/// <param name="len">the number of bytes to write.</param>
-		/// <exception cref="System.IO.IOException">
-		/// if an I/O error occurs. In particular,
-		/// an
-		/// <c>IOException</c>
-		/// is thrown if the output
-		/// stream is closed.
-		/// </exception>
-		public override void Write(byte[] b, int off, int len)
-		{
-			byte[] b2 = new byte[Math.Min(len, 4192)];
-			while (len > 0)
-			{
-				int sz = Math.Min(len, b2.Length);
-				arcfour.EncryptARCFOUR(b, off, sz, b2, 0);
-				@out.Write(b2, 0, sz);
-				len -= sz;
-				off += sz;
-			}
-		}
+        /// <summary>
+        /// Writes
+        /// <paramref name="len"/>
+        /// bytes from the specified byte array
+        /// starting at offset
+        /// <paramref name="off"/>
+        /// to this output stream.
+        /// The general contract for
+        /// <c>write(b, off, len)</c>
+        /// is that
+        /// some of the bytes in the array
+        /// <paramref name="b"/>
+        /// are written to the
+        /// output stream in order; element
+        /// <c>b[off]</c>
+        /// is the first
+        /// byte written and
+        /// <c>b[off+len-1]</c>
+        /// is the last byte written
+        /// by this operation.
+        /// <p/>
+        /// The
+        /// <c>write</c>
+        /// method of
+        /// <c>OutputStream</c>
+        /// calls
+        /// the write method of one argument on each of the bytes to be
+        /// written out. Subclasses are encouraged to override this method and
+        /// provide a more efficient implementation.
+        /// <p/>
+        /// If
+        /// <paramref name="b"/>
+        /// is
+        /// <see langword="null"/>
+        /// , a
+        /// <c>NullPointerException</c>
+        /// is thrown.
+        /// <p/>
+        /// If
+        /// <paramref name="off"/>
+        /// is negative, or
+        /// <paramref name="len"/>
+        /// is negative, or
+        /// <c>off+len</c>
+        /// is greater than the length of the array
+        /// <paramref name="b"/>
+        /// , then an <tt>IndexOutOfBoundsException</tt> is thrown.
+        /// </summary>
+        /// <param name="b">the data.</param>
+        /// <param name="off">the start offset in the data.</param>
+        /// <param name="len">the number of bytes to write.</param>
+        /// <exception cref="System.IO.IOException">
+        /// if an I/O error occurs. In particular,
+        /// an
+        /// <c>IOException</c>
+        /// is thrown if the output
+        /// stream is closed.
+        /// </exception>
+        public override void Write(byte[] b, int off, int len)
+        {
+            byte[] b2 = new byte[Math.Min(len, 4192)];
+            while (len > 0)
+            {
+                int sz = Math.Min(len, b2.Length);
+                arcfour.EncryptARCFOUR(b, off, sz, b2, 0);
+                @out.Write(b2, 0, sz);
+                len -= sz;
+                off += sz;
+            }
+        }
 
-		public override void Finish()
-		{
-		}
-	}
+        public override void Finish()
+        {
+        }
+    }
 }

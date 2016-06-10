@@ -47,34 +47,34 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Kernel.Pdf.Annot
 {
-	public class PdfPrinterMarkAnnotation : PdfAnnotation
-	{
-		public PdfPrinterMarkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
-			: base(rect)
-		{
-			SetNormalAppearance(appearanceStream.GetPdfObject());
-			SetFlags(PdfAnnotation.PRINT | PdfAnnotation.READ_ONLY);
-		}
+    public class PdfPrinterMarkAnnotation : PdfAnnotation
+    {
+        public PdfPrinterMarkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
+            : base(rect)
+        {
+            SetNormalAppearance(appearanceStream.GetPdfObject());
+            SetFlags(PdfAnnotation.PRINT | PdfAnnotation.READ_ONLY);
+        }
 
-		public PdfPrinterMarkAnnotation(PdfDictionary pdfObject)
-			: base(pdfObject)
-		{
-		}
+        public PdfPrinterMarkAnnotation(PdfDictionary pdfObject)
+            : base(pdfObject)
+        {
+        }
 
-		public override PdfName GetSubtype()
-		{
-			return PdfName.PrinterMark;
-		}
+        public override PdfName GetSubtype()
+        {
+            return PdfName.PrinterMark;
+        }
 
-		public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName
-			)
-		{
-			return (PdfMarkupAnnotation)Put(PdfName.MN, arbitraryTypeName);
-		}
+        public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName
+            )
+        {
+            return (PdfMarkupAnnotation)Put(PdfName.MN, arbitraryTypeName);
+        }
 
-		public virtual PdfName GetArbitraryTypeName()
-		{
-			return GetPdfObject().GetAsName(PdfName.MN);
-		}
-	}
+        public virtual PdfName GetArbitraryTypeName()
+        {
+            return GetPdfObject().GetAsName(PdfName.MN);
+        }
+    }
 }

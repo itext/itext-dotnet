@@ -48,132 +48,132 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout.Element
 {
-	/// <summary>
-	/// A
-	/// <see cref="Text"/>
-	/// is a piece of text of any length. As a
-	/// <see cref="ILeafElement">leaf element</see>
-	/// ,
-	/// it is the smallest piece of content that may bear specific layout attributes.
-	/// </summary>
-	public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement
-		, IAccessibleElement
-	{
-		protected internal String text;
+    /// <summary>
+    /// A
+    /// <see cref="Text"/>
+    /// is a piece of text of any length. As a
+    /// <see cref="ILeafElement">leaf element</see>
+    /// ,
+    /// it is the smallest piece of content that may bear specific layout attributes.
+    /// </summary>
+    public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement
+        , IAccessibleElement
+    {
+        protected internal String text;
 
-		protected internal PdfName role = PdfName.Span;
+        protected internal PdfName role = PdfName.Span;
 
-		protected internal AccessibilityProperties tagProperties;
+        protected internal AccessibilityProperties tagProperties;
 
-		/// <summary>Constructs a Text with its role initialized.</summary>
-		/// <param name="text">
-		/// the contents, as a
-		/// <see cref="System.String"/>
-		/// </param>
-		public Text(String text)
-		{
-			if (null == text)
-			{
-				throw new ArgumentException();
-			}
-			this.text = text;
-		}
+        /// <summary>Constructs a Text with its role initialized.</summary>
+        /// <param name="text">
+        /// the contents, as a
+        /// <see cref="System.String"/>
+        /// </param>
+        public Text(String text)
+        {
+            if (null == text)
+            {
+                throw new ArgumentException();
+            }
+            this.text = text;
+        }
 
-		public virtual String GetText()
-		{
-			return text;
-		}
+        public virtual String GetText()
+        {
+            return text;
+        }
 
-		public virtual void SetText(String text)
-		{
-			this.text = text;
-		}
+        public virtual void SetText(String text)
+        {
+            this.text = text;
+        }
 
-		/// <summary>Gets the text rise.</summary>
-		/// <returns>the vertical distance from the text's default base line, as a float.</returns>
-		public virtual float GetTextRise()
-		{
-			return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE
-				);
-		}
+        /// <summary>Gets the text rise.</summary>
+        /// <returns>the vertical distance from the text's default base line, as a float.</returns>
+        public virtual float GetTextRise()
+        {
+            return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE
+                );
+        }
 
-		/// <summary>Sets the text rise.</summary>
-		/// <param name="textRise">a vertical distance from the text's default base line.</param>
-		/// <returns>this Text</returns>
-		public virtual iTextSharp.Layout.Element.Text SetTextRise(float textRise)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE, textRise);
-			return (iTextSharp.Layout.Element.Text)(Object)this;
-		}
+        /// <summary>Sets the text rise.</summary>
+        /// <param name="textRise">a vertical distance from the text's default base line.</param>
+        /// <returns>this Text</returns>
+        public virtual iTextSharp.Layout.Element.Text SetTextRise(float textRise)
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE, textRise);
+            return (iTextSharp.Layout.Element.Text)(Object)this;
+        }
 
-		/// <summary>
-		/// Gets the horizontal scaling property, which determines how wide the text
-		/// should be stretched.
-		/// </summary>
-		/// <returns>the horizontal spacing, as a <code>float</code></returns>
-		public virtual float? GetHorizontalScaling()
-		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-				);
-		}
+        /// <summary>
+        /// Gets the horizontal scaling property, which determines how wide the text
+        /// should be stretched.
+        /// </summary>
+        /// <returns>the horizontal spacing, as a <code>float</code></returns>
+        public virtual float? GetHorizontalScaling()
+        {
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
+                );
+        }
 
-		/// <summary>Skews the text to simulate italic and other effects.</summary>
-		/// <remarks>
-		/// Skews the text to simulate italic and other effects. Try <CODE>alpha=0
-		/// </CODE> and <CODE>beta=12</CODE>.
-		/// </remarks>
-		/// <param name="alpha">the first angle in degrees</param>
-		/// <param name="beta">the second angle in degrees</param>
-		/// <returns>this <CODE>Text</CODE></returns>
-		public virtual iTextSharp.Layout.Element.Text SetSkew(float alpha, float beta)
-		{
-			alpha = (float)Math.Tan(alpha * Math.PI / 180);
-			beta = (float)Math.Tan(beta * Math.PI / 180);
-			SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta }
-				);
-			return this;
-		}
+        /// <summary>Skews the text to simulate italic and other effects.</summary>
+        /// <remarks>
+        /// Skews the text to simulate italic and other effects. Try <CODE>alpha=0
+        /// </CODE> and <CODE>beta=12</CODE>.
+        /// </remarks>
+        /// <param name="alpha">the first angle in degrees</param>
+        /// <param name="beta">the second angle in degrees</param>
+        /// <returns>this <CODE>Text</CODE></returns>
+        public virtual iTextSharp.Layout.Element.Text SetSkew(float alpha, float beta)
+        {
+            alpha = (float)Math.Tan(alpha * Math.PI / 180);
+            beta = (float)Math.Tan(beta * Math.PI / 180);
+            SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta }
+                );
+            return this;
+        }
 
-		/// <summary>
-		/// The horizontal scaling parameter adjusts the width of glyphs by stretching or
-		/// compressing them in the horizontal direction.
-		/// </summary>
-		/// <param name="horizontalScaling">
-		/// the scaling parameter. 1 means no scaling will be applied,
-		/// 0.5 means the text will be scaled by half.
-		/// 2 means the text will be twice as wide as normal one.
-		/// </param>
-		/// <returns>this Text</returns>
-		public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling
-			)
-		{
-			SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling
-				);
-			return (iTextSharp.Layout.Element.Text)(Object)this;
-		}
+        /// <summary>
+        /// The horizontal scaling parameter adjusts the width of glyphs by stretching or
+        /// compressing them in the horizontal direction.
+        /// </summary>
+        /// <param name="horizontalScaling">
+        /// the scaling parameter. 1 means no scaling will be applied,
+        /// 0.5 means the text will be scaled by half.
+        /// 2 means the text will be twice as wide as normal one.
+        /// </param>
+        /// <returns>this Text</returns>
+        public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling
+            )
+        {
+            SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling
+                );
+            return (iTextSharp.Layout.Element.Text)(Object)this;
+        }
 
-		public virtual PdfName GetRole()
-		{
-			return role;
-		}
+        public virtual PdfName GetRole()
+        {
+            return role;
+        }
 
-		public virtual void SetRole(PdfName role)
-		{
-			this.role = role;
-		}
+        public virtual void SetRole(PdfName role)
+        {
+            this.role = role;
+        }
 
-		public virtual AccessibilityProperties GetAccessibilityProperties()
-		{
-			if (tagProperties == null)
-			{
-				tagProperties = new AccessibilityProperties();
-			}
-			return tagProperties;
-		}
+        public virtual AccessibilityProperties GetAccessibilityProperties()
+        {
+            if (tagProperties == null)
+            {
+                tagProperties = new AccessibilityProperties();
+            }
+            return tagProperties;
+        }
 
-		protected internal override IRenderer MakeNewRenderer()
-		{
-			return new TextRenderer(this, text);
-		}
-	}
+        protected internal override IRenderer MakeNewRenderer()
+        {
+            return new TextRenderer(this, text);
+        }
+    }
 }

@@ -45,45 +45,45 @@ using System.Collections.Generic;
 
 namespace iTextSharp.IO.Font.Otf
 {
-	public class OpenTypeFeature
-	{
-		private OpenTypeFontTableReader openTypeReader;
+    public class OpenTypeFeature
+    {
+        private OpenTypeFontTableReader openTypeReader;
 
-		private IList<FeatureRecord> records;
+        private IList<FeatureRecord> records;
 
-		/// <exception cref="System.IO.IOException"/>
-		public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable
-			)
-		{
-			this.openTypeReader = openTypeReader;
-			records = new List<FeatureRecord>();
-			openTypeReader.rf.Seek(locationFeatureTable);
-			TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable
-				);
-			foreach (TagAndLocation tagLoc in tagsLocs)
-			{
-				openTypeReader.rf.Seek(tagLoc.location + 2);
-				//+2 don't use FeatureParams
-				int lookupCount = openTypeReader.rf.ReadUnsignedShort();
-				FeatureRecord rec = new FeatureRecord();
-				rec.tag = tagLoc.tag;
-				rec.lookups = openTypeReader.ReadUShortArray(lookupCount);
-				records.Add(rec);
-			}
-		}
+        /// <exception cref="System.IO.IOException"/>
+        public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable
+            )
+        {
+            this.openTypeReader = openTypeReader;
+            records = new List<FeatureRecord>();
+            openTypeReader.rf.Seek(locationFeatureTable);
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable
+                );
+            foreach (TagAndLocation tagLoc in tagsLocs)
+            {
+                openTypeReader.rf.Seek(tagLoc.location + 2);
+                //+2 don't use FeatureParams
+                int lookupCount = openTypeReader.rf.ReadUnsignedShort();
+                FeatureRecord rec = new FeatureRecord();
+                rec.tag = tagLoc.tag;
+                rec.lookups = openTypeReader.ReadUShortArray(lookupCount);
+                records.Add(rec);
+            }
+        }
 
-		public virtual IList<FeatureRecord> GetRecords()
-		{
-			return records;
-		}
+        public virtual IList<FeatureRecord> GetRecords()
+        {
+            return records;
+        }
 
-		public virtual FeatureRecord GetRecord(int idx)
-		{
-			if (idx < 0 || idx >= records.Count)
-			{
-				return null;
-			}
-			return records[idx];
-		}
-	}
+        public virtual FeatureRecord GetRecord(int idx)
+        {
+            if (idx < 0 || idx >= records.Count)
+            {
+                return null;
+            }
+            return records[idx];
+        }
+    }
 }

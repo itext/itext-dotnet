@@ -49,237 +49,237 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Filters
 {
-	/// <summary>Handles FlateDecode filter.</summary>
-	public class FlateDecodeFilter : IFilterHandler
-	{
-		public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-			, PdfDictionary streamDictionary)
-		{
-			byte[] res = FlateDecode(b, true);
-			if (res == null)
-			{
-				res = FlateDecode(b, false);
-			}
-			b = DecodePredictor(res, decodeParams);
-			return b;
-		}
+    /// <summary>Handles FlateDecode filter.</summary>
+    public class FlateDecodeFilter : IFilterHandler
+    {
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
+            , PdfDictionary streamDictionary)
+        {
+            byte[] res = FlateDecode(b, true);
+            if (res == null)
+            {
+                res = FlateDecode(b, false);
+            }
+            b = DecodePredictor(res, decodeParams);
+            return b;
+        }
 
-		/// <summary>A helper to flateDecode.</summary>
-		/// <param name="in">the input data</param>
-		/// <param name="strict">
-		/// 
-		/// <see langword="true"/>
-		/// to read a correct stream.
-		/// <see langword="false"/>
-		/// to try to read a corrupted stream.
-		/// </param>
-		/// <returns>the decoded data</returns>
-		public static byte[] FlateDecode(byte[] @in, bool strict)
-		{
-			MemoryStream stream = new MemoryStream(@in);
-			ZInflaterInputStream zip = new ZInflaterInputStream(stream);
-			MemoryStream @out = new MemoryStream();
-			byte[] b = new byte[strict ? 4092 : 1];
-			try
-			{
-				int n;
-				while ((n = zip.Read(b)) >= 0)
-				{
-					@out.Write(b, 0, n);
-				}
-				zip.Close();
-				@out.Close();
-				return @out.ToArray();
-			}
-			catch (Exception)
-			{
-				if (strict)
-				{
-					return null;
-				}
-				return @out.ToArray();
-			}
-		}
+        /// <summary>A helper to flateDecode.</summary>
+        /// <param name="in">the input data</param>
+        /// <param name="strict">
+        /// 
+        /// <see langword="true"/>
+        /// to read a correct stream.
+        /// <see langword="false"/>
+        /// to try to read a corrupted stream.
+        /// </param>
+        /// <returns>the decoded data</returns>
+        public static byte[] FlateDecode(byte[] @in, bool strict)
+        {
+            MemoryStream stream = new MemoryStream(@in);
+            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
+            MemoryStream @out = new MemoryStream();
+            byte[] b = new byte[strict ? 4092 : 1];
+            try
+            {
+                int n;
+                while ((n = zip.Read(b)) >= 0)
+                {
+                    @out.Write(b, 0, n);
+                }
+                zip.Close();
+                @out.Close();
+                return @out.ToArray();
+            }
+            catch (Exception)
+            {
+                if (strict)
+                {
+                    return null;
+                }
+                return @out.ToArray();
+            }
+        }
 
-		/// <param name="in">Input byte array.</param>
-		/// <param name="decodeParams">PdfDictionary of decodeParams.</param>
-		/// <returns>a byte array</returns>
-		public static byte[] DecodePredictor(byte[] @in, PdfObject decodeParams)
-		{
-			if (decodeParams == null || decodeParams.GetObjectType() != PdfObject.DICTIONARY)
-			{
-				return @in;
-			}
-			PdfDictionary dic = (PdfDictionary)decodeParams;
-			PdfObject obj = dic.Get(PdfName.Predictor);
-			if (obj == null || obj.GetObjectType() != PdfObject.NUMBER)
-			{
-				return @in;
-			}
-			int predictor = ((PdfNumber)obj).IntValue();
-			if (predictor < 10 && predictor != 2)
-			{
-				return @in;
-			}
-			int width = 1;
-			obj = dic.Get(PdfName.Columns);
-			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
-			{
-				width = ((PdfNumber)obj).IntValue();
-			}
-			int colors = 1;
-			obj = dic.Get(PdfName.Colors);
-			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
-			{
-				colors = ((PdfNumber)obj).IntValue();
-			}
-			int bpc = 8;
-			obj = dic.Get(PdfName.BitsPerComponent);
-			if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
-			{
-				bpc = ((PdfNumber)obj).IntValue();
-			}
-			BinaryReader dataStream = new BinaryReader(new MemoryStream(@in));
-			MemoryStream fout = new MemoryStream(@in.Length);
-			int bytesPerPixel = colors * bpc / 8;
-			int bytesPerRow = (colors * width * bpc + 7) / 8;
-			byte[] curr = new byte[bytesPerRow];
-			byte[] prior = new byte[bytesPerRow];
-			if (predictor == 2)
-			{
-				if (bpc == 8)
-				{
-					int numRows = @in.Length / bytesPerRow;
-					for (int row = 0; row < numRows; row++)
-					{
-						int rowStart = row * bytesPerRow;
-						for (int col = bytesPerPixel; col < bytesPerRow; col++)
-						{
-							@in[rowStart + col] = (byte)(@in[rowStart + col] + @in[rowStart + col - bytesPerPixel
-								]);
-						}
-					}
-				}
-				return @in;
-			}
-			// Decode the (sub)image row-by-row
-			while (true)
-			{
-				// Read the filter type byte and a row of data
-				int filter;
-				try
-				{
-					filter = dataStream.Read();
-					if (filter < 0)
-					{
-						return fout.ToArray();
-					}
-					dataStream.ReadFully(curr, 0, bytesPerRow);
-				}
-				catch (Exception)
-				{
-					return fout.ToArray();
-				}
-				switch (filter)
-				{
-					case 0:
-					{
-						//PNG_FILTER_NONE
-						break;
-					}
+        /// <param name="in">Input byte array.</param>
+        /// <param name="decodeParams">PdfDictionary of decodeParams.</param>
+        /// <returns>a byte array</returns>
+        public static byte[] DecodePredictor(byte[] @in, PdfObject decodeParams)
+        {
+            if (decodeParams == null || decodeParams.GetObjectType() != PdfObject.DICTIONARY)
+            {
+                return @in;
+            }
+            PdfDictionary dic = (PdfDictionary)decodeParams;
+            PdfObject obj = dic.Get(PdfName.Predictor);
+            if (obj == null || obj.GetObjectType() != PdfObject.NUMBER)
+            {
+                return @in;
+            }
+            int predictor = ((PdfNumber)obj).IntValue();
+            if (predictor < 10 && predictor != 2)
+            {
+                return @in;
+            }
+            int width = 1;
+            obj = dic.Get(PdfName.Columns);
+            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
+            {
+                width = ((PdfNumber)obj).IntValue();
+            }
+            int colors = 1;
+            obj = dic.Get(PdfName.Colors);
+            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
+            {
+                colors = ((PdfNumber)obj).IntValue();
+            }
+            int bpc = 8;
+            obj = dic.Get(PdfName.BitsPerComponent);
+            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER)
+            {
+                bpc = ((PdfNumber)obj).IntValue();
+            }
+            BinaryReader dataStream = new BinaryReader(new MemoryStream(@in));
+            MemoryStream fout = new MemoryStream(@in.Length);
+            int bytesPerPixel = colors * bpc / 8;
+            int bytesPerRow = (colors * width * bpc + 7) / 8;
+            byte[] curr = new byte[bytesPerRow];
+            byte[] prior = new byte[bytesPerRow];
+            if (predictor == 2)
+            {
+                if (bpc == 8)
+                {
+                    int numRows = @in.Length / bytesPerRow;
+                    for (int row = 0; row < numRows; row++)
+                    {
+                        int rowStart = row * bytesPerRow;
+                        for (int col = bytesPerPixel; col < bytesPerRow; col++)
+                        {
+                            @in[rowStart + col] = (byte)(@in[rowStart + col] + @in[rowStart + col - bytesPerPixel
+                                ]);
+                        }
+                    }
+                }
+                return @in;
+            }
+            // Decode the (sub)image row-by-row
+            while (true)
+            {
+                // Read the filter type byte and a row of data
+                int filter;
+                try
+                {
+                    filter = dataStream.Read();
+                    if (filter < 0)
+                    {
+                        return fout.ToArray();
+                    }
+                    dataStream.ReadFully(curr, 0, bytesPerRow);
+                }
+                catch (Exception)
+                {
+                    return fout.ToArray();
+                }
+                switch (filter)
+                {
+                    case 0:
+                    {
+                        //PNG_FILTER_NONE
+                        break;
+                    }
 
-					case 1:
-					{
-						//PNG_FILTER_SUB
-						for (int i = bytesPerPixel; i < bytesPerRow; i++)
-						{
-							curr[i] += curr[i - bytesPerPixel];
-						}
-						break;
-					}
+                    case 1:
+                    {
+                        //PNG_FILTER_SUB
+                        for (int i = bytesPerPixel; i < bytesPerRow; i++)
+                        {
+                            curr[i] += curr[i - bytesPerPixel];
+                        }
+                        break;
+                    }
 
-					case 2:
-					{
-						//PNG_FILTER_UP
-						for (int i_1 = 0; i_1 < bytesPerRow; i_1++)
-						{
-							curr[i_1] += prior[i_1];
-						}
-						break;
-					}
+                    case 2:
+                    {
+                        //PNG_FILTER_UP
+                        for (int i_1 = 0; i_1 < bytesPerRow; i_1++)
+                        {
+                            curr[i_1] += prior[i_1];
+                        }
+                        break;
+                    }
 
-					case 3:
-					{
-						//PNG_FILTER_AVERAGE
-						for (int i_2 = 0; i_2 < bytesPerPixel; i_2++)
-						{
-							curr[i_2] += (byte)(prior[i_2] / 2);
-						}
-						for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++)
-						{
-							curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 
-								2);
-						}
-						break;
-					}
+                    case 3:
+                    {
+                        //PNG_FILTER_AVERAGE
+                        for (int i_2 = 0; i_2 < bytesPerPixel; i_2++)
+                        {
+                            curr[i_2] += (byte)(prior[i_2] / 2);
+                        }
+                        for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++)
+                        {
+                            curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 
+                                2);
+                        }
+                        break;
+                    }
 
-					case 4:
-					{
-						//PNG_FILTER_PAETH
-						for (int i_4 = 0; i_4 < bytesPerPixel; i_4++)
-						{
-							curr[i_4] += prior[i_4];
-						}
-						for (int i_5 = bytesPerPixel; i_5 < bytesPerRow; i_5++)
-						{
-							int a = curr[i_5 - bytesPerPixel] & 0xff;
-							int b = prior[i_5] & 0xff;
-							int c = prior[i_5 - bytesPerPixel] & 0xff;
-							int p = a + b - c;
-							int pa = Math.Abs(p - a);
-							int pb = Math.Abs(p - b);
-							int pc = Math.Abs(p - c);
-							int ret;
-							if (pa <= pb && pa <= pc)
-							{
-								ret = a;
-							}
-							else
-							{
-								if (pb <= pc)
-								{
-									ret = b;
-								}
-								else
-								{
-									ret = c;
-								}
-							}
-							curr[i_5] += (byte)ret;
-						}
-						break;
-					}
+                    case 4:
+                    {
+                        //PNG_FILTER_PAETH
+                        for (int i_4 = 0; i_4 < bytesPerPixel; i_4++)
+                        {
+                            curr[i_4] += prior[i_4];
+                        }
+                        for (int i_5 = bytesPerPixel; i_5 < bytesPerRow; i_5++)
+                        {
+                            int a = curr[i_5 - bytesPerPixel] & 0xff;
+                            int b = prior[i_5] & 0xff;
+                            int c = prior[i_5 - bytesPerPixel] & 0xff;
+                            int p = a + b - c;
+                            int pa = Math.Abs(p - a);
+                            int pb = Math.Abs(p - b);
+                            int pc = Math.Abs(p - c);
+                            int ret;
+                            if (pa <= pb && pa <= pc)
+                            {
+                                ret = a;
+                            }
+                            else
+                            {
+                                if (pb <= pc)
+                                {
+                                    ret = b;
+                                }
+                                else
+                                {
+                                    ret = c;
+                                }
+                            }
+                            curr[i_5] += (byte)ret;
+                        }
+                        break;
+                    }
 
-					default:
-					{
-						// Error -- unknown filter type
-						throw new PdfException(PdfException.PngFilterUnknown);
-					}
-				}
-				try
-				{
-					fout.Write(curr);
-				}
-				catch (System.IO.IOException)
-				{
-					// Never happens
-					System.Diagnostics.Debug.Assert(true, "Happens!");
-				}
-				// Swap curr and prior
-				byte[] tmp = prior;
-				prior = curr;
-				curr = tmp;
-			}
-		}
-	}
+                    default:
+                    {
+                        // Error -- unknown filter type
+                        throw new PdfException(PdfException.PngFilterUnknown);
+                    }
+                }
+                try
+                {
+                    fout.Write(curr);
+                }
+                catch (System.IO.IOException)
+                {
+                    // Never happens
+                    System.Diagnostics.Debug.Assert(true, "Happens!");
+                }
+                // Swap curr and prior
+                byte[] tmp = prior;
+                prior = curr;
+                curr = tmp;
+            }
+        }
+    }
 }

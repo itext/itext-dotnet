@@ -51,314 +51,314 @@ using iTextSharp.Kernel.Pdf.Canvas;
 
 namespace iTextSharp.Barcodes
 {
-	public class BarcodeCodabar : Barcode1D
-	{
-		/// <summary>The index chars to <CODE>BARS</CODE>.</summary>
-		private const String CHARS = "0123456789-$:/.+ABCD";
+    public class BarcodeCodabar : Barcode1D
+    {
+        /// <summary>The index chars to <CODE>BARS</CODE>.</summary>
+        private const String CHARS = "0123456789-$:/.+ABCD";
 
-		private const int START_STOP_IDX = 16;
+        private const int START_STOP_IDX = 16;
 
-		/// <summary>The bars to generate the code.</summary>
-		private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0
-			, 1, 1 }, new byte[] { 0, 0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 1 }
-			, new byte[] { 1, 1, 0, 0, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 0, 1, 0 }, new byte
-			[] { 1, 0, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1 }, new byte[] { 0, 
-			1, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 0 }, new byte[] { 1, 0, 0, 1, 
-			0, 0, 0 }, new byte[] { 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 1, 1, 0, 0, 0 }
-			, new byte[] { 1, 0, 0, 0, 1, 0, 1 }, new byte[] { 1, 0, 1, 0, 0, 0, 1 }, new byte
-			[] { 1, 0, 1, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 0, 1, 0, 1 }, new byte[] { 0, 
-			0, 1, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 1 }, new byte[] { 0, 0, 0, 1, 
-			0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
+        /// <summary>The bars to generate the code.</summary>
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0
+            , 1, 1 }, new byte[] { 0, 0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 
+            1 }, new byte[] { 1, 1, 0, 0, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 0, 1, 0 }, 
+            new byte[] { 1, 0, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1 }, new byte
+            [] { 0, 1, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 0 }, new byte[] { 
+            1, 0, 0, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 
+            1, 1, 0, 0, 0 }, new byte[] { 1, 0, 0, 0, 1, 0, 1 }, new byte[] { 1, 0, 1, 0, 
+            0, 0, 1 }, new byte[] { 1, 0, 1, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 0, 1, 0, 
+            1 }, new byte[] { 0, 0, 1, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 1 }, 
+            new byte[] { 0, 0, 0, 1, 0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
 
-		/// <summary>Creates a new BarcodeCodabar.</summary>
-		public BarcodeCodabar(PdfDocument document)
-			: base(document)
-		{
-			// 0
-			// 1
-			// 2
-			// 3
-			// 4
-			// 5
-			// 6
-			// 7
-			// 8
-			// 9
-			// -
-			// $
-			// :
-			// /
-			// .
-			// +
-			// a
-			// b
-			// c
-			// d
-			try
-			{
-				x = 0.8f;
-				n = 2;
-				font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-				size = 8;
-				baseline = size;
-				barHeight = size * 3;
-				textAlignment = ALIGN_CENTER;
-				generateChecksum = false;
-				checksumText = false;
-				startStopText = false;
-			}
-			catch (Exception e)
-			{
-				throw new PdfException(e.Message, e.InnerException);
-			}
-		}
+        /// <summary>Creates a new BarcodeCodabar.</summary>
+        public BarcodeCodabar(PdfDocument document)
+            : base(document)
+        {
+            // 0
+            // 1
+            // 2
+            // 3
+            // 4
+            // 5
+            // 6
+            // 7
+            // 8
+            // 9
+            // -
+            // $
+            // :
+            // /
+            // .
+            // +
+            // a
+            // b
+            // c
+            // d
+            try
+            {
+                x = 0.8f;
+                n = 2;
+                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+                size = 8;
+                baseline = size;
+                barHeight = size * 3;
+                textAlignment = ALIGN_CENTER;
+                generateChecksum = false;
+                checksumText = false;
+                startStopText = false;
+            }
+            catch (Exception e)
+            {
+                throw new PdfException(e.Message, e.InnerException);
+            }
+        }
 
-		/// <summary>Creates the bars.</summary>
-		/// <param name="text">the text to create the bars</param>
-		/// <returns>the bars</returns>
-		public static byte[] GetBarsCodabar(String text)
-		{
-			text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
-			int len = text.Length;
-			if (len < 2)
-			{
-				throw new ArgumentException(PdfException.CodabarMustHaveAtLeastAStartAndStopCharacter
-					);
-			}
-			if (CHARS.IndexOf(text[0]) < START_STOP_IDX || CHARS.IndexOf(text[len - 1]) < START_STOP_IDX)
-			{
-				throw new ArgumentException(PdfException.CodabarMustHaveOneAbcdAsStartStopCharacter
-					);
-			}
-			byte[] bars = new byte[text.Length * 8 - 1];
-			for (int k = 0; k < len; ++k)
-			{
-				int idx = CHARS.IndexOf(text[k]);
-				if (idx >= START_STOP_IDX && k > 0 && k < len - 1)
-				{
-					throw new ArgumentException(PdfException.CodabarStartStopCharacterAreOnlyExtremes
-						);
-				}
-				if (idx < 0)
-				{
-					throw new ArgumentException(PdfException.CodabarCharacterOneIsIllegal);
-				}
-				System.Array.Copy(BARS[idx], 0, bars, k * 8, 7);
-			}
-			return bars;
-		}
+        /// <summary>Creates the bars.</summary>
+        /// <param name="text">the text to create the bars</param>
+        /// <returns>the bars</returns>
+        public static byte[] GetBarsCodabar(String text)
+        {
+            text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            int len = text.Length;
+            if (len < 2)
+            {
+                throw new ArgumentException(PdfException.CodabarMustHaveAtLeastAStartAndStopCharacter
+                    );
+            }
+            if (CHARS.IndexOf(text[0]) < START_STOP_IDX || CHARS.IndexOf(text[len - 1]) < START_STOP_IDX)
+            {
+                throw new ArgumentException(PdfException.CodabarMustHaveOneAbcdAsStartStopCharacter
+                    );
+            }
+            byte[] bars = new byte[text.Length * 8 - 1];
+            for (int k = 0; k < len; ++k)
+            {
+                int idx = CHARS.IndexOf(text[k]);
+                if (idx >= START_STOP_IDX && k > 0 && k < len - 1)
+                {
+                    throw new ArgumentException(PdfException.CodabarStartStopCharacterAreOnlyExtremes
+                        );
+                }
+                if (idx < 0)
+                {
+                    throw new ArgumentException(PdfException.CodabarCharacterOneIsIllegal);
+                }
+                System.Array.Copy(BARS[idx], 0, bars, k * 8, 7);
+            }
+            return bars;
+        }
 
-		public static String CalculateChecksum(String code)
-		{
-			if (code.Length < 2)
-			{
-				return code;
-			}
-			String text = code.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
-			int sum = 0;
-			int len = text.Length;
-			for (int k = 0; k < len; ++k)
-			{
-				sum += CHARS.IndexOf(text[k]);
-			}
-			sum = (sum + 15) / 16 * 16 - sum;
-			return code.JSubstring(0, len - 1) + CHARS[sum] + code.Substring(len - 1);
-		}
+        public static String CalculateChecksum(String code)
+        {
+            if (code.Length < 2)
+            {
+                return code;
+            }
+            String text = code.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            int sum = 0;
+            int len = text.Length;
+            for (int k = 0; k < len; ++k)
+            {
+                sum += CHARS.IndexOf(text[k]);
+            }
+            sum = (sum + 15) / 16 * 16 - sum;
+            return code.JSubstring(0, len - 1) + CHARS[sum] + code.Substring(len - 1);
+        }
 
-		/// <summary>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy.
-		/// </summary>
-		/// <remarks>
-		/// Gets the maximum area that the barcode and the text, if
-		/// any, will occupy. The lower left corner is always (0, 0).
-		/// </remarks>
-		/// <returns>the size the barcode occupies.</returns>
-		public override Rectangle GetBarcodeSize()
-		{
-			float fontX = 0;
-			float fontY = 0;
-			String text = code;
-			if (generateChecksum && checksumText)
-			{
-				text = CalculateChecksum(code);
-			}
-			if (!startStopText)
-			{
-				text = text.JSubstring(1, text.Length - 1);
-			}
-			if (font != null)
-			{
-				if (baseline > 0)
-				{
-					fontY = baseline - GetDescender();
-				}
-				else
-				{
-					fontY = -baseline + size;
-				}
-				fontX = font.GetWidth(altText != null ? altText : text, size);
-			}
-			text = code;
-			if (generateChecksum)
-			{
-				text = CalculateChecksum(code);
-			}
-			byte[] bars = GetBarsCodabar(text);
-			int wide = 0;
-			for (int k = 0; k < bars.Length; ++k)
-			{
-				wide += bars[k];
-			}
-			int narrow = bars.Length - wide;
-			float fullWidth = x * (narrow + wide * n);
-			fullWidth = Math.Max(fullWidth, fontX);
-			float fullHeight = barHeight + fontY;
-			return new Rectangle(fullWidth, fullHeight);
-		}
+        /// <summary>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy.
+        /// </summary>
+        /// <remarks>
+        /// Gets the maximum area that the barcode and the text, if
+        /// any, will occupy. The lower left corner is always (0, 0).
+        /// </remarks>
+        /// <returns>the size the barcode occupies.</returns>
+        public override Rectangle GetBarcodeSize()
+        {
+            float fontX = 0;
+            float fontY = 0;
+            String text = code;
+            if (generateChecksum && checksumText)
+            {
+                text = CalculateChecksum(code);
+            }
+            if (!startStopText)
+            {
+                text = text.JSubstring(1, text.Length - 1);
+            }
+            if (font != null)
+            {
+                if (baseline > 0)
+                {
+                    fontY = baseline - GetDescender();
+                }
+                else
+                {
+                    fontY = -baseline + size;
+                }
+                fontX = font.GetWidth(altText != null ? altText : text, size);
+            }
+            text = code;
+            if (generateChecksum)
+            {
+                text = CalculateChecksum(code);
+            }
+            byte[] bars = GetBarsCodabar(text);
+            int wide = 0;
+            for (int k = 0; k < bars.Length; ++k)
+            {
+                wide += bars[k];
+            }
+            int narrow = bars.Length - wide;
+            float fullWidth = x * (narrow + wide * n);
+            fullWidth = Math.Max(fullWidth, fontX);
+            float fullHeight = barHeight + fontY;
+            return new Rectangle(fullWidth, fullHeight);
+        }
 
-		/// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
-		/// <remarks>
-		/// Places the barcode in a <CODE>PdfCanvas</CODE>. The
-		/// barcode is always placed at coordinates (0, 0). Use the
-		/// translation matrix to move it elsewhere.<p>
-		/// The bars and text are written in the following colors:<p>
-		/// <P><TABLE BORDER=1>
-		/// <TR>
-		/// <TH><P><CODE>barColor</CODE></TH>
-		/// <TH><P><CODE>textColor</CODE></TH>
-		/// <TH><P>Result</TH>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with current fill color</TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>null</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// <TR>
-		/// <TD><P><CODE>barColor</CODE></TD>
-		/// <TD><P><CODE>textColor</CODE></TD>
-		/// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-		/// </TR>
-		/// </TABLE>
-		/// </remarks>
-		/// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-		/// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-		/// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
-		/// <returns>the dimensions the barcode occupies</returns>
-		public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-			 barColor, iTextSharp.Kernel.Color.Color textColor)
-		{
-			String fullCode = code;
-			if (generateChecksum && checksumText)
-			{
-				fullCode = CalculateChecksum(code);
-			}
-			if (!startStopText)
-			{
-				fullCode = fullCode.JSubstring(1, fullCode.Length - 1);
-			}
-			float fontX = 0;
-			if (font != null)
-			{
-				fontX = font.GetWidth(fullCode = altText != null ? altText : fullCode, size);
-			}
-			byte[] bars = GetBarsCodabar(generateChecksum ? CalculateChecksum(code) : code);
-			int wide = 0;
-			for (int k = 0; k < bars.Length; ++k)
-			{
-				wide += bars[k];
-			}
-			int narrow = bars.Length - wide;
-			float fullWidth = x * (narrow + wide * n);
-			float barStartX = 0;
-			float textStartX = 0;
-			switch (textAlignment)
-			{
-				case ALIGN_LEFT:
-				{
-					break;
-				}
+        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <remarks>
+        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// barcode is always placed at coordinates (0, 0). Use the
+        /// translation matrix to move it elsewhere.<p>
+        /// The bars and text are written in the following colors:<p>
+        /// <P><TABLE BORDER=1>
+        /// <TR>
+        /// <TH><P><CODE>barColor</CODE></TH>
+        /// <TH><P><CODE>textColor</CODE></TH>
+        /// <TH><P>Result</TH>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with current fill color</TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P>bars and text painted with <CODE>barColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>null</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// <TR>
+        /// <TD><P><CODE>barColor</CODE></TD>
+        /// <TD><P><CODE>textColor</CODE></TD>
+        /// <TD><P>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
+        /// </TR>
+        /// </TABLE>
+        /// </remarks>
+        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
+        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <returns>the dimensions the barcode occupies</returns>
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
+             barColor, iTextSharp.Kernel.Color.Color textColor)
+        {
+            String fullCode = code;
+            if (generateChecksum && checksumText)
+            {
+                fullCode = CalculateChecksum(code);
+            }
+            if (!startStopText)
+            {
+                fullCode = fullCode.JSubstring(1, fullCode.Length - 1);
+            }
+            float fontX = 0;
+            if (font != null)
+            {
+                fontX = font.GetWidth(fullCode = altText != null ? altText : fullCode, size);
+            }
+            byte[] bars = GetBarsCodabar(generateChecksum ? CalculateChecksum(code) : code);
+            int wide = 0;
+            for (int k = 0; k < bars.Length; ++k)
+            {
+                wide += bars[k];
+            }
+            int narrow = bars.Length - wide;
+            float fullWidth = x * (narrow + wide * n);
+            float barStartX = 0;
+            float textStartX = 0;
+            switch (textAlignment)
+            {
+                case ALIGN_LEFT:
+                {
+                    break;
+                }
 
-				case ALIGN_RIGHT:
-				{
-					if (fontX > fullWidth)
-					{
-						barStartX = fontX - fullWidth;
-					}
-					else
-					{
-						textStartX = fullWidth - fontX;
-					}
-					break;
-				}
+                case ALIGN_RIGHT:
+                {
+                    if (fontX > fullWidth)
+                    {
+                        barStartX = fontX - fullWidth;
+                    }
+                    else
+                    {
+                        textStartX = fullWidth - fontX;
+                    }
+                    break;
+                }
 
-				default:
-				{
-					if (fontX > fullWidth)
-					{
-						barStartX = (fontX - fullWidth) / 2;
-					}
-					else
-					{
-						textStartX = (fullWidth - fontX) / 2;
-					}
-					break;
-				}
-			}
-			float barStartY = 0;
-			float textStartY = 0;
-			if (font != null)
-			{
-				if (baseline <= 0)
-				{
-					textStartY = barHeight - baseline;
-				}
-				else
-				{
-					textStartY = -GetDescender();
-					barStartY = textStartY + baseline;
-				}
-			}
-			bool print = true;
-			if (barColor != null)
-			{
-				canvas.SetFillColor(barColor);
-			}
-			for (int k_1 = 0; k_1 < bars.Length; ++k_1)
-			{
-				float w = (bars[k_1] == 0 ? x : x * n);
-				if (print)
-				{
-					canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
-				}
-				print = !print;
-				barStartX += w;
-			}
-			canvas.Fill();
-			if (font != null)
-			{
-				if (textColor != null)
-				{
-					canvas.SetFillColor(textColor);
-				}
-				canvas.BeginText();
-				canvas.SetFontAndSize(font, size);
-				canvas.SetTextMatrix(textStartX, textStartY);
-				canvas.ShowText(fullCode);
-				canvas.EndText();
-			}
-			return GetBarcodeSize();
-		}
-		// AWT related methods (remove this if you port to Android / GAE)
-	}
+                default:
+                {
+                    if (fontX > fullWidth)
+                    {
+                        barStartX = (fontX - fullWidth) / 2;
+                    }
+                    else
+                    {
+                        textStartX = (fullWidth - fontX) / 2;
+                    }
+                    break;
+                }
+            }
+            float barStartY = 0;
+            float textStartY = 0;
+            if (font != null)
+            {
+                if (baseline <= 0)
+                {
+                    textStartY = barHeight - baseline;
+                }
+                else
+                {
+                    textStartY = -GetDescender();
+                    barStartY = textStartY + baseline;
+                }
+            }
+            bool print = true;
+            if (barColor != null)
+            {
+                canvas.SetFillColor(barColor);
+            }
+            for (int k_1 = 0; k_1 < bars.Length; ++k_1)
+            {
+                float w = (bars[k_1] == 0 ? x : x * n);
+                if (print)
+                {
+                    canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
+                }
+                print = !print;
+                barStartX += w;
+            }
+            canvas.Fill();
+            if (font != null)
+            {
+                if (textColor != null)
+                {
+                    canvas.SetFillColor(textColor);
+                }
+                canvas.BeginText();
+                canvas.SetFontAndSize(font, size);
+                canvas.SetTextMatrix(textStartX, textStartY);
+                canvas.ShowText(fullCode);
+                canvas.EndText();
+            }
+            return GetBarcodeSize();
+        }
+        // AWT related methods (remove this if you port to Android / GAE)
+    }
 }

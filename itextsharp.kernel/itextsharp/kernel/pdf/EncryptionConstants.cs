@@ -43,59 +43,59 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf
 {
-	public class EncryptionConstants
-	{
-		/// <summary>Type of encryption.</summary>
-		public const int STANDARD_ENCRYPTION_40 = 0;
+    public class EncryptionConstants
+    {
+        /// <summary>Type of encryption.</summary>
+        public const int STANDARD_ENCRYPTION_40 = 0;
 
-		/// <summary>Type of encryption.</summary>
-		public const int STANDARD_ENCRYPTION_128 = 1;
+        /// <summary>Type of encryption.</summary>
+        public const int STANDARD_ENCRYPTION_128 = 1;
 
-		/// <summary>Type of encryption.</summary>
-		public const int ENCRYPTION_AES_128 = 2;
+        /// <summary>Type of encryption.</summary>
+        public const int ENCRYPTION_AES_128 = 2;
 
-		/// <summary>Type of encryption.</summary>
-		public const int ENCRYPTION_AES_256 = 3;
+        /// <summary>Type of encryption.</summary>
+        public const int ENCRYPTION_AES_256 = 3;
 
-		/// <summary>Mask to separate the encryption type from the encryption mode.</summary>
-		internal const int ENCRYPTION_MASK = 7;
+        /// <summary>Mask to separate the encryption type from the encryption mode.</summary>
+        internal const int ENCRYPTION_MASK = 7;
 
-		/// <summary>Add this to the mode to keep the metadata in clear text.</summary>
-		public const int DO_NOT_ENCRYPT_METADATA = 8;
+        /// <summary>Add this to the mode to keep the metadata in clear text.</summary>
+        public const int DO_NOT_ENCRYPT_METADATA = 8;
 
-		/// <summary>Add this to the mode to keep encrypt only the embedded files.</summary>
-		public const int EMBEDDED_FILES_ONLY = 24;
+        /// <summary>Add this to the mode to keep encrypt only the embedded files.</summary>
+        public const int EMBEDDED_FILES_ONLY = 24;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_PRINTING = 4 + 2048;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_PRINTING = 4 + 2048;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_MODIFY_CONTENTS = 8;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_MODIFY_CONTENTS = 8;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_COPY = 16;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_COPY = 16;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_MODIFY_ANNOTATIONS = 32;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_MODIFY_ANNOTATIONS = 32;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_FILL_IN = 256;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_FILL_IN = 256;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_SCREENREADERS = 512;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_SCREENREADERS = 512;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_ASSEMBLY = 1024;
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_ASSEMBLY = 1024;
 
-		/// <summary>The operation permitted when the document is opened with the user password.
-		/// 	</summary>
-		public const int ALLOW_DEGRADED_PRINTING = 4;
-	}
+        /// <summary>The operation permitted when the document is opened with the user password.
+        ///     </summary>
+        public const int ALLOW_DEGRADED_PRINTING = 4;
+    }
 }

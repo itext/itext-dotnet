@@ -46,67 +46,67 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Kernel.Events
 {
-	/// <summary>
-	/// IEventDispatcher implementation that forwards Events to registered
-	/// <see cref="IEventHandler"/>
-	/// implementations.
-	/// </summary>
-	public class EventDispatcher : IEventDispatcher
-	{
-		protected internal IDictionary<String, IList<IEventHandler>> eventHandlers = new 
-			Dictionary<String, IList<IEventHandler>>();
+    /// <summary>
+    /// IEventDispatcher implementation that forwards Events to registered
+    /// <see cref="IEventHandler"/>
+    /// implementations.
+    /// </summary>
+    public class EventDispatcher : IEventDispatcher
+    {
+        protected internal IDictionary<String, IList<IEventHandler>> eventHandlers = new 
+            Dictionary<String, IList<IEventHandler>>();
 
-		public virtual void AddEventHandler(String type, IEventHandler handler)
-		{
-			RemoveEventHandler(type, handler);
-			IList<IEventHandler> handlers = eventHandlers.Get(type);
-			if (handlers == null)
-			{
-				handlers = new List<IEventHandler>();
-				eventHandlers[type] = handlers;
-			}
-			handlers.Add(handler);
-		}
+        public virtual void AddEventHandler(String type, IEventHandler handler)
+        {
+            RemoveEventHandler(type, handler);
+            IList<IEventHandler> handlers = eventHandlers.Get(type);
+            if (handlers == null)
+            {
+                handlers = new List<IEventHandler>();
+                eventHandlers[type] = handlers;
+            }
+            handlers.Add(handler);
+        }
 
-		public virtual void DispatchEvent(Event @event)
-		{
-			DispatchEvent(@event, false);
-		}
+        public virtual void DispatchEvent(Event @event)
+        {
+            DispatchEvent(@event, false);
+        }
 
-		public virtual void DispatchEvent(Event @event, bool delayed)
-		{
-			IList<IEventHandler> handlers = eventHandlers.Get(@event.GetEventType());
-			if (handlers != null)
-			{
-				foreach (IEventHandler handler in handlers)
-				{
-					handler.HandleEvent(@event);
-				}
-			}
-		}
+        public virtual void DispatchEvent(Event @event, bool delayed)
+        {
+            IList<IEventHandler> handlers = eventHandlers.Get(@event.GetEventType());
+            if (handlers != null)
+            {
+                foreach (IEventHandler handler in handlers)
+                {
+                    handler.HandleEvent(@event);
+                }
+            }
+        }
 
-		public virtual bool HasEventHandler(String type)
-		{
-			return eventHandlers.ContainsKey(type);
-		}
+        public virtual bool HasEventHandler(String type)
+        {
+            return eventHandlers.ContainsKey(type);
+        }
 
-		public virtual void RemoveEventHandler(String type, IEventHandler handler)
-		{
-			IList<IEventHandler> handlers = eventHandlers.Get(type);
-			if (handlers == null)
-			{
-				return;
-			}
-			handlers.Remove(handler);
-			if (handlers.Count == 0)
-			{
-				eventHandlers.JRemove(type);
-			}
-		}
+        public virtual void RemoveEventHandler(String type, IEventHandler handler)
+        {
+            IList<IEventHandler> handlers = eventHandlers.Get(type);
+            if (handlers == null)
+            {
+                return;
+            }
+            handlers.Remove(handler);
+            if (handlers.Count == 0)
+            {
+                eventHandlers.JRemove(type);
+            }
+        }
 
-		public virtual void RemoveAllHandlers()
-		{
-			eventHandlers.Clear();
-		}
-	}
+        public virtual void RemoveAllHandlers()
+        {
+            eventHandlers.Clear();
+        }
+    }
 }

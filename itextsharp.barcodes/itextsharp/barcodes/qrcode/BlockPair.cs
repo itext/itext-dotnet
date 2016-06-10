@@ -43,26 +43,26 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Barcodes.Qrcode
 {
-	internal sealed class BlockPair
-	{
-		private readonly ByteArray dataBytes;
+    internal sealed class BlockPair
+    {
+        private readonly ByteArray dataBytes;
 
-		private readonly ByteArray errorCorrectionBytes;
+        private readonly ByteArray errorCorrectionBytes;
 
-		internal BlockPair(ByteArray data, ByteArray errorCorrection)
-		{
-			dataBytes = data;
-			errorCorrectionBytes = errorCorrection;
-		}
+        internal BlockPair(ByteArray data, ByteArray errorCorrection)
+        {
+            dataBytes = data;
+            errorCorrectionBytes = errorCorrection;
+        }
 
-		public ByteArray GetDataBytes()
-		{
-			return dataBytes;
-		}
+        public ByteArray GetDataBytes()
+        {
+            return dataBytes;
+        }
 
-		public ByteArray GetErrorCorrectionBytes()
-		{
-			return errorCorrectionBytes;
-		}
-	}
+        public ByteArray GetErrorCorrectionBytes()
+        {
+            return errorCorrectionBytes;
+        }
+    }
 }

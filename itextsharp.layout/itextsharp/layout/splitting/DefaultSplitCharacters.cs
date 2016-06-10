@@ -45,24 +45,24 @@ using iTextSharp.IO.Font.Otf;
 
 namespace iTextSharp.Layout.Splitting
 {
-	/// <summary>
-	/// The default implementation of
-	/// <seealso>ISplitCharacters interface</seealso>
-	/// .
-	/// </summary>
-	public class DefaultSplitCharacters : ISplitCharacters
-	{
-		public virtual bool IsSplitCharacter(GlyphLine text, int glyphPos)
-		{
-			if (!text.Get(glyphPos).HasValidUnicode())
-			{
-				return false;
-			}
-			int charCode = (int)text.Get(glyphPos).GetUnicode();
-			return (charCode <= ' ' || charCode == '-' || charCode == '\u2010' || (charCode >=
-				 0x2002 && charCode <= 0x200b) || (charCode >= 0x2e80 && charCode < 0xd7a0) || (
-				charCode >= 0xf900 && charCode < 0xfb00) || (charCode >= 0xfe30 && charCode < 0xfe50
-				) || (charCode >= 0xff61 && charCode < 0xffa0));
-		}
-	}
+    /// <summary>
+    /// The default implementation of
+    /// <seealso>ISplitCharacters interface</seealso>
+    /// .
+    /// </summary>
+    public class DefaultSplitCharacters : ISplitCharacters
+    {
+        public virtual bool IsSplitCharacter(GlyphLine text, int glyphPos)
+        {
+            if (!text.Get(glyphPos).HasValidUnicode())
+            {
+                return false;
+            }
+            int charCode = (int)text.Get(glyphPos).GetUnicode();
+            return (charCode <= ' ' || charCode == '-' || charCode == '\u2010' || (charCode >=
+                 0x2002 && charCode <= 0x200b) || (charCode >= 0x2e80 && charCode < 0xd7a0) ||
+                 (charCode >= 0xf900 && charCode < 0xfb00) || (charCode >= 0xfe30 && charCode
+                 < 0xfe50) || (charCode >= 0xff61 && charCode < 0xffa0));
+        }
+    }
 }

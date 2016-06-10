@@ -45,24 +45,24 @@ using System;
 
 namespace iTextSharp.Kernel.Events
 {
-	/// <summary>Describes abstract event.</summary>
-	public class Event
-	{
-		/// <summary>A type of event.</summary>
-		protected internal String type;
+    /// <summary>Describes abstract event.</summary>
+    public class Event
+    {
+        /// <summary>A type of event.</summary>
+        protected internal String type;
 
-		/// <summary>Creates an event of the specified type.</summary>
-		/// <param name="type">type of event</param>
-		public Event(String type)
-		{
-			this.type = type;
-		}
+        /// <summary>Creates an event of the specified type.</summary>
+        /// <param name="type">type of event</param>
+        public Event(String type)
+        {
+            this.type = type;
+        }
 
-		/// <summary>Returns the type of this event.</summary>
-		/// <returns>type of this event</returns>
-		public virtual String GetEventType()
-		{
-			return type;
-		}
-	}
+        /// <summary>Returns the type of this event.</summary>
+        /// <returns>type of this event</returns>
+        public virtual String GetEventType()
+        {
+            return type;
+        }
+    }
 }
