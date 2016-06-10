@@ -30,7 +30,7 @@
 using System;
 using System.IO;
 
-namespace iTextSharp.Kernel.Xmp.Impl
+namespace iTextSharp.Kernel.XMP.Impl
 {
 	/// <summary>
 	/// An <code>OutputStream</code> that counts the written bytes.

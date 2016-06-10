@@ -23,7 +23,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void CanvasCheckTest1()
 		{
@@ -53,7 +53,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void CanvasCheckTest2()
@@ -87,7 +87,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void CanvasCheckTest3()
 		{

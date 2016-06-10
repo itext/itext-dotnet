@@ -3,8 +3,8 @@ using System.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
-using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.XMP;
+using iTextSharp.Kernel.XMP.Options;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
@@ -25,7 +25,7 @@ namespace iTextSharp.Layout
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void CreatePdfTest()
 		{
@@ -36,12 +36,12 @@ namespace iTextSharp.Layout
 			Document document = new Document(pdfDocument);
 			// step 2
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			XmpMeta xmp = XmpMetaFactory.Create();
-			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			XMPMeta xmp = XMPMetaFactory.Create();
+			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "Hello World", null);
-			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "XMP & Metadata", null);
-			xmp.AppendArrayItem(XmpConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
+			xmp.AppendArrayItem(XMPConst.NS_DC, "subject", new PropertyOptions(PropertyOptions
 				.ARRAY), "Metadata", null);
 			pdfDocument.SetXmpMetadata(xmp);
 			// step 4

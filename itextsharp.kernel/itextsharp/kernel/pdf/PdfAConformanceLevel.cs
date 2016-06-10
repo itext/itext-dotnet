@@ -42,8 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Properties;
+using iTextSharp.Kernel.XMP;
+using iTextSharp.Kernel.XMP.Properties;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -154,18 +154,18 @@ namespace iTextSharp.Kernel.Pdf
 			return null;
 		}
 
-		public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XmpMeta
+		public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XMPMeta
 			 meta)
 		{
-			XmpProperty conformanceXmpProperty = null;
-			XmpProperty partXmpProperty = null;
+			XMPProperty conformanceXmpProperty = null;
+			XMPProperty partXmpProperty = null;
 			try
 			{
-				conformanceXmpProperty = meta.GetProperty(XmpConst.NS_PDFA_ID, XmpConst.CONFORMANCE
+				conformanceXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE
 					);
-				partXmpProperty = meta.GetProperty(XmpConst.NS_PDFA_ID, XmpConst.PART);
+				partXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART);
 			}
-			catch (XmpException)
+			catch (XMPException)
 			{
 			}
 			if (conformanceXmpProperty == null || partXmpProperty == null)

@@ -24,7 +24,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_01()
@@ -47,7 +47,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_02()
 		{
@@ -71,7 +71,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_03()
@@ -95,7 +95,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_04()
 		{
@@ -118,7 +118,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA1_05()
@@ -142,7 +142,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA2_01()
@@ -166,7 +166,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FontCheckPdfA3_01()
@@ -189,7 +189,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
@@ -213,7 +213,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
@@ -237,7 +237,7 @@ namespace iTextSharp.Pdfa
 			CompareResult(outPdf, cmpPdf);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]

@@ -25,7 +25,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FlushingTest01()
@@ -52,7 +52,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FlushingTest02()
@@ -80,7 +80,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FlushingTest03()
@@ -109,7 +109,7 @@ namespace iTextSharp.Pdfa
 
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void AddUnusedStreamObjectsTest()
 		{

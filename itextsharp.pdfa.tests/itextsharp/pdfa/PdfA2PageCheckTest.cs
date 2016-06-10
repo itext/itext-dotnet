@@ -12,7 +12,7 @@ namespace iTextSharp.Pdfa
 			.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void CatalogCheck01()
 		{

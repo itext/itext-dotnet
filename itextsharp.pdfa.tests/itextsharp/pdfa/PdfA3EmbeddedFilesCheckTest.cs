@@ -25,7 +25,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest01()
@@ -56,7 +56,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest02()
@@ -87,7 +87,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest03()
@@ -115,7 +115,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void FileSpecCheckTest04()

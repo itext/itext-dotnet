@@ -24,7 +24,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.FileNotFoundException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck01()
 		{
@@ -46,7 +46,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck02()
@@ -67,7 +67,7 @@ namespace iTextSharp.Pdfa
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void AcroFormCheck03()

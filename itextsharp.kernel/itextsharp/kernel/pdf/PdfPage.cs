@@ -54,8 +54,8 @@ using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Tagging;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.XMP;
+using iTextSharp.Kernel.XMP.Options;
 
 namespace iTextSharp.Kernel.Pdf
 {
@@ -289,24 +289,24 @@ namespace iTextSharp.Kernel.Pdf
 			GetPdfObject().Put(PdfName.Metadata, xmp);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual void SetXmpMetadata(XmpMeta xmpMeta, SerializeOptions serializeOptions
+		public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions
 			)
 		{
-			SetXmpMetadata(XmpMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
+			SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
-		public virtual void SetXmpMetadata(XmpMeta xmpMeta)
+		public virtual void SetXmpMetadata(XMPMeta xmpMeta)
 		{
 			SerializeOptions serializeOptions = new SerializeOptions();
 			serializeOptions.SetPadding(2000);
 			SetXmpMetadata(xmpMeta, serializeOptions);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		public virtual PdfStream GetXmpMetadata()
 		{
 			return GetPdfObject().GetAsStream(PdfName.Metadata);

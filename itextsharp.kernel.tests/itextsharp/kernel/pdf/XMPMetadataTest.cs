@@ -43,7 +43,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void CreateEmptyDocumentWithAbcXmp()
 		{

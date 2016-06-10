@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.Xmp.Impl
+namespace iTextSharp.Kernel.XMP.Impl
 {
 	/// <since>12.10.2006</since>
 	public class Latin1Converter

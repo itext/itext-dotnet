@@ -29,11 +29,11 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.Xmp.Options
+namespace iTextSharp.Kernel.XMP.Options
 {
 	/// <summary>Options for <code>XMPIterator</code> construction.</summary>
 	/// <since>24.01.2006</since>
-	public sealed class IteratorOptions : iTextSharp.Kernel.Xmp.Options.Options
+	public sealed class IteratorOptions : iTextSharp.Kernel.XMP.Options.Options
 	{
 		/// <summary>Just do the immediate children of the root, default is subtree.</summary>
 		public const int JUST_CHILDREN = 0x0100;

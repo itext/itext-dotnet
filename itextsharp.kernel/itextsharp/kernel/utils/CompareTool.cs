@@ -57,8 +57,8 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Xmp;
-using iTextSharp.Kernel.Xmp.Options;
+using iTextSharp.Kernel.XMP;
+using iTextSharp.Kernel.XMP.Options;
 using Path = System.IO.Path;
 
 namespace iTextSharp.Kernel.Utils
@@ -271,31 +271,31 @@ namespace iTextSharp.Kernel.Utils
 			{
 				cmpDocument = new PdfDocument(new PdfReader(this.cmpPdf));
 				outDocument = new PdfDocument(new PdfReader(this.outPdf));
-				byte[] cmpBytes = cmpDocument.GetXmpMetadata();
+			    byte[] cmpBytes = cmpDocument.GetXmpMetadata();
 				byte[] outBytes = outDocument.GetXmpMetadata();
 				if (ignoreDateAndProducerProperties)
 				{
-					XmpMeta xmpMeta = XmpMetaFactory.ParseFromBuffer(cmpBytes);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.CreateDate, true, true
+					XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true
 						);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.ModifyDate, true, true
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true
 						);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.MetadataDate, true, 
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, 
 						true);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_PDF, PdfConst.Producer, true, true
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true
 						);
-					cmpBytes = XmpMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
+					cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
 						.SORT));
-					xmpMeta = XmpMetaFactory.ParseFromBuffer(outBytes);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.CreateDate, true, true
+					xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes);
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true
 						);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.ModifyDate, true, true
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true
 						);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_XMP, PdfConst.MetadataDate, true, 
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, 
 						true);
-					XmpUtils.RemoveProperties(xmpMeta, XmpConst.NS_PDF, PdfConst.Producer, true, true
+					XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true
 						);
-					outBytes = XmpMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
+					outBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions
 						.SORT));
 				}
 				if (!CompareXmls(cmpBytes, outBytes))
@@ -303,7 +303,7 @@ namespace iTextSharp.Kernel.Utils
 					return "The XMP packages different!";
 				}
 			}
-			catch (XmpException)
+			catch (XMPException)
 			{
 				return "XMP parsing failure!";
 			}

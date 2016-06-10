@@ -32,7 +32,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard128()
@@ -44,7 +44,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard40()
@@ -56,7 +56,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard128NoCompression()
@@ -68,7 +68,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordStandard40NoCompression()
@@ -80,7 +80,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes128()
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes256()
@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes128NoCompression()
@@ -116,7 +116,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.Exception"/>
 		[NUnit.Framework.Test]
 		public virtual void EncryptWithPasswordAes256NoCompression()
@@ -127,7 +127,7 @@ namespace iTextSharp.Kernel.Pdf
 				);
 		}
 
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		/// <exception cref="System.IO.IOException"/>
 		/// <exception cref="System.Exception"/>
 		public virtual void EncryptWithPassword(String filename, int encryptionType, int 

@@ -46,7 +46,7 @@
 using System;
 using System.Text;
 
-namespace iTextSharp.Kernel.Xmp {
+namespace iTextSharp.Kernel.XMP {
 
     /// <summary>
     /// A wrapper for an Encoding to suppress the preamble.

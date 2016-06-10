@@ -46,7 +46,7 @@ using System;
 using System.IO;
 using System.Xml;
 
-namespace iTextSharp.Kernel.Xmp
+namespace iTextSharp.Kernel.XMP
 {
 	/// <summary>This class writes the DOM structure of the XML to the specified output.</summary>
 	public class XmlDomWriter

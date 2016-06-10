@@ -49,7 +49,7 @@ using iTextSharp.Kernel.Log;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.XMP;
 using iTextSharp.Pdfa.Checker;
 
 namespace iTextSharp.Pdfa
@@ -81,12 +81,12 @@ namespace iTextSharp.Pdfa
 				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
 					);
 			}
-			XmpMeta meta;
+			XMPMeta meta;
 			try
 			{
-				meta = XmpMetaFactory.ParseFromBuffer(existingXmpMetadata);
+				meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
 			}
-			catch (XmpException)
+			catch (XMPException)
 			{
 				throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
 					);
@@ -245,20 +245,20 @@ namespace iTextSharp.Pdfa
 		{
 			try
 			{
-				XmpMeta xmpMeta = UpdateDefaultXmpMetadata();
-				xmpMeta.SetProperty(XmpConst.NS_PDFA_ID, XmpConst.PART, checker.GetConformanceLevel
+				XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
+				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel
 					().GetPart());
-				xmpMeta.SetProperty(XmpConst.NS_PDFA_ID, XmpConst.CONFORMANCE, checker.GetConformanceLevel
+				xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel
 					().GetConformance());
 				if (this.IsTagged())
 				{
-					XmpMeta taggedExtensionMeta = XmpMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
+					XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
 						);
-					XmpUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+					XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
 				}
 				SetXmpMetadata(xmpMeta);
 			}
-			catch (XmpException e)
+			catch (XMPException e)
 			{
 				ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Pdfa.PdfADocument));
 				logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);

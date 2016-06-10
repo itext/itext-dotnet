@@ -66,7 +66,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace iTextSharp.Kernel.Xmp {
+namespace iTextSharp.Kernel.XMP {
 
     /**
     * Translates a IANA encoding name to a Java encoding.

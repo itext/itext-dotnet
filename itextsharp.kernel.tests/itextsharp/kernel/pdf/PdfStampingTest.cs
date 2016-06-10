@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.XMP;
 using iTextSharp.Test;
 
 namespace iTextSharp.Kernel.Pdf
@@ -808,7 +808,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void StampingXmp1()
 		{
@@ -841,7 +841,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				pdfDoc3.GetPage(i_1 + 1);
 			}
-			NUnit.Framework.Assert.IsNotNull(XmpMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
+			NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
 				()), "XmpMetadata not found");
 			NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
 				);
@@ -862,7 +862,7 @@ namespace iTextSharp.Kernel.Pdf
 		}
 
 		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="iTextSharp.Kernel.Xmp.XmpException"/>
+		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
 		[NUnit.Framework.Test]
 		public virtual void StampingXmp2()
 		{
@@ -895,7 +895,7 @@ namespace iTextSharp.Kernel.Pdf
 			{
 				pdfDoc3.GetPage(i_1 + 1);
 			}
-			NUnit.Framework.Assert.IsNotNull(XmpMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
+			NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
 				()), "XmpMetadata not found");
 			NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
 				);

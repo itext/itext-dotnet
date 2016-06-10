@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.Xmp.Impl
+namespace iTextSharp.Kernel.XMP.Impl
 {
 	/// <summary>
 	/// A utility class to perform base64 encoding and decoding as specified

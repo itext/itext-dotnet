@@ -29,13 +29,13 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Text;
-using iTextSharp.Kernel.Xmp;
+using iTextSharp.Kernel.XMP;
 
-namespace iTextSharp.Kernel.Xmp.Impl
+namespace iTextSharp.Kernel.XMP.Impl
 {
 	/// <summary>Utility functions for the XMPToolkit implementation.</summary>
 	/// <since>06.06.2006</since>
-	public class Utils : XmpConst
+	public class Utils : XMPConst
 	{
 		/// <summary>segments of a UUID</summary>
 		public const int UUID_SEGMENT_COUNT = 4;
@@ -80,7 +80,7 @@ namespace iTextSharp.Kernel.Xmp.Impl
 		public static String NormalizeLangValue(String value)
 		{
 			// don't normalize x-default
-			if (XmpConst.X_DEFAULT.Equals(value))
+			if (XMPConst.X_DEFAULT.Equals(value))
 			{
 				return value;
 			}
