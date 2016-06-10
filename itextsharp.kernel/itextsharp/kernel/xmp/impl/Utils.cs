@@ -197,9 +197,8 @@ namespace iTextSharp.Kernel.XMP.Impl
             {
                 if (NS_XMP.Equals(schema))
                 {
-                    if ("xmp:BaseURL".Equals(prop) || "xmp:CreatorTool".Equals(prop) || "xmp:Format".
-                        Equals(prop) || "xmp:Locale".Equals(prop) || "xmp:MetadataDate".Equals(prop) 
-                        || "xmp:ModifyDate".Equals(prop))
+                    if ("xmp:BaseURL".Equals(prop) || "xmp:CreatorTool".Equals(prop) || "xmp:Format".Equals(prop) || "xmp:Locale"
+                        .Equals(prop) || "xmp:MetadataDate".Equals(prop) || "xmp:ModifyDate".Equals(prop))
                     {
                         isInternal = true;
                     }
@@ -208,8 +207,8 @@ namespace iTextSharp.Kernel.XMP.Impl
                 {
                     if (NS_PDF.Equals(schema))
                     {
-                        if ("pdf:BaseURL".Equals(prop) || "pdf:Creator".Equals(prop) || "pdf:ModDate".Equals
-                            (prop) || "pdf:PDFVersion".Equals(prop) || "pdf:Producer".Equals(prop))
+                        if ("pdf:BaseURL".Equals(prop) || "pdf:Creator".Equals(prop) || "pdf:ModDate".Equals(prop) || "pdf:PDFVersion"
+                            .Equals(prop) || "pdf:Producer".Equals(prop))
                         {
                             isInternal = true;
                         }
@@ -219,8 +218,7 @@ namespace iTextSharp.Kernel.XMP.Impl
                         if (NS_TIFF.Equals(schema))
                         {
                             isInternal = true;
-                            if ("tiff:ImageDescription".Equals(prop) || "tiff:Artist".Equals(prop) || "tiff:Copyright"
-                                .Equals(prop))
+                            if ("tiff:ImageDescription".Equals(prop) || "tiff:Artist".Equals(prop) || "tiff:Copyright".Equals(prop))
                             {
                                 isInternal = false;
                             }
@@ -254,8 +252,7 @@ namespace iTextSharp.Kernel.XMP.Impl
                                     {
                                         if (NS_CAMERARAW.Equals(schema))
                                         {
-                                            if ("crs:Version".Equals(prop) || "crs:RawFileName".Equals(prop) || "crs:ToneCurveName"
-                                                .Equals(prop))
+                                            if ("crs:Version".Equals(prop) || "crs:RawFileName".Equals(prop) || "crs:ToneCurveName".Equals(prop))
                                             {
                                                 isInternal = true;
                                             }
@@ -328,8 +325,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </ul>
         /// </summary>
         /// <param name="uuid">uuid to test</param>
-        /// <returns>true - this is a well formed UUID, false - UUID has not the expected format
-        ///     </returns>
+        /// <returns>true - this is a well formed UUID, false - UUID has not the expected format</returns>
         internal static bool CheckUUIDFormat(String uuid)
         {
             bool result = true;
@@ -344,8 +340,7 @@ namespace iTextSharp.Kernel.XMP.Impl
                 if (uuid[delimPos] == '-')
                 {
                     delimCnt++;
-                    result = result && (delimPos == 8 || delimPos == 13 || delimPos == 18 || delimPos
-                         == 23);
+                    result = result && (delimPos == 8 || delimPos == 13 || delimPos == 18 || delimPos == 23);
                 }
             }
             return result && UUID_SEGMENT_COUNT == delimCnt && UUID_LENGTH == delimPos;
@@ -420,20 +415,18 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// and CR the resulting XML will become invalid.
         /// </remarks>
         /// <param name="value">a string</param>
-        /// <param name="forAttribute">flag if string is attribute value (need to additional escape quotes)
-        ///     </param>
+        /// <param name="forAttribute">flag if string is attribute value (need to additional escape quotes)</param>
         /// <param name="escapeWhitespaces">Decides if LF, CR and TAB are escaped.</param>
         /// <returns>Returns the value ready for XML output.</returns>
-        public static String EscapeXML(String value, bool forAttribute, bool escapeWhitespaces
-            )
+        public static String EscapeXML(String value, bool forAttribute, bool escapeWhitespaces)
         {
             // quick check if character are contained that need special treatment
             bool needsEscaping = false;
             for (int i = 0; i < value.Length; i++)
             {
                 char c = value[i];
-                if (c == '<' || c == '>' || c == '&' || (escapeWhitespaces && (c == '\t' || c == 
-                    '\n' || c == '\r')) || (forAttribute && c == '"'))
+                if (c == '<' || c == '>' || c == '&' || (escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r')) || (forAttribute
+                     && c == '"'))
                 {
                     // XML chars
                     needsEscaping = true;
@@ -529,11 +522,10 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <returns>Returns true if the character is a valid first char of an XML name.</returns>
         private static bool IsNameStartChar(char ch)
         {
-            return (ch <= 0xFF && xmlNameStartChars[ch]) || (ch >= 0x100 && ch <= 0x2FF) || (
-                ch >= 0x370 && ch <= 0x37D) || (ch >= 0x37F && ch <= 0x1FFF) || (ch >= 0x200C
-                 && ch <= 0x200D) || (ch >= 0x2070 && ch <= 0x218F) || (ch >= 0x2C00 && ch <=
-                 0x2FEF) || (ch >= 0x3001 && ch <= 0xD7FF) || (ch >= 0xF900 && ch <= 0xFDCF) 
-                || (ch >= 0xFDF0 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0xEFFFF);
+            return (ch <= 0xFF && xmlNameStartChars[ch]) || (ch >= 0x100 && ch <= 0x2FF) || (ch >= 0x370 && ch <= 0x37D
+                ) || (ch >= 0x37F && ch <= 0x1FFF) || (ch >= 0x200C && ch <= 0x200D) || (ch >= 0x2070 && ch <= 0x218F)
+                 || (ch >= 0x2C00 && ch <= 0x2FEF) || (ch >= 0x3001 && ch <= 0xD7FF) || (ch >= 0xF900 && ch <= 0xFDCF)
+                 || (ch >= 0xFDF0 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0xEFFFF);
         }
 
         /// <summary>
@@ -545,8 +537,8 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <returns>Returns true if the character is a valid char of an XML name.</returns>
         private static bool IsNameChar(char ch)
         {
-            return (ch <= 0xFF && xmlNameChars[ch]) || IsNameStartChar(ch) || (ch >= 0x300 &&
-                 ch <= 0x36F) || (ch >= 0x203F && ch <= 0x2040);
+            return (ch <= 0xFF && xmlNameChars[ch]) || IsNameStartChar(ch) || (ch >= 0x300 && ch <= 0x36F) || (ch >= 0x203F
+                 && ch <= 0x2040);
         }
 
         /// <summary>
@@ -561,11 +553,9 @@ namespace iTextSharp.Kernel.XMP.Impl
             for (int i = 0; i < xmlNameChars.Length; i++)
             {
                 char ch = (char)i;
-                xmlNameStartChars[ch] = ch == ':' || ('A' <= ch && ch <= 'Z') || ch == '_' || ('a'
-                     <= ch && ch <= 'z') || (0xC0 <= ch && ch <= 0xD6) || (0xD8 <= ch && ch <= 0xF6
-                    ) || (0xF8 <= ch && ch <= 0xFF);
-                xmlNameChars[ch] = xmlNameStartChars[ch] || ch == '-' || ch == '.' || ('0' <= ch 
-                    && ch <= '9') || ch == 0xB7;
+                xmlNameStartChars[ch] = ch == ':' || ('A' <= ch && ch <= 'Z') || ch == '_' || ('a' <= ch && ch <= 'z') || 
+                    (0xC0 <= ch && ch <= 0xD6) || (0xD8 <= ch && ch <= 0xF6) || (0xF8 <= ch && ch <= 0xFF);
+                xmlNameChars[ch] = xmlNameStartChars[ch] || ch == '-' || ch == '.' || ('0' <= ch && ch <= '9') || ch == 0xB7;
             }
         }
     }

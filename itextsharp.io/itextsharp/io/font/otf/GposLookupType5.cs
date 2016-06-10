@@ -54,8 +54,7 @@ namespace iTextSharp.IO.Font.Otf
         private readonly IList<GposLookupType5.MarkToLigature> marksligatures;
 
         /// <exception cref="System.IO.IOException"/>
-        public GposLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GposLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             marksligatures = new List<GposLookupType5.MarkToLigature>();
@@ -121,9 +120,8 @@ namespace iTextSharp.IO.Font.Otf
                     {
                         GposAnchor baseAnchor = gpas[component][markClass];
                         GposAnchor markAnchor = omr.anchor;
-                        line.Add(line.idx, new Glyph(line.Get(line.idx), markAnchor.XCoordinate - baseAnchor
-                            .XCoordinate, markAnchor.YCoordinate - baseAnchor.YCoordinate, 0, 0, gi.idx -
-                             line.idx));
+                        line.Add(line.idx, new Glyph(line.Get(line.idx), markAnchor.XCoordinate - baseAnchor.XCoordinate, markAnchor
+                            .YCoordinate - baseAnchor.YCoordinate, 0, 0, gi.idx - line.idx));
                         changed = true;
                         break;
                     }
@@ -146,18 +144,15 @@ namespace iTextSharp.IO.Font.Otf
             int markArrayLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int ligatureArrayLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             IList<int> markCoverage = openReader.ReadCoverageFormat(markCoverageLocation);
-            IList<int> ligatureCoverage = openReader.ReadCoverageFormat(ligatureCoverageLocation
-                );
-            IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation
-                );
-            GposLookupType5.MarkToLigature markToLigature = new GposLookupType5.MarkToLigature
-                ();
+            IList<int> ligatureCoverage = openReader.ReadCoverageFormat(ligatureCoverageLocation);
+            IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation);
+            GposLookupType5.MarkToLigature markToLigature = new GposLookupType5.MarkToLigature();
             for (int k = 0; k < markCoverage.Count; ++k)
             {
                 markToLigature.marks[markCoverage[k]] = markRecords[k];
             }
-            IList<IList<GposAnchor[]>> ligatureArray = OtfReadCommon.ReadLigatureArray(openReader
-                , classCount, ligatureArrayLocation);
+            IList<IList<GposAnchor[]>> ligatureArray = OtfReadCommon.ReadLigatureArray(openReader, classCount, ligatureArrayLocation
+                );
             for (int k_1 = 0; k_1 < ligatureCoverage.Count; ++k_1)
             {
                 markToLigature.ligatures[ligatureCoverage[k_1]] = ligatureArray[k_1];
@@ -167,11 +162,10 @@ namespace iTextSharp.IO.Font.Otf
 
         public class MarkToLigature
         {
-            public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord
-                >();
+            public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord>();
 
-            public readonly IDictionary<int, IList<GposAnchor[]>> ligatures = new Dictionary<
-                int, IList<GposAnchor[]>>();
+            public readonly IDictionary<int, IList<GposAnchor[]>> ligatures = new Dictionary<int, IList<GposAnchor[]>>
+                ();
         }
     }
 }

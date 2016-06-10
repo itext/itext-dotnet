@@ -67,23 +67,19 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
                 }
                 else
                 {
-                    textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine()
-                        .GetBoundingRectange());
+                    textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine().GetBoundingRectange());
                 }
-                textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().
-                    GetBoundingRectange());
+                textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().GetBoundingRectange());
             }
             else
             {
-                throw new InvalidOperationException(String.Format("Event type not supported: {0}"
-                    , type));
+                throw new InvalidOperationException(String.Format("Event type not supported: {0}", type));
             }
         }
 
         public virtual ICollection<EventType> GetSupportedEvents()
         {
-            return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
-                ));
+            return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
         }
 
         /// <summary>

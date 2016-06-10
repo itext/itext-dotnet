@@ -55,8 +55,7 @@ namespace iTextSharp.IO.Image
 
         private bool direct;
 
-        protected internal TiffImageData(Uri url, bool recoverFromImageError, int page, bool
-             direct)
+        protected internal TiffImageData(Uri url, bool recoverFromImageError, int page, bool direct)
             : base(url, ImageType.TIFF)
         {
             this.recoverFromImageError = recoverFromImageError;
@@ -64,8 +63,7 @@ namespace iTextSharp.IO.Image
             this.direct = direct;
         }
 
-        protected internal TiffImageData(byte[] bytes, bool recoverFromImageError, int page
-            , bool direct)
+        protected internal TiffImageData(byte[] bytes, bool recoverFromImageError, int page, bool direct)
             : base(bytes, ImageType.TIFF)
         {
             this.recoverFromImageError = recoverFromImageError;
@@ -73,18 +71,14 @@ namespace iTextSharp.IO.Image
             this.direct = direct;
         }
 
-        private static ImageData GetImage(Uri url, bool recoverFromImageError, int page, 
-            bool direct)
+        private static ImageData GetImage(Uri url, bool recoverFromImageError, int page, bool direct)
         {
-            return new iTextSharp.IO.Image.TiffImageData(url, recoverFromImageError, page, direct
-                );
+            return new iTextSharp.IO.Image.TiffImageData(url, recoverFromImageError, page, direct);
         }
 
-        private static ImageData GetImage(byte[] bytes, bool recoverFromImageError, int page
-            , bool direct)
+        private static ImageData GetImage(byte[] bytes, bool recoverFromImageError, int page, bool direct)
         {
-            return new iTextSharp.IO.Image.TiffImageData(bytes, recoverFromImageError, page, 
-                direct);
+            return new iTextSharp.IO.Image.TiffImageData(bytes, recoverFromImageError, page, direct);
         }
 
         /// <summary>Gets the number of pages the TIFF document has.</summary>
@@ -102,8 +96,7 @@ namespace iTextSharp.IO.Image
             }
             catch (Exception e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffImageException, e);
             }
         }
 

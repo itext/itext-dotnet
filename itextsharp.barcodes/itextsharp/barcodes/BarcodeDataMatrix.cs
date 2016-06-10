@@ -99,23 +99,19 @@ namespace iTextSharp.Barcodes
 
         private String encoding;
 
-        private static readonly DmParams[] dmSizes = new DmParams[] { new DmParams(10, 10
-            , 10, 10, 3, 3, 5), new DmParams(12, 12, 12, 12, 5, 5, 7), new DmParams(8, 18
-            , 8, 18, 5, 5, 7), new DmParams(14, 14, 14, 14, 8, 8, 10), new DmParams(8, 32
-            , 8, 16, 10, 10, 11), new DmParams(16, 16, 16, 16, 12, 12, 12), new DmParams(
-            12, 26, 12, 26, 16, 16, 14), new DmParams(18, 18, 18, 18, 18, 18, 14), new DmParams
-            (20, 20, 20, 20, 22, 22, 18), new DmParams(12, 36, 12, 18, 22, 22, 18), new DmParams
-            (22, 22, 22, 22, 30, 30, 20), new DmParams(16, 36, 16, 18, 32, 32, 24), new DmParams
-            (24, 24, 24, 24, 36, 36, 24), new DmParams(26, 26, 26, 26, 44, 44, 28), new DmParams
-            (16, 48, 16, 24, 49, 49, 28), new DmParams(32, 32, 16, 16, 62, 62, 36), new DmParams
-            (36, 36, 18, 18, 86, 86, 42), new DmParams(40, 40, 20, 20, 114, 114, 48), new 
-            DmParams(44, 44, 22, 22, 144, 144, 56), new DmParams(48, 48, 24, 24, 174, 174
-            , 68), new DmParams(52, 52, 26, 26, 204, 102, 42), new DmParams(64, 64, 16, 16
-            , 280, 140, 56), new DmParams(72, 72, 18, 18, 368, 92, 36), new DmParams(80, 
-            80, 20, 20, 456, 114, 48), new DmParams(88, 88, 22, 22, 576, 144, 56), new DmParams
-            (96, 96, 24, 24, 696, 174, 68), new DmParams(104, 104, 26, 26, 816, 136, 56), 
-            new DmParams(120, 120, 20, 20, 1050, 175, 68), new DmParams(132, 132, 22, 22, 
-            1304, 163, 62), new DmParams(144, 144, 24, 24, 1558, 156, 62) };
+        private static readonly DmParams[] dmSizes = new DmParams[] { new DmParams(10, 10, 10, 10, 3, 3, 5), new DmParams
+            (12, 12, 12, 12, 5, 5, 7), new DmParams(8, 18, 8, 18, 5, 5, 7), new DmParams(14, 14, 14, 14, 8, 8, 10)
+            , new DmParams(8, 32, 8, 16, 10, 10, 11), new DmParams(16, 16, 16, 16, 12, 12, 12), new DmParams(12, 26
+            , 12, 26, 16, 16, 14), new DmParams(18, 18, 18, 18, 18, 18, 14), new DmParams(20, 20, 20, 20, 22, 22, 
+            18), new DmParams(12, 36, 12, 18, 22, 22, 18), new DmParams(22, 22, 22, 22, 30, 30, 20), new DmParams(
+            16, 36, 16, 18, 32, 32, 24), new DmParams(24, 24, 24, 24, 36, 36, 24), new DmParams(26, 26, 26, 26, 44
+            , 44, 28), new DmParams(16, 48, 16, 24, 49, 49, 28), new DmParams(32, 32, 16, 16, 62, 62, 36), new DmParams
+            (36, 36, 18, 18, 86, 86, 42), new DmParams(40, 40, 20, 20, 114, 114, 48), new DmParams(44, 44, 22, 22, 
+            144, 144, 56), new DmParams(48, 48, 24, 24, 174, 174, 68), new DmParams(52, 52, 26, 26, 204, 102, 42), 
+            new DmParams(64, 64, 16, 16, 280, 140, 56), new DmParams(72, 72, 18, 18, 368, 92, 36), new DmParams(80
+            , 80, 20, 20, 456, 114, 48), new DmParams(88, 88, 22, 22, 576, 144, 56), new DmParams(96, 96, 24, 24, 
+            696, 174, 68), new DmParams(104, 104, 26, 26, 816, 136, 56), new DmParams(120, 120, 20, 20, 1050, 175, 
+            68), new DmParams(132, 132, 22, 22, 1304, 163, 62), new DmParams(144, 144, 24, 24, 1558, 156, 62) };
 
         private const String X12 = "\r*> 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -156,35 +152,32 @@ namespace iTextSharp.Barcodes
             return new Rectangle(0, 0, width + 2 * ws, height + 2 * ws);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             foreground)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground)
         {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
         }
 
-        public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
-            , PdfDocument document)
+        public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, PdfDocument document
+            )
         {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
 
-        /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.
-        ///     </summary>
+        /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <param name="moduleSide">the side (width and height) of the pixels.</param>
         /// <returns>the XObject.</returns>
-        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground
-            , float moduleSide, PdfDocument document)
+        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, float moduleSide
+            , PdfDocument document)
         {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
-            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSide
-                );
+            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSide);
             xObject.SetBBox(new PdfArray(rect));
             return xObject;
         }
 
-        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             foreground, float moduleSide)
+        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground, float moduleSide
+            )
         {
             if (image == null)
             {
@@ -206,8 +199,7 @@ namespace iTextSharp.Barcodes
                     b <<= j % 8;
                     if ((b & 0x80) != 0)
                     {
-                        canvas.Rectangle(j * moduleSide, (h - k - 1) * moduleSide, moduleSide, moduleSide
-                            );
+                        canvas.Rectangle(j * moduleSide, (h - k - 1) * moduleSide, moduleSide, moduleSide);
                     }
                 }
             }
@@ -219,13 +211,11 @@ namespace iTextSharp.Barcodes
         /// <summary>Gets the barcode size</summary>
         public virtual Rectangle GetBarcodeSize(float moduleHeight, float moduleWidth)
         {
-            return new Rectangle(0, 0, (width + 2 * ws) * moduleHeight, (height + 2 * ws) * moduleWidth
-                );
+            return new Rectangle(0, 0, (width + 2 * ws) * moduleHeight, (height + 2 * ws) * moduleWidth);
         }
 
         /// <summary>Creates a barcode.</summary>
-        /// <remarks>Creates a barcode. The <CODE>String</CODE> is interpreted with the ISO-8859-1 encoding
-        ///     </remarks>
+        /// <remarks>Creates a barcode. The <CODE>String</CODE> is interpreted with the ISO-8859-1 encoding</remarks>
         /// <param name="text">the text</param>
         /// <returns>
         /// the status of the generation. It can be one of this values:
@@ -280,8 +270,8 @@ namespace iTextSharp.Barcodes
             if (height == 0 || width == 0)
             {
                 last = dmSizes[dmSizes.Length - 1];
-                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, last
-                    .dataSize - extCount, options, false);
+                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, last.dataSize - extCount, 
+                    options, false);
                 if (e < 0)
                 {
                     return DM_ERROR_TEXT_TOO_BIG;
@@ -312,8 +302,8 @@ namespace iTextSharp.Barcodes
                     return DM_ERROR_INVALID_SQUARE;
                 }
                 dm = dmSizes[k];
-                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, dm
-                    .dataSize - extCount, options, true);
+                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, dm.dataSize - extCount, options
+                    , true);
                 if (e < 0)
                 {
                     return DM_ERROR_TEXT_TOO_BIG;
@@ -326,8 +316,8 @@ namespace iTextSharp.Barcodes
             }
             image = new byte[(dm.width + 2 * ws + 7) / 8 * (dm.height + 2 * ws)];
             MakePadding(data, e, dm.dataSize - e);
-            place = Placement.DoPlacement(dm.height - dm.height / dm.heightSection * 2, dm.width
-                 - dm.width / dm.widthSection * 2);
+            place = Placement.DoPlacement(dm.height - dm.height / dm.heightSection * 2, dm.width - dm.width / dm.widthSection
+                 * 2);
             full = dm.dataSize + (dm.dataSize + 2) / dm.dataBlock * dm.errorBlock;
             ReedSolomon.GenerateECC(data, dm.dataSize, dm.dataBlock, dm.errorBlock);
             Draw(data, full, dm);
@@ -530,8 +520,8 @@ namespace iTextSharp.Barcodes
             return c >= '0' && c <= '9';
         }
 
-        private static int AsciiEncodation(byte[] text, int textOffset, int textLength, byte
-            [] data, int dataOffset, int dataLength)
+        private static int AsciiEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset
+            , int dataLength)
         {
             int ptrIn;
             int ptrOut;
@@ -571,8 +561,8 @@ namespace iTextSharp.Barcodes
             return ptrOut - dataOffset;
         }
 
-        private static int B256Encodation(byte[] text, int textOffset, int textLength, byte
-            [] data, int dataOffset, int dataLength)
+        private static int B256Encodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset
+            , int dataLength)
         {
             int k;
             int j;
@@ -619,8 +609,8 @@ namespace iTextSharp.Barcodes
             return k - dataOffset;
         }
 
-        private static int X12Encodation(byte[] text, int textOffset, int textLength, byte
-            [] data, int dataOffset, int dataLength)
+        private static int X12Encodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset, 
+            int dataLength)
         {
             int ptrIn;
             int ptrOut;
@@ -726,8 +716,8 @@ namespace iTextSharp.Barcodes
             return ptrOut;
         }
 
-        private static int EdifactEncodation(byte[] text, int textOffset, int textLength, 
-            byte[] data, int dataOffset, int dataLength)
+        private static int EdifactEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset
+            , int dataLength)
         {
             int ptrIn;
             int ptrOut;
@@ -872,8 +862,8 @@ namespace iTextSharp.Barcodes
             return ptrOut;
         }
 
-        private static int C40OrTextEncodation(byte[] text, int textOffset, int textLength
-            , byte[] data, int dataOffset, int dataLength, bool c40)
+        private static int C40OrTextEncodation(byte[] text, int textOffset, int textLength, byte[] data, int dataOffset
+            , int dataLength, bool c40)
         {
             int ptrIn;
             int ptrOut;
@@ -976,8 +966,7 @@ namespace iTextSharp.Barcodes
                 data[dataOffset + ptrOut++] = (byte)a;
             }
             data[ptrOut++] = (byte)254;
-            i = AsciiEncodation(text, ptrIn, textLength - ptrIn, data, ptrOut, dataLength - ptrOut
-                );
+            i = AsciiEncodation(text, ptrIn, textLength - ptrIn, data, ptrOut, dataLength - ptrOut);
             if (i < 0)
             {
                 return i;
@@ -1055,8 +1044,8 @@ namespace iTextSharp.Barcodes
             }
         }
 
-        private static int GetEncodation(byte[] text, int textOffset, int textSize, byte[]
-             data, int dataOffset, int dataSize, int options, bool firstMatch)
+        private static int GetEncodation(byte[] text, int textOffset, int textSize, byte[] data, int dataOffset, int
+             dataSize, int options, bool firstMatch)
         {
             int e;
             int j;
@@ -1075,14 +1064,12 @@ namespace iTextSharp.Barcodes
                 {
                     return e1[0];
                 }
-                e1[1] = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize
-                    , false);
+                e1[1] = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
                 if (firstMatch && e1[1] >= 0)
                 {
                     return e1[1];
                 }
-                e1[2] = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize
-                    , true);
+                e1[2] = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
                 if (firstMatch && e1[2] >= 0)
                 {
                     return e1[2];
@@ -1124,15 +1111,13 @@ namespace iTextSharp.Barcodes
                 {
                     if (j == 1)
                     {
-                        e = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false
-                            );
+                        e = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
                     }
                     else
                     {
                         if (j == 2)
                         {
-                            e = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true
-                                );
+                            e = C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
                         }
                         else
                         {
@@ -1161,14 +1146,12 @@ namespace iTextSharp.Barcodes
 
                 case DM_C40:
                 {
-                    return C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize
-                        , true);
+                    return C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, true);
                 }
 
                 case DM_TEXT:
                 {
-                    return C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize
-                        , false);
+                    return C40OrTextEncodation(text, textOffset, textSize, data, dataOffset, dataSize, false);
                 }
 
                 case DM_B256:
@@ -1217,8 +1200,7 @@ namespace iTextSharp.Barcodes
             return v;
         }
 
-        private int ProcessExtensions(byte[] text, int textOffset, int textSize, byte[] data
-            )
+        private int ProcessExtensions(byte[] text, int textOffset, int textSize, byte[] data)
         {
             int order;
             int ptrIn;
@@ -1352,8 +1334,7 @@ namespace iTextSharp.Barcodes
 
                     case 'f':
                     {
-                        if (order != 1 && (order != 2 || text[textOffset] != 's' && text[textOffset] != 'm'
-                            ))
+                        if (order != 1 && (order != 2 || text[textOffset] != 's' && text[textOffset] != 'm'))
                         {
                             return -1;
                         }

@@ -58,7 +58,6 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// <param name="streamDictionary">the dictionary of the stream. Can contain additional information needed to decode the byte[].
         ///     </param>
         /// <returns>decoded byte array</returns>
-        byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary
-             streamDictionary);
+        byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary);
     }
 }

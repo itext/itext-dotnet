@@ -55,8 +55,7 @@ namespace iTextSharp.Forms.Fields
         {
         }
 
-        protected internal PdfSignatureFormField(PdfWidgetAnnotation widget, PdfDocument 
-            pdfDocument)
+        protected internal PdfSignatureFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument)
         {
         }
@@ -77,11 +76,9 @@ namespace iTextSharp.Forms.Fields
         }
 
         /// <summary>Adds the signature to the signature field.</summary>
-        /// <param name="value">the signature to be contained in the signature field, or an indirect reference to it
-        ///     </param>
+        /// <param name="value">the signature to be contained in the signature field, or an indirect reference to it</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value
-            )
+        public virtual iTextSharp.Forms.Fields.PdfSignatureFormField SetValue(PdfObject value)
         {
             return (iTextSharp.Forms.Fields.PdfSignatureFormField)Put(PdfName.V, value);
         }

@@ -63,8 +63,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.Caret;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString
-             symbol)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString symbol)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.Sy, symbol);
         }

@@ -54,8 +54,7 @@ namespace iTextSharp.IO.Font
         {
         }
 
-        private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider
-            ();
+        private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider();
 
         /// <summary>Creates a new font.</summary>
         /// <remarks>
@@ -310,21 +309,18 @@ namespace iTextSharp.IO.Font
                     {
                     }
                 }
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontIsNotRecognized
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontIsNotRecognized);
             }
             FontProgram fontBuilt;
-            if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).EndsWith(".afm") || name.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).EndsWith(".pfm"))
+            if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") ||
+                 name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"))
             {
                 fontBuilt = new Type1Font(name, null, font, null);
             }
             else
             {
-                if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(
-                    ".ttf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                    ).EndsWith(".otf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture
+                if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || baseName.ToLower
+                    (System.Globalization.CultureInfo.InvariantCulture).EndsWith(".otf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture
                     ).IndexOf(".ttc,") > 0)
                 {
                     if (font != null)
@@ -344,8 +340,7 @@ namespace iTextSharp.IO.Font
                     }
                     else
                     {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Font1IsNotRecognized
-                            ).SetMessageParams(name);
+                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Font1IsNotRecognized).SetMessageParams(name);
                     }
                 }
             }
@@ -405,8 +400,7 @@ namespace iTextSharp.IO.Font
         /// is true, otherwise it will always be created new
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool
-             cached)
+        public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool cached)
         {
             FontProgram fontProgram;
             if (cached && name != null)
@@ -428,8 +422,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateType1Font(String metricsPath, String binaryPath, 
-            bool cached)
+        public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached)
         {
             FontProgram fontProgram;
             if (cached && metricsPath != null)
@@ -441,8 +434,7 @@ namespace iTextSharp.IO.Font
                 }
             }
             fontProgram = new Type1Font(metricsPath, binaryPath, null, null);
-            return cached && metricsPath != null ? FontCache.SaveFont(fontProgram, metricsPath
-                ) : fontProgram;
+            return cached && metricsPath != null ? FontCache.SaveFont(fontProgram, metricsPath) : fontProgram;
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -532,8 +524,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached
-            )
+        public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached)
         {
             return fontRegisterProvider.GetFont(fontName, style, cached);
         }
@@ -554,8 +545,7 @@ namespace iTextSharp.IO.Font
         /// <param name="familyName">the font family</param>
         /// <param name="fullName">the font name</param>
         /// <param name="path">the font path</param>
-        public static void RegisterFontFamily(String familyName, String fullName, String 
-            path)
+        public static void RegisterFontFamily(String familyName, String fullName, String path)
         {
             fontRegisterProvider.RegisterFontFamily(familyName, fullName, path);
         }

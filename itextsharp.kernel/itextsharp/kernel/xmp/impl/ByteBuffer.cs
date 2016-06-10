@@ -49,16 +49,14 @@ namespace iTextSharp.Kernel.XMP.Impl
             this.length = 0;
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.
-        ///     </param>
+        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
         public ByteBuffer(byte[] buffer)
         {
             this.buffer = buffer;
             this.length = buffer.Length;
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.
-        ///     </param>
+        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
         /// <param name="length">the length of valid bytes in the array</param>
         public ByteBuffer(byte[] buffer, int length)
         {
@@ -94,8 +92,7 @@ namespace iTextSharp.Kernel.XMP.Impl
             }
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.
-        ///     </param>
+        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
         /// <param name="offset">the offset of the provided buffer.</param>
         /// <param name="length">the length of valid bytes in the array</param>
         public ByteBuffer(byte[] buffer, int offset, int length)

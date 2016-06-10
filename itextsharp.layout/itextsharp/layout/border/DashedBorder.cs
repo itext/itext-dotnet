@@ -53,16 +53,14 @@ namespace iTextSharp.Layout.Border
 
         private const float GAP_MODIFIER = 3.5f;
 
-        /// <summary>Creates a DashedBorder with the specified width and sets the color to black.
-        ///     </summary>
+        /// <summary>Creates a DashedBorder with the specified width and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
         public DashedBorder(float width)
             : base(width)
         {
         }
 
-        /// <summary>Creates a DashedBorder with the specified width and the specified color.
-        ///     </summary>
+        /// <summary>Creates a DashedBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
         public DashedBorder(iTextSharp.Kernel.Color.Color color, float width)
@@ -75,8 +73,8 @@ namespace iTextSharp.Layout.Border
             return iTextSharp.Layout.Border.Border.DASHED;
         }
 
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter)
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter)
         {
             float initialGap = width * GAP_MODIFIER;
             float dash = width * DASH_MODIFIER;
@@ -122,12 +120,10 @@ namespace iTextSharp.Layout.Border
             }
             canvas.SetLineWidth(width);
             canvas.SetStrokeColor(color);
-            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo
-                (x2, y2).Stroke();
+            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2)
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
         {
             float initialGap = width * GAP_MODIFIER;
             float dash = width * DASH_MODIFIER;
@@ -139,9 +135,8 @@ namespace iTextSharp.Layout.Border
             {
                 adjustedGap -= dash;
             }
-            canvas.SaveState().SetStrokeColor(color).SetLineDash(dash, adjustedGap, dash + adjustedGap
-                 / 2).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
-                ();
+            canvas.SaveState().SetStrokeColor(color).SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).SetLineWidth
+                (width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
         protected internal virtual float GetDotsGap(double distance, float initialGap)

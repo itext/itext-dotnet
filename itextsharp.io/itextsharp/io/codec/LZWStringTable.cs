@@ -100,8 +100,7 @@ namespace iTextSharp.IO.Codec
             strHsh_ = new short[HASHSIZE];
         }
 
-        /// <param name="index">value of -1 indicates no predecessor [used in initialization]
-        ///     </param>
+        /// <param name="index">value of -1 indicates no predecessor [used in initialization]</param>
         /// <param name="b">
         /// the byte [character] to add to the string store which follows
         /// the predecessor string specified the index.
@@ -288,8 +287,7 @@ namespace iTextSharp.IO.Codec
             for (i = 258; i < numStrings_; ++i)
             {
                 output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
-                    (strChr_[i] & 0xFF) + " strLen_ " + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
-                    (strLen_[i]));
+                    (strChr_[i] & 0xFF) + " strLen_ " + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(strLen_[i]));
             }
         }
     }

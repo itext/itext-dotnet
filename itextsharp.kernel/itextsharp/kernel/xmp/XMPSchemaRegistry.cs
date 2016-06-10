@@ -166,8 +166,7 @@ namespace iTextSharp.Kernel.XMP
         /// If nothing is found, an empty array is returned.
         /// </remarks>
         /// <param name="aliasNS">a schema namespace URI</param>
-        /// <returns>Returns all alias infos from aliases that are contained in the provided namespace.
-        ///     </returns>
+        /// <returns>Returns all alias infos from aliases that are contained in the provided namespace.</returns>
         XMPAliasInfo[] FindAliases(String aliasNS);
 
         /// <summary>Searches for registered aliases.</summary>

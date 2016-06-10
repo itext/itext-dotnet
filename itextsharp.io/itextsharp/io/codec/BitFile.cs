@@ -152,8 +152,7 @@ namespace iTextSharp.IO.Codec
                         // if bits  > space left in current byte then the highest order bits
                         // of code are taken and put in current byte and rest put in next.
                         // at highest order bit location !!
-                        int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 
-                            1);
+                        int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 1);
                         buffer[index] |= (byte)topbits;
                         numbits -= bitsLeft;
                         // ok this many bits gone off the top

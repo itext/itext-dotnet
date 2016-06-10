@@ -79,8 +79,8 @@ namespace iTextSharp.IO.Font.Otf
             this.end = end;
         }
 
-        protected internal GlyphLine(IList<Glyph> glyphs, IList<GlyphLine.ActualText> actualText
-            , int start, int end)
+        protected internal GlyphLine(IList<Glyph> glyphs, IList<GlyphLine.ActualText> actualText, int start, int end
+            )
             : this(glyphs, start, end)
         {
             this.actualText = actualText;
@@ -141,13 +141,12 @@ namespace iTextSharp.IO.Font.Otf
 
         public virtual iTextSharp.IO.Font.Otf.GlyphLine Copy(int left, int right)
         {
-            iTextSharp.IO.Font.Otf.GlyphLine glyphLine = new iTextSharp.IO.Font.Otf.GlyphLine
-                ();
+            iTextSharp.IO.Font.Otf.GlyphLine glyphLine = new iTextSharp.IO.Font.Otf.GlyphLine();
             glyphLine.start = 0;
             glyphLine.end = right - left;
             glyphLine.glyphs = new List<Glyph>(glyphs.SubList(left, right));
-            glyphLine.actualText = actualText == null ? null : new List<GlyphLine.ActualText>
-                (actualText.SubList(left, right));
+            glyphLine.actualText = actualText == null ? null : new List<GlyphLine.ActualText>(actualText.SubList(left, 
+                right));
             return glyphLine;
         }
 
@@ -212,8 +211,8 @@ namespace iTextSharp.IO.Font.Otf
             return glyphs.Count;
         }
 
-        public virtual void SubstituteManyToOne(OpenTypeFontTableReader tableReader, int 
-            lookupFlag, int rightPartLen, int substitutionGlyphIndex)
+        public virtual void SubstituteManyToOne(OpenTypeFontTableReader tableReader, int lookupFlag, int rightPartLen
+            , int substitutionGlyphIndex)
         {
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
             gidx.line = this;
@@ -256,8 +255,7 @@ namespace iTextSharp.IO.Font.Otf
             end -= rightPartLen;
         }
 
-        public virtual void SubstituteOneToOne(OpenTypeFontTableReader tableReader, int substitutionGlyphIndex
-            )
+        public virtual void SubstituteOneToOne(OpenTypeFontTableReader tableReader, int substitutionGlyphIndex)
         {
             Glyph oldGlyph = glyphs[idx];
             Glyph newGlyph = tableReader.GetGlyph(substitutionGlyphIndex);
@@ -282,8 +280,7 @@ namespace iTextSharp.IO.Font.Otf
             glyphs[idx] = newGlyph;
         }
 
-        public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[]
-             substGlyphIds)
+        public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[] substGlyphIds)
         {
             int substCode = substGlyphIds[0];
             //sequence length shall be at least 1
@@ -304,13 +301,12 @@ namespace iTextSharp.IO.Font.Otf
             }
         }
 
-        public virtual iTextSharp.IO.Font.Otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter
-             filter)
+        public virtual iTextSharp.IO.Font.Otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter filter)
         {
             bool anythingFiltered = false;
             IList<Glyph> filteredGlyphs = new List<Glyph>(end - start);
-            IList<GlyphLine.ActualText> filteredActualText = actualText != null ? new List<GlyphLine.ActualText
-                >(end - start) : null;
+            IList<GlyphLine.ActualText> filteredActualText = actualText != null ? new List<GlyphLine.ActualText>(end -
+                 start) : null;
             for (int i = start; i < end; i++)
             {
                 if (filter.Accept(glyphs[i]))
@@ -328,8 +324,7 @@ namespace iTextSharp.IO.Font.Otf
             }
             if (anythingFiltered)
             {
-                return new iTextSharp.IO.Font.Otf.GlyphLine(filteredGlyphs, filteredActualText, 0
-                    , filteredGlyphs.Count);
+                return new iTextSharp.IO.Font.Otf.GlyphLine(filteredGlyphs, filteredActualText, 0, filteredGlyphs.Count);
             }
             else
             {

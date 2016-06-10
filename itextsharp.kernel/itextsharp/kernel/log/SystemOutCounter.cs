@@ -86,8 +86,7 @@ namespace iTextSharp.Kernel.Log
 
         public virtual void OnDocumentWritten(long size)
         {
-            System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes written", name, size)
-                );
+            System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes written", name, size));
         }
     }
 }

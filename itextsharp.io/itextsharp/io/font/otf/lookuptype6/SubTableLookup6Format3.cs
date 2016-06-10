@@ -47,29 +47,24 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
-    /// <summary>Chaining Contextual Substitution Subtable: Coverage-based Chaining Context Glyph Substitution
-    ///     </summary>
+    /// <summary>Chaining Contextual Substitution Subtable: Coverage-based Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format3 : SubTableLookup6
     {
         internal ContextualSubstRule substitutionRule;
 
-        public SubTableLookup6Format3(OpenTypeFontTableReader openReader, int lookupFlag, 
-            SubTableLookup6Format3.SubstRuleFormat3 rule)
+        public SubTableLookup6Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup6Format3.SubstRuleFormat3
+             rule)
             : base(openReader, lookupFlag)
         {
             this.substitutionRule = rule;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
         {
-            SubTableLookup6Format3.SubstRuleFormat3 ruleFormat3 = (SubTableLookup6Format3.SubstRuleFormat3
-                )this.substitutionRule;
-            if (ruleFormat3.inputCoverages[0].Contains(startId) && !openReader.IsSkip(startId
-                , lookupFlag))
+            SubTableLookup6Format3.SubstRuleFormat3 ruleFormat3 = (SubTableLookup6Format3.SubstRuleFormat3)this.substitutionRule;
+            if (ruleFormat3.inputCoverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
             {
-                return JavaCollectionsUtil.SingletonList<ContextualSubstRule>(this.substitutionRule
-                    );
+                return JavaCollectionsUtil.SingletonList<ContextualSubstRule>(this.substitutionRule);
             }
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
@@ -84,9 +79,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
             internal SubstLookupRecord[] substLookupRecords;
 
-            public SubstRuleFormat3(IList<ICollection<int>> backtrackCoverages, IList<ICollection
-                <int>> inputCoverages, IList<ICollection<int>> lookaheadCoverages, SubstLookupRecord
-                [] substLookupRecords)
+            public SubstRuleFormat3(IList<ICollection<int>> backtrackCoverages, IList<ICollection<int>> inputCoverages
+                , IList<ICollection<int>> lookaheadCoverages, SubstLookupRecord[] substLookupRecords)
             {
                 this.backtrackCoverages = backtrackCoverages;
                 this.inputCoverages = inputCoverages;

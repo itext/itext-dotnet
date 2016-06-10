@@ -71,8 +71,7 @@ namespace iTextSharp.Layout.Element
     /// </summary>
     public class Cell : BlockElement<iTextSharp.Layout.Element.Cell>
     {
-        private static readonly iTextSharp.Layout.Border.Border DEFAULT_BORDER = new SolidBorder
-            (0.5f);
+        private static readonly iTextSharp.Layout.Border.Border DEFAULT_BORDER = new SolidBorder(0.5f);
 
         private int row;
 
@@ -107,8 +106,7 @@ namespace iTextSharp.Layout.Element
         /// <remarks>
         /// Gets a cell renderer for this element. Note that this method can be called more than once.
         /// By default each element should define its own renderer, but the renderer can be overridden by
-        /// <see cref="AbstractElement{T}.SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)
-        ///     "/>
+        /// <see cref="AbstractElement{T}.SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)"/>
         /// method call.
         /// </remarks>
         /// <returns>a cell renderer for this element</returns>
@@ -205,15 +203,12 @@ namespace iTextSharp.Layout.Element
             return Add(new Paragraph(content));
         }
 
-        /// <summary>Clones a cell with its position, properties, and optionally its contents.
-        ///     </summary>
-        /// <param name="includeContent">whether or not to also include the contents of the cell.
-        ///     </param>
+        /// <summary>Clones a cell with its position, properties, and optionally its contents.</summary>
+        /// <param name="includeContent">whether or not to also include the contents of the cell.</param>
         /// <returns>a clone of this Element</returns>
         public virtual iTextSharp.Layout.Element.Cell Clone(bool includeContent)
         {
-            iTextSharp.Layout.Element.Cell newCell = new iTextSharp.Layout.Element.Cell(rowspan
-                , colspan);
+            iTextSharp.Layout.Element.Cell newCell = new iTextSharp.Layout.Element.Cell(rowspan, colspan);
             newCell.row = row;
             newCell.col = col;
             newCell.properties = new Dictionary<int, Object>(properties);
@@ -250,8 +245,7 @@ namespace iTextSharp.Layout.Element
 
         public override String ToString()
         {
-            return String.Format("Cell{row={0}, col={1}, rowspan={2}, colspan={3}}", row, col
-                , rowspan, colspan);
+            return String.Format("Cell{row={0}, col={1}, rowspan={2}, colspan={3}}", row, col, rowspan, colspan);
         }
 
         public override PdfName GetRole()
@@ -282,8 +276,8 @@ namespace iTextSharp.Layout.Element
             return new CellRenderer(this);
         }
 
-        protected internal virtual iTextSharp.Layout.Element.Cell UpdateCellIndexes(int row
-            , int col, int numberOfColumns)
+        protected internal virtual iTextSharp.Layout.Element.Cell UpdateCellIndexes(int row, int col, int numberOfColumns
+            )
         {
             this.row = row;
             this.col = col;

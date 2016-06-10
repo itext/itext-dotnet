@@ -60,11 +60,9 @@ namespace iTextSharp.IO.Color
         {
         }
 
-        public static iTextSharp.IO.Color.IccProfile GetInstance(byte[] data, int numComponents
-            )
+        public static iTextSharp.IO.Color.IccProfile GetInstance(byte[] data, int numComponents)
         {
-            if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73
-                 || data[39] != 0x70)
+            if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73 || data[39] != 0x70)
             {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile);
             }
@@ -77,8 +75,8 @@ namespace iTextSharp.IO.Color
             // invalid ICC
             if (nc != numComponents)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.WrongNumberOfComponentsInIccProfile
-                    ).SetMessageParams(nc, numComponents);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.WrongNumberOfComponentsInIccProfile).SetMessageParams
+                    (nc, numComponents);
             }
             return icc;
         }
@@ -91,8 +89,7 @@ namespace iTextSharp.IO.Color
             return GetInstance(data, numComponents);
         }
 
-        public static iTextSharp.IO.Color.IccProfile GetInstance(RandomAccessFileOrArray 
-            file)
+        public static iTextSharp.IO.Color.IccProfile GetInstance(RandomAccessFileOrArray file)
         {
             try
             {
@@ -113,8 +110,7 @@ namespace iTextSharp.IO.Color
                 {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile);
                 }
-                remain = (head[0] & 0xff) << 24 | (head[1] & 0xff) << 16 | (head[2] & 0xff) << 8 
-                    | head[3] & 0xff;
+                remain = (head[0] & 0xff) << 24 | (head[1] & 0xff) << 16 | (head[2] & 0xff) << 8 | head[3] & 0xff;
                 byte[] icc = new byte[remain];
                 System.Array.Copy(head, 0, icc, 0, head.Length);
                 remain -= head.Length;
@@ -133,8 +129,7 @@ namespace iTextSharp.IO.Color
             }
             catch (Exception ex)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, 
-                    ex);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, ex);
             }
         }
 
@@ -143,13 +138,11 @@ namespace iTextSharp.IO.Color
             RandomAccessFileOrArray raf;
             try
             {
-                raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(stream
-                    ));
+                raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(stream));
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, e);
             }
             return GetInstance(raf);
         }
@@ -159,13 +152,11 @@ namespace iTextSharp.IO.Color
             RandomAccessFileOrArray raf;
             try
             {
-                raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
-                    (filename));
+                raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(filename));
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, e);
             }
             return GetInstance(raf);
         }
@@ -175,13 +166,11 @@ namespace iTextSharp.IO.Color
             String colorSpace;
             try
             {
-                colorSpace = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII"
-                    );
+                colorSpace = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 16, 4, "US-ASCII");
             }
             catch (ArgumentException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, e);
             }
             return colorSpace;
         }
@@ -191,13 +180,11 @@ namespace iTextSharp.IO.Color
             String deviceClass;
             try
             {
-                deviceClass = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII"
-                    );
+                deviceClass = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(data, 12, 4, "US-ASCII");
             }
             catch (ArgumentException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidIccProfile, e);
             }
             return deviceClass;
         }

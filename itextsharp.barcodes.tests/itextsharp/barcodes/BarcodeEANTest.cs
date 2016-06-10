@@ -8,11 +8,10 @@ namespace iTextSharp.Barcodes
 {
     public class BarcodeEANTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/barcodes/BarcodeEAN/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/barcodes/BarcodeEAN/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -35,11 +34,10 @@ namespace iTextSharp.Barcodes
             barcode.SetCodeType(BarcodeEAN.EAN13);
             barcode.SetCode("9781935182610");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color
-                .BLACK);
+            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color.BLACK);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -57,11 +55,10 @@ namespace iTextSharp.Barcodes
             barcode.SetCodeType(BarcodeEAN.EAN8);
             barcode.SetCode("97819351");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color
-                .BLACK);
+            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLACK, iTextSharp.Kernel.Color.Color.BLACK);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -85,8 +82,8 @@ namespace iTextSharp.Barcodes
             BarcodeEANSUPP eanSupp = new BarcodeEANSUPP(codeEAN, codeSUPP);
             eanSupp.PlaceBarcode(canvas, null, iTextSharp.Kernel.Color.Color.BLUE);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
     }
 }

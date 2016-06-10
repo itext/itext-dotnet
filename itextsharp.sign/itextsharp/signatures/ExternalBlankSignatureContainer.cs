@@ -70,8 +70,7 @@ namespace iTextSharp.Signatures
         /// Creates an ExternalBlankSignatureContainer. This constructor will create the PdfDictionary for the
         /// signature information and will insert the  /Filter and /SubFilter values into this dictionary.
         /// </remarks>
-        /// <param name="filter">PdfName of the signature handler to use when validating this signature
-        ///     </param>
+        /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
         /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
         public ExternalBlankSignatureContainer(PdfName filter, PdfName subFilter)
         {

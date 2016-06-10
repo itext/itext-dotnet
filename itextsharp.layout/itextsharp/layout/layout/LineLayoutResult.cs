@@ -49,8 +49,8 @@ namespace iTextSharp.Layout.Layout
     {
         protected internal bool splitForcedByNewline;
 
-        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
-            , IRenderer overflowRenderer)
+        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            )
             : base(status, occupiedArea, splitRenderer, overflowRenderer)
         {
         }
@@ -60,8 +60,8 @@ namespace iTextSharp.Layout.Layout
             return splitForcedByNewline;
         }
 
-        public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(
-            bool isSplitForcedByNewline)
+        public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline
+            )
         {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;

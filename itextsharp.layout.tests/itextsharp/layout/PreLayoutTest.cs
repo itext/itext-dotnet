@@ -16,11 +16,10 @@ namespace iTextSharp.Layout
 {
     public class PreLayoutTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/PreLayoutTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PreLayoutTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/PreLayoutTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/PreLayoutTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -35,13 +34,12 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA));
+            document.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ));
             for (int i = 0; i < 200; i++)
             {
                 document.Add(new Paragraph("This is just junk text"));
@@ -58,15 +56,15 @@ namespace iTextSharp.Layout
             }
             foreach (IRenderer renderer_1 in pageNumberRenderers)
             {
-                String currentData = renderer_1.ToString().Replace("{pageNumber}", renderer_1.GetOccupiedArea
-                    ().GetPageNumber().ToString());
+                String currentData = renderer_1.ToString().Replace("{pageNumber}", renderer_1.GetOccupiedArea().GetPageNumber
+                    ().ToString());
                 ((TextRenderer)renderer_1).SetText(currentData);
                 ((Text)renderer_1.GetModelElement()).SetNextRenderer(renderer_1);
             }
             document.Relayout();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -76,8 +74,7 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "preLayoutTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
-                )));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDoc, PageSize.Default, false);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             StringBuilder text = new StringBuilder();
@@ -86,33 +83,28 @@ namespace iTextSharp.Layout
                 text.Append("A very long text is here...");
             }
             Paragraph twoColumnParagraph = new Paragraph();
-            twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph
-                ));
-            iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text
-                .ToString());
-            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants
-                .HELVETICA));
+            twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph));
+            iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text.ToString());
+            twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
             document.Add(twoColumnParagraph);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;
-            IList<IRenderer> documentChildRenderers = document.GetRenderer().GetChildRenderers
-                ();
+            IList<IRenderer> documentChildRenderers = document.GetRenderer().GetChildRenderers();
             for (int i_1 = documentChildRenderers.Count - 1; i_1 >= 0; i_1--)
             {
                 if (documentChildRenderers[i_1].GetModelElement() == twoColumnParagraph)
                 {
-                    paragraphLastPageNumber = documentChildRenderers[i_1].GetOccupiedArea().GetPageNumber
-                        ();
+                    paragraphLastPageNumber = documentChildRenderers[i_1].GetOccupiedArea().GetPageNumber();
                     break;
                 }
             }
-            twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph
-                , paragraphLastPageNumber));
+            twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph, paragraphLastPageNumber
+                ));
             document.Relayout();
             //Close document. Drawing of content is happened on close
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         internal class TwoColumnParagraphRenderer : ParagraphRenderer
@@ -152,8 +144,7 @@ namespace iTextSharp.Layout
 
             public override IRenderer GetNextRenderer()
             {
-                return new PreLayoutTest.TwoColumnParagraphRenderer((Paragraph)modelElement, oneColumnPage
-                    );
+                return new PreLayoutTest.TwoColumnParagraphRenderer((Paragraph)modelElement, oneColumnPage);
             }
         }
     }

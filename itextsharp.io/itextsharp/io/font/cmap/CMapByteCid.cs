@@ -94,8 +94,7 @@ namespace iTextSharp.IO.Font.Cmap
             return sb.ToString();
         }
 
-        protected internal virtual int DecodeSingle(byte[] cidBytes, CMapByteCid.Cursor cursor
-            )
+        protected internal virtual int DecodeSingle(byte[] cidBytes, CMapByteCid.Cursor cursor)
         {
             int end = cursor.offset + cursor.length;
             int currentPlane = 0;

@@ -49,44 +49,31 @@ namespace iTextSharp.Kernel.Color
 {
     public class Color
     {
-        public static readonly iTextSharp.Kernel.Color.Color BLACK = new DeviceRgb(0, 0, 
-            0);
+        public static readonly iTextSharp.Kernel.Color.Color BLACK = new DeviceRgb(0, 0, 0);
 
-        public static readonly iTextSharp.Kernel.Color.Color BLUE = new DeviceRgb(0, 0, 255
-            );
+        public static readonly iTextSharp.Kernel.Color.Color BLUE = new DeviceRgb(0, 0, 255);
 
-        public static readonly iTextSharp.Kernel.Color.Color CYAN = new DeviceRgb(0, 255, 
-            255);
+        public static readonly iTextSharp.Kernel.Color.Color CYAN = new DeviceRgb(0, 255, 255);
 
-        public static readonly iTextSharp.Kernel.Color.Color DARK_GRAY = new DeviceRgb(64
-            , 64, 64);
+        public static readonly iTextSharp.Kernel.Color.Color DARK_GRAY = new DeviceRgb(64, 64, 64);
 
-        public static readonly iTextSharp.Kernel.Color.Color GRAY = new DeviceRgb(128, 128
-            , 128);
+        public static readonly iTextSharp.Kernel.Color.Color GRAY = new DeviceRgb(128, 128, 128);
 
-        public static readonly iTextSharp.Kernel.Color.Color GREEN = new DeviceRgb(0, 255
-            , 0);
+        public static readonly iTextSharp.Kernel.Color.Color GREEN = new DeviceRgb(0, 255, 0);
 
-        public static readonly iTextSharp.Kernel.Color.Color LIGHT_GRAY = new DeviceRgb(192
-            , 192, 192);
+        public static readonly iTextSharp.Kernel.Color.Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
 
-        public static readonly iTextSharp.Kernel.Color.Color MAGENTA = new DeviceRgb(255, 
-            0, 255);
+        public static readonly iTextSharp.Kernel.Color.Color MAGENTA = new DeviceRgb(255, 0, 255);
 
-        public static readonly iTextSharp.Kernel.Color.Color ORANGE = new DeviceRgb(255, 
-            200, 0);
+        public static readonly iTextSharp.Kernel.Color.Color ORANGE = new DeviceRgb(255, 200, 0);
 
-        public static readonly iTextSharp.Kernel.Color.Color PINK = new DeviceRgb(255, 175
-            , 175);
+        public static readonly iTextSharp.Kernel.Color.Color PINK = new DeviceRgb(255, 175, 175);
 
-        public static readonly iTextSharp.Kernel.Color.Color RED = new DeviceRgb(255, 0, 
-            0);
+        public static readonly iTextSharp.Kernel.Color.Color RED = new DeviceRgb(255, 0, 0);
 
-        public static readonly iTextSharp.Kernel.Color.Color WHITE = new DeviceRgb(255, 255
-            , 255);
+        public static readonly iTextSharp.Kernel.Color.Color WHITE = new DeviceRgb(255, 255, 255);
 
-        public static readonly iTextSharp.Kernel.Color.Color YELLOW = new DeviceRgb(255, 
-            255, 0);
+        public static readonly iTextSharp.Kernel.Color.Color YELLOW = new DeviceRgb(255, 255, 0);
 
         protected internal PdfColorSpace colorSpace;
 
@@ -110,8 +97,7 @@ namespace iTextSharp.Kernel.Color
             return MakeColor(colorSpace, null);
         }
 
-        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace, float
-            [] colorValue)
+        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue)
         {
             iTextSharp.Kernel.Color.Color c = null;
             bool unknownColorSpace = false;
@@ -125,15 +111,14 @@ namespace iTextSharp.Kernel.Color
                 {
                     if (colorSpace is PdfDeviceCs.Rgb)
                     {
-                        c = colorValue != null ? new DeviceRgb(colorValue[0], colorValue[1], colorValue[2
-                            ]) : new DeviceRgb();
+                        c = colorValue != null ? new DeviceRgb(colorValue[0], colorValue[1], colorValue[2]) : new DeviceRgb();
                     }
                     else
                     {
                         if (colorSpace is PdfDeviceCs.Cmyk)
                         {
-                            c = colorValue != null ? new DeviceCmyk(colorValue[0], colorValue[1], colorValue[
-                                2], colorValue[3]) : new DeviceCmyk();
+                            c = colorValue != null ? new DeviceCmyk(colorValue[0], colorValue[1], colorValue[2], colorValue[3]) : new 
+                                DeviceCmyk();
                         }
                         else
                         {
@@ -149,8 +134,7 @@ namespace iTextSharp.Kernel.Color
                     if (colorSpace is PdfCieBasedCs.CalGray)
                     {
                         PdfCieBasedCs.CalGray calGray = (PdfCieBasedCs.CalGray)colorSpace;
-                        c = colorValue != null ? new CalGray(calGray, colorValue[0]) : new CalGray(calGray
-                            );
+                        c = colorValue != null ? new CalGray(calGray, colorValue[0]) : new CalGray(calGray);
                     }
                     else
                     {
@@ -164,8 +148,7 @@ namespace iTextSharp.Kernel.Color
                             if (colorSpace is PdfCieBasedCs.IccBased)
                             {
                                 PdfCieBasedCs.IccBased iccBased = (PdfCieBasedCs.IccBased)colorSpace;
-                                c = colorValue != null ? new IccBased(iccBased, colorValue) : new IccBased(iccBased
-                                    );
+                                c = colorValue != null ? new IccBased(iccBased, colorValue) : new IccBased(iccBased);
                             }
                             else
                             {
@@ -189,8 +172,7 @@ namespace iTextSharp.Kernel.Color
                         if (colorSpace is PdfSpecialCs.Separation)
                         {
                             PdfSpecialCs.Separation separation = (PdfSpecialCs.Separation)colorSpace;
-                            c = colorValue != null ? new Separation(separation, colorValue[0]) : new Separation
-                                (separation);
+                            c = colorValue != null ? new Separation(separation, colorValue[0]) : new Separation(separation);
                         }
                         else
                         {
@@ -204,8 +186,7 @@ namespace iTextSharp.Kernel.Color
                             {
                                 if (colorSpace is PdfSpecialCs.Indexed)
                                 {
-                                    c = colorValue != null ? new Indexed(colorSpace, (int)colorValue[0]) : new Indexed
-                                        (colorSpace);
+                                    c = colorValue != null ? new Indexed(colorSpace, (int)colorValue[0]) : new Indexed(colorSpace);
                                 }
                                 else
                                 {
@@ -294,16 +275,14 @@ namespace iTextSharp.Kernel.Color
                 return false;
             }
             iTextSharp.Kernel.Color.Color color = (iTextSharp.Kernel.Color.Color)o;
-            return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject
-                ()) : color.colorSpace == null) && iTextSharp.IO.Util.JavaUtil.ArraysEquals(colorValue
-                , color.colorValue);
+            return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject()) : color.colorSpace
+                 == null) && iTextSharp.IO.Util.JavaUtil.ArraysEquals(colorValue, color.colorValue);
         }
 
         public override int GetHashCode()
         {
             int result = colorSpace != null ? colorSpace.GetHashCode() : 0;
-            result = 31 * result + (colorValue != null ? iTextSharp.IO.Util.JavaUtil.ArraysHashCode
-                (colorValue) : 0);
+            result = 31 * result + (colorValue != null ? iTextSharp.IO.Util.JavaUtil.ArraysHashCode(colorValue) : 0);
             return result;
         }
     }

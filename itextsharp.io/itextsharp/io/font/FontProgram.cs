@@ -54,11 +54,9 @@ namespace iTextSharp.IO.Font
 
         public const int UNITS_NORMALIZATION = 1000;
 
-        protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph
-            >();
+        protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph>();
 
-        protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph
-            >();
+        protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph>();
 
         protected internal bool isFontSpecific;
 
@@ -66,8 +64,7 @@ namespace iTextSharp.IO.Font
 
         protected internal FontMetrics fontMetrics = new FontMetrics();
 
-        protected internal FontIdentification fontIdentification = new FontIdentification
-            ();
+        protected internal FontIdentification fontIdentification = new FontIdentification();
 
         protected internal int avgWidth;
 
@@ -343,11 +340,9 @@ namespace iTextSharp.IO.Font
 
         protected internal virtual void CheckFilePath(String path)
         {
-            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists
-                (path))
+            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
-                    SetMessageParams(path);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }
 

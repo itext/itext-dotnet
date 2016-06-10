@@ -58,8 +58,7 @@ namespace iTextSharp.Pdfa
     {
         protected internal PdfAChecker checker;
 
-        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent
-             outputIntent)
+        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent)
             : base(writer)
         {
             SetChecker(conformanceLevel);
@@ -71,8 +70,7 @@ namespace iTextSharp.Pdfa
         {
         }
 
-        public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties
-            )
+        public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
             : base(reader, writer, properties)
         {
             byte[] existingXmpMetadata = GetXmpMetadata();
@@ -91,8 +89,7 @@ namespace iTextSharp.Pdfa
                 throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
                     );
             }
-            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(
-                meta);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(meta);
             if (conformanceLevel == null)
             {
                 throw new PdfAConformanceException(PdfAConformanceException.DocumentToReadFromShallBeAPdfAConformantFileWithValidXmpMetadata
@@ -106,8 +103,7 @@ namespace iTextSharp.Pdfa
             CheckIsoConformance(obj, key, null);
         }
 
-        public override void CheckShowTextIsoConformance(Object obj, PdfResources resources
-            )
+        public override void CheckShowTextIsoConformance(Object obj, PdfResources resources)
         {
             CanvasGraphicsState gState = (CanvasGraphicsState)obj;
             bool fill = false;
@@ -161,8 +157,7 @@ namespace iTextSharp.Pdfa
             }
         }
 
-        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources
-            )
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources)
         {
             CanvasGraphicsState gState;
             PdfDictionary currentColorSpaces = null;
@@ -246,14 +241,12 @@ namespace iTextSharp.Pdfa
             try
             {
                 XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
-                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel
-                    ().GetPart());
-                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel
-                    ().GetConformance());
+                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
+                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
+                    ());
                 if (this.IsTagged())
                 {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION
-                        );
+                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
                     XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
                 }
                 SetXmpMetadata(xmpMeta);
@@ -288,8 +281,8 @@ namespace iTextSharp.Pdfa
             {
                 if (!pdfFont.IsEmbedded())
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1
-                        ).SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
+                    throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
+                        (pdfFont.GetFontProgram().GetFontNames().GetFontName());
                 }
             }
             base.FlushFonts();
@@ -321,8 +314,7 @@ namespace iTextSharp.Pdfa
 
         protected override void InitTagStructureContext()
         {
-            tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.
-                GetConformanceLevel()));
+            tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
         }
 
         protected override Counter GetCounter()
@@ -330,8 +322,7 @@ namespace iTextSharp.Pdfa
             return CounterFactory.GetCounter(typeof(iTextSharp.Pdfa.PdfADocument));
         }
 
-        private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel
-            )
+        private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel)
         {
             PdfVersion version;
             switch (conformanceLevel.GetPart())

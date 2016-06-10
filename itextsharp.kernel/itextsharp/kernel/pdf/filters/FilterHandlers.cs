@@ -67,8 +67,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
         {
             // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
             // it may also be better to split the sub-classes out into a separate package
-            IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler
-                >();
+            IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler>();
             map[PdfName.FlateDecode] = new FlateDecodeFilter();
             map[PdfName.FL] = new FlateDecodeFilter();
             map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();

@@ -10,11 +10,10 @@ namespace iTextSharp.Kernel.Utils
 {
     public class PdfMergerTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/utils/PdfMergerTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/utils/PdfMergerTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -31,12 +30,9 @@ namespace iTextSharp.Kernel.Utils
             String filename1 = sourceFolder + "helveticaTest.pdf";
             String filename2 = sourceFolder + "timesRomanTest.pdf";
             String resultFile = destinationFolder + "mergedResult01.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -49,8 +45,8 @@ namespace iTextSharp.Kernel.Utils
             merger.Merge(pdfDoc2, 1, 1);
             pdfDoc3.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult01.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -66,12 +62,9 @@ namespace iTextSharp.Kernel.Utils
             String filename1 = sourceFolder + "doc2.pdf";
             String filename2 = sourceFolder + "doc3.pdf";
             String resultFile = destinationFolder + "mergedResult02.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -81,8 +74,8 @@ namespace iTextSharp.Kernel.Utils
             PdfMerger merger = new PdfMerger(pdfDoc3).SetCloseSourceDocuments(true);
             merger.Merge(pdfDoc, 1, 1).Merge(pdfDoc1, 1, 1).Merge(pdfDoc2, 1, 1).Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult02.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult02.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -100,10 +93,8 @@ namespace iTextSharp.Kernel.Utils
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult03.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -115,10 +106,10 @@ namespace iTextSharp.Kernel.Utils
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = "";
-            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder
-                 + "cmp_mergedResult03.pdf", destinationFolder, "diff_");
-            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder
-                 + "cmp_mergedResult03.pdf");
+            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult03.pdf"
+                , destinationFolder, "diff_");
+            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_mergedResult03.pdf"
+                );
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
             if (!String.IsNullOrEmpty(errorMessage))
@@ -138,10 +129,8 @@ namespace iTextSharp.Kernel.Utils
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult04.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -163,10 +152,10 @@ namespace iTextSharp.Kernel.Utils
             merger.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = "";
-            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder
-                 + "cmp_mergedResult04.pdf", destinationFolder, "diff_");
-            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder
-                 + "cmp_mergedResult04.pdf");
+            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult04.pdf"
+                , destinationFolder, "diff_");
+            String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_mergedResult04.pdf"
+                );
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
             if (!String.IsNullOrEmpty(errorMessage))

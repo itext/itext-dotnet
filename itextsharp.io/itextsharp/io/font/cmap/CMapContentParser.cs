@@ -112,15 +112,14 @@ namespace iTextSharp.IO.Font.Cmap
                 {
                     break;
                 }
-                if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Other && "def".Equals(tokeniser
-                    .GetStringValue()))
+                if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Other && "def".Equals(tokeniser.GetStringValue()))
                 {
                     continue;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name)
                 {
-                    throw new iTextSharp.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams
-                        (tokeniser.GetStringValue());
+                    throw new iTextSharp.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams(tokeniser.GetStringValue
+                        ());
                 }
                 String name = tokeniser.GetStringValue();
                 CMapObject obj = ReadObject();
@@ -193,13 +192,13 @@ namespace iTextSharp.IO.Font.Cmap
                     CMapObject obj;
                     if (tokeniser.IsHexString())
                     {
-                        obj = new CMapObject(CMapObject.HEX_STRING, PdfTokenizer.DecodeStringContent(tokeniser
-                            .GetByteContent(), true));
+                        obj = new CMapObject(CMapObject.HEX_STRING, PdfTokenizer.DecodeStringContent(tokeniser.GetByteContent(), true
+                            ));
                     }
                     else
                     {
-                        obj = new CMapObject(CMapObject.STRING, PdfTokenizer.DecodeStringContent(tokeniser
-                            .GetByteContent(), false));
+                        obj = new CMapObject(CMapObject.STRING, PdfTokenizer.DecodeStringContent(tokeniser.GetByteContent(), false
+                            ));
                     }
                     return obj;
                 }
@@ -319,8 +318,8 @@ namespace iTextSharp.IO.Font.Cmap
         {
             if (cMapObject.IsHexString())
             {
-                return PdfEncodings.ConvertToString(((String)cMapObject.GetValue()).GetBytes(), PdfEncodings
-                    .UNICODE_BIG_UNMARKED);
+                return PdfEncodings.ConvertToString(((String)cMapObject.GetValue()).GetBytes(), PdfEncodings.UNICODE_BIG_UNMARKED
+                    );
             }
             else
             {

@@ -50,8 +50,7 @@ using iTextSharp.Layout.Renderer;
 
 namespace iTextSharp.Layout
 {
-    /// <summary>Document is the default root element when creating a self-sufficient PDF.
-    ///     </summary>
+    /// <summary>Document is the default root element when creating a self-sufficient PDF.</summary>
     /// <remarks>
     /// Document is the default root element when creating a self-sufficient PDF. It
     /// mainly operates high-level operations e.g. setting page size and rotation,
@@ -214,8 +213,7 @@ namespace iTextSharp.Layout
         {
             if (immediateFlush)
             {
-                throw new InvalidOperationException("Operation not supported with immediate flush"
-                    );
+                throw new InvalidOperationException("Operation not supported with immediate flush");
             }
             while (pdfDocument.GetNumberOfPages() > 0)
             {
@@ -282,8 +280,7 @@ namespace iTextSharp.Layout
         /// <param name="rightMargin">the right margin</param>
         /// <param name="leftMargin">the left margin</param>
         /// <param name="bottomMargin">the lower margin</param>
-        public virtual void SetMargins(float topMargin, float rightMargin, float bottomMargin
-            , float leftMargin)
+        public virtual void SetMargins(float topMargin, float rightMargin, float bottomMargin, float leftMargin)
         {
             SetTopMargin(topMargin);
             SetRightMargin(rightMargin);
@@ -307,9 +304,8 @@ namespace iTextSharp.Layout
         /// </returns>
         public virtual Rectangle GetPageEffectiveArea(PageSize pageSize)
         {
-            return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin
-                , pageSize.GetWidth() - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin
-                 - topMargin);
+            return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
+                () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
         /// <summary>checks whether a method is invoked at the closed document</summary>

@@ -12,11 +12,10 @@ namespace iTextSharp.Pdfa
 {
     public class PdfAFlushingTest : ITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/pdfa/PdfAFlushingTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/pdfa/PdfAFlushingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -33,13 +32,11 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA1b_flushingTest01.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_flushingTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent
-                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             imageXObject.Flush();
@@ -60,13 +57,11 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA2b_flushingTest02.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA2b_flushingTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
@@ -88,13 +83,11 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA3b_flushingTest03.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA3b_flushingTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, new PdfOutputIntent
-                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush(true);
@@ -116,11 +109,9 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA1b_docWithUnusedObjects_3.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_docWithUnusedObjects_3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
-                , new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , @is));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -133,8 +124,7 @@ namespace iTextSharp.Pdfa
             pdfDocument.Close();
             PdfReader testerReader = new PdfReader(outPdf);
             PdfDocument testerDocument = new PdfDocument(testerReader);
-            NUnit.Framework.Assert.AreEqual(testerDocument.ListIndirectReferences().Count, 11
-                );
+            NUnit.Framework.Assert.AreEqual(testerDocument.ListIndirectReferences().Count, 11);
             testerDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }
@@ -143,8 +133,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.Exception"/>
         private void CompareResult(String outFile, String cmpFile)
         {
-            String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder
-                , "diff_");
+            String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_");
             if (differences != null)
             {
                 NUnit.Framework.Assert.Fail(differences);

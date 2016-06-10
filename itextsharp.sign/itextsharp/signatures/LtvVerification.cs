@@ -62,8 +62,7 @@ namespace iTextSharp.Signatures
     /// <author>Paulo Soares</author>
     public class LtvVerification
     {
-        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerification
-            ));
+        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerification));
 
         private PdfDocument document;
 
@@ -71,8 +70,8 @@ namespace iTextSharp.Signatures
 
         private PdfAcroForm acroForm;
 
-        private IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary
-            <PdfName, LtvVerification.ValidationData>();
+        private IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, LtvVerification.ValidationData
+            >();
 
         private bool used = false;
 
@@ -130,9 +129,8 @@ namespace iTextSharp.Signatures
         /// <returns>true if a validation was generated, false otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient
-             crl, LtvVerification.CertificateOption certOption, LtvVerification.Level level
-            , LtvVerification.CertificateInclusion certInclude)
+        public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
+             certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude)
         {
             if (used)
             {
@@ -148,8 +146,7 @@ namespace iTextSharp.Signatures
             {
                 cert = (X509Certificate)xc[k];
                 LOGGER.Info("Certificate: " + cert.SubjectDN);
-                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.
-                    Equals(signingCert))
+                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert))
                 {
                     continue;
                 }
@@ -163,9 +160,8 @@ namespace iTextSharp.Signatures
                         LOGGER.Info("OCSP added");
                     }
                 }
-                if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level
-                    .OCSP_CRL || (level == LtvVerification.Level.OCSP_OPTIONAL_CRL && ocspEnc == 
-                    null)))
+                if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level
+                     == LtvVerification.Level.OCSP_OPTIONAL_CRL && ocspEnc == null)))
                 {
                     ICollection<byte[]> cims = crl.GetEncoded(cert, null);
                     if (cims != null)
@@ -237,8 +233,8 @@ namespace iTextSharp.Signatures
         /// <returns>boolean</returns>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps
-            , ICollection<byte[]> crls, ICollection<byte[]> certs)
+        public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps, ICollection<byte[]> crls
+            , ICollection<byte[]> certs)
         {
             if (used)
             {
@@ -310,8 +306,7 @@ namespace iTextSharp.Signatures
             return sh.Digest(b);
         }
 
-        /// <summary>Merges the validation with any validation already in the document or creates a new one.
-        ///     </summary>
+        /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Merge()
         {
@@ -409,13 +404,12 @@ namespace iTextSharp.Signatures
         /// <exception cref="System.IO.IOException"/>
         private void CreateDss()
         {
-            OutputDss(new PdfDictionary(), new PdfDictionary(), new PdfArray(), new PdfArray(
-                ), new PdfArray());
+            OutputDss(new PdfDictionary(), new PdfDictionary(), new PdfArray(), new PdfArray(), new PdfArray());
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void OutputDss(PdfDictionary dss, PdfDictionary vrim, PdfArray ocsps, PdfArray
-             crls, PdfArray certs)
+        private void OutputDss(PdfDictionary dss, PdfDictionary vrim, PdfArray ocsps, PdfArray crls, PdfArray certs
+            )
         {
             PdfCatalog catalog = document.GetCatalog();
             catalog.AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);

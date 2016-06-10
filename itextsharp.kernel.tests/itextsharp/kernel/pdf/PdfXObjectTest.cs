@@ -14,15 +14,13 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfXObjectTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
 
-        public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp"
-            , sourceFolder + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", 
-            sourceFolder + "WP_20140410_001.tif" };
+        public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp", sourceFolder
+             + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder + "WP_20140410_001.tif" };
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -42,8 +40,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfImageXObject[] images = new PdfImageXObject[4];
             for (int i = 0; i < 4; i++)
             {
-                images[i] = new PdfImageXObject(ImageDataFactory.Create(PdfXObjectTest.images[i])
-                    );
+                images[i] = new PdfImageXObject(ImageDataFactory.Create(PdfXObjectTest.images[i]));
                 images[i].SetLayer(new PdfLayer("layer" + i, document));
                 if (i % 2 == 0)
                 {
@@ -66,10 +63,9 @@ namespace iTextSharp.Kernel.Pdf
             canvas_1.Release();
             page_1.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationDocument).Length < 20 * 1024
-                 * 1024);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument
-                , sourceFolder + "cmp_documentFromImages1.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationDocument).Length < 20 * 1024 * 1024);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentFromImages1.pdf"
+                , destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -90,8 +86,8 @@ namespace iTextSharp.Kernel.Pdf
             canvas.Release();
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument
-                , sourceFolder + "cmp_documentFromImages2.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentFromImages2.pdf"
+                , destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -113,8 +109,7 @@ namespace iTextSharp.Kernel.Pdf
             //Create page1 and add forms to the page.
             PdfPage page1 = document.AddNewPage();
             canvas = new PdfCanvas(page1);
-            canvas.AddXObject(form, 0, 0).AddXObject(form, 50, 0).AddXObject(form, 0, 50).AddXObject
-                (form, 50, 50);
+            canvas.AddXObject(form, 0, 0).AddXObject(form, 50, 0).AddXObject(form, 0, 50).AddXObject(form, 50, 50);
             canvas.Release();
             //Create form from the page1 and flush it.
             form = new PdfFormXObject(page1);
@@ -131,8 +126,8 @@ namespace iTextSharp.Kernel.Pdf
             canvas.Release();
             page2.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument
-                , sourceFolder + "cmp_documentWithForms1.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentWithForms1.pdf"
+                , destinationFolder, "diff_"));
         }
     }
 }

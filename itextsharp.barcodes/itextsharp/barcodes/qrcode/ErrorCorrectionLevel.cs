@@ -69,8 +69,8 @@ namespace iTextSharp.Barcodes.Qrcode
         public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel H = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
             (3, 0x02, "H");
 
-        private static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel[] FOR_BITS
-             = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel[] { M, L, H, Q };
+        private static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel[] FOR_BITS = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+            [] { M, L, H, Q };
 
         private readonly int ordinal;
 
@@ -107,8 +107,7 @@ namespace iTextSharp.Barcodes.Qrcode
             return name;
         }
 
-        /// <param name="bits">int containing the two bits encoding a QR Code's error correction level
-        ///     </param>
+        /// <param name="bits">int containing the two bits encoding a QR Code's error correction level</param>
         /// <returns>
         /// 
         /// <see cref="ErrorCorrectionLevel"/>

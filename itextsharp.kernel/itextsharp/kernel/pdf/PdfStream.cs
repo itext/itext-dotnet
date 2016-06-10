@@ -123,8 +123,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             if (doc == null)
             {
-                throw new PdfException(PdfException.CannotCreatePdfStreamByInputStreamWithoutPdfDocument
-                    );
+                throw new PdfException(PdfException.CannotCreatePdfStreamByInputStreamWithoutPdfDocument);
             }
             MakeIndirect(doc);
             if (inputStream == null)
@@ -272,8 +271,8 @@ namespace iTextSharp.Kernel.Pdf
             byte[] bytes = null;
             if (outputStream != null && outputStream.GetOutputStream() != null)
             {
-                System.Diagnostics.Debug.Assert(outputStream.GetOutputStream() is ByteArrayOutputStream
-                    , "Invalid OutputStream: ByteArrayByteArrayOutputStream expected");
+                System.Diagnostics.Debug.Assert(outputStream.GetOutputStream() is ByteArrayOutputStream, "Invalid OutputStream: ByteArrayByteArrayOutputStream expected"
+                    );
                 try
                 {
                     outputStream.GetOutputStream().Flush();
@@ -312,8 +311,7 @@ namespace iTextSharp.Kernel.Pdf
         /// Sets <code>bytes</code> as stream's content.
         /// Could not be used with streams which were created by <code>InputStream</code>.
         /// </remarks>
-        /// <param name="bytes">new content for stream; if <code>null</code> then stream's content will be discarded
-        ///     </param>
+        /// <param name="bytes">new content for stream; if <code>null</code> then stream's content will be discarded</param>
         public virtual void SetData(byte[] bytes)
         {
             SetData(bytes, false);
@@ -336,8 +334,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             if (inputStream != null)
             {
-                throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputstream
-                    );
+                throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputstream);
             }
             bool outputStreamIsUninitialized = outputStream == null;
             if (outputStreamIsUninitialized)
@@ -346,8 +343,8 @@ namespace iTextSharp.Kernel.Pdf
             }
             if (append)
             {
-                if (outputStreamIsUninitialized && GetIndirectReference() != null && GetIndirectReference
-                    ().GetReader() != null)
+                if (outputStreamIsUninitialized && GetIndirectReference() != null && GetIndirectReference().GetReader() !=
+                     null)
                 {
                     // here is the same as in the getBytes() method: this logic makes sense only when stream is created
                     // by reader and in this case indirect reference won't be null and stream is not in the MustBeIndirect state.
@@ -394,8 +391,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
             return (iTextSharp.Kernel.Pdf.PdfStream)base.MakeIndirect(document, reference);
         }
@@ -451,8 +447,7 @@ namespace iTextSharp.Kernel.Pdf
             this.length = length;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfStream stream = (iTextSharp.Kernel.Pdf.PdfStream)from;
@@ -473,8 +468,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             if (GetOutputStream() == null && inputStream == null)
             {
-                outputStream = new PdfOutputStream(stream != null ? stream : new ByteArrayOutputStream
-                    ());
+                outputStream = new PdfOutputStream(stream != null ? stream : new ByteArrayOutputStream());
             }
         }
 

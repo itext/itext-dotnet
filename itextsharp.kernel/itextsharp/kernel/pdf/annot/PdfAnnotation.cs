@@ -116,8 +116,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
 
         protected internal PdfPage page;
 
-        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject 
-            pdfObject, iTextSharp.Kernel.Pdf.Annot.PdfAnnotation parent)
+        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject, iTextSharp.Kernel.Pdf.Annot.PdfAnnotation
+             parent)
         {
             iTextSharp.Kernel.Pdf.Annot.PdfAnnotation annotation = null;
             if (pdfObject.IsIndirectReference())
@@ -158,8 +158,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
                                 }
                                 else
                                 {
-                                    if (PdfName.Highlight.Equals(subtype) || PdfName.Underline.Equals(subtype) || PdfName
-                                        .Squiggly.Equals(subtype) || PdfName.StrikeOut.Equals(subtype))
+                                    if (PdfName.Highlight.Equals(subtype) || PdfName.Underline.Equals(subtype) || PdfName.Squiggly.Equals(subtype
+                                        ) || PdfName.StrikeOut.Equals(subtype))
                                     {
                                         annotation = new PdfTextMarkupAnnotation((PdfDictionary)pdfObject);
                                     }
@@ -321,14 +321,13 @@ namespace iTextSharp.Kernel.Pdf.Annot
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action)
         {
             return Put(PdfName.A, action.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName
-             key, PdfAction action)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action
+            )
         {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
@@ -339,14 +338,12 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.Contents);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(PdfString contents
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(PdfString contents)
         {
             return Put(PdfName.Contents, contents);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents)
         {
             return SetContents(new PdfString(contents));
         }
@@ -455,8 +452,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetAppearanceObject(PdfName.D);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType
-            , PdfDictionary appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType, PdfDictionary
+             appearance)
         {
             PdfDictionary ap = GetAppearanceDictionary();
             if (ap == null)
@@ -468,44 +465,41 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfDictionary
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfDictionary appearance)
         {
             return SetAppearance(PdfName.N, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfDictionary
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfDictionary appearance)
         {
             return SetAppearance(PdfName.R, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfDictionary
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfDictionary appearance)
         {
             return SetAppearance(PdfName.D, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType
-            , PdfAnnotationAppearance appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType, PdfAnnotationAppearance
+             appearance)
         {
             return SetAppearance(appearanceType, appearance.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfAnnotationAppearance
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfAnnotationAppearance appearance
+            )
         {
             return SetAppearance(PdfName.N, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfAnnotationAppearance
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfAnnotationAppearance appearance
+            )
         {
             return SetAppearance(PdfName.R, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfAnnotationAppearance
-             appearance)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfAnnotationAppearance appearance
+            )
         {
             return SetAppearance(PdfName.D, appearance);
         }
@@ -515,8 +509,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsName(PdfName.AS);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceState(PdfName
-             @as)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceState(PdfName @as)
         {
             return Put(PdfName.AS, @as);
         }
@@ -526,8 +519,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.Border);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfArray border
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfArray border)
         {
             return Put(PdfName.Border, border);
         }
@@ -547,8 +539,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return SetColor(new PdfArray(color));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(iTextSharp.Kernel.Color.Color
-             color)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(iTextSharp.Kernel.Color.Color color)
         {
             return SetColor(new PdfArray(color.GetColorValue()));
         }
@@ -566,8 +557,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetStructParentIndex(int
-             structParentIndex)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetStructParentIndex(int structParentIndex)
         {
             return Put(PdfName.StructParent, new PdfNumber(structParentIndex));
         }
@@ -588,14 +578,12 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return Put(PdfName.Open, new PdfBoolean(open));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints)
         {
             return Put(PdfName.QuadPoints, quadPoints);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary
-             borderStyle)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle)
         {
             return Put(PdfName.BS, borderStyle);
         }
@@ -623,8 +611,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
         /// </remarks>
         /// <param name="style">The new value for the annotation's border style.</param>
         /// <returns>The annotation which this method was called on.</returns>
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style)
         {
             PdfDictionary styleDict = GetBorderStyle();
             if (null == styleDict)
@@ -635,8 +622,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return SetBorderStyle(styleDict);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray 
-            dashPattern)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern)
         {
             PdfDictionary styleDict = GetBorderStyle();
             if (null == styleDict)
@@ -652,14 +638,12 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
-        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject 
-            pdfObject)
+        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject)
         {
             return MakeAnnotation(pdfObject, null);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetTitle(PdfString title
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetTitle(PdfString title)
         {
             return Put(PdfName.T, title);
         }
@@ -669,8 +653,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.T);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics
-            (PdfDictionary characteristics)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
+            )
         {
             return Put(PdfName.MK, characteristics);
         }
@@ -690,8 +674,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsDictionary(PdfName.AA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRectangle(PdfArray array
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRectangle(PdfArray array)
         {
             return Put(PdfName.Rect, array);
         }
@@ -701,8 +684,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.Rect);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject
-             value)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;

@@ -82,8 +82,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             xref = new PdfIndirectReference[capacity];
             freeReferences = new SortedSet<int>();
-            Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState
-                (PdfObject.FREE)));
+            Add(((PdfIndirectReference)new PdfIndirectReference(null, 0, MAX_GENERATION, 0).SetState(PdfObject.FREE)));
         }
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
@@ -117,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Creates next available indirect reference.</summary>
         /// <returns>created indirect reference.</returns>
-        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument
-             document)
+        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document)
         {
             PdfIndirectReference reference;
             if (freeReferences.Count > 0)
@@ -149,8 +147,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 if (reference.refersTo != null)
                 {
-                    reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT
-                        );
+                    reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
                     reference.refersTo = null;
                 }
                 if (reference.GetGenNumber() < MAX_GENERATION)
@@ -172,8 +169,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject
-             fileId, PdfObject crypto)
+        protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
+             crypto)
         {
             PdfWriter writer = document.GetWriter();
             if (document.IsAppendMode())
@@ -195,9 +192,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = count; i > 0; --i)
             {
                 PdfIndirectReference lastRef = xref[i];
-                if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef
-                    .CheckState(PdfObject.FLUSHED) && !(document.properties.appendMode && !lastRef
-                    .CheckState(PdfObject.MODIFIED))))
+                if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef.CheckState(PdfObject
+                    .FLUSHED) && !(document.properties.appendMode && !lastRef.CheckState(PdfObject.MODIFIED))))
                 {
                     --count;
                 }
@@ -219,9 +215,8 @@ namespace iTextSharp.Kernel.Pdf
                 PdfIndirectReference reference = xref[i_1];
                 if (reference != null)
                 {
-                    if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED))
-                         || (reference.IsFree() && reference.GetGenNumber() == 0) || (!reference.CheckState
-                        (PdfObject.FLUSHED)))
+                    if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
+                         reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED)))
                     {
                         reference = null;
                     }
@@ -340,9 +335,9 @@ namespace iTextSharp.Kernel.Pdf
                     for (int i_2 = first; i_2 < first + len; i_2++)
                     {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
-                        writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter
-                            )).WriteSpace().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber
-                            (), objectGenerationFormatter)).WriteSpace();
+                        writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter)).WriteSpace
+                            ().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber(), objectGenerationFormatter)).WriteSpace
+                            ();
                         if (reference.IsFree())
                         {
                             writer.WriteBytes(freeXRefEntry);
@@ -426,8 +421,8 @@ namespace iTextSharp.Kernel.Pdf
 
         private static byte[] IntToBytes(int n)
         {
-            return new byte[] { (byte)((n >> 24) & 0xFF), (byte)((n >> 16) & 0xFF), (byte)((n
-                 >> 8) & 0xFF), (byte)(n & 0xFF) };
+            return new byte[] { (byte)((n >> 24) & 0xFF), (byte)((n >> 16) & 0xFF), (byte)((n >> 8) & 0xFF), (byte)(n 
+                & 0xFF) };
         }
     }
 }

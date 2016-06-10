@@ -64,8 +64,7 @@ namespace iTextSharp.IO.Source
         /// <summary>The length</summary>
         private readonly long length;
 
-        /// <summary>Constructs a new OffsetRandomAccessSource that extends to the end of the underlying source
-        ///     </summary>
+        /// <summary>Constructs a new OffsetRandomAccessSource that extends to the end of the underlying source</summary>
         /// <param name="source">the source</param>
         /// <param name="offset">the amount of the offset to use</param>
         public WindowRandomAccessSource(IRandomAccessSource source, long offset)
@@ -77,8 +76,7 @@ namespace iTextSharp.IO.Source
         /// <param name="source">the source</param>
         /// <param name="offset">the amount of the offset to use</param>
         /// <param name="length">the number of bytes to be included in this RAS</param>
-        public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length
-            )
+        public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length)
         {
             this.source = source;
             this.offset = offset;

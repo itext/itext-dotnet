@@ -74,11 +74,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.LE);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLineEndingStyles(
-            PdfArray lineEndingStyles)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLineEndingStyles(PdfArray lineEndingStyles
+            )
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, lineEndingStyles
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, lineEndingStyles);
         }
 
         public virtual float GetLeaderLine()
@@ -87,11 +86,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return n == null ? 0 : n.FloatValue();
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float 
-            leaderLine)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float leaderLine)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, new PdfNumber
-                (leaderLine));
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, new PdfNumber(leaderLine));
         }
 
         public virtual float GetLeaderLineExtension()
@@ -100,11 +97,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return n == null ? 0 : n.FloatValue();
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLineExtension
-            (float leaderLineExtension)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLineExtension(float leaderLineExtension
+            )
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LLE, new PdfNumber
-                (leaderLineExtension));
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LLE, new PdfNumber(leaderLineExtension));
         }
 
         public virtual float GetLeaderLineOffset()
@@ -113,11 +109,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return n == null ? 0 : n.FloatValue();
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLineOffset(
-            float leaderLineOffset)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLineOffset(float leaderLineOffset)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LLO, new PdfNumber
-                (leaderLineOffset));
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LLO, new PdfNumber(leaderLineOffset));
         }
 
         public virtual bool GetContentsAsCaption()
@@ -126,11 +120,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return b != null && b.GetValue();
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetContentsAsCaption
-            (bool contentsAsCaption)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetContentsAsCaption(bool contentsAsCaption)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Cap, new PdfBoolean
-                (contentsAsCaption));
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Cap, new PdfBoolean(contentsAsCaption));
         }
 
         public virtual PdfName GetCaptionPosition()
@@ -138,11 +130,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsName(PdfName.CP);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionPosition(PdfName
-             captionPosition)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionPosition(PdfName captionPosition)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.CP, captionPosition
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.CP, captionPosition);
         }
 
         public virtual PdfDictionary GetMeasure()
@@ -150,11 +140,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsDictionary(PdfName.Measure);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetMeasure(PdfDictionary
-             measure)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetMeasure(PdfDictionary measure)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Measure, measure
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Measure, measure);
         }
 
         public virtual PdfArray GetCaptionOffset()
@@ -162,15 +150,12 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.CO);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionOffset(PdfArray
-             captionOffset)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionOffset(PdfArray captionOffset)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.CO, captionOffset
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.CO, captionOffset);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionOffset(float
-            [] captionOffset)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLineAnnotation SetCaptionOffset(float[] captionOffset)
         {
             return SetCaptionOffset(new PdfArray(captionOffset));
         }

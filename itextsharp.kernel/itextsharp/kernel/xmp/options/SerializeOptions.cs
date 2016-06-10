@@ -58,8 +58,7 @@ namespace iTextSharp.Kernel.XMP.Options
         public const int USE_COMPACT_FORMAT = 0x0040;
 
         /// <summary>Use the canonical form of RDF if set.</summary>
-        /// <remarks>Use the canonical form of RDF if set. By default the compact form is used
-        ///     </remarks>
+        /// <remarks>Use the canonical form of RDF if set. By default the compact form is used</remarks>
         public const int USE_CANONICAL_FORMAT = 0x0080;
 
         /// <summary>Include a padding allowance for a thumbnail image.</summary>
@@ -133,8 +132,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// </remarks>
         private int baseIndent = 0;
 
-        /// <summary>Omits the Toolkit version attribute, not published, only used for Unit tests.
-        ///     </summary>
+        /// <summary>Omits the Toolkit version attribute, not published, only used for Unit tests.</summary>
         private bool omitVersionAttribute = false;
 
         /// <summary>Default constructor.</summary>
@@ -144,8 +142,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <summary>Constructor using inital options</summary>
         /// <param name="options">the inital options</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if options are not consistant.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if options are not consistant.</exception>
         public SerializeOptions(int options)
             : base(options)
         {
@@ -162,8 +159,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetOmitPacketWrapper(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetOmitPacketWrapper(bool value)
         {
             SetOption(OMIT_PACKET_WRAPPER, value);
             return this;
@@ -177,8 +173,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetOmitXmpMetaElement(bool 
-            value)
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetOmitXmpMetaElement(bool value)
         {
             SetOption(OMIT_XMPMETA_ELEMENT, value);
             return this;
@@ -192,8 +187,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetReadOnlyPacket(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetReadOnlyPacket(bool value)
         {
             SetOption(READONLY_PACKET, value);
             return this;
@@ -207,8 +201,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetUseCompactFormat(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetUseCompactFormat(bool value)
         {
             SetOption(USE_COMPACT_FORMAT, value);
             return this;
@@ -222,8 +215,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetUseCanonicalFormat(bool 
-            value)
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetUseCanonicalFormat(bool value)
         {
             SetOption(USE_CANONICAL_FORMAT, value);
             return this;
@@ -237,8 +229,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetIncludeThumbnailPad(bool
-             value)
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetIncludeThumbnailPad(bool value)
         {
             SetOption(INCLUDE_THUMBNAIL_PAD, value);
             return this;
@@ -252,8 +243,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetExactPacketLength(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetExactPacketLength(bool value)
         {
             SetOption(EXACT_PACKET_LENGTH, value);
             return this;
@@ -281,8 +271,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetEncodeUTF16BE(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetEncodeUTF16BE(bool value)
         {
             // clear unicode bits
             SetOption(UTF16_BIT | LITTLEENDIAN_BIT, false);
@@ -298,8 +287,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetEncodeUTF16LE(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetEncodeUTF16LE(bool value)
         {
             // clear unicode bits
             SetOption(UTF16_BIT | LITTLEENDIAN_BIT, false);
@@ -315,8 +303,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="baseIndent">The baseIndent to set.</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetBaseIndent(int baseIndent
-            )
+        public iTextSharp.Kernel.XMP.Options.SerializeOptions SetBaseIndent(int baseIndent)
         {
             this.baseIndent = baseIndent;
             return this;
@@ -393,10 +380,8 @@ namespace iTextSharp.Kernel.XMP.Options
             }
         }
 
-        /// <returns>Returns clone of this SerializeOptions-object with the same options set.
-        ///     </returns>
-        /// <exception cref="Java.Lang.CloneNotSupportedException">Cannot happen in this place.
-        ///     </exception>
+        /// <returns>Returns clone of this SerializeOptions-object with the same options set.</returns>
+        /// <exception cref="Java.Lang.CloneNotSupportedException">Cannot happen in this place.</exception>
         public Object Clone()
         {
             iTextSharp.Kernel.XMP.Options.SerializeOptions clone;
@@ -467,8 +452,8 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <seealso cref="Options.GetValidOptions()"/>
         protected internal override int GetValidOptions()
         {
-            return OMIT_PACKET_WRAPPER | READONLY_PACKET | USE_COMPACT_FORMAT | INCLUDE_THUMBNAIL_PAD
-                 | OMIT_XMPMETA_ELEMENT | EXACT_PACKET_LENGTH | SORT;
+            return OMIT_PACKET_WRAPPER | READONLY_PACKET | USE_COMPACT_FORMAT | INCLUDE_THUMBNAIL_PAD | OMIT_XMPMETA_ELEMENT
+                 | EXACT_PACKET_LENGTH | SORT;
         }
         //		USE_CANONICAL_FORMAT |
     }

@@ -77,8 +77,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 
         /// <summary>Creates a new PdfLayerMembership instance by its PdfDictionary, which must be an indirect object.
         ///     </summary>
-        /// <param name="membershipDictionary">the membership dictionary, must have an indirect reference.
-        ///     </param>
+        /// <param name="membershipDictionary">the membership dictionary, must have an indirect reference.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public PdfLayerMembership(PdfDictionary membershipDictionary)
             : base(membershipDictionary)
@@ -98,8 +97,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
             if (layers is PdfDictionary)
             {
                 IList<PdfLayer> list = new List<PdfLayer>();
-                list.Add(new PdfLayer(((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument
-                    ()))));
+                list.Add(new PdfLayer(((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument()))));
                 return list;
             }
             else
@@ -109,8 +107,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
                     IList<PdfLayer> layerList = new List<PdfLayer>();
                     for (int ind = 0; ind < ((PdfArray)layers).Size(); ind++)
                     {
-                        layerList.Add(new PdfLayer((((PdfArray)((PdfArray)layers).MakeIndirect(GetDocument
-                            ()))).GetAsDictionary(ind)));
+                        layerList.Add(new PdfLayer((((PdfArray)((PdfArray)layers).MakeIndirect(GetDocument()))).GetAsDictionary(ind
+                            )));
                     }
                     return layerList;
                 }
@@ -149,9 +147,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="visibilityPolicy">the visibility policy</param>
         public virtual void SetVisibilityPolicy(PdfName visibilityPolicy)
         {
-            if (visibilityPolicy == null || !PdfName.AllOn.Equals(visibilityPolicy) && !PdfName
-                .AnyOn.Equals(visibilityPolicy) && !PdfName.AnyOff.Equals(visibilityPolicy) &&
-                 !PdfName.AllOff.Equals(visibilityPolicy))
+            if (visibilityPolicy == null || !PdfName.AllOn.Equals(visibilityPolicy) && !PdfName.AnyOn.Equals(visibilityPolicy
+                ) && !PdfName.AnyOff.Equals(visibilityPolicy) && !PdfName.AllOff.Equals(visibilityPolicy))
             {
                 throw new ArgumentException("Argument: visibilityPolicy");
             }
@@ -167,9 +164,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         public virtual PdfName GetVisibilityPolicy()
         {
             PdfName visibilityPolicy = GetPdfObject().GetAsName(PdfName.P);
-            if (visibilityPolicy == null || !visibilityPolicy.Equals(PdfName.AllOn) && !visibilityPolicy
-                .Equals(PdfName.AllOff) && !visibilityPolicy.Equals(PdfName.AnyOn) && !visibilityPolicy
-                .Equals(PdfName.AnyOff))
+            if (visibilityPolicy == null || !visibilityPolicy.Equals(PdfName.AllOn) && !visibilityPolicy.Equals(PdfName
+                .AllOff) && !visibilityPolicy.Equals(PdfName.AnyOn) && !visibilityPolicy.Equals(PdfName.AnyOff))
             {
                 return PdfName.AnyOn;
             }
@@ -185,8 +181,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// followed by a series of indirect references to OCGs or other visibility
         /// expressions.
         /// </param>
-        public virtual void SetVisibilityExpression(PdfVisibilityExpression visibilityExpression
-            )
+        public virtual void SetVisibilityExpression(PdfVisibilityExpression visibilityExpression)
         {
             GetPdfObject().Put(PdfName.VE, visibilityExpression.GetPdfObject());
             GetPdfObject().SetModified();

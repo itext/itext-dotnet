@@ -55,8 +55,7 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-    /// <summary>Utility class that provides several convenience methods concerning digital signatures.
-    ///     </summary>
+    /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil
     {
         private PdfDocument document;
@@ -110,8 +109,7 @@ namespace iTextSharp.Signatures
                     {
                         cert = v.GetAsArray(PdfName.Cert).GetAsString(0);
                     }
-                    pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), cert.GetValueBytes
-                        ());
+                    pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), cert.GetValueBytes());
                 }
                 else
                 {
@@ -182,8 +180,8 @@ namespace iTextSharp.Signatures
             Stream rg = null;
             try
             {
-                rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(rf.CreateSourceView
-                    (), AsLongArray(b)));
+                rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(rf.CreateSourceView(), AsLongArray(b)
+                    ));
                 byte[] buf = new byte[8192];
                 int rd;
                 while ((rd = rg.JRead(buf, 0, buf.Length)) > 0)
@@ -251,8 +249,7 @@ namespace iTextSharp.Signatures
                 {
                     continue;
                 }
-                int length = ro.GetAsNumber(rangeSize - 1).IntValue() + ro.GetAsNumber(rangeSize 
-                    - 2).IntValue();
+                int length = ro.GetAsNumber(rangeSize - 1).IntValue() + ro.GetAsNumber(rangeSize - 2).IntValue();
                 sorter.Add(new Object[] { entry.Key, new int[] { length, 0 } });
             }
             JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
@@ -260,8 +257,7 @@ namespace iTextSharp.Signatures
             {
                 try
                 {
-                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength
-                        ())
+                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength())
                     {
                         totalRevisions = sorter.Count;
                     }
@@ -342,8 +338,7 @@ namespace iTextSharp.Signatures
 
         /// <summary>Extracts a revision from the document.</summary>
         /// <param name="field">the signature field name</param>
-        /// <returns>an InputStream covering the revision. Returns null if it's not a signature field
-        ///     </returns>
+        /// <returns>an InputStream covering the revision. Returns null if it's not a signature field</returns>
         /// <exception cref="System.IO.IOException"/>
         public virtual Stream ExtractRevision(String field)
         {
@@ -354,8 +349,7 @@ namespace iTextSharp.Signatures
             }
             int length = sigNames.Get(field)[0];
             RandomAccessFileOrArray raf = document.GetReader().GetSafeFile();
-            return new RASInputStream(new WindowRandomAccessSource(raf.CreateSourceView(), 0, 
-                length));
+            return new RASInputStream(new WindowRandomAccessSource(raf.CreateSourceView(), 0, length));
         }
 
         /// <summary>Checks if the signature covers the entire document or just part of it.</summary>
@@ -385,8 +379,7 @@ namespace iTextSharp.Signatures
         /// <returns>boolean does the signature field exist</returns>
         public virtual bool DoesSignatureFieldExist(String name)
         {
-            return GetBlankSignatureNames().Contains(name) || GetSignatureNames().Contains(name
-                );
+            return GetBlankSignatureNames().Contains(name) || GetSignatureNames().Contains(name);
         }
 
         /// <summary>

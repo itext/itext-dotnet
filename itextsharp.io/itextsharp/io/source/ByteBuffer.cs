@@ -47,8 +47,8 @@ namespace iTextSharp.IO.Source
 {
     public class ByteBuffer
     {
-        private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55
-            , 56, 57, 97, 98, 99, 100, 101, 102 };
+        private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100
+            , 101, 102 };
 
         protected internal int count;
 
@@ -101,8 +101,8 @@ namespace iTextSharp.IO.Source
 
         public virtual iTextSharp.IO.Source.ByteBuffer Append(byte[] b, int off, int len)
         {
-            if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off
-                 + len) < 0) || len == 0)
+            if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off + len) < 0) || len == 
+                0)
             {
                 return this;
             }
@@ -143,8 +143,7 @@ namespace iTextSharp.IO.Source
         {
             if (index >= count)
             {
-                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, 
-                    count));
+                throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, count));
             }
             return buffer[index];
         }

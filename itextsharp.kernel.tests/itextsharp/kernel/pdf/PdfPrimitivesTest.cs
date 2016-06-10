@@ -7,8 +7,8 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfPrimitivesTest : ExtendedITextTest
     {
-        internal static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
+        internal static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
 
         internal static readonly PdfName TestArray = new PdfName("TestArray");
 
@@ -171,8 +171,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 0; i < PageCount; i++)
             {
                 PdfPage page = pdfDoc.AddNewPage();
-                page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithFloatNumbers(pdfDoc, true)
-                    );
+                page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithFloatNumbers(pdfDoc, true));
                 page.Flush();
             }
             pdfDoc.Close();
@@ -256,8 +255,7 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        private PdfArray GeneratePdfArrayWithFloatNumbers(PdfDocument doc, bool indirects
-            )
+        private PdfArray GeneratePdfArrayWithFloatNumbers(PdfDocument doc, bool indirects)
         {
             PdfArray array = ((PdfArray)new PdfArray().MakeIndirect(doc));
             Random rnd = new Random();
@@ -279,8 +277,7 @@ namespace iTextSharp.Kernel.Pdf
             Random rnd = new Random();
             for (int i = 0; i < DefaultArraySize; i++)
             {
-                array.Add(((PdfNumber)new PdfNumber(rnd.Next()).MakeIndirect(indirects ? doc : null
-                    )));
+                array.Add(((PdfNumber)new PdfNumber(rnd.Next()).MakeIndirect(indirects ? doc : null)));
             }
             return array;
         }
@@ -291,8 +288,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfPrimitivesTest.RandomString rnd = new PdfPrimitivesTest.RandomString(16);
             for (int i = 0; i < DefaultArraySize; i++)
             {
-                array.Add(((PdfString)new PdfString(rnd.NextString()).MakeIndirect(indirects ? doc
-                     : null)));
+                array.Add(((PdfString)new PdfString(rnd.NextString()).MakeIndirect(indirects ? doc : null)));
             }
             return array;
         }
@@ -303,8 +299,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfPrimitivesTest.RandomString rnd = new PdfPrimitivesTest.RandomString(6);
             for (int i = 0; i < DefaultArraySize; i++)
             {
-                array.Add(((PdfName)new PdfName(rnd.NextString()).MakeIndirect(indirects ? doc : 
-                    null)));
+                array.Add(((PdfName)new PdfName(rnd.NextString()).MakeIndirect(indirects ? doc : null)));
             }
             return array;
         }
@@ -315,8 +310,7 @@ namespace iTextSharp.Kernel.Pdf
             Random rnd = new Random();
             for (int i = 0; i < DefaultArraySize; i++)
             {
-                array.Add(((PdfBoolean)new PdfBoolean(rnd.NextBoolean()).MakeIndirect(indirects ? 
-                    doc : null)));
+                array.Add(((PdfBoolean)new PdfBoolean(rnd.NextBoolean()).MakeIndirect(indirects ? doc : null)));
             }
             return array;
         }

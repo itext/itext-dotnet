@@ -13,11 +13,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
     public class HighlightItemsTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/parser/HighlightItemsTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/HighlightItemsTest/";
 
-        private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/parser/HighlightItemsTest/";
+        private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itextsharp/kernel/parser/HighlightItemsTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp()
@@ -34,8 +32,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "page229.pdf";
             String cmp = sourceFolder + "cmp_page229.pdf";
             ParseAndHighlight(input, output, false);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -47,8 +44,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "page229_characters.pdf";
             String cmp = sourceFolder + "cmp_page229_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -60,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
             String cmp = sourceFolder + "cmp_ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
             ParseAndHighlight(input, output, false);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -73,8 +68,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda_characters.pdf";
             String cmp = sourceFolder + "cmp_ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -86,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "HeaderFooter.pdf";
             String cmp = sourceFolder + "cmp_HeaderFooter.pdf";
             ParseAndHighlight(input, output, false);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -99,8 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "HeaderFooter_characters.pdf";
             String cmp = sourceFolder + "cmp_HeaderFooter_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -112,8 +104,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "reference_page2_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page2_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -125,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "reference_page832_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page832_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -138,16 +128,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String output = outputPath + "reference_page604_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page604_characters.pdf";
             ParseAndHighlight(input, output, true);
-            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, 
-                cmp, outputPath, "diff"));
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void ParseAndHighlight(String input, String output, bool singleCharacters
-            )
+        private void ParseAndHighlight(String input, String output, bool singleCharacters)
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output
-                ));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output));
             HighlightItemsTest.MyEventListener myEventListener = singleCharacters ? new HighlightItemsTest.MyCharacterEventListener
                 () : new HighlightItemsTest.MyEventListener();
             PdfDocumentContentParser parser = new PdfDocumentContentParser(pdfDocument);
@@ -189,8 +176,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
             public virtual ICollection<EventType> GetSupportedEvents()
             {
-                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
-                    ));
+                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
             }
 
             public virtual IList<Rectangle> GetRectangles()

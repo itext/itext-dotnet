@@ -71,8 +71,7 @@ namespace iTextSharp.Signatures
         /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException
-        ///     "/>
+        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException"/>
         /// <exception cref="System.IO.IOException"/>
         public static String GetCRLURL(X509Certificate certificate)
         {
@@ -106,8 +105,7 @@ namespace iTextSharp.Signatures
                     {
                         continue;
                     }
-                    DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object
-                        (), false);
+                    DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false);
                     return derStr.GetString();
                 }
             }
@@ -126,8 +124,7 @@ namespace iTextSharp.Signatures
             {
                 return null;
             }
-            return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri
-                (url)));
+            return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(url)));
         }
 
         // Online Certificate Status Protocol
@@ -214,8 +211,7 @@ namespace iTextSharp.Signatures
         /// <param name="oid">the Object Identifier value for the extension.</param>
         /// <returns>the extension value as an ASN1Primitive object</returns>
         /// <exception cref="System.IO.IOException"/>
-        private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid
-            )
+        private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid)
         {
             byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
             if (bytes == null)
@@ -235,8 +231,8 @@ namespace iTextSharp.Signatures
         private static String GetStringFromGeneralName(Asn1Object names)
         {
             Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(
-                taggedObject, false).GetOctets(), "ISO-8859-1");
+            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
+                (), "ISO-8859-1");
         }
     }
 }

@@ -123,8 +123,7 @@ namespace iTextSharp.Layout.Element
         /// </returns>
         public virtual AreaBreakType? GetAreaType()
         {
-            return this.GetProperty<AreaBreakType?>(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE
-                );
+            return this.GetProperty<AreaBreakType?>(iTextSharp.Layout.Property.Property.AREA_BREAK_TYPE);
         }
 
         protected internal override IRenderer MakeNewRenderer()

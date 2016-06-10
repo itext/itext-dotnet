@@ -64,8 +64,7 @@ namespace iTextSharp.Forms.Fields
         {
         }
 
-        protected internal PdfTextFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument
-            )
+        protected internal PdfTextFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument)
         {
         }
@@ -88,17 +87,14 @@ namespace iTextSharp.Forms.Fields
 
         /// <summary>If true, the field can contain multiple lines of text; if false, the field?s text is restricted to a single line.
         ///     </summary>
-        /// <param name="multiline">whether or not the file can contain multiple lines of text
-        ///     </param>
+        /// <param name="multiline">whether or not the file can contain multiple lines of text</param>
         /// <returns>
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMultiline(bool multiline
-            )
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMultiline(bool multiline)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_MULTILINE, multiline
-                );
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_MULTILINE, multiline);
         }
 
         /// <summary>If true, the field is intended for entering a secure password that should not be echoed visibly to the screen.
@@ -112,11 +108,9 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetPassword(bool password
-            )
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetPassword(bool password)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_PASSWORD, password
-                );
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_PASSWORD, password);
         }
 
         /// <summary>
@@ -138,11 +132,9 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetFileSelect(bool fileSelect
-            )
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetFileSelect(bool fileSelect)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_FILE_SELECT, fileSelect
-                );
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_FILE_SELECT, fileSelect);
         }
 
         /// <summary>If true, text entered in the field is spell-checked.</summary>
@@ -158,11 +150,9 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetSpellCheck(bool spellCheck
-            )
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetSpellCheck(bool spellCheck)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
-                , !spellCheck);
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK, !spellCheck);
         }
 
         /// <summary>
@@ -196,8 +186,7 @@ namespace iTextSharp.Forms.Fields
         /// </returns>
         public virtual iTextSharp.Forms.Fields.PdfTextFormField SetScroll(bool scroll)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SCROLL, !
-                scroll);
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SCROLL, !scroll);
         }
 
         /// <summary>
@@ -236,8 +225,7 @@ namespace iTextSharp.Forms.Fields
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_COMB, comb);
         }
 
-        /// <summary>If true, the value of this field should be represented as a rich text string.
-        ///     </summary>
+        /// <summary>If true, the value of this field should be represented as a rich text string.</summary>
         /// <remarks>
         /// If true, the value of this field should be represented as a rich text string.
         /// If the field has a value, the RV entry of the field dictionary specifies the rich text string.
@@ -248,8 +236,7 @@ namespace iTextSharp.Forms.Fields
             return GetFieldFlag(FF_RICH_TEXT);
         }
 
-        /// <summary>If true, the value of this field should be represented as a rich text string.
-        ///     </summary>
+        /// <summary>If true, the value of this field should be represented as a rich text string.</summary>
         /// <remarks>
         /// If true, the value of this field should be represented as a rich text string.
         /// If the field has a value, the RV entry of the field dictionary specifies the rich text string.
@@ -259,11 +246,9 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetRichText(bool richText
-            )
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetRichText(bool richText)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_RICH_TEXT, richText
-                );
+            return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_RICH_TEXT, richText);
         }
 
         /// <summary>Gets the maximum length of the field's text, in characters.</summary>
@@ -283,8 +268,7 @@ namespace iTextSharp.Forms.Fields
         /// <returns>current</returns>
         public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen)
         {
-            return (iTextSharp.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber
-                (maxLen));
+            return (iTextSharp.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber(maxLen));
         }
     }
 }

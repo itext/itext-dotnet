@@ -6,11 +6,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfStringTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStringTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStringTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfStringTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfStringTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void Before()
@@ -24,9 +23,8 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void TestPdfDocumentInfoStringEncoding01()
         {
             String fileName = "testPdfDocumentInfoStringEncoding01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName
-                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION
-                )));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
+                ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.AddNewPage();
             String author = "Алексей";
             String title = "Заголовок";
@@ -39,16 +37,14 @@ namespace iTextSharp.Kernel.Pdf
             pdfDocument.GetDocumentInfo().SetKeywords(keywords);
             pdfDocument.GetDocumentInfo().SetCreator(creator);
             pdfDocument.Close();
-            PdfDocument readDoc = new PdfDocument(new PdfReader(destinationFolder + fileName)
-                );
+            PdfDocument readDoc = new PdfDocument(new PdfReader(destinationFolder + fileName));
             NUnit.Framework.Assert.AreEqual(author, readDoc.GetDocumentInfo().GetAuthor());
             NUnit.Framework.Assert.AreEqual(title, readDoc.GetDocumentInfo().GetTitle());
             NUnit.Framework.Assert.AreEqual(subject, readDoc.GetDocumentInfo().GetSubject());
-            NUnit.Framework.Assert.AreEqual(keywords, readDoc.GetDocumentInfo().GetKeywords()
-                );
+            NUnit.Framework.Assert.AreEqual(keywords, readDoc.GetDocumentInfo().GetKeywords());
             NUnit.Framework.Assert.AreEqual(creator, readDoc.GetDocumentInfo().GetCreator());
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + fileName, sourceFolder + "cmp_" + fileName, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder, "diff_"));
         }
     }
 }

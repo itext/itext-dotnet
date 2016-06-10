@@ -11,11 +11,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfReaderTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfReaderTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfReaderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfReaderTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfReaderTest/";
 
         internal const String author = "Alexander Chingarev";
 
@@ -40,8 +39,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             pdfDoc.AddNewPage();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             pdfDoc = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(author, pdfDoc.GetDocumentInfo().GetAuthor());
             NUnit.Framework.Assert.AreEqual(creator, pdfDoc.GetDocumentInfo().GetCreator());
@@ -57,10 +55,8 @@ namespace iTextSharp.Kernel.Pdf
             @object = pdfDoc.GetPdfObject(4);
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(@object, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, pdfDoc.GetPdfObject(5).GetObjectType
-                ());
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, pdfDoc.GetPdfObject(5).GetObjectType());
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             pdfDoc.Close();
         }
 
@@ -69,8 +65,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void OpenSimpleDocWithFullCompression()
         {
             String filename = sourceFolder + "simpleCanvasWithFullCompression.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfObject @object = pdfDoc.GetPdfObject(1);
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
@@ -86,10 +81,8 @@ namespace iTextSharp.Kernel.Pdf
             @object = pdfDoc.GetPdfObject(5);
             NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, @object.GetObjectType());
             String content = "100 100 100 100 re\nf\n";
-            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes(content), ((PdfStream)@object
-                ).GetBytes());
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes(content), ((PdfStream)@object).GetBytes());
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             pdfDoc.Close();
         }
@@ -99,12 +92,11 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void OpenDocWithFlateFilter()
         {
             String filename = sourceFolder + "100PagesDocumentWithFlateFilter.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(100, document.GetNumberOfPages(), "Page count");
-            String contentTemplate = "q\n" + "BT\n" + "36 700 Td\n" + "/F1 72 Tf\n" + "({0})Tj\n"
-                 + "ET\n" + "Q\n" + "100 500 100 100 re\n" + "f\n";
+            String contentTemplate = "q\n" + "BT\n" + "36 700 Td\n" + "/F1 72 Tf\n" + "({0})Tj\n" + "ET\n" + "Q\n" + "100 500 100 100 re\n"
+                 + "f\n";
             for (int i = 1; i <= document.GetNumberOfPages(); i++)
             {
                 PdfPage page = document.GetPage(i);
@@ -112,8 +104,7 @@ namespace iTextSharp.Kernel.Pdf
                 NUnit.Framework.Assert.AreEqual(String.Format(contentTemplate, i), iTextSharp.IO.Util.JavaUtil.GetStringForBytes
                     (content), "Page content " + i);
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
             reader.Close();
             document.Close();
@@ -129,11 +120,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument document = new PdfDocument(writer);
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-            catalog.Put(new PdfName("a"), ((PdfBoolean)new PdfBoolean(true).MakeIndirect(document
-                )));
+            catalog.Put(new PdfName("a"), ((PdfBoolean)new PdfBoolean(true).MakeIndirect(document)));
             document.Close();
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             document = new PdfDocument(reader);
             PdfObject @object = document.GetXref().Get(1).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
@@ -146,13 +135,11 @@ namespace iTextSharp.Kernel.Pdf
             @object = document.GetXref().Get(4).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(@object, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo
-                ().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo().GetObjectType());
             @object = document.GetXref().Get(6).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.BOOLEAN, @object.GetObjectType());
             NUnit.Framework.Assert.IsNotNull(@object.GetIndirectReference());
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -174,8 +161,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             catalog.Put(new PdfName("a"), pdfObject);
             document.Close();
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             document = new PdfDocument(reader);
             pdfObject = document.GetXref().Get(1).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, pdfObject.GetObjectType());
@@ -188,15 +174,13 @@ namespace iTextSharp.Kernel.Pdf
             pdfObject = document.GetXref().Get(4).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, pdfObject.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(pdfObject, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo
-                ().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo().GetObjectType());
             for (int i_1 = 6; i_1 < document.GetXref().Size(); i_1++)
             {
-                NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(i_1)
-                    .GetRefersTo().GetObjectType());
+                NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(i_1).GetRefersTo().GetObjectType
+                    ());
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -218,8 +202,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             catalog.Put(new PdfName("a"), pdfObject);
             document.Close();
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             document = new PdfDocument(reader);
             pdfObject = document.GetXref().Get(1).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, pdfObject.GetObjectType());
@@ -232,20 +215,18 @@ namespace iTextSharp.Kernel.Pdf
             pdfObject = document.GetXref().Get(4).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, pdfObject.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(pdfObject, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo
-                ().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo().GetObjectType());
             for (int i_1 = 6; i_1 < 6 + 32; i_1++)
             {
-                NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo
-                    ().GetObjectType());
+                NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo().GetObjectType
+                    ());
             }
             for (int i_2 = 6 + 32; i_2 < document.GetXref().Size(); i_2++)
             {
-                NUnit.Framework.Assert.AreEqual(PdfObject.INDIRECT_REFERENCE, document.GetXref().
-                    Get(i_2).GetRefersTo().GetObjectType());
+                NUnit.Framework.Assert.AreEqual(PdfObject.INDIRECT_REFERENCE, document.GetXref().Get(i_2).GetRefersTo().GetObjectType
+                    ());
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -255,8 +236,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void IndirectsChain3()
         {
             String filename = sourceFolder + "indirectsChain3.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             PdfObject @object = document.GetXref().Get(1).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
@@ -269,17 +249,15 @@ namespace iTextSharp.Kernel.Pdf
             @object = document.GetXref().Get(4).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(@object, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo
-                ().GetObjectType());
-            NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo
-                ().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo().GetObjectType
+                ());
             for (int i = 7; i < document.GetXref().Size(); i++)
             {
-                NUnit.Framework.Assert.AreEqual(PdfObject.INDIRECT_REFERENCE, document.GetXref().
-                    Get(i).GetRefersTo().GetObjectType());
+                NUnit.Framework.Assert.AreEqual(PdfObject.INDIRECT_REFERENCE, document.GetXref().Get(i).GetRefersTo().GetObjectType
+                    ());
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -289,8 +267,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void InvalidIndirect()
         {
             String filename = sourceFolder + "invalidIndirect.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             PdfObject @object = document.GetXref().Get(1).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
@@ -303,16 +280,14 @@ namespace iTextSharp.Kernel.Pdf
             @object = document.GetXref().Get(4).GetRefersTo();
             NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, @object.GetObjectType());
             NUnit.Framework.Assert.IsTrue(ObjectTypeEqualTo(@object, PdfName.Page));
-            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo
-                ().GetObjectType());
-            NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo
-                ().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, document.GetXref().Get(5).GetRefersTo().GetObjectType());
+            NUnit.Framework.Assert.AreEqual(PdfObject.DICTIONARY, document.GetXref().Get(6).GetRefersTo().GetObjectType
+                ());
             for (int i = 7; i < document.GetXref().Size(); i++)
             {
                 NUnit.Framework.Assert.IsNull(document.GetXref().Get(i).GetRefersTo());
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -322,31 +297,26 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest01()
         {
             String filename = sourceFolder + "1000PagesDocument.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
             PdfDocument document = new PdfDocument(reader, writer);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             int xrefSize = document.GetXref().Size();
             PdfPage testPage = document.RemovePage(1000);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null
-                );
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber
-                () < xrefSize);
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i_1 = 1; i_1 < pageCount + 1; i_1++)
             {
                 PdfPage page = document.RemovePage(1);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i_1 + ")"));
             }
             reader.Close();
@@ -356,12 +326,10 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.RemovePage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
         }
 
@@ -370,27 +338,23 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest02()
         {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i_1 = 1; i_1 < pageCount + 1; i_1++)
             {
                 PdfPage page = document.RemovePage(1);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i_1 + ")"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
             reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
@@ -399,8 +363,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.RemovePage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             reader.Close();
@@ -412,27 +375,23 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest03()
         {
             String filename = sourceFolder + "10PagesDocumentWithLeafs.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             for (int i_1 = 1; i_1 < pageCount + 1; i_1++)
             {
                 PdfPage page = document.RemovePage(1);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i_1 + ")"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
             reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
@@ -441,12 +400,10 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.RemovePage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -456,27 +413,23 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest04()
         {
             String filename = sourceFolder + "PagesDocument.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(3, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             for (int i_1 = 1; i_1 < pageCount + 1; i_1++)
             {
                 PdfPage page = document.RemovePage(1);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i_1 + "00"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
             reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
@@ -485,12 +438,10 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.RemovePage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(pageNum + "00"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -500,27 +451,23 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest05()
         {
             String filename = sourceFolder + "PagesDocument05.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(3, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i + "00"));
             }
             for (int i_1 = 1; i_1 < pageCount + 1; i_1++)
             {
                 PdfPage page = document.RemovePage(1);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(i_1 + "00"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
             reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
@@ -529,12 +476,10 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = document.GetNumberOfPages();
                 PdfPage page = document.RemovePage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.StartsWith(pageNum + "00"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -550,29 +495,23 @@ namespace iTextSharp.Kernel.Pdf
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(2, pageCount);
             PdfPage page = document.GetPage(1);
-            String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                (0).GetBytes());
+            String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             page = document.GetPage(2);
-            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).
-                GetBytes());
+            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("300"));
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
             reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             document = new PdfDocument(reader);
             page = document.RemovePage(2);
-            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).
-                GetBytes());
+            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("300"));
             page = document.RemovePage(1);
-            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).
-                GetBytes());
+            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -597,8 +536,7 @@ namespace iTextSharp.Kernel.Pdf
                 exception = true;
             }
             NUnit.Framework.Assert.IsTrue(exception);
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -623,8 +561,7 @@ namespace iTextSharp.Kernel.Pdf
                 exception = true;
             }
             NUnit.Framework.Assert.IsTrue(exception);
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -640,15 +577,12 @@ namespace iTextSharp.Kernel.Pdf
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1, pageCount);
             PdfPage page = document.GetPage(1);
-            String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                (0).GetBytes());
+            String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
             page = document.RemovePage(1);
-            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).
-                GetBytes());
+            content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
             NUnit.Framework.Assert.IsTrue(content.StartsWith("100"));
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -658,8 +592,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void PagesTest10()
         {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
@@ -668,8 +601,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 int pageNum = rnd.Next(document.GetNumberOfPages()) + 1;
                 PdfPage page = document.GetPage(pageNum);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
             IList<int> pageNums = new List<int>(1000);
@@ -682,12 +614,10 @@ namespace iTextSharp.Kernel.Pdf
                 int index = rnd.Next(document.GetNumberOfPages()) + 1;
                 int pageNum = (int)pageNums.JRemoveAt(index - 1);
                 PdfPage page = document.RemovePage(index);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + pageNum + ")"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -698,8 +628,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CorrectSimpleDoc1()
         {
             String filename = sourceFolder + "correctSimpleDoc1.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -715,8 +644,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CorrectSimpleDoc2()
         {
             String filename = sourceFolder + "correctSimpleDoc2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasFixedXref(), "Need fixXref()");
             int pageCount = document.GetNumberOfPages();
@@ -733,8 +661,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CorrectSimpleDoc3()
         {
             String filename = sourceFolder + "correctSimpleDoc3.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -752,8 +679,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             //test with abnormal object declaration
             String filename = sourceFolder + "correctSimpleDoc4.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -770,8 +696,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest01()
         {
             String filename = sourceFolder + "OnlyTrailer.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -779,8 +704,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -792,19 +716,16 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest02()
         {
             String filename = sourceFolder + "CompressionShift1.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -816,19 +737,16 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest03()
         {
             String filename = sourceFolder + "CompressionShift2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -840,8 +758,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest04()
         {
             String filename = sourceFolder + "CompressionWrongObjStm.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             bool exception = false;
             try
             {
@@ -861,8 +778,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest05()
         {
             String filename = sourceFolder + "CompressionWrongShift.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             bool exception = false;
             try
             {
@@ -881,8 +797,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest06()
         {
             String filename = sourceFolder + "InvalidOffsets.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasFixedXref(), "Need fixXref()");
             int pageCount = document.GetNumberOfPages();
@@ -890,8 +805,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -903,8 +817,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest07()
         {
             String filename = sourceFolder + "XRefSectionWithFreeReferences1.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             bool exception = false;
             try
             {
@@ -924,8 +837,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest08()
         {
             String filename = sourceFolder + "XRefSectionWithFreeReferences2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor());
@@ -936,8 +848,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -950,8 +861,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest09()
         {
             String filename = sourceFolder + "XRefSectionWithFreeReferences3.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor());
@@ -962,8 +872,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -975,12 +884,10 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest10()
         {
             String filename = sourceFolder + "XRefSectionWithFreeReferences4.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             NUnit.Framework.Assert.AreEqual(null, document.GetDocumentInfo().GetAuthor());
             NUnit.Framework.Assert.AreEqual(null, document.GetDocumentInfo().GetCreator());
             NUnit.Framework.Assert.AreEqual(null, document.GetDocumentInfo().GetTitle());
@@ -989,8 +896,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -1003,8 +909,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest11()
         {
             String filename = sourceFolder + "XRefSectionWithoutSize.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -1012,8 +917,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -1026,8 +930,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest12()
         {
             String filename = sourceFolder + "XRefWithBreaks.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -1035,8 +938,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -1049,25 +951,22 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest13()
         {
             String filename = sourceFolder + "XRefWithInvalidGenerations1.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < 10; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             bool exception = false;
             int i_1;
-            PdfObject fontF1 = document.GetPage(997).GetPdfObject().GetAsDictionary(PdfName.Resources
-                ).GetAsDictionary(PdfName.Font).Get(new PdfName("F1"));
+            PdfObject fontF1 = document.GetPage(997).GetPdfObject().GetAsDictionary(PdfName.Resources).GetAsDictionary
+                (PdfName.Font).Get(new PdfName("F1"));
             NUnit.Framework.Assert.IsTrue(fontF1 is PdfNull);
             //There is a generation number mismatch in xref table and object for 3093
             try
@@ -1103,8 +1002,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest14()
         {
             String filename = sourceFolder + "XRefWithInvalidGenerations2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             bool exception = false;
             try
             {
@@ -1124,8 +1022,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest15()
         {
             String filename = sourceFolder + "XRefWithInvalidGenerations3.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -1133,8 +1030,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -1146,8 +1042,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest16()
         {
             String filename = sourceFolder + "XrefWithInvalidOffsets.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref(), "No need in fixXref()");
             int pageCount = document.GetNumberOfPages();
@@ -1155,8 +1050,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasFixedXref(), "Need live fixXref()");
@@ -1170,8 +1064,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void FixPdfTest17()
         {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
             int pageCount = document.GetNumberOfPages();
@@ -1179,8 +1072,7 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
             }
             reader.Close();
@@ -1192,26 +1084,21 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith1000Pages()
         {
             String filename = sourceFolder + "1000PagesDocumentAppended.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -1221,26 +1108,21 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith1000PagesWithCompression()
         {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompressionAppended.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(1000, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -1250,26 +1132,21 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith10Pages()
         {
             String filename = sourceFolder + "10PagesDocumentAppended.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -1279,26 +1156,21 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith10PagesWithCompression()
         {
             String filename = sourceFolder + "10PagesDocumentWithFullCompressionAppended.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
-            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()"
-                );
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
             reader.Close();
             document.Close();
         }
@@ -1309,27 +1181,22 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith10PagesFix1()
         {
             String filename = sourceFolder + "10PagesDocumentAppendedFix1.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
-            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer"
-                );
+            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer");
             reader.Close();
             document.Close();
         }
@@ -1340,27 +1207,22 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AppendModeWith10PagesFix2()
         {
             String filename = sourceFolder + "10PagesDocumentAppendedFix2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument document = new PdfDocument(reader);
             int pageCount = document.GetNumberOfPages();
             NUnit.Framework.Assert.AreEqual(10, pageCount);
             for (int i = 1; i < document.GetNumberOfPages() + 1; i++)
             {
                 PdfPage page = document.GetPage(i);
-                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream
-                    (0).GetBytes());
+                String content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(0).GetBytes());
                 NUnit.Framework.Assert.IsFalse(content.Length == 0);
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(1).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("(" + i + ")"));
-                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).
-                    GetBytes());
+                content = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(page.GetContentStream(2).GetBytes());
                 NUnit.Framework.Assert.IsTrue(content.Contains("Append mode"));
             }
             NUnit.Framework.Assert.IsTrue(reader.HasRebuiltXref(), "Need rebuildXref()");
-            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer"
-                );
+            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer");
             reader.Close();
             document.Close();
         }
@@ -1605,8 +1467,7 @@ namespace iTextSharp.Kernel.Pdf
             //      startxref
             NUnit.Framework.Assert.IsFalse(reader.HasFixedXref());
             NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref());
-            NUnit.Framework.Assert.IsTrue(((PdfDictionary)pdfDoc.GetPdfObject(1)).ContainsKey
-                (PdfName.AcroForm));
+            NUnit.Framework.Assert.IsTrue(((PdfDictionary)pdfDoc.GetPdfObject(1)).ContainsKey(PdfName.AcroForm));
             pdfDoc.Close();
         }
 

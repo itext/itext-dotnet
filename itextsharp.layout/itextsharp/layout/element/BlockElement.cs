@@ -117,8 +117,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the bottom margin width, as a <code>float</code></returns>
         public virtual float? GetMarginBottom()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
@@ -144,8 +143,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="marginBottom">the new margin bottom width</param>
         /// <param name="marginLeft">the new margin left width</param>
         /// <returns>this element</returns>
-        public virtual T SetMargins(float marginTop, float marginRight, float marginBottom
-            , float marginLeft)
+        public virtual T SetMargins(float marginTop, float marginRight, float marginBottom, float marginLeft)
         {
             SetMarginTop(marginTop);
             SetMarginRight(marginRight);
@@ -174,8 +172,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the right padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingRight()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_RIGHT
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_RIGHT);
         }
 
         /// <summary>Sets the right padding width of the element.</summary>
@@ -207,8 +204,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the bottom padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingBottom()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_BOTTOM
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_BOTTOM);
         }
 
         /// <summary>Sets the bottom padding width of the element.</summary>
@@ -234,8 +230,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="paddingBottom">the new padding bottom width</param>
         /// <param name="paddingLeft">the new padding left width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddings(float paddingTop, float paddingRight, float paddingBottom
-            , float paddingLeft)
+        public virtual T SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float paddingLeft)
         {
             SetPaddingTop(paddingTop);
             SetPaddingRight(paddingRight);
@@ -249,8 +244,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>this element</returns>
         public virtual T SetVerticalAlignment(VerticalAlignment? verticalAlignment)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment
-                );
+            SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment);
             return (T)(Object)this;
         }
 

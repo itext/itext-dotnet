@@ -53,15 +53,14 @@ namespace iTextSharp.Kernel.Pdf.Layer
     public class PdfVisibilityExpression : PdfObjectWrapper<PdfArray>
     {
         /// <summary>Constructs a new PdfVisibilityExpression instance by its raw PdfArray.</summary>
-        /// <param name="visibilityExpressionArray">the array representing the visibility expression
-        ///     </param>
+        /// <param name="visibilityExpressionArray">the array representing the visibility expression</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public PdfVisibilityExpression(PdfArray visibilityExpressionArray)
             : base(visibilityExpressionArray)
         {
             PdfName @operator = visibilityExpressionArray.GetAsName(0);
-            if (visibilityExpressionArray.Size() < 1 || !PdfName.Or.Equals(@operator) && !PdfName
-                .And.Equals(@operator) && !PdfName.Not.Equals(@operator))
+            if (visibilityExpressionArray.Size() < 1 || !PdfName.Or.Equals(@operator) && !PdfName.And.Equals(@operator
+                ) && !PdfName.Not.Equals(@operator))
             {
                 throw new ArgumentException("Invalid visibilityExpressionArray");
             }
@@ -72,8 +71,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         public PdfVisibilityExpression(PdfName @operator)
             : base(new PdfArray())
         {
-            if (@operator == null || !PdfName.Or.Equals(@operator) && !PdfName.And.Equals(@operator
-                ) && !PdfName.Not.Equals(@operator))
+            if (@operator == null || !PdfName.Or.Equals(@operator) && !PdfName.And.Equals(@operator) && !PdfName.Not.Equals
+                (@operator))
             {
                 throw new ArgumentException("Invalid operator");
             }
@@ -89,10 +88,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         }
 
         /// <summary>Adds a new opeand to the current visibility expression.</summary>
-        /// <param name="expression">the PdfVisibilityExpression instance operand to be added
-        ///     </param>
-        public virtual void AddOperand(iTextSharp.Kernel.Pdf.Layer.PdfVisibilityExpression
-             expression)
+        /// <param name="expression">the PdfVisibilityExpression instance operand to be added</param>
+        public virtual void AddOperand(iTextSharp.Kernel.Pdf.Layer.PdfVisibilityExpression expression)
         {
             GetPdfObject().Add(expression.GetPdfObject());
             GetPdfObject().SetModified();

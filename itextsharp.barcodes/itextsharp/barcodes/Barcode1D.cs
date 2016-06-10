@@ -388,8 +388,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor);
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor);
 
         /// <summary>Gets the amount of ink spreading.</summary>
         /// <returns>the ink spreading</returns>
@@ -429,8 +429,7 @@ namespace iTextSharp.Barcodes
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.
-        ///     </remarks>
+        /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.</remarks>
         /// <returns>the XObject</returns>
         /// <seealso cref="CreateFormXObject(iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Pdf.PdfDocument)
         ///     "/>
@@ -445,12 +444,11 @@ namespace iTextSharp.Barcodes
         /// <returns>the XObject</returns>
         /// <seealso cref="PlaceBarcode(iTextSharp.Kernel.Pdf.Canvas.PdfCanvas, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color)
         ///     "/>
-        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor
-            , iTextSharp.Kernel.Color.Color textColor, PdfDocument document)
+        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor, PdfDocument document)
         {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
-            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor
-                );
+            Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor);
             xObject.SetBBox(new PdfArray(rect));
             return xObject;
         }

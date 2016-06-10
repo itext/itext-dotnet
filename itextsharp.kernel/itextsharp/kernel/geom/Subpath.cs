@@ -45,8 +45,7 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Kernel.Geom
 {
-    /// <summary>As subpath is a part of a path comprising a sequence of connected segments.
-    ///     </summary>
+    /// <summary>As subpath is a part of a path comprising a sequence of connected segments.</summary>
     public class Subpath
     {
         private Point startPoint;
@@ -169,15 +168,13 @@ namespace iTextSharp.Kernel.Geom
             return segments.Count == 0 && closed;
         }
 
-        /// <summary>Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.
-        ///     </summary>
+        /// <summary>Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.</summary>
         /// <remarks>
         /// Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.
         /// Ignore this value if the subpath is a rectangle because in this case it is already closed
         /// (of course if you paint the path using <CODE>re</CODE> operator)
         /// </remarks>
-        /// <returns><CODE>boolean</CODE> value indicating whether the path must be closed or not.
-        ///     </returns>
+        /// <returns><CODE>boolean</CODE> value indicating whether the path must be closed or not.</returns>
         public virtual bool IsClosed()
         {
             return closed;
@@ -192,15 +189,13 @@ namespace iTextSharp.Kernel.Geom
             this.closed = closed;
         }
 
-        /// <summary>Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.
-        ///     </summary>
+        /// <summary>Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.</summary>
         /// <remarks>
         /// Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.
         /// A degenerate subpath is the subpath consisting of a single-point closed path or of
         /// two or more points at the same coordinates.
         /// </remarks>
-        /// <returns><CODE>boolean</CODE> value indicating whether the path is degenerate or not.
-        ///     </returns>
+        /// <returns><CODE>boolean</CODE> value indicating whether the path is degenerate or not.</returns>
         public virtual bool IsDegenerate()
         {
             if (segments.Count > 0 && closed)

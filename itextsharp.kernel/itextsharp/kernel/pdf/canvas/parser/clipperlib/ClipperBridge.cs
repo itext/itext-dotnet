@@ -140,8 +140,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
                 if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
                 {
                     IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-                    clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), polyType
-                        , subpath.IsClosed());
+                    clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), polyType, subpath.IsClosed());
                 }
             }
         }
@@ -163,8 +162,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
         /// s of the path.
         /// </returns>
-        public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType
-            , EndType endType)
+        public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType)
         {
             IList<Subpath> degenerateSubpaths = new List<Subpath>();
             foreach (Subpath subpath in path.GetSubpaths())
@@ -187,8 +185,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
                         et = endType;
                     }
                     IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
-                    offset.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), joinType
-                        , et);
+                    offset.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), joinType, et);
                 }
             }
             return degenerateSubpaths;
@@ -206,8 +203,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
             IList<Point> convertedPoints = new List<Point>(points.Count);
             foreach (IntPoint point in points)
             {
-                convertedPoints.Add(new Point(point.X / floatMultiplier, point.Y / floatMultiplier
-                    ));
+                convertedPoints.Add(new Point(point.X / floatMultiplier, point.Y / floatMultiplier));
             }
             return convertedPoints;
         }
@@ -224,8 +220,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
             IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
             foreach (Point point in points)
             {
-                convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier 
-                    * point.GetY()));
+                convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier * point.GetY()));
             }
             return convertedPoints;
         }
@@ -288,11 +283,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// </summary>
         /// <param name="fillingRule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
         /// <returns>Clipper fill type constant.</returns>
@@ -323,8 +316,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
             }
         }
 
-        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType
-             polyType)
+        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType)
         {
             clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
                 (rectVertices)))), polyType, true);

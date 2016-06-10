@@ -81,8 +81,8 @@ namespace iTextSharp.Signatures
         /// </returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             // verify using the CertificateVerifier if root store is missing
             if (rootStore == null)
@@ -98,8 +98,7 @@ namespace iTextSharp.Signatures
                     try
                     {
                         signCert.Verify(anchor.GetPublicKey());
-                        result.Add(new VerificationOK(signCert, this.GetType(), "Certificate verified against root store."
-                            ));
+                        result.Add(new VerificationOK(signCert, this.GetType(), "Certificate verified against root store."));
                         result.AddAll(base.Verify(signCert, issuerCert, signDate));
                         return result;
                     }

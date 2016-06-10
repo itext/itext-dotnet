@@ -10,11 +10,10 @@ namespace iTextSharp.Layout
 {
     public class LargeElementTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/LargeElementTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LargeElementTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/LargeElementTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/LargeElementTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -40,8 +39,7 @@ namespace iTextSharp.Layout
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, 
-                        j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0)
                 {
@@ -52,8 +50,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -80,8 +78,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -111,8 +109,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -145,8 +143,8 @@ namespace iTextSharp.Layout
             // if there will be any more rows. Flushing last row implicitly by calling complete solves this problem.
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -181,8 +179,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -217,8 +215,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -249,8 +247,8 @@ namespace iTextSharp.Layout
             }
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
     }
 }

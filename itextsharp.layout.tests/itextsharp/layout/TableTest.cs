@@ -17,11 +17,10 @@ namespace iTextSharp.Layout
 {
     public class TableTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/TableTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TableTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/TableTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/TableTest/";
 
         internal const String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -49,12 +48,12 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1"))).AddCell(new Cell().Add(new Paragraph("cell 1, 2")));
+            Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -69,15 +68,14 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1"))).AddCell(new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new 
-                Cell().Add(new Paragraph("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph(
-                "cell 2, 2"))).AddCell(new Cell().Add(new Paragraph("cell 3, 1"))).AddCell(new 
-                Cell());
+            Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 2"))).AddCell(new Cell().Add(new Paragraph("cell 3, 1"))).AddCell
+                (new Cell());
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -96,15 +94,14 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n";
             String textContent2 = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n"
                  + "Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.\n" + "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent1))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n"
-                 + textContent1 + textContent2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n"
-                 + textContent2 + textContent1))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n"
-                 + textContent2)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent1
+                ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + textContent1 + textContent2))).AddCell(new Cell
+                ().Add(new Paragraph("cell 2, 1\n" + textContent2 + textContent1))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 2\n" + textContent2)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -121,16 +118,16 @@ namespace iTextSharp.Layout
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent)));
-            table.AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + textContent + textContent
-                 + textContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                )));
+            table.AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + textContent + textContent + textContent))
+                );
             table.AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + textContent)));
             table.AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -147,15 +144,14 @@ namespace iTextSharp.Layout
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new 
-                Paragraph("cell 1, 1:3\n" + textContent + textContent + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 1, 2\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 3, 2\n" + textContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
+                 + textContent + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + textContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 2\n" + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -172,15 +168,14 @@ namespace iTextSharp.Layout
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent))).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
-                )));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 2:3\n" + textContent + textContent))).AddCell(new 
+                Cell().Add(new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
+                 + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -197,15 +192,14 @@ namespace iTextSharp.Layout
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new 
-                Paragraph("cell 1, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 1, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n"
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
+                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + textContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 2\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n"
                  + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -225,17 +219,16 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add
-                (new Paragraph("cell 1:2, 1:3\n" + textContent + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 3, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
+                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new 
+                Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n"
+                 + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -255,20 +248,18 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new 
-                Paragraph("cell 1, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n"
-                 + middleTextContent))).AddCell(new Cell(3, 2).Add(new Paragraph("cell 2:2, 1:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + 
-                middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).
-                AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" 
+                + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 3\n" + middleTextContent))).AddCell(new Cell(3, 2).Add(new Paragraph
+                ("cell 2:2, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" +
+                 middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + middleTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -284,27 +275,26 @@ namespace iTextSharp.Layout
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("Table 1"));
-            Table table = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph
-                ("1, 1"))).AddCell(new Cell().Add(new Paragraph("1, 2"))).AddCell(new Cell().
-                Add(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph("2, 2")));
+            Table table = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(new 
+                Cell().Add(new Paragraph("1, 2"))).AddCell(new Cell().Add(new Paragraph("2, 1"))).AddCell(new Cell().Add
+                (new Paragraph("2, 2")));
             doc.Add(table);
             doc.Add(new Paragraph("Table 2"));
-            Table table2 = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph
-                ("1, 1"))).AddCell(new Cell().Add(new Paragraph("1, 2"))).AddCell(new Cell().
-                Add(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph("2, 2")));
+            Table table2 = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(new 
+                Cell().Add(new Paragraph("1, 2"))).AddCell(new Cell().Add(new Paragraph("2, 1"))).AddCell(new Cell().Add
+                (new Paragraph("2, 2")));
             doc.Add(table2);
             doc.Add(new Paragraph("Table 3"));
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.
-                ToURL(sourceFolder + "itext.png")));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 50);
-            Table table3 = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph
-                ("1, 1"))).AddCell(new Cell().Add(image)).AddCell(new Cell().Add(new Paragraph
-                ("2, 1"))).AddCell(new Cell().Add(new Paragraph("2, 2")));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+                )));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 50);
+            Table table3 = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(
+                new Cell().Add(image)).AddCell(new Cell().Add(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph
+                ("2, 2")));
             doc.Add(table3);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -322,25 +312,22 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether
-                (true).Add(new Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell
-                ().SetKeepTogether(true).Add(new Paragraph("cell 5, 2\n" + shortTextContent))
-                ).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 6, 1\n" + 
-                middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph
-                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true)
-                .Add(new Paragraph("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether
-                (true).Add(new Paragraph("cell 7, 2\n" + middleTextContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether
+                (true).Add(new Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether(true)
+                .Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new 
+                Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph
+                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 7, 1\n"
+                 + middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 7, 2\n" + middleTextContent
+                )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -358,33 +345,27 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether
-                (true).Add(new Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell
-                ().SetKeepTogether(true).Add(new Paragraph("cell 5, 2\n" + shortTextContent))
-                ).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 6, 1\n" + 
-                middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph
-                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true)
-                .Add(new Paragraph("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether
-                (true).Add(new Paragraph("cell 7, 2\n" + middleTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 8, 1\n" + middleTextContent))).AddCell(new Cell().
-                Add(new Paragraph("cell 8, 2\n" + shortTextContent))).AddCell(new Cell().Add(
-                new Paragraph("cell 9, 1\n" + shortTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 9, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 10, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 10, 2\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 11, 1\n" +
-                 shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 11, 2\n" + shortTextContent
-                )));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether
+                (true).Add(new Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether(true)
+                .Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new 
+                Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph
+                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 7, 1\n"
+                 + middleTextContent))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 7, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 8, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 8, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 9, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 9, 2\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 10, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 10, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 11, 1\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 11, 2\n" + shortTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -402,23 +383,20 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 1\n" + middleTextContent
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 3, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 5, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 1\n" + middleTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -438,23 +416,20 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add
-                (new Paragraph("cell 1:2, 1:3\n" + textContent + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 3, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().
-                Add(new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 6, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
+                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + shortTextContent))).AddCell(new 
+                Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n"
+                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 6, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -474,25 +449,22 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new 
-                Paragraph("cell 1, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + 
-                shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + middleTextContent)))
-                .AddCell(new Cell(3, 2).Add(new Paragraph("cell 3:2, 1:3\n" + textContent + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 4, 3\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 3\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 6, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 1\n" + 
-                middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" 
+                + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + middleTextContent))).AddCell(new Cell(3, 2).Add
+                (new Paragraph("cell 3:2, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + textContent))).AddCell(new Cell
+                ().Add(new Paragraph("cell 5, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n"
+                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -511,19 +483,16 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent
-                 + "4. " + textContent + "5. " + textContent + "6. " + textContent + "7. " + 
-                textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n"
-                 + middleTextContent)).SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color
-                .RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + 
-                longTextContent)));
+            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
+                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + longTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + middleTextContent)).SetBorder(new SolidBorder
+                (iTextSharp.Kernel.Color.Color.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
+                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -539,22 +508,20 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1"))).AddCell(new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new 
-                Cell().Add(new Paragraph("cell 1, 3")));
+            Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
             String longText = "Long text, very long text. ";
             for (int i = 0; i < 4; i++)
             {
                 longText += longText;
             }
-            table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether
-                (true)));
+            table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether(true)));
             table.AddCell("cell 2.2\nShort text.");
             table.AddCell(new Cell().Add(new Paragraph("cell 2.3\n" + longText)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -571,22 +538,20 @@ namespace iTextSharp.Layout
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(textContent));
-            Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1"))).AddCell(new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new 
-                Cell().Add(new Paragraph("cell 1, 3")));
+            Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
             String longText = "Long text, very long text. ";
             for (int i = 0; i < 4; i++)
             {
                 longText += longText;
             }
-            table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether
-                (true)));
+            table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether(true)));
             table.AddCell("cell 2.2\nShort text.");
             table.AddCell(new Cell().Add(new Paragraph("cell 2.3\n" + longText)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -602,23 +567,20 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add
-                (new Paragraph("cell 1:2, 1:3\n" + textContent + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 3, 3\n" + textContent))).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(
-                new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
+                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
+                 + textContent))).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new 
+                Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n"
+                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -634,20 +596,18 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new 
-                iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "red.png"
-                )))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().
-                Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 6, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image
+                (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
+                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent
+                )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -669,20 +629,18 @@ namespace iTextSharp.Layout
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             doc.Add(new Paragraph(textContent));
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new 
-                iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "red.png"
-                )))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().
-                Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 6, 3\n" + middleTextContent)));
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image
+                (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
+                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
+                Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent
+                )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -701,19 +659,17 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent
-                 + "4. " + textContent + "5. " + textContent + "6. " + textContent + "7. " + 
-                textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n"
-                 + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + middleTextContent)))
-                .AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + middleTextContent))).AddCell
+            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
+                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
+                (new Paragraph("cell 2, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
+                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + middleTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -732,19 +688,17 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent
-                 + "4. " + textContent + "5. " + textContent + "6. " + textContent + "7. " + 
-                textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n"
-                 + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 1\n" + textContent)));
+            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
+                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
+                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 1\n" + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -763,16 +717,15 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + 
-                textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 1\n" + textContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + middleTextContent))).AddCell(new Cell().Add
+                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 1\n" + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -791,19 +744,17 @@ namespace iTextSharp.Layout
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent
-                 + "4. " + textContent + "5. " + textContent + "6. " + textContent + "7. " + 
-                textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 1\n" + textContent))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n"
-                 + longTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent))).AddCell
-                (new Cell().SetKeepTogether(true).Add(new Paragraph("cell 4, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n" + textContent)));
+            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
+                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(5, 1).Add(new Paragraph("cell 1, 2\n" + longTextContent))).AddCell(new Cell().Add
+                (new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + textContent
+                ))).AddCell(new Cell().SetKeepTogether(true).Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(
+                new Cell().Add(new Paragraph("cell 5, 1\n" + textContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -824,19 +775,17 @@ namespace iTextSharp.Layout
             Table table = new Table(3);
             for (int i = 0; i < 20; i++)
             {
-                table.AddCell(new Cell().Add(new Paragraph(textContent1))).AddCell(new Cell().Add
-                    (new Paragraph(textContent3))).AddCell(new Cell().Add(new Paragraph(textContent2
-                    ))).AddCell(new Cell().Add(new Paragraph(textContent3))).AddCell(new Cell().Add
-                    (new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent1
-                    ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add
-                    (new Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3
-                    )));
+                table.AddCell(new Cell().Add(new Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3
+                    ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent3
+                    ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent1
+                    ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent1
+                    ))).AddCell(new Cell().Add(new Paragraph(textContent3)));
             }
             doc.SetRenderer(new TableTest.RotatedDocumentRenderer(doc, pdfDoc));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer
@@ -851,8 +800,7 @@ namespace iTextSharp.Layout
 
             protected internal override PageSize AddNewPage(PageSize customPageSize)
             {
-                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate
-                    ();
+                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
                 pdfDoc.AddNewPage(pageSize);
                 return pageSize;
             }
@@ -867,8 +815,7 @@ namespace iTextSharp.Layout
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
-                )));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
             Cell cell = new Cell();
@@ -884,8 +831,8 @@ namespace iTextSharp.Layout
             table.AddCell(cell);
             doc.Add(table);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -897,8 +844,8 @@ namespace iTextSharp.Layout
             String testName = "toLargeElementInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "toLargeElementInTableTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "toLargeElementInTableTest01.pdf"
+                , FileMode.Create)));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 5 });
             Cell cell = new Cell();
@@ -907,8 +854,8 @@ namespace iTextSharp.Layout
             table.AddCell(cell);
             doc.Add(table);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -933,12 +880,12 @@ namespace iTextSharp.Layout
                 table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
             }
             Table t = new Table(1);
-            t.AddCell(new Cell().SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 
-                1)).SetPaddings(3, 3, 3, 3).Add(table));
+            t.AddCell(new Cell().SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 1)).SetPaddings(3, 3, 3, 
+                3).Add(table));
             doc.Add(t);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -970,8 +917,8 @@ namespace iTextSharp.Layout
             table.SetKeepTogether(false);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, testName + "_diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
     }
 }

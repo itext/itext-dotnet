@@ -203,12 +203,10 @@ namespace iTextSharp.Kernel.XMP
         /// </returns>
         public static String ComposeLangSelector(String arrayName, String langName)
         {
-            return arrayName + "[?xml:lang=\"" + iTextSharp.Kernel.XMP.Impl.Utils.NormalizeLangValue
-                (langName) + "\"]";
+            return arrayName + "[?xml:lang=\"" + iTextSharp.Kernel.XMP.Impl.Utils.NormalizeLangValue(langName) + "\"]";
         }
 
-        /// <summary>Compose the path expression to select an alternate item by a field's value.
-        ///     </summary>
+        /// <summary>Compose the path expression to select an alternate item by a field's value.</summary>
         /// <remarks>
         /// Compose the path expression to select an alternate item by a field's value. The path syntax
         /// allows two forms of &quot;content addressing&quot; that may be used to select an item in an
@@ -248,16 +246,15 @@ namespace iTextSharp.Kernel.XMP
         /// </returns>
         /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static String ComposeFieldSelector(String arrayName, String fieldNS, String
-             fieldName, String fieldValue)
+        public static String ComposeFieldSelector(String arrayName, String fieldNS, String fieldName, String fieldValue
+            )
         {
             XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
             if (fieldPath.Size() != 2)
             {
                 throw new XMPException("The fieldName name must be simple", XMPError.BADXPATH);
             }
-            return arrayName + '[' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName() +
-                 "=\"" + fieldValue + "\"]";
+            return arrayName + '[' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName() + "=\"" + fieldValue + "\"]";
         }
 
         /// <summary>ParameterAsserts that a qualifier namespace is set.</summary>

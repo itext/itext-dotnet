@@ -337,15 +337,15 @@ namespace iTextSharp.Layout.Hyphenation
         /// object representing
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
-        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word, int
-             remainCharCount, int pushCharCount)
+        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word, int remainCharCount, int pushCharCount
+            )
         {
             char[] w = word.ToCharArray();
             if (IsMultiPartWord(w, w.Length))
             {
                 IList<char[]> words = SplitOnNonCharacters(w);
-                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords
-                    (words, remainCharCount, pushCharCount));
+                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords(words, remainCharCount
+                    , pushCharCount));
             }
             else
             {
@@ -390,14 +390,13 @@ namespace iTextSharp.Layout.Hyphenation
             IList<char[]> words = new List<char[]>();
             for (int ibreak = 0; ibreak < breakPoints.Count; ibreak++)
             {
-                char[] newWord = GetWordFromCharArray(word, ((ibreak == 0) ? 0 : breakPoints[ibreak
-                     - 1]), breakPoints[ibreak]);
+                char[] newWord = GetWordFromCharArray(word, ((ibreak == 0) ? 0 : breakPoints[ibreak - 1]), breakPoints[ibreak
+                    ]);
                 words.Add(newWord);
             }
             if (word.Length - breakPoints[breakPoints.Count - 1] - 1 > 1)
             {
-                char[] newWord = GetWordFromCharArray(word, breakPoints[breakPoints.Count - 1], word
-                    .Length);
+                char[] newWord = GetWordFromCharArray(word, breakPoints[breakPoints.Count - 1], word.Length);
                 words.Add(newWord);
             }
             return words;
@@ -428,8 +427,7 @@ namespace iTextSharp.Layout.Hyphenation
 
         private char[] GetWordFromCharArray(char[] word, int startIndex, int endIndex)
         {
-            char[] newWord = new char[endIndex - ((startIndex == 0) ? startIndex : startIndex
-                 + 1)];
+            char[] newWord = new char[endIndex - ((startIndex == 0) ? startIndex : startIndex + 1)];
             int iChar = 0;
             for (int i = (startIndex == 0) ? 0 : startIndex + 1; i < endIndex; i++)
             {
@@ -438,17 +436,14 @@ namespace iTextSharp.Layout.Hyphenation
             return newWord;
         }
 
-        private int[] GetHyphPointsForWords(IList<char[]> nonLetterWords, int remainCharCount
-            , int pushCharCount)
+        private int[] GetHyphPointsForWords(IList<char[]> nonLetterWords, int remainCharCount, int pushCharCount)
         {
             int[] breaks = new int[0];
-            for (int iNonLetterWord = 0; iNonLetterWord < nonLetterWords.Count; iNonLetterWord
-                ++)
+            for (int iNonLetterWord = 0; iNonLetterWord < nonLetterWords.Count; iNonLetterWord++)
             {
                 char[] nonLetterWord = nonLetterWords[iNonLetterWord];
-                iTextSharp.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord
-                    .Length, (iNonLetterWord == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords
-                    .Count - 1) ? pushCharCount : 1);
+                iTextSharp.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord.Length, (iNonLetterWord
+                     == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords.Count - 1) ? pushCharCount : 1);
                 if (curHyph == null)
                 {
                     continue;
@@ -495,8 +490,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// object representing
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
-        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int 
-            offset, int len, int remainCharCount, int pushCharCount)
+        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int offset, int len, int remainCharCount
+            , int pushCharCount)
         {
             int i;
             char[] word = new char[len + 3];
@@ -598,8 +593,7 @@ namespace iTextSharp.Layout.Hyphenation
                 // trim result array
                 int[] res = new int[k];
                 System.Array.Copy(result, 0, res, 0, k);
-                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w, offset, len), 
-                    res);
+                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
             }
             else
             {

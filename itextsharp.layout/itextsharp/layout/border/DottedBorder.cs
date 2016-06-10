@@ -79,8 +79,8 @@ namespace iTextSharp.Layout.Border
             return iTextSharp.Layout.Border.Border.DOTTED;
         }
 
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter)
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter)
         {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -125,12 +125,10 @@ namespace iTextSharp.Layout.Border
             }
             canvas.SetLineWidth(width);
             canvas.SetStrokeColor(color);
-            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo
-                (x2, y2).Stroke();
+            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2)
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
         {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -141,9 +139,8 @@ namespace iTextSharp.Layout.Border
             {
                 adjustedGap -= width;
             }
-            canvas.SaveState().SetLineWidth(width).SetStrokeColor(color).SetLineDash(width, adjustedGap
-                , width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
-                ();
+            canvas.SaveState().SetLineWidth(width).SetStrokeColor(color).SetLineDash(width, adjustedGap, width + adjustedGap
+                 / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
         protected internal virtual float GetDotsGap(double distance, float initialGap)

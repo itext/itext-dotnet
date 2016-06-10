@@ -53,8 +53,7 @@ namespace iTextSharp.Barcodes.Dmcode
 
         private short[] array;
 
-        private static readonly IDictionary<int, short[]> cache = new Dictionary<int, short
-            []>();
+        private static readonly IDictionary<int, short[]> cache = new Dictionary<int, short[]>();
 
         private Placement()
         {
@@ -68,8 +67,7 @@ namespace iTextSharp.Barcodes.Dmcode
             {
                 return pc;
             }
-            iTextSharp.Barcodes.Dmcode.Placement p = new iTextSharp.Barcodes.Dmcode.Placement
-                ();
+            iTextSharp.Barcodes.Dmcode.Placement p = new iTextSharp.Barcodes.Dmcode.Placement();
             p.nrow = nrow;
             p.ncol = ncol;
             p.array = new short[nrow * ncol];

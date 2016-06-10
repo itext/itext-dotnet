@@ -47,8 +47,7 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-    /// <summary>A text event listener which filters events on the fly before passing them on to the delegate.
-    ///     </summary>
+    /// <summary>A text event listener which filters events on the fly before passing them on to the delegate.</summary>
     /// <remarks>
     /// A text event listener which filters events on the fly before passing them on to the delegate.
     /// The only difference from
@@ -71,8 +70,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>
-        public FilteredTextEventListener(ITextExtractionStrategy delegate_, params IEventFilter
-            [] filterSet)
+        public FilteredTextEventListener(ITextExtractionStrategy delegate_, params IEventFilter[] filterSet)
             : base(delegate_, filterSet)
         {
         }

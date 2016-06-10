@@ -68,8 +68,7 @@ namespace iTextSharp.Kernel.Numbering
             }
         }
 
-        /// <summary>Converts the given number to its English alphabet lowercase string representation.
-        ///     </summary>
+        /// <summary>Converts the given number to its English alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its English alphabet lowercase string representation.
         /// E.g. 1 will be converted to "a", 2 to "b", ..., 27 to "aa", and so on.
@@ -80,8 +79,7 @@ namespace iTextSharp.Kernel.Numbering
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
         }
 
-        /// <summary>Converts the given number to its English alphabet lowercase string representation.
-        ///     </summary>
+        /// <summary>Converts the given number to its English alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its English alphabet lowercase string representation.
         /// E.g. 1 will be converted to "A", 2 to "B", ..., 27 to "AA", and so on.
@@ -92,8 +90,7 @@ namespace iTextSharp.Kernel.Numbering
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
         }
 
-        /// <summary>Converts the given number to its English alphabet string representation.
-        ///     </summary>
+        /// <summary>Converts the given number to its English alphabet string representation.</summary>
         /// <remarks>
         /// Converts the given number to its English alphabet string representation.
         /// E.g. for <code>upperCase</code> set to false,
@@ -103,8 +100,7 @@ namespace iTextSharp.Kernel.Numbering
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         public static String ToLatinAlphabetNumber(int number, bool upperCase)
         {
-            return upperCase ? ToLatinAlphabetNumberUpperCase(number) : ToLatinAlphabetNumberLowerCase
-                (number);
+            return upperCase ? ToLatinAlphabetNumberUpperCase(number) : ToLatinAlphabetNumberLowerCase(number);
         }
     }
 }

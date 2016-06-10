@@ -120,8 +120,7 @@ namespace iTextSharp.Kernel.Geom
             return currentPoint;
         }
 
-        /// <summary>Begins a new subpath by moving the current point to coordinates <CODE>(x, y)</CODE>.
-        ///     </summary>
+        /// <summary>Begins a new subpath by moving the current point to coordinates <CODE>(x, y)</CODE>.</summary>
         public virtual void MoveTo(float x, float y)
         {
             currentPoint = new Point(x, y);
@@ -136,8 +135,7 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        /// <summary>Appends a straight line segment from the current point to the point <CODE>(x, y)</CODE>.
-        ///     </summary>
+        /// <summary>Appends a straight line segment from the current point to the point <CODE>(x, y)</CODE>.</summary>
         public virtual void LineTo(float x, float y)
         {
             if (currentPoint == null)
@@ -154,8 +152,7 @@ namespace iTextSharp.Kernel.Geom
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
         /// the current point to the point <CODE>(x3, y3)</CODE>.
         /// </remarks>
-        public virtual void CurveTo(float x1, float y1, float x2, float y2, float x3, float
-             y3)
+        public virtual void CurveTo(float x1, float y1, float x2, float y2, float x3, float y3)
         {
             if (currentPoint == null)
             {
@@ -165,8 +162,8 @@ namespace iTextSharp.Kernel.Geom
             Point secondPoint = new Point(x1, y1);
             Point thirdPoint = new Point(x2, y2);
             Point fourthPoint = new Point(x3, y3);
-            IList<Point> controlPoints = new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-                (currentPoint, secondPoint, thirdPoint, fourthPoint));
+            IList<Point> controlPoints = new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(currentPoint, secondPoint
+                , thirdPoint, fourthPoint));
             GetLastSubpath().AddSegment(new BezierCurve(controlPoints));
             currentPoint = fourthPoint;
         }
@@ -235,8 +232,7 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        /// <summary>Adds additional line to each closed subpath and makes the subpath unclosed.
-        ///     </summary>
+        /// <summary>Adds additional line to each closed subpath and makes the subpath unclosed.</summary>
         /// <remarks>
         /// Adds additional line to each closed subpath and makes the subpath unclosed.
         /// The line connects the last and the first points of the subpaths.

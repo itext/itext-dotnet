@@ -103,8 +103,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// An empty dash array (first element in the array) and zero phase (second element in the array)
         /// can be used to restore the dash pattern to a solid line.
         /// </remarks>
-        private PdfArray dashPattern = new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList
-            (new PdfObject[] { new PdfArray(), new PdfNumber(0) }));
+        private PdfArray dashPattern = new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new PdfObject[] { new 
+            PdfArray(), new PdfNumber(0) }));
 
         private PdfName renderingIntent = PdfName.RelativeColorimetric;
 
@@ -153,8 +153,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        protected internal CanvasGraphicsState(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState
-             source)
+        protected internal CanvasGraphicsState(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source)
         {
             // color
             // text state
@@ -178,8 +177,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         }
 
         /// <summary>Updates current transformation matrix.</summary>
-        public virtual void UpdateCtm(float a, float b, float c, float d, float e, float 
-            f)
+        public virtual void UpdateCtm(float a, float b, float c, float d, float e, float f)
         {
             UpdateCtm(new Matrix(a, b, c, d, e, f));
         }
@@ -456,8 +454,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
             return htp;
         }
 
-        /// <summary>Updates current graphic state with values from extended graphic state dictionary.
-        ///     </summary>
+        /// <summary>Updates current graphic state with values from extended graphic state dictionary.</summary>
         /// <param name="extGState">the wrapper around the extended graphic state dictionary</param>
         public virtual void UpdateFromExtGState(PdfExtGState extGState)
         {

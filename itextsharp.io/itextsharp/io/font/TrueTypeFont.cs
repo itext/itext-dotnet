@@ -263,8 +263,8 @@ namespace iTextSharp.IO.Font
             int[] gsub = fontParser.tables.Get("GSUB");
             if (gsub != null)
             {
-                gsubTable = new GlyphSubstitutionTableReader(fontParser.raf, gsub[0], gdefTable, 
-                    codeToGlyph, fontMetrics.GetUnitsPerEm());
+                gsubTable = new GlyphSubstitutionTableReader(fontParser.raf, gsub[0], gdefTable, codeToGlyph, fontMetrics.
+                    GetUnitsPerEm());
             }
         }
 
@@ -274,8 +274,8 @@ namespace iTextSharp.IO.Font
             int[] gpos = fontParser.tables.Get("GPOS");
             if (gpos != null)
             {
-                gposTable = new GlyphPositioningTableReader(fontParser.raf, gpos[0], gdefTable, codeToGlyph
-                    , fontMetrics.GetUnitsPerEm());
+                gposTable = new GlyphPositioningTableReader(fontParser.raf, gpos[0], gdefTable, codeToGlyph, fontMetrics.GetUnitsPerEm
+                    ());
             }
         }
 
@@ -342,8 +342,7 @@ namespace iTextSharp.IO.Font
             fontMetrics.SetWinAscender(os_2.usWinAscent);
             fontMetrics.SetWinDescender(os_2.usWinDescent);
             fontMetrics.SetAdvanceWidthMax(hhea.advanceWidthMax);
-            fontMetrics.SetUnderlinePosition((post.underlinePosition - post.underlineThickness
-                ) / 2);
+            fontMetrics.SetUnderlinePosition((post.underlinePosition - post.underlineThickness) / 2);
             fontMetrics.SetUnderlineThickness(post.underlineThickness);
             fontMetrics.SetStrikeoutPosition(os_2.yStrikeoutPosition);
             fontMetrics.SetStrikeoutSize(os_2.yStrikeoutSize);
@@ -375,12 +374,10 @@ namespace iTextSharp.IO.Font
                 if (index >= glyphWidths.Length)
                 {
                     ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
-                    LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
-                        ().GetFontName(), index));
+                    LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName(), index));
                     continue;
                 }
-                Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes
-                    [index] : null);
+                Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes[index] : null);
                 unicodeToGlyph[charCode] = glyph;
                 codeToGlyph[index] = glyph;
                 avgWidth += glyph.GetWidth();
@@ -410,8 +407,8 @@ namespace iTextSharp.IO.Font
         /// <returns>the code pages supported by the font</returns>
         public virtual String[] GetCodePagesSupported()
         {
-            long cp = ((long)fontParser.GetOs_2Table().ulCodePageRange2 << 32) + (fontParser.
-                GetOs_2Table().ulCodePageRange1 & unchecked((long)(0xffffffffL)));
+            long cp = ((long)fontParser.GetOs_2Table().ulCodePageRange2 << 32) + (fontParser.GetOs_2Table().ulCodePageRange1
+                 & unchecked((long)(0xffffffffL)));
             int count = 0;
             long bit = 1;
             for (int k = 0; k < 64; ++k)

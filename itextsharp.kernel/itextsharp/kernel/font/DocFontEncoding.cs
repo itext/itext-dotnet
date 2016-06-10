@@ -56,8 +56,8 @@ namespace iTextSharp.Kernel.Font
         {
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
-             toUnicode, bool fillBaseEncoding)
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode, bool fillBaseEncoding
+            )
         {
             if (encoding != null)
             {
@@ -69,24 +69,20 @@ namespace iTextSharp.Kernel.Font
                 {
                     if (encoding.IsDictionary())
                     {
-                        iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
-                            ();
+                        iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding();
                         fontEncoding.differences = new String[256];
                         if (fillBaseEncoding)
                         {
-                            FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding
-                                ));
+                            FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding));
                         }
-                        FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences
-                            ), toUnicode);
+                        FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences), toUnicode);
                         return fontEncoding;
                     }
                 }
             }
             if (toUnicode != null)
             {
-                iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding
-                    ();
+                iTextSharp.Kernel.Font.DocFontEncoding fontEncoding = new iTextSharp.Kernel.Font.DocFontEncoding();
                 fontEncoding.differences = new String[256];
                 FillDifferences(fontEncoding, toUnicode);
                 return fontEncoding;
@@ -97,22 +93,20 @@ namespace iTextSharp.Kernel.Font
             }
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode
-             toUnicode)
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode)
         {
             return CreateDocFontEncoding(encoding, toUnicode, true);
         }
 
-        private static void FillBaseEncoding(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-            , PdfName baseEncodingName)
+        private static void FillBaseEncoding(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding, PdfName baseEncodingName
+            )
         {
             if (baseEncodingName != null)
             {
                 fontEncoding.baseEncoding = baseEncodingName.GetValue();
             }
-            if (PdfName.MacRomanEncoding.Equals(baseEncodingName) || PdfName.WinAnsiEncoding.
-                Equals(baseEncodingName) || PdfName.Symbol.Equals(baseEncodingName) || PdfName
-                .ZapfDingbats.Equals(baseEncodingName))
+            if (PdfName.MacRomanEncoding.Equals(baseEncodingName) || PdfName.WinAnsiEncoding.Equals(baseEncodingName) 
+                || PdfName.Symbol.Equals(baseEncodingName) || PdfName.ZapfDingbats.Equals(baseEncodingName))
             {
                 String enc = PdfEncodings.WINANSI;
                 if (PdfName.MacRomanEncoding.Equals(baseEncodingName))
@@ -142,11 +136,10 @@ namespace iTextSharp.Kernel.Font
             }
         }
 
-        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-            , PdfArray diffs, CMapToUnicode toUnicode)
+        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding, PdfArray diffs, CMapToUnicode
+             toUnicode)
         {
-            IntHashtable byte2uni = toUnicode != null ? toUnicode.CreateDirectMapping() : new 
-                IntHashtable();
+            IntHashtable byte2uni = toUnicode != null ? toUnicode.CreateDirectMapping() : new IntHashtable();
             if (diffs != null)
             {
                 int currentNumber = 0;
@@ -185,8 +178,8 @@ namespace iTextSharp.Kernel.Font
             }
         }
 
-        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding
-            , CMapToUnicode toUnicode)
+        private static void FillDifferences(iTextSharp.Kernel.Font.DocFontEncoding fontEncoding, CMapToUnicode toUnicode
+            )
         {
             IntHashtable byte2uni = toUnicode.CreateDirectMapping();
             foreach (int? code in byte2uni.GetKeys())

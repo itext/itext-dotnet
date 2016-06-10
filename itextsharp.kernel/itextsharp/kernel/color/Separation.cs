@@ -59,8 +59,7 @@ namespace iTextSharp.Kernel.Color
         {
         }
 
-        public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform
-            , float value)
+        public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform, float value)
             : this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value)
         {
         }

@@ -47,8 +47,7 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
 {
-    /// <summary>A dictionary that stores the name of the application that signs the PDF.
-    ///     </summary>
+    /// <summary>A dictionary that stores the name of the application that signs the PDF.</summary>
     public class PdfSignatureAppDictionary : PdfObjectWrapper<PdfDictionary>
     {
         /// <summary>Creates a new PdfSignatureAppDictionary</summary>

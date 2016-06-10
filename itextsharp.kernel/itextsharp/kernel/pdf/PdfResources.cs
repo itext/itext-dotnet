@@ -68,32 +68,31 @@ namespace iTextSharp.Kernel.Pdf
 
         private const String Sh = "Sh";
 
-        private IDictionary<PdfObject, PdfName> resourceToName = new Dictionary<PdfObject
-            , PdfName>();
+        private IDictionary<PdfObject, PdfName> resourceToName = new Dictionary<PdfObject, PdfName>();
 
-        private PdfResources.ResourceNameGenerator fontNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.Font, F);
+        private PdfResources.ResourceNameGenerator fontNamesGen = new PdfResources.ResourceNameGenerator(PdfName.Font
+            , F);
 
-        private PdfResources.ResourceNameGenerator imageNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.XObject, Im);
+        private PdfResources.ResourceNameGenerator imageNamesGen = new PdfResources.ResourceNameGenerator(PdfName.
+            XObject, Im);
 
-        private PdfResources.ResourceNameGenerator formNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.XObject, Fm);
+        private PdfResources.ResourceNameGenerator formNamesGen = new PdfResources.ResourceNameGenerator(PdfName.XObject
+            , Fm);
 
-        private PdfResources.ResourceNameGenerator egsNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.ExtGState, Gs);
+        private PdfResources.ResourceNameGenerator egsNamesGen = new PdfResources.ResourceNameGenerator(PdfName.ExtGState
+            , Gs);
 
-        private PdfResources.ResourceNameGenerator propNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.Properties, Pr);
+        private PdfResources.ResourceNameGenerator propNamesGen = new PdfResources.ResourceNameGenerator(PdfName.Properties
+            , Pr);
 
-        private PdfResources.ResourceNameGenerator csNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.ColorSpace, Cs);
+        private PdfResources.ResourceNameGenerator csNamesGen = new PdfResources.ResourceNameGenerator(PdfName.ColorSpace
+            , Cs);
 
-        private PdfResources.ResourceNameGenerator patternNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.Pattern, P);
+        private PdfResources.ResourceNameGenerator patternNamesGen = new PdfResources.ResourceNameGenerator(PdfName
+            .Pattern, P);
 
-        private PdfResources.ResourceNameGenerator shadingNamesGen = new PdfResources.ResourceNameGenerator
-            (PdfName.Shading, Sh);
+        private PdfResources.ResourceNameGenerator shadingNamesGen = new PdfResources.ResourceNameGenerator(PdfName
+            .Shading, Sh);
 
         private bool readOnly = false;
 
@@ -110,8 +109,7 @@ namespace iTextSharp.Kernel.Pdf
         {
         }
 
-        /// <summary>Add font to resources and register PdfFont in the document for further flushing.
-        ///     </summary>
+        /// <summary>Add font to resources and register PdfFont in the document for further flushing.</summary>
         /// <returns>font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font)
         {
@@ -233,8 +231,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="defaultCsKey"/>
         /// <param name="defaultCsValue"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue
-            )
+        public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue)
         {
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }
@@ -294,8 +291,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual ICollection<PdfName> GetResourceNames(PdfName resType)
         {
             PdfDictionary resourceCategory = GetPdfObject().GetAsDictionary(resType);
-            return resourceCategory == null ? new SortedSet<PdfName>() : resourceCategory.KeySet
-                ();
+            return resourceCategory == null ? new SortedSet<PdfName>() : resourceCategory.KeySet();
         }
 
         // TODO: TreeSet or HashSet enough?
@@ -329,15 +325,14 @@ namespace iTextSharp.Kernel.Pdf
             return false;
         }
 
-        internal virtual PdfName AddResource<T>(PdfObjectWrapper<T> resource, PdfResources.ResourceNameGenerator
-             nameGen)
+        internal virtual PdfName AddResource<T>(PdfObjectWrapper<T> resource, PdfResources.ResourceNameGenerator nameGen
+            )
             where T : PdfObject
         {
             return AddResource(resource.GetPdfObject(), nameGen);
         }
 
-        protected internal virtual void AddResource(PdfObject resource, PdfName resType, 
-            PdfName resName)
+        protected internal virtual void AddResource(PdfObject resource, PdfName resType, PdfName resName)
         {
             if (resType.Equals(PdfName.XObject))
             {
@@ -350,8 +345,7 @@ namespace iTextSharp.Kernel.Pdf
                 isModified = true;
                 readOnly = false;
             }
-            if (GetPdfObject().ContainsKey(resType) && GetPdfObject().GetAsDictionary(resType
-                ).ContainsKey(resName))
+            if (GetPdfObject().ContainsKey(resType) && GetPdfObject().GetAsDictionary(resType).ContainsKey(resName))
             {
                 return;
             }
@@ -370,8 +364,7 @@ namespace iTextSharp.Kernel.Pdf
             resDictionary.Put(resName, resource);
         }
 
-        internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator
-             nameGen)
+        internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen)
         {
             PdfName resName = GetResourceName(resource);
             if (resName == null)
@@ -457,11 +450,9 @@ namespace iTextSharp.Kernel.Pdf
             {
                 PdfDictionary pdfXObject = (PdfDictionary)pdfObject;
                 PdfObject pdfXObjectResources = pdfXObject.Get(PdfName.Resources);
-                if (pdfXObjectResources != null && pdfXObjectResources.GetIndirectReference() != 
-                    null)
+                if (pdfXObjectResources != null && pdfXObjectResources.GetIndirectReference() != null)
                 {
-                    if (pdfXObjectResources.GetIndirectReference().Equals(GetPdfObject().GetIndirectReference
-                        ()))
+                    if (pdfXObjectResources.GetIndirectReference().Equals(GetPdfObject().GetIndirectReference()))
                     {
                         PdfObject cloneResources = GetPdfObject().Clone();
                         cloneResources.MakeIndirect(GetPdfObject().GetIndirectReference().GetDocument());

@@ -79,30 +79,24 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().Get(PdfName.Dest);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfObject
-             destination)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfObject destination)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfDestination
-             destination)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfDestination destination)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination
-                .GetPdfObject());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfDictionary
-             action)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfDictionary action)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action);
         }
 
         public override PdfAnnotation SetAction(PdfAction action)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action.GetPdfObject
-                ());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action.GetPdfObject());
         }
 
         public virtual PdfName GetHighlightMode()
@@ -110,8 +104,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsName(PdfName.H);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetHighlightMode(PdfName
-             hlMode)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetHighlightMode(PdfName hlMode)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.H, hlMode);
         }
@@ -121,17 +114,14 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsDictionary(PdfName.PA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfDictionary
-             action)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfDictionary action)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfAction
-             action)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfAction action)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action.GetPdfObject
-                ());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action.GetPdfObject());
         }
     }
 }

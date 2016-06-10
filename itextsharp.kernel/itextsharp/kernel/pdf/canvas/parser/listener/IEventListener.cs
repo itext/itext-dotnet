@@ -57,8 +57,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
     public interface IEventListener
     {
         /// <summary>Called when some event occurs during parsing a content stream.</summary>
-        /// <param name="data">Combines the data required for processing corresponding event type.
-        ///     </param>
+        /// <param name="data">Combines the data required for processing corresponding event type.</param>
         /// <param name="type">Event type.</param>
         void EventOccurred(IEventData data, EventType type);
 

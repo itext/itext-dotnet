@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.IO.Source
 {
-    /// <summary>A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().
-    ///     </summary>
+    /// <summary>A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().</summary>
     /// <remarks>
     /// A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().  This is useful when
     /// passing a RandomAccessSource to a method that would normally close the source.

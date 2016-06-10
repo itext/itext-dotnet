@@ -57,8 +57,8 @@ namespace iTextSharp.Layout.Property
 
         protected internal int lineCapStyle;
 
-        public Underline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul
-            , float yPosition, float yPositionMul, int lineCapStyle)
+        public Underline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul, float yPosition
+            , float yPositionMul, int lineCapStyle)
         {
             this.color = color;
             this.thickness = thickness;

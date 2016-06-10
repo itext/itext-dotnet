@@ -53,8 +53,7 @@ using iTextSharp.Kernel.Pdf.Filters;
 
 namespace iTextSharp.Kernel.Pdf
 {
-    public class PdfOutputStream : OutputStream<iTextSharp.Kernel.Pdf.PdfOutputStream
-        >
+    public class PdfOutputStream : OutputStream<iTextSharp.Kernel.Pdf.PdfOutputStream>
     {
         private static readonly byte[] stream = ByteUtils.GetIsoBytes("stream\n");
 
@@ -66,8 +65,7 @@ namespace iTextSharp.Kernel.Pdf
 
         private static readonly byte[] endIndirect = ByteUtils.GetIsoBytes(" R");
 
-        private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R"
-            );
+        private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R");
 
         private byte[] duplicateContentBuffer = null;
 
@@ -187,16 +185,13 @@ namespace iTextSharp.Kernel.Pdf
                 PdfObject value = entry.Value;
                 if (value == null)
                 {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream
-                        ));
-                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
-                        , entry.Key));
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream));
+                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, entry.Key));
                     value = PdfNull.PDF_NULL;
                 }
-                if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject
-                    .LITERAL || value.GetObjectType() == PdfObject.BOOLEAN || value.GetObjectType
-                    () == PdfObject.NULL || value.GetObjectType() == PdfObject.INDIRECT_REFERENCE
-                     || value.CheckState(PdfObject.MUST_BE_INDIRECT)))
+                if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject.LITERAL || value.GetObjectType
+                    () == PdfObject.BOOLEAN || value.GetObjectType() == PdfObject.NULL || value.GetObjectType() == PdfObject
+                    .INDIRECT_REFERENCE || value.CheckState(PdfObject.MUST_BE_INDIRECT)))
                 {
                     isAlreadyWriteSpace = true;
                     WriteSpace();
@@ -232,13 +227,12 @@ namespace iTextSharp.Kernel.Pdf
             {
                 if (indirectReference.GetGenNumber() == 0)
                 {
-                    WriteInteger(indirectReference.GetObjNumber()).WriteBytes(endIndirectWithZeroGenNr
-                        );
+                    WriteInteger(indirectReference.GetObjNumber()).WriteBytes(endIndirectWithZeroGenNr);
                 }
                 else
                 {
-                    WriteInteger(indirectReference.GetObjNumber()).WriteSpace().WriteInteger(indirectReference
-                        .GetGenNumber()).WriteBytes(endIndirect);
+                    WriteInteger(indirectReference.GetObjNumber()).WriteSpace().WriteInteger(indirectReference.GetGenNumber())
+                        .WriteBytes(endIndirect);
                 }
             }
         }
@@ -298,25 +292,23 @@ namespace iTextSharp.Kernel.Pdf
 
         private bool IsNotMetadataPdfStream(PdfStream pdfStream)
         {
-            return pdfStream.GetAsName(PdfName.Type) == null || (pdfStream.GetAsName(PdfName.
-                Type) != null && !pdfStream.GetAsName(PdfName.Type).Equals(PdfName.Metadata));
+            return pdfStream.GetAsName(PdfName.Type) == null || (pdfStream.GetAsName(PdfName.Type) != null && !pdfStream
+                .GetAsName(PdfName.Type).Equals(PdfName.Metadata));
         }
 
         private void Write(PdfStream pdfStream)
         {
             try
             {
-                bool userDefinedCompression = pdfStream.GetCompressionLevel() != CompressionConstants
-                    .UNDEFINED_COMPRESSION;
+                bool userDefinedCompression = pdfStream.GetCompressionLevel() != CompressionConstants.UNDEFINED_COMPRESSION;
                 if (!userDefinedCompression)
                 {
-                    int defaultCompressionLevel = document != null ? document.GetWriter().GetCompressionLevel
-                        () : CompressionConstants.DEFAULT_COMPRESSION;
+                    int defaultCompressionLevel = document != null ? document.GetWriter().GetCompressionLevel() : CompressionConstants
+                        .DEFAULT_COMPRESSION;
                     pdfStream.SetCompressionLevel(defaultCompressionLevel);
                 }
                 bool toCompress = pdfStream.GetCompressionLevel() != CompressionConstants.NO_COMPRESSION;
-                bool allowCompression = !pdfStream.ContainsKey(PdfName.Filter) && IsNotMetadataPdfStream
-                    (pdfStream);
+                bool allowCompression = !pdfStream.ContainsKey(PdfName.Filter) && IsNotMetadataPdfStream(pdfStream);
                 if (pdfStream.GetInputStream() != null)
                 {
                     Stream fout = this;
@@ -329,8 +321,7 @@ namespace iTextSharp.Kernel.Pdf
                     if (toCompress && (allowCompression || userDefinedCompression))
                     {
                         UpdateCompressionFilter(pdfStream);
-                        fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000
-                            );
+                        fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000);
                     }
                     this.Write((PdfDictionary)pdfStream);
                     WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
@@ -362,13 +353,11 @@ namespace iTextSharp.Kernel.Pdf
                 {
                     //When document is opened in stamping mode the output stream can be uninitialized.
                     //We have to initialize it and write all data from streams input to streams output.
-                    if (pdfStream.GetOutputStream() == null && pdfStream.GetIndirectReference().GetReader
-                        () != null)
+                    if (pdfStream.GetOutputStream() == null && pdfStream.GetIndirectReference().GetReader() != null)
                     {
                         // If new specific compression is set for stream,
                         // then compressed stream should be decoded and written with new compression settings
-                        byte[] bytes = pdfStream.GetIndirectReference().GetReader().ReadStreamBytes(pdfStream
-                            , false);
+                        byte[] bytes = pdfStream.GetIndirectReference().GetReader().ReadStreamBytes(pdfStream, false);
                         if (userDefinedCompression)
                         {
                             bytes = DecodeFlateBytes(pdfStream, bytes);
@@ -376,33 +365,26 @@ namespace iTextSharp.Kernel.Pdf
                         pdfStream.InitOutputStream(new ByteArrayOutputStream(bytes.Length));
                         pdfStream.GetOutputStream().Write(bytes);
                     }
-                    System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "PdfStream lost OutputStream"
-                        );
+                    System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "PdfStream lost OutputStream");
                     ByteArrayOutputStream byteArrayStream;
                     try
                     {
-                        if (toCompress && !ContainsFlateFilter(pdfStream) && (allowCompression || userDefinedCompression
-                            ))
+                        if (toCompress && !ContainsFlateFilter(pdfStream) && (allowCompression || userDefinedCompression))
                         {
                             // compress
                             UpdateCompressionFilter(pdfStream);
                             byteArrayStream = new ByteArrayOutputStream();
-                            DeflaterOutputStream zip = new DeflaterOutputStream(byteArrayStream, pdfStream.GetCompressionLevel
-                                ());
+                            DeflaterOutputStream zip = new DeflaterOutputStream(byteArrayStream, pdfStream.GetCompressionLevel());
                             if (pdfStream is PdfObjectStream)
                             {
                                 PdfObjectStream objectStream = (PdfObjectStream)pdfStream;
-                                ((ByteArrayOutputStream)objectStream.GetIndexStream().GetOutputStream()).WriteTo(
-                                    zip);
-                                ((ByteArrayOutputStream)objectStream.GetOutputStream().GetOutputStream()).WriteTo
-                                    (zip);
+                                ((ByteArrayOutputStream)objectStream.GetIndexStream().GetOutputStream()).WriteTo(zip);
+                                ((ByteArrayOutputStream)objectStream.GetOutputStream().GetOutputStream()).WriteTo(zip);
                             }
                             else
                             {
-                                System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "Error in outputStream"
-                                    );
-                                ((ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream()).WriteTo(zip
-                                    );
+                                System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "Error in outputStream");
+                                ((ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream()).WriteTo(zip);
                             }
                             zip.Finish();
                         }
@@ -412,17 +394,13 @@ namespace iTextSharp.Kernel.Pdf
                             {
                                 PdfObjectStream objectStream = (PdfObjectStream)pdfStream;
                                 byteArrayStream = new ByteArrayOutputStream();
-                                ((ByteArrayOutputStream)objectStream.GetIndexStream().GetOutputStream()).WriteTo(
-                                    byteArrayStream);
-                                ((ByteArrayOutputStream)objectStream.GetOutputStream().GetOutputStream()).WriteTo
-                                    (byteArrayStream);
+                                ((ByteArrayOutputStream)objectStream.GetIndexStream().GetOutputStream()).WriteTo(byteArrayStream);
+                                ((ByteArrayOutputStream)objectStream.GetOutputStream().GetOutputStream()).WriteTo(byteArrayStream);
                             }
                             else
                             {
-                                System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "Error in outputStream"
-                                    );
-                                byteArrayStream = (ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream
-                                    ();
+                                System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "Error in outputStream");
+                                byteArrayStream = (ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream();
                             }
                         }
                         if (CheckEncryption(pdfStream))
@@ -551,8 +529,8 @@ namespace iTextSharp.Kernel.Pdf
                         }
                         else
                         {
-                            throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams
-                                (decodeParms.GetType().ToString());
+                            throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams(decodeParms.GetType
+                                ().ToString());
                         }
                     }
                 }
@@ -560,8 +538,7 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        protected internal virtual byte[] DecodeFlateBytes(PdfStream stream, byte[] bytes
-            )
+        protected internal virtual byte[] DecodeFlateBytes(PdfStream stream, byte[] bytes)
         {
             PdfObject filterObject = stream.Get(PdfName.Filter);
             if (filterObject == null)
@@ -614,8 +591,8 @@ namespace iTextSharp.Kernel.Pdf
                     }
                     else
                     {
-                        throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams
-                            (decodeParamsObject.GetType().ToString());
+                        throw new PdfException(PdfException.DecodeParameterType1IsNotSupported).SetMessageParams(decodeParamsObject
+                            .GetType().ToString());
                     }
                 }
             }
@@ -647,8 +624,7 @@ namespace iTextSharp.Kernel.Pdf
             if (decodeParamsArray != null)
             {
                 decodeParamsArray.Remove(0);
-                if (decodeParamsArray.Size() == 1 && decodeParamsArray.Get(0).GetObjectType() != 
-                    PdfObject.NULL)
+                if (decodeParamsArray.Size() == 1 && decodeParamsArray.Get(0).GetObjectType() != PdfObject.NULL)
                 {
                     decodeParamsObject = decodeParamsArray.Get(0);
                 }

@@ -167,8 +167,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         ///     </summary>
         public static bool IsStructElem(PdfDictionary dictionary)
         {
-            return (PdfName.StructElem.Equals(dictionary.GetAsName(PdfName.Type)) || dictionary
-                .ContainsKey(PdfName.S));
+            return (PdfName.StructElem.Equals(dictionary.GetAsName(PdfName.Type)) || dictionary.ContainsKey(PdfName.S)
+                );
         }
 
         // required key of the struct elem
@@ -259,8 +259,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         {
             if (GetStructElementType() == InlineLevel || GetStructElementType() == Illustration)
             {
-                throw new PdfException(PdfException.InlineLevelOrIllustrationElementCannotContainKids
-                    , GetPdfObject());
+                throw new PdfException(PdfException.InlineLevelOrIllustrationElementCannotContainKids, GetPdfObject());
             }
             AddKidObject(GetPdfObject(), index, kid.GetPdfObject());
             return kid;
@@ -302,8 +301,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             IPdfStructElem removedKid = ConvertPdfObjectToIPdfStructElem(k);
             if (removedKid is PdfMcr)
             {
-                GetDocument().GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid
-                    );
+                GetDocument().GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
             }
             return removedKid;
         }
@@ -320,15 +318,13 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             {
                 if (kid is iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)
                 {
-                    return RemoveKidObject(((iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)kid).GetPdfObject
-                        ());
+                    return RemoveKidObject(((iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)kid).GetPdfObject());
                 }
             }
             return -1;
         }
 
-        /// <returns>parent of the current structure element. If parent is already flushed it returns null.
-        ///     </returns>
+        /// <returns>parent of the current structure element. If parent is already flushed it returns null.</returns>
         public virtual IPdfStructElem GetParent()
         {
             PdfDictionary parent = GetPdfObject().GetAsDictionary(PdfName.P);
@@ -427,8 +423,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject
-             value)
+        public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;
@@ -458,8 +453,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             }
             if (!parent.ContainsKey(PdfName.P))
             {
-                throw new PdfException(PdfException.StructureElementShallContainParentObject, parent
-                    );
+                throw new PdfException(PdfException.StructureElementShallContainParentObject, parent);
             }
             PdfObject k = parent.Get(PdfName.K);
             if (k == null)
@@ -504,8 +498,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
-        private void AddKidObjectToStructElemList(PdfObject k, IList<IPdfStructElem> list
-            )
+        private void AddKidObjectToStructElemList(PdfObject k, IList<IPdfStructElem> list)
         {
             if (k.IsFlushed())
             {

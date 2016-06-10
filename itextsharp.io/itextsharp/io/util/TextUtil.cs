@@ -85,8 +85,7 @@ namespace iTextSharp.IO.Util
         /// <returns>true if the characters are surrogate pairs</returns>
         public static bool IsSurrogatePair(String text, int idx)
         {
-            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
-                (text[idx + 1]);
+            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow(text[idx + 1]);
         }
 
         /// <summary>
@@ -94,14 +93,12 @@ namespace iTextSharp.IO.Util
         /// are the higher and the lower character in a surrogate
         /// pair (and therefore eligible for conversion to a UTF 32 character).
         /// </summary>
-        /// <param name="text">the character array with the high and low surrogate characters
-        ///     </param>
+        /// <param name="text">the character array with the high and low surrogate characters</param>
         /// <param name="idx">the index of the 'high' character in the pair</param>
         /// <returns>true if the characters are surrogate pairs</returns>
         public static bool IsSurrogatePair(char[] text, int idx)
         {
-            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow
-                (text[idx + 1]);
+            return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow(text[idx + 1]);
         }
 
         /// <summary>
@@ -116,8 +113,7 @@ namespace iTextSharp.IO.Util
             return (highSurrogate - 0xd800) * 0x400 + lowSurrogate - 0xdc00 + 0x10000;
         }
 
-        /// <summary>Converts a unicode character in a character array to a UTF 32 code point value.
-        ///     </summary>
+        /// <summary>Converts a unicode character in a character array to a UTF 32 code point value.</summary>
         /// <param name="text">a character array that has the unicode character(s)</param>
         /// <param name="idx">the index of the 'high' character</param>
         /// <returns>the code point value</returns>
@@ -159,8 +155,7 @@ namespace iTextSharp.IO.Util
             return ArrayUtil.ToArray(charCodes);
         }
 
-        /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).
-        ///     </summary>
+        /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
         /// <returns>the corresponding characters in a String</returns>
         public static char[] ConvertFromUtf32(int codePoint)
@@ -170,8 +165,7 @@ namespace iTextSharp.IO.Util
                 return new char[] { (char)codePoint };
             }
             codePoint -= 0x10000;
-            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
-                + 0xdc00) };
+            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 + 0xdc00) };
         }
 
         /// <summary>
@@ -192,8 +186,7 @@ namespace iTextSharp.IO.Util
             return sb.ToString();
         }
 
-        /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).
-        ///     </summary>
+        /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
         /// <returns>the corresponding characters in a char arrat</returns>
         public static char[] ConvertFromUtf32ToCharArray(int codePoint)
@@ -203,8 +196,7 @@ namespace iTextSharp.IO.Util
                 return new char[] { (char)codePoint };
             }
             codePoint -= 0x10000;
-            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 
-                + 0xdc00) };
+            return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 + 0xdc00) };
         }
     }
 }

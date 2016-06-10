@@ -77,8 +77,7 @@ namespace iTextSharp.Kernel.Numbering
             }
         }
 
-        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.
-        ///     </summary>
+        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet lowercase string representation.
         /// E.g. 1 will be converted to "?", 2 to "?", and so on.
@@ -89,8 +88,7 @@ namespace iTextSharp.Kernel.Numbering
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
         }
 
-        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.
-        ///     </summary>
+        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet lowercase string representation.
         /// E.g. 1 will be converted to "A", 2 to "B", and so on.
@@ -111,8 +109,7 @@ namespace iTextSharp.Kernel.Numbering
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         public static String ToGreekAlphabetNumber(int number, bool upperCase)
         {
-            return upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase
-                (number);
+            return upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase(number);
         }
 
         /// <summary>Converts a given greek unicode character code into the code of the corresponding char Symbol font.

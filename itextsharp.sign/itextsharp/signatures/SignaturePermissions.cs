@@ -66,8 +66,7 @@ namespace iTextSharp.Signatures
             internal PdfArray fields;
 
             /// <summary>Creates a FieldLock instance</summary>
-            public FieldLock(SignaturePermissions _enclosing, PdfName action, PdfArray fields
-                )
+            public FieldLock(SignaturePermissions _enclosing, PdfName action, PdfArray fields)
             {
                 this._enclosing = _enclosing;
                 this.action = action;
@@ -89,15 +88,13 @@ namespace iTextSharp.Signatures
             /// <summary>toString method</summary>
             public override String ToString()
             {
-                return this.action.ToString() + (this.fields == null ? "" : this.fields.ToString(
-                    ));
+                return this.action.ToString() + (this.fields == null ? "" : this.fields.ToString());
             }
 
             private readonly SignaturePermissions _enclosing;
         }
 
-        /// <summary>Is the signature a cerification signature (true) or an approval signature (false)?
-        ///     </summary>
+        /// <summary>Is the signature a cerification signature (true) or an approval signature (false)?</summary>
         internal bool certification = false;
 
         /// <summary>Is form filling allowed by this signature?</summary>
@@ -107,8 +104,7 @@ namespace iTextSharp.Signatures
         internal bool annotationsAllowed = true;
 
         /// <summary>Does this signature lock specific fields?</summary>
-        internal IList<SignaturePermissions.FieldLock> fieldLocks = new List<SignaturePermissions.FieldLock
-            >();
+        internal IList<SignaturePermissions.FieldLock> fieldLocks = new List<SignaturePermissions.FieldLock>();
 
         /// <summary>
         /// Creates an object that can inform you about the type of signature
@@ -137,8 +133,7 @@ namespace iTextSharp.Signatures
                     PdfName action = @params.GetAsName(PdfName.Action);
                     if (action != null)
                     {
-                        fieldLocks.Add(new SignaturePermissions.FieldLock(this, action, @params.GetAsArray
-                            (PdfName.Fields)));
+                        fieldLocks.Add(new SignaturePermissions.FieldLock(this, action, @params.GetAsArray(PdfName.Fields)));
                     }
                     PdfNumber p = @params.GetAsNumber(PdfName.P);
                     if (p == null)
@@ -169,8 +164,7 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Getter to find out if the signature is a certification signature.</summary>
-        /// <returns>true if the signature is a certification signature, false for an approval signature.
-        ///     </returns>
+        /// <returns>true if the signature is a certification signature, false for an approval signature.</returns>
         public virtual bool IsCertification()
         {
             return certification;
@@ -190,8 +184,7 @@ namespace iTextSharp.Signatures
             return annotationsAllowed;
         }
 
-        /// <summary>Getter for the field lock actions, and fields that are impacted by the action
-        ///     </summary>
+        /// <summary>Getter for the field lock actions, and fields that are impacted by the action</summary>
         /// <returns>an Array with field names</returns>
         public virtual IList<SignaturePermissions.FieldLock> GetFieldLocks()
         {

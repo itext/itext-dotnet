@@ -10,11 +10,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfPagesTest : ExtendedITextTest
     {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfPagesTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfPagesTest/";
 
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfPagesTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfPagesTest/";
 
         internal static readonly PdfName PageNum = new PdfName("PageNum");
 
@@ -119,15 +118,12 @@ namespace iTextSharp.Kernel.Pdf
             }
             int xrefSize = document.GetXref().Size();
             PdfPage testPage = document.RemovePage(1000);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null
-                );
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
-            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber
-                () < xrefSize);
+            NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
             for (int i_3 = 0; i_3 < pages.Length; i_3++)
             {
-                NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i_3]), "Remove page"
-                    );
+                NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i_3]), "Remove page");
                 document.AddPage(i_3 + 1, pages[i_3]);
             }
             document.Close();
@@ -175,8 +171,7 @@ namespace iTextSharp.Kernel.Pdf
                         pdfDoc.AddPage(j, page);
                     }
                 }
-                NUnit.Framework.Assert.IsTrue(VerifyIntegrity(pdfDoc.GetCatalog().GetPageTree()) 
-                    == -1);
+                NUnit.Framework.Assert.IsTrue(VerifyIntegrity(pdfDoc.GetCatalog().GetPageTree()) == -1);
             }
             pdfDoc.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount);
@@ -245,8 +240,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage removedPage = pdfDoc.AddNewPage();
-            int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber
-                ();
+            int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber();
             removedPage.Flush();
             pdfDoc.RemovePage(removedPage);
             for (int i = 0; i < pageCount; i++)
@@ -255,10 +249,9 @@ namespace iTextSharp.Kernel.Pdf
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
                 page.Flush();
             }
-            NUnit.Framework.Assert.AreEqual(true, pdfDoc.RemovePage(pdfDoc.GetPage(pageCount)
-                ), "Remove last page");
-            NUnit.Framework.Assert.AreEqual(true, pdfDoc.GetXref().Get(removedPageObjectNumber
-                ).CheckState(PdfObject.FREE), "Free reference");
+            NUnit.Framework.Assert.AreEqual(true, pdfDoc.RemovePage(pdfDoc.GetPage(pageCount)), "Remove last page");
+            NUnit.Framework.Assert.AreEqual(true, pdfDoc.GetXref().Get(removedPageObjectNumber).CheckState(PdfObject.FREE
+                ), "Free reference");
             pdfDoc.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount - 1);
         }
@@ -276,8 +269,7 @@ namespace iTextSharp.Kernel.Pdf
                 PdfNumber number = page.GetAsNumber(PageNum5);
                 NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
             }
-            NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages");
             reader.Close();
         }
 
@@ -341,9 +333,8 @@ namespace iTextSharp.Kernel.Pdf
             String filename = sourceFolder + "1000PagesDocument.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
-            PdfObject[] pageDictionaries = new PdfObject[] { pdfDoc.GetPdfObject(4), pdfDoc.GetPdfObject
-                (255), pdfDoc.GetPdfObject(512), pdfDoc.GetPdfObject(1023), pdfDoc.GetPdfObject
-                (2049), pdfDoc.GetPdfObject(3100) };
+            PdfObject[] pageDictionaries = new PdfObject[] { pdfDoc.GetPdfObject(4), pdfDoc.GetPdfObject(255), pdfDoc.
+                GetPdfObject(512), pdfDoc.GetPdfObject(1023), pdfDoc.GetPdfObject(2049), pdfDoc.GetPdfObject(3100) };
             foreach (PdfObject pageObject in pageDictionaries)
             {
                 PdfDictionary pageDictionary = (PdfDictionary)pageObject;
@@ -361,8 +352,8 @@ namespace iTextSharp.Kernel.Pdf
             String filename = sourceFolder + "docWithFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             pdfDoc.RemovePage(1);
-            PdfArray fields = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm
-                ).GetAsArray(PdfName.Fields);
+            PdfArray fields = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsArray(PdfName.
+                Fields);
             PdfDictionary field = (PdfDictionary)fields.Get(0);
             PdfDictionary kid = (PdfDictionary)field.GetAsArray(PdfName.Kids).Get(0);
             NUnit.Framework.Assert.AreEqual(6, kid.KeySet().Count);

@@ -65,15 +65,15 @@ namespace iTextSharp.IO.Image
         private const int UNSUPPORTED_MARKER = 1;
 
         /// <summary>Unsupported Jpeg markers.</summary>
-        private static readonly int[] UNSUPPORTED_MARKERS = new int[] { 0xC3, 0xC5, 0xC6, 
-            0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF };
+        private static readonly int[] UNSUPPORTED_MARKERS = new int[] { 0xC3, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 
+            0xCB, 0xCD, 0xCE, 0xCF };
 
         /// <summary>This is a type of marker.</summary>
         private const int NOPARAM_MARKER = 2;
 
         /// <summary>Jpeg markers without additional parameters.</summary>
-        private static readonly int[] NOPARAM_MARKERS = new int[] { 0xD0, 0xD1, 0xD2, 0xD3
-            , 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0x01 };
+        private static readonly int[] NOPARAM_MARKERS = new int[] { 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7
+            , 0xD8, 0x01 };
 
         /// <summary>Marker value</summary>
         private const int M_APP0 = 0xE0;
@@ -88,12 +88,10 @@ namespace iTextSharp.IO.Image
         private const int M_APPD = 0xED;
 
         /// <summary>sequence that is used in all Jpeg files</summary>
-        private static readonly byte[] JFIF_ID = new byte[] { 0x4A, 0x46, 0x49, 0x46, 0x00
-             };
+        private static readonly byte[] JFIF_ID = new byte[] { 0x4A, 0x46, 0x49, 0x46, 0x00 };
 
         /// <summary>sequence preceding Photoshop resolution data</summary>
-        private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d
-            , 0x03, (byte)0xed };
+        private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d, 0x03, (byte)0xed };
 
         public static void ProcessImage(ImageData image)
         {
@@ -120,8 +118,7 @@ namespace iTextSharp.IO.Image
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.JpegImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.JpegImageException, e);
             }
             finally
             {
@@ -148,25 +145,22 @@ namespace iTextSharp.IO.Image
                 decodeParms["ColorTransform"] = 0;
                 image.decodeParms = decodeParms;
             }
-            if (image.GetColorSpace() != 1 && image.GetColorSpace() != 3 && image.IsInverted(
-                ))
+            if (image.GetColorSpace() != 1 && image.GetColorSpace() != 3 && image.IsInverted())
             {
                 image.decode = new float[] { 1, 0, 1, 0, 1, 0, 1, 0 };
             }
         }
 
-        /// <summary>This method checks if the image is a valid JPEG and processes some parameters.
-        ///     </summary>
+        /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
         /// <exception cref="iTextSharp.IO.IOException"/>
         /// <exception cref="System.IO.IOException"/>
-        private static void ProcessParameters(Stream jpegStream, String errorID, ImageData
-             image)
+        private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image)
         {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAValidJpegFile
-                    ).SetMessageParams(errorID);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAValidJpegFile).SetMessageParams(errorID
+                    );
             }
             bool firstPass = true;
             int len;
@@ -175,8 +169,7 @@ namespace iTextSharp.IO.Image
                 int v = jpegStream.Read();
                 if (v < 0)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PrematureEofWhileReadingJpg
-                        );
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PrematureEofWhileReadingJpg);
                 }
                 if (v == 0xFF)
                 {
@@ -194,8 +187,8 @@ namespace iTextSharp.IO.Image
                         int r = jpegStream.Read(bcomp);
                         if (r != bcomp.Length)
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1CorruptedJfifMarker
-                                ).SetMessageParams(errorID);
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1CorruptedJfifMarker).SetMessageParams(errorID
+                                );
                         }
                         bool found = true;
                         for (int k = 0; k < bcomp.Length; ++k)
@@ -239,8 +232,7 @@ namespace iTextSharp.IO.Image
                         }
                         if (byteappe.Length >= 12)
                         {
-                            String appe = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1"
-                                );
+                            String appe = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1");
                             if (appe.Equals("Adobe"))
                             {
                                 image.SetInverted(true);
@@ -258,8 +250,7 @@ namespace iTextSharp.IO.Image
                         }
                         if (byteapp2.Length >= 14)
                         {
-                            String app2 = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1"
-                                );
+                            String app2 = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1");
                             if (app2.Equals("ICC_PROFILE"))
                             {
                                 int order = byteapp2[12] & 0xff;
@@ -324,8 +315,8 @@ namespace iTextSharp.IO.Image
                             // just skip name
                             k_1 += namelength;
                             // size of the resolution data
-                            int resosize = (byteappd[k_1] << 24) + (byteappd[k_1 + 1] << 16) + (byteappd[k_1 
-                                + 2] << 8) + byteappd[k_1 + 3];
+                            int resosize = (byteappd[k_1] << 24) + (byteappd[k_1 + 1] << 16) + (byteappd[k_1 + 2] << 8) + byteappd[k_1
+                                 + 3];
                             // should be 16
                             if (resosize != 16)
                             {
@@ -354,8 +345,7 @@ namespace iTextSharp.IO.Image
                                 if (image.GetDpiX() != 0 && image.GetDpiX() != dx)
                                 {
                                     ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(String.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX
-                                        (), dx));
+                                    logger.Debug(String.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
                                 }
                                 else
                                 {
@@ -369,8 +359,7 @@ namespace iTextSharp.IO.Image
                                 if (image.GetDpiY() != 0 && image.GetDpiY() != dy)
                                 {
                                     ILogger logger = LoggerFactory.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(String.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY
-                                        (), dy));
+                                    logger.Debug(String.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
                                 }
                                 else
                                 {
@@ -387,8 +376,8 @@ namespace iTextSharp.IO.Image
                         StreamUtil.Skip(jpegStream, 2);
                         if (jpegStream.Read() != 0x08)
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1MustHave8BitsPerComponent
-                                ).SetMessageParams(errorID);
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1MustHave8BitsPerComponent).SetMessageParams
+                                (errorID);
                         }
                         image.SetHeight(GetShort(jpegStream));
                         image.SetWidth(GetShort(jpegStream));
@@ -400,9 +389,8 @@ namespace iTextSharp.IO.Image
                     {
                         if (markertype == UNSUPPORTED_MARKER)
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1UnsupportedJpegMarker2
-                                ).SetMessageParams(errorID, iTextSharp.IO.Util.JavaUtil.IntegerToString(marker
-                                ));
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID
+                                , iTextSharp.IO.Util.JavaUtil.IntegerToString(marker));
                         }
                         else
                         {
@@ -455,8 +443,7 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Returns a type of marker.</summary>
         /// <param name="marker">an int</param>
-        /// <returns>a type: <VAR>VALID_MARKER</CODE>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR>
-        ///     </returns>
+        /// <returns>a type: <VAR>VALID_MARKER</CODE>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR></returns>
         private static int Marker(int marker)
         {
             for (int i = 0; i < VALID_MARKERS.Length; i++)

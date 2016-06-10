@@ -14,11 +14,10 @@ namespace iTextSharp.Layout
 {
     public class ImageTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/ImageTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/ImageTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/ImageTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/ImageTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -37,18 +36,16 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
             doc.Add(p);
             doc.Add(new Paragraph(new Text("Second Line")));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -62,18 +59,17 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil
-                .ToURL(sourceFolder + "Desert.jpg")));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
+                )));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
             p.Add(new Text("before image"));
             p.Add(image);
             p.Add(new Text("after image"));
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -87,10 +83,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -98,8 +92,8 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph(new Text("Second Line")));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -113,10 +107,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
             p.Add(new Text("before image"));
             p.Add(image);
@@ -124,8 +116,8 @@ namespace iTextSharp.Layout
             p.Add(new Text("after image"));
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -139,10 +131,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -150,8 +140,8 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph(new Text("Second Line")));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -165,10 +155,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject
-                , 100);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -176,8 +164,8 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph(new Text("Second Line")));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -192,14 +180,14 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + "Desert.jpg"));
             Div div = new Div();
             div.Add(image);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -214,19 +202,18 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + "Desert.jpg"));
             Div div = new Div();
             div.Add(image);
             div.Add(image);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
-        /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.
-        ///     </summary>
+        /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -239,8 +226,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "Desert.jpg"));
+            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + "Desert.jpg"));
             Table table = new Table(8);
             table.SetWidthPercent(100);
             for (int k = 0; k < rowCount; k++)
@@ -254,8 +241,8 @@ namespace iTextSharp.Layout
             }
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <summary>
@@ -279,8 +266,8 @@ namespace iTextSharp.Layout
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             //Initialize document
             Document document = new Document(pdf);
-            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "itis.jpg"));
+            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + "itis.jpg"));
             img.SetAutoScale(true);
             Table table = new Table(4);
             table.SetWidthPercent(100);
@@ -288,8 +275,7 @@ namespace iTextSharp.Layout
             {
                 table.AddCell("Hello World from iText7");
                 List list = new List().SetListSymbol("-> ");
-                list.Add("list item").Add("list item").Add("list item").Add("list item").Add("list item"
-                    );
+                list.Add("list item").Add("list item").Add("list item").Add("list item").Add("list item");
                 Cell cell = new Cell().Add(list);
                 table.AddCell(cell);
                 Cell c = new Cell().Add(img);
@@ -305,8 +291,8 @@ namespace iTextSharp.Layout
             }
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
     }
 }

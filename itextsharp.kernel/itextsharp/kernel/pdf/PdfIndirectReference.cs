@@ -46,8 +46,7 @@ using System.Text;
 
 namespace iTextSharp.Kernel.Pdf
 {
-    public class PdfIndirectReference : PdfObject, IComparable<iTextSharp.Kernel.Pdf.PdfIndirectReference
-        >
+    public class PdfIndirectReference : PdfObject, IComparable<iTextSharp.Kernel.Pdf.PdfIndirectReference>
     {
         private const int LENGTH_OF_INDIRECTS_CHAIN = 31;
 
@@ -92,8 +91,7 @@ namespace iTextSharp.Kernel.Pdf
             this.genNr = genNr;
         }
 
-        protected internal PdfIndirectReference(PdfDocument doc, int objNr, int genNr, long
-             offset)
+        protected internal PdfIndirectReference(PdfDocument doc, int objNr, int genNr, long offset)
             : base()
         {
             this.pdfDocument = doc;
@@ -130,8 +128,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             if (!recursively)
             {
-                if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && GetReader
-                    () != null)
+                if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && GetReader() != null)
                 {
                     refersTo = GetReader().ReadObject(this);
                 }
@@ -144,8 +141,7 @@ namespace iTextSharp.Kernel.Pdf
                 {
                     if (currentRefersTo is iTextSharp.Kernel.Pdf.PdfIndirectReference)
                     {
-                        currentRefersTo = ((iTextSharp.Kernel.Pdf.PdfIndirectReference)currentRefersTo).GetRefersTo
-                            (false);
+                        currentRefersTo = ((iTextSharp.Kernel.Pdf.PdfIndirectReference)currentRefersTo).GetRefersTo(false);
                     }
                     else
                     {
@@ -167,16 +163,14 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <summary>Gets refersTo object offset in a document.</summary>
-        /// <returns>object offset in a document. If refersTo object is in object stream then -1.
-        ///     </returns>
+        /// <returns>object offset in a document. If refersTo object is in object stream then -1.</returns>
         public virtual long GetOffset()
         {
             return objectStreamNumber == 0 ? offsetOrIndex : -1;
         }
 
         /// <summary>Gets refersTo object index in the object stream.</summary>
-        /// <returns>object index in a document. If refersTo object is not in object stream then -1.
-        ///     </returns>
+        /// <returns>object index in a document. If refersTo object is not in object stream then -1.</returns>
         public virtual int GetIndex()
         {
             return objectStreamNumber == 0 ? -1 : (int)offsetOrIndex;
@@ -192,8 +186,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 return false;
             }
-            iTextSharp.Kernel.Pdf.PdfIndirectReference that = (iTextSharp.Kernel.Pdf.PdfIndirectReference
-                )o;
+            iTextSharp.Kernel.Pdf.PdfIndirectReference that = (iTextSharp.Kernel.Pdf.PdfIndirectReference)o;
             return objNr == that.objNr && genNr == that.genNr;
         }
 
@@ -276,8 +269,8 @@ namespace iTextSharp.Kernel.Pdf
             {
                 states.Append("ReadOnly; ");
             }
-            return String.Format("{0} {1} R{2}", GetObjNumber(), GetGenNumber(), states.JSubstring
-                (0, states.Length - 1));
+            return String.Format("{0} {1} R{2}", GetObjNumber(), GetGenNumber(), states.JSubstring(0, states.Length - 
+                1));
         }
 
         /// <summary>Gets a PdfWriter associated with the document object belongs to.</summary>
@@ -315,8 +308,7 @@ namespace iTextSharp.Kernel.Pdf
             return PdfNull.PDF_NULL;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
         }
 

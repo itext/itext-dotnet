@@ -57,8 +57,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// </summary>
         public override String ToString()
         {
-            if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-"
-                ))
+            if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-"))
             {
                 return "-";
             }

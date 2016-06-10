@@ -51,8 +51,7 @@ namespace iTextSharp.IO.Font.Otf
     public class OtfReadCommon
     {
         /// <exception cref="System.IO.IOException"/>
-        public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size, int location
-            )
+        public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size, int location)
         {
             int[] ret = new int[size];
             for (int k = 0; k < size; ++k)
@@ -70,8 +69,8 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static void ReadCoverages(RandomAccessFileOrArray rf, int[] locations, IList
-            <ICollection<int>> coverage)
+        public static void ReadCoverages(RandomAccessFileOrArray rf, int[] locations, IList<ICollection<int>> coverage
+            )
         {
             foreach (int location in locations)
             {
@@ -80,8 +79,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static IList<int> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation
-            )
+        public static IList<int> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation)
         {
             rf.Seek(coverageLocation);
             int coverageFormat = rf.ReadShort();
@@ -109,16 +107,14 @@ namespace iTextSharp.IO.Font.Otf
                 }
                 else
                 {
-                    throw new NotSupportedException(String.Format("Invalid coverage format: {0}", coverageFormat
-                        ));
+                    throw new NotSupportedException(String.Format("Invalid coverage format: {0}", coverageFormat));
                 }
             }
             return JavaCollectionsUtil.UnmodifiableList(glyphIds);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int> glyphIds
-            )
+        private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int> glyphIds)
         {
             int startGlyphId = rf.ReadShort();
             int endGlyphId = rf.ReadShort();
@@ -130,8 +126,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader
-            , int mask)
+        public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader, int mask)
         {
             GposValueRecord vr = new GposValueRecord();
             if ((mask & 0x0001) != 0)
@@ -170,8 +165,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static GposAnchor ReadGposAnchor(OpenTypeFontTableReader tableReader, int 
-            location)
+        public static GposAnchor ReadGposAnchor(OpenTypeFontTableReader tableReader, int location)
         {
             if (location == 0)
             {
@@ -194,8 +188,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static IList<OtfMarkRecord> ReadMarkArray(OpenTypeFontTableReader tableReader
-            , int location)
+        public static IList<OtfMarkRecord> ReadMarkArray(OpenTypeFontTableReader tableReader, int location)
         {
             tableReader.rf.Seek(location);
             int markCount = tableReader.rf.ReadUnsignedShort();
@@ -219,8 +212,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static SubstLookupRecord[] ReadSubstLookupRecords(RandomAccessFileOrArray 
-            rf, int substCount)
+        public static SubstLookupRecord[] ReadSubstLookupRecords(RandomAccessFileOrArray rf, int substCount)
         {
             SubstLookupRecord[] substPosLookUpRecords = new SubstLookupRecord[substCount];
             for (int i = 0; i < substCount; ++i)
@@ -234,8 +226,8 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static GposAnchor[] ReadAnchorArray(OpenTypeFontTableReader tableReader, int
-            [] locations, int left, int right)
+        public static GposAnchor[] ReadAnchorArray(OpenTypeFontTableReader tableReader, int[] locations, int left, 
+            int right)
         {
             GposAnchor[] anchors = new GposAnchor[right - left];
             for (int i = left; i < right; i++)
@@ -246,46 +238,42 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static IList<GposAnchor[]> ReadBaseArray(OpenTypeFontTableReader tableReader
-            , int classCount, int location)
+        public static IList<GposAnchor[]> ReadBaseArray(OpenTypeFontTableReader tableReader, int classCount, int location
+            )
         {
             IList<GposAnchor[]> baseArray = new List<GposAnchor[]>();
             tableReader.rf.Seek(location);
             int baseCount = tableReader.rf.ReadUnsignedShort();
-            int[] anchorLocations = ReadUShortArray(tableReader.rf, baseCount * classCount, location
-                );
+            int[] anchorLocations = ReadUShortArray(tableReader.rf, baseCount * classCount, location);
             int idx = 0;
             for (int k = 0; k < baseCount; ++k)
             {
-                baseArray.Add(ReadAnchorArray(tableReader, anchorLocations, idx, idx + classCount
-                    ));
+                baseArray.Add(ReadAnchorArray(tableReader, anchorLocations, idx, idx + classCount));
                 idx += classCount;
             }
             return baseArray;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static IList<IList<GposAnchor[]>> ReadLigatureArray(OpenTypeFontTableReader
-             tableReader, int classCount, int location)
+        public static IList<IList<GposAnchor[]>> ReadLigatureArray(OpenTypeFontTableReader tableReader, int classCount
+            , int location)
         {
             IList<IList<GposAnchor[]>> ligatureArray = new List<IList<GposAnchor[]>>();
             tableReader.rf.Seek(location);
             int ligatureCount = tableReader.rf.ReadUnsignedShort();
-            int[] ligatureAttachLocations = ReadUShortArray(tableReader.rf, ligatureCount, location
-                );
+            int[] ligatureAttachLocations = ReadUShortArray(tableReader.rf, ligatureCount, location);
             for (int liga = 0; liga < ligatureCount; ++liga)
             {
                 int ligatureAttachLocation = ligatureAttachLocations[liga];
                 IList<GposAnchor[]> ligatureAttach = new List<GposAnchor[]>();
                 tableReader.rf.Seek(ligatureAttachLocation);
                 int componentCount = tableReader.rf.ReadUnsignedShort();
-                int[] componentRecordsLocation = ReadUShortArray(tableReader.rf, classCount * componentCount
-                    , ligatureAttachLocation);
+                int[] componentRecordsLocation = ReadUShortArray(tableReader.rf, classCount * componentCount, ligatureAttachLocation
+                    );
                 int idx = 0;
                 for (int k = 0; k < componentCount; ++k)
                 {
-                    ligatureAttach.Add(ReadAnchorArray(tableReader, componentRecordsLocation, idx, idx
-                         + classCount));
+                    ligatureAttach.Add(ReadAnchorArray(tableReader, componentRecordsLocation, idx, idx + classCount));
                     idx += classCount;
                 }
                 ligatureArray.Add(ligatureAttach);

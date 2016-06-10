@@ -60,10 +60,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// . No language hyphenation files will be used.
         /// Only soft hyphen symbols ('\u00ad') will be taken into account.
         /// </summary>
-        /// <param name="leftMin">the minimum number of characters before the hyphenation point
-        ///     </param>
-        /// <param name="rightMin">the minimum number of characters after the hyphenation point
-        ///     </param>
+        /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
+        /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         public HyphenationConfig(int leftMin, int rightMin)
         {
             this.hyphenator = new Hyphenator(null, null, leftMin, rightMin);
@@ -94,10 +92,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// </summary>
         /// <param name="lang">the language</param>
         /// <param name="country">the optional country code (may be null or "none")</param>
-        /// <param name="leftMin">the minimum number of characters before the hyphenation point
-        ///     </param>
-        /// <param name="rightMin">the minimum number of characters after the hyphenation point
-        ///     </param>
+        /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
+        /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         public HyphenationConfig(String lang, String country, int leftMin, int rightMin)
         {
             this.hyphenator = new Hyphenator(lang, country, leftMin, rightMin);

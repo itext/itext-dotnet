@@ -46,8 +46,7 @@ using iTextSharp.Kernel.Color;
 namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 {
     /// <summary>A Pen object of the WMF format.</summary>
-    /// <remarks>A Pen object of the WMF format. Holds the color, style and width information of the pen.
-    ///     </remarks>
+    /// <remarks>A Pen object of the WMF format. Holds the color, style and width information of the pen.</remarks>
     public class MetaPen : MetaObject
     {
         public const int PS_SOLID = 0;
@@ -77,8 +76,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         }
 
         /// <summary>Initializes a MetaPen object.</summary>
-        /// <param name="in">the InputMeta object that holds the inputstream of the WMF image
-        ///     </param>
+        /// <param name="in">the InputMeta object that holds the inputstream of the WMF image</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Init(InputMeta @in)
         {

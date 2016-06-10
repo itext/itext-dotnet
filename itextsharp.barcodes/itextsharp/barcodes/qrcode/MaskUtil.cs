@@ -57,8 +57,7 @@ namespace iTextSharp.Barcodes.Qrcode
         // give penalty to them. Example: 00000 or 11111.
         public static int ApplyMaskPenaltyRule1(ByteMatrix matrix)
         {
-            return ApplyMaskPenaltyRule1Internal(matrix, true) + ApplyMaskPenaltyRule1Internal
-                (matrix, false);
+            return ApplyMaskPenaltyRule1Internal(matrix, true) + ApplyMaskPenaltyRule1Internal(matrix, false);
         }
 
         // Apply mask penalty rule 2 and return the penalty. Find 2x2 blocks with the same color and give
@@ -74,8 +73,7 @@ namespace iTextSharp.Barcodes.Qrcode
                 for (int x = 0; x < width - 1; ++x)
                 {
                     int value = array[y][x];
-                    if (value == array[y][x + 1] && value == array[y + 1][x] && value == array[y + 1]
-                        [x + 1])
+                    if (value == array[y][x + 1] && value == array[y + 1][x] && value == array[y + 1][x + 1])
                     {
                         penalty += 3;
                     }
@@ -98,21 +96,17 @@ namespace iTextSharp.Barcodes.Qrcode
                 for (int x = 0; x < width; ++x)
                 {
                     // Tried to simplify following conditions but failed.
-                    if (x + 6 < width && array[y][x] == 1 && array[y][x + 1] == 0 && array[y][x + 2] 
-                        == 1 && array[y][x + 3] == 1 && array[y][x + 4] == 1 && array[y][x + 5] == 0 
-                        && array[y][x + 6] == 1 && ((x + 10 < width && array[y][x + 7] == 0 && array[
-                        y][x + 8] == 0 && array[y][x + 9] == 0 && array[y][x + 10] == 0) || (x - 4 >=
-                         0 && array[y][x - 1] == 0 && array[y][x - 2] == 0 && array[y][x - 3] == 0 &&
-                         array[y][x - 4] == 0)))
+                    if (x + 6 < width && array[y][x] == 1 && array[y][x + 1] == 0 && array[y][x + 2] == 1 && array[y][x + 3] ==
+                         1 && array[y][x + 4] == 1 && array[y][x + 5] == 0 && array[y][x + 6] == 1 && ((x + 10 < width && array
+                        [y][x + 7] == 0 && array[y][x + 8] == 0 && array[y][x + 9] == 0 && array[y][x + 10] == 0) || (x - 4 >=
+                         0 && array[y][x - 1] == 0 && array[y][x - 2] == 0 && array[y][x - 3] == 0 && array[y][x - 4] == 0)))
                     {
                         penalty += 40;
                     }
-                    if (y + 6 < height && array[y][x] == 1 && array[y + 1][x] == 0 && array[y + 2][x]
-                         == 1 && array[y + 3][x] == 1 && array[y + 4][x] == 1 && array[y + 5][x] == 0
-                         && array[y + 6][x] == 1 && ((y + 10 < height && array[y + 7][x] == 0 && array
-                        [y + 8][x] == 0 && array[y + 9][x] == 0 && array[y + 10][x] == 0) || (y - 4 >=
-                         0 && array[y - 1][x] == 0 && array[y - 2][x] == 0 && array[y - 3][x] == 0 &&
-                         array[y - 4][x] == 0)))
+                    if (y + 6 < height && array[y][x] == 1 && array[y + 1][x] == 0 && array[y + 2][x] == 1 && array[y + 3][x] 
+                        == 1 && array[y + 4][x] == 1 && array[y + 5][x] == 0 && array[y + 6][x] == 1 && ((y + 10 < height && array
+                        [y + 7][x] == 0 && array[y + 8][x] == 0 && array[y + 9][x] == 0 && array[y + 10][x] == 0) || (y - 4 >=
+                         0 && array[y - 1][x] == 0 && array[y - 2][x] == 0 && array[y - 3][x] == 0 && array[y - 4][x] == 0)))
                     {
                         penalty += 40;
                     }
@@ -224,8 +218,7 @@ namespace iTextSharp.Barcodes.Qrcode
 
         // Helper function for applyMaskPenaltyRule1. We need this for doing this calculation in both
         // vertical and horizontal orders respectively.
-        private static int ApplyMaskPenaltyRule1Internal(ByteMatrix matrix, bool isHorizontal
-            )
+        private static int ApplyMaskPenaltyRule1Internal(ByteMatrix matrix, bool isHorizontal)
         {
             int penalty = 0;
             int numSameBitCells = 0;

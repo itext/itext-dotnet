@@ -59,11 +59,9 @@ namespace iTextSharp.Kernel.Pdf.Xobject
         {
         }
 
-        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream
-            )
+        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream)
         {
-            if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(
-                PdfName.BBox))
+            if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(PdfName.BBox))
             {
                 return new PdfFormXObject(stream);
             }

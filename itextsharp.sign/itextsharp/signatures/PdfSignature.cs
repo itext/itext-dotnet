@@ -59,8 +59,7 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Creates new PdfSignature.</summary>
-        /// <param name="filter">PdfName of the signature handler to use when validating this signature
-        ///     </param>
+        /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
         /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
         public PdfSignature(PdfName filter, PdfName subFilter)
             : this()
@@ -104,8 +103,7 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Sets the /M value.</summary>
-        /// <remarks>Sets the /M value. Should only be used if the time of signing is not available in the signature.
-        ///     </remarks>
+        /// <remarks>Sets the /M value. Should only be used if the time of signing is not available in the signature.</remarks>
         /// <param name="date">time of signing</param>
         public virtual void SetDate(PdfDate date)
         {
@@ -141,15 +139,13 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Sets the /ContactInfo value.</summary>
-        /// <param name="contactInfo">information to contact the person who signed this document
-        ///     </param>
+        /// <param name="contactInfo">information to contact the person who signed this document</param>
         public virtual void SetContact(String contactInfo)
         {
             Put(PdfName.ContactInfo, new PdfString(contactInfo, PdfEncodings.UNICODE_BIG));
         }
 
-        public virtual iTextSharp.Signatures.PdfSignature Put(PdfName key, PdfObject value
-            )
+        public virtual iTextSharp.Signatures.PdfSignature Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;

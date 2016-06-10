@@ -49,11 +49,9 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public abstract class StandardSecurityHandler : SecurityHandler
     {
-        protected internal const int PERMS_MASK_1_FOR_REVISION_2 = unchecked((int)(0xffffffc0
-            ));
+        protected internal const int PERMS_MASK_1_FOR_REVISION_2 = unchecked((int)(0xffffffc0));
 
-        protected internal const int PERMS_MASK_1_FOR_REVISION_3_OR_GREATER = unchecked((
-            int)(0xfffff0c0));
+        protected internal const int PERMS_MASK_1_FOR_REVISION_3_OR_GREATER = unchecked((int)(0xfffff0c0));
 
         protected internal const int PERMS_MASK_2 = unchecked((int)(0xfffffffc));
 
@@ -71,19 +69,16 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return usedOwnerPassword;
         }
 
-        protected internal virtual void SetStandardHandlerDicEntries(PdfDictionary encryptionDictionary
-            , byte[] userKey, byte[] ownerKey)
+        protected internal virtual void SetStandardHandlerDicEntries(PdfDictionary encryptionDictionary, byte[] userKey
+            , byte[] ownerKey)
         {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Standard);
-            encryptionDictionary.Put(PdfName.O, new PdfLiteral(StreamUtil.CreateEscapedString
-                (ownerKey)));
-            encryptionDictionary.Put(PdfName.U, new PdfLiteral(StreamUtil.CreateEscapedString
-                (userKey)));
+            encryptionDictionary.Put(PdfName.O, new PdfLiteral(StreamUtil.CreateEscapedString(ownerKey)));
+            encryptionDictionary.Put(PdfName.U, new PdfLiteral(StreamUtil.CreateEscapedString(userKey)));
             encryptionDictionary.Put(PdfName.P, new PdfNumber(permissions));
         }
 
-        protected internal virtual byte[] GenerateOwnerPasswordIfNullOrEmpty(byte[] ownerPassword
-            )
+        protected internal virtual byte[] GenerateOwnerPasswordIfNullOrEmpty(byte[] ownerPassword)
         {
             if (ownerPassword == null || ownerPassword.Length == 0)
             {

@@ -51,8 +51,8 @@ namespace iTextSharp.Layout.Layout
 
         protected internal bool splitForcedByNewline;
 
-        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer
-            , IRenderer overflowRenderer)
+        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            )
             : base(status, occupiedArea, splitRenderer, overflowRenderer)
         {
         }
@@ -62,8 +62,7 @@ namespace iTextSharp.Layout.Layout
             return wordHasBeenSplit;
         }
 
-        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetWordHasBeenSplit(bool
-             wordHasBeenSplit)
+        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetWordHasBeenSplit(bool wordHasBeenSplit)
         {
             this.wordHasBeenSplit = wordHasBeenSplit;
             return this;
@@ -74,8 +73,8 @@ namespace iTextSharp.Layout.Layout
             return splitForcedByNewline;
         }
 
-        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(
-            bool isSplitForcedByNewline)
+        public virtual iTextSharp.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline
+            )
         {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;

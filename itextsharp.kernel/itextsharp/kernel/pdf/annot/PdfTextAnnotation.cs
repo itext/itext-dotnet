@@ -68,8 +68,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.State);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.State, state);
         }
@@ -79,11 +78,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.StateModel);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString
-             stateModel)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel);
         }
     }
 }

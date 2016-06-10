@@ -63,8 +63,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.Stamp;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation SetStampName(PdfName
-             name)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation SetStampName(PdfName name)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
         }

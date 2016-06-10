@@ -64,10 +64,8 @@ namespace iTextSharp.Layout
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        [System.ObsoleteAttribute(@"This field just hides the same field from ElementPropertyContainer{T}"
-            )]
-        protected internal IDictionary<int, Object> properties = new Dictionary<int, Object
-            >();
+        [System.ObsoleteAttribute(@"This field just hides the same field from ElementPropertyContainer{T}")]
+        protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
 
         protected internal PdfFont defaultFont;
 
@@ -76,8 +74,7 @@ namespace iTextSharp.Layout
         protected internal RootRenderer rootRenderer;
 
         /// <summary>Adds an element to the root.</summary>
-        /// <remarks>Adds an element to the root. The element is immediately placed in the contents.
-        ///     </remarks>
+        /// <remarks>Adds an element to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
         /// <returns>this element</returns>
         /// <seealso cref="iTextSharp.Layout.Element.BlockElement{T}"/>
@@ -90,8 +87,7 @@ namespace iTextSharp.Layout
         }
 
         /// <summary>Adds an image to the root.</summary>
-        /// <remarks>Adds an image to the root. The element is immediately placed in the contents.
-        ///     </remarks>
+        /// <remarks>Adds an image to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="image">a graphical image element</param>
         /// <returns>this element</returns>
         /// <seealso cref="iTextSharp.Layout.Element.Image"/>
@@ -213,8 +209,7 @@ namespace iTextSharp.Layout
         /// <param name="y">the point about which the text will be aligned and rotated</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign
-            )
+        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign)
         {
             return ShowTextAligned(text, x, y, textAlign, 0);
         }
@@ -226,8 +221,7 @@ namespace iTextSharp.Layout
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="angle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign
-            , float angle)
+        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign, float angle)
         {
             return ShowTextAligned(text, x, y, textAlign, VerticalAlignment.BOTTOM, angle);
         }
@@ -240,16 +234,14 @@ namespace iTextSharp.Layout
         /// <param name="vertAlign">vertical alignment about the specified point</param>
         /// <param name="angle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign
-            , VerticalAlignment? vertAlign, float angle)
+        public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
+             vertAlign, float angle)
         {
             Paragraph p = new Paragraph(text);
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
-                , angle);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
         }
 
-        /// <summary>Convenience method to write a kerned text aligned about the specified point
-        ///     </summary>
+        /// <summary>Convenience method to write a kerned text aligned about the specified point</summary>
         /// <param name="text">text to be placed to the page</param>
         /// <param name="x">the point about which the text will be aligned and rotated</param>
         /// <param name="y">the point about which the text will be aligned and rotated</param>
@@ -257,12 +249,11 @@ namespace iTextSharp.Layout
         /// <param name="vertAlign">vertical alignment about the specified point</param>
         /// <param name="angle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAlignedKerned(String text, float x, float y, TextAlignment?
-             textAlign, VerticalAlignment? vertAlign, float angle)
+        public virtual T ShowTextAlignedKerned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
+             vertAlign, float angle)
         {
             Paragraph p = new Paragraph(text).SetFontKerning(FontKerning.YES);
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
-                , angle);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
         }
 
         /// <summary>Convenience method to write a text aligned about the specified point</summary>
@@ -274,11 +265,9 @@ namespace iTextSharp.Layout
         /// <param name="y">the point about which the text will be aligned and rotated</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(Paragraph p, float x, float y, TextAlignment? textAlign
-            )
+        public virtual T ShowTextAligned(Paragraph p, float x, float y, TextAlignment? textAlign)
         {
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, VerticalAlignment
-                .BOTTOM, 0);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, VerticalAlignment.BOTTOM, 0);
         }
 
         /// <summary>Convenience method to write a text aligned about the specified point</summary>
@@ -291,11 +280,10 @@ namespace iTextSharp.Layout
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="vertAlign">vertical alignment about the specified point</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(Paragraph p, float x, float y, TextAlignment? textAlign
-            , VerticalAlignment? vertAlign)
+        public virtual T ShowTextAligned(Paragraph p, float x, float y, TextAlignment? textAlign, VerticalAlignment?
+             vertAlign)
         {
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign
-                , 0);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, 0);
         }
 
         /// <summary>Convenience method to write a text aligned about the specified point</summary>
@@ -310,8 +298,8 @@ namespace iTextSharp.Layout
         /// <param name="vertAlign">vertical alignment about the specified point</param>
         /// <param name="angle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
-        public virtual T ShowTextAligned(Paragraph p, float x, float y, int pageNumber, TextAlignment?
-             textAlign, VerticalAlignment? vertAlign, float angle)
+        public virtual T ShowTextAligned(Paragraph p, float x, float y, int pageNumber, TextAlignment? textAlign, 
+            VerticalAlignment? vertAlign, float angle)
         {
             Div div = new Div();
             div.SetTextAlignment(textAlign).SetVerticalAlignment(vertAlign);

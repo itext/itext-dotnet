@@ -15,8 +15,7 @@ namespace iTextSharp.Layout
 {
     public class SimpleTextExtractionStrategyTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
 
         internal String TEXT1 = "TEXT1 TEXT1";
 
@@ -32,9 +31,8 @@ namespace iTextSharp.Layout
         public virtual void TestCoLinnearText()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 0);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + TEXT2, PdfTextExtractor.GetTextFromPage(new 
-                PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new PdfReader
+                (new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -43,9 +41,8 @@ namespace iTextSharp.Layout
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 2);
             //saveBytesToFile(bytes, new File("c:/temp/test.pdf"));
-            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -55,9 +52,8 @@ namespace iTextSharp.Layout
             // in this case, we shouldn't be inserting an extra space
             byte[] bytes = CreatePdfWithRotatedText(TEXT1 + " ", TEXT2, 0, false, 2);
             //TestResourceUtils.openBytesAsPdf(bytes);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -65,9 +61,8 @@ namespace iTextSharp.Layout
         public virtual void TestUnRotatedText()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, true, -20);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -75,9 +70,8 @@ namespace iTextSharp.Layout
         public virtual void TestRotatedText()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, -90, true, -20);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -86,9 +80,8 @@ namespace iTextSharp.Layout
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 90, true, -20);
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
-            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -96,9 +89,8 @@ namespace iTextSharp.Layout
         public virtual void TestPartiallyRotatedText()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 33, true, -20);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + "\n" + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -106,9 +98,8 @@ namespace iTextSharp.Layout
         public virtual void TestWordSpacingCausedByExplicitGlyphPositioning()
         {
             byte[] bytes = CreatePdfWithArrayText(TEXT1, TEXT2, 250);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -140,9 +131,8 @@ namespace iTextSharp.Layout
             textArray.Add(10.7f);
             textArray.Add(new PdfString("er"));
             byte[] bytes = CreatePdfWithArrayText(textArray);
-            NUnit.Framework.Assert.AreEqual("San Diego Chapter", PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual("San Diego Chapter", PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -150,9 +140,8 @@ namespace iTextSharp.Layout
         public virtual void TestTrailingSpace()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1 + " ", TEXT2, 0, false, 6);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -160,9 +149,8 @@ namespace iTextSharp.Layout
         public virtual void TestLeadingSpace()
         {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, " " + TEXT2, 0, false, 6);
-            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage
-                (new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest
-                ()));
+            NUnit.Framework.Assert.AreEqual(TEXT1 + " " + TEXT2, PdfTextExtractor.GetTextFromPage(new PdfDocument(new 
+                PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
         /// <exception cref="System.Exception"/>
@@ -171,10 +159,10 @@ namespace iTextSharp.Layout
         {
             String text1 = "X";
             byte[] bytes = CreatePdfWithXObject(text1);
-            String text = PdfTextExtractor.GetTextFromPage(new PdfDocument(new PdfReader(new 
-                MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest());
-            NUnit.Framework.Assert.IsTrue(text.Contains(text1), "extracted text (" + text + ") must contain '"
-                 + text1 + "'");
+            String text = PdfTextExtractor.GetTextFromPage(new PdfDocument(new PdfReader(new MemoryStream(bytes))).GetPage
+                (1), CreateRenderListenerForTest());
+            NUnit.Framework.Assert.IsTrue(text.Contains(text1), "extracted text (" + text + ") must contain '" + text1
+                 + "'");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -185,12 +173,11 @@ namespace iTextSharp.Layout
             {
                 return;
             }
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "page229.pdf"
-                ));
-            String text1 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new SimpleTextExtractionStrategy
-                ());
-            String text2 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new GlyphTextEventListener
-                (new SimpleTextExtractionStrategy()));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "page229.pdf"));
+            String text1 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new SimpleTextExtractionStrategy()
+                );
+            String text2 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new GlyphTextEventListener(new SimpleTextExtractionStrategy
+                ()));
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(text1, text2);
         }
@@ -205,13 +192,12 @@ namespace iTextSharp.Layout
             }
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf"
                 ));
-            String text1 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new SimpleTextExtractionStrategy
-                ()) + "\n" + PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(2), new SimpleTextExtractionStrategy
-                ());
-            String text2 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new GlyphTextEventListener
-                (new SimpleTextExtractionStrategy())) + "\n" + PdfTextExtractor.GetTextFromPage
-                (pdfDocument.GetPage(2), new GlyphTextEventListener(new SimpleTextExtractionStrategy
-                ()));
+            String text1 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new SimpleTextExtractionStrategy()
+                ) + "\n" + PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(2), new SimpleTextExtractionStrategy()
+                );
+            String text2 = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new GlyphTextEventListener(new SimpleTextExtractionStrategy
+                ())) + "\n" + PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(2), new GlyphTextEventListener(new 
+                SimpleTextExtractionStrategy()));
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(text1, text2);
         }
@@ -220,15 +206,13 @@ namespace iTextSharp.Layout
         internal virtual byte[] CreatePdfWithXObject(String xobjectText)
         {
             MemoryStream byteStream = new MemoryStream();
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(byteStream).SetCompressionLevel
-                (0));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(byteStream).SetCompressionLevel(0));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("A"));
             document.Add(new Paragraph("B"));
             PdfFormXObject template = new PdfFormXObject(new Rectangle(100, 100));
-            new PdfCanvas(template, pdfDocument).BeginText().SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 12).MoveText(5, template.GetHeight() - 5).ShowText
-                (xobjectText).EndText();
+            new PdfCanvas(template, pdfDocument).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 12).MoveText(5, template.GetHeight() - 5).ShowText(xobjectText).EndText();
             document.Add(new Image(template));
             document.Add(new Paragraph("C"));
             document.Close();
@@ -251,8 +235,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private static byte[] CreatePdfWithArrayText(String text1, String text2, int spaceInPoints
-            )
+        private static byte[] CreatePdfWithArrayText(String text1, String text2, int spaceInPoints)
         {
             PdfTextArray textArray = new PdfTextArray();
             textArray.Add(new PdfString(text1));
@@ -262,8 +245,8 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private static byte[] CreatePdfWithRotatedText(String text1, String text2, float 
-            rotation, bool moveTextToNextLine, float moveTextDelta)
+        private static byte[] CreatePdfWithRotatedText(String text1, String text2, float rotation, bool moveTextToNextLine
+            , float moveTextDelta)
         {
             MemoryStream byteStream = new MemoryStream();
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
@@ -274,8 +257,8 @@ namespace iTextSharp.Layout
             float y = document.GetDefaultPageSize().GetHeight() / 2;
             canvas.ConcatMatrix(AffineTransform.GetTranslateInstance(x, y));
             canvas.MoveTo(-10, 0).LineTo(10, 0).MoveTo(0, -10).LineTo(0, 10).Stroke();
-            canvas.BeginText().SetFontAndSize(font, 12).ConcatMatrix(AffineTransform.GetRotateInstance
-                ((float)(rotation / 180f * Math.PI))).ShowText(text1);
+            canvas.BeginText().SetFontAndSize(font, 12).ConcatMatrix(AffineTransform.GetRotateInstance((float)(rotation
+                 / 180f * Math.PI))).ShowText(text1);
             if (moveTextToNextLine)
             {
                 canvas.MoveText(0, moveTextDelta);

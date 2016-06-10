@@ -47,8 +47,7 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
-    /// <summary>Chaining Contextual Substitution Subtable: Class-based Chaining Context Glyph Substitution
-    ///     </summary>
+    /// <summary>Chaining Contextual Substitution Subtable: Class-based Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format2 : SubTableLookup6
     {
         private ICollection<int> substCoverageGlyphIds;
@@ -61,9 +60,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
         private OtfClass lookaheadClassDefinition;
 
-        public SubTableLookup6Format2(OpenTypeFontTableReader openReader, int lookupFlag, 
-            ICollection<int> substCoverageGlyphIds, OtfClass backtrackClassDefinition, OtfClass
-             inputClassDefinition, OtfClass lookaheadClassDefinition)
+        public SubTableLookup6Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> substCoverageGlyphIds
+            , OtfClass backtrackClassDefinition, OtfClass inputClassDefinition, OtfClass lookaheadClassDefinition)
             : base(openReader, lookupFlag)
         {
             this.substCoverageGlyphIds = substCoverageGlyphIds;
@@ -72,17 +70,14 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
             this.lookaheadClassDefinition = lookaheadClassDefinition;
         }
 
-        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets
-            )
+        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets)
         {
             this.subClassSets = subClassSets;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
         {
-            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag
-                ))
+            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
             {
                 int gClass = inputClassDefinition.GetOtfClass(startId);
                 return subClassSets[gClass];
@@ -102,9 +97,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
             private SubTableLookup6Format2 subTable;
 
-            public SubstRuleFormat2(SubTableLookup6Format2 subTable, int[] backtrackClassIds, 
-                int[] inputClassIds, int[] lookAheadClassIds, SubstLookupRecord[] substLookupRecords
-                )
+            public SubstRuleFormat2(SubTableLookup6Format2 subTable, int[] backtrackClassIds, int[] inputClassIds, int
+                [] lookAheadClassIds, SubstLookupRecord[] substLookupRecords)
             {
                 // inputClassIds array omits the first class in the sequence,
                 // the first class is defined by corresponding index of subClassSet array
@@ -137,20 +131,17 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
             public override bool IsGlyphMatchesInput(int glyphId, int atIdx)
             {
-                return subTable.inputClassDefinition.GetOtfClass(glyphId) == inputClassIds[atIdx 
-                    - 1];
+                return subTable.inputClassDefinition.GetOtfClass(glyphId) == inputClassIds[atIdx - 1];
             }
 
             public override bool IsGlyphMatchesLookahead(int glyphId, int atIdx)
             {
-                return subTable.lookaheadClassDefinition.GetOtfClass(glyphId) == lookAheadClassIds
-                    [atIdx];
+                return subTable.lookaheadClassDefinition.GetOtfClass(glyphId) == lookAheadClassIds[atIdx];
             }
 
             public override bool IsGlyphMatchesBacktrack(int glyphId, int atIdx)
             {
-                return subTable.backtrackClassDefinition.GetOtfClass(glyphId) == backtrackClassIds
-                    [atIdx];
+                return subTable.backtrackClassDefinition.GetOtfClass(glyphId) == backtrackClassIds[atIdx];
             }
         }
     }

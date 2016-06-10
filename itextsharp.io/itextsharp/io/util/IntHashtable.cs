@@ -121,8 +121,7 @@ namespace iTextSharp.IO.Util
         {
             if (initialCapacity < 0)
             {
-                throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity
-                    ));
+                throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity));
             }
             if (loadFactor <= 0)
             {
@@ -174,8 +173,7 @@ namespace iTextSharp.IO.Util
         /// determined by the <tt>equals</tt> method;
         /// <code>false</code> otherwise.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">if the value is <code>null</code>.
-        ///     </exception>
+        /// <exception cref="System.ArgumentNullException">if the value is <code>null</code>.</exception>
         /// <seealso cref="ContainsKey(int)"/>
         /// <seealso cref="ContainsValue(int)"/>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
@@ -231,8 +229,7 @@ namespace iTextSharp.IO.Util
             return false;
         }
 
-        /// <summary><p>Returns the value to which the specified key is mapped in this map.</p>
-        ///     </summary>
+        /// <summary><p>Returns the value to which the specified key is mapped in this map.</p></summary>
         /// <param name="key">a key in the hashtable.</param>
         /// <returns>
         /// the value to which the key is mapped in this hashtable;
@@ -419,8 +416,7 @@ namespace iTextSharp.IO.Util
             /// <exception cref="Java.Lang.CloneNotSupportedException"/>
             protected internal virtual Object Clone()
             {
-                return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next
-                    .Clone() : null);
+                return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next.Clone() : null);
             }
         }
 

@@ -86,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf
 
         protected internal abstract void GenerateContent();
 
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
             if (!directOnly)
             {
@@ -101,8 +100,7 @@ namespace iTextSharp.Kernel.Pdf
             return this;
         }
 
-        protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference
-            )
+        protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference)
         {
             if (!directOnly)
             {
@@ -116,21 +114,17 @@ namespace iTextSharp.Kernel.Pdf
             return this;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject
-                )from;
+            iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject)from;
             if (@object.content != null)
             {
-                content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content
-                    .Length);
+                content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
             }
         }
 
-        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject
-             o)
+        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject o)
         {
             for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++)
             {
@@ -143,8 +137,7 @@ namespace iTextSharp.Kernel.Pdf
                     return -1;
                 }
             }
-            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length
-                );
+            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length);
         }
     }
 }

@@ -18,21 +18,18 @@ namespace iTextSharp.Kernel.Pdf
     {
         public const int PageCount = 1;
 
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfFontTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfFontTest/";
 
-        public static readonly String fontsFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/";
+        public static readonly String fontsFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfFontTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfFontTest/";
 
         internal const String author = "Alexander Chingarev";
 
         internal const String creator = "iText 6";
 
-        internal const String pangramme = "Amazingly few discothegues provide jukeboxes" 
-            + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
+        internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -53,21 +50,19 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "UniJIS-UCS2-H"
-                );
+            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "UniJIS-UCS2-H");
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
-            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -79,23 +74,22 @@ namespace iTextSharp.Kernel.Pdf
             String cmpFilename = sourceFolder + "cmp_DocumentWithStSongUni.pdf";
             String title = "Type0 test";
             FileStream fos = new FileStream(filename, FileMode.Create);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants
-                .NO_COMPRESSION));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                ));
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfFont type0Font = PdfFontFactory.CreateFont("STSong-Light", "UniGB-UTF16-H");
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
-            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -107,23 +101,22 @@ namespace iTextSharp.Kernel.Pdf
             String cmpFilename = sourceFolder + "cmp_DocumentWithStSong.pdf";
             String title = "Type0 test";
             FileStream fos = new FileStream(filename, FileMode.Create);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants
-                .NO_COMPRESSION));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                ));
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfFont type0Font = PdfFontFactory.CreateFont("STSong-Light", "Adobe-GB1-4");
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
-            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -143,12 +136,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfFont type0Font = PdfFontFactory.CreateFont(font, "Identity-H");
             //        type0Font.setSubset(false);
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "PdfType0Font expected");
-            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected"
-                );
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected");
             PdfPage page = pdfDoc.AddNewPage();
-            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font
-                , 72).ShowText("Hello World").EndText().RestoreState().Rectangle(100, 500, 100
-                , 100).Fill().Release();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World"
+                ).EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             //        new PdfCanvas(page)
             //                .saveState()
             //                .beginText()
@@ -159,20 +150,17 @@ namespace iTextSharp.Kernel.Pdf
             //                .restoreState()
             //                .release();
             page.Flush();
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read
-                ));
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
             type0Font = PdfFontFactory.CreateFont(ttf, "Identity-H");
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "PdfType0Font expected");
-            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected"
-                );
+            NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is TrueTypeFont, "TrueType expected");
             page = pdfDoc.AddNewPage();
-            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font
-                , 72).ShowText("Hello World").EndText().RestoreState().Rectangle(100, 500, 100
-                , 100).Fill().Release();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(type0Font, 72).ShowText("Hello World"
+                ).EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -223,14 +211,13 @@ namespace iTextSharp.Kernel.Pdf
             {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText
-                    (testString).EndText();
+                canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText(testString).EndText();
                 page.Flush();
             }
             pdfDoc.Close();
             // reading and comparing text
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -250,14 +237,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfCanvas canvas = new PdfCanvas(page);
             PdfFont pdfFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -277,14 +264,14 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -304,14 +291,14 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -331,14 +318,14 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType1Font, "PdfType1Font expected");
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello World").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -354,28 +341,25 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font
-                (fontsFolder + "cmr10.afm", fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC
+            PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.afm"
+                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, true);
+            NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected");
+            new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 
+                72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill
+                ();
+            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
+                ));
+            byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
+                ));
+            pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, pfb), FontEncoding.FONT_SPECIFIC
                 , true);
-            NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected"
-                );
-            new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize
-                (pdfType1Font, 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState
-                ().Rectangle(100, 500, 100, 100).Fill();
-            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-                , FileMode.Open, FileAccess.Read));
-            byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-                , FileMode.Open, FileAccess.Read));
-            pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
-                pfb), FontEncoding.FONT_SPECIFIC, true);
-            NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected"
-                );
-            new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize
-                (pdfType1Font, 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState
-                ().Rectangle(100, 500, 100, 100).Fill();
+            NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected");
+            new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 
+                72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill
+                ();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -391,19 +375,18 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font
-                (fontsFolder + "cmr10.pfm", fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC
-                , true);
+            PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfm"
+                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72)
-                .ShowText("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("Hello world").
+                EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -421,27 +404,22 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "abserif4_5.ttf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, true);
-            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
-            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont
-                , 72).ShowText("Hello world").EndText().RestoreState().Rectangle(100, 500, 100
-                , 100).Fill().Release();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read
-                ));
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
             pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
-            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
-            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont
-                , 72).ShowText("Hello world").EndText().RestoreState().Rectangle(100, 500, 100
-                , 100).Fill().Release();
+            new PdfCanvas(page).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText
+                ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -459,31 +437,28 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "Puritan2.otf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, true);
-            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read
-                ));
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
             pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
-            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -505,26 +480,24 @@ namespace iTextSharp.Kernel.Pdf
             pdfFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello world").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read
-                ));
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
             pdfFont = PdfFontFactory.CreateFont(ttf, "Identity-H");
-            NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font, "PdfTrueTypeFont expected"
-                );
+            NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font, "PdfTrueTypeFont expected");
             pdfFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("Hello world").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -541,8 +514,7 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary
-                )pdfDoc.GetPdfObject(4));
+            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(4));
             Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
             newGlyph.SetLineWidth(100);
             newGlyph.MoveTo(540, 5);
@@ -550,15 +522,14 @@ namespace iTextSharp.Kernel.Pdf
             newGlyph.Stroke();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("AAAAAA EEEE ~ \u00E9 \u00F6"
+                ).EndText();
             // é ö
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram
-                ()).GetGlyphsCount());
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, 
-                cmpOutputFileName, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram()).GetGlyphsCount());
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
+                , "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -571,16 +542,14 @@ namespace iTextSharp.Kernel.Pdf
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
             String title = "Type3 font iText 6 Document";
             PdfReader reader = new PdfReader(inputFileName);
-            PdfWriter pdfWriter = new PdfWriter(new FileStream(outputFileName, FileMode.Create
-                ));
+            PdfWriter pdfWriter = new PdfWriter(new FileStream(outputFileName, FileMode.Create));
             pdfWriter.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument inputPdfDoc = new PdfDocument(reader);
             PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
-            outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title
-                );
+            outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(4);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(((PdfDictionary
-                )pdfType3FontDict.CopyTo(outputPdfDoc)));
+            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(((PdfDictionary)pdfType3FontDict.CopyTo
+                (outputPdfDoc)));
             Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
             newGlyph.SetLineWidth(100);
             newGlyph.MoveTo(540, 5);
@@ -588,15 +557,14 @@ namespace iTextSharp.Kernel.Pdf
             newGlyph.Stroke();
             PdfPage page = outputPdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("AAAAAA EEEE ~ \u00E9 \u00F6"
+                ).EndText();
             // é ö
             page.Flush();
             outputPdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram
-                ()).GetGlyphsCount());
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, 
-                cmpOutputFileName, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.AreEqual(6, ((Type3FontProgram)pdfType3Font.GetFontProgram()).GetGlyphsCount());
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
+                , "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -616,18 +584,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo
-                (pdfDoc)));
+            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72)
-                .ShowText("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -647,18 +614,17 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary
-                .CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -678,18 +644,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(
-                pdfDoc)));
+            PdfFont pdfFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("New Hello world").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -709,14 +674,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfFont pdfFont = PdfFontFactory.CreateFont(pdfDictionary);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText
-                ("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("New Hello world").EndText
+                ().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -738,14 +703,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(pdfDictionary);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -765,18 +730,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary
-                .CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -796,18 +760,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary
-                .CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("New Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello World"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -825,18 +788,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject
-                (6));
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(6));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("New Hello World").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello World"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -856,18 +818,17 @@ namespace iTextSharp.Kernel.Pdf
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo
-                (pdfDoc)));
+            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(pdfType1Font, 10)
-                .ShowText("New MyriadPro-Bold font.").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(pdfType1Font, 10).ShowText("New MyriadPro-Bold font."
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -879,21 +840,21 @@ namespace iTextSharp.Kernel.Pdf
             String filename = destinationFolder + "DocumentWithCMR10Afm_updated.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm_updated.pdf";
             PdfReader reader = new PdfReader(inputFileName1);
-            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create)).SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create)).SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfDictionary pdfDictionary = (PdfDictionary)pdfDoc.GetPdfObject(4);
             PdfFont pdfType1Font = PdfFontFactory.CreateFont(pdfDictionary);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72)
-                .ShowText("New Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -904,8 +865,8 @@ namespace iTextSharp.Kernel.Pdf
             String message = "";
             try
             {
-                byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-                    , FileMode.Open, FileAccess.Read));
+                byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
+                    ));
                 FontProgramFactory.CreateType1Font(null, pfb);
             }
             catch (iTextSharp.IO.IOException e)
@@ -929,8 +890,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory
-                 + "/../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
+            NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
                 , message);
         }
 
@@ -940,14 +900,11 @@ namespace iTextSharp.Kernel.Pdf
         [LogMessage(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
         public virtual void CreateWrongPfb()
         {
-            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-                , FileMode.Open, FileAccess.Read));
-            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, 
-                afm), null);
-            byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes
-                ();
-            NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected"
-                );
+            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
+                ));
+            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm), null);
+            byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes();
+            NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -955,10 +912,9 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AutoDetect1()
         {
-            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-                , FileMode.Open, FileAccess.Read));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected"
-                );
+            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
+                ));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -966,12 +922,12 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AutoDetect2()
         {
-            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm"
-                , FileMode.Open, FileAccess.Read));
-            byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb"
-                , FileMode.Open, FileAccess.Read));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateType1Font(afm, pfb) is Type1Font
-                , "Type1 font expected");
+            byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
+                ));
+            byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
+                ));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateType1Font(afm, pfb) is Type1Font, "Type1 font expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -979,10 +935,10 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AutoDetect3()
         {
-            byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf"
-                , FileMode.Open, FileAccess.Read));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, 
-                "TrueType (OTF) font expected");
+            byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf", FileMode.Open, FileAccess.Read
+                ));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, "TrueType (OTF) font expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -990,10 +946,10 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AutoDetect4()
         {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-                , FileMode.Open, FileAccess.Read));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
-                "TrueType (TTF) expected");
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
+                ));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1001,10 +957,10 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AutoDetect5()
         {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf"
-                , FileMode.Open, FileAccess.Read));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, 
-                "TrueType (TTF) expected");
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
+                ));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1022,30 +978,27 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "uming.ttc";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI
-                , true, false);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, true, false);
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             page.Flush();
-            byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read
-                ));
-            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true
-                , false);
+            byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
+            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true, false);
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 
-                72).ShowText("Hello world").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1058,14 +1011,13 @@ namespace iTextSharp.Kernel.Pdf
             String japanese = "\u713C";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", 
-                "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H", true);
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
-                (japanese).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(japanese).EndText().RestoreState
+                ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1080,8 +1032,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument doc = new PdfDocument(writer);
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", 
-                "Identity-H");
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
             // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             //        canvas.saveState()
@@ -1092,19 +1043,18 @@ namespace iTextSharp.Kernel.Pdf
             //                .showText(pangramme)
             //                .endText()
             //                .restoreState();
-            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize
-                (font, 12).ShowText("1").EndText().RestoreState();
+            canvas.SaveState().SetFillColor(DeviceRgb.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText
+                ("1").EndText().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize()
         {
-            TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc", 
-                "WinAnsi");
+            TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc", "WinAnsi");
             NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
         }
 

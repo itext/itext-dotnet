@@ -52,24 +52,21 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class PubSecHandlerUsingStandard40 : PubKeySecurityHandler
     {
-        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, X509Certificate
-            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
+        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+            , bool encryptMetadata, bool embeddedFilesOnly)
         {
-            InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata
-                , embeddedFilesOnly);
+            InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly);
         }
 
-        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata)
+        public PubSecHandlerUsingStandard40(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, 
+            X509Certificate certificate, bool encryptMetadata)
         {
-            InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata
-                );
+            InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata);
         }
 
         public override OutputStreamEncryption GetEncryptionStream(Stream os)
         {
-            return new OutputStreamStandardEncryption(os, nextObjectKey, 0, nextObjectKeySize
-                );
+            return new OutputStreamStandardEncryption(os, nextObjectKey, 0, nextObjectKeySize);
         }
 
         public override IDecryptor GetDecryptor()
@@ -88,8 +85,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             System.Array.Copy(globalKey, 0, mkey, 0, mkey.Length);
         }
 
-        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
+             encryptMetadata, bool embeddedFilesOnly)
         {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             encryptionDictionary.Put(PdfName.R, new PdfNumber(2));

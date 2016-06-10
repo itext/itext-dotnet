@@ -46,8 +46,7 @@ using System;
 namespace iTextSharp.Kernel.Geom
 {
     /// <summary>Represents a line segment in a particular coordinate system.</summary>
-    /// <remarks>Represents a line segment in a particular coordinate system.  This class is immutable.
-    ///     </remarks>
+    /// <remarks>Represents a line segment in a particular coordinate system.  This class is immutable.</remarks>
     public class LineSegment
     {
         /// <summary>Start vector of the segment.</summary>
@@ -97,8 +96,7 @@ namespace iTextSharp.Kernel.Geom
             float y1 = GetStartPoint().Get(Vector.I2);
             float x2 = GetEndPoint().Get(Vector.I1);
             float y2 = GetEndPoint().Get(Vector.I2);
-            return new Rectangle(Math.Min(x1, x2), Math.Min(y1, y2), Math.Abs(x2 - x1), Math.
-                Abs(y2 - y1));
+            return new Rectangle(Math.Min(x1, x2), Math.Min(y1, y2), Math.Abs(x2 - x1), Math.Abs(y2 - y1));
         }
 
         /// <summary>Transforms the segment by the specified matrix</summary>
@@ -116,8 +114,7 @@ namespace iTextSharp.Kernel.Geom
         /// <returns>true if this segment contains other one, false otherwise</returns>
         public virtual bool ContainsSegment(iTextSharp.Kernel.Geom.LineSegment other)
         {
-            return other != null && ContainsPoint(other.startPoint) && ContainsPoint(other.endPoint
-                );
+            return other != null && ContainsPoint(other.startPoint) && ContainsPoint(other.endPoint);
         }
 
         /// <summary>Checks if a segment contains a given point in itself</summary>

@@ -56,11 +56,11 @@ namespace iTextSharp.IO.Font
         [Obsolete]
         public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
 
-        private static readonly IDictionary<String, IDictionary<String, Object>> allFonts
-             = new Dictionary<String, IDictionary<String, Object>>();
+        private static readonly IDictionary<String, IDictionary<String, Object>> allFonts = new Dictionary<String, 
+            IDictionary<String, Object>>();
 
-        private static readonly IDictionary<String, ICollection<String>> registryNames = 
-            new Dictionary<String, ICollection<String>>();
+        private static readonly IDictionary<String, ICollection<String>> registryNames = new Dictionary<String, ICollection
+            <String>>();
 
         private const String CJK_REGISTRY_FILENAME = "cjk_registry.properties";
 
@@ -72,8 +72,8 @@ namespace iTextSharp.IO.Font
 
         private const String W2_PROP = "W2";
 
-        private static IDictionary<String, FontProgram> fontCache = new ConcurrentDictionary
-            <String, FontProgram>();
+        private static IDictionary<String, FontProgram> fontCache = new ConcurrentDictionary<String, FontProgram>(
+            );
 
         static FontCache()
         {
@@ -137,8 +137,7 @@ namespace iTextSharp.IO.Font
 
         public static ICollection<String> GetCompatibleCmaps(String fontName)
         {
-            String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP
-                );
+            String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP);
             return registryNames.Get(registry);
         }
 
@@ -202,8 +201,7 @@ namespace iTextSharp.IO.Font
         /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry()
         {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
-                 + CJK_REGISTRY_FILENAME);
+            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + CJK_REGISTRY_FILENAME);
             try
             {
                 Properties p = new Properties();
@@ -235,8 +233,7 @@ namespace iTextSharp.IO.Font
         /// <exception cref="System.IO.IOException"/>
         private static IDictionary<String, Object> ReadFontProperties(String name)
         {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
-                 + name + ".properties");
+            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name + ".properties");
             try
             {
                 Properties p = new Properties();

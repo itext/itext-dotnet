@@ -153,11 +153,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             SetMetaState(state);
         }
 
-        /// <summary>Sets every field of this MetaState to the values of the fields of the specified MetaState.
-        ///     </summary>
+        /// <summary>Sets every field of this MetaState to the values of the fields of the specified MetaState.</summary>
         /// <param name="state">state to copy</param>
-        public virtual void SetMetaState(iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state
-            )
+        public virtual void SetMetaState(iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state)
         {
             savedStates = state.savedStates;
             MetaObjects = state.MetaObjects;
@@ -292,8 +290,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         public virtual void SaveState(PdfCanvas cb)
         {
             cb.SaveState();
-            iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state = new iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState
-                (this);
+            iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState state = new iTextSharp.Kernel.Pdf.Canvas.Wmf.MetaState(this);
             savedStates.Push(state);
         }
 
@@ -450,10 +447,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         }
 
         /// <summary>Setter for property currentBackgroundColor.</summary>
-        /// <param name="currentBackgroundColor">New value of property currentBackgroundColor.
-        ///     </param>
-        public virtual void SetCurrentBackgroundColor(iTextSharp.Kernel.Color.Color currentBackgroundColor
-            )
+        /// <param name="currentBackgroundColor">New value of property currentBackgroundColor.</param>
+        public virtual void SetCurrentBackgroundColor(iTextSharp.Kernel.Color.Color currentBackgroundColor)
         {
             this.currentBackgroundColor = currentBackgroundColor;
         }
@@ -467,8 +462,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 
         /// <summary>Setter for property currentTextColor.</summary>
         /// <param name="currentTextColor">New value of property currentTextColor.</param>
-        public virtual void SetCurrentTextColor(iTextSharp.Kernel.Color.Color currentTextColor
-            )
+        public virtual void SetCurrentTextColor(iTextSharp.Kernel.Color.Color currentTextColor)
         {
             this.currentTextColor = currentTextColor;
         }

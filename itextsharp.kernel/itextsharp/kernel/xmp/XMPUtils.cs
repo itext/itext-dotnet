@@ -48,14 +48,12 @@ namespace iTextSharp.Kernel.XMP
         /// </param>
         /// <param name="allowCommas">Option flag to control the catenation.</param>
         /// <returns>Returns the string containing the catenated array items.</returns>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
-        ///     </exception>
+        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
-            , String separator, String quotes, bool allowCommas)
+        public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String separator, 
+            String quotes, bool allowCommas)
         {
-            return XMPUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes
-                , allowCommas);
+            return XMPUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes, allowCommas);
         }
 
         /// <summary>Separate a single edit string into an array of strings.</summary>
@@ -72,14 +70,12 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="catedStr">The string to be separated into the array items.</param>
         /// <param name="arrayOptions">Option flags to control the separation.</param>
         /// <param name="preserveCommas">Flag if commas shall be preserved</param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
-        ///     </exception>
+        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName
-            , String catedStr, PropertyOptions arrayOptions, bool preserveCommas)
+        public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String catedStr, PropertyOptions
+             arrayOptions, bool preserveCommas)
         {
-            XMPUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, 
-                preserveCommas);
+            XMPUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, preserveCommas);
         }
 
         /// <summary>Remove multiple properties from an XMP object.</summary>
@@ -121,27 +117,23 @@ namespace iTextSharp.Kernel.XMP
         /// Include aliases in the "named schema" case above.
         /// <em>Note:</em> Currently not supported.
         /// </param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
-        ///     </exception>
+        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName
-            , bool doAllProperties, bool includeAliases)
+        public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName, bool doAllProperties, bool
+             includeAliases)
         {
-            XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases
-                );
+            XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases);
         }
 
         /// <summary>Alias without the new option <code>deleteEmptyValues</code>.</summary>
         /// <param name="source">The source XMP object.</param>
         /// <param name="dest">The destination XMP object.</param>
-        /// <param name="doAllProperties">Do internal properties in addition to external properties.
-        ///     </param>
+        /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
-        ///     </exception>
+        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
-            , bool replaceOldValues)
+        public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
+            )
         {
             AppendProperties(source, dest, doAllProperties, replaceOldValues, false);
         }
@@ -213,19 +205,15 @@ namespace iTextSharp.Kernel.XMP
         /// </remarks>
         /// <param name="source">The source XMP object.</param>
         /// <param name="dest">The destination XMP object.</param>
-        /// <param name="doAllProperties">Do internal properties in addition to external properties.
-        ///     </param>
+        /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
-        /// <param name="deleteEmptyValues">Delete destination values if source property is empty.
-        ///     </param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing
-        ///     </exception>
+        /// <param name="deleteEmptyValues">Delete destination values if source property is empty.</param>
+        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties
-            , bool replaceOldValues, bool deleteEmptyValues)
+        public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
+            , bool deleteEmptyValues)
         {
-            XMPUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues
-                );
+            XMPUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues);
         }
 
         /// <summary>Convert from string to Boolean.</summary>
@@ -260,8 +248,7 @@ namespace iTextSharp.Kernel.XMP
             }
             catch (FormatException)
             {
-                return "true".Equals(value) || "t".Equals(value) || "on".Equals(value) || "yes".Equals
-                    (value);
+                return "true".Equals(value) || "t".Equals(value) || "on".Equals(value) || "yes".Equals(value);
             }
         }
 
@@ -376,8 +363,7 @@ namespace iTextSharp.Kernel.XMP
                 }
                 else
                 {
-                    return System.Double.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture
-                        );
+                    return System.Double.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             catch (FormatException)
@@ -433,8 +419,7 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>Decode from Base64 encoded string to raw data.</summary>
         /// <param name="base64String">a base64 encoded string</param>
         /// <returns>Returns a byte array containg the decoded string.</returns>
-        /// <exception cref="XMPException">Thrown if the given string is not property base64 encoded
-        ///     </exception>
+        /// <exception cref="XMPException">Thrown if the given string is not property base64 encoded</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static byte[] DecodeBase64(String base64String)
         {

@@ -51,8 +51,7 @@ namespace iTextSharp.IO.Codec
     /// </summary>
     public class LZWCompressor
     {
-        /// <summary>base underlying code size of data being compressed 8 for TIFF, 1 to 8 for GIF
-        ///     </summary>
+        /// <summary>base underlying code size of data being compressed 8 for TIFF, 1 to 8 for GIF</summary>
         internal int codeSize_;
 
         /// <summary>reserved clear code based on code size</summary>
@@ -67,8 +66,7 @@ namespace iTextSharp.IO.Codec
         /// <summary>limit at which current number of bits code size has to be increased</summary>
         internal int limit_;
 
-        /// <summary>the prefix code which represents the predecessor string to current input point
-        ///     </summary>
+        /// <summary>the prefix code which represents the predecessor string to current input point</summary>
         internal short prefix_;
 
         /// <summary>output destination for bit codes</summary>
@@ -77,8 +75,7 @@ namespace iTextSharp.IO.Codec
         /// <summary>general purpose LZW string table</summary>
         internal LZWStringTable lzss_;
 
-        /// <summary>modify the limits of the code values in LZW encoding due to TIFF bug / feature
-        ///     </summary>
+        /// <summary>modify the limits of the code values in LZW encoding due to TIFF bug / feature</summary>
         internal bool tiffFudge_;
 
         /// <param name="outputStream">destination for compressed data</param>

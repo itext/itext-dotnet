@@ -75,12 +75,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return parent;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation
-             parent)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation parent)
         {
             this.parent = parent;
-            return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent
-                .GetPdfObject());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent.GetPdfObject());
         }
     }
 }

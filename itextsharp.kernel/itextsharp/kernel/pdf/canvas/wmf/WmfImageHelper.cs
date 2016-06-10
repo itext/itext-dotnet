@@ -86,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             ProcessParameters();
         }
 
-        /// <summary>This method checks if the image is a valid WMF and processes some parameters.
-        ///     </summary>
+        /// <summary>This method checks if the image is a valid WMF and processes some parameters.</summary>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         private void ProcessParameters()
         {
@@ -108,8 +107,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                 InputMeta @in = new InputMeta(@is);
                 if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7)))
                 {
-                    throw new PdfException(PdfException._1IsNotAValidPlaceableWindowsMetafile, errorID
-                        );
+                    throw new PdfException(PdfException._1IsNotAValidPlaceableWindowsMetafile, errorID);
                 }
                 @in.ReadWord();
                 int left = @in.ReadShort();
@@ -149,8 +147,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <returns>PdfXObject based on the WMF image</returns>
         public virtual PdfXObject CreatePdfForm(PdfDocument document)
         {
-            PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, wmf.GetWidth(), wmf
-                .GetHeight()));
+            PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, wmf.GetWidth(), wmf.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             Stream @is = null;
             try

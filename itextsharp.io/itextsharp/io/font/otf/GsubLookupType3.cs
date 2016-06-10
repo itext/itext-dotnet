@@ -52,8 +52,7 @@ namespace iTextSharp.IO.Font.Otf
         private IDictionary<int, int[]> substMap;
 
         /// <exception cref="System.IO.IOException"/>
-        public GsubLookupType3(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GsubLookupType3(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             substMap = new Dictionary<int, int[]>();
@@ -90,16 +89,14 @@ namespace iTextSharp.IO.Font.Otf
             int coverage = openReader.rf.ReadUnsignedShort();
             int alternateSetCount = openReader.rf.ReadUnsignedShort();
             int[][] substitute = new int[alternateSetCount][];
-            int[] alternateLocations = openReader.ReadUShortArray(alternateSetCount, subTableLocation
-                );
+            int[] alternateLocations = openReader.ReadUShortArray(alternateSetCount, subTableLocation);
             for (int k = 0; k < alternateSetCount; k++)
             {
                 openReader.rf.Seek(alternateLocations[k]);
                 int glyphCount = openReader.rf.ReadUnsignedShort();
                 substitute[k] = openReader.ReadUShortArray(glyphCount);
             }
-            IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
-                );
+            IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
             for (int k_1 = 0; k_1 < alternateSetCount; ++k_1)
             {
                 substMap[coverageGlyphIds[k_1]] = substitute[k_1];

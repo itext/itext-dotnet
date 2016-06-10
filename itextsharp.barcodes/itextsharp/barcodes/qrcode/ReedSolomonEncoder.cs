@@ -80,8 +80,7 @@ namespace iTextSharp.Barcodes.Qrcode
                 GF256Poly lastGenerator = cachedGenerators[cachedGenerators.Count - 1];
                 for (int d = cachedGenerators.Count; d <= degree; d++)
                 {
-                    GF256Poly nextGenerator = lastGenerator.Multiply(new GF256Poly(field, new int[] { 
-                        1, field.Exp(d - 1) }));
+                    GF256Poly nextGenerator = lastGenerator.Multiply(new GF256Poly(field, new int[] { 1, field.Exp(d - 1) }));
                     cachedGenerators.Add(nextGenerator);
                     lastGenerator = nextGenerator;
                 }
@@ -115,8 +114,7 @@ namespace iTextSharp.Barcodes.Qrcode
             {
                 toEncode[dataBytes + i] = 0;
             }
-            System.Array.Copy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients
-                .Length);
+            System.Array.Copy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.Length);
         }
     }
 }

@@ -145,16 +145,14 @@ namespace iTextSharp.IO.Image
             // LZW decoder working arrays
         }
 
-        /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)
-        ///     </summary>
+        /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>
         /// <param name="image">GifImage</param>
         public static void ProcessImage(GifImageData image)
         {
             ProcessImage(image, -1);
         }
 
-        /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)
-        ///     </summary>
+        /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>
         /// <param name="image">GifImage</param>
         /// <param name="lastFrameNumber">the last frame of the gif image should be read</param>
         public static void ProcessImage(GifImageData image, int lastFrameNumber)
@@ -172,22 +170,20 @@ namespace iTextSharp.IO.Image
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void Process(Stream stream, GifImageHelper.GifParameters gif, int 
-            lastFrameNumber)
+        private static void Process(Stream stream, GifImageHelper.GifParameters gif, int lastFrameNumber)
         {
             gif.input = stream;
             ReadHeader(gif);
             ReadContents(gif, lastFrameNumber);
             if (gif.currentFrame <= lastFrameNumber)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotFind1Frame).SetMessageParams
-                    (lastFrameNumber);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotFind1Frame).SetMessageParams(lastFrameNumber
+                    );
             }
         }
 
@@ -202,8 +198,7 @@ namespace iTextSharp.IO.Image
             }
             if (!id.ToString().StartsWith("GIF8"))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifSignatureNotFound
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifSignatureNotFound);
             }
             ReadLSD(gif);
             if (gif.gctFlag)
@@ -288,8 +283,7 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadContents(GifImageHelper.GifParameters gif, int lastFrameNumber
-            )
+        private static void ReadContents(GifImageHelper.GifParameters gif, int lastFrameNumber)
         {
             // read GIF file content blocks
             bool done = false;
@@ -410,8 +404,7 @@ namespace iTextSharp.IO.Image
                 IDictionary<String, Object> ad = new Dictionary<String, Object>();
                 ad["ColorSpace"] = colorspace;
                 RawImageData img = new RawImageData(gif.m_out, ImageType.NONE);
-                RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out
-                    );
+                RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out);
                 RawImageHelper.UpdateImageAttributes(img, ad);
                 gif.image.AddFrame(img);
                 if (gif.transparency)
@@ -421,8 +414,7 @@ namespace iTextSharp.IO.Image
             }
             catch (Exception e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, e);
             }
         }
 
@@ -619,8 +611,7 @@ namespace iTextSharp.IO.Image
             return skipZero;
         }
 
-        private static void SetPixel(int x, int y, int v, GifImageHelper.GifParameters gif
-            )
+        private static void SetPixel(int x, int y, int v, GifImageHelper.GifParameters gif)
         {
             if (gif.m_bpc == 8)
             {

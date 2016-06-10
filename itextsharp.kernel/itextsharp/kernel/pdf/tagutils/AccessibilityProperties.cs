@@ -58,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 
         protected internal String expansion;
 
-        protected internal IList<PdfDictionary> attributesList = new List<PdfDictionary>(
-            );
+        protected internal IList<PdfDictionary> attributesList = new List<PdfDictionary>();
 
         public virtual String GetLanguage()
         {
@@ -88,8 +87,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return alternateDescription;
         }
 
-        public virtual AccessibilityProperties SetAlternateDescription(String alternateDescription
-            )
+        public virtual AccessibilityProperties SetAlternateDescription(String alternateDescription)
         {
             this.alternateDescription = alternateDescription;
             return this;
@@ -145,22 +143,21 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             if (newAttributesList.Count > 0)
             {
                 PdfObject attributesObject = elem.GetAttributes(false);
-                PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList
-                    , elem.GetPdfObject().GetAsNumber(PdfName.R));
+                PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList, elem.GetPdfObject
+                    ().GetAsNumber(PdfName.R));
                 elem.SetAttributes(combinedAttributes);
             }
         }
 
-        protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject
-            , IList<PdfDictionary> newAttributesList, PdfNumber revision)
+        protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject, IList<PdfDictionary
+            > newAttributesList, PdfNumber revision)
         {
             PdfObject combinedAttributes;
             if (attributesObject is PdfDictionary)
             {
                 PdfArray combinedAttributesArray = new PdfArray();
                 combinedAttributesArray.Add(attributesObject);
-                AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
-                    );
+                AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray);
                 combinedAttributes = combinedAttributesArray;
             }
             else
@@ -168,8 +165,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
                 if (attributesObject is PdfArray)
                 {
                     PdfArray combinedAttributesArray = (PdfArray)attributesObject;
-                    AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray
-                        );
+                    AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray);
                     combinedAttributes = combinedAttributesArray;
                 }
                 else
@@ -181,16 +177,15 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
                     else
                     {
                         combinedAttributes = new PdfArray();
-                        AddNewAttributesToAttributesArray(newAttributesList, revision, (PdfArray)combinedAttributes
-                            );
+                        AddNewAttributesToAttributesArray(newAttributesList, revision, (PdfArray)combinedAttributes);
                     }
                 }
             }
             return combinedAttributes;
         }
 
-        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary
-            > newAttributesList, PdfNumber revision, PdfArray attributesArray)
+        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary> newAttributesList, 
+            PdfNumber revision, PdfArray attributesArray)
         {
             if (revision != null)
             {

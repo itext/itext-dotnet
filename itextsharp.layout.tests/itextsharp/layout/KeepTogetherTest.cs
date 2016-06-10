@@ -13,11 +13,10 @@ namespace iTextSharp.Layout
 {
     public class KeepTogetherTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/KeepTogetherTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/KeepTogetherTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/KeepTogetherTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/KeepTogetherTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -44,8 +43,8 @@ namespace iTextSharp.Layout
             p1.SetKeepTogether(true);
             doc.Add(p1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -72,8 +71,8 @@ namespace iTextSharp.Layout
             p1.SetKeepTogether(true);
             doc.Add(p1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -91,12 +90,12 @@ namespace iTextSharp.Layout
                 doc.Add(new Paragraph("String number" + i));
             }
             List list = new List();
-            list.Add("firstItem").Add("secondItem").Add("thirdItem").SetKeepTogether(true).SetListSymbol
-                (ListNumberingType.DECIMAL);
+            list.Add("firstItem").Add("secondItem").Add("thirdItem").SetKeepTogether(true).SetListSymbol(ListNumberingType
+                .DECIMAL);
             doc.Add(list);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -121,8 +120,8 @@ namespace iTextSharp.Layout
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -136,8 +135,8 @@ namespace iTextSharp.Layout
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle
-                (400, 100, 100, 500) };
+            Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle(400, 100, 100, 500
+                ) };
             doc.SetRenderer(new ColumnDocumentRenderer(doc, columns));
             Div div = new Div();
             doc.Add(new Paragraph("first string"));
@@ -148,8 +147,8 @@ namespace iTextSharp.Layout
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
         }
     }
 }

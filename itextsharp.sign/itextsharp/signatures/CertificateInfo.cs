@@ -65,74 +65,60 @@ namespace iTextSharp.Signatures
             public static readonly DerObjectIdentifier C = new DerObjectIdentifier("2.5.4.6");
 
             /// <summary>Organization - StringType(SIZE(1..64)).</summary>
-            public static readonly DerObjectIdentifier O = new DerObjectIdentifier("2.5.4.10"
-                );
+            public static readonly DerObjectIdentifier O = new DerObjectIdentifier("2.5.4.10");
 
             /// <summary>Organizational unit name - StringType(SIZE(1..64)).</summary>
-            public static readonly DerObjectIdentifier OU = new DerObjectIdentifier("2.5.4.11"
-                );
+            public static readonly DerObjectIdentifier OU = new DerObjectIdentifier("2.5.4.11");
 
             /// <summary>Title.</summary>
-            public static readonly DerObjectIdentifier T = new DerObjectIdentifier("2.5.4.12"
-                );
+            public static readonly DerObjectIdentifier T = new DerObjectIdentifier("2.5.4.12");
 
             /// <summary>Common name - StringType(SIZE(1..64)).</summary>
-            public static readonly DerObjectIdentifier CN = new DerObjectIdentifier("2.5.4.3"
-                );
+            public static readonly DerObjectIdentifier CN = new DerObjectIdentifier("2.5.4.3");
 
             /// <summary>Device serial number name - StringType(SIZE(1..64)).</summary>
-            public static readonly DerObjectIdentifier SN = new DerObjectIdentifier("2.5.4.5"
-                );
+            public static readonly DerObjectIdentifier SN = new DerObjectIdentifier("2.5.4.5");
 
             /// <summary>Locality name - StringType(SIZE(1..64)).</summary>
             public static readonly DerObjectIdentifier L = new DerObjectIdentifier("2.5.4.7");
 
             /// <summary>State, or province name - StringType(SIZE(1..64)).</summary>
-            public static readonly DerObjectIdentifier ST = new DerObjectIdentifier("2.5.4.8"
-                );
+            public static readonly DerObjectIdentifier ST = new DerObjectIdentifier("2.5.4.8");
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly DerObjectIdentifier SURNAME = new DerObjectIdentifier("2.5.4.4"
-                );
+            public static readonly DerObjectIdentifier SURNAME = new DerObjectIdentifier("2.5.4.4");
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly DerObjectIdentifier GIVENNAME = new DerObjectIdentifier("2.5.4.42"
-                );
+            public static readonly DerObjectIdentifier GIVENNAME = new DerObjectIdentifier("2.5.4.42");
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly DerObjectIdentifier INITIALS = new DerObjectIdentifier("2.5.4.43"
-                );
+            public static readonly DerObjectIdentifier INITIALS = new DerObjectIdentifier("2.5.4.43");
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly DerObjectIdentifier GENERATION = new DerObjectIdentifier("2.5.4.44"
-                );
+            public static readonly DerObjectIdentifier GENERATION = new DerObjectIdentifier("2.5.4.44");
 
             /// <summary>Naming attribute of type X520name.</summary>
-            public static readonly DerObjectIdentifier UNIQUE_IDENTIFIER = new DerObjectIdentifier
-                ("2.5.4.45");
+            public static readonly DerObjectIdentifier UNIQUE_IDENTIFIER = new DerObjectIdentifier("2.5.4.45");
 
             /// <summary>Email address (RSA PKCS#9 extension) - IA5String.</summary>
             /// <remarks>
             /// Email address (RSA PKCS#9 extension) - IA5String.
             /// <p>Note: if you're trying to be ultra orthodox, don't use this! It shouldn't be in here.</p>
             /// </remarks>
-            public static readonly DerObjectIdentifier EmailAddress = new DerObjectIdentifier
-                ("1.2.840.113549.1.9.1");
+            public static readonly DerObjectIdentifier EmailAddress = new DerObjectIdentifier("1.2.840.113549.1.9.1");
 
             /// <summary>Email address in Verisign certificates.</summary>
             public static readonly DerObjectIdentifier E = EmailAddress;
 
             /// <summary>Object identifier.</summary>
-            public static readonly DerObjectIdentifier DC = new DerObjectIdentifier("0.9.2342.19200300.100.1.25"
-                );
+            public static readonly DerObjectIdentifier DC = new DerObjectIdentifier("0.9.2342.19200300.100.1.25");
 
             /// <summary>LDAP User id.</summary>
-            public static readonly DerObjectIdentifier UID = new DerObjectIdentifier("0.9.2342.19200300.100.1.1"
-                );
+            public static readonly DerObjectIdentifier UID = new DerObjectIdentifier("0.9.2342.19200300.100.1.1");
 
             /// <summary>A Map with default symbols.</summary>
-            public static readonly IDictionary<DerObjectIdentifier, String> DefaultSymbols = 
-                new Dictionary<DerObjectIdentifier, String>();
+            public static readonly IDictionary<DerObjectIdentifier, String> DefaultSymbols = new Dictionary<DerObjectIdentifier
+                , String>();
 
             static X500Name()
             {
@@ -155,8 +141,7 @@ namespace iTextSharp.Signatures
             }
 
             /// <summary>A Map with values.</summary>
-            public IDictionary<String, IList<String>> values = new Dictionary<String, IList<String
-                >>();
+            public IDictionary<String, IList<String>> values = new Dictionary<String, IList<String>>();
 
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="seq">an ASN1 Sequence</param>
@@ -189,8 +174,7 @@ namespace iTextSharp.Signatures
             /// <param name="dirName">a directory name</param>
             public X500Name(String dirName)
             {
-                CertificateInfo.X509NameTokenizer nTok = new CertificateInfo.X509NameTokenizer(dirName
-                    );
+                CertificateInfo.X509NameTokenizer nTok = new CertificateInfo.X509NameTokenizer(dirName);
                 while (nTok.HasMoreTokens())
                 {
                     String token = nTok.NextToken();
@@ -200,8 +184,7 @@ namespace iTextSharp.Signatures
                         throw new ArgumentException();
                     }
                     /*MessageLocalization.getComposedMessage("badly.formated.directory.string")*/
-                    String id = token.JSubstring(0, index).ToUpper(System.Globalization.CultureInfo.InvariantCulture
-                        );
+                    String id = token.JSubstring(0, index).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
                     String value = token.Substring(index + 1);
                     IList<String> vs = values.Get(id);
                     if (vs == null)
@@ -213,8 +196,7 @@ namespace iTextSharp.Signatures
                 }
             }
 
-            /// <summary>Gets the first entry from the field array retrieved from the values Map.
-            ///     </summary>
+            /// <summary>Gets the first entry from the field array retrieved from the values Map.</summary>
             /// <param name="name">the field name</param>
             /// <returns>the (first) field value</returns>
             public virtual String GetField(String name)
@@ -341,8 +323,7 @@ namespace iTextSharp.Signatures
         {
             try
             {
-                return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetIssuer(cert.
-                    GetTbsCertificate()));
+                return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetIssuer(cert.GetTbsCertificate()));
             }
             catch (Exception e)
             {
@@ -377,8 +358,7 @@ namespace iTextSharp.Signatures
             {
                 if (cert != null)
                 {
-                    return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetSubject(cert
-                        .GetTbsCertificate()));
+                    return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetSubject(cert.GetTbsCertificate()));
                 }
             }
             catch (Exception e)

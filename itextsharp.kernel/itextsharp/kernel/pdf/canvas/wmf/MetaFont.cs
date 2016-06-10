@@ -49,10 +49,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
     /// <summary>A Meta Font.</summary>
     public class MetaFont : MetaObject
     {
-        internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold"
-            , "Courier-Oblique", "Courier-BoldOblique", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique"
-            , "Helvetica-BoldOblique", "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic"
-            , "Symbol", "ZapfDingbats" };
+        internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold", "Courier-Oblique", 
+            "Courier-BoldOblique", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique", "Times-Roman"
+            , "Times-Bold", "Times-Italic", "Times-BoldItalic", "Symbol", "ZapfDingbats" };
 
         internal const int MARKER_BOLD = 1;
 
@@ -167,8 +166,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             {
                 return font;
             }
-            FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0
-                ) ? FontConstants.ITALIC : 0) | ((bold != 0) ? FontConstants.BOLD : 0));
+            FontProgram ff2 = FontProgramFactory.CreateRegisteredFont(faceName, ((italic != 0) ? FontConstants.ITALIC : 
+                0) | ((bold != 0) ? FontConstants.BOLD : 0));
             encoding = FontEncoding.CreateFontEncoding(PdfEncodings.WINANSI);
             font = ff2;
             if (font != null)
@@ -176,15 +175,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                 return font;
             }
             String fontName;
-            if (faceName.Contains("courier") || faceName.Contains("terminal") || faceName.Contains
-                ("fixedsys"))
+            if (faceName.Contains("courier") || faceName.Contains("terminal") || faceName.Contains("fixedsys"))
             {
                 fontName = fontNames[MARKER_COURIER + italic + bold];
             }
             else
             {
-                if (faceName.Contains("ms sans serif") || faceName.Contains("arial") || faceName.
-                    Contains("system"))
+                if (faceName.Contains("ms sans serif") || faceName.Contains("arial") || faceName.Contains("system"))
                 {
                     fontName = fontNames[MARKER_HELVETICA + italic + bold];
                 }
@@ -196,8 +193,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                     }
                     else
                     {
-                        if (faceName.Contains("times") || faceName.Contains("ms serif") || faceName.Contains
-                            ("roman"))
+                        if (faceName.Contains("times") || faceName.Contains("ms serif") || faceName.Contains("roman"))
                         {
                             fontName = fontNames[MARKER_TIMES + italic + bold];
                         }
@@ -302,8 +298,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <returns>font size</returns>
         public virtual float GetFontSize(MetaState state)
         {
-            return Math.Abs(state.TransformY(height) - state.TransformY(0)) * WmfImageHelper.
-                wmfFontCorrection;
+            return Math.Abs(state.TransformY(height) - state.TransformY(0)) * WmfImageHelper.wmfFontCorrection;
         }
     }
 }

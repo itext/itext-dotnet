@@ -56,8 +56,7 @@ namespace iTextSharp.Layout.Element
     /// ,
     /// it is the smallest piece of content that may bear specific layout attributes.
     /// </summary>
-    public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement
-        , IAccessibleElement
+    public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement, IAccessibleElement
     {
         protected internal String text;
 
@@ -93,8 +92,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the vertical distance from the text's default base line, as a float.</returns>
         public virtual float GetTextRise()
         {
-            return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE
-                );
+            return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE);
         }
 
         /// <summary>Sets the text rise.</summary>
@@ -113,8 +111,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the horizontal spacing, as a <code>float</code></returns>
         public virtual float? GetHorizontalScaling()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING);
         }
 
         /// <summary>Skews the text to simulate italic and other effects.</summary>
@@ -129,8 +126,7 @@ namespace iTextSharp.Layout.Element
         {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);
-            SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta }
-                );
+            SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta });
             return this;
         }
 
@@ -144,11 +140,9 @@ namespace iTextSharp.Layout.Element
         /// 2 means the text will be twice as wide as normal one.
         /// </param>
         /// <returns>this Text</returns>
-        public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling
-            )
+        public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling
-                );
+            SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
             return (iTextSharp.Layout.Element.Text)(Object)this;
         }
 

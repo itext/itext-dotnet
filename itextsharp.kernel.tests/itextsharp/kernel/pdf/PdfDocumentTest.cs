@@ -10,11 +10,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfDocumentTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -28,8 +27,8 @@ namespace iTextSharp.Kernel.Pdf
         {
             // There is a possibility to override version in stamping mode
             String @out = destinationFolder + "writing_pdf_version.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(@out, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                )));
             NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetPdfVersion());
             pdfDoc.AddNewPage();
             pdfDoc.Close();
@@ -45,8 +44,8 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-                , FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
+                ));
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
             FileStream fos = new FileStream(filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
@@ -74,17 +73,14 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.AddNamedDestination("test3", array1);
             PdfOutline root = pdfDoc.GetOutlines(false);
             PdfOutline firstOutline = root.AddOutline("Test1");
-            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")
-                ));
+            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")));
             PdfOutline secondOutline = root.AddOutline("Test2");
-            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test2"
-                )));
+            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test2")));
             PdfOutline thirdOutline = root.AddOutline("Test3");
-            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")
-                ));
+            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
-                 + "cmp_outlinesWithNamedDestinations01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations01.pdf"
+                , destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -93,8 +89,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             PdfReader reader = new PdfReader(sourceFolder + "styledLineArts_Redacted.pdf");
             PdfWriter writer = new PdfWriter(new MemoryStream());
-            PdfDocument document = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode
-                ());
+            PdfDocument document = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
             PdfDictionary dict = new PdfDictionary();
             dict.MakeIndirect(document);
             NUnit.Framework.Assert.IsTrue(dict.GetIndirectReference().GetObjNumber() > 0);
@@ -106,8 +101,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void RemoveUnusedObjectsInWriterModeTest()
         {
             String filename = "removeUnusedObjectsInWriter.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create
-                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
@@ -131,8 +125,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             String filenameIn = "docWithUnusedObjects_1.pdf";
             String filenameOut = "removeUnusedObjectsInStamping.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
-                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
@@ -142,8 +135,8 @@ namespace iTextSharp.Kernel.Pdf
             ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
             pdfDocument.Close();
             PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder
-                 + filenameOut, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder + filenameOut, FileMode.Create
+                )));
             NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
             //on closing, all unused objects shall not be written to resultant document
             doc.Close();
@@ -159,8 +152,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AddUnusedObjectsInWriterModeTest()
         {
             String filename = "addUnusedObjectsInWriter.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create
-                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
@@ -184,8 +176,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             String filenameIn = "docWithUnusedObjects_2.pdf";
             String filenameOut = "addUnusedObjectsInStamping.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
-                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
@@ -195,8 +186,8 @@ namespace iTextSharp.Kernel.Pdf
             ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
             pdfDocument.Close();
             PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder
-                 + filenameOut, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder + filenameOut, FileMode.Create
+                )));
             NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
             doc.SetFlushUnusedObjects(true);
             doc.Close();
@@ -212,8 +203,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AddUnusedStreamObjectsTest()
         {
             String filenameIn = "docWithUnusedObjects_3.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create
-                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
@@ -254,21 +244,18 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void TestFreeReference()
         {
-            PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties
-                ().SetFullCompressionMode(false));
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "baseFreeReference.pdf"
-                ), writer);
-            pdfDocument.GetPage(1).GetResources().GetPdfObject().GetAsArray(new PdfName("d"))
-                .Get(0).GetIndirectReference().SetFree();
+            PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
+                (false));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "baseFreeReference.pdf"), writer);
+            pdfDocument.GetPage(1).GetResources().GetPdfObject().GetAsArray(new PdfName("d")).Get(0).GetIndirectReference
+                ().SetFree();
             PdfStream pdfStream = new PdfStream();
             pdfStream.SetData(new byte[] { 24, 23, 67 });
             pdfStream.MakeIndirect(pdfDocument);
-            pdfDocument.GetPage(1).GetResources().GetPdfObject().GetAsArray(new PdfName("d"))
-                .Add(pdfStream);
+            pdfDocument.GetPage(1).GetResources().GetPdfObject().GetAsArray(new PdfName("d")).Add(pdfStream);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "freeReference.pdf", sourceFolder + "cmp_freeReference.pdf", destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "freeReference.pdf", 
+                sourceFolder + "cmp_freeReference.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -277,33 +264,29 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CheckAndResolveCircularReferences()
         {
             PdfReader pdfReader = new PdfReader(sourceFolder + "datasheet.pdf");
-            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(destinationFolder
-                 + "datasheet_mode.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(destinationFolder + "datasheet_mode.pdf"
+                ));
             PdfDictionary pdfObject = (PdfDictionary)pdfDocument.GetPdfObject(53);
             pdfDocument.GetPage(1).GetResources().AddForm(pdfObject);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "datasheet_mode.pdf", sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"
-                ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "datasheet_mode.pdf", 
+                sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadEncryptedDocumentWithFullCompression()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode.Open
-                , FileAccess.Read), new ReaderProperties().SetPassword("123".GetBytes()));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode.Open, FileAccess.Read
+                ), new ReaderProperties().SetPassword("123".GetBytes()));
             PdfDocument pdfDocument = new PdfDocument(reader);
-            PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
-                .AcroForm);
+            PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
             PdfDictionary field = form.GetAsArray(PdfName.Fields).GetAsDictionary(0);
-            NUnit.Framework.Assert.AreEqual("ch", field.GetAsString(PdfName.T).ToUnicodeString
-                ());
-            NUnit.Framework.Assert.AreEqual("SomeStringValueInDictionary", field.GetAsDictionary
-                (new PdfName("TestDic")).GetAsString(new PdfName("TestString")).ToUnicodeString
-                ());
-            NUnit.Framework.Assert.AreEqual("SomeStringValueInArray", field.GetAsArray(new PdfName
-                ("TestArray")).GetAsString(0).ToUnicodeString());
+            NUnit.Framework.Assert.AreEqual("ch", field.GetAsString(PdfName.T).ToUnicodeString());
+            NUnit.Framework.Assert.AreEqual("SomeStringValueInDictionary", field.GetAsDictionary(new PdfName("TestDic"
+                )).GetAsString(new PdfName("TestString")).ToUnicodeString());
+            NUnit.Framework.Assert.AreEqual("SomeStringValueInArray", field.GetAsArray(new PdfName("TestArray")).GetAsString
+                (0).ToUnicodeString());
             pdfDocument.Close();
         }
     }

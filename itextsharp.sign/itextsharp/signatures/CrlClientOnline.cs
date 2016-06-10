@@ -143,10 +143,8 @@ namespace iTextSharp.Signatures
         /// URL with the path to the local file to this method. An other option is to use
         /// the CrlClientOffline class.
         /// </remarks>
-        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)
-        ///     "/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url
-            )
+        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
+        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url)
         {
             if (checkCert == null)
             {

@@ -51,10 +51,8 @@ namespace iTextSharp.Layout.Renderer
         public CellRenderer(Cell modelElement)
             : base(modelElement)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan(
-                ));
-            SetProperty(iTextSharp.Layout.Property.Property.COLSPAN, modelElement.GetColspan(
-                ));
+            SetProperty(iTextSharp.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan());
+            SetProperty(iTextSharp.Layout.Property.Property.COLSPAN, modelElement.GetColspan());
         }
 
         public override IPropertyContainer GetModelElement()
@@ -62,11 +60,10 @@ namespace iTextSharp.Layout.Renderer
             return (Cell)base.GetModelElement();
         }
 
-        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult
-            )
+        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult)
         {
-            iTextSharp.Layout.Renderer.CellRenderer splitRenderer = (iTextSharp.Layout.Renderer.CellRenderer
-                )GetNextRenderer();
+            iTextSharp.Layout.Renderer.CellRenderer splitRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
+                ();
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
@@ -75,11 +72,10 @@ namespace iTextSharp.Layout.Renderer
             return splitRenderer;
         }
 
-        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult
-            )
+        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult)
         {
-            iTextSharp.Layout.Renderer.CellRenderer overflowRenderer = (iTextSharp.Layout.Renderer.CellRenderer
-                )GetNextRenderer();
+            iTextSharp.Layout.Renderer.CellRenderer overflowRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
+                ();
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());

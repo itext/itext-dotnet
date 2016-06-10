@@ -58,10 +58,8 @@ namespace iTextSharp.Kernel.Pdf.Action
             : this(new PdfDictionary())
         {
             GetPdfObject().Put(PdfName.S, PdfName.MR);
-            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Rendition for {0}", file
-                )));
-            GetPdfObject().Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType).GetPdfObject
-                ());
+            GetPdfObject().Put(PdfName.N, new PdfString(String.Format("Rendition for {0}", file)));
+            GetPdfObject().Put(PdfName.C, new PdfMediaClipData(file, fs, mimeType).GetPdfObject());
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect()

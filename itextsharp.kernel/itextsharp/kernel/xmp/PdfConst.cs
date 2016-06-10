@@ -54,8 +54,7 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>The extent or scope of the resource.</summary>
         public const String Coverage = "coverage";
 
-        /// <summary>The authors of the resource (listed in order of precedence, if significant).
-        ///     </summary>
+        /// <summary>The authors of the resource (listed in order of precedence, if significant).</summary>
         public const String Creator = "creator";
 
         /// <summary>Date(s) that something interesting happened to the resource.</summary>
@@ -114,8 +113,7 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>The part</summary>
         public const String Part = "part";
 
-        /// <summary>An unordered array specifying properties that were edited outside the authoring application.
-        ///     </summary>
+        /// <summary>An unordered array specifying properties that were edited outside the authoring application.</summary>
         /// <remarks>An unordered array specifying properties that were edited outside the authoring application. Each item should contain a single namespace and XPath separated by one ASCII space (U+0020).
         ///     </remarks>
         public const String Advisory = "Advisory";

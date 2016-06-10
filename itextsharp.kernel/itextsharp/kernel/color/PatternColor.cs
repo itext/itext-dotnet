@@ -59,14 +59,12 @@ namespace iTextSharp.Kernel.Color
             this.pattern = coloredPattern;
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color
-             color)
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color color)
             : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue())
         {
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS
-            , float[] colorValue)
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
             : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue)
         {
             if (underlyingCS is PdfSpecialCs.Pattern)
@@ -74,17 +72,16 @@ namespace iTextSharp.Kernel.Color
                 throw new ArgumentException("underlyingCS");
             }
             this.pattern = uncoloredPattern;
-            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(underlyingCS, colorValue
-                );
+            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(underlyingCS, colorValue);
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern
-             uncoloredTilingCS, float[] colorValue)
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
+            , float[] colorValue)
             : base(uncoloredTilingCS, colorValue)
         {
             this.pattern = uncoloredPattern;
-            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.
-                GetUnderlyingColorSpace(), colorValue);
+            this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace()
+                , colorValue);
         }
 
         public virtual PdfPattern GetPattern()
@@ -103,10 +100,9 @@ namespace iTextSharp.Kernel.Color
             {
                 return false;
             }
-            iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor
-                )o;
-            return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor
-                .Equals(color.underlyingColor) : color.underlyingColor == null);
+            iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor)o;
+            return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor.Equals(color.underlyingColor
+                ) : color.underlyingColor == null);
         }
     }
 }

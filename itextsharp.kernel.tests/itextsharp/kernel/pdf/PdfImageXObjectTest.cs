@@ -6,8 +6,7 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfImageXObjectTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfImageXObjectTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfImageXObjectTest/";
 
         /// <exception cref="System.Exception"/>
         private void TestFile(String filename, int page, String objectid)
@@ -20,11 +19,11 @@ namespace iTextSharp.Kernel.Pdf
                 PdfObject obj = xobjets.Get(new PdfName(objectid));
                 if (obj == null)
                 {
-                    throw new ArgumentNullException("Reference " + objectid + " not found - Available keys are "
-                         + xobjets.KeySet());
+                    throw new ArgumentNullException("Reference " + objectid + " not found - Available keys are " + xobjets.KeySet
+                        ());
                 }
-                PdfImageXObject img = new PdfImageXObject((PdfStream)(obj.IsIndirectReference() ? 
-                    ((PdfIndirectReference)obj).GetRefersTo() : obj));
+                PdfImageXObject img = new PdfImageXObject((PdfStream)(obj.IsIndirectReference() ? ((PdfIndirectReference)obj
+                    ).GetRefersTo() : obj));
                 byte[] result = img.GetImageBytes(true);
                 NUnit.Framework.Assert.IsNotNull(result);
                 int zeroCount = 0;

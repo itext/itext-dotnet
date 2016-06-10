@@ -11,8 +11,7 @@ namespace iTextSharp.Layout
 {
     public class PdfTextExtractorEncodingsTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
 
         /// <summary>Basic Latin characters, with Unicode values less than 128</summary>
         private const String TEXT1 = "AZaz09*!";
@@ -59,21 +58,17 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         private void CheckPdf(byte[] pdfBytes)
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(pdfBytes
-                )));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(pdfBytes)));
             // Characters from http://unicode.org/charts/PDF/U0000.pdf
-            NUnit.Framework.Assert.AreEqual(TEXT1, PdfTextExtractor.GetTextFromPage(pdfDocument
-                .GetPage(1)));
+            NUnit.Framework.Assert.AreEqual(TEXT1, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
             // Characters from http://unicode.org/charts/PDF/U0080.pdf
-            NUnit.Framework.Assert.AreEqual(TEXT2, PdfTextExtractor.GetTextFromPage(pdfDocument
-                .GetPage(2)));
+            NUnit.Framework.Assert.AreEqual(TEXT2, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(2)));
         }
 
         /// <exception cref="System.IO.IOException"/>
         protected internal static PdfFont GetTTFont(String encoding, bool embedded)
         {
-            return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embedded
-                );
+            return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embedded);
         }
 
         /// <exception cref="System.Exception"/>

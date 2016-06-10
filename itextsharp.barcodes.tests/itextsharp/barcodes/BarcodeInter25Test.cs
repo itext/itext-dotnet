@@ -8,11 +8,10 @@ namespace iTextSharp.Barcodes
 {
     public class BarcodeInter25Test : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/barcodes/BarcodeInter25/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/barcodes/BarcodeInter25/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -35,11 +34,10 @@ namespace iTextSharp.Barcodes
             barcode.SetGenerateChecksum(true);
             barcode.SetCode("41-1200076041-001");
             barcode.SetTextAlignment(Barcode1D.ALIGN_CENTER);
-            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLUE, iTextSharp.Kernel.Color.Color
-                .GREEN);
+            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.BLUE, iTextSharp.Kernel.Color.Color.GREEN);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
     }
 }

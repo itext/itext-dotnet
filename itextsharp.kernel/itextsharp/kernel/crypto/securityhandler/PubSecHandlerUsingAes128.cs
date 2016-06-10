@@ -52,18 +52,16 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class PubSecHandlerUsingAes128 : PubKeySecurityHandler
     {
-        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate
-            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
+        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+            , bool encryptMetadata, bool embeddedFilesOnly)
         {
-            InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata
-                , embeddedFilesOnly);
+            InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly);
         }
 
-        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata)
+        public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, X509Certificate
+             certificate, bool encryptMetadata)
         {
-            InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata
-                );
+            InitKeyAndReadDictionary(encryptionDictionary, certificateKey, certificate, encryptMetadata);
         }
 
         public override OutputStreamEncryption GetEncryptionStream(Stream os)
@@ -87,8 +85,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             System.Array.Copy(globalKey, 0, mkey, 0, mkey.Length);
         }
 
-        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
+             encryptMetadata, bool embeddedFilesOnly)
         {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);

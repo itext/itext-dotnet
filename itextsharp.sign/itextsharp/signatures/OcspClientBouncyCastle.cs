@@ -82,8 +82,8 @@ namespace iTextSharp.Signatures
         /// <seealso>OCSPVerifier</seealso>
         /// was setted, the response will be checked.
         /// </remarks>
-        public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate
-             rootCert, String url)
+        public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String 
+            url)
         {
             try
             {
@@ -111,18 +111,15 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Gets an encoded byte array with OCSP validation.</summary>
-        /// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.
-        ///     </remarks>
+        /// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.</remarks>
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
         /// <param name="url">
         /// to get the verification. It it's null it will be taken
         /// from the check cert or from other implementation specific source
         /// </param>
-        /// <returns>a byte array with the validation or null if the validation could not be obtained
-        ///     </returns>
-        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert
-            , String url)
+        /// <returns>a byte array with the validation or null if the validation could not be obtained</returns>
+        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert, String url)
         {
             try
             {
@@ -166,10 +163,8 @@ namespace iTextSharp.Signatures
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException
-        ///     "/>
-        private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger
-             serialNumber)
+        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
+        private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber)
         {
             //Add provider BC
             // Generate the id for the certificate we are looking for
@@ -183,8 +178,7 @@ namespace iTextSharp.Signatures
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
-        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert
-            , String url)
+        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url)
         {
             if (checkCert == null || rootCert == null)
             {

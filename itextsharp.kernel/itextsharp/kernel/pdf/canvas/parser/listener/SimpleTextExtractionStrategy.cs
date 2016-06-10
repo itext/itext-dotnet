@@ -75,8 +75,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
                     Vector x1 = lastStart;
                     Vector x2 = lastEnd;
                     // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-                    float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract
-                        (x1).LengthSquared();
+                    float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract(x1).LengthSquared
+                        ();
                     float sameLineThreshold = 1f;
                     // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
                     if (dist > sameLineThreshold)
@@ -95,8 +95,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
                 {
                     if (!firstRender)
                     {
-                        if (result[result.Length - 1] != ' ' && renderInfo.GetText().Length > 0 && renderInfo
-                            .GetText()[0] != ' ')
+                        if (result[result.Length - 1] != ' ' && renderInfo.GetText().Length > 0 && renderInfo.GetText()[0] != ' ')
                         {
                             // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
                             float spacing = lastEnd.Subtract(start).Length();
@@ -118,8 +117,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 
         public virtual ICollection<EventType> GetSupportedEvents()
         {
-            return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil
-                .SingletonList(EventType.RENDER_TEXT)));
+            return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(
+                EventType.RENDER_TEXT)));
         }
 
         /// <summary>Returns the result so far.</summary>

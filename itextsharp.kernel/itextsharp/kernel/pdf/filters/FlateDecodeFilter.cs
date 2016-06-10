@@ -52,8 +52,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <summary>Handles FlateDecode filter.</summary>
     public class FlateDecodeFilter : IFilterHandler
     {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             byte[] res = FlateDecode(b, true);
             if (res == null)
@@ -155,8 +155,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
                         int rowStart = row * bytesPerRow;
                         for (int col = bytesPerPixel; col < bytesPerRow; col++)
                         {
-                            @in[rowStart + col] = (byte)(@in[rowStart + col] + @in[rowStart + col - bytesPerPixel
-                                ]);
+                            @in[rowStart + col] = (byte)(@in[rowStart + col] + @in[rowStart + col - bytesPerPixel]);
                         }
                     }
                 }
@@ -217,8 +216,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
                         }
                         for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++)
                         {
-                            curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 
-                                2);
+                            curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 2);
                         }
                         break;
                     }

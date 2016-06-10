@@ -49,8 +49,7 @@ namespace iTextSharp.IO
 {
     public class IOException : Exception
     {
-        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor
-             = "{0} bit.samples.are.not.supported.for.horizontal.differencing.predictor";
+        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit.samples.are.not.supported.for.horizontal.differencing.predictor";
 
         public const String _1CorruptedJfifMarker = "{0} corrupted.jfif.marker";
 
@@ -110,8 +109,7 @@ namespace iTextSharp.IO
 
         public const String ColorSpaceIsNotSupported = "the.color.space {0} is.not.supported";
 
-        public const String CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips
-             = "compression.jpeg.is.only.supported.with.a.single.strip.this.image.has {0} strips";
+        public const String CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips = "compression.jpeg.is.only.supported.with.a.single.strip.this.image.has {0} strips";
 
         public const String DirectoryNumberTooLarge = "directory.number.too.large";
 
@@ -281,8 +279,7 @@ namespace iTextSharp.IO
             }
         }
 
-        public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams
-            )
+        public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams)
         {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);

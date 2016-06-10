@@ -13,11 +13,10 @@ namespace iTextSharp.Layout
 {
     public class TextWritingTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/TextWritingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TextWritingTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/TextWritingTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/TextWritingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -33,22 +32,20 @@ namespace iTextSharp.Layout
             // CountryChunks example
             String outFileName = destinationFolder + "textRiseTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++)
             {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
-                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor
-                    (iTextSharp.Kernel.Color.Color.WHITE).SetBackgroundColor(iTextSharp.Kernel.Color.Color
-                    .BLACK, 0, 0, 0, 0);
+                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(iTextSharp.Kernel.Color.Color
+                    .WHITE).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLACK, 0, 0, 0, 0);
                 p.Add(id);
                 document.Add(p);
             }
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -58,24 +55,21 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRenderingModeTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.RED).SetStrokeWidth
-                (0.1f);
+                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.RED).SetStrokeWidth(0.1f);
             document.Add(new Paragraph().Add(text1));
             Text text2 = new Text("This is a stroke-only text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).SetStrokeWidth(0.3f
-                );
+                .STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).SetStrokeWidth(0.3f);
             document.Add(new Paragraph(text2));
             Text text3 = new Text("This is a colorful text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.BLUE).SetStrokeWidth
-                (0.3f).SetFontColor(iTextSharp.Kernel.Color.Color.GREEN).SetFontSize(20);
+                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(iTextSharp.Kernel.Color.Color
+                .GREEN).SetFontSize(20);
             document.Add(new Paragraph(text3));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -85,8 +79,7 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "leadingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph("first, leading of 150").SetFixedLeading(150);
             document.Add(p1);
@@ -96,8 +89,8 @@ namespace iTextSharp.Layout
             p3.Add(new Text("third, leading of 20")).SetFixedLeading(20);
             document.Add(p3);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -107,8 +100,7 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
@@ -123,8 +115,7 @@ namespace iTextSharp.Layout
                  + "are necessary to make, use, sell and distribute PDF compliant implementations.[6] However, there are still some proprietary technologies"
                  + " with published specification defined only by Adobe, such as Adobe XML Forms Architecture, and JavaScript for Acrobat, which are referenced "
                  + "by ISO 32000-1 as normative and indispensable for the application of ISO 32000-1 specification.[7][8][9][10][11] The ISO committee is actively"
-                 + " standardizing many of these as part of ISO 32000-2.").SetFirstLineIndent
-                (50));
+                 + " standardizing many of these as part of ISO 32000-2.").SetFirstLineIndent(50));
             document.Add(new AreaBreak());
             document.Add(new Paragraph("During Harry's fourth year of school (detailed in Harry Potter and the Goblet of Fire), Harry is unwillingly entered as a participant in the Triwizard Tournament, a dangerous contest where Harry must compete against a witch and a wizard \"champion\" from visiting schools as well as another Hogwarts student, causing Harry's friends to distance themselves from him.[18] Harry is guided through the tournament by their new Defence Against the Dark Arts professor, Alastor \"Mad-Eye\" Moody, who turns out to be an impostor\u2014one of Voldemort's supporters named Barty Crouch, Jr. in disguise. The point at which the mystery is unravelled marks the series' shift from foreboding and uncertainty into open conflict. Voldemort's plan to have Crouch use the tournament to bring Harry to Voldemort succeeds. Although Harry manages to escape, Cedric Diggory, the other Hogwarts champion in the tournament, is killed by Peter Pettigrew and Voldemort re-enters the wizarding world with a physical body.\n"
                  + "\n" + "In the fifth book, Harry Potter and the Order of the Phoenix, Harry must confront the newly resurfaced Voldemort. In response to Voldemort's reappearance, Dumbledore re-activates the Order of the Phoenix, a secret society which works from Sirius Black's dark family home to defeat Voldemort's minions and protect Voldemort's targets, especially Harry. Despite Harry's description of Voldemort's recent activities, the Ministry of Magic and many others in the magical world refuse to believe that Voldemort has returned.[19] In an attempt to counter and eventually discredit Dumbledore, who along with Harry is the most prominent voice in the wizarding world attempting to warn of Voldemort's return, the Ministry appoints Dolores Umbridge as the High Inquisitor of Hogwarts and the new Defence Against the Dark Arts teacher. She transforms the school into a dictatorial regime and refuses to allow the students to learn ways to defend themselves against dark magic.[19]\n"
@@ -135,8 +126,8 @@ namespace iTextSharp.Layout
                  + "\n" + "An epilogue describes the lives of the surviving characters and the effects of Voldemort's death on the wizarding world."
                 ));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -146,8 +137,7 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "charSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -160,8 +150,8 @@ namespace iTextSharp.Layout
             p.SetCharacterSpacing(4);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -171,8 +161,7 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "wordSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -182,13 +171,12 @@ namespace iTextSharp.Layout
                  + "Save time in Word with new buttons that show up where you need them. To change the way a picture fits in your document, click it and a button for layout options appears next to it. When you work on a table, click where you want to add a row or a column, and then click the plus sign.\n"
                  + "Reading is easier, too, in the new Reading view. You can collapse parts of the document and focus on the text you want. If you need to stop reading before you reach the end, Word remembers where you left off - even on another device. "
                 );
-            p.Add(new Text("You can collapse parts of the document and focus.").SetBackgroundColor
-                (DeviceRgb.GREEN));
+            p.Add(new Text("You can collapse parts of the document and focus.").SetBackgroundColor(DeviceRgb.GREEN));
             p.SetWordSpacing(15);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -198,22 +186,20 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fontStyleSimulationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
-            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor
-                (iTextSharp.Kernel.Color.Color.GREEN)).SetBold());
-            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor
-                (iTextSharp.Kernel.Color.Color.GREEN)).SetItalic());
+            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+                .GREEN)).SetBold());
+            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+                .GREEN)).SetItalic());
             document.Add(new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
-                 + "such a long description will cause me to occupy two lines").SetBackgroundColor
-                (iTextSharp.Kernel.Color.Color.GREEN)).SetItalic().SetBold().SetUnderline().SetLineThrough
-                ());
+                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+                .GREEN)).SetItalic().SetBold().SetUnderline().SetLineThrough());
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
     }
 }

@@ -55,8 +55,7 @@ namespace iTextSharp.Kernel.Pdf
 
         public static int FLAG_BOLD = 2;
 
-        private IList<iTextSharp.Kernel.Pdf.PdfOutline> children = new List<iTextSharp.Kernel.Pdf.PdfOutline
-            >();
+        private IList<iTextSharp.Kernel.Pdf.PdfOutline> children = new List<iTextSharp.Kernel.Pdf.PdfOutline>();
 
         private String title;
 
@@ -75,8 +74,7 @@ namespace iTextSharp.Kernel.Pdf
             this.pdfDoc = pdfDocument;
         }
 
-        public PdfOutline(String title, PdfDictionary content, iTextSharp.Kernel.Pdf.PdfOutline
-             parent)
+        public PdfOutline(String title, PdfDictionary content, iTextSharp.Kernel.Pdf.PdfOutline parent)
         {
             this.title = title;
             this.content = content;
@@ -177,16 +175,14 @@ namespace iTextSharp.Kernel.Pdf
         /// </param>
         /// <returns>created outline</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title, int position
-            )
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title, int position)
         {
             if (position == -1)
             {
                 position = children.Count;
             }
             PdfDictionary dictionary = new PdfDictionary();
-            iTextSharp.Kernel.Pdf.PdfOutline outline = new iTextSharp.Kernel.Pdf.PdfOutline(title
-                , dictionary, this);
+            iTextSharp.Kernel.Pdf.PdfOutline outline = new iTextSharp.Kernel.Pdf.PdfOutline(title, dictionary, this);
             dictionary.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
             dictionary.Put(PdfName.Parent, content);
             if (children.Count > 0)
@@ -289,8 +285,7 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(iTextSharp.Kernel.Pdf.PdfOutline
-             outline)
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(iTextSharp.Kernel.Pdf.PdfOutline outline)
         {
             iTextSharp.Kernel.Pdf.PdfOutline newOutline = AddOutline(outline.GetTitle());
             newOutline.AddDestination(outline.GetDestination());

@@ -55,31 +55,25 @@ namespace iTextSharp.Barcodes
     public class Barcode39 : Barcode1D
     {
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 1, 1
-            , 0, 1, 0, 0 }, new byte[] { 1, 0, 0, 1, 0, 0, 0, 0, 1 }, new byte[] { 0, 0, 
-            1, 1, 0, 0, 0, 0, 1 }, new byte[] { 1, 0, 1, 1, 0, 0, 0, 0, 0 }, new byte[] { 
-            0, 0, 0, 1, 1, 0, 0, 0, 1 }, new byte[] { 1, 0, 0, 1, 1, 0, 0, 0, 0 }, new byte
-            [] { 0, 0, 1, 1, 1, 0, 0, 0, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 1, 0, 1 }, new 
-            byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 1, 0, 0, 1, 0, 0 }
-            , new byte[] { 1, 0, 0, 0, 0, 1, 0, 0, 1 }, new byte[] { 0, 0, 1, 0, 0, 1, 0, 
-            0, 1 }, new byte[] { 1, 0, 1, 0, 0, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 0, 1, 
-            1, 0, 0, 1 }, new byte[] { 1, 0, 0, 0, 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 1, 
-            0, 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 0, 0, 1, 1, 0, 1 }, new byte[] { 1, 
-            0, 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 1, 0, 0, 1, 1, 0, 0 }, new byte[
-            ] { 0, 0, 0, 0, 1, 1, 1, 0, 0 }, new byte[] { 1, 0, 0, 0, 0, 0, 0, 1, 1 }, new 
-            byte[] { 0, 0, 1, 0, 0, 0, 0, 1, 1 }, new byte[] { 1, 0, 1, 0, 0, 0, 0, 1, 0 }
-            , new byte[] { 0, 0, 0, 0, 1, 0, 0, 1, 1 }, new byte[] { 1, 0, 0, 0, 1, 0, 0, 
-            1, 0 }, new byte[] { 0, 0, 1, 0, 1, 0, 0, 1, 0 }, new byte[] { 0, 0, 0, 0, 0, 
-            0, 1, 1, 1 }, new byte[] { 1, 0, 0, 0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 1, 
-            0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 0, 1, 0, 1, 1, 0 }, new byte[] { 1, 
-            1, 0, 0, 0, 0, 0, 0, 1 }, new byte[] { 0, 1, 1, 0, 0, 0, 0, 0, 1 }, new byte[
-            ] { 1, 1, 1, 0, 0, 0, 0, 0, 0 }, new byte[] { 0, 1, 0, 0, 1, 0, 0, 0, 1 }, new 
-            byte[] { 1, 1, 0, 0, 1, 0, 0, 0, 0 }, new byte[] { 0, 1, 1, 0, 1, 0, 0, 0, 0 }
-            , new byte[] { 0, 1, 0, 0, 0, 0, 1, 0, 1 }, new byte[] { 1, 1, 0, 0, 0, 0, 1, 
-            0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 0, 1, 0, 
-            1, 0, 0, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 
-            0, 0, 1, 0, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 1, 0, 1, 0 }, new byte[] { 0, 
-            1, 0, 0, 1, 0, 1, 0, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 1, 1, 0, 1, 0, 0 }, new byte[
+            ] { 1, 0, 0, 1, 0, 0, 0, 0, 1 }, new byte[] { 0, 0, 1, 1, 0, 0, 0, 0, 1 }, new byte[] { 1, 0, 1, 1, 0, 
+            0, 0, 0, 0 }, new byte[] { 0, 0, 0, 1, 1, 0, 0, 0, 1 }, new byte[] { 1, 0, 0, 1, 1, 0, 0, 0, 0 }, new 
+            byte[] { 0, 0, 1, 1, 1, 0, 0, 0, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 1, 0, 1 }, new byte[] { 1, 0, 0, 
+            1, 0, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 1, 0, 0, 1, 0, 0 }, new byte[] { 1, 0, 0, 0, 0, 1, 0, 0, 1 }
+            , new byte[] { 0, 0, 1, 0, 0, 1, 0, 0, 1 }, new byte[] { 1, 0, 1, 0, 0, 1, 0, 0, 0 }, new byte[] { 0, 
+            0, 0, 0, 1, 1, 0, 0, 1 }, new byte[] { 1, 0, 0, 0, 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 1, 1, 0, 
+            0, 0 }, new byte[] { 0, 0, 0, 0, 0, 1, 1, 0, 1 }, new byte[] { 1, 0, 0, 0, 0, 1, 1, 0, 0 }, new byte[]
+             { 0, 0, 1, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 0, 0, 1, 1, 1, 0, 0 }, new byte[] { 1, 0, 0, 0, 0, 
+            0, 0, 1, 1 }, new byte[] { 0, 0, 1, 0, 0, 0, 0, 1, 1 }, new byte[] { 1, 0, 1, 0, 0, 0, 0, 1, 0 }, new 
+            byte[] { 0, 0, 0, 0, 1, 0, 0, 1, 1 }, new byte[] { 1, 0, 0, 0, 1, 0, 0, 1, 0 }, new byte[] { 0, 0, 1, 
+            0, 1, 0, 0, 1, 0 }, new byte[] { 0, 0, 0, 0, 0, 0, 1, 1, 1 }, new byte[] { 1, 0, 0, 0, 0, 0, 1, 1, 0 }
+            , new byte[] { 0, 0, 1, 0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 0, 1, 0, 1, 1, 0 }, new byte[] { 1, 
+            1, 0, 0, 0, 0, 0, 0, 1 }, new byte[] { 0, 1, 1, 0, 0, 0, 0, 0, 1 }, new byte[] { 1, 1, 1, 0, 0, 0, 0, 
+            0, 0 }, new byte[] { 0, 1, 0, 0, 1, 0, 0, 0, 1 }, new byte[] { 1, 1, 0, 0, 1, 0, 0, 0, 0 }, new byte[]
+             { 0, 1, 1, 0, 1, 0, 0, 0, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1, 0, 1 }, new byte[] { 1, 1, 0, 0, 0, 
+            0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 0, 1, 0, 1, 0, 0, 0 }, new 
+            byte[] { 0, 1, 0, 1, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 1, 0, 1, 0 }, new byte[] { 0, 0, 0, 
+            1, 0, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 1, 0, 1, 0, 0 } };
 
         /// <summary>
         /// The index chars to <CODE>BARS</CODE>, symbol * use only start and stop  characters,
@@ -88,10 +82,9 @@ namespace iTextSharp.Barcodes
         private const String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%*";
 
         /// <summary>The character combinations to make the code 39 extended.</summary>
-        private const String EXTENDED = "%U" + "$A$B$C$D$E$F$G$H$I$J$K$L$M$N$O$P$Q$R$S$T$U$V$W$X$Y$Z"
-             + "%A%B%C%D%E  /A/B/C/D/E/F/G/H/I/J/K/L - ./O" + " 0 1 2 3 4 5 6 7 8 9/Z%F%G%H%I%J%V"
-             + " A B C D E F G H I J K L M N O P Q R S T U V W X Y Z" + "%K%L%M%N%O%W" + 
-            "+A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z" + "%P%Q%R%S%T";
+        private const String EXTENDED = "%U" + "$A$B$C$D$E$F$G$H$I$J$K$L$M$N$O$P$Q$R$S$T$U$V$W$X$Y$Z" + "%A%B%C%D%E  /A/B/C/D/E/F/G/H/I/J/K/L - ./O"
+             + " 0 1 2 3 4 5 6 7 8 9/Z%F%G%H%I%J%V" + " A B C D E F G H I J K L M N O P Q R S T U V W X Y Z" + "%K%L%M%N%O%W"
+             + "+A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z" + "%P%Q%R%S%T";
 
         /// <summary>Creates a new Barcode39.</summary>
         public Barcode39(PdfDocument document)
@@ -136,8 +129,7 @@ namespace iTextSharp.Barcodes
                 }
                 if (idx < 0)
                 {
-                    throw new ArgumentException("The character " + text[k] + " is illegal in code 39"
-                        );
+                    throw new ArgumentException("The character " + text[k] + " is illegal in code 39");
                 }
                 System.Array.Copy(BARS[idx], 0, bars, k * 10, 9);
             }
@@ -187,8 +179,7 @@ namespace iTextSharp.Barcodes
                 }
                 if (idx < 0)
                 {
-                    throw new ArgumentException("The character " + text[k] + " is illegal in code 39"
-                        );
+                    throw new ArgumentException("The character " + text[k] + " is illegal in code 39");
                 }
                 chk += idx;
             }
@@ -283,8 +274,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             String fullCode = code;
             float fontX = 0;
@@ -383,8 +374,8 @@ namespace iTextSharp.Barcodes
                 {
                     canvas.SetFillColor(textColor);
                 }
-                canvas.BeginText().SetFontAndSize(font, size).SetTextMatrix(textStartX, textStartY
-                    ).ShowText(fullCode).EndText();
+                canvas.BeginText().SetFontAndSize(font, size).SetTextMatrix(textStartX, textStartY).ShowText(fullCode).EndText
+                    ();
             }
             return GetBarcodeSize();
         }

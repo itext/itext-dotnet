@@ -58,22 +58,17 @@ namespace iTextSharp.Pdfa.Checker
 {
     public class PdfA2Checker : PdfA1Checker
     {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new 
-            HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName._3D, PdfName
-            .Sound, PdfName.Screen, PdfName.Movie));
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet
-            <PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound
-            , PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript, PdfName
-            .Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName.Trans, PdfName.GoTo3DView
-            ));
+        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
+            , PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName.Trans, PdfName.GoTo3DView));
 
-        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet
-            <PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Normal, PdfName.Compatible
-            , PdfName.Multiply, PdfName.Screen, PdfName.Overlay, PdfName.Darken, PdfName.
-            Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight
-            , PdfName.Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName
-            .Color, PdfName.Luminosity));
+        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            (PdfName.Normal, PdfName.Compatible, PdfName.Multiply, PdfName.Screen, PdfName.Overlay, PdfName.Darken
+            , PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight, PdfName
+            .Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName.Color, PdfName.Luminosity));
 
         internal const int MAX_PAGE_SIZE = 14400;
 
@@ -85,29 +80,25 @@ namespace iTextSharp.Pdfa.Checker
 
         private bool currentStrokeCsIsIccBasedCMYK = false;
 
-        private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName
-            , PdfArray>();
+        private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>();
 
         public PdfA2Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel)
         {
         }
 
-        public override void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces
-            )
+        public override void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces)
         {
             PdfObject filter = inlineImage.Get(PdfName.Filter);
             if (filter is PdfName)
             {
                 if (filter.Equals(PdfName.LZWDecode))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
                 }
                 if (filter.Equals(PdfName.Crypt))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.CryptFilterIsNotPermitted
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.CryptFilterIsNotPermitted);
                 }
             }
             else
@@ -119,13 +110,11 @@ namespace iTextSharp.Pdfa.Checker
                         PdfName f = ((PdfArray)filter).GetAsName(i);
                         if (f.Equals(PdfName.LZWDecode))
                         {
-                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted
-                                );
+                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
                         }
                         if (f.Equals(PdfName.Crypt))
                         {
-                            throw new PdfAConformanceException(PdfAConformanceException.CryptFilterIsNotPermitted
-                                );
+                            throw new PdfAConformanceException(PdfAConformanceException.CryptFilterIsNotPermitted);
                         }
                     }
                 }
@@ -133,8 +122,8 @@ namespace iTextSharp.Pdfa.Checker
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary
-             currentColorSpaces, bool? fill)
+        public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool?
+             fill)
         {
             if (color is PatternColor)
             {
@@ -143,10 +132,8 @@ namespace iTextSharp.Pdfa.Checker
                 {
                     PdfDictionary shadingDictionary = ((PdfPattern.Shading)pattern).GetShading();
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
-                    CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true
-                        , true);
-                    PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary
-                        (PdfName.ExtGState);
+                    CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
+                    PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
                     CanvasGraphicsState gState = new _CanvasGraphicsState_137(extGStateDict);
                     CheckExtGState(gState);
                 }
@@ -167,8 +154,8 @@ namespace iTextSharp.Pdfa.Checker
             private readonly PdfDictionary extGStateDict;
         }
 
-        public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces
-            , bool checkAlternate, bool? fill)
+        public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
+            , bool? fill)
         {
             if (fill != null)
             {
@@ -202,8 +189,8 @@ namespace iTextSharp.Pdfa.Checker
                         foreach (KeyValuePair<PdfName, PdfObject> entry in colorants.EntrySet())
                         {
                             PdfArray separation = (PdfArray)entry.Value;
-                            CheckSeparationInsideDeviceN(separation, ((PdfArray)deviceN.GetPdfObject()).Get(2
-                                ), ((PdfArray)deviceN.GetPdfObject()).Get(3).GetIndirectReference());
+                            CheckSeparationInsideDeviceN(separation, ((PdfArray)deviceN.GetPdfObject()).Get(2), ((PdfArray)deviceN.GetPdfObject
+                                ()).Get(3).GetIndirectReference());
                         }
                     }
                     if (checkAlternate)
@@ -217,8 +204,7 @@ namespace iTextSharp.Pdfa.Checker
                     {
                         if (checkAlternate)
                         {
-                            CheckColorSpace(((PdfSpecialCs.Indexed)colorSpace).GetBaseCs(), currentColorSpaces
-                                , true, fill);
+                            CheckColorSpace(((PdfSpecialCs.Indexed)colorSpace).GetBaseCs(), currentColorSpaces, true, fill);
                         }
                     }
                     else
@@ -227,8 +213,8 @@ namespace iTextSharp.Pdfa.Checker
                         {
                             if (checkAlternate)
                             {
-                                CheckColorSpace(((PdfSpecialCs.UncoloredTilingPattern)colorSpace).GetUnderlyingColorSpace
-                                    (), currentColorSpaces, true, fill);
+                                CheckColorSpace(((PdfSpecialCs.UncoloredTilingPattern)colorSpace).GetUnderlyingColorSpace(), currentColorSpaces
+                                    , true, fill);
                             }
                         }
                         else
@@ -298,13 +284,11 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (extGState.GetTransferFunction() != null)
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheTrKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheTrKey);
             }
             if (extGState.GetHTP() != null)
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheHTPKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AnExtgstateDictionaryShallNotContainTheHTPKey);
             }
             PdfObject transferFunction2 = extGState.GetTransferFunction2();
             if (transferFunction2 != null && !PdfName.Default.Equals(transferFunction2))
@@ -318,13 +302,11 @@ namespace iTextSharp.Pdfa.Checker
                 int? halftoneType = halftoneDict.GetAsInt(PdfName.HalftoneType);
                 if (halftoneType != 1 && halftoneType != 5)
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.AllHalftonesShallHaveHalftonetype1Or5
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.AllHalftonesShallHaveHalftonetype1Or5);
                 }
                 if (halftoneDict.ContainsKey(PdfName.HalftoneName))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.HalftonesShallNotContainHalftonename
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.HalftonesShallNotContainHalftonename);
                 }
             }
             CheckRenderingIntent(extGState.GetRenderingIntent());
@@ -379,58 +361,54 @@ namespace iTextSharp.Pdfa.Checker
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null)
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted
-                    ).SetMessageParams("null");
+                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted).SetMessageParams
+                    ("null");
             }
             if (forbiddenAnnotations.Contains(subtype))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted
-                    ).SetMessageParams(subtype.GetValue());
+                throw new PdfAConformanceException(PdfAConformanceException.AnnotationType1IsNotPermitted).SetMessageParams
+                    (subtype.GetValue());
             }
             if (!subtype.Equals(PdfName.Popup))
             {
                 PdfNumber f = annotDic.GetAsNumber(PdfName.F);
                 if (f == null)
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallContainTheFKey
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallContainTheFKey);
                 }
                 int flags = f.IntValue();
-                if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN
-                    ) || CheckFlag(flags, PdfAnnotation.INVISIBLE) || CheckFlag(flags, PdfAnnotation
-                    .NO_VIEW) || CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW))
+                if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN) || CheckFlag(flags, PdfAnnotation
+                    .INVISIBLE) || CheckFlag(flags, PdfAnnotation.NO_VIEW) || CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW
+                    ))
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.TheFKeysPrintFlagBitShallBeSetTo1AndItsHiddenInvisibleNoviewAndTogglenoviewFlagBitsShallBeSetTo0
                         );
                 }
                 if (subtype.Equals(PdfName.Text))
                 {
-                    if (!CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !CheckFlag(flags, PdfAnnotation.NO_ROTATE
-                        ))
+                    if (!CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !CheckFlag(flags, PdfAnnotation.NO_ROTATE))
                     {
                         throw new PdfAConformanceException(PdfAConformanceException.TextAnnotationsShouldSetTheNozoomAndNorotateFlagBitsOfTheFKeyTo1
                             );
                     }
                 }
             }
-            if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic
-                .ContainsKey(PdfName.A)))
+            if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
+                ))
             {
                 throw new PdfAConformanceException(PdfAConformanceException.WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry
                     );
             }
             if (annotDic.ContainsKey(PdfName.AA))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallNotContainAAKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AnAnnotationDictionaryShallNotContainAAKey);
             }
             if (CheckStructure(conformanceLevel))
             {
-                if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents
-                    ))
+                if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.AnnotationOfType1ShouldHaveContentsKey
-                        ).SetMessageParams(subtype);
+                    throw new PdfAConformanceException(PdfAConformanceException.AnnotationOfType1ShouldHaveContentsKey).SetMessageParams
+                        (subtype);
                 }
             }
             PdfDictionary ap = annotDic.GetAsDictionary(PdfName.AP);
@@ -442,8 +420,7 @@ namespace iTextSharp.Pdfa.Checker
                         );
                 }
                 PdfObject n = ap.Get(PdfName.N);
-                if (PdfName.Widget.Equals(subtype) && PdfName.Btn.Equals(annotDic.GetAsName(PdfName
-                    .FT)))
+                if (PdfName.Widget.Equals(subtype) && PdfName.Btn.Equals(annotDic.GetAsName(PdfName.FT)))
                 {
                     if (n == null || !n.IsDictionary())
                     {
@@ -470,9 +447,8 @@ namespace iTextSharp.Pdfa.Checker
                     PdfNumber index1 = rect.GetAsNumber(1);
                     PdfNumber index2 = rect.GetAsNumber(2);
                     PdfNumber index3 = rect.GetAsNumber(3);
-                    if (index0 != null && index1 != null && index2 != null && index3 != null && index0
-                        .FloatValue() == index2.FloatValue() && index1.FloatValue() == index3.FloatValue
-                        ())
+                    if (index0 != null && index1 != null && index2 != null && index3 != null && index0.FloatValue() == index2.
+                        FloatValue() && index1.FloatValue() == index3.FloatValue())
                     {
                         isCorrectRect = true;
                     }
@@ -503,8 +479,7 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict
-            )
+        protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict)
         {
             if (catalogDict.ContainsKey(PdfName.NeedsRendering))
             {
@@ -513,8 +488,7 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (catalogDict.ContainsKey(PdfName.AA))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.CatalogDictionaryShallNotContainAAEntry
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.CatalogDictionaryShallNotContainAAEntry);
             }
             if (catalogDict.ContainsKey(PdfName.Requirements))
             {
@@ -537,11 +511,10 @@ namespace iTextSharp.Pdfa.Checker
                                 for (int i = 0; i < references.Size(); i++)
                                 {
                                     PdfDictionary referenceDict = references.GetAsDictionary(i);
-                                    if (referenceDict.ContainsKey(PdfName.DigestLocation) || referenceDict.ContainsKey
-                                        (PdfName.DigestMethod) || referenceDict.ContainsKey(PdfName.DigestValue))
+                                    if (referenceDict.ContainsKey(PdfName.DigestLocation) || referenceDict.ContainsKey(PdfName.DigestMethod) ||
+                                         referenceDict.ContainsKey(PdfName.DigestValue))
                                     {
-                                        throw new PdfAConformanceException(PdfAConformanceException.SigRefDicShallNotContDigestParam
-                                            );
+                                        throw new PdfAConformanceException(PdfAConformanceException.SigRefDicShallNotContDigestParam);
                                     }
                                 }
                             }
@@ -561,8 +534,7 @@ namespace iTextSharp.Pdfa.Checker
                 }
             }
             PdfDictionary namesDictionary = catalogDict.GetAsDictionary(PdfName.Names);
-            if (namesDictionary != null && namesDictionary.ContainsKey(PdfName.AlternatePresentations
-                ))
+            if (namesDictionary != null && namesDictionary.ContainsKey(PdfName.AlternatePresentations))
             {
                 throw new PdfAConformanceException(PdfAConformanceException.CatalogDictionaryShallNotContainAlternatepresentationsNamesEntry
                     );
@@ -621,22 +593,20 @@ namespace iTextSharp.Pdfa.Checker
                 }
                 if (order.Count != ocgs.Count)
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs);
                 }
                 order.IntersectWith(ocgs);
                 if (order.Count != ocgs.Count)
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs);
                 }
             }
         }
 
         protected internal override void CheckPageSize(PdfDictionary page)
         {
-            PdfName[] boxNames = new PdfName[] { PdfName.MediaBox, PdfName.CropBox, PdfName.TrimBox
-                , PdfName.ArtBox, PdfName.BleedBox };
+            PdfName[] boxNames = new PdfName[] { PdfName.MediaBox, PdfName.CropBox, PdfName.TrimBox, PdfName.ArtBox, PdfName
+                .BleedBox };
             foreach (PdfName boxName in boxNames)
             {
                 Rectangle box = page.GetAsRectangle(boxName);
@@ -644,11 +614,9 @@ namespace iTextSharp.Pdfa.Checker
                 {
                     float width = box.GetWidth();
                     float height = box.GetHeight();
-                    if (width < MIN_PAGE_SIZE || width > MAX_PAGE_SIZE || height < MIN_PAGE_SIZE || height
-                         > MAX_PAGE_SIZE)
+                    if (width < MIN_PAGE_SIZE || width > MAX_PAGE_SIZE || height < MIN_PAGE_SIZE || height > MAX_PAGE_SIZE)
                     {
-                        throw new PdfAConformanceException(PdfAConformanceException.PageLess3UnitsNoGreater14400InEitherDirection
-                            );
+                        throw new PdfAConformanceException(PdfAConformanceException.PageLess3UnitsNoGreater14400InEitherDirection);
                     }
                 }
             }
@@ -658,8 +626,8 @@ namespace iTextSharp.Pdfa.Checker
         {
             if (fileSpec.ContainsKey(PdfName.EF))
             {
-                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec
-                    .ContainsKey(PdfName.Desc))
+                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec.ContainsKey(PdfName
+                    .Desc))
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainFKeyUFKeyAndDescKey
                         );
@@ -674,16 +642,15 @@ namespace iTextSharp.Pdfa.Checker
                 PdfName subtype = embeddedFile.GetAsName(PdfName.Subtype);
                 if (!PdfName.ApplicationPdf.Equals(subtype))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.EmbeddedFileShallBeOfPdfMimeType);
                 }
             }
         }
 
         protected internal override void CheckPdfStream(PdfStream stream)
         {
-            if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream
-                .ContainsKey(PdfName.FDecodeParams))
+            if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream.ContainsKey(PdfName.FDecodeParams
+                ))
             {
                 throw new PdfAConformanceException(PdfAConformanceException.StreamObjDictShallNotContainForFFilterOrFDecodeParams
                     );
@@ -693,8 +660,7 @@ namespace iTextSharp.Pdfa.Checker
             {
                 if (filter.Equals(PdfName.LZWDecode))
                 {
-                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
                 }
                 if (filter.Equals(PdfName.Crypt))
                 {
@@ -704,8 +670,7 @@ namespace iTextSharp.Pdfa.Checker
                         PdfString cryptFilterName = decodeParams.GetAsString(PdfName.Name);
                         if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity))
                         {
-                            throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted
-                                );
+                            throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted);
                         }
                     }
                 }
@@ -719,8 +684,7 @@ namespace iTextSharp.Pdfa.Checker
                         PdfName f = ((PdfArray)filter).GetAsName(i);
                         if (f.Equals(PdfName.LZWDecode))
                         {
-                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted
-                                );
+                            throw new PdfAConformanceException(PdfAConformanceException.LZWDecodeFilterIsNotPermitted);
                         }
                         if (f.Equals(PdfName.Crypt))
                         {
@@ -731,8 +695,7 @@ namespace iTextSharp.Pdfa.Checker
                                 PdfString cryptFilterName = decodeParam.GetAsString(PdfName.Name);
                                 if (cryptFilterName != null && !cryptFilterName.Equals(PdfName.Identity))
                                 {
-                                    throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted
-                                        );
+                                    throw new PdfAConformanceException(PdfAConformanceException.NotIdentityCryptFilterIsNotPermitted);
                                 }
                             }
                         }
@@ -741,28 +704,24 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        protected internal override void CheckPageObject(PdfDictionary pageDict, PdfDictionary
-             pageResources)
+        protected internal override void CheckPageObject(PdfDictionary pageDict, PdfDictionary pageResources)
         {
             if (pageDict.ContainsKey(PdfName.AA))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.PageDictionaryShallNotContainAAEntry
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.PageDictionaryShallNotContainAAEntry);
             }
             if (pageDict.ContainsKey(PdfName.PresSteps))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.PageDictionaryShallNotContainPressstepsEntry
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.PageDictionaryShallNotContainPressstepsEntry);
             }
-            if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary
-                (PdfName.Group).GetAsName(PdfName.S)))
+            if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
+                ).GetAsName(PdfName.S)))
             {
                 transparencyIsUsed = true;
                 PdfObject cs = pageDict.GetAsDictionary(PdfName.Group).Get(PdfName.CS);
                 if (cs != null)
                 {
-                    PdfDictionary currentColorSpaces = pageResources.GetAsDictionary(PdfName.ColorSpace
-                        );
+                    PdfDictionary currentColorSpaces = pageResources.GetAsDictionary(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(cs), currentColorSpaces, true, null);
                 }
             }
@@ -779,13 +738,11 @@ namespace iTextSharp.Pdfa.Checker
             PdfObject destOutputProfile = null;
             for (i = 0; i < outputIntents.Size() && destOutputProfile == null; ++i)
             {
-                destOutputProfile = outputIntents.GetAsDictionary(i).Get(PdfName.DestOutputProfile
-                    );
+                destOutputProfile = outputIntents.GetAsDictionary(i).Get(PdfName.DestOutputProfile);
             }
             for (; i < outputIntents.Size(); ++i)
             {
-                PdfObject otherDestOutputProfile = outputIntents.GetAsDictionary(i).Get(PdfName.DestOutputProfile
-                    );
+                PdfObject otherDestOutputProfile = outputIntents.GetAsDictionary(i).Get(PdfName.DestOutputProfile);
                 if (otherDestOutputProfile != null && destOutputProfile != otherDestOutputProfile)
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.IfOutputintentsArrayHasMoreThanOneEntryWithDestoutputprofileKeyTheSameIndirectObjectShallBeUsedAsTheValueOfThatObject
@@ -794,18 +751,16 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (destOutputProfile != null)
             {
-                String deviceClass = IccProfile.GetIccDeviceClass(((PdfStream)destOutputProfile).
-                    GetBytes());
-                if (!ICC_DEVICE_CLASS_OUTPUT_PROFILE.Equals(deviceClass) && !ICC_DEVICE_CLASS_MONITOR_PROFILE
-                    .Equals(deviceClass))
+                String deviceClass = IccProfile.GetIccDeviceClass(((PdfStream)destOutputProfile).GetBytes());
+                if (!ICC_DEVICE_CLASS_OUTPUT_PROFILE.Equals(deviceClass) && !ICC_DEVICE_CLASS_MONITOR_PROFILE.Equals(deviceClass
+                    ))
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.ProfileStreamOfOutputintentShallBeOutputProfilePrtrOrMonitorProfileMntr
                         );
                 }
-                String cs = IccProfile.GetIccColorSpaceName(((PdfStream)destOutputProfile).GetBytes
-                    ());
-                if (!ICC_COLOR_SPACE_RGB.Equals(cs) && !ICC_COLOR_SPACE_CMYK.Equals(cs) && !ICC_COLOR_SPACE_GRAY
-                    .Equals(cs))
+                String cs = IccProfile.GetIccColorSpaceName(((PdfStream)destOutputProfile).GetBytes());
+                if (!ICC_COLOR_SPACE_RGB.Equals(cs) && !ICC_COLOR_SPACE_CMYK.Equals(cs) && !ICC_COLOR_SPACE_GRAY.Equals(cs
+                    ))
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.OutputIntentColorSpaceShallBeEitherGrayRgbOrCmyk
                         );
@@ -853,8 +808,7 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces
-            )
+        protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces)
         {
             PdfColorSpace colorSpace = null;
             if (IsAlreadyChecked(image))
@@ -872,34 +826,28 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (image.ContainsKey(PdfName.Alternates))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainAlternatesKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainAlternatesKey);
             }
             if (image.ContainsKey(PdfName.OPI))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainOpiKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainOpiKey);
             }
-            if (image.ContainsKey(PdfName.Interpolate) && (bool)image.GetAsBool(PdfName.Interpolate
-                ))
+            if (image.ContainsKey(PdfName.Interpolate) && (bool)image.GetAsBool(PdfName.Interpolate))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.TheValueOfInterpolateKeyShallNotBeTrue
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.TheValueOfInterpolateKeyShallNotBeTrue);
             }
             CheckRenderingIntent(image.GetAsName(PdfName.Intent));
             if (image.GetAsStream(PdfName.SMask) != null)
             {
                 transparencyIsUsed = true;
             }
-            if (image.ContainsKey(PdfName.SMaskInData) && image.GetAsInt(PdfName.SMaskInData)
-                 > 0)
+            if (image.ContainsKey(PdfName.SMaskInData) && image.GetAsInt(PdfName.SMaskInData) > 0)
             {
                 transparencyIsUsed = true;
             }
             if (PdfName.JPXDecode.Equals(image.Get(PdfName.Filter)))
             {
-                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image
-                    .GetBytes());
+                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image.GetBytes());
                 Jpeg2000ImageData.Parameters @params = jpgImage.GetParameters();
                 /* Concerning !params.isJpxBaseline check
                 *
@@ -921,8 +869,7 @@ namespace iTextSharp.Pdfa.Checker
                 if (!@params.isJp2)
                 {
                     /*|| !params.isJpxBaseline*/
-                    throw new PdfAConformanceException(PdfAConformanceException.OnlyJpxBaselineSetOfFeaturesShallBeUsed
-                        );
+                    throw new PdfAConformanceException(PdfAConformanceException.OnlyJpxBaselineSetOfFeaturesShallBeUsed);
                 }
                 if (@params.numOfComps != 1 && @params.numOfComps != 3 && @params.numOfComps != 4)
                 {
@@ -937,11 +884,10 @@ namespace iTextSharp.Pdfa.Checker
                         if (colorSpecBox.GetApprox() == 1)
                         {
                             ++numOfApprox0x01;
-                            if (numOfApprox0x01 == 1 && colorSpecBox.GetMeth() != 1 && colorSpecBox.GetMeth()
-                                 != 2 && colorSpecBox.GetMeth() != 3)
+                            if (numOfApprox0x01 == 1 && colorSpecBox.GetMeth() != 1 && colorSpecBox.GetMeth() != 2 && colorSpecBox.GetMeth
+                                () != 3)
                             {
-                                throw new PdfAConformanceException(PdfAConformanceException.TheValueOfTheMethEntryInColrBoxShallBe123
-                                    );
+                                throw new PdfAConformanceException(PdfAConformanceException.TheValueOfTheMethEntryInColrBoxShallBe123);
                             }
                             if (image.Get(PdfName.ColorSpace) == null)
                             {
@@ -1009,21 +955,19 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (form.ContainsKey(PdfName.OPI))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainOpiKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainOpiKey);
             }
             if (form.ContainsKey(PdfName.PS))
             {
-                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainPSKey
-                    );
+                throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainPSKey);
             }
             if (PdfName.PS.Equals(form.GetAsName(PdfName.Subtype2)))
             {
                 throw new PdfAConformanceException(PdfAConformanceException.AFormXobjectDictionaryShallNotContainSubtype2KeyWithAValueOfPS
                     );
             }
-            if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary
-                (PdfName.Group).GetAsName(PdfName.S)))
+            if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
+                (PdfName.S)))
             {
                 transparencyIsUsed = true;
                 PdfObject cs = form.GetAsDictionary(PdfName.Group).Get(PdfName.CS);
@@ -1045,11 +989,11 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        private void CheckSeparationInsideDeviceN(PdfArray separation, PdfObject deviceNColorSpace
-            , PdfIndirectReference deviceNTintTransform)
+        private void CheckSeparationInsideDeviceN(PdfArray separation, PdfObject deviceNColorSpace, PdfIndirectReference
+             deviceNTintTransform)
         {
-            if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform
-                .Equals(separation.GetAsDictionary(3).GetIndirectReference()))
+            if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.GetAsDictionary
+                (3).GetIndirectReference()))
             {
                 throw new PdfAConformanceException(PdfAConformanceException.TintTransformAndAlternateSpaceOfSeparationArraysInTheColorantsOfDeviceNShallBeConsistentWithSameAttributesOfDeviceN
                     );
@@ -1070,8 +1014,7 @@ namespace iTextSharp.Pdfa.Checker
                 PdfDictionary f1 = separation.GetAsDictionary(3);
                 PdfDictionary f2 = sameNameSeparation.GetAsDictionary(3);
                 //todo compare dictionaries or stream references
-                tintTransformIsTheSame = f1.GetIndirectReference().Equals(f2.GetIndirectReference
-                    ());
+                tintTransformIsTheSame = f1.GetIndirectReference().Equals(f2.GetIndirectReference());
                 if (!altCSIsTheSame || !tintTransformIsTheSame)
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.TintTransformAndAlternateSpaceShallBeTheSameForTheAllSeparationCSWithTheSameName
@@ -1102,8 +1045,7 @@ namespace iTextSharp.Pdfa.Checker
             return altCSIsTheSame;
         }
 
-        private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order
-            )
+        private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order)
         {
             foreach (PdfObject orderItem in orderArray)
             {
@@ -1118,8 +1060,8 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        private bool CheckDefaultCS(PdfDictionary currentColorSpaces, bool? fill, PdfName
-             defaultCsName, int numOfComponents)
+        private bool CheckDefaultCS(PdfDictionary currentColorSpaces, bool? fill, PdfName defaultCsName, int numOfComponents
+            )
         {
             if (currentColorSpaces == null)
             {
@@ -1133,13 +1075,13 @@ namespace iTextSharp.Pdfa.Checker
             PdfColorSpace defaultCs = PdfColorSpace.MakeColorSpace(defaultCsObj);
             if (defaultCs is PdfDeviceCs)
             {
-                throw new PdfAConformanceException(PdfAConformanceException.ColorSpace1ShallBeDeviceIndependent
-                    ).SetMessageParams(defaultCsName.ToString());
+                throw new PdfAConformanceException(PdfAConformanceException.ColorSpace1ShallBeDeviceIndependent).SetMessageParams
+                    (defaultCsName.ToString());
             }
             if (defaultCs.GetNumberOfComponents() != numOfComponents)
             {
-                throw new PdfAConformanceException(PdfAConformanceException.ColorSpace1ShallHave2Components
-                    ).SetMessageParams(defaultCsName.ToString(), numOfComponents);
+                throw new PdfAConformanceException(PdfAConformanceException.ColorSpace1ShallHave2Components).SetMessageParams
+                    (defaultCsName.ToString(), numOfComponents);
             }
             CheckColorSpace(defaultCs, currentColorSpaces, false, fill);
             return true;

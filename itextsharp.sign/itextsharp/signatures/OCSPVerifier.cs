@@ -59,8 +59,8 @@ namespace iTextSharp.Signatures
     public class OCSPVerifier : RootStoreVerifier
     {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
-            iTextSharp.Signatures.OCSPVerifier));
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.OCSPVerifier
+            ));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
 
@@ -92,8 +92,8 @@ namespace iTextSharp.Signatures
         ///     "/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             IList<VerificationOK> result = new List<VerificationOK>();
             int validOCSPsFound = 0;
@@ -122,8 +122,8 @@ namespace iTextSharp.Signatures
             LOGGER.Info("Valid OCSPs found: " + validOCSPsFound);
             if (validOCSPsFound > 0)
             {
-                result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound
-                     + (online ? " (online)" : "")));
+                result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound + (online ? 
+                    " (online)" : "")));
             }
             if (verifier != null)
             {
@@ -145,8 +145,8 @@ namespace iTextSharp.Signatures
         /// </returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool Verify(BasicOcspResp ocspResp, X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public virtual bool Verify(BasicOcspResp ocspResp, X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             if (ocspResp == null)
             {
@@ -182,12 +182,10 @@ namespace iTextSharp.Signatures
                 if (resp[i].NextUpdate == null)
                 {
                     DateTime nextUpdate = SignUtils.Add180Sec(resp[i].ThisUpdate);
-                    LOGGER.Info(String.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate
-                        ));
+                    LOGGER.Info(String.Format("No 'next update' for OCSP Response; assuming {0}", nextUpdate));
                     if (signDate.After(nextUpdate))
                     {
-                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate
-                            ));
+                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, nextUpdate));
                         continue;
                     }
                 }
@@ -195,8 +193,7 @@ namespace iTextSharp.Signatures
                 {
                     if (signDate.After(resp[i].NextUpdate))
                     {
-                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i
-                            ].NextUpdate));
+                        LOGGER.Info(String.Format("OCSP no longer valid: {0} after {1}", signDate, resp[i].NextUpdate));
                         continue;
                     }
                 }
@@ -221,8 +218,7 @@ namespace iTextSharp.Signatures
         /// <param name="issuerCert">the issuer certificate</param>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert
-            )
+        public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert)
         {
             //OCSP response might be signed by the issuer certificate or
             //the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension
@@ -247,8 +243,7 @@ namespace iTextSharp.Signatures
                         try
                         {
                             keyPurposes = cert.GetExtendedKeyUsage();
-                            if ((keyPurposes != null) && keyPurposes.Contains(id_kp_OCSPSigning) && IsSignatureValid
-                                (ocspResp, cert))
+                            if ((keyPurposes != null) && keyPurposes.Contains(id_kp_OCSPSigning) && IsSignatureValid(ocspResp, cert))
                             {
                                 responderCert = cert;
                                 break;
@@ -262,8 +257,7 @@ namespace iTextSharp.Signatures
                     // and is not signed by the issuer certificate.
                     if (responderCert == null)
                     {
-                        throw new VerificationException(issuerCert, "OCSP response could not be verified"
-                            );
+                        throw new VerificationException(issuerCert, "OCSP response could not be verified");
                     }
                 }
                 else
@@ -292,8 +286,7 @@ namespace iTextSharp.Signatures
                     // of the rootStore or the issuer certificate.
                     if (responderCert == null)
                     {
-                        throw new VerificationException(issuerCert, "OCSP response could not be verified"
-                            );
+                        throw new VerificationException(issuerCert, "OCSP response could not be verified");
                     }
                 }
             }
@@ -302,8 +295,7 @@ namespace iTextSharp.Signatures
             // validating ocsp signers certificate
             // Check if responders certificate has id-pkix-ocsp-nocheck extension,
             // in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
-            if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == 
-                null)
+            if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == null)
             {
                 X509Crl crl;
                 try
@@ -319,8 +311,7 @@ namespace iTextSharp.Signatures
                     CRLVerifier crlVerifier = new CRLVerifier(null, null);
                     crlVerifier.SetRootStore(rootStore);
                     crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-                    crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentUtcTime
-                        ());
+                    crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentUtcTime());
                     return;
                 }
             }
@@ -341,8 +332,7 @@ namespace iTextSharp.Signatures
         /// <param name="issuerCert">the issuer certificate</param>
         /// <returns>true if the response can be trusted</returns>
         [Obsolete]
-        public virtual bool VerifyResponse(BasicOcspResp ocspResp, X509Certificate issuerCert
-            )
+        public virtual bool VerifyResponse(BasicOcspResp ocspResp, X509Certificate issuerCert)
         {
             try
             {
@@ -359,8 +349,7 @@ namespace iTextSharp.Signatures
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="responderCert">the responder certificate</param>
         /// <returns>true if the OCSP response verifies against the responder certificate</returns>
-        public virtual bool IsSignatureValid(BasicOcspResp ocspResp, X509Certificate responderCert
-            )
+        public virtual bool IsSignatureValid(BasicOcspResp ocspResp, X509Certificate responderCert)
         {
             try
             {
@@ -379,8 +368,7 @@ namespace iTextSharp.Signatures
         /// <param name="signCert">the signing certificate</param>
         /// <param name="issuerCert">the issuer certificate</param>
         /// <returns>an OCSP response</returns>
-        public virtual BasicOcspResp GetOcspResponse(X509Certificate signCert, X509Certificate
-             issuerCert)
+        public virtual BasicOcspResp GetOcspResponse(X509Certificate signCert, X509Certificate issuerCert)
         {
             if (signCert == null && issuerCert == null)
             {

@@ -79,8 +79,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <see langword="null"/>
         /// values delete the key in the original info dictionary
         /// </param>
-        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties
-            , IDictionary<String, String> newInfo)
+        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties, IDictionary<String
+            , String> newInfo)
         {
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.encryptionProperties = properties;
@@ -98,8 +98,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <see cref="EncryptionProperties"/>
         /// .
         /// </param>
-        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties
-            )
+        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties)
         {
             Encrypt(reader, os, properties, null);
         }
@@ -114,8 +113,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 buf.Append(" Printing");
             }
-            if ((EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants
-                .ALLOW_MODIFY_CONTENTS)
+            if ((EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants.ALLOW_MODIFY_CONTENTS)
             {
                 buf.Append(" Modify contents");
             }
@@ -123,8 +121,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 buf.Append(" Copy");
             }
-            if ((EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants
-                .ALLOW_MODIFY_ANNOTATIONS)
+            if ((EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS)
             {
                 buf.Append(" Modify annotations");
             }
@@ -132,8 +129,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 buf.Append(" Fill in");
             }
-            if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants
-                .ALLOW_SCREENREADERS)
+            if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants.ALLOW_SCREENREADERS)
             {
                 buf.Append(" Screen readers");
             }
@@ -141,8 +137,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 buf.Append(" Assembly");
             }
-            if ((EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants
-                .ALLOW_DEGRADED_PRINTING)
+            if ((EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING)
             {
                 buf.Append(" Degraded printing");
             }
@@ -154,8 +149,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if printing is allowed</returns>
         public static bool IsPrintingAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.
-                ALLOW_PRINTING;
+            return (EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.ALLOW_PRINTING;
         }
 
         /// <summary>Tells you if modifying content is allowed.</summary>
@@ -163,8 +157,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if modifying content is allowed</returns>
         public static bool IsModifyContentsAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants
-                .ALLOW_MODIFY_CONTENTS;
+            return (EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants.ALLOW_MODIFY_CONTENTS;
         }
 
         /// <summary>Tells you if copying is allowed.</summary>
@@ -180,8 +173,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if modifying annotations is allowed</returns>
         public static bool IsModifyAnnotationsAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants
-                .ALLOW_MODIFY_ANNOTATIONS;
+            return (EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS;
         }
 
         /// <summary>Tells you if filling in fields is allowed.</summary>
@@ -197,8 +189,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if repurposing for screenreaders is allowed</returns>
         public static bool IsScreenReadersAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants
-                .ALLOW_SCREENREADERS;
+            return (EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants.ALLOW_SCREENREADERS;
         }
 
         /// <summary>Tells you if document assembly is allowed.</summary>
@@ -206,8 +197,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if document assembly is allowed</returns>
         public static bool IsAssemblyAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.
-                ALLOW_ASSEMBLY;
+            return (EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.ALLOW_ASSEMBLY;
         }
 
         /// <summary>Tells you if degraded printing is allowed.</summary>
@@ -215,8 +205,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if degraded printing is allowed</returns>
         public static bool IsDegradedPrintingAllowed(int permissions)
         {
-            return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants
-                .ALLOW_DEGRADED_PRINTING;
+            return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING;
         }
     }
 }

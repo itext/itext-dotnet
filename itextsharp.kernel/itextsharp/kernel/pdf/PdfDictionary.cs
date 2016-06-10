@@ -60,8 +60,7 @@ namespace iTextSharp.Kernel.Pdf
     /// </remarks>
     public class PdfDictionary : PdfObject
     {
-        private IDictionary<PdfName, PdfObject> map = new SortedDictionary<PdfName, PdfObject
-            >();
+        private IDictionary<PdfName, PdfObject> map = new SortedDictionary<PdfName, PdfObject>();
 
         /// <summary>Creates a new PdfDictionary instance.</summary>
         public PdfDictionary()
@@ -85,8 +84,7 @@ namespace iTextSharp.Kernel.Pdf
         /// Creates a new PdfDictionary instance. This constructor inserts the content of the specified Set into this
         /// PdfDictionary instance.
         /// </remarks>
-        /// <param name="entrySet">Set containing Map#Entries to be inserted into PdfDictionary
-        ///     </param>
+        /// <param name="entrySet">Set containing Map#Entries to be inserted into PdfDictionary</param>
         public PdfDictionary(ICollection<KeyValuePair<PdfName, PdfObject>> entrySet)
         {
             foreach (KeyValuePair<PdfName, PdfObject> entry in entrySet)
@@ -100,8 +98,7 @@ namespace iTextSharp.Kernel.Pdf
         /// Creates a new PdfDictionary instance. This constructor inserts the content of the specified PdfDictionary
         /// into this PdfDictionary instance.
         /// </remarks>
-        /// <param name="dictionary">PdfDictionary containing values to be inserted into PdfDictionary
-        ///     </param>
+        /// <param name="dictionary">PdfDictionary containing values to be inserted into PdfDictionary</param>
         public PdfDictionary(iTextSharp.Kernel.Pdf.PdfDictionary dictionary)
         {
             map.AddAll(dictionary.map);
@@ -312,8 +309,7 @@ namespace iTextSharp.Kernel.Pdf
             return booleanValue;
         }
 
-        /// <summary>Inserts the value into this PdfDictionary and associates it with the specified key.
-        ///     </summary>
+        /// <summary>Inserts the value into this PdfDictionary and associates it with the specified key.</summary>
         /// <remarks>
         /// Inserts the value into this PdfDictionary and associates it with the specified key. If the key is already
         /// present in this PdfDictionary, this method will override the old value with the specified one.
@@ -382,8 +378,8 @@ namespace iTextSharp.Kernel.Pdf
                 foreach (KeyValuePair<PdfName, PdfObject> entry in EntrySet())
                 {
                     PdfIndirectReference indirectReference = entry.Value.GetIndirectReference();
-                    @string = @string + entry.Key.ToString() + " " + (indirectReference == null ? entry
-                        .Value.ToString() : indirectReference.ToString()) + " ";
+                    @string = @string + entry.Key.ToString() + " " + (indirectReference == null ? entry.Value.ToString() : indirectReference
+                        .ToString()) + " ";
                 }
                 @string += ">>";
                 return @string;
@@ -402,11 +398,9 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="excludeKeys">list of objects to exclude when cloning dictionary.</param>
         /// <returns>cloned dictionary.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual iTextSharp.Kernel.Pdf.PdfDictionary Clone(IList<PdfName> excludeKeys
-            )
+        public virtual iTextSharp.Kernel.Pdf.PdfDictionary Clone(IList<PdfName> excludeKeys)
         {
-            IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject
-                >();
+            IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject>();
             foreach (PdfName key in excludeKeys)
             {
                 PdfObject obj = map.Get(key);
@@ -415,8 +409,7 @@ namespace iTextSharp.Kernel.Pdf
                     excluded[key] = map.JRemove(key);
                 }
             }
-            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = (iTextSharp.Kernel.Pdf.PdfDictionary
-                )Clone();
+            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = (iTextSharp.Kernel.Pdf.PdfDictionary)Clone();
             map.AddAll(excluded);
             return dictionary;
         }
@@ -432,11 +425,9 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
-            return (iTextSharp.Kernel.Pdf.PdfDictionary)base.MakeIndirect(document, reference
-                );
+            return (iTextSharp.Kernel.Pdf.PdfDictionary)base.MakeIndirect(document, reference);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -465,8 +456,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
         {
-            return (iTextSharp.Kernel.Pdf.PdfDictionary)base.CopyTo(document, allowDuplicating
-                );
+            return (iTextSharp.Kernel.Pdf.PdfDictionary)base.CopyTo(document, allowDuplicating);
         }
 
         /// <summary>Copies dictionary to specified document.</summary>
@@ -482,11 +472,10 @@ namespace iTextSharp.Kernel.Pdf
         /// </param>
         /// <returns>copied dictionary.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual iTextSharp.Kernel.Pdf.PdfDictionary CopyTo(PdfDocument document, IList
-            <PdfName> excludeKeys, bool allowDuplicating)
+        public virtual iTextSharp.Kernel.Pdf.PdfDictionary CopyTo(PdfDocument document, IList<PdfName> excludeKeys
+            , bool allowDuplicating)
         {
-            IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject
-                >();
+            IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject>();
             foreach (PdfName key in excludeKeys)
             {
                 PdfObject obj = map.Get(key);
@@ -495,8 +484,8 @@ namespace iTextSharp.Kernel.Pdf
                     excluded[key] = map.JRemove(key);
                 }
             }
-            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = ((iTextSharp.Kernel.Pdf.PdfDictionary
-                )CopyTo(document, allowDuplicating));
+            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = ((iTextSharp.Kernel.Pdf.PdfDictionary)CopyTo(document, allowDuplicating
+                ));
             map.AddAll(excluded);
             return dictionary;
         }
@@ -523,10 +512,8 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        /// <summary>This method merges different fields from two dictionaries into the current one
-        ///     </summary>
-        /// <param name="other">a dictionary whose fields should be merged into the current dictionary.
-        ///     </param>
+        /// <summary>This method merges different fields from two dictionaries into the current one</summary>
+        /// <param name="other">a dictionary whose fields should be merged into the current dictionary.</param>
         public virtual void MergeDifferent(iTextSharp.Kernel.Pdf.PdfDictionary other)
         {
             foreach (PdfName key in other.KeySet())
@@ -543,12 +530,10 @@ namespace iTextSharp.Kernel.Pdf
             return new iTextSharp.Kernel.Pdf.PdfDictionary();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = (iTextSharp.Kernel.Pdf.PdfDictionary
-                )from;
+            iTextSharp.Kernel.Pdf.PdfDictionary dictionary = (iTextSharp.Kernel.Pdf.PdfDictionary)from;
             foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.EntrySet())
             {
                 map[entry.Key] = entry.Value.ProcessCopying(document, false);

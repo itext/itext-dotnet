@@ -54,11 +54,11 @@ namespace iTextSharp.IO.Font
         [Obsolete]
         public const String RESOURCE_PATH_CMAP = FontConstants.RESOURCE_PATH + "cmap/";
 
-        private static readonly IDictionary<String, IDictionary<String, Object>> allFonts
-             = new Dictionary<String, IDictionary<String, Object>>();
+        private static readonly IDictionary<String, IDictionary<String, Object>> allFonts = new Dictionary<String, 
+            IDictionary<String, Object>>();
 
-        private static readonly IDictionary<String, ICollection<String>> registryNames = 
-            new Dictionary<String, ICollection<String>>();
+        private static readonly IDictionary<String, ICollection<String>> registryNames = new Dictionary<String, ICollection
+            <String>>();
 
         static CidFontProperties()
         {
@@ -134,8 +134,8 @@ namespace iTextSharp.IO.Font
         /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry()
         {
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
-                 + "cjk_registry.properties");
+            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + "cjk_registry.properties"
+                );
             Properties p = new Properties();
             p.Load(resource);
             resource.Close();
@@ -159,8 +159,7 @@ namespace iTextSharp.IO.Font
         private static IDictionary<String, Object> ReadFontProperties(String name)
         {
             name += ".properties";
-            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH
-                 + name);
+            Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name);
             Properties p = new Properties();
             p.Load(resource);
             resource.Close();

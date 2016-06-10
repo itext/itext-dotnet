@@ -76,12 +76,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// </summary>
         private static readonly IDictionary<PdfName, PdfName> inlineImageEntryAbbreviationMap;
 
-        /// <summary>Map between value abbreviations allowed in dictionary of inline images for COLORSPACE
-        ///     </summary>
+        /// <summary>Map between value abbreviations allowed in dictionary of inline images for COLORSPACE</summary>
         private static readonly IDictionary<PdfName, PdfName> inlineImageColorSpaceAbbreviationMap;
 
-        /// <summary>Map between value abbreviations allowed in dictionary of inline images for FILTER
-        ///     </summary>
+        /// <summary>Map between value abbreviations allowed in dictionary of inline images for FILTER</summary>
         private static readonly IDictionary<PdfName, PdfName> inlineImageFilterAbbreviationMap;
 
         static InlineImageParsingUtils()
@@ -161,8 +159,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         {
             // by the time we get to here, we have already parsed the BI operator
             PdfDictionary dict = new PdfDictionary();
-            for (PdfObject key = ps.ReadObject(); key != null && !"ID".Equals(key.ToString())
-                ; key = ps.ReadObject())
+            for (PdfObject key = ps.ReadObject(); key != null && !"ID".Equals(key.ToString()); key = ps.ReadObject())
             {
                 PdfObject value = ps.ReadObject();
                 PdfName resolvedKey = inlineImageEntryAbbreviationMap.Get((PdfName)key);
@@ -230,8 +227,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <param name="colorSpaceName">the name of the color space. If null, a bi-tonal (black and white) color space is assumed.
         ///     </param>
         /// <returns>the components per pixel for the specified color space</returns>
-        private static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic
-            )
+        private static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic)
         {
             if (colorSpaceName == null)
             {
@@ -268,12 +264,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                     }
                 }
             }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedColorSpace1
-                ).SetMessageParams(colorSpaceName);
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedColorSpace1).SetMessageParams
+                (colorSpaceName);
         }
 
-        /// <summary>Computes the number of unfiltered bytes that each row of the image will contain.
-        ///     </summary>
+        /// <summary>Computes the number of unfiltered bytes that each row of the image will contain.</summary>
         /// <remarks>
         /// Computes the number of unfiltered bytes that each row of the image will contain.
         /// If the number of bytes results in a partial terminating byte, this number is rounded up
@@ -281,20 +276,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// </remarks>
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <returns>the number of bytes per row of the image</returns>
-        private static int ComputeBytesPerRow(PdfDictionary imageDictionary, PdfDictionary
-             colorSpaceDic)
+        private static int ComputeBytesPerRow(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic)
         {
             PdfNumber wObj = imageDictionary.GetAsNumber(PdfName.Width);
             PdfNumber bpcObj = imageDictionary.GetAsNumber(PdfName.BitsPerComponent);
-            int cpp = GetComponentsPerPixel(imageDictionary.GetAsName(PdfName.ColorSpace), colorSpaceDic
-                );
+            int cpp = GetComponentsPerPixel(imageDictionary.GetAsName(PdfName.ColorSpace), colorSpaceDic);
             int w = wObj.IntValue();
             int bpc = bpcObj != null ? bpcObj.IntValue() : 1;
             return (w * bpc * cpp + 7) / 8;
         }
 
-        /// <summary>Parses the samples of the image from the underlying content parser, ignoring all filters.
-        ///     </summary>
+        /// <summary>Parses the samples of the image from the underlying content parser, ignoring all filters.</summary>
         /// <remarks>
         /// Parses the samples of the image from the underlying content parser, ignoring all filters.
         /// The parser must be positioned immediately after the ID operator that ends the inline image's dictionary.
@@ -305,8 +297,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
         /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
-        private static byte[] ParseUnfilteredSamples(PdfDictionary imageDictionary, PdfDictionary
-             colorSpaceDic, PdfCanvasParser ps)
+        private static byte[] ParseUnfilteredSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
+             ps)
         {
             // special case:  when no filter is specified, we just read the number of bits
             // per component, multiplied by the width and height.
@@ -315,8 +307,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                 throw new ArgumentException("Dictionary contains filters");
             }
             PdfNumber h = imageDictionary.GetAsNumber(PdfName.Height);
-            int bytesToRead = ComputeBytesPerRow(imageDictionary, colorSpaceDic) * h.IntValue
-                ();
+            int bytesToRead = ComputeBytesPerRow(imageDictionary, colorSpaceDic) * h.IntValue();
             byte[] bytes = new byte[bytesToRead];
             PdfTokenizer tokeniser = ps.GetTokeniser();
             int shouldBeWhiteSpace = tokeniser.Read();
@@ -369,12 +360,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
         /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
-        private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic
-            , PdfCanvasParser ps)
+        private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
+             ps)
         {
             // by the time we get to here, we have already parsed the ID operator
-            if (!imageDictionary.ContainsKey(PdfName.Filter) && ImageColorSpaceIsKnown(imageDictionary
-                , colorSpaceDic))
+            if (!imageDictionary.ContainsKey(PdfName.Filter) && ImageColorSpaceIsKnown(imageDictionary, colorSpaceDic))
             {
                 return ParseUnfilteredSamples(imageDictionary, colorSpaceDic, ps);
             }
@@ -448,24 +438,21 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                     }
                 }
             }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.CannotFindImageDataOrEI
-                );
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.CannotFindImageDataOrEI);
         }
 
-        private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary
-             colorSpaceDic)
+        private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic)
         {
             PdfName cs = imageDictionary.GetAsName(PdfName.ColorSpace);
-            if (cs == null || cs.Equals(PdfName.DeviceGray) || cs.Equals(PdfName.DeviceRGB) ||
-                 cs.Equals(PdfName.DeviceCMYK))
+            if (cs == null || cs.Equals(PdfName.DeviceGray) || cs.Equals(PdfName.DeviceRGB) || cs.Equals(PdfName.DeviceCMYK
+                ))
             {
                 return true;
             }
             return colorSpaceDic != null && colorSpaceDic.ContainsKey(cs);
         }
 
-        /// <summary>This method acts like a check that bytes that were parsed are really all image bytes.
-        ///     </summary>
+        /// <summary>This method acts like a check that bytes that were parsed are really all image bytes.</summary>
         /// <remarks>
         /// This method acts like a check that bytes that were parsed are really all image bytes. If it's true,
         /// then decoding will succeed, but if not all image bytes were read and "<ws>EI<ws>" bytes were just a part of the image,
@@ -476,13 +463,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// support these filters; what if decoding will succeed eventhough it's not all bytes?; also I'm not sure that all
         /// filters throw an exception in case data is corrupted (For example, FlateDecodeFilter seems not to throw an exception).
         /// </remarks>
-        private static bool InlineImageStreamBytesAreComplete(byte[] samples, PdfDictionary
-             imageDictionary)
+        private static bool InlineImageStreamBytesAreComplete(byte[] samples, PdfDictionary imageDictionary)
         {
             try
             {
-                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler
-                    >(FilterHandlers.GetDefaultFilterHandlers());
+                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
+                    ());
                 DoNothingFilter stubfilter = new DoNothingFilter();
                 filters[PdfName.DCTDecode] = stubfilter;
                 filters[PdfName.JBIG2Decode] = stubfilter;

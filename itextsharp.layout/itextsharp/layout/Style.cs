@@ -107,8 +107,7 @@ namespace iTextSharp.Layout
         /// <returns>the bottom margin width, as a <code>float</code></returns>
         public virtual float? GetMarginBottom()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
@@ -134,8 +133,7 @@ namespace iTextSharp.Layout
         /// <param name="marginBottom">the new margin bottom width</param>
         /// <param name="marginLeft">the new margin left width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMargins(float marginTop, float marginRight, float marginBottom
-            , float marginLeft)
+        public virtual Style SetMargins(float marginTop, float marginRight, float marginBottom, float marginLeft)
         {
             SetMarginTop(marginTop);
             SetMarginRight(marginRight);
@@ -164,8 +162,7 @@ namespace iTextSharp.Layout
         /// <returns>the right padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingRight()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_RIGHT
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_RIGHT);
         }
 
         /// <summary>Sets the right padding width of the element.</summary>
@@ -197,8 +194,7 @@ namespace iTextSharp.Layout
         /// <returns>the bottom padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingBottom()
         {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_BOTTOM
-                );
+            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_BOTTOM);
         }
 
         /// <summary>Sets the bottom padding width of the element.</summary>
@@ -215,8 +211,7 @@ namespace iTextSharp.Layout
         /// <returns>this element</returns>
         public virtual Style SetPadding(float commonPadding)
         {
-            return (Style)(Object)SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding
-                );
+            return (Style)(Object)SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding);
         }
 
         /// <summary>Sets the paddings around the element to a series of new widths.</summary>
@@ -225,8 +220,8 @@ namespace iTextSharp.Layout
         /// <param name="paddingBottom">the new padding bottom width</param>
         /// <param name="paddingLeft">the new padding left width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddings(float paddingTop, float paddingRight, float paddingBottom
-            , float paddingLeft)
+        public virtual Style SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float paddingLeft
+            )
         {
             SetPaddingTop(paddingTop);
             SetPaddingRight(paddingRight);
@@ -240,8 +235,7 @@ namespace iTextSharp.Layout
         /// <returns>this element</returns>
         public virtual Style SetVerticalAlignment(VerticalAlignment? verticalAlignment)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment
-                );
+            SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment);
             return (Style)(Object)this;
         }
 

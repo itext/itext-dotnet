@@ -85,8 +85,7 @@ namespace iTextSharp.Layout.Renderer
         /// <see cref="Draw(DrawContext)"/>
         /// , to prepare the renderer to be flushed to the output stream.
         /// </summary>
-        /// <param name="layoutContext">the description of layout area and any other additional information
-        ///     </param>
+        /// <param name="layoutContext">the description of layout area and any other additional information</param>
         /// <returns>result of the layout process</returns>
         LayoutResult Layout(LayoutContext layoutContext);
 
@@ -176,10 +175,8 @@ namespace iTextSharp.Layout.Renderer
         /// <summary>Moves the renderer subtree by the specified offset.</summary>
         /// <remarks>Moves the renderer subtree by the specified offset. This method affects occupied area of the renderer.
         ///     </remarks>
-        /// <param name="dx">the x-axis offset in points. Positive value will move the renderer subtree to the right.
-        ///     </param>
-        /// <param name="dy">the y-axis offset in points. Positive value will move the renderer subtree to the top.
-        ///     </param>
+        /// <param name="dx">the x-axis offset in points. Positive value will move the renderer subtree to the right.</param>
+        /// <param name="dy">the y-axis offset in points. Positive value will move the renderer subtree to the top.</param>
         void Move(float dx, float dy);
 
         /// <summary>

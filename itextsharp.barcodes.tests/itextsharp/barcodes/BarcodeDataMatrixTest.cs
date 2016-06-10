@@ -8,11 +8,10 @@ namespace iTextSharp.Barcodes
 {
     public class BarcodeDataMatrixTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/barcodes/BarcodeDataMatrix/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/barcodes/BarcodeDataMatrix/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -36,8 +35,8 @@ namespace iTextSharp.Barcodes
                 );
             barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 5);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -54,8 +53,8 @@ namespace iTextSharp.Barcodes
             BarcodeDataMatrix barcode2 = new BarcodeDataMatrix("дима", "UTF-8");
             barcode2.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 10);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
     }
 }

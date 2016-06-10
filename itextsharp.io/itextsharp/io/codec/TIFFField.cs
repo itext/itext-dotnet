@@ -613,8 +613,7 @@ namespace iTextSharp.IO.Codec
         /// <p><b>Note: this class has a natural ordering that is inconsistent
         /// with <code>equals()</code>.</b>
         /// </remarks>
-        /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.
-        ///     </exception>
+        /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.</exception>
         public virtual int CompareTo(iTextSharp.IO.Codec.TIFFField o)
         {
             if (o == null)

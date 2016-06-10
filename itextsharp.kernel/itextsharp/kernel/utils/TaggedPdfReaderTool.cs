@@ -63,8 +63,8 @@ namespace iTextSharp.Kernel.Utils
 
         protected internal String rootTag;
 
-        protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags
-             = new Dictionary<PdfDictionary, IDictionary<int, String>>();
+        protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags = new Dictionary<PdfDictionary
+            , IDictionary<int, String>>();
 
         public TaggedPdfReaderTool(PdfDocument document)
         {
@@ -102,8 +102,7 @@ namespace iTextSharp.Kernel.Utils
             @out.Close();
         }
 
-        public virtual iTextSharp.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName
-            )
+        public virtual iTextSharp.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName)
         {
             this.rootTag = rootTagName;
             return this;
@@ -139,8 +138,7 @@ namespace iTextSharp.Kernel.Utils
                 if (alt != null)
                 {
                     @out.Write("<alt><![CDATA[");
-                    @out.Write(iTextSharp.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""
-                        ));
+                    @out.Write(iTextSharp.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
                     @out.Write("]]></alt>" + Environment.NewLine);
                 }
                 InspectKids(structElemKid.GetKids());
@@ -229,15 +227,13 @@ namespace iTextSharp.Kernel.Utils
             for (int k = 0; k < tag.Length; ++k)
             {
                 char c = tag[k];
-                bool nameStart = c == ':' || (c >= 'A' && c <= 'Z') || c == '_' || (c >= 'a' && c
-                     <= 'z') || (c >= '\u00c0' && c <= '\u00d6') || (c >= '\u00d8' && c <= '\u00f6'
-                    ) || (c >= '\u00f8' && c <= '\u02ff') || (c >= '\u0370' && c <= '\u037d') || 
-                    (c >= '\u037f' && c <= '\u1fff') || (c >= '\u200c' && c <= '\u200d') || (c >=
-                     '\u2070' && c <= '\u218f') || (c >= '\u2c00' && c <= '\u2fef') || (c >= '\u3001'
-                     && c <= '\ud7ff') || (c >= '\uf900' && c <= '\ufdcf') || (c >= '\ufdf0' && c
-                     <= '\ufffd');
-                bool nameMiddle = c == '-' || c == '.' || (c >= '0' && c <= '9') || c == '\u00b7'
-                     || (c >= '\u0300' && c <= '\u036f') || (c >= '\u203f' && c <= '\u2040') || nameStart;
+                bool nameStart = c == ':' || (c >= 'A' && c <= 'Z') || c == '_' || (c >= 'a' && c <= 'z') || (c >= '\u00c0'
+                     && c <= '\u00d6') || (c >= '\u00d8' && c <= '\u00f6') || (c >= '\u00f8' && c <= '\u02ff') || (c >= '\u0370'
+                     && c <= '\u037d') || (c >= '\u037f' && c <= '\u1fff') || (c >= '\u200c' && c <= '\u200d') || (c >= '\u2070'
+                     && c <= '\u218f') || (c >= '\u2c00' && c <= '\u2fef') || (c >= '\u3001' && c <= '\ud7ff') || (c >= '\uf900'
+                     && c <= '\ufdcf') || (c >= '\ufdf0' && c <= '\ufffd');
+                bool nameMiddle = c == '-' || c == '.' || (c >= '0' && c <= '9') || c == '\u00b7' || (c >= '\u0300' && c <=
+                     '\u036f') || (c >= '\u203f' && c <= '\u2040') || nameStart;
                 if (k == 0)
                 {
                     if (!nameStart)
@@ -263,8 +259,7 @@ namespace iTextSharp.Kernel.Utils
         /// Escapes a string with the appropriated XML codes.
         /// </summary>
         /// <param name="s">the string to be escaped</param>
-        /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <CODE>true</CODE>
-        ///     </param>
+        /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <CODE>true</CODE></param>
         /// <returns>the escaped string</returns>
         /// <since>5.0.6</since>
         protected internal static String EscapeXML(String s, bool onlyASCII)
@@ -332,14 +327,14 @@ namespace iTextSharp.Kernel.Utils
         /// <returns>true if it's OK to escape or unescape this value</returns>
         public static bool IsValidCharacterValue(int c)
         {
-            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000
-                 && c <= 0xFFFD || c >= 0x10000 && c <= 0x10FFFF);
+            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
+                 0x10000 && c <= 0x10FFFF);
         }
 
         private class MarkedContentEventListener : IEventListener
         {
-            private IDictionary<int, ITextExtractionStrategy> contentByMcid = new Dictionary<
-                int, ITextExtractionStrategy>();
+            private IDictionary<int, ITextExtractionStrategy> contentByMcid = new Dictionary<int, ITextExtractionStrategy
+                >();
 
             public virtual IDictionary<int, String> GetMcidContent()
             {

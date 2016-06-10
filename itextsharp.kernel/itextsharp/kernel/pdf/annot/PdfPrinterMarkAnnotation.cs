@@ -66,8 +66,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.PrinterMark;
         }
 
-        public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName
-            )
+        public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName)
         {
             return (PdfMarkupAnnotation)Put(PdfName.MN, arbitraryTypeName);
         }

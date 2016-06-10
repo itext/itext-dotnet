@@ -63,17 +63,16 @@ namespace iTextSharp.IO.Font.Otf
     public class GlyphPositioningTableReader : OpenTypeFontTableReader
     {
         /// <exception cref="System.IO.IOException"/>
-        public GlyphPositioningTableReader(RandomAccessFileOrArray rf, int gposTableLocation
-            , OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm
-            )
+        public GlyphPositioningTableReader(RandomAccessFileOrArray rf, int gposTableLocation, OpenTypeGdefTableReader
+             gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
             : base(rf, gposTableLocation, gdef, indexGlyphMap, unitsPerEm)
         {
             StartReadingTable();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag
-            , int[] subTableLocations)
+        protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
+            )
         {
             switch (lookupType)
             {

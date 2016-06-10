@@ -61,18 +61,16 @@ namespace iTextSharp.Layout
             this.columns = columns;
         }
 
-        public ColumnDocumentRenderer(Document document, bool immediateFlush, Rectangle[]
-             columns)
+        public ColumnDocumentRenderer(Document document, bool immediateFlush, Rectangle[] columns)
             : base(document, immediateFlush)
         {
             this.columns = columns;
         }
 
-        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-            )
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult)
         {
-            if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult
-                .GetAreaBreak().GetAreaType() != AreaBreakType.NEXT_AREA)
+            if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult.GetAreaBreak().GetAreaType
+                () != AreaBreakType.NEXT_AREA)
             {
                 nextAreaNumber = 0;
             }
@@ -80,8 +78,8 @@ namespace iTextSharp.Layout
             {
                 base.UpdateCurrentArea(overflowResult);
             }
-            return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ 
-                % columns.Length].Clone()));
+            return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone()
+                ));
         }
     }
 }

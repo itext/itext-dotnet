@@ -76,8 +76,8 @@ namespace iTextSharp.Kernel.Font
 
         /// <summary>Creates a Type3Glyph canvas with a new Content Stream.</summary>
         /// <param name="pdfDocument">the document that this canvas is created for</param>
-        internal Type3Glyph(PdfDocument pdfDocument, float wx, float llx, float lly, float
-             urx, float ury, bool isColor)
+        internal Type3Glyph(PdfDocument pdfDocument, float wx, float llx, float lly, float urx, float ury, bool isColor
+            )
             : base(((PdfStream)new PdfStream().MakeIndirect(pdfDocument)), null, pdfDocument)
         {
             WriteMetrics(wx, llx, lly, urx, ury, isColor);
@@ -157,8 +157,7 @@ namespace iTextSharp.Kernel.Font
         /// defines whether the glyph color is specified in the glyph description in the font.
         /// The consequence of value <CODE>true</CODE> is that the bounding box parameters are ignored.
         /// </param>
-        private void WriteMetrics(float wx, float llx, float lly, float urx, float ury, bool
-             isColor)
+        private void WriteMetrics(float wx, float llx, float lly, float urx, float ury, bool isColor)
         {
             this.isColor = isColor;
             this.wx = wx;
@@ -168,15 +167,14 @@ namespace iTextSharp.Kernel.Font
             this.ury = ury;
             if (isColor)
             {
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace
-                    ().WriteBytes(d0);
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteBytes(d0);
             }
             else
             {
                 //wy
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace
-                    ().WriteFloat(llx).WriteSpace().WriteFloat(lly).WriteSpace().WriteFloat(urx).
-                    WriteSpace().WriteFloat(ury).WriteSpace().WriteBytes(d1);
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteFloat(llx).WriteSpace
+                    ().WriteFloat(lly).WriteSpace().WriteFloat(urx).WriteSpace().WriteFloat(ury).WriteSpace().WriteBytes(d1
+                    );
             }
         }
 
@@ -198,13 +196,11 @@ namespace iTextSharp.Kernel.Font
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
         /// <param name="inlineImage">true if to add image as in-line.</param>
-        /// <returns>created Image XObject or null in case of in-line image (asInline = true).
-        ///     </returns>
-        public override PdfXObject AddImage(ImageData image, float a, float b, float c, float
-             d, float e, float f, bool inlineImage)
+        /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
+        public override PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
+            bool inlineImage)
         {
-            if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff
-                )))
+            if (!isColor && (!image.IsMask() || !(image.GetBpc() == 1 || image.GetBpc() > 0xff)))
             {
                 throw new PdfException("not.colorized.typed3.fonts.only.accept.mask.images");
             }
@@ -222,8 +218,7 @@ namespace iTextSharp.Kernel.Font
                 String[] bbArray = str.JSubstring(0, d0Pos - 1).Split(" ");
                 if (bbArray.Length == 2)
                 {
-                    this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture
-                        );
+                    this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             else
@@ -234,16 +229,11 @@ namespace iTextSharp.Kernel.Font
                     String[] bbArray = str.JSubstring(0, d1Pos - 1).Split(" ");
                     if (bbArray.Length == 6)
                     {
-                        this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        this.lly = float.Parse(bbArray[3], System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        this.urx = float.Parse(bbArray[4], System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        this.ury = float.Parse(bbArray[5], System.Globalization.CultureInfo.InvariantCulture
-                            );
+                        this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
+                        this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture);
+                        this.lly = float.Parse(bbArray[3], System.Globalization.CultureInfo.InvariantCulture);
+                        this.urx = float.Parse(bbArray[4], System.Globalization.CultureInfo.InvariantCulture);
+                        this.ury = float.Parse(bbArray[5], System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
             }

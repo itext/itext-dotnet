@@ -67,8 +67,7 @@ namespace iTextSharp.Signatures
         /// <param name="certificate">the certificate that was successfully verified</param>
         /// <param name="verifierClass">the class that was used for verification</param>
         /// <param name="message">the reason why the certificate could be verified</param>
-        public VerificationOK(X509Certificate certificate, Type verifierClass, String message
-            )
+        public VerificationOK(X509Certificate certificate, Type verifierClass, String message)
         {
             this.certificate = certificate;
             this.verifierClass = verifierClass;

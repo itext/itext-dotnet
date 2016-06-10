@@ -92,8 +92,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
         /// <param name="schemaNS">schema namespace</param>
         /// <param name="path">property name</param>
         /// <returns>Returns the expandet XMPPath.</returns>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the format is not correct somehow.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the format is not correct somehow.</exception>
         public static XMPPath ExpandXPath(String schemaNS, String path)
         {
             if (schemaNS == null || path == null)
@@ -208,8 +207,8 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
                 throw new XMPException("Empty XMPPath segment", XMPError.BADXPATH);
             }
             // ! Touch up later, also changing '@' to '?'.
-            XMPPathSegment segment = new XMPPathSegment(pos.path.JSubstring(pos.stepBegin, pos
-                .stepEnd), XMPPath.STRUCT_FIELD_STEP);
+            XMPPathSegment segment = new XMPPathSegment(pos.path.JSubstring(pos.stepBegin, pos.stepEnd), XMPPath.STRUCT_FIELD_STEP
+                );
             return segment;
         }
 
@@ -225,8 +224,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
             if ('0' <= pos.path[pos.stepEnd] && pos.path[pos.stepEnd] <= '9')
             {
                 // A numeric (decimal integer) array index.
-                while (pos.stepEnd < pos.path.Length && '0' <= pos.path[pos.stepEnd] && pos.path[
-                    pos.stepEnd] <= '9')
+                while (pos.stepEnd < pos.path.Length && '0' <= pos.path[pos.stepEnd] && pos.path[pos.stepEnd] <= '9')
                 {
                     pos.stepEnd++;
                 }
@@ -235,8 +233,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
             else
             {
                 // Could be "[last()]" or one of the selector forms. Find the ']' or '='.
-                while (pos.stepEnd < pos.path.Length && pos.path[pos.stepEnd] != ']' && pos.path[
-                    pos.stepEnd] != '=')
+                while (pos.stepEnd < pos.path.Length && pos.path[pos.stepEnd] != ']' && pos.path[pos.stepEnd] != '=')
                 {
                     pos.stepEnd++;
                 }
@@ -280,8 +277,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
                     }
                     if (pos.stepEnd >= pos.path.Length)
                     {
-                        throw new XMPException("No terminating quote for array selector", XMPError.BADXPATH
-                            );
+                        throw new XMPException("No terminating quote for array selector", XMPError.BADXPATH);
                     }
                     pos.stepEnd++;
                     // Absorb the trailing quote.
@@ -306,8 +302,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
         /// <param name="pos">the parsing position helper</param>
         /// <param name="expandedXPath">the path to contribute to</param>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the path is not valid.</exception>
-        private static void ParseRootNode(String schemaNS, PathPosition pos, XMPPath expandedXPath
-            )
+        private static void ParseRootNode(String schemaNS, PathPosition pos, XMPPath expandedXPath)
         {
             while (pos.stepEnd < pos.path.Length && "/[*".IndexOf(pos.path[pos.stepEnd]) < 0)
             {
@@ -317,8 +312,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
             {
                 throw new XMPException("Empty initial XMPPath step", XMPError.BADXPATH);
             }
-            String rootProp = VerifyXPathRoot(schemaNS, pos.path.JSubstring(pos.stepBegin, pos
-                .stepEnd));
+            String rootProp = VerifyXPathRoot(schemaNS, pos.path.JSubstring(pos.stepBegin, pos.stepEnd));
             XMPAliasInfo aliasInfo = XMPMetaFactory.GetSchemaRegistry().FindAlias(rootProp);
             if (aliasInfo == null)
             {
@@ -330,17 +324,16 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
             else
             {
                 // add schema xpath step and base step of alias
-                expandedXPath.Add(new XMPPathSegment(aliasInfo.GetNamespace(), XMPPath.SCHEMA_NODE
-                    ));
-                XMPPathSegment rootStep = new XMPPathSegment(VerifyXPathRoot(aliasInfo.GetNamespace
-                    (), aliasInfo.GetPropName()), XMPPath.STRUCT_FIELD_STEP);
+                expandedXPath.Add(new XMPPathSegment(aliasInfo.GetNamespace(), XMPPath.SCHEMA_NODE));
+                XMPPathSegment rootStep = new XMPPathSegment(VerifyXPathRoot(aliasInfo.GetNamespace(), aliasInfo.GetPropName
+                    ()), XMPPath.STRUCT_FIELD_STEP);
                 rootStep.SetAlias(true);
                 rootStep.SetAliasForm(aliasInfo.GetAliasForm().GetOptions());
                 expandedXPath.Add(rootStep);
                 if (aliasInfo.GetAliasForm().IsArrayAltText())
                 {
-                    XMPPathSegment qualSelectorStep = new XMPPathSegment("[?xml:lang='x-default']", XMPPath
-                        .QUAL_SELECTOR_STEP);
+                    XMPPathSegment qualSelectorStep = new XMPPathSegment("[?xml:lang='x-default']", XMPPath.QUAL_SELECTOR_STEP
+                        );
                     qualSelectorStep.SetAlias(true);
                     qualSelectorStep.SetAliasForm(aliasInfo.GetAliasForm().GetOptions());
                     expandedXPath.Add(qualSelectorStep);
@@ -363,8 +356,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
         /// namespace prefix has not been registered.
         /// </summary>
         /// <param name="qualName">a qualifier name</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the name is not conformant
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the name is not conformant</exception>
         private static void VerifyQualName(String qualName)
         {
             int colonPos = qualName.IndexOf(':');
@@ -378,8 +370,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
                     {
                         return;
                     }
-                    throw new XMPException("Unknown namespace prefix for qualified name", XMPError.BADXPATH
-                        );
+                    throw new XMPException("Unknown namespace prefix for qualified name", XMPError.BADXPATH);
                 }
             }
             throw new XMPException("Ill-formed qualified name", XMPError.BADXPATH);
@@ -387,8 +378,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
 
         /// <summary>Verify if an XML name is conformant.</summary>
         /// <param name="name">an XML name</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">When the name is not XML conformant
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">When the name is not XML conformant</exception>
         private static void VerifySimpleXMLName(String name)
         {
             if (!Utils.IsXMLName(name))
@@ -410,8 +400,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
         /// <param name="schemaNS">schema namespace</param>
         /// <param name="rootProp">the root xpath segment</param>
         /// <returns>Returns root QName.</returns>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the format is not correct somehow.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the format is not correct somehow.</exception>
         private static String VerifyXPathRoot(String schemaNS, String rootProp)
         {
             // Do some basic checks on the URI and name. Try to lookup the URI. See if the name is
@@ -422,8 +411,7 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
             }
             if ((rootProp[0] == '?') || (rootProp[0] == '@'))
             {
-                throw new XMPException("Top level name must not be a qualifier", XMPError.BADXPATH
-                    );
+                throw new XMPException("Top level name must not be a qualifier", XMPError.BADXPATH);
             }
             if (rootProp.IndexOf('/') >= 0 || rootProp.IndexOf('[') >= 0)
             {
@@ -453,16 +441,14 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
                 VerifySimpleXMLName(rootProp.JSubstring(0, colonPos));
                 VerifySimpleXMLName(rootProp.Substring(colonPos));
                 prefix = rootProp.JSubstring(0, colonPos + 1);
-                String regPrefix = XMPMetaFactory.GetSchemaRegistry().GetNamespacePrefix(schemaNS
-                    );
+                String regPrefix = XMPMetaFactory.GetSchemaRegistry().GetNamespacePrefix(schemaNS);
                 if (regPrefix == null)
                 {
                     throw new XMPException("Unknown schema namespace prefix", XMPError.BADSCHEMA);
                 }
                 if (!prefix.Equals(regPrefix))
                 {
-                    throw new XMPException("Schema namespace URI and prefix mismatch", XMPError.BADSCHEMA
-                        );
+                    throw new XMPException("Schema namespace URI and prefix mismatch", XMPError.BADSCHEMA);
                 }
                 return rootProp;
             }

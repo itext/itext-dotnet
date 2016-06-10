@@ -66,8 +66,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState
-             source)
+        internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState source)
             : base(source)
         {
             // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
@@ -112,11 +111,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="fillingRule">
         /// The filling rule which should be applied to the given path.
         /// It should be either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// </param>
         public virtual void Clip(Path path, int fillingRule)
         {
@@ -130,8 +127,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             ClipperBridge.AddPath(clipper, clippingPath, PolyType.SUBJECT);
             ClipperBridge.AddPath(clipper, pathCopy, PolyType.CLIP);
             PolyTree resultTree = new PolyTree();
-            clipper.Execute(ClipType.INTERSECTION, resultTree, PolyFillType.NON_ZERO, ClipperBridge
-                .GetFillType(fillingRule));
+            clipper.Execute(ClipType.INTERSECTION, resultTree, PolyFillType.NON_ZERO, ClipperBridge.GetFillType(fillingRule
+                ));
             clippingPath = ClipperBridge.ConvertToPath(resultTree);
         }
 
@@ -177,12 +174,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         {
             IShape newSegment;
             IList<Point> segBasePts = segment.GetBasePoints();
-            Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[
-                segBasePts.Count]));
+            Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[segBasePts.Count]));
             if (segment is BezierCurve)
             {
-                newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints
-                    ));
+                newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints));
             }
             else
             {
@@ -191,15 +186,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             return newSegment;
         }
 
-        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points
-            )
+        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points)
         {
             try
             {
-                AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix
-                    .Get(Matrix.I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.
-                    Get(Matrix.I22), transformationMatrix.Get(Matrix.I31), transformationMatrix.Get
-                    (Matrix.I32));
+                AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix.Get(Matrix
+                    .I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.Get(Matrix.I22), transformationMatrix
+                    .Get(Matrix.I31), transformationMatrix.Get(Matrix.I32));
                 t = t.CreateInverse();
                 Point[] transformed = new Point[points.Length];
                 t.Transform(points, 0, transformed, 0, points.Length);

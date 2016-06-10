@@ -95,20 +95,16 @@ namespace iTextSharp.Kernel.Geom
         /// <returns>the result of the cross product</returns>
         public virtual iTextSharp.Kernel.Geom.Vector Cross(Matrix by)
         {
-            float x = vals[I1] * by.Get(Matrix.I11) + vals[I2] * by.Get(Matrix.I21) + vals[I3
-                ] * by.Get(Matrix.I31);
-            float y = vals[I1] * by.Get(Matrix.I12) + vals[I2] * by.Get(Matrix.I22) + vals[I3
-                ] * by.Get(Matrix.I32);
-            float z = vals[I1] * by.Get(Matrix.I13) + vals[I2] * by.Get(Matrix.I23) + vals[I3
-                ] * by.Get(Matrix.I33);
+            float x = vals[I1] * by.Get(Matrix.I11) + vals[I2] * by.Get(Matrix.I21) + vals[I3] * by.Get(Matrix.I31);
+            float y = vals[I1] * by.Get(Matrix.I12) + vals[I2] * by.Get(Matrix.I22) + vals[I3] * by.Get(Matrix.I32);
+            float z = vals[I1] * by.Get(Matrix.I13) + vals[I2] * by.Get(Matrix.I23) + vals[I3] * by.Get(Matrix.I33);
             return new iTextSharp.Kernel.Geom.Vector(x, y, z);
         }
 
         /// <summary>Computes the difference between this vector and the specified vector</summary>
         /// <param name="v">the vector to subtract from this one</param>
         /// <returns>the results of the subtraction</returns>
-        public virtual iTextSharp.Kernel.Geom.Vector Subtract(iTextSharp.Kernel.Geom.Vector
-             v)
+        public virtual iTextSharp.Kernel.Geom.Vector Subtract(iTextSharp.Kernel.Geom.Vector v)
         {
             float x = vals[I1] - v.vals[I1];
             float y = vals[I2] - v.vals[I2];
@@ -119,8 +115,7 @@ namespace iTextSharp.Kernel.Geom
         /// <summary>Computes the cross product of this vector and the specified vector</summary>
         /// <param name="with">the vector to cross this vector with</param>
         /// <returns>the cross product</returns>
-        public virtual iTextSharp.Kernel.Geom.Vector Cross(iTextSharp.Kernel.Geom.Vector 
-            with)
+        public virtual iTextSharp.Kernel.Geom.Vector Cross(iTextSharp.Kernel.Geom.Vector with)
         {
             float x = vals[I2] * with.vals[I3] - vals[I3] * with.vals[I2];
             float y = vals[I3] * with.vals[I1] - vals[I1] * with.vals[I3];
@@ -129,8 +124,7 @@ namespace iTextSharp.Kernel.Geom
         }
 
         /// <summary>Normalizes the vector (i.e.</summary>
-        /// <remarks>Normalizes the vector (i.e. returns the unit vector in the same orientation as this vector)
-        ///     </remarks>
+        /// <remarks>Normalizes the vector (i.e. returns the unit vector in the same orientation as this vector)</remarks>
         /// <returns>the unit vector</returns>
         public virtual iTextSharp.Kernel.Geom.Vector Normalize()
         {
@@ -157,8 +151,7 @@ namespace iTextSharp.Kernel.Geom
         /// <returns>the dot product</returns>
         public virtual float Dot(iTextSharp.Kernel.Geom.Vector with)
         {
-            return vals[I1] * with.vals[I1] + vals[I2] * with.vals[I2] + vals[I3] * with.vals
-                [I3];
+            return vals[I1] * with.vals[I1] + vals[I2] * with.vals[I2] + vals[I3] * with.vals[I3];
         }
 
         /// <summary>

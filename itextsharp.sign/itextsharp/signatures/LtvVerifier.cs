@@ -57,13 +57,11 @@ namespace iTextSharp.Signatures
     public class LtvVerifier : RootStoreVerifier
     {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
-            iTextSharp.Signatures.LtvVerifier));
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerifier
+            ));
 
-        /// <summary>Option to specify level of verification; signing certificate only or the entire chain.
-        ///     </summary>
-        protected internal LtvVerification.CertificateOption option = LtvVerification.CertificateOption
-            .SIGNING_CERTIFICATE;
+        /// <summary>Option to specify level of verification; signing certificate only or the entire chain.</summary>
+        protected internal LtvVerification.CertificateOption option = LtvVerification.CertificateOption.SIGNING_CERTIFICATE;
 
         /// <summary>Verify root.</summary>
         protected internal bool verifyRootCertificate = true;
@@ -74,8 +72,7 @@ namespace iTextSharp.Signatures
         /// <summary>The fields in the revision that is being verified.</summary>
         protected internal PdfAcroForm acroForm;
 
-        /// <summary>The date the revision was signed, or <code>null</code> for the highest revision.
-        ///     </summary>
+        /// <summary>The date the revision was signed, or <code>null</code> for the highest revision.</summary>
         protected internal DateTime signDate;
 
         /// <summary>The signature that covers the revision.</summary>
@@ -105,8 +102,8 @@ namespace iTextSharp.Signatures
             signatureName = names[names.Count - 1];
             this.signDate = SignUtils.GetCurrentUtcTime();
             pkcs7 = CoversWholeDocument();
-            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
-                 : "", signatureName));
+            LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
+                ));
         }
 
         /// <summary>Sets an extra verifier.</summary>
@@ -119,14 +116,12 @@ namespace iTextSharp.Signatures
         /// <summary>Sets the certificate option.</summary>
         /// <param name="option">Either CertificateOption.SIGNING_CERTIFICATE (default) or CertificateOption.WHOLE_CHAIN
         ///     </param>
-        public virtual void SetCertificateOption(LtvVerification.CertificateOption option
-            )
+        public virtual void SetCertificateOption(LtvVerification.CertificateOption option)
         {
             this.option = option;
         }
 
-        /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.
-        ///     </summary>
+        /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
         public virtual void SetVerifyRootCertificate(bool verifyRootCertificate)
         {
             this.verifyRootCertificate = verifyRootCertificate;
@@ -147,8 +142,7 @@ namespace iTextSharp.Signatures
             }
             else
             {
-                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document."
-                    );
+                throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
             }
             if (pkcs7.Verify())
             {
@@ -162,8 +156,7 @@ namespace iTextSharp.Signatures
             }
         }
 
-        /// <summary>Verifies all the document-level timestamps and all the signatures in the document.
-        ///     </summary>
+        /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual IList<VerificationOK> Verify(IList<VerificationOK> result)
@@ -218,8 +211,7 @@ namespace iTextSharp.Signatures
                         signCert.Verify(signCert.GetPublicKey());
                         if (latestRevision && chain.Length > 1)
                         {
-                            list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"
-                                ));
+                            list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"));
                         }
                         if (list.Count == 0 && verifyRootCertificate)
                         {
@@ -229,15 +221,13 @@ namespace iTextSharp.Signatures
                         {
                             if (chain.Length > 1)
                             {
-                                list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate passed without checking"
-                                    ));
+                                list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate passed without checking"));
                             }
                         }
                     }
                     catch (GeneralSecurityException)
                     {
-                        throw new VerificationException(signCert, "Couldn't verify with CRL or OCSP or trusted anchor"
-                            );
+                        throw new VerificationException(signCert, "Couldn't verify with CRL or OCSP or trusted anchor");
                     }
                 }
                 result.AddAll(list);
@@ -282,8 +272,8 @@ namespace iTextSharp.Signatures
         /// <exception cref="System.IO.IOException"/>
         /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
         ///     "/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             // we'll verify agains the rootstore (if present)
             RootStoreVerifier rootStoreVerifier = new RootStoreVerifier(verifier);
@@ -293,8 +283,7 @@ namespace iTextSharp.Signatures
             crlVerifier.SetRootStore(rootStore);
             crlVerifier.SetOnlineCheckingAllowed(latestRevision || onlineCheckingAllowed);
             // We'll verify against a list of OCSPs
-            OCSPVerifier ocspVerifier = new OCSPVerifier(crlVerifier, GetOCSPResponsesFromDSS
-                ());
+            OCSPVerifier ocspVerifier = new OCSPVerifier(crlVerifier, GetOCSPResponsesFromDSS());
             ocspVerifier.SetRootStore(rootStore);
             ocspVerifier.SetOnlineCheckingAllowed(latestRevision || onlineCheckingAllowed);
             // We verify the chain
@@ -325,8 +314,8 @@ namespace iTextSharp.Signatures
                 names = sgnUtil.GetSignatureNames();
                 signatureName = names[names.Count - 1];
                 pkcs7 = CoversWholeDocument();
-                LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
-                     : "", signatureName));
+                LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
+                    ));
             }
             else
             {
@@ -354,8 +343,7 @@ namespace iTextSharp.Signatures
             for (int i = 0; i < crlarray.Size(); i++)
             {
                 PdfStream stream = crlarray.GetAsStream(i);
-                crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes()
-                    )));
+                crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
             }
             return crls;
         }

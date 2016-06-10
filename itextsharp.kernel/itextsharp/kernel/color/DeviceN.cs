@@ -60,8 +60,7 @@ namespace iTextSharp.Kernel.Color
         {
         }
 
-        public DeviceN(IList<String> names, PdfColorSpace alternateCs, PdfFunction tintTransform
-            , float[] value)
+        public DeviceN(IList<String> names, PdfColorSpace alternateCs, PdfFunction tintTransform, float[] value)
             : this(new PdfSpecialCs.DeviceN(names, alternateCs, tintTransform), value)
         {
         }

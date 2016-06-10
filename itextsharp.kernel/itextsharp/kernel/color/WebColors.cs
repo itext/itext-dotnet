@@ -239,13 +239,11 @@ namespace iTextSharp.Kernel.Color
         /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B)
         /// </param>
         /// <returns>the corresponding BaseColor object. Never returns null.</returns>
-        /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.
-        ///     </exception>
+        /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.</exception>
         public static DeviceRgb GetRGBColor(String name)
         {
             int[] color = new int[] { 0, 0, 0, 255 };
-            String colorName = name.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                );
+            String colorName = name.ToLower(System.Globalization.CultureInfo.InvariantCulture);
             bool colorStrWithoutHash = MissingHashColorFormat(colorName);
             if (colorName.StartsWith("#") || colorStrWithoutHash)
             {
@@ -315,8 +313,7 @@ namespace iTextSharp.Kernel.Color
         {
             if (rgbChannel.EndsWith("%"))
             {
-                return System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) * 
-                    255 / 100;
+                return System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) * 255 / 100;
             }
             else
             {

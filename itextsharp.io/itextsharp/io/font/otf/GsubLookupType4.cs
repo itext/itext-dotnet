@@ -57,8 +57,7 @@ namespace iTextSharp.IO.Font.Otf
         private IDictionary<int, IList<int[]>> ligatures;
 
         /// <exception cref="System.IO.IOException"/>
-        public GsubLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GsubLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             ligatures = new Dictionary<int, IList<int[]>>();
@@ -75,8 +74,7 @@ namespace iTextSharp.IO.Font.Otf
             bool changed = false;
             Glyph g = line.Get(line.idx);
             bool match = false;
-            if (ligatures.ContainsKey(g.GetCode()) && !openReader.IsSkip(g.GetCode(), lookupFlag
-                ))
+            if (ligatures.ContainsKey(g.GetCode()) && !openReader.IsSkip(g.GetCode(), lookupFlag))
             {
                 OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
                 gidx.line = line;

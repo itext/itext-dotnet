@@ -108,8 +108,8 @@ namespace iTextSharp.Layout.Property
 
         public override bool Equals(Object obj)
         {
-            return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading
-                )obj).type && value == ((iTextSharp.Layout.Property.Leading)obj).value;
+            return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading)obj).type
+                 && value == ((iTextSharp.Layout.Property.Leading)obj).value;
         }
     }
 }

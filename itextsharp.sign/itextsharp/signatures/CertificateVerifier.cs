@@ -92,8 +92,8 @@ namespace iTextSharp.Signatures
         /// </returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             // Check if the certificate is valid on the signDate
             if (signDate != null)

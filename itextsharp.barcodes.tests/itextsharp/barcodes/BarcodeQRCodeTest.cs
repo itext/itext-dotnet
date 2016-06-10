@@ -10,11 +10,10 @@ namespace iTextSharp.Barcodes
 {
     public class BarcodeQRCodeTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/barcodes/BarcodeQRCode/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/barcodes/BarcodeQRCode/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -33,15 +32,13 @@ namespace iTextSharp.Barcodes
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object
-                >();
+            IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.L;
-            BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world"
-                );
+            BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
             barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GRAY, 12);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -55,14 +52,13 @@ namespace iTextSharp.Barcodes
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object
-                >();
+            IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
             BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
             barcode1.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GRAY, 12);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
     }
 }

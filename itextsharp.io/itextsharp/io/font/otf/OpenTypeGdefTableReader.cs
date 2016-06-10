@@ -100,8 +100,7 @@ namespace iTextSharp.IO.Font.Otf
 
         public virtual bool IsSkip(int glyph, int flag)
         {
-            if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK
-                )) != 0)
+            if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK)) != 0)
             {
                 int cla = glyphClass.GetOtfClass(glyph);
                 if (cla == GLYPH_SKIP_BASE && (flag & FLAG_IGNORE_BASE) != 0)

@@ -86,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf
                 PdfDictionary pages = pdfCatalog.GetPdfObject().GetAsDictionary(PdfName.Pages);
                 if (pages == null)
                 {
-                    throw new PdfException(PdfException.InvalidPageStructurePagesPagesMustBePdfDictionary
-                        );
+                    throw new PdfException(PdfException.InvalidPageStructurePagesPagesMustBePdfDictionary);
                 }
                 this.root = new PdfPages(0, int.MaxValue, pages, null);
                 parents.Add(this.root);
@@ -385,8 +384,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfArray kids = parent.GetKids();
             if (kids == null)
             {
-                throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum
-                     + 1);
+                throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
             }
             int kidsCount = parent.GetCount();
             // we should handle separated pages, it means every PdfArray kids must contain either PdfPage or PdfPages,
@@ -399,8 +397,7 @@ namespace iTextSharp.Kernel.Pdf
                 if (page == null)
                 {
                     // null values not allowed in pages tree.
-                    throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum
-                         + 1);
+                    throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);
                 if (pageKids != null)
@@ -412,8 +409,7 @@ namespace iTextSharp.Kernel.Pdf
                     else
                     {
                         // kids must be of type array
-                        throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum
-                             + 1);
+                        throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
                     }
                 }
             }
@@ -444,8 +440,7 @@ namespace iTextSharp.Kernel.Pdf
                     else
                     {
                         // pdfPagesObject is PdfPages
-                        int from = lastPdfPages == null ? parent.GetFrom() : lastPdfPages.GetFrom() + lastPdfPages
-                            .GetCount();
+                        int from = lastPdfPages == null ? parent.GetFrom() : lastPdfPages.GetFrom() + lastPdfPages.GetCount();
                         lastPdfPages = new PdfPages(from, kidsCount, pdfPagesObject, parent);
                         newParents.Add(lastPdfPages);
                         kidsCount -= lastPdfPages.GetCount();

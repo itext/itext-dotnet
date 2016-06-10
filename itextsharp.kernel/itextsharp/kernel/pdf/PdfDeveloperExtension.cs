@@ -63,19 +63,16 @@ namespace iTextSharp.Kernel.Pdf
     public class PdfDeveloperExtension
     {
         /// <summary>An instance of this class for Adobe 1.7 Extension level 3.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ADOBE_1_7_EXTENSIONLEVEL3
-             = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension(PdfName.ADBE, PdfName.Pdf_Version_1_7
-            , 3);
+        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ADOBE_1_7_EXTENSIONLEVEL3 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+            (PdfName.ADBE, PdfName.Pdf_Version_1_7, 3);
 
         /// <summary>An instance of this class for ETSI 1.7 Extension level 2.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL2
-             = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension(PdfName.ESIC, PdfName.Pdf_Version_1_7
-            , 2);
+        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL2 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+            (PdfName.ESIC, PdfName.Pdf_Version_1_7, 2);
 
         /// <summary>An instance of this class for ETSI 1.7 Extension level 5.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL5
-             = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension(PdfName.ESIC, PdfName.Pdf_Version_1_7
-            , 5);
+        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL5 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+            (PdfName.ESIC, PdfName.Pdf_Version_1_7, 5);
 
         /// <summary>The prefix used in the Extensions dictionary added to the Catalog.</summary>
         protected internal PdfName prefix;
@@ -90,8 +87,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="prefix">the prefix referring to the developer</param>
         /// <param name="baseVersion">the number of the base version</param>
         /// <param name="extensionLevel">the extension level within the baseverion.</param>
-        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel
-            )
+        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel)
         {
             /* TODO: There is one more entry in PDF 2.0 (URL entry), so probably this class
             * should be refactored to be more flexible in the future */

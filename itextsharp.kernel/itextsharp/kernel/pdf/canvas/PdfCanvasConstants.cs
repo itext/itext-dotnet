@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf.Canvas
 {
-    /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).
-    ///     </summary>
+    /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).</summary>
     public class PdfCanvasConstants
     {
         /// <summary>

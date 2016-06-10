@@ -55,11 +55,10 @@ namespace iTextSharp.Barcodes
         public static int TYPE_PLANET = 2;
 
         /// <summary>The bars for each character.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 1, 0, 0, 0
-             }, new byte[] { 0, 0, 0, 1, 1 }, new byte[] { 0, 0, 1, 0, 1 }, new byte[] { 
-            0, 0, 1, 1, 0 }, new byte[] { 0, 1, 0, 0, 1 }, new byte[] { 0, 1, 0, 1, 0 }, 
-            new byte[] { 0, 1, 1, 0, 0 }, new byte[] { 1, 0, 0, 0, 1 }, new byte[] { 1, 0
-            , 0, 1, 0 }, new byte[] { 1, 0, 1, 0, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 
+            1, 1 }, new byte[] { 0, 0, 1, 0, 1 }, new byte[] { 0, 0, 1, 1, 0 }, new byte[] { 0, 1, 0, 0, 1 }, new 
+            byte[] { 0, 1, 0, 1, 0 }, new byte[] { 0, 1, 1, 0, 0 }, new byte[] { 1, 0, 0, 0, 1 }, new byte[] { 1, 
+            0, 0, 1, 0 }, new byte[] { 1, 0, 1, 0, 0 } };
 
         public BarcodePostnet(PdfDocument document)
             : base(document)
@@ -113,8 +112,8 @@ namespace iTextSharp.Barcodes
             n = (width - x) / (bars.Length - 1);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             if (barColor != null)
             {

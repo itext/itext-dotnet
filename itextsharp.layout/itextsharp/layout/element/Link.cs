@@ -55,8 +55,7 @@ namespace iTextSharp.Layout.Element
     /// A clickable piece of
     /// <see cref="Text"/>
     /// which contains a
-    /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary
-    ///     </see>
+    /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary</see>
     /// . The concept is largely similar to that of the
     /// HTML anchor tag.
     /// </summary>
@@ -84,8 +83,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Kernel.Pdf.Action.PdfAction"/>
         /// </param>
         public Link(String text, PdfAction action)
-            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0))
-                .SetAction(action)))
+            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action)))
         {
         }
 
@@ -96,8 +94,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Kernel.Pdf.Navigation.PdfDestination"/>
         /// </param>
         public Link(String text, PdfDestination destination)
-            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination
-                ))
+            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination))
         {
         }
 

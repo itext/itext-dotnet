@@ -48,8 +48,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
     public abstract class SubTableLookup6 : ContextualSubTable
     {
-        protected internal SubTableLookup6(OpenTypeFontTableReader openReader, int lookupFlag
-            )
+        protected internal SubTableLookup6(OpenTypeFontTableReader openReader, int lookupFlag)
             : base(openReader, lookupFlag)
         {
         }
@@ -65,8 +64,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
             foreach (ContextualSubstRule rule in rules)
             {
                 int lastGlyphIndex = CheckIfContextMatch(line, rule);
-                if (lastGlyphIndex != -1 && CheckIfLookaheadContextMatch(line, rule, lastGlyphIndex
-                    ) && CheckIfBacktrackContextMatch(line, rule))
+                if (lastGlyphIndex != -1 && CheckIfLookaheadContextMatch(line, rule, lastGlyphIndex) && CheckIfBacktrackContextMatch
+                    (line, rule))
                 {
                     line.start = line.idx;
                     line.end = lastGlyphIndex + 1;
@@ -77,8 +76,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
         }
 
         /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-        protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, ContextualSubstRule
-             rule, int startIdx)
+        protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, ContextualSubstRule rule, int
+             startIdx)
         {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
@@ -96,8 +95,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
         }
 
         /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-        protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, ContextualSubstRule
-             rule)
+        protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, ContextualSubstRule rule)
         {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();

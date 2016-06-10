@@ -50,19 +50,16 @@ namespace iTextSharp.IO.Font
 {
     public class AdobeGlyphList
     {
-        private static IDictionary<int, String> unicode2names = new Dictionary<int, String
-            >();
+        private static IDictionary<int, String> unicode2names = new Dictionary<int, String>();
 
-        private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?
-            >();
+        private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?>();
 
         static AdobeGlyphList()
         {
             Stream resource = null;
             try
             {
-                resource = ResourceUtil.GetResourceStream(FontConstants.RESOURCE_PATH + "AdobeGlyphList.txt"
-                    );
+                resource = ResourceUtil.GetResourceStream(FontConstants.RESOURCE_PATH + "AdobeGlyphList.txt");
                 if (resource == null)
                 {
                     String msg = "AdobeGlyphList.txt not found as resource. (It must exist as resource in the package com.itextpdf.text.pdf.fonts)";
@@ -141,8 +138,8 @@ namespace iTextSharp.IO.Font
             {
                 v = (int)names2unicode.Get(name);
             }
-            if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).StartsWith("uni"))
+            if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith
+                ("uni"))
             {
                 try
                 {

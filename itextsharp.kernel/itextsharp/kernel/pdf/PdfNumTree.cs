@@ -80,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf
             {
                 if (treeType.Equals(PdfName.ParentTree))
                 {
-                    PdfDictionary structTreeRoot = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot
-                        );
+                    PdfDictionary structTreeRoot = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
                     if (structTreeRoot != null)
                     {
                         numbers = structTreeRoot.GetAsDictionary(PdfName.ParentTree);
@@ -118,8 +117,7 @@ namespace iTextSharp.Kernel.Pdf
                 return dic;
             }
             int skip = NODE_SIZE;
-            PdfDictionary[] kids = new PdfDictionary[(numbers.Length + NODE_SIZE - 1) / NODE_SIZE
-                ];
+            PdfDictionary[] kids = new PdfDictionary[(numbers.Length + NODE_SIZE - 1) / NODE_SIZE];
             for (int i = 0; i < kids.Length; ++i)
             {
                 int offset = i * NODE_SIZE;
@@ -159,12 +157,10 @@ namespace iTextSharp.Kernel.Pdf
                 {
                     int offset = k_1 * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
-                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument
-                        ()));
+                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
                     PdfArray arr = new PdfArray();
                     arr.Add(new PdfNumber((int)numbers[k_1 * skip]));
-                    arr.Add(new PdfNumber((int)numbers[Math.Min((k_1 + 1) * skip, numbers.Length) - 1
-                        ]));
+                    arr.Add(new PdfNumber((int)numbers[Math.Min((k_1 + 1) * skip, numbers.Length) - 1]));
                     dic.Put(PdfName.Limits, arr);
                     arr = new PdfArray();
                     for (; offset < end; ++offset)

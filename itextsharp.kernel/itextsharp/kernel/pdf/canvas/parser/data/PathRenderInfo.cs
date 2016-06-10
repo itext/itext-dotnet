@@ -90,27 +90,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// </param>
         /// <param name="rule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
-        /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.
-        ///     </param>
+        /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.</param>
         /// <param name="clipRule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
         /// <param name="gs">The graphics state.</param>
-        public PathRenderInfo(Path path, int operation, int rule, bool isClip, int clipRule
-            , CanvasGraphicsState gs)
+        public PathRenderInfo(Path path, int operation, int rule, bool isClip, int clipRule, CanvasGraphicsState gs
+            )
         {
             this.path = path;
             this.operation = operation;
@@ -125,8 +120,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="NO_OP"/>
         /// then the rule is ignored,
         /// otherwise
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
         /// See
@@ -165,11 +159,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <returns>
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
         public virtual int GetRule()
@@ -177,8 +169,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
             return rule;
         }
 
-        /// <returns>true indicates that current path modifies the clipping path, false - if not.
-        ///     </returns>
+        /// <returns>true indicates that current path modifies the clipping path, false - if not.</returns>
         public virtual bool IsPathModifiesClippingPath()
         {
             return isClip;
@@ -186,11 +177,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <returns>
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING
-        ///     "/>
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/
-        ///     >
+        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
         public virtual int GetClippingRule()

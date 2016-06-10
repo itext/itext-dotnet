@@ -8,8 +8,7 @@ namespace iTextSharp.Pdfa
 {
     public class PdfA1EmbeddedFilesCheckTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
@@ -19,12 +18,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
-                    , outputIntent);
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 PdfDictionary fileNames = new PdfDictionary();
                 pdfDocument.GetCatalog().Put(PdfName.Names, fileNames);
                 PdfDictionary embeddedFiles = new PdfDictionary();
@@ -32,8 +29,8 @@ namespace iTextSharp.Pdfa
                 PdfArray names = new PdfArray();
                 fileNames.Put(PdfName.Names, names);
                 names.Add(new PdfString("some/file/path"));
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder +
-                     "sample.wav", "sample.wav", "sample", null, null, true);
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                    , "sample", null, null, true);
                 names.Add(spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
@@ -50,16 +47,14 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
-                    , outputIntent);
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder +
-                     "sample.wav", "sample.wav", "sample", null, null, true);
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                    , "sample", null, null, true);
                 stream.Put(PdfName.F, spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();
@@ -76,16 +71,14 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B
-                    , outputIntent);
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 PdfStream stream = new PdfStream();
                 pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder +
-                     "sample.wav", "sample.wav", "sample", null, null, true);
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                    , "sample", null, null, true);
                 stream.Put(new PdfName("fileData"), spec.GetPdfObject());
                 pdfDocument.AddNewPage();
                 pdfDocument.Close();

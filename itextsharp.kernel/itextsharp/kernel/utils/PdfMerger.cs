@@ -61,16 +61,14 @@ namespace iTextSharp.Kernel.Utils
         /// This class is used to merge a number of existing documents into one. By default, if source document
         /// contains tags and outlines, they will be also copied to the destination document.
         /// </remarks>
-        /// <param name="pdfDocument">the document into which source documents will be merged.
-        ///     </param>
+        /// <param name="pdfDocument">the document into which source documents will be merged.</param>
         public PdfMerger(PdfDocument pdfDocument)
             : this(pdfDocument, true, true)
         {
         }
 
         /// <summary>This class is used to merge a number of existing documents into one.</summary>
-        /// <param name="pdfDocument">the document into which source documents will be merged.
-        ///     </param>
+        /// <param name="pdfDocument">the document into which source documents will be merged.</param>
         /// <param name="mergeTags">
         /// if true, then tags from the source document are copied even if destination document is not set as
         /// tagged. Note, that if false, tag structure is still could be copied if the destination document
@@ -99,15 +97,13 @@ namespace iTextSharp.Kernel.Utils
         /// immediately after merging specified pages into current document. If <i>false</i> - PdfDocuments are left open.
         /// Default value - <i>false</i>.
         /// </summary>
-        /// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.
-        ///     </param>
+        /// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.</param>
         /// <returns>
         /// this
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments
-            )
+        public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments)
         {
             this.closeSrcDocuments = closeSourceDocuments;
             return this;
@@ -132,8 +128,7 @@ namespace iTextSharp.Kernel.Utils
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage
-            , int toPage)
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage, int toPage)
         {
             IList<int> pages = new List<int>(toPage - fromPage);
             for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
@@ -161,8 +156,7 @@ namespace iTextSharp.Kernel.Utils
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int
-            > pages)
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int> pages)
         {
             if (mergeTags && from.IsTagged())
             {

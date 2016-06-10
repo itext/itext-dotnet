@@ -125,8 +125,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
             }
 
-            public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix
-                )
+            public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix)
                 : this(whitePoint)
             {
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
@@ -270,8 +269,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
                 List<PdfObject> tempArray = new List<PdfObject>(2);
                 tempArray.Add(PdfName.ICCBased);
-                tempArray.Add(range == null ? GetIccProfileStream(iccStream) : GetIccProfileStream
-                    (iccStream, range));
+                tempArray.Add(range == null ? GetIccProfileStream(iccStream) : GetIccProfileStream(iccStream, range));
                 return new PdfArray(tempArray);
             }
         }

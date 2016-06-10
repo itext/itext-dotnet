@@ -65,17 +65,15 @@ namespace iTextSharp.Layout.Renderer
                 UpdateCurrentArea(null);
             }
             // Static layout
-            if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers
-                .Count - 1] == renderer)
+            if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers.Count - 1] == renderer)
             {
                 childRenderers.JRemoveAt(childRenderers.Count - 1);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
                 LayoutArea storedArea = null;
                 LayoutArea nextStoredArea = null;
-                while (currentArea != null && renderer != null && (result = renderer.SetParent(this
-                    ).Layout(new LayoutContext(currentArea.Clone()))).GetStatus() != LayoutResult
-                    .FULL)
+                while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
+                    (currentArea.Clone()))).GetStatus() != LayoutResult.FULL)
                 {
                     if (result.GetStatus() == LayoutResult.PARTIAL)
                     {
@@ -104,8 +102,8 @@ namespace iTextSharp.Layout.Renderer
                         {
                             if (result.GetOverflowRenderer() is ImageRenderer)
                             {
-                                if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer
-                                    ()).imageHeight && !currentArea.IsEmptyArea())
+                                if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer()).imageHeight && !currentArea
+                                    .IsEmptyArea())
                                 {
                                     UpdateCurrentArea(result);
                                 }
@@ -115,11 +113,11 @@ namespace iTextSharp.Layout.Renderer
                             {
                                 if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer))
                                 {
-                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>
-                                        (iTextSharp.Layout.Property.Property.KEEP_TOGETHER)))
+                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(iTextSharp.Layout.Property.Property
+                                        .KEEP_TOGETHER)))
                                     {
-                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property
-                                            .KEEP_TOGETHER, false);
+                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER
+                                            , false);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
@@ -133,8 +131,7 @@ namespace iTextSharp.Layout.Renderer
                                     }
                                     else
                                     {
-                                        result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
-                                            , true);
+                                        result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT, true);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                     }
@@ -159,10 +156,9 @@ namespace iTextSharp.Layout.Renderer
                 }
                 if (currentArea != null)
                 {
-                    System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null
-                        );
-                    currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea
-                        ().GetBBox().GetHeight());
+                    System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null);
+                    currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
+                        ());
                     currentArea.SetEmptyArea(false);
                     if (renderer != null)
                     {
@@ -176,17 +172,15 @@ namespace iTextSharp.Layout.Renderer
             }
             else
             {
-                if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count
-                     - 1] == renderer)
+                if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count - 1] == renderer)
                 {
-                    int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property
-                        .PAGE_NUMBER);
+                    int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property.PAGE_NUMBER);
                     if (positionedPageNumber == null)
                     {
                         positionedPageNumber = currentPageNumber;
                     }
-                    renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber
-                        , currentArea.GetBBox().Clone())));
+                    renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, currentArea.GetBBox
+                        ().Clone())));
                     if (immediateFlush)
                     {
                         FlushSingleRenderer(renderer);
@@ -213,8 +207,7 @@ namespace iTextSharp.Layout.Renderer
 
         public override LayoutResult Layout(LayoutContext layoutContext)
         {
-            throw new InvalidOperationException("Layout is not supported for root renderers."
-                );
+            throw new InvalidOperationException("Layout is not supported for root renderers.");
         }
 
         public virtual LayoutArea GetCurrentArea()
@@ -228,11 +221,9 @@ namespace iTextSharp.Layout.Renderer
 
         protected internal abstract void FlushSingleRenderer(IRenderer resultRenderer);
 
-        protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-            );
+        protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
 
-        private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
-            )
+        private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers)
         {
             AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
             if (immediateFlush)

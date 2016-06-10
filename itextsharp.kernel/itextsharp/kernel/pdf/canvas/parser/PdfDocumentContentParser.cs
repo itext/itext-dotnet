@@ -62,8 +62,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             this.pdfDocument = pdfDocument;
         }
 
-        /// <summary>Processes content from the specified page number using the specified listener.
-        ///     </summary>
+        /// <summary>Processes content from the specified page number using the specified listener.</summary>
         /// <remarks>
         /// Processes content from the specified page number using the specified listener.
         /// Also allows registration of custom ContentOperators
@@ -74,8 +73,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="additionalContentOperators">an optional map of custom ContentOperators for rendering instructions
         ///     </param>
         /// <returns>the provided renderListener</returns>
-        public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<
-            String, IContentOperator> additionalContentOperators)
+        public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<String, IContentOperator>
+             additionalContentOperators)
             where E : IEventListener
         {
             PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
@@ -87,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             return renderListener;
         }
 
-        /// <summary>Processes content from the specified page number using the specified listener
-        ///     </summary>
+        /// <summary>Processes content from the specified page number using the specified listener</summary>
         /// 
         /// <param name="pageNumber">the page number to process</param>
         /// <param name="renderListener">the listener that will receive render callbacks</param>
@@ -96,8 +94,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         public virtual E ProcessContent<E>(int pageNumber, E renderListener)
             where E : IEventListener
         {
-            return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator
-                >());
+            return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator>());
         }
     }
 }

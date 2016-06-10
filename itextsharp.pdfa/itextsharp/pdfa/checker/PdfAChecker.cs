@@ -85,11 +85,10 @@ namespace iTextSharp.Pdfa.Checker
         /// that shall be checked are able to be changed) shouldn't be marked as checked if they are not to be
         /// flushed immediately.
         /// </remarks>
-        protected internal ICollection<PdfObject> checkedObjects = new HashSet<PdfObject>
-            ();
+        protected internal ICollection<PdfObject> checkedObjects = new HashSet<PdfObject>();
 
-        protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace
-             = new Dictionary<PdfObject, PdfColorSpace>();
+        protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace = new Dictionary<PdfObject
+            , PdfColorSpace>();
 
         protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel)
         {
@@ -167,14 +166,13 @@ namespace iTextSharp.Pdfa.Checker
 
         public abstract void CheckCanvasStack(char stackOperation);
 
-        public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces
-            );
+        public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces);
 
-        public abstract void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary
-             currentColorSpaces, bool? fill);
+        public abstract void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool?
+             fill);
 
-        public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces
-            , bool checkAlternate, bool? fill);
+        public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
+            , bool? fill);
 
         public abstract void CheckRenderingIntent(PdfName intent);
 
@@ -188,13 +186,11 @@ namespace iTextSharp.Pdfa.Checker
 
         protected internal abstract void CheckAnnotation(PdfDictionary annotDic);
 
-        protected internal abstract void CheckCatalogValidEntries(PdfDictionary catalogDict
-            );
+        protected internal abstract void CheckCatalogValidEntries(PdfDictionary catalogDict);
 
         protected internal abstract void CheckColorsUsages();
 
-        protected internal abstract void CheckImage(PdfStream image, PdfDictionary currentColorSpaces
-            );
+        protected internal abstract void CheckImage(PdfStream image, PdfDictionary currentColorSpaces);
 
         protected internal abstract void CheckFileSpec(PdfDictionary fileSpec);
 
@@ -208,8 +204,7 @@ namespace iTextSharp.Pdfa.Checker
 
         protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
 
-        protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary
-             pageResources);
+        protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary pageResources);
 
         protected internal abstract void CheckPageSize(PdfDictionary page);
 
@@ -253,8 +248,8 @@ namespace iTextSharp.Pdfa.Checker
                 foreach (PdfObject shading in shadings.Values())
                 {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
-                    CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace))
-                        , resources.GetAsDictionary(PdfName.ColorSpace), true, null);
+                    CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
+                        (PdfName.ColorSpace), true, null);
                 }
             }
         }
@@ -264,11 +259,10 @@ namespace iTextSharp.Pdfa.Checker
             return (flags & flag) != 0;
         }
 
-        protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel
-            )
+        protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel)
         {
-            return conformanceLevel == PdfAConformanceLevel.PDF_A_1A || conformanceLevel == PdfAConformanceLevel
-                .PDF_A_2A || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
+            return conformanceLevel == PdfAConformanceLevel.PDF_A_1A || conformanceLevel == PdfAConformanceLevel.PDF_A_2A
+                 || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
         }
 
         protected internal virtual bool IsAlreadyChecked(PdfDictionary dictionary)
@@ -399,8 +393,7 @@ namespace iTextSharp.Pdfa.Checker
         {
             for (int i = 0; i < outputIntents.Size(); ++i)
             {
-                PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.
-                    S);
+                PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.S);
                 if (PdfName.GTS_PDFA1.Equals(outputIntentSubtype))
                 {
                     return outputIntents.GetAsDictionary(i);

@@ -192,12 +192,10 @@ namespace iTextSharp.Kernel.Pdf.Collection
         }
 
         /// <summary>The relative order of the field name.</summary>
-        /// <remarks>The relative order of the field name. Fields are sorted in ascending order.
-        ///     </remarks>
+        /// <remarks>The relative order of the field name. Fields are sorted in ascending order.</remarks>
         /// <param name="order">a number indicating the order of the field</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order
-            )
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order)
         {
             GetPdfObject().Put(PdfName.O, new PdfNumber(order));
             return this;
@@ -211,8 +209,7 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <summary>Sets the initial visibility of the field.</summary>
         /// <param name="visible"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(
-            bool visible)
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible)
         {
             GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
             return this;
@@ -226,8 +223,7 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <summary>Indication if the field value should be editable in the viewer.</summary>
         /// <param name="editable"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool
-             editable)
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable)
         {
             GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
             return this;
@@ -254,12 +250,11 @@ namespace iTextSharp.Kernel.Pdf.Collection
 
                 case NUMBER:
                 {
-                    return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture
-                        ));
+                    return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
-            throw new PdfException(PdfException.IsNotAnAcceptableValueForTheField).SetMessageParams
-                (value, GetPdfObject().GetAsName(PdfName.N).GetValue());
+            throw new PdfException(PdfException.IsNotAnAcceptableValueForTheField).SetMessageParams(value, GetPdfObject
+                ().GetAsName(PdfName.N).GetValue());
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect()

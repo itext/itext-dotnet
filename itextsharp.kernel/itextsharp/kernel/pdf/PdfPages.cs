@@ -53,8 +53,7 @@ namespace iTextSharp.Kernel.Pdf
 
         private readonly iTextSharp.Kernel.Pdf.PdfPages parent;
 
-        public PdfPages(int from, PdfDocument pdfDocument, iTextSharp.Kernel.Pdf.PdfPages
-             parent)
+        public PdfPages(int from, PdfDocument pdfDocument, iTextSharp.Kernel.Pdf.PdfPages parent)
             : base(new PdfDictionary())
         {
             if (pdfDocument.GetWriter() != null)
@@ -76,8 +75,7 @@ namespace iTextSharp.Kernel.Pdf
         {
         }
 
-        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iTextSharp.Kernel.Pdf.PdfPages
-             parent)
+        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iTextSharp.Kernel.Pdf.PdfPages parent)
             : base(pdfObject)
         {
             SetForbidRelease();

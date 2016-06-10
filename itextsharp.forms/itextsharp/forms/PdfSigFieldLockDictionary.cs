@@ -95,8 +95,8 @@ namespace iTextSharp.Forms
         /// <see cref="PdfSigFieldLockDictionary"/>
         /// object.
         /// </returns>
-        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(
-            PdfSigFieldLockDictionary.LockPermissions permissions)
+        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(PdfSigFieldLockDictionary.LockPermissions
+             permissions)
         {
             GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
             return this;
@@ -126,8 +126,7 @@ namespace iTextSharp.Forms
             return this;
         }
 
-        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action
-            )
+        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action)
         {
             switch (action)
             {
@@ -153,8 +152,7 @@ namespace iTextSharp.Forms
             }
         }
 
-        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions
-             permissions)
+        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions permissions)
         {
             switch (permissions)
             {

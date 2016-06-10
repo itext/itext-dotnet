@@ -54,14 +54,12 @@ namespace iTextSharp.Kernel.Pdf.Navigation
         {
         }
 
-        public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names
-            );
+        public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names);
 
-        public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination
-            (IDictionary<Object, PdfObject> names);
+        public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object
+            , PdfObject> names);
 
-        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject
-             pdfObject)
+        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject)
         {
             if (pdfObject.GetObjectType() == PdfObject.STRING)
             {

@@ -8,8 +8,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
     public class TextMarginFinderTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -20,11 +19,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             new PdfCanvasProcessor(finder).ProcessPageContent(pdfDocument.GetPage(1));
             Rectangle textRect = finder.GetTextRectangle();
             NUnit.Framework.Assert.AreEqual(1.42f * 72f, textRect.GetX(), 0.01f);
-            NUnit.Framework.Assert.AreEqual(7.42f * 72f, textRect.GetX() + textRect.GetWidth(
-                ), 0.01f);
+            NUnit.Framework.Assert.AreEqual(7.42f * 72f, textRect.GetX() + textRect.GetWidth(), 0.01f);
             NUnit.Framework.Assert.AreEqual(2.42f * 72f, textRect.GetY(), 0.01f);
-            NUnit.Framework.Assert.AreEqual(10.42f * 72f, textRect.GetY() + textRect.GetHeight
-                (), 0.01f);
+            NUnit.Framework.Assert.AreEqual(10.42f * 72f, textRect.GetY() + textRect.GetHeight(), 0.01f);
         }
     }
 }

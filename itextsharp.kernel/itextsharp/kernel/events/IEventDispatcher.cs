@@ -67,8 +67,7 @@ namespace iTextSharp.Kernel.Events
         /// <param name="delayed"/>
         void DispatchEvent(Event @event, bool delayed);
 
-        /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.
-        ///     </summary>
+        /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.</summary>
         /// <param name="type"/>
         /// <returns/>
         bool HasEventHandler(String type);

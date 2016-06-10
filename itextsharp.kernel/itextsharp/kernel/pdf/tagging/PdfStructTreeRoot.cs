@@ -176,10 +176,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// </remarks>
         public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page)
         {
-            IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences
-                (page);
-            return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values
-                ) : null;
+            IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences(page);
+            return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values) : null;
         }
 
         public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid)
@@ -187,11 +185,9 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             return GetParentTreeHandler().FindMcrByMcid(pageDict, mcid);
         }
 
-        public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int
-             structParentIndex)
+        public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex)
         {
-            return GetParentTreeHandler().FindObjRefByStructParentIndex(pageDict, structParentIndex
-                );
+            return GetParentTreeHandler().FindObjRefByStructParentIndex(pageDict, structParentIndex);
         }
 
         public virtual PdfName GetRole()
@@ -206,8 +202,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging
                 CreateParentTreeEntryForPage(GetDocument().GetPage(i + 1));
             }
             GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
-            GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex
-                ()));
+            GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex())
+                );
             FlushAllKids(this);
             base.Flush();
         }
@@ -222,12 +218,10 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
         /// </summary>
-        /// <param name="destDocument">document to copy structure to. Shall not be current document.
-        ///     </param>
+        /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage
-            > page2page)
+        public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page)
         {
             StructureTreeCopier.CopyTo(destDocument, page2page, GetDocument());
         }
@@ -246,11 +240,10 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary
-            <PdfPage, PdfPage> page2page)
+        public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
+            )
         {
-            StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument
-                ());
+            StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());
         }
 
         public virtual int GetParentTreeNextKey()
@@ -307,8 +300,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             }
         }
 
-        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IPdfStructElem> kids
-            )
+        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IPdfStructElem> kids)
         {
             if (kid.IsFlushed())
             {
@@ -316,8 +308,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             }
             else
             {
-                if (kid.GetObjectType() == PdfObject.DICTIONARY && PdfStructElem.IsStructElem((PdfDictionary
-                    )kid))
+                if (kid.GetObjectType() == PdfObject.DICTIONARY && PdfStructElem.IsStructElem((PdfDictionary)kid))
                 {
                     kids.Add(new PdfStructElem((PdfDictionary)kid));
                 }

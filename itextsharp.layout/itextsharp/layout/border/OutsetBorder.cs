@@ -73,8 +73,7 @@ namespace iTextSharp.Layout.Border
             return iTextSharp.Layout.Border.Border._3D_OUTSET;
         }
 
-        protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side 
-            side)
+        protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side)
         {
             switch (side)
             {
@@ -94,8 +93,7 @@ namespace iTextSharp.Layout.Border
             }
         }
 
-        protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side 
-            side)
+        protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side side)
         {
             switch (side)
             {

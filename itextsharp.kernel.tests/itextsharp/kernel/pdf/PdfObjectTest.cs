@@ -13,11 +13,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument document = new PdfDocument(writer);
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-            catalog.Put(new PdfName("a"), ((PdfDictionary)GetTestPdfDictionary().MakeIndirect
-                (document)).GetIndirectReference().MakeIndirect(document).GetIndirectReference
-                ().MakeIndirect(document));
-            PdfObject @object = ((PdfIndirectReference)catalog.Get(new PdfName("a"), false)).
-                GetRefersTo(true);
+            catalog.Put(new PdfName("a"), ((PdfDictionary)GetTestPdfDictionary().MakeIndirect(document)).GetIndirectReference
+                ().MakeIndirect(document).GetIndirectReference().MakeIndirect(document));
+            PdfObject @object = ((PdfIndirectReference)catalog.Get(new PdfName("a"), false)).GetRefersTo(true);
             NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
             document.Close();
         }
@@ -38,8 +36,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             catalog.Put(new PdfName("a"), @object);
             ((PdfIndirectReference)catalog.Get(new PdfName("a"))).GetRefersTo(true);
-            NUnit.Framework.Assert.IsNotNull(((PdfIndirectReference)catalog.Get(new PdfName("a"
-                ))).GetRefersTo(true));
+            NUnit.Framework.Assert.IsNotNull(((PdfIndirectReference)catalog.Get(new PdfName("a"))).GetRefersTo(true));
             document.Close();
         }
 
@@ -60,8 +57,8 @@ namespace iTextSharp.Kernel.Pdf
             catalog.Put(new PdfName("a"), @object);
             @object = catalog.Get(new PdfName("a"), true);
             NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
-            NUnit.Framework.Assert.AreEqual(new PdfName("c").ToString(), ((PdfDictionary)@object
-                ).Get(new PdfName("b")).ToString());
+            NUnit.Framework.Assert.AreEqual(new PdfName("c").ToString(), ((PdfDictionary)@object).Get(new PdfName("b")
+                ).ToString());
             document.Close();
         }
 
@@ -84,8 +81,8 @@ namespace iTextSharp.Kernel.Pdf
             catalog.Put(new PdfName("a"), array);
             @object = ((PdfArray)catalog.Get(new PdfName("a"))).Get(0, true);
             NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
-            NUnit.Framework.Assert.AreEqual(new PdfName("c").ToString(), ((PdfDictionary)@object
-                ).Get(new PdfName("b")).ToString());
+            NUnit.Framework.Assert.AreEqual(new PdfName("c").ToString(), ((PdfDictionary)@object).Get(new PdfName("b")
+                ).ToString());
             document.Close();
         }
 
@@ -96,41 +93,29 @@ namespace iTextSharp.Kernel.Pdf
             reference.SetState(PdfObject.FREE);
             reference.SetState(PdfObject.READING);
             reference.SetState(PdfObject.MODIFIED);
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.FREE), "Free"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.FREE 
-                | PdfObject.MODIFIED | PdfObject.READING)), "Free|Reading|Modified");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.FREE), "Free");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.FREE | PdfObject.MODIFIED | PdfObject
+                .READING)), "Free|Reading|Modified");
             reference.ClearState(PdfObject.FREE);
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.READING
-                 | PdfObject.MODIFIED)), "Reading|Modified");
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE
-                 | PdfObject.READING | PdfObject.MODIFIED)), "Free|Reading|Modified");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.READING), "Reading");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState((byte)(PdfObject.READING | PdfObject.MODIFIED))
+                , "Reading|Modified");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE | PdfObject.READING | PdfObject
+                .MODIFIED)), "Free|Reading|Modified");
             reference.ClearState(PdfObject.READING);
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading");
+            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE | PdfObject.READING)), "Free|Reading"
                 );
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading"
-                );
-            NUnit.Framework.Assert.AreEqual(true, reference.CheckState(PdfObject.MODIFIED), "Modified"
-                );
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState((byte)(PdfObject.FREE
-                 | PdfObject.READING)), "Free|Reading");
             reference.ClearState(PdfObject.MODIFIED);
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free"
-                );
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading"
-                );
-            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.MODIFIED), 
-                "Modified");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.FREE), "Free");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.READING), "Reading");
+            NUnit.Framework.Assert.AreEqual(false, reference.CheckState(PdfObject.MODIFIED), "Modified");
             NUnit.Framework.Assert.AreEqual(true, !reference.IsFree(), "Is InUse");
             reference.SetState(PdfObject.FREE);
             NUnit.Framework.Assert.AreEqual(false, !reference.IsFree(), "Not IsInUse");
@@ -219,10 +204,10 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(@string != string1);
             NUnit.Framework.Assert.IsTrue(@string.GetValue().Equals(string1.GetValue()));
             PdfDictionary dict1 = (PdfDictionary)object1;
-            NUnit.Framework.Assert.IsTrue(dict1.GetIndirectReference().GetObjNumber() == dict
-                .GetIndirectReference().GetObjNumber());
-            NUnit.Framework.Assert.IsTrue(dict1.GetIndirectReference().GetGenNumber() == dict
-                .GetIndirectReference().GetGenNumber());
+            NUnit.Framework.Assert.IsTrue(dict1.GetIndirectReference().GetObjNumber() == dict.GetIndirectReference().GetObjNumber
+                ());
+            NUnit.Framework.Assert.IsTrue(dict1.GetIndirectReference().GetGenNumber() == dict.GetIndirectReference().GetGenNumber
+                ());
             NUnit.Framework.Assert.IsTrue(dict1 == dict);
             document.Close();
         }

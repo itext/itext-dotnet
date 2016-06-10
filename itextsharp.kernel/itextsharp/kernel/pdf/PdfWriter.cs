@@ -59,8 +59,8 @@ namespace iTextSharp.Kernel.Pdf
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
-        private Dictionary<PdfWriter.ByteStore, PdfIndirectReference> streamMap = new Dictionary
-            <PdfWriter.ByteStore, PdfIndirectReference>();
+        private Dictionary<PdfWriter.ByteStore, PdfIndirectReference> streamMap = new Dictionary<PdfWriter.ByteStore
+            , PdfIndirectReference>();
 
         private readonly IntHashtable serialized = new IntHashtable();
 
@@ -75,8 +75,8 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         internal PdfObjectStream objectStream = null;
 
-        protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary
-            <int, PdfIndirectReference>();
+        protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary<int, PdfIndirectReference
+            >();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -94,16 +94,15 @@ namespace iTextSharp.Kernel.Pdf
             EncryptionProperties encryptProps = properties.encryptionProperties;
             if (properties.IsStandardEncryptionUsed())
             {
-                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, 
-                    encryptProps.standardEncryptPermissions, encryptProps.encryptionAlgorithm, PdfEncryption
-                    .GenerateNewDocumentId());
+                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
+                    , encryptProps.encryptionAlgorithm, PdfEncryption.GenerateNewDocumentId());
             }
             else
             {
                 if (properties.IsPublicKeyEncryptionUsed())
                 {
-                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions
-                        , encryptProps.encryptionAlgorithm);
+                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
+                        .encryptionAlgorithm);
                 }
             }
             if (properties.debugMode)
@@ -128,8 +127,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>true if to use full compression, false otherwise.</returns>
         public virtual bool IsFullCompression()
         {
-            return properties.isFullCompression != null ? (bool)properties.isFullCompression : 
-                false;
+            return properties.isFullCompression != null ? (bool)properties.isFullCompression : false;
         }
 
         /// <summary>Gets default compression level for @see PdfStream.</summary>
@@ -153,8 +151,7 @@ namespace iTextSharp.Kernel.Pdf
         /// .
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
-        public virtual iTextSharp.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel
-            )
+        public virtual iTextSharp.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel)
         {
             this.properties.SetCompressionLevel(compressionLevel);
             return this;
@@ -245,12 +242,10 @@ namespace iTextSharp.Kernel.Pdf
         /// <remarks>Flushes the object. Override this method if you want to define custom behaviour for object flushing.
         ///     </remarks>
         /// <param name="pdfObject">object to flush.</param>
-        /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.
-        ///     </param>
+        /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm
-            )
+        protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm)
         {
             PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
             if (IsFullCompression() && canBeInObjStm)
@@ -263,8 +258,8 @@ namespace iTextSharp.Kernel.Pdf
                 indirectReference.SetOffset(GetCurrentPos());
                 WriteToBody(pdfObject);
             }
-            ((PdfIndirectReference)indirectReference.SetState(PdfObject.FLUSHED)).ClearState(
-                PdfObject.MUST_BE_FLUSHED);
+            ((PdfIndirectReference)indirectReference.SetState(PdfObject.FLUSHED)).ClearState(PdfObject.MUST_BE_FLUSHED
+                );
             switch (pdfObject.GetObjectType())
             {
                 case PdfObject.BOOLEAN:
@@ -302,8 +297,8 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument document
-            , bool allowDuplicating)
+        protected internal virtual PdfObject CopyObject(PdfObject obj, PdfDocument document, bool allowDuplicating
+            )
         {
             if (obj is PdfIndirectReference)
             {
@@ -346,8 +341,7 @@ namespace iTextSharp.Kernel.Pdf
                 {
                     copyObjectKey = GetCopyObjectKey(obj);
                 }
-                PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference
-                    ();
+                PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference();
                 copiedObjects[copyObjectKey] = reference;
             }
             newObject.CopyContent(obj, document);
@@ -362,11 +356,11 @@ namespace iTextSharp.Kernel.Pdf
         {
             if (crypto != null)
             {
-                crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj
-                    .GetIndirectReference().GetGenNumber());
+                crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj.GetIndirectReference()
+                    .GetGenNumber());
             }
-            WriteInteger(pdfObj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger
-                (pdfObj.GetIndirectReference().GetGenNumber()).WriteBytes(obj);
+            WriteInteger(pdfObj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger(pdfObj.GetIndirectReference
+                ().GetGenNumber()).WriteBytes(obj);
             Write(pdfObj);
             WriteBytes(endobj);
         }
@@ -391,8 +385,7 @@ namespace iTextSharp.Kernel.Pdf
                 for (int i = 1; i < xref.Size(); i++)
                 {
                     PdfIndirectReference indirectReference = xref.Get(i);
-                    if (indirectReference != null && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED
-                        ))
+                    if (indirectReference != null && indirectReference.CheckState(PdfObject.MUST_BE_FLUSHED))
                     {
                         PdfObject obj = indirectReference.GetRefersTo(false);
                         if (obj != null)
@@ -411,8 +404,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
-        /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.
-        ///     </remarks>
+        /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         protected internal virtual void FlushModifiedWaitingObjects()
         {
@@ -563,11 +555,10 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType
-            )
+        private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType)
         {
-            return dictionary.IsDictionary() && expectedType.Equals(((PdfDictionary)dictionary
-                ).GetAsName(PdfName.Type));
+            return dictionary.IsDictionary() && expectedType.Equals(((PdfDictionary)dictionary).GetAsName(PdfName.Type
+                ));
         }
 
         internal class ByteStore
@@ -578,8 +569,7 @@ namespace iTextSharp.Kernel.Pdf
 
             private IDigest md5;
 
-            private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, IntHashtable
-                 serialized)
+            private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, IntHashtable serialized)
             {
                 if (level <= 0)
                 {
@@ -660,8 +650,7 @@ namespace iTextSharp.Kernel.Pdf
                 }
             }
 
-            private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, IntHashtable
-                 serialized)
+            private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, IntHashtable serialized)
             {
                 bb.Append("$D");
                 if (level <= 0)
@@ -673,8 +662,8 @@ namespace iTextSharp.Kernel.Pdf
                 iTextSharp.IO.Util.JavaUtil.Sort(keys);
                 foreach (Object key in keys)
                 {
-                    if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.
-                        Get((PdfName)key).IsDictionary()) || key.Equals(PdfName.Parent))
+                    if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
+                        ()) || key.Equals(PdfName.Parent))
                     {
                         // ignore recursive call
                         continue;
@@ -684,8 +673,7 @@ namespace iTextSharp.Kernel.Pdf
                 }
             }
 
-            private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, IntHashtable
-                 serialized)
+            private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, IntHashtable serialized)
             {
                 bb.Append("$A");
                 if (level <= 0)

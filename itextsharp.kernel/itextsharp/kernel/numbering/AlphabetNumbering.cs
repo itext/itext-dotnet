@@ -61,8 +61,7 @@ namespace iTextSharp.Kernel.Numbering
         /// into an alphabet number using the letters from the specified alphabet.
         /// </summary>
         /// <param name="number">the number</param>
-        /// <param name="alphabet">the array containing all possible letters from the alphabet
-        ///     </param>
+        /// <param name="alphabet">the array containing all possible letters from the alphabet</param>
         /// <returns>a translated number representation</returns>
         public static String ToAlphabetNumber(int number, char[] alphabet)
         {

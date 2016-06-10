@@ -82,8 +82,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// logical structure).
         /// </remarks>
         /// <param name="role">the type of tag</param>
-        /// <param name="mcid">marked content id which serves as a reference to the document's logical structure
-        ///     </param>
+        /// <param name="mcid">marked content id which serves as a reference to the document's logical structure</param>
         public CanvasTag(PdfName role, int mcid)
         {
             this.role = role;
@@ -146,8 +145,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary
-             properties)
+        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary properties)
         {
             if (properties != null)
             {
@@ -167,8 +165,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag AddProperty(PdfName name, PdfObject
-             value)
+        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag AddProperty(PdfName name, PdfObject value)
         {
             EnsurePropertiesInit();
             properties.Put(name, value);
@@ -185,8 +182,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag RemoveProperty(PdfName name
-            )
+        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag RemoveProperty(PdfName name)
         {
             if (properties != null)
             {

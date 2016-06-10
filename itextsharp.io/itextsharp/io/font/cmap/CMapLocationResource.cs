@@ -59,11 +59,10 @@ namespace iTextSharp.IO.Font.Cmap
             Stream inp = ResourceUtil.GetResourceStream(fullName);
             if (inp == null)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound
-                    ).SetMessageParams(fullName);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound).SetMessageParams(fullName
+                    );
             }
-            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
-                ().CreateSource(inp)));
+            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(inp)));
         }
     }
 }

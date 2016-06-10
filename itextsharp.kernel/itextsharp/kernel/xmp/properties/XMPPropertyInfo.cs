@@ -31,8 +31,7 @@ using System;
 
 namespace iTextSharp.Kernel.XMP.Properties
 {
-    /// <summary>This interface is used to return a property together with its path and namespace.
-    ///     </summary>
+    /// <summary>This interface is used to return a property together with its path and namespace.</summary>
     /// <remarks>
     /// This interface is used to return a property together with its path and namespace.
     /// It is returned when properties are iterated with the <code>XMPIterator</code>.

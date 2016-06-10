@@ -68,8 +68,7 @@ namespace iTextSharp.IO.Source
         /// <summary>Whether there is a pushed back byte</summary>
         private bool isBack = false;
 
-        /// <summary>Creates an independent view of this object (with it's own file pointer and push back queue).
-        ///     </summary>
+        /// <summary>Creates an independent view of this object (with it's own file pointer and push back queue).</summary>
         /// <remarks>
         /// Creates an independent view of this object (with it's own file pointer and push back queue).  Closing the new object will not close this object.
         /// Closing this object will have adverse effect on the view.
@@ -77,8 +76,7 @@ namespace iTextSharp.IO.Source
         /// <returns>the new view</returns>
         public virtual iTextSharp.IO.Source.RandomAccessFileOrArray CreateView()
         {
-            return new iTextSharp.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource
-                (byteSource));
+            return new iTextSharp.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
         }
 
         public virtual IRandomAccessSource CreateSourceView()
@@ -352,8 +350,7 @@ namespace iTextSharp.IO.Source
             return (ch1 << 8) + ch2;
         }
 
-        /// <summary>Reads an unsigned 16-bit number from this stream in little-endian order.
-        ///     </summary>
+        /// <summary>Reads an unsigned 16-bit number from this stream in little-endian order.</summary>
         /// <remarks>
         /// Reads an unsigned 16-bit number from this stream in little-endian order.
         /// This method reads

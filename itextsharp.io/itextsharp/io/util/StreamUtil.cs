@@ -138,8 +138,7 @@ namespace iTextSharp.IO.Util
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e);
             }
         }
 
@@ -152,8 +151,7 @@ namespace iTextSharp.IO.Util
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e);
             }
         }
 
@@ -279,8 +277,7 @@ namespace iTextSharp.IO.Util
         /// <summary>Reads the full content of a stream and returns them in a byte array</summary>
         /// <param name="stream">the stream to read</param>
         /// <returns>a byte array containing all of the bytes from the stream</returns>
-        /// <exception cref="System.IO.IOException">if there is a problem reading from the input stream
-        ///     </exception>
+        /// <exception cref="System.IO.IOException">if there is a problem reading from the input stream</exception>
         public static byte[] InputStreamToArray(Stream stream)
         {
             byte[] b = new byte[8192];
@@ -318,8 +315,7 @@ namespace iTextSharp.IO.Util
         /// copy to.
         /// </param>
         /// <exception cref="System.IO.IOException">on error.</exception>
-        public static void CopyBytes(IRandomAccessSource source, long start, long length, 
-            Stream output)
+        public static void CopyBytes(IRandomAccessSource source, long start, long length, Stream output)
         {
             if (length <= 0)
             {

@@ -92,8 +92,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>PdfArray</c>
         /// to be added
         /// </param>
-        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
-        ///     "/>
+        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})"/>
         public override void AddAll(PdfArray a)
         {
             if (a != null)
@@ -104,8 +103,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Adds the Collection of PdfObjects.</summary>
         /// <param name="c">the Collection of PdfObjects to be added</param>
-        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
-        ///     "/>
+        /// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})"/>
         public override void AddAll(ICollection<PdfObject> c)
         {
             foreach (PdfObject obj in c)

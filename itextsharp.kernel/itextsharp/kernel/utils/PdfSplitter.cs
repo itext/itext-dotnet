@@ -71,8 +71,7 @@ namespace iTextSharp.Kernel.Utils
             this.preserveOutlines = true;
         }
 
-        /// <summary>If original document is tagged, then by default all resultant document will also be tagged.
-        ///     </summary>
+        /// <summary>If original document is tagged, then by default all resultant document will also be tagged.</summary>
         /// <remarks>
         /// If original document is tagged, then by default all resultant document will also be tagged.
         /// This could be changed with this flag - if set to false, resultant documents will be not tagged, even if
@@ -126,20 +125,18 @@ namespace iTextSharp.Kernel.Utils
         /// You can close this document in this listener, for instance.
         /// </param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void SplitByPageNumbers(IList<int> pageNumbers, PdfSplitter.IDocumentReadyListener
-             documentReady)
+        public virtual void SplitByPageNumbers(IList<int> pageNumbers, PdfSplitter.IDocumentReadyListener documentReady
+            )
         {
             int currentPageNumber = 1;
             for (int ind = 0; ind <= pageNumbers.Count; ind++)
             {
-                int nextPageNumber = ind == pageNumbers.Count ? pdfDocument.GetNumberOfPages() + 
-                    1 : (int)pageNumbers[ind];
+                int nextPageNumber = ind == pageNumbers.Count ? pdfDocument.GetNumberOfPages() + 1 : (int)pageNumbers[ind];
                 if (ind == 0 && nextPageNumber == 1)
                 {
                     continue;
                 }
-                PageRange currentPageRange = new PageRange().AddPageSequence(currentPageNumber, nextPageNumber
-                     - 1);
+                PageRange currentPageRange = new PageRange().AddPageSequence(currentPageNumber, nextPageNumber - 1);
                 PdfDocument currentDocument = CreatePdfDocument(currentPageRange);
                 pdfDocument.CopyPagesTo(currentPageNumber, nextPageNumber - 1, currentDocument);
                 documentReady.DocumentReady(currentDocument, currentPageRange);
@@ -176,20 +173,16 @@ namespace iTextSharp.Kernel.Utils
             private readonly IList<PdfDocument> splitDocuments;
         }
 
-        /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.
-        ///     </summary>
-        /// <param name="pageCount">the biggest possible number of pages in a split document.
-        ///     </param>
+        /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.</summary>
+        /// <param name="pageCount">the biggest possible number of pages in a split document.</param>
         /// <param name="documentReady">
         /// the event listener which is called when another document is ready.
         /// You can close this document in this listener, for instance.
         /// </param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void SplitByPageCount(int pageCount, PdfSplitter.IDocumentReadyListener
-             documentReady)
+        public virtual void SplitByPageCount(int pageCount, PdfSplitter.IDocumentReadyListener documentReady)
         {
-            for (int startPage = 1; startPage <= pdfDocument.GetNumberOfPages(); startPage +=
-                 pageCount)
+            for (int startPage = 1; startPage <= pdfDocument.GetNumberOfPages(); startPage += pageCount)
             {
                 int endPage = Math.Min(startPage + pageCount - 1, pdfDocument.GetNumberOfPages());
                 PageRange currentPageRange = new PageRange().AddPageSequence(startPage, endPage);
@@ -199,10 +192,8 @@ namespace iTextSharp.Kernel.Utils
             }
         }
 
-        /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.
-        ///     </summary>
-        /// <param name="pageCount">the biggest possible number of pages in a split document.
-        ///     </param>
+        /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.</summary>
+        /// <param name="pageCount">the biggest possible number of pages in a split document.</param>
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount)
@@ -228,8 +219,7 @@ namespace iTextSharp.Kernel.Utils
         }
 
         /// <summary>Extracts the specified page ranges from a document.</summary>
-        /// <param name="pageRanges">the list of page ranges for each of the resultant document.
-        ///     </param>
+        /// <param name="pageRanges">the list of page ranges for each of the resultant document.</param>
         /// <returns>
         /// the list of the resultant documents for each of the specified page range.
         /// Be warned that these documents are not closed.
@@ -274,8 +264,7 @@ namespace iTextSharp.Kernel.Utils
         /// <param name="documentPageRange">the page range of the original document to be included in the document being created now.
         ///     </param>
         /// <returns>the PdfWriter instance for the document which is being created.</returns>
-        protected internal virtual PdfWriter GetNextPdfWriter(PageRange documentPageRange
-            )
+        protected internal virtual PdfWriter GetNextPdfWriter(PageRange documentPageRange)
         {
             return new PdfWriter(new ByteArrayOutputStream());
         }
@@ -399,8 +388,7 @@ namespace iTextSharp.Kernel.Utils
             {
                 foreach (PdfOutline pdfOutline in outline.GetParent().GetAllChildren())
                 {
-                    if (pdfOutline.GetContent().GetIndirectReference().Equals(nextPdfObject.GetIndirectReference
-                        ()))
+                    if (pdfOutline.GetContent().GetIndirectReference().Equals(nextPdfObject.GetIndirectReference()))
                     {
                         nextPdfOutline = pdfOutline;
                         break;

@@ -78,8 +78,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
             if (type.Equals(EventType.RENDER_TEXT))
             {
                 TextRenderInfo textRenderInfo = (TextRenderInfo)data;
-                foreach (TextRenderInfo glyphRenderInfo in textRenderInfo.GetCharacterRenderInfos
-                    ())
+                foreach (TextRenderInfo glyphRenderInfo in textRenderInfo.GetCharacterRenderInfos())
                 {
                     delegate_.EventOccurred(glyphRenderInfo, type);
                 }

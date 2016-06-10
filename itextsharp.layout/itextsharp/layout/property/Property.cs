@@ -254,10 +254,8 @@ namespace iTextSharp.Layout.Property
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.KEEP_TOGETHER] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT] = 
-                true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT] =
-                 true;
+            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT] = true;
+            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.STROKE_COLOR] = true;
@@ -271,8 +269,7 @@ namespace iTextSharp.Layout.Property
 
         public static bool IsPropertyInherited(int property)
         {
-            return property >= 0 && property < MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES
-                [property];
+            return property >= 0 && property < MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
         }
     }
 }

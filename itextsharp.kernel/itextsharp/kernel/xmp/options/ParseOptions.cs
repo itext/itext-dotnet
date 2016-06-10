@@ -33,22 +33,19 @@ namespace iTextSharp.Kernel.XMP.Options
 {
     /// <summary>
     /// Options for
-    /// <see cref="iTextSharp.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)
-    ///     "/>
+    /// <see cref="iTextSharp.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)"/>
     /// .
     /// </summary>
     /// <since>24.01.2006</since>
     public sealed class ParseOptions : iTextSharp.Kernel.XMP.Options.Options
     {
-        /// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.
-        ///     </summary>
+        /// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.</summary>
         public const int REQUIRE_XMP_META = 0x0001;
 
         /// <summary>Do not reconcile alias differences, throw an exception instead.</summary>
         public const int STRICT_ALIASING = 0x0004;
 
-        /// <summary>Convert ASCII control characters 0x01 - 0x1F (except tab, cr, and lf) to spaces.
-        ///     </summary>
+        /// <summary>Convert ASCII control characters 0x01 - 0x1F (except tab, cr, and lf) to spaces.</summary>
         public const int FIX_CONTROL_CHARS = 0x0008;
 
         /// <summary>If the input is not unicode, try to parse it as ISO-8859-1.</summary>
@@ -113,8 +110,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value)
         {
             SetOption(OMIT_NORMALIZATION, value);
             return this;
@@ -174,8 +170,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <seealso cref="Options.GetValidOptions()"/>
         protected internal override int GetValidOptions()
         {
-            return REQUIRE_XMP_META | STRICT_ALIASING | FIX_CONTROL_CHARS | ACCEPT_LATIN_1 | 
-                OMIT_NORMALIZATION;
+            return REQUIRE_XMP_META | STRICT_ALIASING | FIX_CONTROL_CHARS | ACCEPT_LATIN_1 | OMIT_NORMALIZATION;
         }
     }
 }

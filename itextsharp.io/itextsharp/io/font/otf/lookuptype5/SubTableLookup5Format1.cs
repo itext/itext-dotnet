@@ -52,18 +52,16 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
     {
         private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
-        public SubTableLookup5Format1(OpenTypeFontTableReader openReader, int lookupFlag, 
-            IDictionary<int, IList<ContextualSubstRule>> substMap)
+        public SubTableLookup5Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule
+            >> substMap)
             : base(openReader, lookupFlag)
         {
             this.substMap = substMap;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startGlyphId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startGlyphId)
         {
-            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag
-                ))
+            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag))
             {
                 return substMap.Get(startGlyphId);
             }
@@ -76,8 +74,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
             private SubstLookupRecord[] substLookupRecords;
 
-            public SubstRuleFormat1(int[] inputGlyphIds, SubstLookupRecord[] substLookupRecords
-                )
+            public SubstRuleFormat1(int[] inputGlyphIds, SubstLookupRecord[] substLookupRecords)
             {
                 // inputGlyphIds array omits the first glyph in the sequence,
                 // the first glyph is defined by corresponding coverage glyph

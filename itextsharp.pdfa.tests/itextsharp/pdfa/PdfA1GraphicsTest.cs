@@ -13,13 +13,12 @@ namespace iTextSharp.Pdfa
 {
     public class PdfA1GraphicsTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1GraphicsTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/pdfa/PdfA1GraphicsTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/pdfa/PdfA1GraphicsTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -35,29 +34,21 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop
-                    ());
+                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
                 canvas.Fill();
                 canvas.SetFillColor(iTextSharp.Kernel.Color.Color.RED);
-                canvas.MoveTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom
-                    ());
+                canvas.MoveTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
                 canvas.Fill();
                 doc.Close();
             }
@@ -73,21 +64,16 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop
-                    ());
+                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
                 canvas.Fill();
                 doc.Close();
             }
@@ -107,12 +93,9 @@ namespace iTextSharp.Pdfa
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetFillColor(iTextSharp.Kernel.Color.Color.GREEN);
-                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom
-                    ());
-                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop
-                    ());
+                canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+                canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
                 canvas.Fill();
                 doc.Close();
             }
@@ -129,21 +112,16 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA1b_colorCheckTest4.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_colorCheckTest4.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                );
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
             canvas.SetFillColor(iTextSharp.Kernel.Color.Color.GREEN);
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom
-                ());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom
-                ());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop
-                ());
+            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
+            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
             canvas.Fill();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
@@ -157,12 +135,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetExtGState(new PdfExtGState().SetTransferFunction(new PdfName("Test")));
@@ -182,12 +158,10 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA1b_egsCheckTest2.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_egsCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                );
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
             canvas.SetExtGState(new PdfExtGState().SetTransferFunction2(PdfName.Default));
@@ -204,12 +178,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetExtGState(new PdfExtGState().SetTransferFunction2(new PdfName("Test")));
@@ -228,12 +200,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetExtGState(new PdfExtGState().SetRenderingIntent(new PdfName("Test")));
@@ -252,12 +222,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfFormXObject xObject = new PdfFormXObject(new Rectangle(100, 100));
@@ -283,12 +251,10 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                    , "sRGB IEC61966-2.1", @is);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                    );
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                    , @is);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 canvas.SetExtGState(new PdfExtGState().SetSoftMask(new PdfName("Test")));
@@ -308,12 +274,10 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA1b_transparencyCheckTest3.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_transparencyCheckTest3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent
-                );
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
             doc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
             canvas.SetExtGState(new PdfExtGState().SetSoftMask(PdfName.None));
@@ -326,8 +290,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf)
         {
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder
-                , "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null)
             {
                 NUnit.Framework.Assert.Fail(result);

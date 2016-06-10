@@ -16,11 +16,10 @@ namespace iTextSharp.Layout
 {
     public class AutoTaggingTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/AutoTaggingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AutoTaggingTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/AutoTaggingTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/AutoTaggingTest/";
 
         public const String imageName = "Desert.jpg";
 
@@ -37,8 +36,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "textInParagraphTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textInParagraphTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -58,12 +57,11 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void ImageTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "imageTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "imageTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            iTextSharp.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder
-                 + imageName));
+            iTextSharp.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + imageName));
             document.Add(image);
             document.Close();
             CompareResult("imageTest01.pdf", "cmp_imageTest01.pdf");
@@ -76,14 +74,14 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void DivTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "divTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "divTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div = new Div();
             div.Add(CreateParagraph1());
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + imageName));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + imageName));
             image.SetAutoScale(true);
             div.Add(image);
             div.Add(CreateParagraph2());
@@ -101,20 +99,20 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TableTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
             table.AddCell(CreateParagraph1());
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + imageName));
+            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + imageName));
             image.SetAutoScale(true);
             table.AddCell(image);
             table.AddCell(CreateParagraph2());
             table.AddCell(image);
-            table.AddCell(new Paragraph("abcdefghijklkmnopqrstuvwxyz").SetFontColor(iTextSharp.Kernel.Color.Color
-                .GREEN));
+            table.AddCell(new Paragraph("abcdefghijklkmnopqrstuvwxyz").SetFontColor(iTextSharp.Kernel.Color.Color.GREEN
+                ));
             table.AddCell("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -132,8 +130,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TableTest02()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest02.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest02.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
@@ -154,8 +152,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TableTest03()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest03.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest03.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
@@ -184,8 +182,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TableTest04()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest04.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest04.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -194,8 +192,7 @@ namespace iTextSharp.Layout
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, 
-                        j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0)
                 {
@@ -218,8 +215,8 @@ namespace iTextSharp.Layout
         {
             String outFileName = destinationFolder + "tableTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest05.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest05.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -251,8 +248,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TableTest06()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "tableTest06.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest06.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -260,20 +257,17 @@ namespace iTextSharp.Layout
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new 
-                Paragraph("cell 1, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 1, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + 
-                shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + shortTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + middleTextContent)))
-                .AddCell(new Cell(3, 2).Add(new Paragraph("cell 3:2, 1:3\n" + textContent + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 4, 3\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 3\n" + textContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 6, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 6, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n"
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 1\n" + 
-                middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" 
+                + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 1, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + shortTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + middleTextContent))).AddCell(new Cell(3, 2).Add
+                (new Paragraph("cell 3:2, 1:3\n" + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + textContent))).AddCell(new Cell
+                ().Add(new Paragraph("cell 5, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n"
+                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + shortTextContent))).AddCell
+                (new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
+                ("cell 7, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
@@ -287,8 +281,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void ListTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "listTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "listTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             List list = new List();
@@ -307,16 +301,15 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void ArtifactTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "artifactTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
             Paragraph watermark = new Paragraph(watermarkText);
             watermark.SetFontColor(new DeviceGray(0.75f)).SetFontSize(72);
-            document.ShowTextAligned(watermark, PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight
-                () / 2, 1, TextAlignment.CENTER, VerticalAlignment.MIDDLE, (float)(Math.PI / 
-                4));
+            document.ShowTextAligned(watermark, PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight() / 2, 1, TextAlignment
+                .CENTER, VerticalAlignment.MIDDLE, (float)(Math.PI / 4));
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             document.Add(new Paragraph(textContent + textContent + textContent));
@@ -332,8 +325,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void ArtifactTest02()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "artifactTest02.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest02.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello world"));
@@ -363,8 +356,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void FlushingTest01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "flushingTest01.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest01.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -397,8 +390,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void FlushingTest02()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "flushingTest02.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest02.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -439,8 +432,8 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void FlushingTest03()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "flushingTest03.pdf", FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest03.pdf"
+                , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -449,8 +442,7 @@ namespace iTextSharp.Layout
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, 
-                        j + 1))));
+                    table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
                 if (i % 10 == 0)
                 {
@@ -469,10 +461,8 @@ namespace iTextSharp.Layout
         private Paragraph CreateParagraph1()
         {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
-            Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk"
-                );
-            Text id = new Text("text chunk with specific font").SetFont(font).SetFontSize(8).
-                SetTextRise(6);
+            Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
+            Text id = new Text("text chunk with specific font").SetFont(font).SetFontSize(8).SetTextRise(6);
             p.Add(id);
             return p;
         }
@@ -500,13 +490,10 @@ namespace iTextSharp.Layout
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
-            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder
-                , "diff");
-            String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf
-                );
+            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff");
+            String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
             String errorMessage = "";
-            errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences
-                 + "\n";
+            errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;
             if (!String.IsNullOrEmpty(errorMessage))
             {

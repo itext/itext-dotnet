@@ -55,8 +55,7 @@ namespace iTextSharp.Kernel
 
         public const String AnnotShallHaveReferenceToPage = "annot.shall.have.reference.to.page";
 
-        public const String AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible
-             = "append.mode.requires.a.document.without.errors.even.if.recovery.was.possible";
+        public const String AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible = "append.mode.requires.a.document.without.errors.even.if.recovery.was.possible";
 
         public const String AuthenticatedAttributeIsMissingTheDigest = "authenticated.attribute.is.missing.the.digest";
 
@@ -116,8 +115,7 @@ namespace iTextSharp.Kernel
 
         public const String CannotRemoveDocumentRootTag = "cannot.remove.document.root.tag";
 
-        public const String CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed
-             = "cannot.remove.marked.content.reference.because.its.page.was.already.flushed";
+        public const String CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed = "cannot.remove.marked.content.reference.because.its.page.was.already.flushed";
 
         public const String CannotRemoveTagBecauseItsParentIsFlushed = "cannot.remove.tag.because.its.parent.is.flushed";
 
@@ -145,8 +143,7 @@ namespace iTextSharp.Kernel
 
         public const String ColorNotFound = "color.not.found";
 
-        public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters
-             = "content.stream.must.not.invoke.operators.that.specify.colors.or.other.color.related.parameters.in.the.graphics.state";
+        public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "content.stream.must.not.invoke.operators.that.specify.colors.or.other.color.related.parameters.in.the.graphics.state";
 
         public const String DecodeParameterType1IsNotSupported = "decode.parameter.type {0} is.not.supported";
 
@@ -304,8 +301,7 @@ namespace iTextSharp.Kernel
 
         public const String PageWasAlreadyFlushed = "the.page.was.already.flushed";
 
-        public const String PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
-             = "the.page.was.already.flushed.use.add.field.appearance.to.page.method.before.page.flushing";
+        public const String PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "the.page.was.already.flushed.use.add.field.appearance.to.page.method.before.page.flushing";
 
         public const String PdfEncodings = "pdf.encodings";
 
@@ -335,8 +331,7 @@ namespace iTextSharp.Kernel
 
         public const String ResourcesCannotBeNull = "resources.cannot.be.null";
 
-        public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = 
-            "resources.do.not.contain.extgstate.entry.unable.to.process.operator {0}";
+        public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "resources.do.not.contain.extgstate.entry.unable.to.process.operator {0}";
 
         public const String RoleIsNotMappedWithAnyStandardRole = "role.is.not.mapped.with.any.standard.role";
 
@@ -350,14 +345,11 @@ namespace iTextSharp.Kernel
 
         public const String TagCannotBeMovedToTheAnotherDocumentsTagStructure = "tag.cannot.be.moved.to.the.another.documents.tag.structure";
 
-        public const String TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags
-             = "tag.from.the.existing.tag.structure.is.flushed.cannot.add.copied.page.tags";
+        public const String TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags = "tag.from.the.existing.tag.structure.is.flushed.cannot.add.copied.page.tags";
 
-        public const String TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot
-             = "tagtreepointer.is.in.invalid.state.it.points.at.flushed.element.use.movetoroot";
+        public const String TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot = "tagtreepointer.is.in.invalid.state.it.points.at.flushed.element.use.movetoroot";
 
-        public const String TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot
-             = "tagtreepointer.is.in.invalid.state.it.points.at.removed.element.use.movetoroot";
+        public const String TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot = "tagtreepointer.is.in.invalid.state.it.points.at.removed.element.use.movetoroot";
 
         public const String TextCannotBeNull = "text.cannot.be.null";
 
@@ -367,8 +359,7 @@ namespace iTextSharp.Kernel
 
         public const String TwoBarcodeMustBeExternally = "the.two.barcodes.must.be.composed.externally";
 
-        public const String TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields
-             = "the.number.of.booleans.in.the.array.doesn.t.correspond.with.the.number.of.fields";
+        public const String TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields = "the.number.of.booleans.in.the.array.doesn.t.correspond.with.the.number.of.fields";
 
         public const String ThereAreIllegalCharactersForBarcode128In1 = "there.are.illegal.characters.for.barcode.128.in {0}";
 
@@ -376,8 +367,7 @@ namespace iTextSharp.Kernel
 
         public const String ThereIsNoFieldInTheDocumentWithSuchName1 = "there.is.no.field.in.the.document.with.such.name {0}";
 
-        public const String ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime
-             = "this.pkcs.7.object.has.multiple.signerinfos.only.one.is.supported.at.this.time";
+        public const String ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime = "this.pkcs.7.object.has.multiple.signerinfos.only.one.is.supported.at.this.time";
 
         public const String ThisInstanceOfPdfSignerIsAlreadyClosed = "this.instance.of.PdfSigner.is.already.closed";
 
@@ -419,8 +409,7 @@ namespace iTextSharp.Kernel
 
         public const String VerificationAlreadyOutput = "verification.already.output";
 
-        public const String WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject
-             = "when.adding.object.reference.to.the.tag.tree.it.must.be.connected.to.not.flushed.object";
+        public const String WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject = "when.adding.object.reference.to.the.tag.tree.it.must.be.connected.to.not.flushed.object";
 
         public const String WhitePointIsIncorrectlySpecified = "white.point.is.incorrectly.specified";
 
@@ -432,8 +421,7 @@ namespace iTextSharp.Kernel
 
         public const String YouCannotFlushPdfCatalogManually = "you.cannot.flush.pdf.catalog.manually";
 
-        public const String YouHaveToDefineABooleanArrayForThisCollectionSortDictionary = 
-            "you.have.to.define.a.boolean.array.for.this.collection.sort.dictionary";
+        public const String YouHaveToDefineABooleanArrayForThisCollectionSortDictionary = "you.have.to.define.a.boolean.array.for.this.collection.sort.dictionary";
 
         public const String YouMustSetAValueBeforeAddingAPrefix = "you.must.set.a.value.before.adding.a.prefix";
 
@@ -485,8 +473,7 @@ namespace iTextSharp.Kernel
             }
         }
 
-        public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams
-            )
+        public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams)
         {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);

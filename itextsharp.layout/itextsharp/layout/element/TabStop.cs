@@ -66,8 +66,7 @@ namespace iTextSharp.Layout.Element
         {
         }
 
-        public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader
-            )
+        public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader)
         {
             this.tabPosition = tabPosition;
             this.tabAlignment = tabAlignment;

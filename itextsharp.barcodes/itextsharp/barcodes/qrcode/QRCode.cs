@@ -164,11 +164,10 @@ namespace iTextSharp.Barcodes.Qrcode
         // false.
         public bool IsValid()
         {
-            return mode != null && ecLevel != null && version != -1 && matrixWidth != -1 && maskPattern
-                 != -1 && numTotalBytes != -1 && numDataBytes != -1 && numECBytes != -1 && numRSBlocks
-                 != -1 && IsValidMaskPattern(maskPattern) && numTotalBytes == numDataBytes + 
-                numECBytes && matrix != null && matrixWidth == matrix.GetWidth() && matrix.GetWidth
-                () == matrix.GetHeight();
+            return mode != null && ecLevel != null && version != -1 && matrixWidth != -1 && maskPattern != -1 && numTotalBytes
+                 != -1 && numDataBytes != -1 && numECBytes != -1 && numRSBlocks != -1 && IsValidMaskPattern(maskPattern
+                ) && numTotalBytes == numDataBytes + numECBytes && matrix != null && matrixWidth == matrix.GetWidth() 
+                && matrix.GetWidth() == matrix.GetHeight();
         }
 
         // First check if all version are not uninitialized.

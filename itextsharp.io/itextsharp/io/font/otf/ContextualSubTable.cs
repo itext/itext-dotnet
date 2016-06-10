@@ -51,15 +51,13 @@ namespace iTextSharp.IO.Font.Otf
 
         protected internal int lookupFlag;
 
-        protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag
-            )
+        protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag)
         {
             this.openReader = openReader;
             this.lookupFlag = lookupFlag;
         }
 
-        /// <summary>Gets a most preferable context rule that matches the line at current position.
-        ///     </summary>
+        /// <summary>Gets a most preferable context rule that matches the line at current position.</summary>
         /// <remarks>
         /// Gets a most preferable context rule that matches the line at current position. If no matching context rule is found,
         /// it returns null.
@@ -92,16 +90,14 @@ namespace iTextSharp.IO.Font.Otf
 
         /// <summary>Gets a set of rules, which start with given glyph id.</summary>
         /// <param name="startId">id of the first glyph in the sequence.</param>
-        protected internal abstract IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startId);
+        protected internal abstract IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId);
 
         /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
         /// <returns>
         /// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
         /// or -1 if context doesn't match.
         /// </returns>
-        protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule
-             rule)
+        protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule)
         {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();

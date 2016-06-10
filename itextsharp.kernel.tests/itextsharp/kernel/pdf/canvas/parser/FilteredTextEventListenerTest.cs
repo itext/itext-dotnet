@@ -9,8 +9,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
     public class FilteredTextEventListenerTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/parser/FilteredTextEventListenerTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/FilteredTextEventListenerTest/";
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -18,8 +17,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         {
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "in.pdf"));
             float pageHeight = doc.GetPage(1).GetPageSize().GetHeight();
-            Rectangle upperLeft = new Rectangle(0, (int)pageHeight - 30, 250, (int)pageHeight
-                );
+            Rectangle upperLeft = new Rectangle(0, (int)pageHeight - 30, 250, (int)pageHeight);
             NUnit.Framework.Assert.IsTrue(TextIsInRectangle(doc, "Upper Left", upperLeft));
             NUnit.Framework.Assert.IsFalse(TextIsInRectangle(doc, "Upper Right", upperLeft));
         }
@@ -29,8 +27,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         {
             FilteredTextEventListener filterListener = new FilteredTextEventListener(new LocationTextExtractionStrategy
                 (), new TextRegionEventFilter(rect));
-            String extractedText = PdfTextExtractor.GetTextFromPage(doc.GetPage(1), filterListener
-                );
+            String extractedText = PdfTextExtractor.GetTextFromPage(doc.GetPage(1), filterListener);
             return extractedText.Equals(text);
         }
     }

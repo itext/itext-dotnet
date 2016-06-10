@@ -124,15 +124,13 @@ namespace iTextSharp.IO.Codec
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
             }
             isBigEndian = endian == 0x4d4d;
             int magic = ReadUnsignedShort(stream);
             if (magic != 42)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42);
             }
             // Get the initial ifd offset as an unsigned int (using a long)
             ifd_offset = ReadUnsignedInt(stream);
@@ -140,8 +138,7 @@ namespace iTextSharp.IO.Codec
             {
                 if (ifd_offset == 0L)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.DirectoryNumberTooLarge
-                        );
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.DirectoryNumberTooLarge);
                 }
                 stream.Seek(ifd_offset);
                 int entries = ReadUnsignedShort(stream);
@@ -169,16 +166,14 @@ namespace iTextSharp.IO.Codec
         /// at the current offset.
         /// </param>
         /// <exception cref="System.IO.IOException"/>
-        public TIFFDirectory(RandomAccessFileOrArray stream, long ifd_offset, int directory
-            )
+        public TIFFDirectory(RandomAccessFileOrArray stream, long ifd_offset, int directory)
         {
             long global_save_offset = stream.GetPosition();
             stream.Seek(0L);
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
             }
             isBigEndian = endian == 0x4d4d;
             // Seek to the first IFD.
@@ -202,8 +197,7 @@ namespace iTextSharp.IO.Codec
             stream.Seek(global_save_offset);
         }
 
-        private static readonly int[] sizeOfType = new int[] { 0, 1, 1, 2, 4, 8, 1, 1, 2, 
-            4, 8, 4, 8 };
+        private static readonly int[] sizeOfType = new int[] { 0, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 };
 
         //  0 = n/a
         //  1 = byte
@@ -285,8 +279,7 @@ namespace iTextSharp.IO.Codec
                                     {
                                     }
                                     // When we encountered zero, means one string has ended
-                                    v.Add(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index - 
-                                        prevIndex)));
+                                    v.Add(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bvalues, prevIndex, (index - prevIndex)));
                                     prevIndex = index;
                                 }
                                 count = v.Count;
@@ -684,8 +677,7 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static int ReadUnsignedShort(RandomAccessFileOrArray stream, bool isBigEndian
-            )
+        private static int ReadUnsignedShort(RandomAccessFileOrArray stream, bool isBigEndian)
         {
             if (isBigEndian)
             {
@@ -698,8 +690,7 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static long ReadUnsignedInt(RandomAccessFileOrArray stream, bool isBigEndian
-            )
+        private static long ReadUnsignedInt(RandomAccessFileOrArray stream, bool isBigEndian)
         {
             if (isBigEndian)
             {
@@ -725,15 +716,13 @@ namespace iTextSharp.IO.Codec
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
             }
             bool isBigEndian = endian == 0x4d4d;
             int magic = ReadUnsignedShort(stream, isBigEndian);
             if (magic != 42)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BadMagicNumberShouldBe42);
             }
             stream.Seek(4L);
             long offset = ReadUnsignedInt(stream, isBigEndian);

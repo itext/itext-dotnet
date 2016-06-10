@@ -121,14 +121,14 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             if (supp.GetFont() != null)
             {
                 float sizeCoef = supp.GetSize() / FontProgram.UNITS_NORMALIZATION;
-                supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram
-                    ().GetFontMetrics().GetCapHeight() * sizeCoef);
+                supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram().GetFontMetrics
+                    ().GetCapHeight() * sizeCoef);
             }
             else
             {
@@ -139,8 +139,7 @@ namespace iTextSharp.Barcodes
             ean.PlaceBarcode(canvas, barColor, textColor);
             canvas.RestoreState();
             canvas.SaveState();
-            canvas.ConcatMatrix(1, 0, 0, 1, eanR.GetWidth() + n, eanR.GetHeight() - ean.GetBarHeight
-                ());
+            canvas.ConcatMatrix(1, 0, 0, 1, eanR.GetWidth() + n, eanR.GetHeight() - ean.GetBarHeight());
             supp.PlaceBarcode(canvas, barColor, textColor);
             canvas.RestoreState();
             return GetBarcodeSize();

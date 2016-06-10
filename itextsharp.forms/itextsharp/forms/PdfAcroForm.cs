@@ -56,8 +56,7 @@ using iTextSharp.Kernel.Pdf.Xobject;
 
 namespace iTextSharp.Forms
 {
-    /// <summary>This class represents the static form technology AcroForm on a PDF file.
-    ///     </summary>
+    /// <summary>This class represents the static form technology AcroForm on a PDF file.</summary>
     public class PdfAcroForm : PdfObjectWrapper<PdfDictionary>
     {
         /// <summary>
@@ -107,19 +106,17 @@ namespace iTextSharp.Forms
         /// <see cref="iTextSharp.Forms.Fields.PdfFormField">form field</see>
         /// objects.
         /// </summary>
-        protected internal IDictionary<String, PdfFormField> fields = new LinkedDictionary
-            <String, PdfFormField>();
+        protected internal IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField>();
 
         /// <summary>The PdfDocument to which the PdfAcroForm belongs.</summary>
         protected internal PdfDocument document;
 
-        private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject
-            , PdfName.ColorSpace, PdfName.Pattern };
+        private static PdfName[] resourceNames = new PdfName[] { PdfName.Font, PdfName.XObject, PdfName.ColorSpace
+            , PdfName.Pattern };
 
         private PdfDictionary defaultResources;
 
-        private ICollection<PdfFormField> fieldsForFlattening = new LinkedHashSet<PdfFormField
-            >();
+        private ICollection<PdfFormField> fieldsForFlattening = new LinkedHashSet<PdfFormField>();
 
         private XfaForm xfaForm;
 
@@ -178,11 +175,9 @@ namespace iTextSharp.Forms
         /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument">document</see>
         /// 's AcroForm, or a new one
         /// </returns>
-        public static iTextSharp.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool
-             createIfNotExist)
+        public static iTextSharp.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist)
         {
-            PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary
-                (PdfName.AcroForm);
+            PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
             iTextSharp.Forms.PdfAcroForm acroForm = null;
             if (acroFormDictionary == null)
             {
@@ -254,8 +249,8 @@ namespace iTextSharp.Forms
             }
             GetFields().Add(fieldDic);
             fields[field.GetFieldName().ToUnicodeString()] = field;
-            if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field
-                .GetFormType().Equals(PdfName.Ch)))
+            if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field.GetFormType().Equals(PdfName
+                .Ch)))
             {
                 IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
                 foreach (PdfDictionary resDict in resources)
@@ -347,8 +342,7 @@ namespace iTextSharp.Forms
         /// </remarks>
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
-        public virtual iTextSharp.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances
-            )
+        public virtual iTextSharp.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances)
         {
             return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
         }
@@ -458,8 +452,7 @@ namespace iTextSharp.Forms
         /// </remarks>
         /// <param name="calculationOrder">an array of indirect references</param>
         /// <returns>current AcroForm</returns>
-        public virtual iTextSharp.Forms.PdfAcroForm SetCalculationOrder(PdfArray calculationOrder
-            )
+        public virtual iTextSharp.Forms.PdfAcroForm SetCalculationOrder(PdfArray calculationOrder)
         {
             return Put(PdfName.CO, calculationOrder);
         }
@@ -495,8 +488,7 @@ namespace iTextSharp.Forms
         /// </remarks>
         /// <param name="defaultResources">a resource dictionary</param>
         /// <returns>current AcroForm</returns>
-        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultResources(PdfDictionary defaultResources
-            )
+        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultResources(PdfDictionary defaultResources)
         {
             return Put(PdfName.DR, defaultResources);
         }
@@ -529,10 +521,8 @@ namespace iTextSharp.Forms
         /// </remarks>
         /// <param name="appearance">a String containing a sequence of valid PDF syntax</param>
         /// <returns>current AcroForm</returns>
-        /// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)
-        ///     "></seealso>
-        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultAppearance(String appearance
-            )
+        /// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)"></seealso>
+        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultAppearance(String appearance)
         {
             return Put(PdfName.DA, new PdfString(appearance));
         }
@@ -562,8 +552,7 @@ namespace iTextSharp.Forms
         /// <param name="justification">an integer representing a justification value</param>
         /// <returns>current AcroForm</returns>
         /// <seealso cref="iTextSharp.Forms.Fields.PdfFormField.SetJustification(int)"></seealso>
-        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultJustification(int justification
-            )
+        public virtual iTextSharp.Forms.PdfAcroForm SetDefaultJustification(int justification)
         {
             return Put(PdfName.Q, new PdfNumber(justification));
         }
@@ -726,12 +715,10 @@ namespace iTextSharp.Forms
             // xObject, so that circular reference is avoided.
             // We copy beforehand firstly not to produce a copy every time, and secondly not to copy all the
             // xObjects that have already been added to the page resources.
-            IDictionary<int, PdfObject> initialPageResourceClones = new LinkedDictionary<int, 
-                PdfObject>();
+            IDictionary<int, PdfObject> initialPageResourceClones = new LinkedDictionary<int, PdfObject>();
             for (int i = 1; i <= document.GetNumberOfPages(); i++)
             {
-                PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.
-                    Resources);
+                PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.Resources);
                 initialPageResourceClones[i] = resources == null ? null : resources.Clone();
             }
             PdfPage page;
@@ -802,8 +789,7 @@ namespace iTextSharp.Forms
                         PdfObject pageResources = page.GetResources().GetPdfObject();
                         if (xObjectResources != null && pageResources != null && xObjectResources == pageResources)
                         {
-                            xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document
-                                .GetPageNumber(page)));
+                            xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
                         }
                         if (tagPointer != null)
                         {
@@ -952,8 +938,8 @@ namespace iTextSharp.Forms
             PdfFormField oldField = GetField(name);
             if (oldField != null)
             {
-                PdfFormField field = new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone
-                    ().MakeIndirect(document));
+                PdfFormField field = new PdfFormField((PdfDictionary)oldField.GetPdfObject().Clone().MakeIndirect(document
+                    ));
                 return field;
             }
             return null;
@@ -999,8 +985,7 @@ namespace iTextSharp.Forms
 
         private IDictionary<String, PdfFormField> IterateFields(PdfArray array)
         {
-            IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField
-                >();
+            IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField>();
             int index = 1;
             foreach (PdfObject field in array)
             {
@@ -1009,8 +994,7 @@ namespace iTextSharp.Forms
                 String name;
                 if (fieldName == null)
                 {
-                    PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document
-                        );
+                    PdfFormField parentField = PdfFormField.MakeFormField(formField.GetParent(), document);
                     while (fieldName == null)
                     {
                         fieldName = parentField.GetFieldName();
@@ -1035,8 +1019,7 @@ namespace iTextSharp.Forms
             return fields;
         }
 
-        private PdfDictionary ProcessKids(PdfArray kids, PdfDictionary parent, PdfPage page
-            )
+        private PdfDictionary ProcessKids(PdfArray kids, PdfDictionary parent, PdfPage page)
         {
             if (kids.Size() == 1)
             {
@@ -1083,16 +1066,15 @@ namespace iTextSharp.Forms
             return parent;
         }
 
-        private void MergeWidgetWithParentField(PdfDictionary parent, PdfDictionary widgetDict
-            )
+        private void MergeWidgetWithParentField(PdfDictionary parent, PdfDictionary widgetDict)
         {
             parent.Remove(PdfName.Kids);
             widgetDict.Remove(PdfName.Parent);
             parent.MergeDifferent(widgetDict);
         }
 
-        private void DefineWidgetPageAndAddToIt(PdfPage currentPage, PdfDictionary mergedFieldAndWidget
-            , bool warnIfPageFlushed)
+        private void DefineWidgetPageAndAddToIt(PdfPage currentPage, PdfDictionary mergedFieldAndWidget, bool warnIfPageFlushed
+            )
         {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(mergedFieldAndWidget);
             PdfDictionary pageDic = annot.GetPageObject();

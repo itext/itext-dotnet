@@ -49,8 +49,7 @@ namespace iTextSharp.Kernel.Pdf
     /// <summary>Representation of the null object in the PDF specification.</summary>
     public class PdfNull : PdfPrimitiveObject
     {
-        public static readonly iTextSharp.Kernel.Pdf.PdfNull PDF_NULL = new iTextSharp.Kernel.Pdf.PdfNull
-            (true);
+        public static readonly iTextSharp.Kernel.Pdf.PdfNull PDF_NULL = new iTextSharp.Kernel.Pdf.PdfNull(true);
 
         private static readonly byte[] NullContent = ByteUtils.GetIsoBytes("null");
 
@@ -81,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
             return (iTextSharp.Kernel.Pdf.PdfNull)base.MakeIndirect(document, reference);
         }
@@ -132,8 +130,7 @@ namespace iTextSharp.Kernel.Pdf
             return new iTextSharp.Kernel.Pdf.PdfNull();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
         }
     }

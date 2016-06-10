@@ -58,8 +58,7 @@ namespace iTextSharp.Kernel.Font
 
         protected internal static readonly byte[] emptyBytes = new byte[0];
 
-        protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph
-            >();
+        protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph>();
 
         /// <summary>false, if the font comes from PdfDocument.</summary>
         protected internal bool newFont = true;
@@ -129,8 +128,7 @@ namespace iTextSharp.Kernel.Font
 
         public abstract byte[] ConvertToBytes(Glyph glyph);
 
-        public abstract void WriteText(GlyphLine text, int from, int to, PdfOutputStream 
-            stream);
+        public abstract void WriteText(GlyphLine text, int from, int to, PdfOutputStream stream);
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
@@ -144,8 +142,7 @@ namespace iTextSharp.Kernel.Font
             return FontConstants.DefaultFontMatrix;
         }
 
-        /// <summary>Returns the width of a certain character of this font in 1000 normalized units.
-        ///     </summary>
+        /// <summary>Returns the width of a certain character of this font in 1000 normalized units.</summary>
         /// <param name="unicode">a certain character.</param>
         /// <returns>a width in Text Space.</returns>
         public virtual int GetWidth(int unicode)
@@ -402,8 +399,7 @@ namespace iTextSharp.Kernel.Font
             subsetRanges.Add(range);
         }
 
-        public virtual IList<String> SplitString(String text, int fontSize, float maxWidth
-            )
+        public virtual IList<String> SplitString(String text, int fontSize, float maxWidth)
         {
             IList<String> resultString = new List<String>();
             int lastWhiteSpace = 0;
@@ -446,29 +442,25 @@ namespace iTextSharp.Kernel.Font
             return true;
         }
 
-        protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName
-             fontType)
+        protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType)
         {
             return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
         }
 
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic
-            )
+        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic)
         {
             return CheckTrueTypeFontDictionary(fontDic, true);
         }
 
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic
-            , bool isException)
+        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException)
         {
-            if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName
-                .Subtype).Equals(PdfName.TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName
-                .Type1)))
+            if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
+                .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1)))
             {
                 if (isException)
                 {
-                    throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams
-                        (PdfName.TrueType.GetValue());
+                    throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams(PdfName.TrueType.GetValue
+                        ());
                 }
                 return false;
             }
@@ -514,8 +506,7 @@ namespace iTextSharp.Kernel.Font
         /// <see langword="null"/>
         /// .
         /// </exception>
-        protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int
-            [] fontStreamLengths)
+        protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths)
         {
             if (fontStreamBytes == null)
             {
@@ -524,8 +515,7 @@ namespace iTextSharp.Kernel.Font
             PdfStream fontStream = new PdfStream(fontStreamBytes);
             for (int k = 0; k < fontStreamLengths.Length; ++k)
             {
-                fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k
-                    ]));
+                fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
             }
             return fontStream;
         }
@@ -537,8 +527,8 @@ namespace iTextSharp.Kernel.Font
             {
                 for (int j = 0; j < range.Length; j += 2)
                 {
-                    simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff
-                        , Math.Max(range[j], range[j + 1])) });
+                    simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff, Math.Max(range[j], range
+                        [j + 1])) });
                 }
             }
             for (int k1 = 0; k1 < simp.Count - 1; ++k1)

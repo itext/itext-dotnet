@@ -84,8 +84,7 @@ namespace iTextSharp.IO.Font
             fontSpecific = false;
         }
 
-        public static iTextSharp.IO.Font.FontEncoding CreateFontEncoding(String baseEncoding
-            )
+        public static iTextSharp.IO.Font.FontEncoding CreateFontEncoding(String baseEncoding)
         {
             iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
             encoding.baseEncoding = NormalizeEncoding(baseEncoding);
@@ -113,8 +112,7 @@ namespace iTextSharp.IO.Font
             return encoding;
         }
 
-        /// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)
-        ///     </summary>
+        /// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)</summary>
         public static iTextSharp.IO.Font.FontEncoding CreateFontSpecificEncoding()
         {
             iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
@@ -276,8 +274,7 @@ namespace iTextSharp.IO.Font
         protected internal virtual void FillCustomEncoding()
         {
             differences = new String[256];
-            StringTokenizer tok = new StringTokenizer(baseEncoding.Substring(1), " ,\t\n\r\f"
-                );
+            StringTokenizer tok = new StringTokenizer(baseEncoding.Substring(1), " ,\t\n\r\f");
             if (tok.NextToken().Equals("full"))
             {
                 while (tok.HasMoreTokens())
@@ -338,8 +335,7 @@ namespace iTextSharp.IO.Font
         {
             PdfEncodings.ConvertToBytes(" ", baseEncoding);
             // check if the encoding exists
-            bool stdEncoding = PdfEncodings.WINANSI.Equals(baseEncoding) || PdfEncodings.MACROMAN
-                .Equals(baseEncoding);
+            bool stdEncoding = PdfEncodings.WINANSI.Equals(baseEncoding) || PdfEncodings.MACROMAN.Equals(baseEncoding);
             if (!stdEncoding && differences == null)
             {
                 differences = new String[256];
@@ -405,8 +401,7 @@ namespace iTextSharp.IO.Font
         /// <returns>the normalized encoding</returns>
         protected internal static String NormalizeEncoding(String enc)
         {
-            String tmp = enc == null ? "" : enc.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                );
+            String tmp = enc == null ? "" : enc.ToLower(System.Globalization.CultureInfo.InvariantCulture);
             switch (tmp)
             {
                 case "":

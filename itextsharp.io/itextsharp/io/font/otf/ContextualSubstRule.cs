@@ -54,8 +54,7 @@ namespace iTextSharp.IO.Font.Otf
         /// </returns>
         public abstract SubstLookupRecord[] GetSubstLookupRecords();
 
-        /// <summary>Checks if glyph line element matches element from input sequence of the rule.
-        ///     </summary>
+        /// <summary>Checks if glyph line element matches element from input sequence of the rule.</summary>
         /// <remarks>
         /// Checks if glyph line element matches element from input sequence of the rule.
         /// <br /><br />
@@ -78,8 +77,7 @@ namespace iTextSharp.IO.Font.Otf
             return 0;
         }
 
-        /// <summary>Checks if glyph line element matches element from lookahead sequence of the rule.
-        ///     </summary>
+        /// <summary>Checks if glyph line element matches element from lookahead sequence of the rule.</summary>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getLookaheadContextLength().
         ///     </param>
         public virtual bool IsGlyphMatchesLookahead(int glyphId, int atIdx)
@@ -87,8 +85,7 @@ namespace iTextSharp.IO.Font.Otf
             return false;
         }
 
-        /// <summary>Checks if glyph line element matches element from backtrack sequence of the rule.
-        ///     </summary>
+        /// <summary>Checks if glyph line element matches element from backtrack sequence of the rule.</summary>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getBacktrackContextLength().
         ///     </param>
         public virtual bool IsGlyphMatchesBacktrack(int glyphId, int atIdx)

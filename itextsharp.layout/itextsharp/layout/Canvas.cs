@@ -78,8 +78,7 @@ namespace iTextSharp.Layout
 
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
         /// <param name="pdfCanvas">the low-level content stream writer</param>
-        /// <param name="pdfDocument">the document that the resulting content stream will be written to
-        ///     </param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
             : base()
@@ -91,11 +90,9 @@ namespace iTextSharp.Layout
 
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
         /// <param name="pdfCanvas">the low-level content stream writer</param>
-        /// <param name="pdfDocument">the document that the resulting content stream will be written to
-        ///     </param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
-        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool
-             immediateFlush)
+        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool immediateFlush)
             : this(pdfCanvas, pdfDocument, rootArea)
         {
             this.immediateFlush = immediateFlush;
@@ -107,11 +104,9 @@ namespace iTextSharp.Layout
         /// .
         /// </summary>
         /// <param name="formXObject">the form</param>
-        /// <param name="pdfDocument">the document that the resulting content stream will be written to
-        ///     </param>
+        /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
-            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox(
-                ).ToRectangle())
+            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox().ToRectangle())
         {
         }
 
@@ -156,8 +151,7 @@ namespace iTextSharp.Layout
         }
 
         /// <summary>Returned value is not null only in case when autotagging is enabled.</summary>
-        /// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.
-        ///     </returns>
+        /// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.</returns>
         public virtual PdfPage GetPage()
         {
             return page;
@@ -171,8 +165,7 @@ namespace iTextSharp.Layout
             this.page = page;
         }
 
-        /// <returns>true if autotagging of canvas content is enabled. Default value - false.
-        ///     </returns>
+        /// <returns>true if autotagging of canvas content is enabled. Default value - false.</returns>
         public virtual bool IsAutoTaggingEnabled()
         {
             return page != null;
@@ -182,8 +175,7 @@ namespace iTextSharp.Layout
         {
             if (immediateFlush)
             {
-                throw new InvalidOperationException("Operation not supported with immediate flush"
-                    );
+                throw new InvalidOperationException("Operation not supported with immediate flush");
             }
             rootRenderer = new CanvasRenderer(this, immediateFlush);
             foreach (IElement element in childElements)

@@ -52,14 +52,12 @@ namespace iTextSharp.IO.Font.Otf
         private IList<FeatureRecord> records;
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable
-            )
+        public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable)
         {
             this.openTypeReader = openTypeReader;
             records = new List<FeatureRecord>();
             openTypeReader.rf.Seek(locationFeatureTable);
-            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable
-                );
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable);
             foreach (TagAndLocation tagLoc in tagsLocs)
             {
                 openTypeReader.rf.Seek(tagLoc.location + 2);

@@ -65,53 +65,41 @@ namespace iTextSharp.Barcodes
         public const int CODE128_RAW = 3;
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 2, 1, 2, 2, 2
-            , 2 }, new byte[] { 2, 2, 2, 1, 2, 2 }, new byte[] { 2, 2, 2, 2, 2, 1 }, new 
-            byte[] { 1, 2, 1, 2, 2, 3 }, new byte[] { 1, 2, 1, 3, 2, 2 }, new byte[] { 1, 
-            3, 1, 2, 2, 2 }, new byte[] { 1, 2, 2, 2, 1, 3 }, new byte[] { 1, 2, 2, 3, 1, 
-            2 }, new byte[] { 1, 3, 2, 2, 1, 2 }, new byte[] { 2, 2, 1, 2, 1, 3 }, new byte
-            [] { 2, 2, 1, 3, 1, 2 }, new byte[] { 2, 3, 1, 2, 1, 2 }, new byte[] { 1, 1, 
-            2, 2, 3, 2 }, new byte[] { 1, 2, 2, 1, 3, 2 }, new byte[] { 1, 2, 2, 2, 3, 1 }
-            , new byte[] { 1, 1, 3, 2, 2, 2 }, new byte[] { 1, 2, 3, 1, 2, 2 }, new byte[
-            ] { 1, 2, 3, 2, 2, 1 }, new byte[] { 2, 2, 3, 2, 1, 1 }, new byte[] { 2, 2, 1
-            , 1, 3, 2 }, new byte[] { 2, 2, 1, 2, 3, 1 }, new byte[] { 2, 1, 3, 2, 1, 2 }
-            , new byte[] { 2, 2, 3, 1, 1, 2 }, new byte[] { 3, 1, 2, 1, 3, 1 }, new byte[
-            ] { 3, 1, 1, 2, 2, 2 }, new byte[] { 3, 2, 1, 1, 2, 2 }, new byte[] { 3, 2, 1
-            , 2, 2, 1 }, new byte[] { 3, 1, 2, 2, 1, 2 }, new byte[] { 3, 2, 2, 1, 1, 2 }
-            , new byte[] { 3, 2, 2, 2, 1, 1 }, new byte[] { 2, 1, 2, 1, 2, 3 }, new byte[
-            ] { 2, 1, 2, 3, 2, 1 }, new byte[] { 2, 3, 2, 1, 2, 1 }, new byte[] { 1, 1, 1
-            , 3, 2, 3 }, new byte[] { 1, 3, 1, 1, 2, 3 }, new byte[] { 1, 3, 1, 3, 2, 1 }
-            , new byte[] { 1, 1, 2, 3, 1, 3 }, new byte[] { 1, 3, 2, 1, 1, 3 }, new byte[
-            ] { 1, 3, 2, 3, 1, 1 }, new byte[] { 2, 1, 1, 3, 1, 3 }, new byte[] { 2, 3, 1
-            , 1, 1, 3 }, new byte[] { 2, 3, 1, 3, 1, 1 }, new byte[] { 1, 1, 2, 1, 3, 3 }
-            , new byte[] { 1, 1, 2, 3, 3, 1 }, new byte[] { 1, 3, 2, 1, 3, 1 }, new byte[
-            ] { 1, 1, 3, 1, 2, 3 }, new byte[] { 1, 1, 3, 3, 2, 1 }, new byte[] { 1, 3, 3
-            , 1, 2, 1 }, new byte[] { 3, 1, 3, 1, 2, 1 }, new byte[] { 2, 1, 1, 3, 3, 1 }
-            , new byte[] { 2, 3, 1, 1, 3, 1 }, new byte[] { 2, 1, 3, 1, 1, 3 }, new byte[
-            ] { 2, 1, 3, 3, 1, 1 }, new byte[] { 2, 1, 3, 1, 3, 1 }, new byte[] { 3, 1, 1
-            , 1, 2, 3 }, new byte[] { 3, 1, 1, 3, 2, 1 }, new byte[] { 3, 3, 1, 1, 2, 1 }
-            , new byte[] { 3, 1, 2, 1, 1, 3 }, new byte[] { 3, 1, 2, 3, 1, 1 }, new byte[
-            ] { 3, 3, 2, 1, 1, 1 }, new byte[] { 3, 1, 4, 1, 1, 1 }, new byte[] { 2, 2, 1
-            , 4, 1, 1 }, new byte[] { 4, 3, 1, 1, 1, 1 }, new byte[] { 1, 1, 1, 2, 2, 4 }
-            , new byte[] { 1, 1, 1, 4, 2, 2 }, new byte[] { 1, 2, 1, 1, 2, 4 }, new byte[
-            ] { 1, 2, 1, 4, 2, 1 }, new byte[] { 1, 4, 1, 1, 2, 2 }, new byte[] { 1, 4, 1
-            , 2, 2, 1 }, new byte[] { 1, 1, 2, 2, 1, 4 }, new byte[] { 1, 1, 2, 4, 1, 2 }
-            , new byte[] { 1, 2, 2, 1, 1, 4 }, new byte[] { 1, 2, 2, 4, 1, 1 }, new byte[
-            ] { 1, 4, 2, 1, 1, 2 }, new byte[] { 1, 4, 2, 2, 1, 1 }, new byte[] { 2, 4, 1
-            , 2, 1, 1 }, new byte[] { 2, 2, 1, 1, 1, 4 }, new byte[] { 4, 1, 3, 1, 1, 1 }
-            , new byte[] { 2, 4, 1, 1, 1, 2 }, new byte[] { 1, 3, 4, 1, 1, 1 }, new byte[
-            ] { 1, 1, 1, 2, 4, 2 }, new byte[] { 1, 2, 1, 1, 4, 2 }, new byte[] { 1, 2, 1
-            , 2, 4, 1 }, new byte[] { 1, 1, 4, 2, 1, 2 }, new byte[] { 1, 2, 4, 1, 1, 2 }
-            , new byte[] { 1, 2, 4, 2, 1, 1 }, new byte[] { 4, 1, 1, 2, 1, 2 }, new byte[
-            ] { 4, 2, 1, 1, 1, 2 }, new byte[] { 4, 2, 1, 2, 1, 1 }, new byte[] { 2, 1, 2
-            , 1, 4, 1 }, new byte[] { 2, 1, 4, 1, 2, 1 }, new byte[] { 4, 1, 2, 1, 2, 1 }
-            , new byte[] { 1, 1, 1, 1, 4, 3 }, new byte[] { 1, 1, 1, 3, 4, 1 }, new byte[
-            ] { 1, 3, 1, 1, 4, 1 }, new byte[] { 1, 1, 4, 1, 1, 3 }, new byte[] { 1, 1, 4
-            , 3, 1, 1 }, new byte[] { 4, 1, 1, 1, 1, 3 }, new byte[] { 4, 1, 1, 3, 1, 1 }
-            , new byte[] { 1, 1, 3, 1, 4, 1 }, new byte[] { 1, 1, 4, 1, 3, 1 }, new byte[
-            ] { 3, 1, 1, 1, 4, 1 }, new byte[] { 4, 1, 1, 1, 3, 1 }, new byte[] { 2, 1, 1
-            , 4, 1, 2 }, new byte[] { 2, 1, 1, 2, 1, 4 }, new byte[] { 2, 1, 1, 2, 3, 2 }
-             };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 2, 1, 2, 2, 2, 2 }, new byte[] { 2, 2, 
+            2, 1, 2, 2 }, new byte[] { 2, 2, 2, 2, 2, 1 }, new byte[] { 1, 2, 1, 2, 2, 3 }, new byte[] { 1, 2, 1, 
+            3, 2, 2 }, new byte[] { 1, 3, 1, 2, 2, 2 }, new byte[] { 1, 2, 2, 2, 1, 3 }, new byte[] { 1, 2, 2, 3, 
+            1, 2 }, new byte[] { 1, 3, 2, 2, 1, 2 }, new byte[] { 2, 2, 1, 2, 1, 3 }, new byte[] { 2, 2, 1, 3, 1, 
+            2 }, new byte[] { 2, 3, 1, 2, 1, 2 }, new byte[] { 1, 1, 2, 2, 3, 2 }, new byte[] { 1, 2, 2, 1, 3, 2 }
+            , new byte[] { 1, 2, 2, 2, 3, 1 }, new byte[] { 1, 1, 3, 2, 2, 2 }, new byte[] { 1, 2, 3, 1, 2, 2 }, new 
+            byte[] { 1, 2, 3, 2, 2, 1 }, new byte[] { 2, 2, 3, 2, 1, 1 }, new byte[] { 2, 2, 1, 1, 3, 2 }, new byte
+            [] { 2, 2, 1, 2, 3, 1 }, new byte[] { 2, 1, 3, 2, 1, 2 }, new byte[] { 2, 2, 3, 1, 1, 2 }, new byte[] 
+            { 3, 1, 2, 1, 3, 1 }, new byte[] { 3, 1, 1, 2, 2, 2 }, new byte[] { 3, 2, 1, 1, 2, 2 }, new byte[] { 3
+            , 2, 1, 2, 2, 1 }, new byte[] { 3, 1, 2, 2, 1, 2 }, new byte[] { 3, 2, 2, 1, 1, 2 }, new byte[] { 3, 2
+            , 2, 2, 1, 1 }, new byte[] { 2, 1, 2, 1, 2, 3 }, new byte[] { 2, 1, 2, 3, 2, 1 }, new byte[] { 2, 3, 2
+            , 1, 2, 1 }, new byte[] { 1, 1, 1, 3, 2, 3 }, new byte[] { 1, 3, 1, 1, 2, 3 }, new byte[] { 1, 3, 1, 3
+            , 2, 1 }, new byte[] { 1, 1, 2, 3, 1, 3 }, new byte[] { 1, 3, 2, 1, 1, 3 }, new byte[] { 1, 3, 2, 3, 1
+            , 1 }, new byte[] { 2, 1, 1, 3, 1, 3 }, new byte[] { 2, 3, 1, 1, 1, 3 }, new byte[] { 2, 3, 1, 3, 1, 1
+             }, new byte[] { 1, 1, 2, 1, 3, 3 }, new byte[] { 1, 1, 2, 3, 3, 1 }, new byte[] { 1, 3, 2, 1, 3, 1 }, 
+            new byte[] { 1, 1, 3, 1, 2, 3 }, new byte[] { 1, 1, 3, 3, 2, 1 }, new byte[] { 1, 3, 3, 1, 2, 1 }, new 
+            byte[] { 3, 1, 3, 1, 2, 1 }, new byte[] { 2, 1, 1, 3, 3, 1 }, new byte[] { 2, 3, 1, 1, 3, 1 }, new byte
+            [] { 2, 1, 3, 1, 1, 3 }, new byte[] { 2, 1, 3, 3, 1, 1 }, new byte[] { 2, 1, 3, 1, 3, 1 }, new byte[] 
+            { 3, 1, 1, 1, 2, 3 }, new byte[] { 3, 1, 1, 3, 2, 1 }, new byte[] { 3, 3, 1, 1, 2, 1 }, new byte[] { 3
+            , 1, 2, 1, 1, 3 }, new byte[] { 3, 1, 2, 3, 1, 1 }, new byte[] { 3, 3, 2, 1, 1, 1 }, new byte[] { 3, 1
+            , 4, 1, 1, 1 }, new byte[] { 2, 2, 1, 4, 1, 1 }, new byte[] { 4, 3, 1, 1, 1, 1 }, new byte[] { 1, 1, 1
+            , 2, 2, 4 }, new byte[] { 1, 1, 1, 4, 2, 2 }, new byte[] { 1, 2, 1, 1, 2, 4 }, new byte[] { 1, 2, 1, 4
+            , 2, 1 }, new byte[] { 1, 4, 1, 1, 2, 2 }, new byte[] { 1, 4, 1, 2, 2, 1 }, new byte[] { 1, 1, 2, 2, 1
+            , 4 }, new byte[] { 1, 1, 2, 4, 1, 2 }, new byte[] { 1, 2, 2, 1, 1, 4 }, new byte[] { 1, 2, 2, 4, 1, 1
+             }, new byte[] { 1, 4, 2, 1, 1, 2 }, new byte[] { 1, 4, 2, 2, 1, 1 }, new byte[] { 2, 4, 1, 2, 1, 1 }, 
+            new byte[] { 2, 2, 1, 1, 1, 4 }, new byte[] { 4, 1, 3, 1, 1, 1 }, new byte[] { 2, 4, 1, 1, 1, 2 }, new 
+            byte[] { 1, 3, 4, 1, 1, 1 }, new byte[] { 1, 1, 1, 2, 4, 2 }, new byte[] { 1, 2, 1, 1, 4, 2 }, new byte
+            [] { 1, 2, 1, 2, 4, 1 }, new byte[] { 1, 1, 4, 2, 1, 2 }, new byte[] { 1, 2, 4, 1, 1, 2 }, new byte[] 
+            { 1, 2, 4, 2, 1, 1 }, new byte[] { 4, 1, 1, 2, 1, 2 }, new byte[] { 4, 2, 1, 1, 1, 2 }, new byte[] { 4
+            , 2, 1, 2, 1, 1 }, new byte[] { 2, 1, 2, 1, 4, 1 }, new byte[] { 2, 1, 4, 1, 2, 1 }, new byte[] { 4, 1
+            , 2, 1, 2, 1 }, new byte[] { 1, 1, 1, 1, 4, 3 }, new byte[] { 1, 1, 1, 3, 4, 1 }, new byte[] { 1, 3, 1
+            , 1, 4, 1 }, new byte[] { 1, 1, 4, 1, 1, 3 }, new byte[] { 1, 1, 4, 3, 1, 1 }, new byte[] { 4, 1, 1, 1
+            , 1, 3 }, new byte[] { 4, 1, 1, 3, 1, 1 }, new byte[] { 1, 1, 3, 1, 4, 1 }, new byte[] { 1, 1, 4, 1, 3
+            , 1 }, new byte[] { 3, 1, 1, 1, 4, 1 }, new byte[] { 4, 1, 1, 1, 3, 1 }, new byte[] { 2, 1, 1, 4, 1, 2
+             }, new byte[] { 2, 1, 1, 2, 1, 4 }, new byte[] { 2, 1, 1, 2, 3, 2 } };
 
         /// <summary>The stop bars.</summary>
         private static readonly byte[] BARS_STOP = new byte[] { 2, 3, 3, 1, 1, 1, 2 };
@@ -291,8 +279,7 @@ namespace iTextSharp.Barcodes
         /// </param>
         /// <param name="codeSet">forced code set, or AUTO for optimized barcode.</param>
         /// <returns>the code ready to be fed to getBarsCode128Raw()</returns>
-        public static String GetRawText(String text, bool ucc, Barcode128.Barcode128CodeSet
-             codeSet)
+        public static String GetRawText(String text, bool ucc, Barcode128.Barcode128CodeSet codeSet)
         {
             String @out = "";
             int tLen = text.Length;
@@ -317,8 +304,8 @@ namespace iTextSharp.Barcodes
             c = text[0];
             char currentCode = START_B;
             int index = 0;
-            if ((codeSet == Barcode128.Barcode128CodeSet.AUTO || codeSet == Barcode128.Barcode128CodeSet
-                .C) && IsNextDigits(text, index, 2))
+            if ((codeSet == Barcode128.Barcode128CodeSet.AUTO || codeSet == Barcode128.Barcode128CodeSet.C) && IsNextDigits
+                (text, index, 2))
             {
                 currentCode = START_C;
                 @out += currentCode;
@@ -361,8 +348,7 @@ namespace iTextSharp.Barcodes
                     ++index;
                 }
             }
-            if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol
-                (codeSet))
+            if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet))
             {
                 throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
             }
@@ -479,8 +465,7 @@ namespace iTextSharp.Barcodes
                         break;
                     }
                 }
-                if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol
-                    (codeSet))
+                if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet))
                 {
                     throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
                 }
@@ -648,8 +633,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             String fullCode;
             if (codeType == CODE128_RAW)
@@ -790,8 +775,7 @@ namespace iTextSharp.Barcodes
         /// <param name="code">the code to generate</param>
         public override void SetCode(String code)
         {
-            if (GetCodeType() == iTextSharp.Barcodes.Barcode128.CODE128_UCC && code.StartsWith
-                ("("))
+            if (GetCodeType() == iTextSharp.Barcodes.Barcode128.CODE128_UCC && code.StartsWith("("))
             {
                 int idx = 0;
                 StringBuilder ret = new StringBuilder("");
@@ -983,11 +967,9 @@ namespace iTextSharp.Barcodes
         /// </remarks>
         /// <param name="text">the text to pack</param>
         /// <param name="textIndex">where to pack from</param>
-        /// <param name="numDigits">the number of digits to pack. It is always an even number
-        ///     </param>
+        /// <param name="numDigits">the number of digits to pack. It is always an even number</param>
         /// <returns>the packed digits, two digits per character</returns>
-        internal static String GetPackedRawDigits(String text, int textIndex, int numDigits
-            )
+        internal static String GetPackedRawDigits(String text, int textIndex, int numDigits)
         {
             StringBuilder @out = new StringBuilder("");
             int start = textIndex;

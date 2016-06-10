@@ -11,19 +11,17 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfOutlineTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfOutlineTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfOutlineTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
         {
             CreateDestinationFolder(destinationFolder);
-            FileStream fos = new FileStream(destinationFolder + "documentWithOutlines.pdf", FileMode.Create
-                );
+            FileStream fos = new FileStream(destinationFolder + "documentWithOutlines.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
@@ -41,23 +39,22 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void OutlinesTest()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-                , FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
+                ));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             IList<PdfOutline> children = outlines.GetAllChildren()[0].GetAllChildren();
             NUnit.Framework.Assert.AreEqual(outlines.GetTitle(), "Outlines");
             NUnit.Framework.Assert.AreEqual(children.Count, 13);
-            NUnit.Framework.Assert.IsTrue(children[0].GetDestination() is PdfStringDestination
-                );
+            NUnit.Framework.Assert.IsTrue(children[0].GetDestination() is PdfStringDestination);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OutlinesWithPagesTest()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-                , FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
+                ));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage page = pdfDoc.GetPage(52);
             IList<PdfOutline> pageOutlines = page.GetOutlines(true);
@@ -78,10 +75,8 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void SetupAddOutlinesToDocumentTest()
         {
             String filename = sourceFolder + "iphone_user_guide.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "addOutlinesResult.pdf", FileMode.Create
-                );
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "addOutlinesResult.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.SetTagged();
@@ -91,13 +86,11 @@ namespace iTextSharp.Kernel.Pdf
             PdfOutline secondPage = outlines.AddOutline("secondPage");
             PdfOutline secondPageChild = secondPage.AddOutline("secondPageChild");
             firstPage.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1)));
-            firstPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1))
-                );
+            firstPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1)));
             secondPage.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
-            secondPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)
-                ));
-            outlines.GetAllChildren()[0].GetAllChildren()[1].AddOutline("testOutline", 1).AddDestination
-                (PdfExplicitDestination.CreateFit(pdfDoc.GetPage(102)));
+            secondPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
+            outlines.GetAllChildren()[0].GetAllChildren()[1].AddOutline("testOutline", 1).AddDestination(PdfExplicitDestination
+                .CreateFit(pdfDoc.GetPage(102)));
             pdfDoc.Close();
             fos.Close();
         }
@@ -108,15 +101,14 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AddOutlinesToDocumentTest()
         {
             String filename = destinationFolder + "addOutlinesResult.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             try
             {
                 NUnit.Framework.Assert.AreEqual(3, outlines.GetAllChildren().Count);
-                NUnit.Framework.Assert.AreEqual("firstPageChild", outlines.GetAllChildren()[1].GetAllChildren
-                    ()[0].GetTitle());
+                NUnit.Framework.Assert.AreEqual("firstPageChild", outlines.GetAllChildren()[1].GetAllChildren()[0].GetTitle
+                    ());
             }
             finally
             {
@@ -129,10 +121,8 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void SetupRemovePageWithOutlinesTest()
         {
             String filename = sourceFolder + "iphone_user_guide.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "removePagesWithOutlinesResult.pdf"
-                , FileMode.Create);
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "removePagesWithOutlinesResult.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.RemovePage(102);
@@ -144,8 +134,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void RemovePageWithOutlinesTest()
         {
             String filename = destinationFolder + "removePagesWithOutlinesResult.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage page = pdfDoc.GetPage(102);
             IList<PdfOutline> pageOutlines = page.GetOutlines(false);
@@ -164,10 +153,8 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void SetupUpdateOutlineTitle()
         {
             String filename = sourceFolder + "iphone_user_guide.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "updateOutlineTitleResult.pdf"
-                , FileMode.Create);
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "updateOutlineTitleResult.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
@@ -180,8 +167,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void UpdateOutlineTitle()
         {
             String filename = destinationFolder + "updateOutlineTitleResult.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             PdfOutline outline = outlines.GetAllChildren()[0].GetAllChildren()[1];
@@ -200,10 +186,9 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void SetupAddOutlineInNotOutlineMode()
         {
             String filename = sourceFolder + "iphone_user_guide.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf"
-                , FileMode.Create);
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf", FileMode.Create
+                );
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfOutline outlines = new PdfOutline(pdfDoc);
@@ -212,11 +197,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfOutline secondPage = outlines.AddOutline("secondPage");
             PdfOutline secondPageChild = secondPage.AddOutline("secondPageChild");
             firstPage.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1)));
-            firstPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1))
-                );
+            firstPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(1)));
             secondPage.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
-            secondPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)
-                ));
+            secondPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
             pdfDoc.Close();
         }
 
@@ -225,8 +208,7 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void AddOutlineInNotOutlineMode()
         {
             String filename = destinationFolder + "addOutlinesWithoutOutlineModeResult.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             IList<PdfOutline> pageOutlines = pdfDoc.GetPage(102).GetOutlines(true);
             try
@@ -245,15 +227,13 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CreateDocWithOutlines()
         {
             String filename = destinationFolder + "documentWithOutlines.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             try
             {
                 NUnit.Framework.Assert.AreEqual(2, outlines.GetAllChildren().Count);
-                NUnit.Framework.Assert.AreEqual("First Page", outlines.GetAllChildren()[0].GetTitle
-                    ());
+                NUnit.Framework.Assert.AreEqual("First Page", outlines.GetAllChildren()[0].GetTitle());
             }
             finally
             {
@@ -266,10 +246,10 @@ namespace iTextSharp.Kernel.Pdf
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-                , FileMode.Open, FileAccess.Read));
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "copyPagesWithOutlines01.pdf"
-                , FileMode.Create));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
+                ));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "copyPagesWithOutlines01.pdf", FileMode.Create
+                ));
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(writer);
             IList<int> pages = new List<int>();
@@ -283,8 +263,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.CopyPagesTo(pages, pdfDoc1);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(6, pdfDoc1.GetNumberOfPages());
-            NUnit.Framework.Assert.AreEqual(4, pdfDoc1.GetOutlines(false).GetAllChildren()[0]
-                .GetAllChildren().Count);
+            NUnit.Framework.Assert.AreEqual(4, pdfDoc1.GetOutlines(false).GetAllChildren()[0].GetAllChildren().Count);
             pdfDoc1.Close();
         }
 
@@ -293,8 +272,8 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01()
         {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf"
-                , FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
+                ));
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
             FileStream fos = new FileStream(filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
@@ -322,17 +301,14 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.AddNamedDestination("test3", array1);
             PdfOutline root = pdfDoc.GetOutlines(false);
             PdfOutline firstOutline = root.AddOutline("Test1");
-            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")
-                ));
+            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test1")));
             PdfOutline secondOutline = root.AddOutline("Test2");
-            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test2"
-                )));
+            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test2")));
             PdfOutline thirdOutline = root.AddOutline("Test3");
-            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")
-                ));
+            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
-                 + "cmp_outlinesWithNamedDestinations01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations01.pdf"
+                , destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -367,17 +343,14 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc.AddNamedDestination("page3", array1);
             PdfOutline root = pdfDoc.GetOutlines(false);
             PdfOutline firstOutline = root.AddOutline("Test1");
-            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page1")
-                ));
+            firstOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page1")));
             PdfOutline secondOutline = root.AddOutline("Test2");
-            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page2"
-                )));
+            secondOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page2")));
             PdfOutline thirdOutline = root.AddOutline("Test3");
-            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page3")
-                ));
+            thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page3")));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder
-                 + "cmp_outlinesWithNamedDestinations02.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations02.pdf"
+                , destinationFolder, "diff_"));
         }
     }
 }

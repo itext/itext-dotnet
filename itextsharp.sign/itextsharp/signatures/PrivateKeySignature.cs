@@ -81,8 +81,7 @@ namespace iTextSharp.Signatures
         public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm)
         {
             this.pk = pk;
-            this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest
-                (hashAlgorithm));
+            this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(hashAlgorithm));
             encryptionAlgorithm = pk.GetAlgorithm();
             if (encryptionAlgorithm.StartsWith("EC"))
             {

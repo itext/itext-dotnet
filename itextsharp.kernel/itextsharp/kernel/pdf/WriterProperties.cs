@@ -84,8 +84,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version
-            )
+        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version)
         {
             this.pdfVersion = version;
             return this;
@@ -140,8 +139,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel
-            )
+        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel)
         {
             this.compressionLevel = compressionLevel;
             return this;
@@ -152,15 +150,13 @@ namespace iTextSharp.Kernel.Pdf
         /// Defines if full compression mode is enabled. If enabled, not only the content of the pdf document will be
         /// compressed, but also the pdf document inner structure.
         /// </remarks>
-        /// <param name="fullCompressionMode">true - to enable full compression mode, false to disable it
-        ///     </param>
+        /// <param name="fullCompressionMode">true - to enable full compression mode, false to disable it</param>
         /// <returns>
         /// this
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool
-             fullCompressionMode)
+        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool fullCompressionMode)
         {
             this.isFullCompression = fullCompressionMode;
             return this;
@@ -191,12 +187,10 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[]
-             userPassword, byte[] ownerPassword, int permissions, int encryptionAlgorithm
-            )
+        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
+            , int permissions, int encryptionAlgorithm)
         {
-            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions
-                , encryptionAlgorithm);
+            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm);
             return this;
         }
 
@@ -224,11 +218,10 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate
-            [] certs, int[] permissions, int encryptionAlgorithm)
+        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[]
+             permissions, int encryptionAlgorithm)
         {
-            encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm
-                );
+            encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
             return this;
         }
 

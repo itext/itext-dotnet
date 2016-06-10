@@ -64,11 +64,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName._3D;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(
-            PdfObject initialView)
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(PdfObject initialView)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView);
         }
 
         public virtual PdfObject GetDefaultInitialView()
@@ -76,11 +74,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().Get(PdfName._3DV);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary
-            (PdfDictionary activationDictionary)
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary(PdfDictionary activationDictionary
+            )
         {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary);
         }
 
         public virtual PdfDictionary GetActivationDictionary()
@@ -88,11 +85,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsDictionary(PdfName._3DA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean
-                (interactive));
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean(interactive));
         }
 
         public virtual PdfBoolean IsInteractive()
@@ -100,11 +95,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsBoolean(PdfName._3DI);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray
-                (viewBox));
+            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray(viewBox));
         }
 
         public virtual Rectangle GetViewBox()

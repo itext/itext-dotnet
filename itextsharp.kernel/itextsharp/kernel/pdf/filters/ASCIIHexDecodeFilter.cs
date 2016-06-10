@@ -51,8 +51,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <summary>Handles ASCIIHexDecode filter</summary>
     public class ASCIIHexDecodeFilter : IFilterHandler
     {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             b = ASCIIHexDecode(b);
             return b;

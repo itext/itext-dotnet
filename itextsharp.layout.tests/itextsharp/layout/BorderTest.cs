@@ -11,11 +11,10 @@ namespace iTextSharp.Layout
 {
     public class BorderTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/BorderTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/BorderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/BorderTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/BorderTest/";
 
         public const String cmpPrefix = "cmp_";
 
@@ -40,34 +39,25 @@ namespace iTextSharp.Layout
             Document doc = CreateDocument();
             List list = new List();
             ListItem solidBorderItem = new ListItem("solid");
-            solidBorderItem.SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 6)).
-                SetMarginBottom(5);
-            solidBorderItem.SetBorderTop(new SolidBorder(iTextSharp.Kernel.Color.Color.BLUE, 
-                10));
+            solidBorderItem.SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 6)).SetMarginBottom(5);
+            solidBorderItem.SetBorderTop(new SolidBorder(iTextSharp.Kernel.Color.Color.BLUE, 10));
             list.Add(solidBorderItem);
             ListItem doubleBorderItem = new ListItem("double");
-            doubleBorderItem.SetBorder(new DoubleBorder(iTextSharp.Kernel.Color.Color.RED, 10
-                )).SetMarginBottom(5);
-            doubleBorderItem.SetBorderRight(new DoubleBorder(iTextSharp.Kernel.Color.Color.BLUE
-                , 6));
+            doubleBorderItem.SetBorder(new DoubleBorder(iTextSharp.Kernel.Color.Color.RED, 10)).SetMarginBottom(5);
+            doubleBorderItem.SetBorderRight(new DoubleBorder(iTextSharp.Kernel.Color.Color.BLUE, 6));
             list.Add(doubleBorderItem);
             ListItem dashedBorderItem = new ListItem("dashed");
-            dashedBorderItem.SetBorder(new DashedBorder(iTextSharp.Kernel.Color.Color.GRAY, 2
-                )).SetMarginBottom(5);
-            dashedBorderItem.SetBorderBottom(new DashedBorder(iTextSharp.Kernel.Color.Color.BLACK
-                , 4));
+            dashedBorderItem.SetBorder(new DashedBorder(iTextSharp.Kernel.Color.Color.GRAY, 2)).SetMarginBottom(5);
+            dashedBorderItem.SetBorderBottom(new DashedBorder(iTextSharp.Kernel.Color.Color.BLACK, 4));
             list.Add(dashedBorderItem);
             ListItem dottedBorderItem = new ListItem("dotted");
-            dottedBorderItem.SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 
-                3)).SetMarginBottom(5);
-            dottedBorderItem.SetBorderLeft(new DottedBorder(iTextSharp.Kernel.Color.Color.GRAY
-                , 6));
+            dottedBorderItem.SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 3)).SetMarginBottom(5);
+            dottedBorderItem.SetBorderLeft(new DottedBorder(iTextSharp.Kernel.Color.Color.GRAY, 6));
             list.Add(dottedBorderItem);
             ListItem roundDotsBorderItem = new ListItem("round dots");
-            roundDotsBorderItem.SetBorder(new RoundDotsBorder(iTextSharp.Kernel.Color.Color.LIGHT_GRAY
-                , 3)).SetMarginBottom(5);
-            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(iTextSharp.Kernel.Color.Color
-                .BLUE, 5));
+            roundDotsBorderItem.SetBorder(new RoundDotsBorder(iTextSharp.Kernel.Color.Color.LIGHT_GRAY, 3)).SetMarginBottom
+                (5);
+            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(iTextSharp.Kernel.Color.Color.BLUE, 5));
             list.Add(roundDotsBorderItem);
             doc.Add(list);
             CloseDocumentAndCompareOutputs(doc);
@@ -102,20 +92,16 @@ namespace iTextSharp.Layout
             DeviceCmyk yellowCmyk = new DeviceCmyk(0, 0, 100, 0);
             list = new List();
             grooveBorderItem = new ListItem("groove");
-            grooveBorderItem.SetBorder(new GrooveBorder(blueRgb, 2)).SetMarginBottom(5).SetWidth
-                (100);
+            grooveBorderItem.SetBorder(new GrooveBorder(blueRgb, 2)).SetMarginBottom(5).SetWidth(100);
             list.Add(grooveBorderItem);
             ridgeBorderItem = new ListItem("ridge");
-            ridgeBorderItem.SetBorder(new RidgeBorder(greenRgb, 2)).SetMarginBottom(5).SetWidth
-                (100);
+            ridgeBorderItem.SetBorder(new RidgeBorder(greenRgb, 2)).SetMarginBottom(5).SetWidth(100);
             list.Add(ridgeBorderItem);
             insetBorderItem = new ListItem("inset");
-            insetBorderItem.SetBorder(new InsetBorder(magentaCmyk, 1)).SetMarginBottom(5).SetWidth
-                (100);
+            insetBorderItem.SetBorder(new InsetBorder(magentaCmyk, 1)).SetMarginBottom(5).SetWidth(100);
             list.Add(insetBorderItem);
             outsetBorderItem = new ListItem("outset");
-            outsetBorderItem.SetBorder(new OutsetBorder(yellowCmyk, 1)).SetMarginBottom(5).SetWidth
-                (100);
+            outsetBorderItem.SetBorder(new OutsetBorder(yellowCmyk, 1)).SetMarginBottom(5).SetWidth(100);
             list.Add(outsetBorderItem);
             doc.Add(list);
             emptyParagraph = new Paragraph("\n");
@@ -144,11 +130,10 @@ namespace iTextSharp.Layout
         {
             fileName = "borderSidesTest.pdf";
             Document doc = CreateDocument();
-            String text = "<p class=\"none\"  >No border.</p>\n" + "<p class=\"dotted\">A dotted border.</p>\n"
-                 + "<p class=\"dashed\">A dashed border.</p>\n" + "<p class=\"solid\" >A solid border.</p>\n"
-                 + "<p class=\"double\">A double border.</p>\n" + "<p class=\"groove\">A groove border.</p>\n"
-                 + "<p class=\"ridge\" >A ridge border.</p>\n" + "<p class=\"inset\" >An inset border.</p>\n"
-                 + "<p class=\"outset\">An outset border.</p>\n" + "<p class=\"hidden\">A hidden border.</p>";
+            String text = "<p class=\"none\"  >No border.</p>\n" + "<p class=\"dotted\">A dotted border.</p>\n" + "<p class=\"dashed\">A dashed border.</p>\n"
+                 + "<p class=\"solid\" >A solid border.</p>\n" + "<p class=\"double\">A double border.</p>\n" + "<p class=\"groove\">A groove border.</p>\n"
+                 + "<p class=\"ridge\" >A ridge border.</p>\n" + "<p class=\"inset\" >An inset border.</p>\n" + "<p class=\"outset\">An outset border.</p>\n"
+                 + "<p class=\"hidden\">A hidden border.</p>";
             Paragraph p = new Paragraph(text);
             p.SetBorderTop(new SolidBorder(DeviceCmyk.MAGENTA, 4));
             p.SetBorderRight(new DoubleBorder(DeviceRgb.RED, 6));
@@ -157,8 +142,7 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph(text).SetBorderTop(new SolidBorder(DeviceCmyk.MAGENTA, 8)));
             doc.Add(new Paragraph(text).SetBorderRight(new DoubleBorder(DeviceRgb.RED, 4)));
-            doc.Add(new Paragraph(text).SetBorderBottom(new RoundDotsBorder(DeviceCmyk.CYAN, 
-                3)));
+            doc.Add(new Paragraph(text).SetBorderBottom(new RoundDotsBorder(DeviceCmyk.CYAN, 3)));
             doc.Add(new Paragraph(text).SetBorderLeft(new DashedBorder(DeviceGray.BLACK, 5)));
             doc.Add(new Paragraph(text).SetBorder(new DottedBorder(DeviceGray.BLACK, 1)));
             CloseDocumentAndCompareOutputs(doc);
@@ -192,15 +176,13 @@ namespace iTextSharp.Layout
                  + "its high silica content, so often does not reach the surface and cools at depth. When it does reach the surface, a volcano is formed. Typical examples"
                  + " of this kind of volcano are Mount Etna and the volcanoes in the Pacific Ring of Fire.";
             doc.Add(new Paragraph(textBefore).SetMargins(25, 60, 70, 80));
-            Paragraph p = new Paragraph(text).SetBackgroundColor(iTextSharp.Kernel.Color.Color
-                .GRAY);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(iTextSharp.Kernel.Color.Color.GRAY);
             p.SetMargins(25, 60, 70, 80);
             p.SetBorderLeft(new DoubleBorder(DeviceRgb.RED, 25));
             p.SetBorder(new DoubleBorder(DeviceRgb.BLACK, 6));
             doc.Add(p);
-            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color
-                .BLACK, 3)).SetBorderRight(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK
-                , 12)));
+            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 3)).SetBorderRight
+                (new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 12)));
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -209,8 +191,7 @@ namespace iTextSharp.Layout
         {
             outFileName = destinationFolder + fileName;
             cmpFileName = sourceFolder + cmpPrefix + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             return new Document(pdfDocument);
         }
 
@@ -219,8 +200,8 @@ namespace iTextSharp.Layout
         private void CloseDocumentAndCompareOutputs(Document document)
         {
             document.Close();
-            String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff");
+            String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"
+                );
             if (compareResult != null)
             {
                 NUnit.Framework.Assert.Fail(compareResult);

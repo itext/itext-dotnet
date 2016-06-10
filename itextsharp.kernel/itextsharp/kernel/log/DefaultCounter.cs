@@ -47,8 +47,7 @@ using iTextSharp.Kernel;
 
 namespace iTextSharp.Kernel.Log
 {
-    /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.
-    ///     </summary>
+    /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
     public class DefaultCounter : Counter
     {
         private volatile int count = 0;

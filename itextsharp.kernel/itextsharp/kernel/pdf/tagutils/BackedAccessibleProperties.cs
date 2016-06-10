@@ -85,8 +85,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return backingElem.GetAlt().GetValue();
         }
 
-        public override AccessibilityProperties SetAlternateDescription(String alternateDescription
-            )
+        public override AccessibilityProperties SetAlternateDescription(String alternateDescription)
         {
             backingElem.SetAlt(new PdfString(alternateDescription));
             return this;
@@ -106,9 +105,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         public override AccessibilityProperties AddAttributes(PdfDictionary attributes)
         {
             PdfObject attributesObject = backingElem.GetAttributes(false);
-            PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil
-                .SingletonList(attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R)
-                );
+            PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil.SingletonList(attributes
+                ), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
             backingElem.SetAttributes(combinedAttributes);
             return this;
         }

@@ -100,8 +100,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                     {
                         throw new PdfException(PdfException.UnexpectedShadingType);
                     }
-                    shading = new PdfShading.FreeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary
-                        );
+                    shading = new PdfShading.FreeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary);
                     break;
                 }
 
@@ -111,8 +110,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                     {
                         throw new PdfException(PdfException.UnexpectedShadingType);
                     }
-                    shading = new PdfShading.LatticeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary
-                        );
+                    shading = new PdfShading.LatticeFormGouraudShadedTriangleMesh((PdfStream)shadingDictionary);
                     break;
                 }
 
@@ -149,8 +147,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
         {
         }
 
-        protected internal PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace
-            )
+        protected internal PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace)
             : base(pdfObject)
         {
             GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));
@@ -219,8 +216,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
             public virtual void SetDomain(float xmin, float xmax, float ymin, float ymax)
             {
-                GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { xmin, xmax, ymin, ymax
-                     }));
+                GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { xmin, xmax, ymin, ymax }));
                 SetModified();
             }
 
@@ -264,8 +260,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float
-                 y1, float[] color1)
+            public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs.GetPdfObject())
             {
                 if (cs is PdfSpecialCs.Pattern)
@@ -273,13 +268,13 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                     throw new ArgumentException("colorSpace");
                 }
                 SetCoords(x0, y0, x1, y1);
-                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null
-                    , new PdfArray(color0), new PdfArray(color1), new PdfNumber(1));
+                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
+                    PdfArray(color1), new PdfNumber(1));
                 SetFunction(func);
             }
 
-            public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float
-                 y1, float[] color1, bool[] extend)
+            public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1, bool
+                [] extend)
                 : this(cs, x0, y0, color0, x1, y1, color1)
             {
                 if (extend != null)
@@ -318,8 +313,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 {
                     return new float[] { 0, 1 };
                 }
-                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue
-                    () };
+                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue() };
             }
 
             public virtual void SetDomain(float t0, float t1)
@@ -335,14 +329,12 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 {
                     return new bool[] { true, true };
                 }
-                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue
-                    () };
+                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
             }
 
             public virtual void SetExtend(bool extendStart, bool extendEnd)
             {
-                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd
-                     }));
+                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd }));
                 SetModified();
             }
         }
@@ -354,18 +346,18 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float
-                 x1, float y1, float r1, float[] color1)
+            public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float x1, float y1, float r1
+                , float[] color1)
                 : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs.GetPdfObject())
             {
                 SetCoords(x0, y0, r0, x1, y1, r1);
-                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null
-                    , new PdfArray(color0), new PdfArray(color1), new PdfNumber(1));
+                PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
+                    PdfArray(color1), new PdfNumber(1));
                 SetFunction(func);
             }
 
-            public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float
-                 x1, float y1, float r1, float[] color1, bool[] extend)
+            public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float x1, float y1, float r1
+                , float[] color1, bool[] extend)
                 : this(cs, x0, y0, r0, color0, x1, y1, r1, color1)
             {
                 if (extend != null)
@@ -386,8 +378,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 return GetPdfObject().GetAsArray(PdfName.Coords);
             }
 
-            public virtual void SetCoords(float x0, float y0, float r0, float x1, float y1, float
-                 r1)
+            public virtual void SetCoords(float x0, float y0, float r0, float x1, float y1, float r1)
             {
                 SetCoords(new PdfArray(new float[] { x0, y0, r0, x1, y1, r1 }));
             }
@@ -405,8 +396,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 {
                     return new float[] { 0, 1 };
                 }
-                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue
-                    () };
+                return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue() };
             }
 
             public virtual void SetDomain(float t0, float t1)
@@ -422,14 +412,12 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 {
                     return new bool[] { true, true };
                 }
-                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue
-                    () };
+                return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
             }
 
             public virtual void SetExtend(bool extendStart, bool extendEnd)
             {
-                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd
-                     }));
+                GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd }));
                 SetModified();
             }
         }
@@ -441,17 +429,15 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public FreeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, 
-                int bitsPerComponent, int bitsPerFlag, float[] decode)
-                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode)
-                    )
+            public FreeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int
+                 bitsPerFlag, float[] decode)
+                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode))
             {
             }
 
-            public FreeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, 
-                int bitsPerComponent, int bitsPerFlag, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH
-                    , cs.GetPdfObject())
+            public FreeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int
+                 bitsPerFlag, PdfArray decode)
+                : base(new PdfStream(), PdfShading.ShadingType.FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs.GetPdfObject())
             {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
@@ -515,17 +501,16 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public LatticeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate
-                , int bitsPerComponent, int verticesPerRow, float[] decode)
-                : this(cs, bitsPerCoordinate, bitsPerComponent, verticesPerRow, new PdfArray(decode
-                    ))
+            public LatticeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, 
+                int verticesPerRow, float[] decode)
+                : this(cs, bitsPerCoordinate, bitsPerComponent, verticesPerRow, new PdfArray(decode))
             {
             }
 
-            public LatticeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate
-                , int bitsPerComponent, int verticesPerRow, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH
-                    , cs.GetPdfObject())
+            public LatticeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, 
+                int verticesPerRow, PdfArray decode)
+                : base(new PdfStream(), PdfShading.ShadingType.LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs.GetPdfObject(
+                    ))
             {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
@@ -589,17 +574,15 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public CoonsPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent
-                , int bitsPerFlag, float[] decode)
-                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode)
-                    )
+            public CoonsPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag, float
+                [] decode)
+                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode))
             {
             }
 
-            public CoonsPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent
-                , int bitsPerFlag, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.COONS_PATCH_MESH, cs.GetPdfObject(
-                    ))
+            public CoonsPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag, PdfArray
+                 decode)
+                : base(new PdfStream(), PdfShading.ShadingType.COONS_PATCH_MESH, cs.GetPdfObject())
             {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
@@ -663,17 +646,15 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
             }
 
-            public TensorProductPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent
-                , int bitsPerFlag, float[] decode)
-                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode)
-                    )
+            public TensorProductPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag
+                , float[] decode)
+                : this(cs, bitsPerCoordinate, bitsPerComponent, bitsPerFlag, new PdfArray(decode))
             {
             }
 
-            public TensorProductPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent
-                , int bitsPerFlag, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.TENSOR_PRODUCT_PATCH_MESH, cs.GetPdfObject
-                    ())
+            public TensorProductPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag
+                , PdfArray decode)
+                : base(new PdfStream(), PdfShading.ShadingType.TENSOR_PRODUCT_PATCH_MESH, cs.GetPdfObject())
             {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);

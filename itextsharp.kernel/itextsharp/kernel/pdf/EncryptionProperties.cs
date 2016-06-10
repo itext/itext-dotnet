@@ -81,8 +81,8 @@ namespace iTextSharp.Kernel.Pdf
         /// ENCRYPTION_AES128 or ENCRYPTION_AES256
         /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
         /// </param>
-        public virtual EncryptionProperties SetStandardEncryption(byte[] userPassword, byte
-            [] ownerPassword, int permissions, int encryptionAlgorithm)
+        public virtual EncryptionProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword, int permissions
+            , int encryptionAlgorithm)
         {
             ClearEncryption();
             this.userPassword = userPassword;
@@ -111,8 +111,8 @@ namespace iTextSharp.Kernel.Pdf
         /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
         /// ENCRYPTION_AES128 or ENCRYPTION_AES256.
         /// </param>
-        public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs
-            , int[] permissions, int encryptionAlgorithm)
+        public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions, int
+             encryptionAlgorithm)
         {
             ClearEncryption();
             this.publicCertificates = certs;

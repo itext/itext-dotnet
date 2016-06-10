@@ -117,8 +117,7 @@ namespace iTextSharp.IO.Image
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException
-                    , e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException, e);
             }
         }
     }

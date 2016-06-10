@@ -65,30 +65,24 @@ namespace iTextSharp.IO.Source
             EndOfFile
         }
 
-        public static readonly bool[] delims = new bool[] { true, true, false, false, false
-            , false, false, false, false, false, true, true, false, true, true, false, false
-            , false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, true, false, false, false, false, true, 
-            false, false, true, true, false, false, false, false, false, true, false, false
-            , false, false, false, false, false, false, false, false, false, false, true, 
-            false, true, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, true, false, true, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false };
+        public static readonly bool[] delims = new bool[] { true, true, false, false, false, false, false, false, 
+            false, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, true, false, false, false, false, true
+            , false, false, true, true, false, false, false, false, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, true, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, true, false, true, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false };
 
         public static readonly byte[] Obj = ByteUtils.GetIsoBytes("obj");
 
@@ -209,14 +203,12 @@ namespace iTextSharp.IO.Source
 
         public virtual String GetStringValue()
         {
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 
-                0, outBuf.Size());
+            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
         public virtual byte[] GetDecodedStringContent()
         {
-            return DecodeStringContent(outBuf.GetInternalBuffer(), 0, outBuf.Size() - 1, IsHexString
-                ());
+            return DecodeStringContent(outBuf.GetInternalBuffer(), 0, outBuf.Size() - 1, IsHexString());
         }
 
         public virtual bool TokenValueEqualsTo(byte[] cmp)
@@ -268,8 +260,7 @@ namespace iTextSharp.IO.Source
                 idx = str.IndexOf("%FDF-");
                 if (idx < 0)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, 
-                        this);
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
                 }
             }
             return idx;
@@ -283,8 +274,7 @@ namespace iTextSharp.IO.Source
             int idx = str.IndexOf("%PDF-");
             if (idx != 0)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, 
-                    this);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
@@ -297,8 +287,7 @@ namespace iTextSharp.IO.Source
             int idx = str.IndexOf("%FDF-");
             if (idx != 0)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FdfStartxrefNotFound
-                    , this);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FdfStartxrefNotFound, this);
             }
         }
 
@@ -324,8 +313,7 @@ namespace iTextSharp.IO.Source
                 pos = pos - arrLength + 9;
             }
             // 9 = "startxref".length()
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfStartxrefNotFound
-                , this);
+            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfStartxrefNotFound, this);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -377,10 +365,8 @@ namespace iTextSharp.IO.Source
                             {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
-                                reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(
-                                    n1));
-                                generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                                    (n2));
+                                reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n2));
                                 return;
                             }
                             else
@@ -389,10 +375,8 @@ namespace iTextSharp.IO.Source
                                 {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(
-                                        n1));
-                                    generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                                        (n2));
+                                    reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                    generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n2));
                                     return;
                                 }
                             }
@@ -684,8 +668,7 @@ namespace iTextSharp.IO.Source
         /// <see cref="System.String"/>
         /// .
         /// </returns>
-        protected internal static byte[] DecodeStringContent(byte[] content, int from, int
-             to, bool hexWriting)
+        protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting)
         {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
             if (hexWriting)
@@ -859,14 +842,13 @@ namespace iTextSharp.IO.Source
         /// <returns>boolean</returns>
         protected internal static bool IsWhitespace(int ch, bool isWhitespace)
         {
-            return ((isWhitespace && ch == 0) || ch == 9 || ch == 10 || ch == 12 || ch == 13 
-                || ch == 32);
+            return ((isWhitespace && ch == 0) || ch == 9 || ch == 10 || ch == 12 || ch == 13 || ch == 32);
         }
 
         protected internal static bool IsDelimiter(int ch)
         {
-            return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']'
-                 || ch == '/' || ch == '%');
+            return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']' || ch == '/' || ch == '%'
+                );
         }
 
         protected internal static bool IsDelimiterWhitespace(int ch)
@@ -891,15 +873,13 @@ namespace iTextSharp.IO.Source
         {
             try
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1
-                    , new iTextSharp.IO.IOException(error).SetMessageParams(messageParams)).SetMessageParams
-                    (file.GetPosition());
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
+                    (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
             }
             catch (System.IO.IOException)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1
-                    , new iTextSharp.IO.IOException(error).SetMessageParams(messageParams)).SetMessageParams
-                    (error, "no position");
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
+                    (error).SetMessageParams(messageParams)).SetMessageParams(error, "no position");
             }
         }
 
@@ -1060,20 +1040,17 @@ namespace iTextSharp.IO.Source
         /// <summary>Check whether line starts with object declaration.</summary>
         /// <param name="lineTokenizer">tokenizer, built by single line.</param>
         /// <returns>object number and generation if check is successful, otherwise - null.</returns>
-        public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer
-            )
+        public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer)
         {
             try
             {
                 lineTokenizer.Seek(0);
-                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType
-                    .Number)
+                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number)
                 {
                     return null;
                 }
                 int num = lineTokenizer.GetIntValue();
-                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType
-                    .Number)
+                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number)
                 {
                     return null;
                 }
@@ -1082,8 +1059,7 @@ namespace iTextSharp.IO.Source
                 {
                     return null;
                 }
-                if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent()
-                    ))
+                if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent()))
                 {
                     return null;
                 }

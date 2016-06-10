@@ -162,8 +162,7 @@ namespace iTextSharp.IO.Font.Cmap
             return bytes;
         }
 
-        protected internal virtual String ToUnicodeString(String value, bool isHexWriting
-            )
+        protected internal virtual String ToUnicodeString(String value, bool isHexWriting)
         {
             byte[] bytes = DecodeStringToByte(value);
             if (isHexWriting)

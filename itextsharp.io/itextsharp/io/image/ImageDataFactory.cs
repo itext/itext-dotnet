@@ -51,15 +51,13 @@ namespace iTextSharp.IO.Image
 {
     public sealed class ImageDataFactory
     {
-        private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F'
-             };
+        private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
 
         private static readonly byte[] jpeg = new byte[] { (byte)0xFF, (byte)0xD8 };
 
         private static readonly byte[] jpeg2000_1 = new byte[] { 0x00, 0x00, 0x00, 0x0c };
 
-        private static readonly byte[] jpeg2000_2 = new byte[] { (byte)0xff, (byte)0x4f, 
-            (byte)0xff, 0x51 };
+        private static readonly byte[] jpeg2000_2 = new byte[] { (byte)0xff, (byte)0x4f, (byte)0xff, 0x51 };
 
         private static readonly byte[] png = new byte[] { (byte)137, 80, 78, 71 };
 
@@ -71,8 +69,8 @@ namespace iTextSharp.IO.Image
 
         private static readonly byte[] tiff_2 = new byte[] { (byte)'I', (byte)'I', 42, 0 };
 
-        private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)
-            'B', (byte)'2', (byte)'\r', (byte)'\n', 0x1a, (byte)'\n' };
+        private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)'B', (byte)'2', (byte)'\r'
+            , (byte)'\n', 0x1a, (byte)'\n' };
 
         private ImageDataFactory()
         {
@@ -110,16 +108,16 @@ namespace iTextSharp.IO.Image
             return Create(filename, false);
         }
 
-        public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT
-            , int parameters, byte[] data, int[] transparency)
+        public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
+            [] data, int[] transparency)
         {
             if (transparency != null && transparency.Length != 2)
             {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
                     );
             }
-            if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && 
-                typeCCITT != RawImageData.CCITTG3_2D)
+            if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && typeCCITT != RawImageData
+                .CCITTG3_2D)
             {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
@@ -137,8 +135,8 @@ namespace iTextSharp.IO.Image
             return image;
         }
 
-        public static ImageData Create(int width, int height, int components, int bpc, byte
-            [] data, int[] transparency)
+        public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
+            )
         {
             if (transparency != null && transparency.Length != components * 2)
             {
@@ -148,21 +146,19 @@ namespace iTextSharp.IO.Image
             if (components == 1 && bpc == 1)
             {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
-                return iTextSharp.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData
-                    .CCITTG4, RawImageData.CCITT_BLACKIS1, g4, transparency);
+                return iTextSharp.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData.CCITTG4, RawImageData
+                    .CCITT_BLACKIS1, g4, transparency);
             }
             RawImageData image = new RawImageData(data, ImageType.RAW);
             image.height = height;
             image.width = width;
             if (components != 1 && components != 3 && components != 4)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4);
             }
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.colorSpace = components;
             image.bpc = bpc;
@@ -177,8 +173,7 @@ namespace iTextSharp.IO.Image
         ///     </param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color
-            )
+        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color)
         {
             return iTextSharp.IO.Image.ImageDataFactory.Create(image, color, false);
         }
@@ -187,12 +182,10 @@ namespace iTextSharp.IO.Image
         /// <param name="image">the <CODE>java.awt.Image</CODE> to convert</param>
         /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
         ///     </param>
-        /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white
-        ///     </param>
+        /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white</param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color
-            , bool forceBW)
+        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color, bool forceBW)
         {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
@@ -447,8 +440,7 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("PNG image expected.");
         }
 
-        public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, 
-            bool direct)
+        public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct)
         {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
@@ -460,8 +452,7 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("TIFF image expected.");
         }
 
-        public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int 
-            page, bool direct)
+        public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct)
         {
             byte[] imageType = ReadImageType(bytes);
             if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
@@ -541,8 +532,7 @@ namespace iTextSharp.IO.Image
                     }
                 }
             }
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized
-                );
+            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
         private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage)
@@ -608,8 +598,7 @@ namespace iTextSharp.IO.Image
                     }
                 }
             }
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized
-                );
+            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
         private static bool ImageTypeIs(byte[] imageType, byte[] compareWith)

@@ -89,8 +89,8 @@ namespace iTextSharp.Layout.Layout
 
         public virtual iTextSharp.Layout.Layout.LayoutArea Clone()
         {
-            iTextSharp.Layout.Layout.LayoutArea area = new iTextSharp.Layout.Layout.LayoutArea
-                (pageNumber, bBox.Clone());
+            iTextSharp.Layout.Layout.LayoutArea area = new iTextSharp.Layout.Layout.LayoutArea(pageNumber, bBox.Clone(
+                ));
             area.SetEmptyArea(emptyArea);
             return area;
         }
@@ -102,8 +102,7 @@ namespace iTextSharp.Layout.Layout
                 return false;
             }
             iTextSharp.Layout.Layout.LayoutArea that = (iTextSharp.Layout.Layout.LayoutArea)obj;
-            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer
-                .EPS);
+            return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer.EPS);
         }
 
         public override int GetHashCode()

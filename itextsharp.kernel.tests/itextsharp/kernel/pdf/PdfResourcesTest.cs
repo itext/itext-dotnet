@@ -57,8 +57,8 @@ namespace iTextSharp.Kernel.Pdf
             PdfExtGState egs3 = new PdfExtGState();
             PdfName n3 = resources.AddExtGState(egs3);
             NUnit.Framework.Assert.AreEqual("Gs3", n3.GetValue());
-            PdfDictionary egsResources = page.GetPdfObject().GetAsDictionary(PdfName.Resources
-                ).GetAsDictionary(PdfName.ExtGState);
+            PdfDictionary egsResources = page.GetPdfObject().GetAsDictionary(PdfName.Resources).GetAsDictionary(PdfName
+                .ExtGState);
             PdfObject e1 = egsResources.Get(new PdfName("Gs1"), false);
             PdfName n1 = resources.AddExtGState(e1);
             NUnit.Framework.Assert.AreEqual("Gs1", n1.GetValue());

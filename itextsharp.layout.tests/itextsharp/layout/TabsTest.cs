@@ -14,11 +14,10 @@ namespace iTextSharp.Layout
 {
     public class TabsTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/TabTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TabTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/layout/TabTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/layout/TabTest/";
 
         private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
              + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"
@@ -35,8 +34,7 @@ namespace iTextSharp.Layout
              + "Hotel Miramar, East Overcliff Drive, Bournemouth\tStayed here regularly from the 1950s until 1972\t10 June 1992 by Priscilla Tolkien\tBorough of Bournemouth";
 
         private const String text2 = "space anchor:\t222222222222222222222222222222222222222222222222 03\tslash anchor:\t2024\\12\tdot anchor:\t20421.32\n"
-             + "space anchor:\t2012 203\tslash anchor:\t2024\\2\tdot anchor:\t20421.333452\n"
-             + "space anchor:\t201212 0423\tslash anchor:\t2067867824\\67867812\tdot anchor:\t21.32131232\n"
+             + "space anchor:\t2012 203\tslash anchor:\t2024\\2\tdot anchor:\t20421.333452\n" + "space anchor:\t201212 0423\tslash anchor:\t2067867824\\67867812\tdot anchor:\t21.32131232\n"
              + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
              + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
@@ -63,12 +61,12 @@ namespace iTextSharp.Layout
             float left = doc.GetLeftMargin();
             float right = doc.GetRightMargin();
             float pageWidth = doc.GetPdfDocument().GetDefaultPageSize().GetWidth();
-            float[] defaultStopPositions = new float[] { 0f, 50f, 100f, 150f, 200f, 250f, 300f
-                , 350f, 400f, 450f, 500f, pageWidth - left - right };
+            float[] defaultStopPositions = new float[] { 0f, 50f, 100f, 150f, 200f, 250f, 300f, 350f, 400f, 450f, 500f
+                , pageWidth - left - right };
             DrawTabStopsPositions(defaultStopPositions, doc, 1, 0, 120);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -82,10 +80,8 @@ namespace iTextSharp.Layout
             Document doc = InitDocument(outFileName);
             float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
             //left alignments
-            float[] positions1 = new float[] { tabInterval * 2, tabInterval * 4, tabInterval 
-                * 5 };
-            TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.LEFT, TabAlignment
-                .LEFT, TabAlignment.LEFT };
+            float[] positions1 = new float[] { tabInterval * 2, tabInterval * 4, tabInterval * 5 };
+            TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.LEFT, TabAlignment.LEFT, TabAlignment.LEFT };
             ILineDrawer[] leaders1 = new ILineDrawer[] { null, null, null };
             char?[] anchors1 = new char?[] { null, null, null };
             Paragraph p = new Paragraph();
@@ -94,10 +90,9 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph("\n"));
             //right alignments
-            float[] positions2 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval 
-                * 6 };
-            TabAlignment[] alignments2 = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment
-                .RIGHT, TabAlignment.RIGHT };
+            float[] positions2 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval * 6 };
+            TabAlignment[] alignments2 = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment.RIGHT, TabAlignment.RIGHT
+                 };
             ILineDrawer[] leaders2 = new ILineDrawer[] { null, null, null };
             char?[] anchors2 = new char?[] { null, null, null };
             p = new Paragraph();
@@ -106,10 +101,9 @@ namespace iTextSharp.Layout
             doc.Add(p);
             doc.Add(new Paragraph("\n"));
             //center alignments
-            float[] positions3 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval 
-                * 6 };
-            TabAlignment[] alignments3 = new TabAlignment[] { TabAlignment.CENTER, TabAlignment
-                .CENTER, TabAlignment.CENTER };
+            float[] positions3 = new float[] { tabInterval * 3, tabInterval * 4, tabInterval * 6 };
+            TabAlignment[] alignments3 = new TabAlignment[] { TabAlignment.CENTER, TabAlignment.CENTER, TabAlignment.CENTER
+                 };
             ILineDrawer[] leaders3 = new ILineDrawer[] { null, null, null };
             char?[] anchors3 = new char?[] { null, null, null };
             p = new Paragraph();
@@ -120,8 +114,8 @@ namespace iTextSharp.Layout
             DrawTabStopsPositions(positions2, doc, 1, 125, 95);
             DrawTabStopsPositions(positions3, doc, 1, 235, 95);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -134,12 +128,12 @@ namespace iTextSharp.Layout
             String cmpFileName = sourceFolder + "cmp_" + fileName;
             Document doc = InitDocument(outFileName);
             float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
-            float[] positions1 = new float[] { tabInterval * 2, tabInterval * 3, tabInterval 
-                * 4, tabInterval * 5, tabInterval * 6 };
-            TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.ANCHOR, TabAlignment
-                .CENTER, TabAlignment.ANCHOR, TabAlignment.RIGHT, TabAlignment.ANCHOR };
-            ILineDrawer[] leaders1 = new ILineDrawer[] { new DottedLine(), null, new DashedLine
-                (.5f), null, new SolidLine(.5f) };
+            float[] positions1 = new float[] { tabInterval * 2, tabInterval * 3, tabInterval * 4, tabInterval * 5, tabInterval
+                 * 6 };
+            TabAlignment[] alignments1 = new TabAlignment[] { TabAlignment.ANCHOR, TabAlignment.CENTER, TabAlignment.ANCHOR
+                , TabAlignment.RIGHT, TabAlignment.ANCHOR };
+            ILineDrawer[] leaders1 = new ILineDrawer[] { new DottedLine(), null, new DashedLine(.5f), null, new SolidLine
+                (.5f) };
             char?[] anchors1 = new char?[] { ' ', null, '\\', null, '.' };
             Paragraph p = new Paragraph();
             p.SetFontSize(8);
@@ -147,8 +141,8 @@ namespace iTextSharp.Layout
             doc.Add(p);
             DrawTabStopsPositions(positions1, doc, 1, 0, 120);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff" + outFileName));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + outFileName));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -161,13 +155,11 @@ namespace iTextSharp.Layout
             String cmpFileName = sourceFolder + "cmp_" + fileName;
             Document doc = InitDocument(outFileName);
             float tabInterval = doc.GetPdfDocument().GetDefaultPageSize().GetWidth() / 8;
-            float[] positions = new float[] { tabInterval * 2, tabInterval * 4, tabInterval *
-                 6 };
-            TabAlignment[] alignments = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment
-                .CENTER, TabAlignment.CENTER };
+            float[] positions = new float[] { tabInterval * 2, tabInterval * 4, tabInterval * 6 };
+            TabAlignment[] alignments = new TabAlignment[] { TabAlignment.RIGHT, TabAlignment.CENTER, TabAlignment.CENTER
+                 };
             //        Drawable[] leaders = {null, null, null};
-            ILineDrawer[] leaders = new ILineDrawer[] { new DottedLine(), new DashedLine(.5f)
-                , new SolidLine(.5f) };
+            ILineDrawer[] leaders = new ILineDrawer[] { new DottedLine(), new DashedLine(.5f), new SolidLine(.5f) };
             Paragraph p = new Paragraph();
             p.SetFontSize(8);
             IList<TabStop> tabStops = new List<TabStop>();
@@ -177,18 +169,17 @@ namespace iTextSharp.Layout
                 tabStops.Add(tabStop);
             }
             p.AddTabStops(tabStops);
-            p.Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttt").Add(new Tab
-                ()).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt\n"
+            p.Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttt").Add(new Tab()).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt\n"
                 );
             p.Add(new Tab()).Add(new Tab()).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt\n"
                 );
-            p.Add(new Tab()).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttt"
-                ).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttt");
+            p.Add(new Tab()).Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttttt").Add(new Tab()).Add("ttttttttttttttttttttttttttttttttttttttttttt"
+                );
             doc.Add(p);
             DrawTabStopsPositions(positions, doc, 1, 0, 120);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff" + outFileName));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + outFileName));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -235,16 +226,15 @@ namespace iTextSharp.Layout
             doc.Add(p);
             p = new Paragraph();
             p.AddTabStops(new TabStop(450, TabAlignment.RIGHT, new DashedLine(.5f)));
-            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab
-                ()).Add("some interesting text after right-tabstop\n");
-            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab
-                ()).Add("someinterestingtextafterright-tabstop\n");
-            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab
-                ()).Add("word.");
+            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab()).Add("some interesting text after right-tabstop\n"
+                );
+            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab()).Add("someinterestingtextafterright-tabstop\n"
+                );
+            p.Add("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext").Add(new Tab()).Add("word.");
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName
-                , destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
@@ -257,8 +247,7 @@ namespace iTextSharp.Layout
             return new Document(pdfDoc);
         }
 
-        private void DrawTabStopsPositions(float[] positions, Document doc, int pageNum, 
-            int yStart, int dy)
+        private void DrawTabStopsPositions(float[] positions, Document doc, int pageNum, int yStart, int dy)
         {
             PdfCanvas canvas = new PdfCanvas(doc.GetPdfDocument().GetPage(pageNum));
             float left = doc.GetLeftMargin();
@@ -277,9 +266,8 @@ namespace iTextSharp.Layout
             canvas.Release();
         }
 
-        private void AddTabbedTextToParagraph(Paragraph p, String text, float[] positions
-            , TabAlignment[] alignments, ILineDrawer[] tabLeadings, char?[] tabAnchorCharacters
-            )
+        private void AddTabbedTextToParagraph(Paragraph p, String text, float[] positions, TabAlignment[] alignments
+            , ILineDrawer[] tabLeadings, char?[] tabAnchorCharacters)
         {
             IList<TabStop> tabStops = new List<TabStop>();
             for (int i = 0; i < positions.Length; ++i)

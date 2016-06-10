@@ -72,8 +72,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <summary>Pointer to high branch.</summary>
         protected internal char[] hi;
 
-        /// <summary>Pointer to equal branch and to data when this node is a string terminator.
-        ///     </summary>
+        /// <summary>Pointer to equal branch and to data when this node is a string terminator.</summary>
         protected internal char[] eq;
 
         /// <summary><P>The character stored in this node: splitchar.</summary>
@@ -88,8 +87,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// </remarks>
         protected internal char[] sc;
 
-        /// <summary>This vector holds the trailing of the keys when the branch is compressed.
-        ///     </summary>
+        /// <summary>This vector holds the trailing of the keys when the branch is compressed.</summary>
         protected internal CharVector kv;
 
         /// <summary>root</summary>
@@ -463,8 +461,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="v">array of values</param>
         /// <param name="offset">where to insert</param>
         /// <param name="n">count to insert</param>
-        protected internal virtual void InsertBalanced(String[] k, char[] v, int offset, 
-            int n)
+        protected internal virtual void InsertBalanced(String[] k, char[] v, int offset, int n)
         {
             int m;
             if (n < 1)
@@ -522,15 +519,13 @@ namespace iTextSharp.Layout.Hyphenation
             // ok, compact kv array
             CharVector kx = new CharVector();
             kx.Alloc(1);
-            iTextSharp.Layout.Hyphenation.TernaryTree map = new iTextSharp.Layout.Hyphenation.TernaryTree
-                ();
+            iTextSharp.Layout.Hyphenation.TernaryTree map = new iTextSharp.Layout.Hyphenation.TernaryTree();
             Compact(kx, map, root);
             kv = kx;
             kv.TrimToSize();
         }
 
-        private void Compact(CharVector kx, iTextSharp.Layout.Hyphenation.TernaryTree map
-            , char p)
+        private void Compact(CharVector kx, iTextSharp.Layout.Hyphenation.TernaryTree map, char p)
         {
             int k;
             if (p == 0)

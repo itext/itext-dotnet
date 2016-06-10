@@ -86,10 +86,8 @@ namespace iTextSharp.Signatures
         }
 
         /// <summary>Returns the CRL bytes (the parameters are ignored).</summary>
-        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)
-        ///     "/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url
-            )
+        /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
+        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url)
         {
             return crls;
         }

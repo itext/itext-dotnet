@@ -55,8 +55,8 @@ namespace iTextSharp.Kernel.Font
 {
     internal class FontUtil
     {
-        private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary
-            <String, CMapToUnicode>();
+        private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
+            );
 
         internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode)
         {

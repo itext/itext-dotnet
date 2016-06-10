@@ -59,8 +59,7 @@ namespace iTextSharp.IO.Font.Cmap
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfTokenizer GetLocation(String location)
         {
-            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory
-                ().CreateSource(data)));
+            return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(data)));
         }
     }
 }

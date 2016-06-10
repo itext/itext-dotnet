@@ -52,8 +52,8 @@ namespace iTextSharp.IO.Font.Otf
 
         protected internal OpenTypeFontTableReader openReader;
 
-        protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag
-            , int[] subTableLocations)
+        protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
+            )
         {
             this.lookupFlag = lookupFlag;
             this.subTableLocations = subTableLocations;
@@ -112,8 +112,7 @@ namespace iTextSharp.IO.Font.Otf
                 }
             }
 
-            public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag
-                )
+            public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag)
             {
                 glyph = null;
                 while (--idx >= line.start)

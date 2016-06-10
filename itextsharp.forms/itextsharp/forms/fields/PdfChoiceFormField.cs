@@ -72,8 +72,7 @@ namespace iTextSharp.Forms.Fields
         {
         }
 
-        protected internal PdfChoiceFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument
-            )
+        protected internal PdfChoiceFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument)
         {
         }
@@ -117,14 +116,12 @@ namespace iTextSharp.Forms.Fields
         }
 
         /// <summary>Sets the selected items in the field.</summary>
-        /// <param name="indices">a sorted array of indices representing selected items in the field
-        ///     </param>
+        /// <param name="indices">a sorted array of indices representing selected items in the field</param>
         /// <returns>
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetIndices(PdfArray indices
-            )
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetIndices(PdfArray indices)
         {
             return (iTextSharp.Forms.Fields.PdfChoiceFormField)Put(PdfName.I, indices);
         }
@@ -139,8 +136,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(String[]
-             optionValues)
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues)
         {
             PdfArray options = GetOptions();
             PdfArray indices = new PdfArray();
@@ -195,8 +191,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers
-            )
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers)
         {
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();
@@ -237,8 +232,7 @@ namespace iTextSharp.Forms.Fields
         }
 
         /// <summary>Gets the currently selected items in the field</summary>
-        /// <returns>a sorted array of indices representing the currently selected items in the field
-        ///     </returns>
+        /// <returns>a sorted array of indices representing the currently selected items in the field</returns>
         public virtual PdfArray GetIndices()
         {
             return GetPdfObject().GetAsArray(PdfName.I);
@@ -331,11 +325,9 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetMultiSelect(bool multiSelect
-            )
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetMultiSelect(bool multiSelect)
         {
-            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT, 
-                multiSelect);
+            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_MULTI_SELECT, multiSelect);
         }
 
         /// <summary>If true, more than one of the field???s option items may be selected simultaneously; if false, at most one item shall be selected.
@@ -347,17 +339,14 @@ namespace iTextSharp.Forms.Fields
         }
 
         /// <summary>If true, text entered in the field shall be spell-checked..</summary>
-        /// <param name="spellCheck">whether or not to require the PDF viewer to perform a spell check
-        ///     </param>
+        /// <param name="spellCheck">whether or not to require the PDF viewer to perform a spell check</param>
         /// <returns>
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetSpellCheck(bool spellCheck
-            )
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetSpellCheck(bool spellCheck)
         {
-            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK
-                , !spellCheck);
+            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK, !spellCheck);
         }
 
         /// <summary>If true, text entered in the field shall be spell-checked..</summary>
@@ -374,11 +363,10 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetCommitOnSelChange(bool
-             commitOnSelChange)
+        public virtual iTextSharp.Forms.Fields.PdfChoiceFormField SetCommitOnSelChange(bool commitOnSelChange)
         {
-            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_COMMIT_ON_SEL_CHANGE
-                , commitOnSelChange);
+            return (iTextSharp.Forms.Fields.PdfChoiceFormField)SetFieldFlag(FF_COMMIT_ON_SEL_CHANGE, commitOnSelChange
+                );
         }
 
         /// <summary>If true, the new value shall be committed as soon as a selection is made (commonly with the pointing device).

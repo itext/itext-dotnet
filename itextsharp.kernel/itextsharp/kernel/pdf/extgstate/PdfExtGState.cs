@@ -96,8 +96,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.LW);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineWidth(float lineWidth
-            )
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineWidth(float lineWidth)
         {
             return Put(PdfName.LW, new PdfNumber(lineWidth));
         }
@@ -107,8 +106,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsInt(PdfName.LC);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int 
-            lineCapStyle)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int lineCapStyle)
         {
             return Put(PdfName.LC, new PdfNumber(lineCapStyle));
         }
@@ -118,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsInt(PdfName.LJ);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineJoinStyle(int 
-            lineJoinStyle)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetLineJoinStyle(int lineJoinStyle)
         {
             return Put(PdfName.LJ, new PdfNumber(lineJoinStyle));
         }
@@ -129,8 +126,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.ML);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetMiterLimit(float miterLimit
-            )
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetMiterLimit(float miterLimit)
         {
             return Put(PdfName.ML, new PdfNumber(miterLimit));
         }
@@ -140,8 +136,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsArray(PdfName.D);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetDashPattern(PdfArray
-             dashPattern)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetDashPattern(PdfArray dashPattern)
         {
             return Put(PdfName.D, dashPattern);
         }
@@ -151,8 +146,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsName(PdfName.RI);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetRenderingIntent(PdfName
-             renderingIntent)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetRenderingIntent(PdfName renderingIntent)
         {
             return Put(PdfName.RI, renderingIntent);
         }
@@ -162,8 +156,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsInt(PdfName.OPM);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetOverprintMode(int 
-            overprintMode)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetOverprintMode(int overprintMode)
         {
             return Put(PdfName.OPM, new PdfNumber(overprintMode));
         }
@@ -173,8 +166,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsBool(PdfName.op);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(
-            bool fillOverprintFlag)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(bool fillOverprintFlag)
         {
             return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
         }
@@ -184,8 +176,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsBool(PdfName.OP);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOverPrintFlag
-            (bool strokeOverPrintFlag)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOverPrintFlag(bool strokeOverPrintFlag
+            )
         {
             return Put(PdfName.OP, new PdfBoolean(strokeOverPrintFlag));
         }
@@ -195,8 +187,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsArray(PdfName.Font);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFont(PdfArray font
-            )
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFont(PdfArray font)
         {
             return Put(PdfName.Font, font);
         }
@@ -206,8 +197,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.BG);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction
-            (PdfObject blackGenerationFunction)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction(PdfObject blackGenerationFunction
+            )
         {
             return Put(PdfName.BG, blackGenerationFunction);
         }
@@ -217,8 +208,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.BG2);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction2
-            (PdfObject blackGenerationFunction2)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction2(PdfObject blackGenerationFunction2
+            )
         {
             return Put(PdfName.BG2, blackGenerationFunction2);
         }
@@ -228,8 +219,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.UCR);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction
-            (PdfObject undercolorRemovalFunction)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction(PdfObject undercolorRemovalFunction
+            )
         {
             return Put(PdfName.UCR, undercolorRemovalFunction);
         }
@@ -239,8 +230,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.UCR2);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction2
-            (PdfObject undercolorRemovalFunction2)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction2(PdfObject undercolorRemovalFunction2
+            )
         {
             return Put(PdfName.UCR2, undercolorRemovalFunction2);
         }
@@ -250,8 +241,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.TR);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction(PdfObject
-             transferFunction)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction(PdfObject transferFunction
+            )
         {
             return Put(PdfName.TR, transferFunction);
         }
@@ -261,8 +252,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.TR2);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction2(
-            PdfObject transferFunction)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction2(PdfObject transferFunction
+            )
         {
             return Put(PdfName.TR2, transferFunction);
         }
@@ -272,8 +263,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.HT);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetHalftone(PdfObject
-             halftone)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetHalftone(PdfObject halftone)
         {
             return Put(PdfName.HT, halftone);
         }
@@ -293,8 +283,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.FT);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFlatnessTolerance(
-            float flatnessTolerance)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFlatnessTolerance(float flatnessTolerance)
         {
             return Put(PdfName.FT, new PdfNumber(flatnessTolerance));
         }
@@ -304,8 +293,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.SM);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSmoothnessTolerance
-            (float smoothnessTolerance)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSmoothnessTolerance(float smoothnessTolerance
+            )
         {
             return Put(PdfName.SM, new PdfNumber(smoothnessTolerance));
         }
@@ -315,8 +304,8 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsBool(PdfName.SA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAutomaticStrokeAdjustmentFlag
-            (bool strokeAdjustment)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAutomaticStrokeAdjustmentFlag(bool strokeAdjustment
+            )
         {
             return Put(PdfName.SA, new PdfBoolean(strokeAdjustment));
         }
@@ -326,8 +315,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.BM);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlendMode(PdfObject
-             blendMode)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetBlendMode(PdfObject blendMode)
         {
             return Put(PdfName.BM, blendMode);
         }
@@ -337,8 +325,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().Get(PdfName.SMask);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSoftMask(PdfObject
-             sMask)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetSoftMask(PdfObject sMask)
         {
             return Put(PdfName.SMask, sMask);
         }
@@ -348,8 +335,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.CA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOpacity(float
-             strokingAlphaConstant)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOpacity(float strokingAlphaConstant)
         {
             return Put(PdfName.CA, new PdfNumber(strokingAlphaConstant));
         }
@@ -359,8 +345,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsFloat(PdfName.ca);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOpacity(float 
-            fillingAlphaConstant)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetFillOpacity(float fillingAlphaConstant)
         {
             return Put(PdfName.ca, new PdfNumber(fillingAlphaConstant));
         }
@@ -370,8 +355,7 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsBool(PdfName.AIS);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAlphaSourceFlag(bool
-             alphaSourceFlag)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetAlphaSourceFlag(bool alphaSourceFlag)
         {
             return Put(PdfName.AIS, new PdfBoolean(alphaSourceFlag));
         }
@@ -381,14 +365,12 @@ namespace iTextSharp.Kernel.Pdf.Extgstate
             return GetPdfObject().GetAsBool(PdfName.TK);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTextKnockoutFlag(bool
-             textKnockoutFlag)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState SetTextKnockoutFlag(bool textKnockoutFlag)
         {
             return Put(PdfName.TK, new PdfBoolean(textKnockoutFlag));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject
-             value)
+        public virtual iTextSharp.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;

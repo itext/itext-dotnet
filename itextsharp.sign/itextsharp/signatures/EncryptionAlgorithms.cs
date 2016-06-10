@@ -50,8 +50,7 @@ namespace iTextSharp.Signatures
     public class EncryptionAlgorithms
     {
         /// <summary>Maps IDs of encryption algorithms with its human-readable name.</summary>
-        internal static readonly IDictionary<String, String> algorithmNames = new Dictionary
-            <String, String>();
+        internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
         static EncryptionAlgorithms()
         {

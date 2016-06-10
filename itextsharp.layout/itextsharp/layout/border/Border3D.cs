@@ -52,8 +52,7 @@ namespace iTextSharp.Layout.Border
         private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
         /// <summary>Creates a Border3D instance with the specified width.</summary>
-        /// <remarks>Creates a Border3D instance with the specified width. Also sets the color to gray.
-        ///     </remarks>
+        /// <remarks>Creates a Border3D instance with the specified width. Also sets the color to gray.</remarks>
         /// <param name="width">with of the border</param>
         protected internal Border3D(float width)
             : this(GRAY, width)
@@ -84,8 +83,8 @@ namespace iTextSharp.Layout.Border
         {
         }
 
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter)
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter)
         {
             float x3 = 0;
             float y3 = 0;
@@ -134,8 +133,7 @@ namespace iTextSharp.Layout.Border
                 }
             }
             SetInnerHalfColor(canvas, borderSide);
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-                .Fill();
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             switch (borderSide)
             {
                 case Border.Side.TOP:
@@ -175,15 +173,13 @@ namespace iTextSharp.Layout.Border
                 }
             }
             SetOuterHalfColor(canvas, borderSide);
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-                .Fill();
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2)
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
         {
-            canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo
-                (x2, y2).Stroke().RestoreState();
+            canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
         }
 
         protected internal virtual iTextSharp.Kernel.Color.Color GetDarkerColor()
@@ -209,10 +205,8 @@ namespace iTextSharp.Layout.Border
             return color;
         }
 
-        protected internal abstract void SetInnerHalfColor(PdfCanvas canvas, Border.Side 
-            side);
+        protected internal abstract void SetInnerHalfColor(PdfCanvas canvas, Border.Side side);
 
-        protected internal abstract void SetOuterHalfColor(PdfCanvas canvas, Border.Side 
-            side);
+        protected internal abstract void SetOuterHalfColor(PdfCanvas canvas, Border.Side side);
     }
 }

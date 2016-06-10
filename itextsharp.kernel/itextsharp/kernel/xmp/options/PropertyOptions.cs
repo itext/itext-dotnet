@@ -67,8 +67,7 @@ namespace iTextSharp.Kernel.XMP.Options
         public const int DELETE_EXISTING = 0x20000000;
 
         /// <summary>Updated by iText.</summary>
-        /// <remarks>Updated by iText. Indicates if the property should be writted as a separate node
-        ///     </remarks>
+        /// <remarks>Updated by iText. Indicates if the property should be writted as a separate node</remarks>
         public const int SEPARATE_NODE = 0x40000000;
 
         /// <summary>Default constructor</summary>
@@ -78,8 +77,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not valid
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not valid</exception>
         public PropertyOptions(int options)
             : base(options)
         {
@@ -227,8 +225,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value
-            )
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value)
         {
             SetOption(ARRAY_ALTERNATE, value);
             return this;
@@ -267,15 +264,13 @@ namespace iTextSharp.Kernel.XMP.Options
         }
 
         //-------------------------------------------------------------------------- convenience methods
-        /// <returns>Returns whether the property is of composite type - an array or a struct.
-        ///     </returns>
+        /// <returns>Returns whether the property is of composite type - an array or a struct.</returns>
         public bool IsCompositeProperty()
         {
             return (GetOptions() & (ARRAY | STRUCT)) > 0;
         }
 
-        /// <returns>Returns whether the property is of composite type - an array or a struct.
-        ///     </returns>
+        /// <returns>Returns whether the property is of composite type - an array or a struct.</returns>
         public bool IsSimple()
         {
             return (GetOptions() & (ARRAY | STRUCT)) == 0;
@@ -284,12 +279,10 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <summary>Compares two options set for array compatibility.</summary>
         /// <param name="options">other options</param>
         /// <returns>Returns true if the array options of the sets are equal.</returns>
-        public bool EqualArrayTypes(iTextSharp.Kernel.XMP.Options.PropertyOptions options
-            )
+        public bool EqualArrayTypes(iTextSharp.Kernel.XMP.Options.PropertyOptions options)
         {
-            return IsArray() == options.IsArray() && IsArrayOrdered() == options.IsArrayOrdered
-                () && IsArrayAlternate() == options.IsArrayAlternate() && IsArrayAltText() ==
-                 options.IsArrayAltText();
+            return IsArray() == options.IsArray() && IsArrayOrdered() == options.IsArrayOrdered() && IsArrayAlternate(
+                ) == options.IsArrayAlternate() && IsArrayAltText() == options.IsArrayAltText();
         }
 
         /// <summary>Merges the set options of a another options object with this.</summary>
@@ -298,8 +291,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// If the other options set is null, this objects stays the same.
         /// </remarks>
         /// <param name="options">other options</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If illegal options are provided
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If illegal options are provided</exception>
         public void MergeWith(iTextSharp.Kernel.XMP.Options.PropertyOptions options)
         {
             if (options != null)
@@ -311,15 +303,14 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <returns>Returns true if only array options are set.</returns>
         public bool IsOnlyArrayOptions()
         {
-            return (GetOptions() & ~(ARRAY | ARRAY_ORDERED | ARRAY_ALTERNATE | ARRAY_ALT_TEXT
-                )) == 0;
+            return (GetOptions() & ~(ARRAY | ARRAY_ORDERED | ARRAY_ALTERNATE | ARRAY_ALT_TEXT)) == 0;
         }
 
         /// <seealso cref="Options.GetValidOptions()"/>
         protected internal override int GetValidOptions()
         {
-            return URI | HAS_QUALIFIERS | QUALIFIER | HAS_LANGUAGE | HAS_TYPE | STRUCT | ARRAY
-                 | ARRAY_ORDERED | ARRAY_ALTERNATE | ARRAY_ALT_TEXT | SCHEMA_NODE | SEPARATE_NODE;
+            return URI | HAS_QUALIFIERS | QUALIFIER | HAS_LANGUAGE | HAS_TYPE | STRUCT | ARRAY | ARRAY_ORDERED | ARRAY_ALTERNATE
+                 | ARRAY_ALT_TEXT | SCHEMA_NODE | SEPARATE_NODE;
         }
 
         /// <seealso cref="Options.DefineOptionName(int)"/>
@@ -394,21 +385,18 @@ namespace iTextSharp.Kernel.XMP.Options
         /// and URI cannot be a struct.
         /// </summary>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal override void AssertConsistency(int options)
         {
             if ((options & STRUCT) > 0 && (options & ARRAY) > 0)
             {
-                throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError
-                    .BADOPTIONS);
+                throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError.BADOPTIONS);
             }
             else
             {
                 if ((options & URI) > 0 && (options & (ARRAY | STRUCT)) > 0)
                 {
-                    throw new XMPException("Structs and arrays can't have \"value\" options", XMPError
-                        .BADOPTIONS);
+                    throw new XMPException("Structs and arrays can't have \"value\" options", XMPError.BADOPTIONS);
                 }
             }
         }

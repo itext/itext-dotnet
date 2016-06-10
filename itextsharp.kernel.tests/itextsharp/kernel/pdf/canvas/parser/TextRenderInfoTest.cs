@@ -12,8 +12,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
     public class TextRenderInfoTest : ExtendedITextTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
 
         public const int FIRST_PAGE = 1;
 
@@ -23,10 +22,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         [NUnit.Framework.Test]
         public virtual void TestCharacterRenderInfos()
         {
-            PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener
-                ());
-            parser.ProcessPageContent(new PdfDocument(new PdfReader(sourceFolder + "simple_text.pdf"
-                )).GetPage(FIRST_PAGE));
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener()
+                );
+            parser.ProcessPageContent(new PdfDocument(new PdfReader(sourceFolder + "simple_text.pdf")).GetPage(FIRST_PAGE
+                ));
         }
 
         /// <summary>
@@ -45,8 +44,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             String inFile = "japanese_text.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
             ITextExtractionStrategy start = new SimpleTextExtractionStrategy();
-            sb.Append(PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), start
-                ));
+            sb.Append(PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(FIRST_PAGE), start));
             String result = sb.JSubstring(0, sb.ToString().IndexOf("\n"));
             String origText = "\u76f4\u8fd1\u306e\u0053\uff06\u0050\u0035\u0030\u0030" + "\u914d\u5f53\u8cb4\u65cf\u6307\u6570\u306e\u30d1\u30d5"
                  + "\u30a9\u30fc\u30de\u30f3\u30b9\u306f\u0053\uff06\u0050" + "\u0035\u0030\u0030\u6307\u6570\u3092\u4e0a\u56de\u308b";
@@ -58,19 +56,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         public virtual void TestType3FontWidth()
         {
             String inFile = "type3font_text.pdf";
-            LineSegment origLineSegment = new LineSegment(new Vector(20.3246f, 769.4974f, 1.0f
-                ), new Vector(151.22923f, 769.4974f, 1.0f));
+            LineSegment origLineSegment = new LineSegment(new Vector(20.3246f, 769.4974f, 1.0f), new Vector(151.22923f
+                , 769.4974f, 1.0f));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inFile));
             TextRenderInfoTest.TextPositionEventListener renderListener = new TextRenderInfoTest.TextPositionEventListener
                 ();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
             processor.ProcessPageContent(pdfDocument.GetPage(FIRST_PAGE));
-            NUnit.Framework.Assert.AreEqual(renderListener.GetLineSegments()[FIRST_ELEMENT_INDEX
-                ].GetStartPoint().Get(FIRST_ELEMENT_INDEX), origLineSegment.GetStartPoint().Get
-                (FIRST_ELEMENT_INDEX), 1 / 2f);
-            NUnit.Framework.Assert.AreEqual(renderListener.GetLineSegments()[FIRST_ELEMENT_INDEX
-                ].GetEndPoint().Get(FIRST_ELEMENT_INDEX), origLineSegment.GetEndPoint().Get(FIRST_ELEMENT_INDEX
-                ), 1 / 2f);
+            NUnit.Framework.Assert.AreEqual(renderListener.GetLineSegments()[FIRST_ELEMENT_INDEX].GetStartPoint().Get(
+                FIRST_ELEMENT_INDEX), origLineSegment.GetStartPoint().Get(FIRST_ELEMENT_INDEX), 1 / 2f);
+            NUnit.Framework.Assert.AreEqual(renderListener.GetLineSegments()[FIRST_ELEMENT_INDEX].GetEndPoint().Get(FIRST_ELEMENT_INDEX
+                ), origLineSegment.GetEndPoint().Get(FIRST_ELEMENT_INDEX), 1 / 2f);
         }
 
         private class TextPositionEventListener : IEventListener
@@ -87,8 +83,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
             public virtual ICollection<EventType> GetSupportedEvents()
             {
-                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
-                    ));
+                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
             }
 
             public virtual IList<LineSegment> GetLineSegments()
@@ -130,8 +125,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
             public virtual ICollection<EventType> GetSupportedEvents()
             {
-                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT
-                    ));
+                return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
             }
         }
     }

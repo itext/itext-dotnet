@@ -73,8 +73,7 @@ namespace iTextSharp.Barcodes.Qrcode
 
         private readonly GF256Poly one;
 
-        /// <summary>Create a representation of GF(256) using the given primitive polynomial.
-        ///     </summary>
+        /// <summary>Create a representation of GF(256) using the given primitive polynomial.</summary>
         /// <param name="primitive">
         /// irreducible polynomial whose coefficients are represented by
         /// the bits of an int, where the least-significant bit represents the constant
@@ -132,8 +131,7 @@ namespace iTextSharp.Barcodes.Qrcode
             return new GF256Poly(this, coefficients);
         }
 
-        /// <summary>Implements both addition and subtraction -- they are the same in GF(256).
-        ///     </summary>
+        /// <summary>Implements both addition and subtraction -- they are the same in GF(256).</summary>
         /// <returns>sum/difference of a and b</returns>
         internal static int AddOrSubtract(int a, int b)
         {

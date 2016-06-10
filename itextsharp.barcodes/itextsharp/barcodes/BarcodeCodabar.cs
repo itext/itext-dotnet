@@ -59,16 +59,14 @@ namespace iTextSharp.Barcodes
         private const int START_STOP_IDX = 16;
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0
-            , 1, 1 }, new byte[] { 0, 0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 
-            1 }, new byte[] { 1, 1, 0, 0, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 0, 1, 0 }, 
-            new byte[] { 1, 0, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1 }, new byte
-            [] { 0, 1, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 0 }, new byte[] { 
-            1, 0, 0, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 
-            1, 1, 0, 0, 0 }, new byte[] { 1, 0, 0, 0, 1, 0, 1 }, new byte[] { 1, 0, 1, 0, 
-            0, 0, 1 }, new byte[] { 1, 0, 1, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 0, 1, 0, 
-            1 }, new byte[] { 0, 0, 1, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 1 }, 
-            new byte[] { 0, 0, 0, 1, 0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0, 1, 1 }, new byte[] { 0, 
+            0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 1 }, new byte[] { 1, 1, 0, 0, 0, 0, 0 }, new byte[]
+             { 0, 0, 1, 0, 0, 1, 0 }, new byte[] { 1, 0, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1 }, new 
+            byte[] { 0, 1, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 0 }, new byte[] { 1, 0, 0, 1, 0, 0, 0 }
+            , new byte[] { 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 1, 1, 0, 0, 0 }, new byte[] { 1, 0, 0, 0, 1, 
+            0, 1 }, new byte[] { 1, 0, 1, 0, 0, 0, 1 }, new byte[] { 1, 0, 1, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 
+            0, 1, 0, 1 }, new byte[] { 0, 0, 1, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 1 }, new byte[] { 0, 
+            0, 0, 1, 0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
 
         /// <summary>Creates a new BarcodeCodabar.</summary>
         public BarcodeCodabar(PdfDocument document)
@@ -122,13 +120,11 @@ namespace iTextSharp.Barcodes
             int len = text.Length;
             if (len < 2)
             {
-                throw new ArgumentException(PdfException.CodabarMustHaveAtLeastAStartAndStopCharacter
-                    );
+                throw new ArgumentException(PdfException.CodabarMustHaveAtLeastAStartAndStopCharacter);
             }
             if (CHARS.IndexOf(text[0]) < START_STOP_IDX || CHARS.IndexOf(text[len - 1]) < START_STOP_IDX)
             {
-                throw new ArgumentException(PdfException.CodabarMustHaveOneAbcdAsStartStopCharacter
-                    );
+                throw new ArgumentException(PdfException.CodabarMustHaveOneAbcdAsStartStopCharacter);
             }
             byte[] bars = new byte[text.Length * 8 - 1];
             for (int k = 0; k < len; ++k)
@@ -136,8 +132,7 @@ namespace iTextSharp.Barcodes
                 int idx = CHARS.IndexOf(text[k]);
                 if (idx >= START_STOP_IDX && k > 0 && k < len - 1)
                 {
-                    throw new ArgumentException(PdfException.CodabarStartStopCharacterAreOnlyExtremes
-                        );
+                    throw new ArgumentException(PdfException.CodabarStartStopCharacterAreOnlyExtremes);
                 }
                 if (idx < 0)
                 {
@@ -255,8 +250,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             String fullCode = code;
             if (generateChecksum && checksumText)

@@ -143,8 +143,7 @@ namespace iTextSharp.Kernel.Geom
         /// </summary>
         /// <param name="by">The matrix to multiply by</param>
         /// <returns>the resulting matrix</returns>
-        public virtual iTextSharp.Kernel.Geom.Matrix Multiply(iTextSharp.Kernel.Geom.Matrix
-             by)
+        public virtual iTextSharp.Kernel.Geom.Matrix Multiply(iTextSharp.Kernel.Geom.Matrix by)
         {
             iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
             float[] a = vals;
@@ -165,8 +164,7 @@ namespace iTextSharp.Kernel.Geom
         /// <summary>Subtracts a matrix from this matrix and returns the results</summary>
         /// <param name="arg">the matrix to subtract from this matrix</param>
         /// <returns>a Matrix object</returns>
-        public virtual iTextSharp.Kernel.Geom.Matrix Subtract(iTextSharp.Kernel.Geom.Matrix
-             arg)
+        public virtual iTextSharp.Kernel.Geom.Matrix Subtract(iTextSharp.Kernel.Geom.Matrix arg)
         {
             iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
             float[] a = vals;
@@ -191,9 +189,9 @@ namespace iTextSharp.Kernel.Geom
             // ref http://en.wikipedia.org/wiki/Determinant
             // note that in PDF, I13 and I23 are always 0 and I33 is always 1
             // so this could be simplified/faster
-            return vals[I11] * vals[I22] * vals[I33] + vals[I12] * vals[I23] * vals[I31] + vals
-                [I13] * vals[I21] * vals[I32] - vals[I11] * vals[I23] * vals[I32] - vals[I12]
-                 * vals[I21] * vals[I33] - vals[I13] * vals[I22] * vals[I31];
+            return vals[I11] * vals[I22] * vals[I33] + vals[I12] * vals[I23] * vals[I31] + vals[I13] * vals[I21] * vals
+                [I32] - vals[I11] * vals[I23] * vals[I32] - vals[I12] * vals[I21] * vals[I33] - vals[I13] * vals[I22] 
+                * vals[I31];
         }
 
         /// <summary>Checks equality of matrices.</summary>
@@ -206,8 +204,7 @@ namespace iTextSharp.Kernel.Geom
             {
                 return false;
             }
-            return iTextSharp.IO.Util.JavaUtil.ArraysEquals(vals, ((iTextSharp.Kernel.Geom.Matrix
-                )obj).vals);
+            return iTextSharp.IO.Util.JavaUtil.ArraysEquals(vals, ((iTextSharp.Kernel.Geom.Matrix)obj).vals);
         }
 
         /// <summary>Generates a hash code for this object.</summary>
@@ -229,9 +226,8 @@ namespace iTextSharp.Kernel.Geom
         /// <seealso cref="System.Object.ToString()"/>
         public override String ToString()
         {
-            return vals[I11] + "\t" + vals[I12] + "\t" + vals[I13] + "\n" + vals[I21] + "\t" 
-                + vals[I22] + "\t" + vals[I13] + "\n" + vals[I31] + "\t" + vals[I32] + "\t" +
-                 vals[I33];
+            return vals[I11] + "\t" + vals[I12] + "\t" + vals[I13] + "\n" + vals[I21] + "\t" + vals[I22] + "\t" + vals
+                [I13] + "\n" + vals[I31] + "\t" + vals[I32] + "\t" + vals[I33];
         }
     }
 }

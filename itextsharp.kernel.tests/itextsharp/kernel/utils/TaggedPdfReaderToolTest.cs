@@ -7,11 +7,10 @@ namespace iTextSharp.Kernel.Utils
 {
     public class TaggedPdfReaderToolTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp()

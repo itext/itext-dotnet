@@ -122,13 +122,11 @@ namespace iTextSharp.Layout.Element
         /// .
         /// </param>
         /// <returns>this list item.</returns>
-        public virtual iTextSharp.Layout.Element.ListItem SetListSymbol(ListNumberingType
-             listNumberingType)
+        public virtual iTextSharp.Layout.Element.ListItem SetListSymbol(ListNumberingType listNumberingType)
         {
             // Do not draw any points after ZapfDingbats special number symbol
-            if (listNumberingType == ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType ==
-                 ListNumberingType.ZAPF_DINGBATS_2 || listNumberingType == ListNumberingType.
-                ZAPF_DINGBATS_3 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_4)
+            if (listNumberingType == ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_2
+                 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_3 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_4)
             {
                 SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT, " ");
             }

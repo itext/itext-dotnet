@@ -82,8 +82,7 @@ namespace iTextSharp.Kernel.Crypto
             }
         }
 
-        public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut
-            , int offOut)
+        public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut, int offOut)
         {
             int length = len + off;
             byte tmp;
@@ -94,8 +93,7 @@ namespace iTextSharp.Kernel.Crypto
                 tmp = state[x];
                 state[x] = state[y];
                 state[y] = tmp;
-                dataOut[k - off + offOut] = (byte)(dataIn[k] ^ state[(state[x] + state[y]) & 255]
-                    );
+                dataOut[k - off + offOut] = (byte)(dataIn[k] ^ state[(state[x] + state[y]) & 255]);
             }
         }
 

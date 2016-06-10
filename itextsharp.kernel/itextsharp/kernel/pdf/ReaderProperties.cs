@@ -58,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf
         //added by Aiken Sam for certificate decryption
         //added by Aiken Sam for certificate decryption
         //added by Aiken Sam for certificate decryption
-        /// <summary>Defines the password which will be used if the document is encrypted with standard encryption.
-        ///     </summary>
+        /// <summary>Defines the password which will be used if the document is encrypted with standard encryption.</summary>
         /// <remarks>
         /// Defines the password which will be used if the document is encrypted with standard encryption.
         /// This could be either user or owner password.
@@ -74,8 +73,8 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
         ///     </summary>
-        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
-            , ICipherParameters certificateKey)
+        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate, ICipherParameters 
+            certificateKey)
         {
             ClearEncryptionParams();
             this.certificate = certificate;
@@ -85,8 +84,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
         ///     </summary>
-        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate
-            )
+        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate)
         {
             ClearEncryptionParams();
             this.certificate = certificate;

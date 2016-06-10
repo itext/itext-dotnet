@@ -45,8 +45,8 @@ namespace iTextSharp.Barcodes.Dmcode
 {
     public class DmParams
     {
-        public DmParams(int height, int width, int heightSection, int widthSection, int dataSize
-            , int dataBlock, int errorBlock)
+        public DmParams(int height, int width, int heightSection, int widthSection, int dataSize, int dataBlock, int
+             errorBlock)
         {
             this.height = height;
             this.width = width;

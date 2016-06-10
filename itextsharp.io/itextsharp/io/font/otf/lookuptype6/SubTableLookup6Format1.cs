@@ -47,24 +47,21 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype6
 {
-    /// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution
-    ///     </summary>
+    /// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format1 : SubTableLookup6
     {
         private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
-        public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, 
-            IDictionary<int, IList<ContextualSubstRule>> substMap)
+        public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule
+            >> substMap)
             : base(openReader, lookupFlag)
         {
             this.substMap = substMap;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startGlyphId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startGlyphId)
         {
-            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag
-                ))
+            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag))
             {
                 return substMap.Get(startGlyphId);
             }
@@ -81,8 +78,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
 
             private SubstLookupRecord[] substLookupRecords;
 
-            public SubstRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds
-                , SubstLookupRecord[] substLookupRecords)
+            public SubstRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds, SubstLookupRecord
+                [] substLookupRecords)
             {
                 // inputGlyphIds array omits the first glyph in the sequence,
                 // the first glyph is defined by corresponding coverage glyph

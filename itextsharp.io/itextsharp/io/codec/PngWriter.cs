@@ -49,8 +49,7 @@ namespace iTextSharp.IO.Codec
     /// <summary>Writes a PNG image.</summary>
     public class PngWriter
     {
-        private static readonly byte[] PNG_SIGNTURE = new byte[] { (byte)137, 80, 78, 71, 
-            13, 10, 26, 10 };
+        private static readonly byte[] PNG_SIGNTURE = new byte[] { (byte)137, 80, 78, 71, 13, 10, 26, 10 };
 
         private static readonly byte[] IHDR = ByteUtils.GetIsoBytes("IHDR");
 
@@ -74,8 +73,7 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void WriteHeader(int width, int height, int bitDepth, int colorType
-            )
+        public virtual void WriteHeader(int width, int height, int bitDepth, int colorType)
         {
             MemoryStream ms = new MemoryStream();
             OutputInt(width, ms);

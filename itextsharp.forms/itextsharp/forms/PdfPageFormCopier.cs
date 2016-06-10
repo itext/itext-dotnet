@@ -82,8 +82,7 @@ namespace iTextSharp.Forms
                     IList<PdfName> excludedKeys = new List<PdfName>();
                     excludedKeys.Add(PdfName.Fields);
                     excludedKeys.Add(PdfName.DR);
-                    PdfDictionary dict = formFrom.GetPdfObject().CopyTo(documentTo, excludedKeys, false
-                        );
+                    PdfDictionary dict = formFrom.GetPdfObject().CopyTo(documentTo, excludedKeys, false);
                     formTo.GetPdfObject().MergeDifferent(dict);
                 }
             }
@@ -130,14 +129,12 @@ namespace iTextSharp.Forms
                                 }
                                 if (annotNameString != null && fieldsFrom.ContainsKey(annotNameString))
                                 {
-                                    PdfFormField field = PdfFormField.MakeFormField(annot.GetPdfObject(), toPage.GetDocument
-                                        ());
+                                    PdfFormField field = PdfFormField.MakeFormField(annot.GetPdfObject(), toPage.GetDocument());
                                     if (fieldsTo.ContainsKey(annotNameString))
                                     {
                                         field = MergeFieldsWithTheSameName(field, fieldsTo.Get(annotNameString));
                                         ILogger logger = LoggerFactory.GetLogger(typeof(PdfPageFormCopier));
-                                        logger.Warn(String.Format(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString
-                                            ));
+                                        logger.Warn(String.Format(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
                                     }
                                     formTo.AddField(field, null);
                                 }
@@ -148,8 +145,7 @@ namespace iTextSharp.Forms
             }
         }
 
-        private PdfFormField MergeFieldsWithTheSameName(PdfFormField existingField, PdfFormField
-             newField)
+        private PdfFormField MergeFieldsWithTheSameName(PdfFormField existingField, PdfFormField newField)
         {
             String fieldName = newField.GetFieldName().ToUnicodeString();
             existingField.GetPdfObject().Remove(PdfName.T);
@@ -163,8 +159,7 @@ namespace iTextSharp.Forms
             newField.GetPdfObject().Remove(PdfName.T);
             mergedField = PdfFormField.CreateEmptyField(documentTo);
             formTo.GetFields().Remove(newField.GetPdfObject());
-            mergedField.Put(PdfName.FT, existingField.GetFormType()).Put(PdfName.T, new PdfString
-                (fieldName));
+            mergedField.Put(PdfName.FT, existingField.GetFormType()).Put(PdfName.T, new PdfString(fieldName));
             PdfDictionary parent = existingField.GetParent();
             if (parent != null)
             {

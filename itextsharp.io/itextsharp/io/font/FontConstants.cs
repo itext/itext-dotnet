@@ -48,8 +48,7 @@ namespace iTextSharp.IO.Font
 {
     public class FontConstants
     {
-        internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String
-            >();
+        internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String>();
 
         static FontConstants()
         {
@@ -231,8 +230,7 @@ namespace iTextSharp.IO.Font
         /// <summary>The recommended vertical size for subscripts for this font.</summary>
         public const int SUBSCRIPT_SIZE = 17;
 
-        /// <summary>The recommended vertical offset from the baseline for subscripts for this font.
-        ///     </summary>
+        /// <summary>The recommended vertical offset from the baseline for subscripts for this font.</summary>
         /// <remarks>The recommended vertical offset from the baseline for subscripts for this font. Usually a negative value.
         ///     </remarks>
         public const int SUBSCRIPT_OFFSET = 18;
@@ -240,8 +238,7 @@ namespace iTextSharp.IO.Font
         /// <summary>The recommended vertical size for superscripts for this font.</summary>
         public const int SUPERSCRIPT_SIZE = 19;
 
-        /// <summary>The recommended vertical offset from the baseline for superscripts for this font.
-        ///     </summary>
+        /// <summary>The recommended vertical offset from the baseline for superscripts for this font.</summary>
         public const int SUPERSCRIPT_OFFSET = 20;
 
         /// <summary>The weight class of the font, as defined by the font author.</summary>
@@ -262,25 +259,21 @@ namespace iTextSharp.IO.Font
         /// <summary>A not defined character in a custom PDF encoding.</summary>
         public const String notdef = ".notdef";
 
-        public static readonly double[] DefaultFontMatrix = new double[] { 0.001, 0, 0, 0.001
-            , 0, 0 };
+        public static readonly double[] DefaultFontMatrix = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
         protected internal const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
         /// <summary>The code pages possible for a True Type font.</summary>
-        protected internal static readonly String[] CODE_PAGES = new String[] { "1252 Latin 1"
-            , "1250 Latin 2: Eastern Europe", "1251 Cyrillic", "1253 Greek", "1254 Turkish"
-            , "1255 Hebrew", "1256 Arabic", "1257 Windows Baltic", "1258 Vietnamese", null
-            , null, null, null, null, null, null, "874 Thai", "932 JIS/Japan", "936 Chinese: Simplified chars--PRC and Singapore"
-            , "949 Korean Wansung", "950 Chinese: Traditional chars--Taiwan and Hong Kong"
-            , "1361 Korean Johab", null, null, null, null, null, null, null, "Macintosh Character Set (US Roman)"
-            , "OEM Character Set", "Symbol Character Set", null, null, null, null, null, 
-            null, null, null, null, null, null, null, null, null, null, null, "869 IBM Greek"
-            , "866 MS-DOS Russian", "865 MS-DOS Nordic", "864 Arabic", "863 MS-DOS Canadian French"
-            , "862 Hebrew", "861 MS-DOS Icelandic", "860 MS-DOS Portuguese", "857 IBM Turkish"
-            , "855 IBM Cyrillic; primarily Russian", "852 Latin 2", "775 MS-DOS Baltic", 
-            "737 Greek; former 437 G", "708 Arabic; ASMO 708", "850 WE/Latin 1", "437 US"
-             };
+        protected internal static readonly String[] CODE_PAGES = new String[] { "1252 Latin 1", "1250 Latin 2: Eastern Europe"
+            , "1251 Cyrillic", "1253 Greek", "1254 Turkish", "1255 Hebrew", "1256 Arabic", "1257 Windows Baltic", 
+            "1258 Vietnamese", null, null, null, null, null, null, null, "874 Thai", "932 JIS/Japan", "936 Chinese: Simplified chars--PRC and Singapore"
+            , "949 Korean Wansung", "950 Chinese: Traditional chars--Taiwan and Hong Kong", "1361 Korean Johab", null
+            , null, null, null, null, null, null, "Macintosh Character Set (US Roman)", "OEM Character Set", "Symbol Character Set"
+            , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "869 IBM Greek"
+            , "866 MS-DOS Russian", "865 MS-DOS Nordic", "864 Arabic", "863 MS-DOS Canadian French", "862 Hebrew", 
+            "861 MS-DOS Icelandic", "860 MS-DOS Portuguese", "857 IBM Turkish", "855 IBM Cyrillic; primarily Russian"
+            , "852 Latin 2", "775 MS-DOS Baltic", "737 Greek; former 437 G", "708 Arabic; ASMO 708", "850 WE/Latin 1"
+            , "437 US" };
         //-Font styles------------------------------------------------------------------------------------------------------
         //-Font types-------------------------------------------------------------------------------------------------------
         //-Default fonts----------------------------------------------------------------------------------------------------

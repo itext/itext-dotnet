@@ -65,8 +65,8 @@ namespace iTextSharp.Kernel.Font
             FontNames fontNames = ttf.GetFontNames();
             if (embedded && !fontNames.AllowEmbedding())
             {
-                throw new PdfException("1.cannot.be.embedded.due.to.licensing.restrictions").SetMessageParams
-                    (fontNames.GetFontName());
+                throw new PdfException("1.cannot.be.embedded.due.to.licensing.restrictions").SetMessageParams(fontNames.GetFontName
+                    ());
             }
             if ((encoding == null || encoding.Length == 0) && ttf.IsFontSpecific())
             {
@@ -88,10 +88,8 @@ namespace iTextSharp.Kernel.Font
         {
             newFont = false;
             CheckFontDictionary(fontDictionary, PdfName.TrueType);
-            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode
-                ));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding
-                ), toUni);
+            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
             embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             subset = false;
@@ -101,8 +99,7 @@ namespace iTextSharp.Kernel.Font
         {
             if (fontEncoding.CanEncode(unicode))
             {
-                Glyph glyph = ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
-                    (unicode));
+                Glyph glyph = ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 //TODO TrueType what if font is specific?
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
                 {
@@ -133,8 +130,8 @@ namespace iTextSharp.Kernel.Font
                 else
                 {
                     subtype = PdfName.TrueType;
-                    fontName = subset ? CreateSubsetPrefix() + fontProgram.GetFontNames().GetFontName
-                        () : fontProgram.GetFontNames().GetFontName();
+                    fontName = subset ? CreateSubsetPrefix() + fontProgram.GetFontNames().GetFontName() : fontProgram.GetFontNames
+                        ().GetFontName();
                 }
                 FlushFontData(fontName, subtype);
             }
@@ -143,11 +140,10 @@ namespace iTextSharp.Kernel.Font
 
         protected internal virtual void AddRangeUni(ICollection<int> longTag)
         {
-            if (!subset && (subsetRanges != null || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset
-                () > 0))
+            if (!subset && (subsetRanges != null || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() > 0))
             {
-                int[] rg = subsetRanges == null && ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset
-                    () > 0 ? new int[] { 0, 0xffff } : CompactRanges(subsetRanges);
+                int[] rg = subsetRanges == null && ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() > 0 ? new int[] { 
+                    0, 0xffff } : CompactRanges(subsetRanges);
                 IDictionary<int, int[]> usemap = ((TrueTypeFont)GetFontProgram()).GetActiveCmap();
                 System.Diagnostics.Debug.Assert(usemap != null);
                 foreach (KeyValuePair<int, int[]> e in usemap)
@@ -195,14 +191,12 @@ namespace iTextSharp.Kernel.Font
                         try
                         {
                             byte[] fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetFontStreamBytes();
-                            fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length
-                                 });
+                            fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                             fontStream.Put(PdfName.Subtype, new PdfName("Type1C"));
                         }
                         catch (PdfException e)
                         {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
-                                ));
+                            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont));
                             logger.Error(e.Message);
                             fontStream = null;
                         }
@@ -216,8 +210,7 @@ namespace iTextSharp.Kernel.Font
                             if (shortTag[k] != 0)
                             {
                                 int uni = fontEncoding.GetUnicode(k);
-                                Glyph glyph = uni > -1 ? fontProgram.GetGlyph(uni) : fontProgram.GetGlyphByCode(k
-                                    );
+                                Glyph glyph = uni > -1 ? fontProgram.GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
                                 if (glyph != null)
                                 {
                                     glyphs.Add(glyph.GetCode());
@@ -228,24 +221,20 @@ namespace iTextSharp.Kernel.Font
                         try
                         {
                             byte[] fontStreamBytes;
-                            if (subset || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() != 0 || subsetRanges
-                                 != null)
+                            if (subset || ((TrueTypeFont)GetFontProgram()).GetDirectoryOffset() != 0 || subsetRanges != null)
                             {
                                 //clone glyphs due to possible cache issue
-                                fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(new HashSet<int>(glyphs
-                                    ), subset);
+                                fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetSubset(new HashSet<int>(glyphs), subset);
                             }
                             else
                             {
                                 fontStreamBytes = ((TrueTypeFont)GetFontProgram()).GetFontStreamBytes();
                             }
-                            fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length
-                                 });
+                            fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                         }
                         catch (PdfException e)
                         {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont
-                                ));
+                            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfTrueTypeFont));
                             logger.Error(e.Message);
                             fontStream = null;
                         }

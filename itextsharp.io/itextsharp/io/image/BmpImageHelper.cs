@@ -93,8 +93,7 @@ namespace iTextSharp.IO.Image
 
             internal int alphaMask;
 
-            internal IDictionary<String, Object> properties = new Dictionary<String, Object>(
-                );
+            internal IDictionary<String, Object> properties = new Dictionary<String, Object>();
 
             internal long xPelsPerMeter;
 
@@ -173,14 +172,12 @@ namespace iTextSharp.IO.Image
                 {
                     image.SetWidth(bmp.width);
                     image.SetHeight(bmp.height);
-                    image.SetDpi((int)(bmp.xPelsPerMeter * 0.0254d + 0.5d), (int)(bmp.yPelsPerMeter *
-                         0.0254d + 0.5d));
+                    image.SetDpi((int)(bmp.xPelsPerMeter * 0.0254d + 0.5d), (int)(bmp.yPelsPerMeter * 0.0254d + 0.5d));
                 }
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BmpImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BmpImageException, e);
             }
             RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
         }
@@ -192,11 +189,9 @@ namespace iTextSharp.IO.Image
             if (!bmp.image.IsNoHeader())
             {
                 // Start File Header
-                if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream
-                    ) == 'M'))
+                if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream) == 'M'))
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidMagicValueForBmpFile
-                        );
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidMagicValueForBmpFile);
                 }
                 // Read file size
                 bmp.bitmapFileSize = ReadDWord(bmp.inputStream);
@@ -489,8 +484,7 @@ namespace iTextSharp.IO.Image
 
                         default:
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
-                                );
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression);
                         }
                     }
                 }
@@ -671,8 +665,7 @@ namespace iTextSharp.IO.Image
                 byte[] g;
                 byte[] b;
                 int sizep;
-                if (bmp.imageType == VERSION_2_1_BIT || bmp.imageType == VERSION_2_4_BIT || bmp.imageType
-                     == VERSION_2_8_BIT)
+                if (bmp.imageType == VERSION_2_1_BIT || bmp.imageType == VERSION_2_4_BIT || bmp.imageType == VERSION_2_8_BIT)
                 {
                     sizep = bmp.palette.Length / 3;
                     if (sizep > 256)
@@ -792,8 +785,7 @@ namespace iTextSharp.IO.Image
                     // no compression
                     bdata = new byte[bmp.width * bmp.height * 3];
                     Read24Bit(bdata, bmp);
-                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata
-                        );
+                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata);
                     return true;
                 }
 
@@ -822,8 +814,7 @@ namespace iTextSharp.IO.Image
 
                         default:
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
-                                );
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -847,8 +838,7 @@ namespace iTextSharp.IO.Image
 
                         default:
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
-                                );
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -859,8 +849,7 @@ namespace iTextSharp.IO.Image
                     // 24-bit images are not compressed
                     bdata = new byte[bmp.width * bmp.height * 3];
                     Read24Bit(bdata, bmp);
-                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata
-                        );
+                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata);
                     return true;
                 }
 
@@ -900,8 +889,7 @@ namespace iTextSharp.IO.Image
 
                         default:
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
-                                );
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -925,8 +913,7 @@ namespace iTextSharp.IO.Image
 
                         default:
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression
-                                );
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidBmpFileCompression);
                         }
                     }
                     return true;
@@ -942,8 +929,7 @@ namespace iTextSharp.IO.Image
                 {
                     bdata = new byte[bmp.width * bmp.height * 3];
                     Read24Bit(bdata, bmp);
-                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata
-                        );
+                    RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata);
                     return true;
                 }
 
@@ -956,11 +942,10 @@ namespace iTextSharp.IO.Image
             return false;
         }
 
-        private static void IndexedModel(byte[] bdata, int bpc, int paletteEntries, BmpImageHelper.BmpParameters
-             bmp)
+        private static void IndexedModel(byte[] bdata, int bpc, int paletteEntries, BmpImageHelper.BmpParameters bmp
+            )
         {
-            RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 1, bpc, 
-                bdata);
+            RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 1, bpc, bdata);
             Object[] colorSpace = new Object[4];
             colorSpace[0] = "/Indexed";
             colorSpace[1] = "/DeviceRGB";
@@ -973,8 +958,7 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadPalette(int sizeOfPalette, BmpImageHelper.BmpParameters bmp
-            )
+        private static void ReadPalette(int sizeOfPalette, BmpImageHelper.BmpParameters bmp)
         {
             if (sizeOfPalette == 0)
             {
@@ -996,8 +980,7 @@ namespace iTextSharp.IO.Image
 
         // Deal with 1 Bit images using IndexColorModels
         /// <exception cref="System.IO.IOException"/>
-        private static void Read1Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp
-            )
+        private static void Read1Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp)
         {
             byte[] bdata = new byte[(bmp.width + 7) / 8 * bmp.height];
             int padding = 0;
@@ -1021,16 +1004,15 @@ namespace iTextSharp.IO.Image
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, 
-                        i * bytesPerScanline, bytesPerScanline);
+                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
+                        );
                 }
             }
             else
             {
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline
-                        , bytesPerScanline);
+                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
                 }
             }
             IndexedModel(bdata, 1, paletteEntries, bmp);
@@ -1038,8 +1020,7 @@ namespace iTextSharp.IO.Image
 
         // Method to read a 4 bit BMP image data
         /// <exception cref="System.IO.IOException"/>
-        private static void Read4Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp
-            )
+        private static void Read4Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp)
         {
             byte[] bdata = new byte[(bmp.width + 1) / 2 * bmp.height];
             // Padding bytes at the end of each scanline
@@ -1064,16 +1045,15 @@ namespace iTextSharp.IO.Image
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, 
-                        i * bytesPerScanline, bytesPerScanline);
+                    System.Array.Copy(values, imSize - (i + 1) * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline
+                        );
                 }
             }
             else
             {
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline
-                        , bytesPerScanline);
+                    System.Array.Copy(values, i * (bytesPerScanline + padding), bdata, i * bytesPerScanline, bytesPerScanline);
                 }
             }
             IndexedModel(bdata, 4, paletteEntries, bmp);
@@ -1081,8 +1061,7 @@ namespace iTextSharp.IO.Image
 
         // Method to read 8 bit BMP image data
         /// <exception cref="System.IO.IOException"/>
-        private static void Read8Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp
-            )
+        private static void Read8Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp)
         {
             byte[] bdata = new byte[bmp.width * bmp.height];
             // Padding bytes at the end of each scanline
@@ -1108,16 +1087,14 @@ namespace iTextSharp.IO.Image
                 // one scanline from the bottom to the top at a time.
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, imSize - (i + 1) * (bmp.width + padding), bdata, i * bmp
-                        .width, bmp.width);
+                    System.Array.Copy(values, imSize - (i + 1) * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
                 }
             }
             else
             {
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(values, i * (bmp.width + padding), bdata, i * bmp.width, bmp.width
-                        );
+                    System.Array.Copy(values, i * (bmp.width + padding), bdata, i * bmp.width, bmp.width);
                 }
             }
             IndexedModel(bdata, 8, paletteEntries, bmp);
@@ -1260,12 +1237,9 @@ namespace iTextSharp.IO.Image
                         {
                             v = ReadWord(bmp.inputStream);
                         }
-                        bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor
-                            );
-                        bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor
-                            );
-                        bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor
-                            );
+                        bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor);
+                        bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor);
+                        bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor);
                     }
                     for (int m = 0; m < padding; m++)
                     {
@@ -1287,12 +1261,9 @@ namespace iTextSharp.IO.Image
                         {
                             v = ReadWord(bmp.inputStream);
                         }
-                        bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor
-                            );
-                        bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor
-                            );
-                        bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor
-                            );
+                        bdata[l++] = (byte)(((int)(((uint)v) >> red_shift) & red_mask) * 256 / red_factor);
+                        bdata[l++] = (byte)(((int)(((uint)v) >> green_shift) & green_mask) * 256 / green_factor);
+                        bdata[l++] = (byte)(((int)(((uint)v) >> blue_shift) & blue_mask) * 256 / blue_factor);
                     }
                     for (int m = 0; m < padding; m++)
                     {
@@ -1300,8 +1271,7 @@ namespace iTextSharp.IO.Image
                     }
                 }
             }
-            RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata
-                );
+            RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1333,8 +1303,7 @@ namespace iTextSharp.IO.Image
                 int bytesPerScanline = bmp.width;
                 for (int i = 0; i < bmp.height; i++)
                 {
-                    System.Array.Copy(val, imSize - (i + 1) * bytesPerScanline, temp, i * bytesPerScanline
-                        , bytesPerScanline);
+                    System.Array.Copy(val, imSize - (i + 1) * bytesPerScanline, temp, i * bytesPerScanline, bytesPerScanline);
                 }
                 val = temp;
             }
@@ -1399,8 +1368,7 @@ namespace iTextSharp.IO.Image
             IndexedModel(bdata, 4, 4, bmp);
         }
 
-        private static byte[] DecodeRLE(bool is8, byte[] values, BmpImageHelper.BmpParameters
-             bmp)
+        private static byte[] DecodeRLE(bool is8, byte[] values, BmpImageHelper.BmpParameters bmp)
         {
             byte[] val = new byte[bmp.width * bmp.height];
             try

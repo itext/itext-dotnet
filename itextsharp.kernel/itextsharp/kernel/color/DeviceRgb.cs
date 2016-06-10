@@ -63,8 +63,7 @@ namespace iTextSharp.Kernel.Color
         {
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb
-             rgbColor)
+        public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb rgbColor)
         {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
@@ -81,8 +80,7 @@ namespace iTextSharp.Kernel.Color
             return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb
-             rgbColor)
+        public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb rgbColor)
         {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];

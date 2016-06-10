@@ -110,23 +110,16 @@ namespace iTextSharp.Layout.Border
         /// </p>
         /// </remarks>
         /// <param name="canvas">PdfCanvas to be written to</param>
-        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered
-        ///     </param>
-        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered
-        ///     </param>
-        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered
-        ///     </param>
-        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered
-        ///     </param>
-        /// <param name="borderWidthBefore">defines width of the border that is before the current one
-        ///     </param>
-        /// <param name="borderWidthAfter">defines width of the border that is after the current one
-        ///     </param>
-        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter);
+        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
+        /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
+        public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter);
 
-        public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2);
+        public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2);
 
         public abstract int GetBorderType();
 
@@ -148,10 +141,9 @@ namespace iTextSharp.Layout.Border
             }
             if (anObject is iTextSharp.Layout.Border.Border)
             {
-                iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)
-                    anObject;
-                if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() 
-                    != GetColor() || anotherBorder.GetWidth() != GetWidth())
+                iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)anObject;
+                if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
+                    .GetWidth() != GetWidth())
                 {
                     return false;
                 }
@@ -174,8 +166,7 @@ namespace iTextSharp.Layout.Border
             return h;
         }
 
-        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2
-            , float y2)
+        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2)
         {
             bool isLeft = false;
             bool isRight = false;

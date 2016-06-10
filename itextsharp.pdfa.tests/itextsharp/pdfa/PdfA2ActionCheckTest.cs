@@ -10,11 +10,10 @@ namespace iTextSharp.Pdfa
 {
     public class PdfA2ActionCheckTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/pdfa/PdfA2ActionCheckTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/pdfa/PdfA2ActionCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -30,10 +29,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Launch);
@@ -52,10 +50,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Hide);
@@ -74,10 +71,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Sound);
@@ -96,10 +92,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Movie);
@@ -118,10 +113,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.ResetForm);
@@ -140,10 +134,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.ImportData);
@@ -162,10 +155,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.JavaScript);
@@ -184,10 +176,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Named);
@@ -207,10 +198,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.SetOCGState);
@@ -229,10 +219,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Rendition);
@@ -251,10 +240,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Trans);
@@ -273,10 +261,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.GoTo3DView);
@@ -295,10 +282,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 PdfPage page = doc.AddNewPage();
                 page.SetAdditionalAction(PdfName.C, PdfAction.CreateJavaScript("js"));
                 doc.Close();
@@ -315,10 +301,9 @@ namespace iTextSharp.Pdfa
             NUnit.Framework.Assert.That(() => 
             {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                    , FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                    ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 doc.AddNewPage();
                 doc.GetCatalog().SetAdditionalAction(PdfName.C, PdfAction.CreateJavaScript("js"));
                 doc.Close();
@@ -336,17 +321,15 @@ namespace iTextSharp.Pdfa
             String outPdf = destinationFolder + "pdfA2b_actionCheck15.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfA2ActionCheckTest/cmp_pdfA2b_actionCheck15.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open
-                , FileAccess.Read);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent
-                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.GetOutlines(true);
             PdfOutline @out = doc.GetOutlines(false);
             @out.AddOutline("New").AddAction(PdfAction.CreateGoTo("TestDest"));
             doc.AddNewPage();
             doc.Close();
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder
-                , "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null)
             {
                 NUnit.Framework.Assert.Fail(result);

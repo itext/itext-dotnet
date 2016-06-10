@@ -59,8 +59,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         private int digits = 0;
 
         /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-        /// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)
-        ///     "/>
+        /// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
         /// <param name="input">a Reader</param>
         public FixASCIIControlsReader(TextReader input)
             : base(input, BUFFER_SIZE)
@@ -121,8 +120,7 @@ namespace iTextSharp.Kernel.XMP.Impl
             return read > 0 || available ? read : -1;
         }
 
-        /// <summary>Processes numeric escaped chars to find out if they are a control character.
-        ///     </summary>
+        /// <summary>Processes numeric escaped chars to find out if they are a control character.</summary>
         /// <param name="ch">a char</param>
         /// <returns>Returns the char directly or as replacement for the escaped sequence.</returns>
         private char ProcessChar(char ch)
@@ -208,8 +206,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
                 case STATE_HEX:
                 {
-                    if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'
-                        ))
+                    if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'))
                     {
                         control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
                         digits++;

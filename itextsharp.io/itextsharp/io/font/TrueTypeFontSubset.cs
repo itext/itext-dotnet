@@ -52,16 +52,15 @@ namespace iTextSharp.IO.Font
     /// <author>Paulo Soares</author>
     internal class TrueTypeFontSubset
     {
-        internal static readonly String[] tableNamesSimple = new String[] { "cvt ", "fpgm"
-            , "glyf", "head", "hhea", "hmtx", "loca", "maxp", "prep" };
+        internal static readonly String[] tableNamesSimple = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea"
+            , "hmtx", "loca", "maxp", "prep" };
 
         internal static readonly String[] tableNamesCmap = new String[] { "cmap", "OS/2" };
 
-        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2"
-            , "name" };
+        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name" };
 
-        internal static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 
-            2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4 };
+        internal static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3
+            , 4, 4, 4, 4, 4 };
 
         internal const int TABLE_CHECKSUM = 0;
 
@@ -129,8 +128,7 @@ namespace iTextSharp.IO.Font
         protected internal int directoryOffset;
 
         /// <summary>Creates a new TrueTypeFontSubSet</summary>
-        /// <param name="directoryOffset">The offset from the start of the file to the table directory
-        ///     </param>
+        /// <param name="directoryOffset">The offset from the start of the file to the table directory</param>
         /// <param name="fileName">the file name of the font</param>
         /// <param name="glyphsUsed">the glyphs used</param>
         /// <param name="includeCmap">
@@ -138,8 +136,8 @@ namespace iTextSharp.IO.Font
         /// <see langword="true"/>
         /// if the table cmap is to be included in the generated font
         /// </param>
-        internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection
-            <int> glyphsUsed, int directoryOffset, bool includeCmap, bool includeExtras)
+        internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection<int> glyphsUsed, int 
+            directoryOffset, bool includeCmap, bool includeExtras)
         {
             this.fileName = fileName;
             this.rf = rf;
@@ -303,8 +301,7 @@ namespace iTextSharp.IO.Font
             int id = rf.ReadInt();
             if (id != 0x00010000)
             {
-                throw new iTextSharp.IO.IOException("1.is.not.a.true.type.file").SetMessageParams
-                    (fileName);
+                throw new iTextSharp.IO.IOException("1.is.not.a.true.type.file").SetMessageParams(fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
             rf.SkipBytes(6);
@@ -325,16 +322,14 @@ namespace iTextSharp.IO.Font
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null)
             {
-                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams
-                    (fileName);
+                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams(fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
             if (tableLocation == null)
             {
-                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams
-                    (fileName);
+                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams(fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
             if (locaShortTable)
@@ -428,8 +423,7 @@ namespace iTextSharp.IO.Font
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null)
             {
-                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams
-                    ("glyf", fileName);
+                throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
             }
             int glyph0 = 0;
             if (!glyphsUsed.Contains(glyph0))

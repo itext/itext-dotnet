@@ -113,8 +113,7 @@ namespace iTextSharp.Kernel.Pdf
             return new iTextSharp.Kernel.Pdf.PdfLiteral();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfLiteral literal = (iTextSharp.Kernel.Pdf.PdfLiteral)from;

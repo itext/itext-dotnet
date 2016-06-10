@@ -78,10 +78,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
 
         protected internal IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> children;
 
-        /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.
-        ///     </summary>
-        /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.
-        ///     </param>
+        /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.</summary>
+        /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public PdfLayer(PdfDictionary layerDictionary)
             : base(layerDictionary)
@@ -115,8 +113,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="title">the title text</param>
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <returns>the title layer</returns>
-        public static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument
-             document)
+        public static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document)
         {
             iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
             document.GetCatalog().GetOCProperties(true).RegisterLayer(layer);
@@ -136,8 +133,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// </remarks>
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <param name="group">the radio group</param>
-        public static void AddOCGRadioGroup(PdfDocument document, IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer
-            > group)
+        public static void AddOCGRadioGroup(PdfDocument document, IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> group
+            )
         {
             document.GetCatalog().GetOCProperties(true).AddOCGRadioGroup(group);
         }
@@ -301,8 +298,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// Used by the creating application to store application-specific
         /// data associated with this optional content group.
         /// </summary>
-        /// <param name="creator">a text string specifying the application that created the group
-        ///     </param>
+        /// <param name="creator">a text string specifying the application that created the group</param>
         /// <param name="subtype">
         /// a string defining the type of content controlled by the group. Suggested
         /// values include but are not limited to <B>Artwork</B>, for graphic-design or publishing
@@ -433,16 +429,14 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// Specifies one or more users for whom this optional content group
         /// is primarily intended.
         /// </summary>
-        /// <param name="type">a name that can be Ind (individual), Ttl (title), or Org (organization).
-        ///     </param>
+        /// <param name="type">a name that can be Ind (individual), Ttl (title), or Org (organization).</param>
         /// <param name="names">
         /// one or more text strings representing
         /// the name(s) of the individual, position or organization
         /// </param>
         public virtual void SetUser(String type, params String[] names)
         {
-            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org"
-                ))
+            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org"))
             {
                 throw new ArgumentException("Illegal type argument");
             }
@@ -496,8 +490,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
             return GetPdfObject().GetIndirectReference();
         }
 
-        /// <summary>Gets the title of the layer if it is a title layer, or null if it is a usual layer.
-        ///     </summary>
+        /// <summary>Gets the title of the layer if it is a title layer, or null if it is a usual layer.</summary>
         public virtual String GetTitle()
         {
             return title;
@@ -509,12 +502,10 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// BE CAREFUL! Do not try to add a child layer using the resultant child list,
         /// use #addChild method instead.
         /// </remarks>
-        /// <returns>the list of the current child layers, null if the layer has no children.
-        ///     </returns>
+        /// <returns>the list of the current child layers, null if the layer has no children.</returns>
         public virtual IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> GetChildren()
         {
-            return children == null ? null : new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>(children
-                );
+            return children == null ? null : new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>(children);
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect()
@@ -532,15 +523,14 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="document">the document this title layer belongs to</param>
         /// <returns>the created layer</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(
-            String title, PdfDocument document)
+        protected internal static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument
+             document)
         {
             if (title == null)
             {
                 throw new ArgumentException("Invalid title argument");
             }
-            iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = new iTextSharp.Kernel.Pdf.Layer.PdfLayer
-                (document);
+            iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = new iTextSharp.Kernel.Pdf.Layer.PdfLayer(document);
             layer.title = title;
             return layer;
         }

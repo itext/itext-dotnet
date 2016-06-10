@@ -75,12 +75,11 @@ namespace iTextSharp.Kernel.Geom
         {
         }
 
-        /// <summary>Calculates the common rectangle which includes all the input rectangles.
-        ///     </summary>
+        /// <summary>Calculates the common rectangle which includes all the input rectangles.</summary>
         /// <param name="rectangles">list of input rectangles.</param>
         /// <returns>common rectangle.</returns>
-        public static iTextSharp.Kernel.Geom.Rectangle GetCommonRectangle(params iTextSharp.Kernel.Geom.Rectangle
-            [] rectangles)
+        public static iTextSharp.Kernel.Geom.Rectangle GetCommonRectangle(params iTextSharp.Kernel.Geom.Rectangle[]
+             rectangles)
         {
             float ury = -float.MaxValue;
             float llx = float.MaxValue;
@@ -113,8 +112,7 @@ namespace iTextSharp.Kernel.Geom
             return new iTextSharp.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
         }
 
-        public virtual iTextSharp.Kernel.Geom.Rectangle SetBbox(float llx, float lly, float
-             urx, float ury)
+        public virtual iTextSharp.Kernel.Geom.Rectangle SetBbox(float llx, float lly, float urx, float ury)
         {
             // If llx is greater than urx, swap them (normalize)
             if (llx > urx)
@@ -257,8 +255,8 @@ namespace iTextSharp.Kernel.Geom
             return this;
         }
 
-        public virtual T ApplyMargins<T>(float topIndent, float rightIndent, float bottomIndent
-            , float leftIndent, bool reverse)
+        public virtual T ApplyMargins<T>(float topIndent, float rightIndent, float bottomIndent, float leftIndent, 
+            bool reverse)
             where T : iTextSharp.Kernel.Geom.Rectangle
         {
             x += leftIndent * (reverse ? -1 : 1);
@@ -274,9 +272,9 @@ namespace iTextSharp.Kernel.Geom
             double ry1 = GetY();
             double rx2 = rx1 + GetWidth();
             double ry2 = ry1 + GetHeight();
-            return (rx1 <= x1 && x1 <= rx2 && ry1 <= y1 && y1 <= ry2) || (rx1 <= x2 && x2 <= 
-                rx2 && ry1 <= y2 && y2 <= ry2) || LinesIntersect(rx1, ry1, rx2, ry2, x1, y1, 
-                x2, y2) || LinesIntersect(rx2, ry1, rx1, ry2, x1, y1, x2, y2);
+            return (rx1 <= x1 && x1 <= rx2 && ry1 <= y1 && y1 <= ry2) || (rx1 <= x2 && x2 <= rx2 && ry1 <= y2 && y2 <=
+                 ry2) || LinesIntersect(rx1, ry1, rx2, ry2, x1, y1, x2, y2) || LinesIntersect(rx2, ry1, rx1, ry2, x1, 
+                y1, x2, y2);
         }
 
         public override String ToString()
@@ -294,8 +292,7 @@ namespace iTextSharp.Kernel.Geom
             return EqualsWithEpsilon(that, EPS);
         }
 
-        public virtual bool EqualsWithEpsilon(iTextSharp.Kernel.Geom.Rectangle that, float
-             eps)
+        public virtual bool EqualsWithEpsilon(iTextSharp.Kernel.Geom.Rectangle that, float eps)
         {
             float dx = Math.Abs(x - that.x);
             float dy = Math.Abs(y - that.y);
@@ -304,8 +301,8 @@ namespace iTextSharp.Kernel.Geom
             return dx < eps && dy < eps && dw < eps && dh < eps;
         }
 
-        private static bool LinesIntersect(double x1, double y1, double x2, double y2, double
-             x3, double y3, double x4, double y4)
+        private static bool LinesIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double
+             x4, double y4)
         {
             /*
             * A = (x2-x1, y2-y1) B = (x3-x1, y3-y1) C = (x4-x1, y4-y1) D = (x4-x3,
@@ -332,13 +329,11 @@ namespace iTextSharp.Kernel.Geom
             {
                 if (x2 != 0.0)
                 {
-                    return (x4 * x3 <= 0.0) || ((x3 * x2 >= 0.0) && (x2 > 0.0 ? x3 <= x2 || x4 <= x2 : 
-                        x3 >= x2 || x4 >= x2));
+                    return (x4 * x3 <= 0.0) || ((x3 * x2 >= 0.0) && (x2 > 0.0 ? x3 <= x2 || x4 <= x2 : x3 >= x2 || x4 >= x2));
                 }
                 if (y2 != 0.0)
                 {
-                    return (y4 * y3 <= 0.0) || ((y3 * y2 >= 0.0) && (y2 > 0.0 ? y3 <= y2 || y4 <= y2 : 
-                        y3 >= y2 || y4 >= y2));
+                    return (y4 * y3 <= 0.0) || ((y3 * y2 >= 0.0) && (y2 > 0.0 ? y3 <= y2 || y4 <= y2 : y3 >= y2 || y4 >= y2));
                 }
                 return false;
             }

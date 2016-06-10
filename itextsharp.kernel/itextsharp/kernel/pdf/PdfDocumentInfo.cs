@@ -77,29 +77,25 @@ namespace iTextSharp.Kernel.Pdf
 
         public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author)
         {
-            GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG
-                ));
+            GetPdfObject().Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
         public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject)
         {
-            GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG
-                ));
+            GetPdfObject().Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
         public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords)
         {
-            GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG
-                ));
+            GetPdfObject().Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
         public virtual iTextSharp.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator)
         {
-            GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG
-                ));
+            GetPdfObject().Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
             return this;
         }
 

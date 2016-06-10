@@ -58,29 +58,25 @@ namespace iTextSharp.Kernel.Pdf.Annot
             pdfObject.Put(PdfName.Type, PdfName.FixedPrint);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(PdfArray matrix
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(PdfArray matrix)
         {
             GetPdfObject().Put(PdfName.Matrix, matrix);
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(float[] matrix
-            )
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetMatrix(float[] matrix)
         {
             GetPdfObject().Put(PdfName.Matrix, new PdfArray(matrix));
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetHorizontalTranslation
-            (float horizontal)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetHorizontalTranslation(float horizontal)
         {
             GetPdfObject().Put(PdfName.H, new PdfNumber(horizontal));
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetVerticalTranslation(float
-             vertical)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFixedPrint SetVerticalTranslation(float vertical)
         {
             GetPdfObject().Put(PdfName.V, new PdfNumber(vertical));
             return this;

@@ -270,8 +270,7 @@ namespace iTextSharp.IO.Font
             normalizationCoef = (float)FontProgram.UNITS_NORMALIZATION / unitsPerEm;
         }
 
-        protected internal virtual void UpdateBbox(float llx, float lly, float urx, float
-             ury)
+        protected internal virtual void UpdateBbox(float llx, float lly, float urx, float ury)
         {
             bbox[0] = (int)(llx * normalizationCoef);
             bbox[1] = (int)(lly * normalizationCoef);

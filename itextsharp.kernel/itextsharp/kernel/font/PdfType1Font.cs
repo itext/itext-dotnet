@@ -81,10 +81,8 @@ namespace iTextSharp.Kernel.Font
         {
             newFont = false;
             CheckFontDictionary(fontDictionary, PdfName.Type1);
-            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode
-                ));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding
-                ), toUni);
+            CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
             fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUni);
             if (fontProgram is IDocFontProgram)
             {
@@ -123,8 +121,7 @@ namespace iTextSharp.Kernel.Font
                 }
                 else
                 {
-                    glyph = ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(
-                        unicode));
+                    glyph = ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                     if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
                     {
                         // Handle special layout characters like sfthyphen (00AD).
@@ -173,8 +170,7 @@ namespace iTextSharp.Kernel.Font
                         int[] fontStreamLengths = ((Type1Font)GetFontProgram()).GetFontStreamLengths();
                         for (int k = 0; k < fontStreamLengths.Length; ++k)
                         {
-                            fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k
-                                ]));
+                            fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
                         }
                         fontDescriptor.Put(PdfName.FontFile, fontStream);
                     }

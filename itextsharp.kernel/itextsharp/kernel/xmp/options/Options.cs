@@ -55,8 +55,7 @@ namespace iTextSharp.Kernel.XMP.Options
 
         /// <summary>Constructor with the options bit mask.</summary>
         /// <param name="options">the options bit mask</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not correct
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not correct</exception>
         public Options(int options)
         {
             // EMTPY
@@ -98,8 +97,7 @@ namespace iTextSharp.Kernel.XMP.Options
             return (options & optionBit) != 0;
         }
 
-        /// <param name="optionBits">the binary bit or bits that shall be set to the given value
-        ///     </param>
+        /// <param name="optionBits">the binary bit or bits that shall be set to the given value</param>
         /// <param name="value">the boolean value to set</param>
         public virtual void SetOption(int optionBits, bool value)
         {
@@ -194,8 +192,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// (it has to be made public therefore).
         /// </remarks>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal virtual void AssertConsistency(int options)
         {
         }
@@ -210,8 +207,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// -method is called.
         /// </remarks>
         /// <param name="options">the options to check</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are invalid.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are invalid.</exception>
         private void AssertOptionsValid(int options)
         {
             int invalidOptions = options & ~GetValidOptions();
@@ -221,8 +217,8 @@ namespace iTextSharp.Kernel.XMP.Options
             }
             else
             {
-                throw new XMPException("The option bit(s) 0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
-                    (invalidOptions) + " are invalid!", XMPError.BADOPTIONS);
+                throw new XMPException("The option bit(s) 0x" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(invalidOptions
+                    ) + " are invalid!", XMPError.BADOPTIONS);
             }
         }
 

@@ -66,12 +66,11 @@ namespace iTextSharp.Kernel.Pdf.Annot
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream
-            , float sampleRate, PdfName encoding, int channels, int sampleSizeInBits)
+        public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
+             encoding, int channels, int sampleSizeInBits)
             : base(rect)
         {
-            PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile
-                (soundStream));
+            PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile(soundStream));
             sound.Put(PdfName.R, new PdfNumber(sampleRate));
             sound.Put(PdfName.E, encoding);
             sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));

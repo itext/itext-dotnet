@@ -95,8 +95,7 @@ namespace iTextSharp.IO.Codec
         {
             if (data[0] == (byte)0x00 && data[1] == (byte)0x01)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Tiff50StyleLzwCodesAreNotSupported
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Tiff50StyleLzwCodesAreNotSupported);
             }
             InitializeStringTable();
             this.data = data;

@@ -50,8 +50,8 @@ namespace iTextSharp.IO.Source
     {
         internal static bool HighPrecision = false;
 
-        private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55
-            , 56, 57, 97, 98, 99, 100, 101, 102 };
+        private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100
+            , 101, 102 };
 
         private static readonly byte[] zero = new byte[] { 48 };
 
@@ -149,8 +149,7 @@ namespace iTextSharp.IO.Source
             return GetIsoBytes(d, buffer, HighPrecision);
         }
 
-        internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision
-            )
+        internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision)
         {
             if (highPrecision)
             {
@@ -284,8 +283,7 @@ namespace iTextSharp.IO.Source
                     {
                         v /= 100;
                     }
-                    buf = buffer != null ? buffer : new ByteBuffer(intLen + fracLen + (negative ? 1 : 
-                        0));
+                    buf = buffer != null ? buffer : new ByteBuffer(intLen + fracLen + (negative ? 1 : 0));
                     for (int i = 0; i < fracLen - 1; i++)
                     {
                         //-1 because fracLen include '.'

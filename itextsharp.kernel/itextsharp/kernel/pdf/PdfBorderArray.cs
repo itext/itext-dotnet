@@ -50,8 +50,7 @@ namespace iTextSharp.Kernel.Pdf
         {
         }
 
-        public PdfBorderArray(float hRadius, float vRadius, float width, PdfDashPattern dash
-            )
+        public PdfBorderArray(float hRadius, float vRadius, float width, PdfDashPattern dash)
             : base(new PdfArray(new float[] { hRadius, vRadius, width }))
         {
             if (dash != null)

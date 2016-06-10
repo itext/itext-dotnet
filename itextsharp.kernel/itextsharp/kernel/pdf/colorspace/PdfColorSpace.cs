@@ -48,9 +48,8 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 {
     public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject>
     {
-        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName
-            >(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.DeviceGray, PdfName.DeviceRGB
-            , PdfName.DeviceCMYK, PdfName.Pattern));
+        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            (PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName.Pattern));
 
         protected internal PdfColorSpace(PdfObject pdfObject)
             : base(pdfObject)
@@ -59,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
         public abstract int GetNumberOfComponents();
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject
-             pdfObject)
+        public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject pdfObject)
         {
             if (pdfObject.IsIndirectReference())
             {
@@ -132,8 +130,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                                                     {
                                                         if (PdfName.DeviceN.Equals(csType))
                                                         {
-                                                            return array.Size() == 4 ? new PdfSpecialCs.DeviceN(array) : new PdfSpecialCs.NChannel
-                                                                (array);
+                                                            return array.Size() == 4 ? new PdfSpecialCs.DeviceN(array) : new PdfSpecialCs.NChannel(array);
                                                         }
                                                         else
                                                         {

@@ -67,8 +67,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
-             document, PdfIndirectReference reference)
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
+             reference)
         {
             GetPdfObject().MakeIndirect(document, reference);
             return this;
@@ -77,8 +77,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument
-             document)
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document)
         {
             return MakeIndirect(document, null);
         }

@@ -82,8 +82,7 @@ namespace iTextSharp.Forms.Xfa
         /// name may contain the #subform name part.
         /// </remarks>
         /// <param name="acroShort2LongName">the mapping from short names to long names</param>
-        public virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName
-            )
+        public virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName)
         {
             this.acroShort2LongName = acroShort2LongName;
         }

@@ -49,8 +49,7 @@ using Org.BouncyCastle.X509;
 
 namespace iTextSharp.Signatures
 {
-    /// <summary>This class consists of some methods that allow you to verify certificates.
-    ///     </summary>
+    /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
     public class CertificateVerification
     {
         /// <summary>Verifies a single certificate for the current date.</summary>
@@ -60,8 +59,7 @@ namespace iTextSharp.Signatures
         /// a <CODE>String</CODE> with the error description or <CODE>null</CODE>
         /// if no error
         /// </returns>
-        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl>
-             crls)
+        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls)
         {
             return VerifyCertificate(cert, crls, SignUtils.GetCurrentTime());
         }
@@ -74,8 +72,7 @@ namespace iTextSharp.Signatures
         /// a <CODE>String</CODE> with the error description or <CODE>null</CODE>
         /// if no error
         /// </returns>
-        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl>
-             crls, DateTime calendar)
+        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls, DateTime calendar)
         {
             if (SignUtils.HasUnsupportedCriticalExtension(cert))
             {
@@ -111,8 +108,8 @@ namespace iTextSharp.Signatures
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
-        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
-            , List<X509Certificate> keystore, ICollection<X509Crl> crls)
+        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
+             keystore, ICollection<X509Crl> crls)
         {
             return VerifyCertificates(certs, keystore, crls, SignUtils.GetCurrentTime());
         }
@@ -127,9 +124,8 @@ namespace iTextSharp.Signatures
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
-        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
-            , List<X509Certificate> keystore, ICollection<X509Crl> crls, DateTime calendar
-            )
+        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
+             keystore, ICollection<X509Crl> crls, DateTime calendar)
         {
             IList<VerificationException> result = new List<VerificationException>();
             for (int k = 0; k < certs.Length; ++k)
@@ -207,8 +203,8 @@ namespace iTextSharp.Signatures
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
-        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
-            , List<X509Certificate> keystore)
+        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
+             keystore)
         {
             return VerifyCertificates(certs, keystore, SignUtils.GetCurrentTime());
         }
@@ -222,8 +218,8 @@ namespace iTextSharp.Signatures
         /// <CODE>Object[]{cert,error}</CODE> where <CODE>cert</CODE> is the
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
-        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs
-            , List<X509Certificate> keystore, DateTime calendar)
+        public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
+             keystore, DateTime calendar)
         {
             return VerifyCertificates(certs, keystore, null, calendar);
         }
@@ -231,11 +227,9 @@ namespace iTextSharp.Signatures
         /// <summary>Verifies an OCSP response against a KeyStore.</summary>
         /// <param name="ocsp">the OCSP response</param>
         /// <param name="keystore">the <CODE>KeyStore</CODE></param>
-        /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider
-        ///     </param>
+        /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
-        public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate>
-             keystore)
+        public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore)
         {
             try
             {
@@ -259,11 +253,9 @@ namespace iTextSharp.Signatures
         /// <summary>Verifies a time stamp against a KeyStore.</summary>
         /// <param name="ts">the time stamp</param>
         /// <param name="keystore">the <CODE>KeyStore</CODE></param>
-        /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider
-        ///     </param>
+        /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
-        public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate>
-             keystore)
+        public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore)
         {
             try
             {

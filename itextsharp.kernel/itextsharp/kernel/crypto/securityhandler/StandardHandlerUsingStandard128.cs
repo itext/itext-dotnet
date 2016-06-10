@@ -47,16 +47,15 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class StandardHandlerUsingStandard128 : StandardHandlerUsingStandard40
     {
-        public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[]
-             userPassword, byte[] ownerPassword, int permissions, bool encryptMetadata, bool
-             embeddedFilesOnly, byte[] documentId)
-            : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata
-                , embeddedFilesOnly, documentId)
+        public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
+            : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
+                documentId)
         {
         }
 
-        public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[]
-             password, byte[] documentId, bool encryptMetadata)
+        public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId
+            , bool encryptMetadata)
             : base(encryptionDictionary, password, documentId, encryptMetadata)
         {
         }
@@ -68,8 +67,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             this.permissions = permissions;
         }
 
-        protected internal override byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad
-            )
+        protected internal override byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad)
         {
             byte[] ownerKey = new byte[32];
             byte[] digest = md5.Digest(ownerPad);
@@ -93,8 +91,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return ownerKey;
         }
 
-        protected internal override void ComputeGlobalEncryptionKey(byte[] userPad, byte[]
-             ownerKey, bool encryptMetadata)
+        protected internal override void ComputeGlobalEncryptionKey(byte[] userPad, byte[] ownerKey, bool encryptMetadata
+            )
         {
             mkey = new byte[keyLength / 8];
             // fixed by ujihara in order to follow PDF reference
@@ -147,8 +145,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return userKey;
         }
 
-        protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary
-            , bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool encryptMetadata
+            , bool embeddedFilesOnly)
         {
             if (encryptMetadata)
             {

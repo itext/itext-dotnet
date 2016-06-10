@@ -54,8 +54,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <summary>Asserts that a property name is set.</summary>
         /// <param name="propName">a property name or path</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Property name is null or empty
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Property name is null or empty</exception>
         public static void AssertPropName(String propName)
         {
             if (propName == null || propName.Length == 0)
@@ -88,8 +87,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <summary>Asserts that a specific language is set.</summary>
         /// <param name="specificLang">a specific lang</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Specific language is null or empty
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Specific language is null or empty</exception>
         public static void AssertSpecificLang(String specificLang)
         {
             if (specificLang == null || specificLang.Length == 0)
@@ -100,8 +98,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <summary>Asserts that a struct name is set.</summary>
         /// <param name="structName">a struct name</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Struct name is null or empty
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Struct name is null or empty</exception>
         public static void AssertStructName(String structName)
         {
             if (structName == null || structName.Length == 0)
@@ -112,8 +109,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <summary>Asserts that any string parameter is set.</summary>
         /// <param name="param">any string parameter</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the parameter is null or has length 0.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the parameter is null or has length 0.</exception>
         public static void AssertNotNull(Object param)
         {
             if (param == null)
@@ -136,8 +132,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// ).
         /// </summary>
         /// <param name="xmp">the XMP object</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">A wrong implentaion is used.
-        ///     </exception>
+        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">A wrong implentaion is used.</exception>
         public static void AssertImplementation(XMPMeta xmp)
         {
             if (xmp == null)
@@ -148,8 +143,7 @@ namespace iTextSharp.Kernel.XMP.Impl
             {
                 if (!(xmp is XMPMetaImpl))
                 {
-                    throw new XMPException("The XMPMeta-object is not compatible with this implementation"
-                        , XMPError.BADPARAM);
+                    throw new XMPException("The XMPMeta-object is not compatible with this implementation", XMPError.BADPARAM);
                 }
             }
         }

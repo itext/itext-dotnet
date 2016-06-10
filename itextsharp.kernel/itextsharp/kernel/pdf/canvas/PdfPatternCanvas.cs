@@ -52,15 +52,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas
     {
         private readonly PdfPattern.Tiling tilingPattern;
 
-        /// <summary>Creates PdfPatternCanvas from content stream of page, form XObject, pattern etc.
-        ///     </summary>
+        /// <summary>Creates PdfPatternCanvas from content stream of page, form XObject, pattern etc.</summary>
         /// <param name="contentStream">@see PdfStream.</param>
         /// <param name="resources">the resources, a specialized dictionary that can be used by PDF instructions in the content stream
         ///     </param>
-        /// <param name="document">the document that the resulting content stream will be written to
-        ///     </param>
-        public PdfPatternCanvas(PdfStream contentStream, PdfResources resources, PdfDocument
-             document)
+        /// <param name="document">the document that the resulting content stream will be written to</param>
+        public PdfPatternCanvas(PdfStream contentStream, PdfResources resources, PdfDocument document)
             : base(contentStream, resources, document)
         {
             this.tilingPattern = new PdfPattern.Tiling(contentStream);
@@ -68,16 +65,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 
         /// <summary>Creates PdfPatternCanvas for a document from a provided Tiling pattern</summary>
         /// <param name="pattern">@see PdfPattern.Tiling. The Tiling pattern must be colored</param>
-        /// <param name="document">the document that the resulting content stream will be written to
-        ///     </param>
+        /// <param name="document">the document that the resulting content stream will be written to</param>
         public PdfPatternCanvas(PdfPattern.Tiling pattern, PdfDocument document)
             : base((PdfStream)pattern.GetPdfObject(), pattern.GetResources(), document)
         {
             this.tilingPattern = pattern;
         }
 
-        public override PdfCanvas SetColor(PdfColorSpace colorSpace, float[] colorValue, 
-            PdfPattern pattern, bool fill)
+        public override PdfCanvas SetColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern pattern, bool 
+            fill)
         {
             CheckNoColor();
             return base.SetColor(colorSpace, colorValue, pattern, fill);

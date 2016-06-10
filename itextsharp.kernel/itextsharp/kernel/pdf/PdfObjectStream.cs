@@ -55,8 +55,7 @@ namespace iTextSharp.Kernel.Pdf
         protected internal PdfNumber size = new PdfNumber(0);
 
         /// <summary>Stream containing object indices, a heading part of object stream.</summary>
-        protected internal PdfOutputStream indexStream = new PdfOutputStream(new ByteArrayOutputStream
-            ());
+        protected internal PdfOutputStream indexStream = new PdfOutputStream(new ByteArrayOutputStream());
 
         public PdfObjectStream(PdfDocument doc)
             : base()
@@ -68,8 +67,7 @@ namespace iTextSharp.Kernel.Pdf
             Put(PdfName.First, new PdfNumber(indexStream.GetCurrentPos()));
         }
 
-        /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.
-        ///     </summary>
+        /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
         /// <remarks>
         /// This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.
         /// NOTE Only for internal use in PdfWriter!
@@ -78,12 +76,10 @@ namespace iTextSharp.Kernel.Pdf
         internal PdfObjectStream(iTextSharp.Kernel.Pdf.PdfObjectStream prev)
             : this(prev.GetIndirectReference().GetDocument())
         {
-            ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream
-                ().GetOutputStream();
+            ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream().GetOutputStream();
             prevOutputStream.JReset();
             InitOutputStream(prevOutputStream);
-            ByteArrayOutputStream prevIndexStream = ((ByteArrayOutputStream)indexStream.GetOutputStream
-                ());
+            ByteArrayOutputStream prevIndexStream = ((ByteArrayOutputStream)indexStream.GetOutputStream());
             prevIndexStream.JReset();
             indexStream = new PdfOutputStream(prevIndexStream);
         }
@@ -98,11 +94,10 @@ namespace iTextSharp.Kernel.Pdf
                 throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);
             }
             PdfOutputStream outputStream = GetOutputStream();
-            indexStream.WriteInteger(@object.GetIndirectReference().GetObjNumber()).WriteSpace
-                ().WriteLong(outputStream.GetCurrentPos()).WriteSpace();
+            indexStream.WriteInteger(@object.GetIndirectReference().GetObjNumber()).WriteSpace().WriteLong(outputStream
+                .GetCurrentPos()).WriteSpace();
             outputStream.Write(@object);
-            @object.GetIndirectReference().SetObjStreamNumber(GetIndirectReference().GetObjNumber
-                ());
+            @object.GetIndirectReference().SetObjStreamNumber(GetIndirectReference().GetObjNumber());
             @object.GetIndirectReference().SetIndex(size.IntValue());
             outputStream.WriteSpace();
             size.Increment();

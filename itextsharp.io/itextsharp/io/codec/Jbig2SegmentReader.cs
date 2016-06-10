@@ -108,14 +108,14 @@ namespace iTextSharp.IO.Codec
 
         public const int EXTENSION = 62;
 
-        private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new 
-            SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment>();
+        private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment
+            >();
 
-        private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary
-            <int, Jbig2SegmentReader.Jbig2Page>();
+        private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Page> pages = new SortedDictionary<int, Jbig2SegmentReader.Jbig2Page
+            >();
 
-        private readonly ICollection<Jbig2SegmentReader.Jbig2Segment> globals = new SortedSet
-            <Jbig2SegmentReader.Jbig2Segment>();
+        private readonly ICollection<Jbig2SegmentReader.Jbig2Segment> globals = new SortedSet<Jbig2SegmentReader.Jbig2Segment
+            >();
 
         private RandomAccessFileOrArray ra;
 
@@ -193,8 +193,8 @@ namespace iTextSharp.IO.Codec
 
             private readonly Jbig2SegmentReader sr;
 
-            private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary
-                <int, Jbig2SegmentReader.Jbig2Segment>();
+            private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment
+                >();
 
             public int pageBitmapWidth = -1;
 
@@ -281,8 +281,7 @@ namespace iTextSharp.IO.Codec
         {
             if (this.read)
             {
-                throw new InvalidOperationException("already.attempted.a.read.on.this.jbig2.file"
-                    );
+                throw new InvalidOperationException("already.attempted.a.read.on.this.jbig2.file");
             }
             this.read = true;
             ReadFileHeader();
@@ -337,8 +336,8 @@ namespace iTextSharp.IO.Codec
                 Jbig2SegmentReader.Jbig2Page p = pages.Get(s.page);
                 if (p == null)
                 {
-                    throw new iTextSharp.IO.IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1"
-                        ).SetMessageParams(s.page);
+                    throw new iTextSharp.IO.IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1").SetMessageParams
+                        (s.page);
                 }
                 p.pageBitmapWidth = page_bitmap_width;
                 p.pageBitmapHeight = page_bitmap_height;
@@ -351,8 +350,7 @@ namespace iTextSharp.IO.Codec
             int ptr = (int)ra.GetPosition();
             // 7.2.1
             int segment_number = ra.ReadInt();
-            Jbig2SegmentReader.Jbig2Segment s = new Jbig2SegmentReader.Jbig2Segment(segment_number
-                );
+            Jbig2SegmentReader.Jbig2Segment s = new Jbig2SegmentReader.Jbig2Segment(segment_number);
             // 7.2.3
             int segment_header_flags = ra.Read();
             bool deferred_non_retain = (segment_header_flags & 0x80) == 0x80;
@@ -443,8 +441,8 @@ namespace iTextSharp.IO.Codec
             }
             if (segment_page_association < 0)
             {
-                throw new iTextSharp.IO.IOException("page.1.invalid.for.segment.2.starting.at.3")
-                    .SetMessageParams(segment_page_association, segment_number, ptr);
+                throw new iTextSharp.IO.IOException("page.1.invalid.for.segment.2.starting.at.3").SetMessageParams(segment_page_association
+                    , segment_number, ptr);
             }
             s.page = segment_page_association;
             // so we can change the page association at embedding time.
@@ -452,8 +450,7 @@ namespace iTextSharp.IO.Codec
             s.page_association_offset = page_association_offset;
             if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association))
             {
-                pages[segment_page_association] = new Jbig2SegmentReader.Jbig2Page(segment_page_association
-                    , this);
+                pages[segment_page_association] = new Jbig2SegmentReader.Jbig2Page(segment_page_association, this);
             }
             if (segment_page_association > 0)
             {
@@ -481,14 +478,12 @@ namespace iTextSharp.IO.Codec
             ra.Seek(0);
             byte[] idstring = new byte[8];
             ra.Read(idstring);
-            byte[] refidstring = new byte[] { (byte)0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 
-                0x0A };
+            byte[] refidstring = new byte[] { (byte)0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 0x0A };
             for (int i = 0; i < idstring.Length; i++)
             {
                 if (idstring[i] != refidstring[i])
                 {
-                    throw new iTextSharp.IO.IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams
-                        (i);
+                    throw new iTextSharp.IO.IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams(i);
                 }
             }
             int fileheaderflags = ra.Read();

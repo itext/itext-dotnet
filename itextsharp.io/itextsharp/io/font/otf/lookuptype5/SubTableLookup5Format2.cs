@@ -47,8 +47,7 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype5
 {
-    /// <summary>Contextual Substitution Subtable: Class-based context glyph substitution
-    ///     </summary>
+    /// <summary>Contextual Substitution Subtable: Class-based context glyph substitution</summary>
     public class SubTableLookup5Format2 : ContextualSubTable
     {
         private ICollection<int> substCoverageGlyphIds;
@@ -57,25 +56,22 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
         private OtfClass classDefinition;
 
-        public SubTableLookup5Format2(OpenTypeFontTableReader openReader, int lookupFlag, 
-            ICollection<int> substCoverageGlyphIds, OtfClass classDefinition)
+        public SubTableLookup5Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> substCoverageGlyphIds
+            , OtfClass classDefinition)
             : base(openReader, lookupFlag)
         {
             this.substCoverageGlyphIds = substCoverageGlyphIds;
             this.classDefinition = classDefinition;
         }
 
-        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets
-            )
+        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets)
         {
             this.subClassSets = subClassSets;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
         {
-            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag
-                ))
+            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
             {
                 int gClass = classDefinition.GetOtfClass(startId);
                 return subClassSets[gClass];
@@ -91,8 +87,8 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
             private OtfClass classDefinition;
 
-            public SubstRuleFormat2(SubTableLookup5Format2 subTable, int[] inputClassIds, SubstLookupRecord
-                [] substLookupRecords)
+            public SubstRuleFormat2(SubTableLookup5Format2 subTable, int[] inputClassIds, SubstLookupRecord[] substLookupRecords
+                )
             {
                 // inputClassIds array omits the first class in the sequence,
                 // the first class is defined by corresponding index of subClassSet array

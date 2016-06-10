@@ -56,8 +56,8 @@ namespace iTextSharp.Signatures
     public class CRLVerifier : RootStoreVerifier
     {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(
-            iTextSharp.Signatures.CRLVerifier));
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CRLVerifier
+            ));
 
         /// <summary>The list of CRLs to check for revocation date.</summary>
         internal IList<X509Crl> crls;
@@ -87,8 +87,8 @@ namespace iTextSharp.Signatures
         ///     "/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
+             signDate)
         {
             IList<VerificationOK> result = new List<VerificationOK>();
             int validCrlsFound = 0;
@@ -117,8 +117,8 @@ namespace iTextSharp.Signatures
             LOGGER.Info("Valid CRLs found: " + validCrlsFound);
             if (validCrlsFound > 0)
             {
-                result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound
-                     + (online ? " (online)" : "")));
+                result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound + (online ? 
+                    " (online)" : "")));
             }
             if (verifier != null)
             {
@@ -135,16 +135,16 @@ namespace iTextSharp.Signatures
         /// <param name="signDate">the sign date</param>
         /// <returns>true if the verification succeeded</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate
-             issuerCert, DateTime signDate)
+        public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate issuerCert, DateTime signDate
+            )
         {
             if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE)
             {
                 return false;
             }
             // We only check CRLs valid on the signing date for which the issuer matches
-            if (crl.IssuerDN.Equals(signCert.IssuerDN) && signDate.After(crl.ThisUpdate) && signDate
-                .Before(crl.NextUpdate))
+            if (crl.IssuerDN.Equals(signCert.IssuerDN) && signDate.After(crl.ThisUpdate) && signDate.Before(crl.NextUpdate
+                ))
             {
                 // the signing certificate may not be revoked
                 if (IsSignatureValid(crl, issuerCert) && crl.IsRevoked(signCert))
@@ -156,13 +156,11 @@ namespace iTextSharp.Signatures
             return false;
         }
 
-        /// <summary>Fetches a CRL for a specific certificate online (without further checking).
-        ///     </summary>
+        /// <summary>Fetches a CRL for a specific certificate online (without further checking).</summary>
         /// <param name="signCert">the certificate</param>
         /// <param name="issuerCert">its issuer</param>
         /// <returns>an X509CRL object</returns>
-        public virtual X509Crl GetCRL(X509Certificate signCert, X509Certificate issuerCert
-            )
+        public virtual X509Crl GetCRL(X509Certificate signCert, X509Certificate issuerCert)
         {
             if (issuerCert == null)
             {
@@ -177,8 +175,7 @@ namespace iTextSharp.Signatures
                     return null;
                 }
                 LOGGER.Info("Getting CRL from " + crlurl);
-                return (X509Crl)SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream
-                    (new Uri(crlurl)));
+                return (X509Crl)SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(crlurl)));
             }
             catch (System.IO.IOException)
             {
@@ -190,8 +187,7 @@ namespace iTextSharp.Signatures
             }
         }
 
-        /// <summary>Checks if a CRL verifies against the issuer certificate or a trusted anchor.
-        ///     </summary>
+        /// <summary>Checks if a CRL verifies against the issuer certificate or a trusted anchor.</summary>
         /// <param name="crl">the CRL</param>
         /// <param name="crlIssuer">the trusted anchor</param>
         /// <returns>true if the CRL can be trusted</returns>
@@ -207,8 +203,7 @@ namespace iTextSharp.Signatures
                 }
                 catch (GeneralSecurityException)
                 {
-                    LOGGER.Warn("CRL not issued by the same authority as the certificate that is being checked"
-                        );
+                    LOGGER.Warn("CRL not issued by the same authority as the certificate that is being checked");
                 }
             }
             // check the CRL against trusted anchors

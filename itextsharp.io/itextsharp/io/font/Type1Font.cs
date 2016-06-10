@@ -74,8 +74,7 @@ namespace iTextSharp.IO.Font
         private int[] fontStreamLengths;
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal static iTextSharp.IO.Font.Type1Font CreateStandardFont(String 
-            name)
+        protected internal static iTextSharp.IO.Font.Type1Font CreateStandardFont(String name)
         {
             if (FontConstants.BUILTIN_FONTS_14.Contains(name))
             {
@@ -83,14 +82,12 @@ namespace iTextSharp.IO.Font
             }
             else
             {
-                throw new iTextSharp.IO.IOException("1.is.not.a.standard.type1.font").SetMessageParams
-                    (name);
+                throw new iTextSharp.IO.IOException("1.is.not.a.standard.type1.font").SetMessageParams(name);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte
-            [] pfb)
+        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
         {
             CheckFilePath(metricsPath);
             CheckFilePath(binaryPath);
@@ -120,8 +117,7 @@ namespace iTextSharp.IO.Font
             {
                 flags |= 64;
             }
-            if (fontNames.GetFontName().Contains("Caps") || fontNames.GetFontName().EndsWith(
-                "SC"))
+            if (fontNames.GetFontName().Contains("Caps") || fontNames.GetFontName().EndsWith("SC"))
             {
                 flags |= 131072;
             }
@@ -309,22 +305,20 @@ namespace iTextSharp.IO.Font
                     case "FamilyName":
                     {
                         String familyName = tok.NextToken("\u00ff").Substring(1);
-                        fontNames.SetFamilyName(new String[][] { new String[] { "", "", "", familyName } }
-                            );
+                        fontNames.SetFamilyName(new String[][] { new String[] { "", "", "", familyName } });
                         break;
                     }
 
                     case "Weight":
                     {
-                        fontNames.SetWeight(FontNames.ConvertFontWeight(tok.NextToken("\u00ff").Substring
-                            (1)));
+                        fontNames.SetWeight(FontNames.ConvertFontWeight(tok.NextToken("\u00ff").Substring(1)));
                         break;
                     }
 
                     case "ItalicAngle":
                     {
-                        fontMetrics.SetItalicAngle(float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            ));
+                        fontMetrics.SetItalicAngle(float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture)
+                            );
                         break;
                     }
 
@@ -342,14 +336,10 @@ namespace iTextSharp.IO.Font
 
                     case "FontBBox":
                     {
-                        int llx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        int lly = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        int urx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            );
-                        int ury = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            );
+                        int llx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
+                        int lly = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
+                        int urx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
+                        int ury = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                         fontMetrics.SetBbox(llx, lly, urx, ury);
                         break;
                     }
@@ -404,15 +394,13 @@ namespace iTextSharp.IO.Font
 
                     case "StdHW":
                     {
-                        fontMetrics.SetStemH((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            ));
+                        fontMetrics.SetStemH((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture));
                         break;
                     }
 
                     case "StdVW":
                     {
-                        fontMetrics.SetStemV((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            ));
+                        fontMetrics.SetStemV((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture));
                         break;
                     }
 
@@ -428,13 +416,11 @@ namespace iTextSharp.IO.Font
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null)
                 {
-                    throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.1").SetMessageParams
-                        (metricsPath);
+                    throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.1").SetMessageParams(metricsPath);
                 }
                 else
                 {
-                    throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.the.metrics.file"
-                        );
+                    throw new iTextSharp.IO.IOException("missing.startcharmetrics.in.the.metrics.file");
                 }
             }
             avgWidth = 0;
@@ -475,8 +461,7 @@ namespace iTextSharp.IO.Font
 
                         case "WX":
                         {
-                            WX = (int)float.Parse(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                                );
+                            WX = (int)float.Parse(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         }
 
@@ -488,9 +473,8 @@ namespace iTextSharp.IO.Font
 
                         case "B":
                         {
-                            B = new int[] { System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32(
-                                tokc.NextToken()), System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32
-                                (tokc.NextToken()) };
+                            B = new int[] { System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32(tokc.NextToken()), System.Convert.ToInt32
+                                (tokc.NextToken()), System.Convert.ToInt32(tokc.NextToken()) };
                             break;
                         }
                     }
@@ -517,8 +501,7 @@ namespace iTextSharp.IO.Font
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null)
                 {
-                    throw new iTextSharp.IO.IOException("missing.endcharmetrics.in.1").SetMessageParams
-                        (metricsPath);
+                    throw new iTextSharp.IO.IOException("missing.endcharmetrics.in.1").SetMessageParams(metricsPath);
                 }
                 else
                 {
@@ -537,8 +520,7 @@ namespace iTextSharp.IO.Font
                 }
                 if (space != null)
                 {
-                    unicodeToGlyph[0x00A0] = new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space
-                        .GetBbox());
+                    unicodeToGlyph[0x00A0] = new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space.GetBbox());
                 }
             }
             bool endOfMetrics = false;
@@ -578,8 +560,7 @@ namespace iTextSharp.IO.Font
                     {
                         String first = tok.NextToken();
                         String second = tok.NextToken();
-                        int? width = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
-                            );
+                        int? width = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                         int firstUni = (int)AdobeGlyphList.NameToUnicode(first);
                         int secondUni = (int)AdobeGlyphList.NameToUnicode(second);
                         if (firstUni != -1 && secondUni != -1)
@@ -605,8 +586,7 @@ namespace iTextSharp.IO.Font
                     String metricsPath = fontParser.GetAfmPath();
                     if (metricsPath != null)
                     {
-                        throw new iTextSharp.IO.IOException("missing.endfontmetrics.in.1").SetMessageParams
-                            (metricsPath);
+                        throw new iTextSharp.IO.IOException("missing.endfontmetrics.in.1").SetMessageParams(metricsPath);
                     }
                     else
                     {
@@ -619,8 +599,7 @@ namespace iTextSharp.IO.Font
                 String metricsPath = fontParser.GetAfmPath();
                 if (metricsPath != null)
                 {
-                    throw new iTextSharp.IO.IOException("missing.endkernpairs.in.1").SetMessageParams
-                        (metricsPath);
+                    throw new iTextSharp.IO.IOException("missing.endkernpairs.in.1").SetMessageParams(metricsPath);
                 }
                 else
                 {
@@ -628,8 +607,8 @@ namespace iTextSharp.IO.Font
                 }
             }
             raf.Close();
-            isFontSpecific = !(encodingScheme.Equals("AdobeStandardEncoding") || encodingScheme
-                .Equals("StandardEncoding"));
+            isFontSpecific = !(encodingScheme.Equals("AdobeStandardEncoding") || encodingScheme.Equals("StandardEncoding"
+                ));
         }
     }
 }

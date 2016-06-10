@@ -47,17 +47,17 @@ namespace iTextSharp.Kernel.Color
 {
     public class DeviceCmyk : iTextSharp.Kernel.Color.Color
     {
-        public static readonly iTextSharp.Kernel.Color.DeviceCmyk CYAN = new iTextSharp.Kernel.Color.DeviceCmyk
-            (100, 0, 0, 0);
+        public static readonly iTextSharp.Kernel.Color.DeviceCmyk CYAN = new iTextSharp.Kernel.Color.DeviceCmyk(100
+            , 0, 0, 0);
 
         public static readonly iTextSharp.Kernel.Color.DeviceCmyk MAGENTA = new iTextSharp.Kernel.Color.DeviceCmyk
             (0, 100, 0, 0);
 
-        public static readonly iTextSharp.Kernel.Color.DeviceCmyk YELLOW = new iTextSharp.Kernel.Color.DeviceCmyk
-            (0, 0, 100, 0);
+        public static readonly iTextSharp.Kernel.Color.DeviceCmyk YELLOW = new iTextSharp.Kernel.Color.DeviceCmyk(
+            0, 0, 100, 0);
 
-        public static readonly iTextSharp.Kernel.Color.DeviceCmyk BLACK = new iTextSharp.Kernel.Color.DeviceCmyk
-            (0, 0, 0, 100);
+        public static readonly iTextSharp.Kernel.Color.DeviceCmyk BLACK = new iTextSharp.Kernel.Color.DeviceCmyk(0
+            , 0, 0, 100);
 
         public DeviceCmyk()
             : this(0f, 0f, 0f, 1f)
@@ -74,16 +74,14 @@ namespace iTextSharp.Kernel.Color
         {
         }
 
-        public static iTextSharp.Kernel.Color.DeviceCmyk MakeLighter(iTextSharp.Kernel.Color.DeviceCmyk
-             cmykColor)
+        public static iTextSharp.Kernel.Color.DeviceCmyk MakeLighter(iTextSharp.Kernel.Color.DeviceCmyk cmykColor)
         {
             DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
             DeviceRgb lighterRgb = DeviceRgb.MakeLighter((rgbEquivalent));
             return ConvertRgbToCmyk(lighterRgb);
         }
 
-        public static iTextSharp.Kernel.Color.DeviceCmyk MakeDarker(iTextSharp.Kernel.Color.DeviceCmyk
-             cmykColor)
+        public static iTextSharp.Kernel.Color.DeviceCmyk MakeDarker(iTextSharp.Kernel.Color.DeviceCmyk cmykColor)
         {
             DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
             DeviceRgb darkerRgb = DeviceRgb.MakeDarker(rgbEquivalent);

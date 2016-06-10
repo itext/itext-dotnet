@@ -49,8 +49,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <summary>Handles RunLengthDecode filter.</summary>
     public class RunLengthDecodeFilter : IFilterHandler
     {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             MemoryStream baos = new MemoryStream();
             byte dupCount;

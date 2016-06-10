@@ -6,11 +6,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class XMPMetadataTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/XmpWriterTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/XmpWriterTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/XmpWriterTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/XmpWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -26,8 +25,8 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos, new WriterProperties().AddXmpMetadata());
             PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle
-                ("Empty iText 7 Document");
+            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
+                );
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.CreationDate);
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);
             PdfPage page = pdfDoc.AddNewPage();
@@ -36,8 +35,8 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(ReadFile(sourceFolder + "emptyDocumentWithXmp.xml"
-                ).Length, pdfDocument.GetXmpMetadata().Length);
+            NUnit.Framework.Assert.AreEqual(ReadFile(sourceFolder + "emptyDocumentWithXmp.xml").Length, pdfDocument.GetXmpMetadata
+                ().Length);
             NUnit.Framework.Assert.IsNotNull(reader.pdfDocument.GetPage(1));
             reader.Close();
         }
@@ -50,8 +49,8 @@ namespace iTextSharp.Kernel.Pdf
             MemoryStream fos = new MemoryStream();
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle
-                ("Empty iText 7 Document");
+            pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
+                );
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.CreationDate);
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);
             PdfPage page = pdfDoc.AddNewPage();

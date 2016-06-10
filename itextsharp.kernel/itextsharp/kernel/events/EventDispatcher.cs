@@ -53,8 +53,8 @@ namespace iTextSharp.Kernel.Events
     /// </summary>
     public class EventDispatcher : IEventDispatcher
     {
-        protected internal IDictionary<String, IList<IEventHandler>> eventHandlers = new 
-            Dictionary<String, IList<IEventHandler>>();
+        protected internal IDictionary<String, IList<IEventHandler>> eventHandlers = new Dictionary<String, IList<
+            IEventHandler>>();
 
         public virtual void AddEventHandler(String type, IEventHandler handler)
         {

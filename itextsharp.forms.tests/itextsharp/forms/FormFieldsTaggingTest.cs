@@ -10,11 +10,10 @@ namespace iTextSharp.Forms
 {
     public class FormFieldsTaggingTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/forms/FormFieldsTaggingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/FormFieldsTaggingTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/forms/FormFieldsTaggingTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/forms/FormFieldsTaggingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -55,12 +54,9 @@ namespace iTextSharp.Forms
             pdfDoc.SetTagged();
             pdfDoc.InitializeOutlines();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            acroForm.AddField(PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 560, 20, 
-                20), "TestCheck", "1"));
-            PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"
-                ));
-            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier
-                ());
+            acroForm.AddField(PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 560, 20, 20), "TestCheck", "1"));
+            PdfDocument docToCopyFrom = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms07.pdf"));
+            docToCopyFrom.CopyPagesTo(1, docToCopyFrom.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
             CompareOutput(outFileName, cmpFileName);
         }
@@ -75,8 +71,8 @@ namespace iTextSharp.Forms
         {
             String outFileName = destinationFolder + "taggedPdfWithForms03.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"
-                ), new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
+                (outFileName));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
             acroForm.FlattenFields();
             pdfDoc.Close();
@@ -93,8 +89,8 @@ namespace iTextSharp.Forms
         {
             String outFileName = destinationFolder + "taggedPdfWithForms04.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms04.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"
-                ), new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
+                (outFileName));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, false);
             acroForm.RemoveField("TestCheck");
             acroForm.RemoveField("push");
@@ -157,10 +153,9 @@ namespace iTextSharp.Forms
             // Original document is already tagged, so there is no need to mark it as tagged again
             //        pdfDoc.setTagged();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle
-                (36, 650, 40, 20), "push", "Capcha");
-            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer
-                ();
+            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 650, 40, 20), "push"
+                , "Capcha");
+            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
             tagPointer.MoveToKid(PdfName.Div);
             acroForm.AddField(pushButton);
             pdfDoc.Close();
@@ -171,15 +166,14 @@ namespace iTextSharp.Forms
         {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
-            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup", "1"
-                );
+            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup", "1");
             PdfFormField.CreateRadioButton(pdfDoc, rect, group, "1");
             PdfFormField.CreateRadioButton(pdfDoc, rect1, group, "2");
             acroForm.AddField(group);
-            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle
-                (36, 650, 40, 20), "push", "Capcha");
-            PdfButtonFormField checkBox = PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36
-                , 560, 20, 20), "TestCheck", "1");
+            PdfButtonFormField pushButton = PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 650, 40, 20), "push"
+                , "Capcha");
+            PdfButtonFormField checkBox = PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 560, 20, 20), "TestCheck"
+                , "1");
             acroForm.AddField(pushButton);
             acroForm.AddField(checkBox);
         }
@@ -196,8 +190,8 @@ namespace iTextSharp.Forms
             {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
-            compareResult = compareTool.CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff" + outFileName);
+            compareResult = compareTool.CompareByContent(outFileName, cmpFileName, destinationFolder, "diff" + outFileName
+                );
             if (compareResult != null)
             {
                 NUnit.Framework.Assert.Fail(compareResult);

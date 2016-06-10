@@ -65,8 +65,7 @@ namespace iTextSharp.IO.Font
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeCollection(byte[] ttc, String encoding)
         {
-            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc
-                ));
+            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             this.ttc = ttc;
             this.encoding = encoding;
             InitFontSize();
@@ -77,11 +76,9 @@ namespace iTextSharp.IO.Font
         {
             if (!FileUtil.FileExists(ttcPath))
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).
-                    SetMessageParams(ttcPath);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
             }
-            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
-                (ttcPath));
+            raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             this.ttcPath = ttcPath;
             this.encoding = encoding;
             InitFontSize();
@@ -95,8 +92,7 @@ namespace iTextSharp.IO.Font
         {
             if (ttcIndex > TTCSize - 1)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile);
             }
             if (ttcPath != null)
             {
@@ -108,8 +104,7 @@ namespace iTextSharp.IO.Font
             }
         }
 
-        /// <summary>returns the number of fonts in True Type Collection (file or bytes array)
-        ///     </summary>
+        /// <summary>returns the number of fonts in True Type Collection (file or bytes array)</summary>
         /// <returns>returns the number of fonts</returns>
         public virtual int GetTTCSize()
         {

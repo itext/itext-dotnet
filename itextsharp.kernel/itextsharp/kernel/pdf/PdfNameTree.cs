@@ -53,8 +53,7 @@ namespace iTextSharp.Kernel.Pdf
 
         private PdfCatalog catalog;
 
-        private IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>(
-            );
+        private IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>();
 
         private PdfName treeType;
 
@@ -104,8 +103,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             if (treeType.Equals(PdfName.Dests))
             {
-                PdfDictionary destinations = catalog.GetPdfObject().GetAsDictionary(PdfName.Dests
-                    );
+                PdfDictionary destinations = catalog.GetPdfObject().GetAsDictionary(PdfName.Dests);
                 if (destinations != null)
                 {
                     ICollection<PdfName> keys = destinations.KeySet();
@@ -156,8 +154,7 @@ namespace iTextSharp.Kernel.Pdf
                 return dic;
             }
             int skip = NODE_SIZE;
-            PdfDictionary[] kids = new PdfDictionary[(names.Length + NODE_SIZE - 1) / NODE_SIZE
-                ];
+            PdfDictionary[] kids = new PdfDictionary[(names.Length + NODE_SIZE - 1) / NODE_SIZE];
             for (int k = 0; k < kids.Length; ++k)
             {
                 int offset = k * NODE_SIZE;
@@ -197,8 +194,7 @@ namespace iTextSharp.Kernel.Pdf
                 {
                     int offset = i_1 * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
-                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument
-                        ()));
+                    PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
                     PdfArray arr = new PdfArray();
                     arr.Add(new PdfString(names[i_1 * skip], null));
                     arr.Add(new PdfString(names[Math.Min((i_1 + 1) * skip, names.Length) - 1], null));
@@ -225,8 +221,8 @@ namespace iTextSharp.Kernel.Pdf
             return items;
         }
 
-        private PdfString IterateItems(PdfDictionary dictionary, IDictionary<String, PdfObject
-            > items, PdfString leftOver)
+        private PdfString IterateItems(PdfDictionary dictionary, IDictionary<String, PdfObject> items, PdfString leftOver
+            )
         {
             PdfArray names = dictionary.GetAsArray(PdfName.Names);
             if (names != null)

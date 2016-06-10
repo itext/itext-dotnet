@@ -17,11 +17,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfAnnotationTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -33,8 +32,8 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation01()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "linkAnnotation01.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation01.pdf"
+                , FileMode.Create)));
             PdfPage page1 = document.AddNewPage();
             PdfPage page2 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -46,9 +45,8 @@ namespace iTextSharp.Kernel.Pdf
             canvas.ShowText("Link to page 2. Click here!");
             canvas.EndText();
             canvas.Release();
-            page1.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination
-                (PdfExplicitDestination.CreateFit(page2)).SetBorder(new PdfArray(new float[] 
-                { 0, 0, 1 })));
+            page1.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page2)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
             page1.Flush();
             canvas = new PdfCanvas(page2);
             canvas.BeginText();
@@ -59,17 +57,16 @@ namespace iTextSharp.Kernel.Pdf
             canvas.Release();
             page2.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "linkAnnotation01.pdf", sourceFolder + "cmp_linkAnnotation01.pdf", destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation01.pdf"
+                , sourceFolder + "cmp_linkAnnotation01.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation02()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "linkAnnotation02.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation02.pdf"
+                , FileMode.Create)));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -78,23 +75,21 @@ namespace iTextSharp.Kernel.Pdf
             canvas.ShowText("Click here to go to itextpdf site.");
             canvas.EndText();
             canvas.Release();
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590
-                , 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com"))).SetBorder(
-                new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray(new float[] { 1, 
-                0, 0 })));
+            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction
+                .CreateURI("http://itextpdf.com"))).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray
+                (new float[] { 1, 0, 0 })));
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "linkAnnotation02.pdf", sourceFolder + "cmp_linkAnnotation02.pdf", destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation02.pdf"
+                , sourceFolder + "cmp_linkAnnotation02.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddAndGetLinkAnnotations()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "linkAnnotation03.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation03.pdf"
+                , FileMode.Create)));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -108,22 +103,21 @@ namespace iTextSharp.Kernel.Pdf
             canvas.EndText();
             canvas.Release();
             int[] borders = new int[] { 0, 0, 1 };
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590
-                , 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com"))).SetBorder(
-                new PdfArray(borders)).SetColor(new PdfArray(new float[] { 1, 0, 0 })));
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 540
-                , 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com/node"))).SetBorder
-                (new PdfArray(borders)).SetColor(new PdfArray(new float[] { 0, 1, 0 })));
-            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 490
-                , 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com/salesfaq"))).SetBorder
-                (new PdfArray(borders)).SetColor(new PdfArray(new float[] { 0, 0, 1 })));
+            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction
+                .CreateURI("http://itextpdf.com"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float[]
+                 { 1, 0, 0 })));
+            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 540, 300, 25)).SetAction(PdfAction
+                .CreateURI("http://itextpdf.com/node"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new float
+                [] { 0, 1, 0 })));
+            page.AddAnnotation(((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 490, 300, 25)).SetAction(PdfAction
+                .CreateURI("http://itextpdf.com/salesfaq"))).SetBorder(new PdfArray(borders)).SetColor(new PdfArray(new 
+                float[] { 0, 0, 1 })));
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "linkAnnotation03.pdf", sourceFolder + "cmp_linkAnnotation03.pdf", destinationFolder
-                , "diff_"));
-            document = new PdfDocument(new PdfReader(new FileStream(destinationFolder + "linkAnnotation03.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation03.pdf"
+                , sourceFolder + "cmp_linkAnnotation03.pdf", destinationFolder, "diff_"));
+            document = new PdfDocument(new PdfReader(new FileStream(destinationFolder + "linkAnnotation03.pdf", FileMode.Open
+                , FileAccess.Read)));
             page = document.GetPage(1);
             NUnit.Framework.Assert.AreEqual(3, page.GetAnnotsSize());
             IList<PdfAnnotation> annotations = page.GetAnnotations();
@@ -137,15 +131,12 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AddTextAnnotation01()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "textAnnotation01.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textAnnotation01.pdf"
+                , FileMode.Create)));
             PdfPage page = document.AddNewPage();
-            PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40
-                ));
-            textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString(
-                "Some contents..."));
-            PdfPopupAnnotation popupAnnot = new PdfPopupAnnotation(new Rectangle(150, 640, 200
-                , 100));
+            PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
+            textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
+            PdfPopupAnnotation popupAnnot = new PdfPopupAnnotation(new Rectangle(150, 640, 200, 100));
             popupAnnot.SetOpen(true);
             textannot.SetPopup(popupAnnot);
             popupAnnot.SetParent(textannot);
@@ -153,9 +144,8 @@ namespace iTextSharp.Kernel.Pdf
             page.AddAnnotation(popupAnnot);
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "textAnnotation01.pdf", sourceFolder + "cmp_textAnnotation01.pdf", destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "textAnnotation01.pdf"
+                , sourceFolder + "cmp_textAnnotation01.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -169,17 +159,13 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("This is a text").EndText().RestoreState
-                ();
-            canvas.SaveState().BeginText().MoveText(236, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("This is an edited text").EndText().RestoreState
-                ();
-            PdfCaretAnnotation caret = new PdfCaretAnnotation(new Rectangle(36, 745, 350, 20)
-                );
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("This is a text").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(236, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("This is an edited text").EndText().RestoreState();
+            PdfCaretAnnotation caret = new PdfCaretAnnotation(new Rectangle(36, 745, 350, 20));
             caret.SetSymbol(new PdfString("P"));
-            PdfPopupAnnotation popup = new PdfPopupAnnotation(new Rectangle(36, 445, 100, 100
-                ));
+            PdfPopupAnnotation popup = new PdfPopupAnnotation(new Rectangle(36, 445, 100, 100));
             popup.SetContents(new PdfString("Popup"));
             popup.SetOpen(true);
             caret.SetPopup(popup);
@@ -188,8 +174,8 @@ namespace iTextSharp.Kernel.Pdf
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_CaretAnnotation.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_CaretAnnotation.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -200,50 +186,43 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void AddFreeTextAnnotation01()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "freeTextAnnotation01.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "freeTextAnnotation01.pdf"
+                , FileMode.Create)));
             PdfPage page = document.AddNewPage();
-            new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
-                .COURIER), 24).MoveText(100, 600).ShowText("Annotated text").EndText().Release
-                ();
-            PdfFreeTextAnnotation textannot = new PdfFreeTextAnnotation(new Rectangle(300, 700
-                , 150, 20), "");
-            textannot.SetContents(new PdfString("FreeText annotation")).SetColor(new float[] 
-                { 1, 0, 0 });
+            new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24).MoveText
+                (100, 600).ShowText("Annotated text").EndText().Release();
+            PdfFreeTextAnnotation textannot = new PdfFreeTextAnnotation(new Rectangle(300, 700, 150, 20), "");
+            textannot.SetContents(new PdfString("FreeText annotation")).SetColor(new float[] { 1, 0, 0 });
             textannot.SetIntent(PdfName.FreeTextCallout);
-            textannot.SetCalloutLine(new float[] { 120, 616, 180, 680, 300, 710 }).SetLineEndingStyle
-                (PdfName.OpenArrow);
+            textannot.SetCalloutLine(new float[] { 120, 616, 180, 680, 300, 710 }).SetLineEndingStyle(PdfName.OpenArrow
+                );
             page.AddAnnotation(textannot);
             textannot.Flush();
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "freeTextAnnotation01.pdf", sourceFolder + "cmp_freeTextAnnotation01.pdf", 
-                destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "freeTextAnnotation01.pdf"
+                , sourceFolder + "cmp_freeTextAnnotation01.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddSquareAndCircleAnnotations01()
         {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder
-                 + "squareAndCircleAnnotations01.pdf", FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "squareAndCircleAnnotations01.pdf"
+                , FileMode.Create)));
             PdfPage page = document.AddNewPage();
-            PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 
-                100));
-            square.SetInteriorColor(new float[] { 1, 0, 0 }).SetColor(new float[] { 0, 1, 0 }
-                ).SetContents("RED Square");
+            PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
+            square.SetInteriorColor(new float[] { 1, 0, 0 }).SetColor(new float[] { 0, 1, 0 }).SetContents("RED Square"
+                );
             page.AddAnnotation(square);
-            PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 
-                100));
-            circle.SetInteriorColor(new float[] { 0, 1, 0 }).SetColor(new float[] { 0, 0, 1 }
-                ).SetContents(new PdfString("GREEN Circle"));
+            PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 100));
+            circle.SetInteriorColor(new float[] { 0, 1, 0 }).SetColor(new float[] { 0, 0, 1 }).SetContents(new PdfString
+                ("GREEN Circle"));
             page.AddAnnotation(circle);
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "squareAndCircleAnnotations01.pdf", sourceFolder + "cmp_squareAndCircleAnnotations01.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "squareAndCircleAnnotations01.pdf"
+                , sourceFolder + "cmp_squareAndCircleAnnotations01.pdf", destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -257,10 +236,9 @@ namespace iTextSharp.Kernel.Pdf
             writer1.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav"
-                , null, "sample.wav", null, null, true);
-            PdfFileAttachmentAnnotation fileAttach = new PdfFileAttachmentAnnotation(new Rectangle
-                (100, 100), spec);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav", null, "sample.wav"
+                , null, null, true);
+            PdfFileAttachmentAnnotation fileAttach = new PdfFileAttachmentAnnotation(new Rectangle(100, 100), spec);
             fileAttach.SetIconName(PdfName.Paperclip);
             page1.AddAnnotation(fileAttach);
             page1.Flush();
@@ -288,41 +266,29 @@ namespace iTextSharp.Kernel.Pdf
             stamp.SetStampName(PdfName.Approved);
             PdfStampAnnotation stamp1 = new PdfStampAnnotation(new Rectangle(0, 50, 100, 50));
             stamp1.SetStampName(PdfName.AsIs);
-            PdfStampAnnotation stamp2 = new PdfStampAnnotation(new Rectangle(0, 100, 100, 50)
-                );
+            PdfStampAnnotation stamp2 = new PdfStampAnnotation(new Rectangle(0, 100, 100, 50));
             stamp2.SetStampName(PdfName.Confidential);
-            PdfStampAnnotation stamp3 = new PdfStampAnnotation(new Rectangle(0, 150, 100, 50)
-                );
+            PdfStampAnnotation stamp3 = new PdfStampAnnotation(new Rectangle(0, 150, 100, 50));
             stamp3.SetStampName(PdfName.Departmental);
-            PdfStampAnnotation stamp4 = new PdfStampAnnotation(new Rectangle(0, 200, 100, 50)
-                );
+            PdfStampAnnotation stamp4 = new PdfStampAnnotation(new Rectangle(0, 200, 100, 50));
             stamp4.SetStampName(PdfName.Draft);
-            PdfStampAnnotation stamp5 = new PdfStampAnnotation(new Rectangle(0, 250, 100, 50)
-                );
+            PdfStampAnnotation stamp5 = new PdfStampAnnotation(new Rectangle(0, 250, 100, 50));
             stamp5.SetStampName(PdfName.Experimental);
-            PdfStampAnnotation stamp6 = new PdfStampAnnotation(new Rectangle(0, 300, 100, 50)
-                );
+            PdfStampAnnotation stamp6 = new PdfStampAnnotation(new Rectangle(0, 300, 100, 50));
             stamp6.SetStampName(PdfName.Expired);
-            PdfStampAnnotation stamp7 = new PdfStampAnnotation(new Rectangle(0, 350, 100, 50)
-                );
+            PdfStampAnnotation stamp7 = new PdfStampAnnotation(new Rectangle(0, 350, 100, 50));
             stamp7.SetStampName(PdfName.Final);
-            PdfStampAnnotation stamp8 = new PdfStampAnnotation(new Rectangle(0, 400, 100, 50)
-                );
+            PdfStampAnnotation stamp8 = new PdfStampAnnotation(new Rectangle(0, 400, 100, 50));
             stamp8.SetStampName(PdfName.ForComment);
-            PdfStampAnnotation stamp9 = new PdfStampAnnotation(new Rectangle(0, 450, 100, 50)
-                );
+            PdfStampAnnotation stamp9 = new PdfStampAnnotation(new Rectangle(0, 450, 100, 50));
             stamp9.SetStampName(PdfName.ForPublicRelease);
-            PdfStampAnnotation stamp10 = new PdfStampAnnotation(new Rectangle(0, 500, 100, 50
-                ));
+            PdfStampAnnotation stamp10 = new PdfStampAnnotation(new Rectangle(0, 500, 100, 50));
             stamp10.SetStampName(PdfName.NotApproved);
-            PdfStampAnnotation stamp11 = new PdfStampAnnotation(new Rectangle(0, 550, 100, 50
-                ));
+            PdfStampAnnotation stamp11 = new PdfStampAnnotation(new Rectangle(0, 550, 100, 50));
             stamp11.SetStampName(PdfName.NotForPublicRelease);
-            PdfStampAnnotation stamp12 = new PdfStampAnnotation(new Rectangle(0, 600, 100, 50
-                ));
+            PdfStampAnnotation stamp12 = new PdfStampAnnotation(new Rectangle(0, 600, 100, 50));
             stamp12.SetStampName(PdfName.Sold);
-            PdfStampAnnotation stamp13 = new PdfStampAnnotation(new Rectangle(0, 650, 100, 50
-                ));
+            PdfStampAnnotation stamp13 = new PdfStampAnnotation(new Rectangle(0, 650, 100, 50));
             stamp13.SetStampName(PdfName.TopSecret);
             page1.AddAnnotation(stamp);
             page1.AddAnnotation(stamp1);
@@ -390,8 +356,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDictionary borderStyle = new PdfDictionary();
             borderStyle.Put(PdfName.Type, PdfName.Border);
             borderStyle.Put(PdfName.W, new PdfNumber(3));
-            PdfInkAnnotation ink = new PdfInkAnnotation(new Rectangle(0, 0, 575, 842), resultArray
-                );
+            PdfInkAnnotation ink = new PdfInkAnnotation(new Rectangle(0, 0, 575, 842), resultArray);
             ink.SetBorderStyle(borderStyle);
             float[] rgb = new float[] { 1, 0, 0 };
             PdfArray colors = new PdfArray(rgb);
@@ -400,8 +365,8 @@ namespace iTextSharp.Kernel.Pdf
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_inkAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_inkAnnotation01.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.IsNull(errorMessage);
@@ -420,12 +385,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Underline!").EndText().RestoreState(
-                );
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Underline!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
-            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateUnderline(PageSize
-                .A4, points);
+            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateUnderline(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
             float[] rgb = new float[] { 1, 0, 0 };
             PdfArray colors = new PdfArray(rgb);
@@ -454,12 +417,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Highlight!").EndText().RestoreState(
-                );
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Highlight!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
-            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateHighLight(PageSize
-                .A4, points);
+            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateHighLight(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
             float[] rgb = new float[] { 1, 0, 0 };
             PdfArray colors = new PdfArray(rgb);
@@ -488,11 +449,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Squiggly!").EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Squiggly!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
-            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateSquiggly(PageSize.
-                A4, points);
+            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateSquiggly(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
             float[] rgb = new float[] { 1, 0, 0 };
             PdfArray colors = new PdfArray(rgb);
@@ -521,12 +481,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Strikeout!").EndText().RestoreState(
-                );
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Strikeout!").EndText().RestoreState();
             float[] points = new float[] { 36, 765, 109, 765, 36, 746, 109, 746 };
-            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateStrikeout(PageSize
-                .A4, points);
+            PdfTextMarkupAnnotation markup = PdfTextMarkupAnnotation.CreateStrikeout(PageSize.A4, points);
             markup.SetContents(new PdfString("TextMarkup"));
             float[] rgb = new float[] { 1, 0, 0 };
             PdfArray colors = new PdfArray(rgb);
@@ -554,16 +512,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page1);
-            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory
-                .CreateFont(FontConstants.HELVETICA), 16).ShowText("This is Printer Mark annotation:"
-                ).EndText().RestoreState();
+            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
+                .HELVETICA), 16).ShowText("This is Printer Mark annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN
-                , true).Fill().RestoreState();
+            canvas.SaveState().Circle(265, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN, true).Fill().RestoreState
+                ();
             canvas.Release();
-            PdfPrinterMarkAnnotation printer = new PdfPrinterMarkAnnotation(PageSize.A4, form
-                );
+            PdfPrinterMarkAnnotation printer = new PdfPrinterMarkAnnotation(PageSize.A4, form);
             page1.AddAnnotation(printer);
             page1.Flush();
             pdfDoc1.Close();
@@ -587,13 +543,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page = pdfDoc1.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page);
-            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory
-                .CreateFont(FontConstants.HELVETICA), 16).ShowText("This is Trap Network annotation:"
-                ).EndText().RestoreState();
+            canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
+                .HELVETICA), 16).ShowText("This is Trap Network annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(272, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN
-                , true).Fill().RestoreState();
+            canvas.SaveState().Circle(272, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN, true).Fill().RestoreState
+                ();
             canvas.Release();
             form.SetProcessColorModel(PdfName.DeviceN);
             PdfTrapNetworkAnnotation trap = new PdfTrapNetworkAnnotation(PageSize.A4, form);
@@ -641,14 +596,13 @@ namespace iTextSharp.Kernel.Pdf
             sound1.Put(PdfName.E, PdfName.Signed);
             sound1.Put(PdfName.B, new PdfNumber(16));
             sound1.Put(PdfName.C, new PdfNumber(1));
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100
-                ), sound1);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), sound1);
             page1.AddAnnotation(sound);
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation02.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation02.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -686,14 +640,13 @@ namespace iTextSharp.Kernel.Pdf
             sound1.Put(PdfName.E, PdfName.Signed);
             sound1.Put(PdfName.B, new PdfNumber(16));
             sound1.Put(PdfName.C, new PdfNumber(1));
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100
-                ), sound1);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), sound1);
             page1.AddAnnotation(sound);
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation03.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation03.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -713,14 +666,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100
-                , 100, 100), @is, 44100, PdfName.Signed, 2, 16);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100, 100, 100), @is, 44100, 
+                PdfName.Signed, 2, 16);
             page1.AddAnnotation(sound);
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation04.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation04.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -740,14 +693,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100
-                , 100, 100), @is, 48000, PdfName.Signed, 2, 16);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100, 100, 100), @is, 48000, 
+                PdfName.Signed, 2, 16);
             page1.AddAnnotation(sound);
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation01.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -786,14 +739,13 @@ namespace iTextSharp.Kernel.Pdf
             soundStream.Put(PdfName.E, PdfName.Signed);
             soundStream.Put(PdfName.B, new PdfNumber(16));
             soundStream.Put(PdfName.C, new PdfNumber(2));
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100
-                ), soundStream);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), soundStream);
             page1.AddAnnotation(sound);
             page1.Flush();
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation05.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation05.pdf", destinationFolder
+                , "diff_");
             if (errorMessage != null)
             {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -811,14 +763,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
-                ).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc1, "c:\\morph\\itext6\\itextpdf\\canvas\\src\\test\\resources\\com\\itextpdf\\canvas\\PdfAnnotationTest\\"
                  + "sample.wav", true);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav"
-                , screen);
+            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
@@ -841,14 +791,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
-                ).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav"
-                , null, "sample.wav", null, null, true);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav"
-                , screen);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav", null, "sample.wav"
+                , null, null, true);
+            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
@@ -871,15 +819,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
-                ).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, new FileStream(sourceFolder
-                 + "sample.wav", FileMode.Open, FileAccess.Read), null, "sample.wav", null, null
-                , true);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav"
-                , screen);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, new FileStream(sourceFolder + "sample.wav", 
+                FileMode.Open, FileAccess.Read), null, "sample.wav", null, null, true);
+            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
@@ -902,12 +847,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont
-                (FontConstants.HELVETICA), 16).ShowText("Click on the area below to play a sound."
-                ).EndText().RestoreState();
+            canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
+                ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
             MemoryStream baos = new MemoryStream();
             int reads = @is.Read();
             while (reads != -1)
@@ -915,10 +858,9 @@ namespace iTextSharp.Kernel.Pdf
                 baos.Write(reads);
                 reads = @is.Read();
             }
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, baos.ToArray(), null
-                , "sample.wav", null, null, null, true);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav"
-                , screen);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, baos.ToArray(), null, "sample.wav", null, null
+                , null, true);
+            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
@@ -940,8 +882,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 
-                400, 200, 200));
+            PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 400, 200, 200));
             float[] arr = new float[] { 1, 0, 0, 1, 0, 0 };
             PdfFixedPrint fixedPrint = new PdfFixedPrint();
             fixedPrint.SetMatrix(arr);
@@ -950,8 +891,8 @@ namespace iTextSharp.Kernel.Pdf
             watermark.SetFixedPrint(fixedPrint);
             PdfFormXObject form = new PdfFormXObject(new Rectangle(200, 200));
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(100, 100, 50).SetColor(iTextSharp.Kernel.Color.Color.BLACK
-                , true).Fill().RestoreState();
+            canvas.SaveState().Circle(100, 100, 50).SetColor(iTextSharp.Kernel.Color.Color.BLACK, true).Fill().RestoreState
+                ();
             canvas.Release();
             watermark.SetNormalAppearance(form.GetPdfObject());
             watermark.SetFlags(PdfAnnotation.PRINT);
@@ -979,17 +920,15 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             float[] rgb = new float[] { 0, 0, 0 };
             float[] rgb1 = new float[] { 1, 0, 0 };
-            PdfRedactAnnotation redact = new PdfRedactAnnotation(new Rectangle(180, 531, 120, 
-                49));
+            PdfRedactAnnotation redact = new PdfRedactAnnotation(new Rectangle(180, 531, 120, 49));
             PdfFormXObject formD = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
             PdfCanvas canvasD = new PdfCanvas(formD, pdfDoc1);
             canvasD.SetFillColorGray(0).Rectangle(180, 531, 120, 48).Fill();
             redact.SetDownAppearance(formD.GetPdfObject());
             PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 51));
             PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc1);
-            canvasN.SetColor(iTextSharp.Kernel.Color.Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle
-                (PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE).Rectangle(180, 531, 120, 
-                48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
+            canvasN.SetColor(iTextSharp.Kernel.Color.Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
+                .PROJECTING_SQUARE).Rectangle(180, 531, 120, 48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
             redact.SetNormalAppearance(formN.GetPdfObject());
             PdfFormXObject formR = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
             PdfCanvas canvasR = new PdfCanvas(formR, pdfDoc1);

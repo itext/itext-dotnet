@@ -53,8 +53,7 @@ namespace iTextSharp.IO.Source
         ///     </summary>
         private readonly GroupedRandomAccessSource.SourceEntry[] sources;
 
-        /// <summary>Cached value to make multiple reads from the same underlying source more efficient
-        ///     </summary>
+        /// <summary>Cached value to make multiple reads from the same underlying source more efficient</summary>
         private GroupedRandomAccessSource.SourceEntry currentSourceEntry;
 
         /// <summary>Cached size of the underlying channel</summary>
@@ -73,8 +72,7 @@ namespace iTextSharp.IO.Source
             long totalSize = 0;
             for (int i = 0; i < sources.Length; i++)
             {
-                this.sources[i] = new GroupedRandomAccessSource.SourceEntry(i, sources[i], totalSize
-                    );
+                this.sources[i] = new GroupedRandomAccessSource.SourceEntry(i, sources[i], totalSize);
                 totalSize += sources[i].Length();
             }
             size = totalSize;
@@ -82,8 +80,7 @@ namespace iTextSharp.IO.Source
             SourceInUse(currentSourceEntry.source);
         }
 
-        /// <summary>For a given offset, return the index of the source that contains the specified offset.
-        ///     </summary>
+        /// <summary>For a given offset, return the index of the source that contains the specified offset.</summary>
         /// <remarks>
         /// For a given offset, return the index of the source that contains the specified offset.
         /// This is an optimization feature to help optimize the access of the correct source without having to iterate
@@ -95,8 +92,7 @@ namespace iTextSharp.IO.Source
         /// takes advantage of fixed size page buffers to compute the index)
         /// </remarks>
         /// <param name="offset">the offset</param>
-        /// <returns>the index of the input source that contains the specified offset, or 0 if unknown
-        ///     </returns>
+        /// <returns>the index of the input source that contains the specified offset, or 0 if unknown</returns>
         protected internal virtual int GetStartingSourceIndex(long offset)
         {
             if (offset >= currentSourceEntry.firstByte)
@@ -115,8 +111,7 @@ namespace iTextSharp.IO.Source
         /// <returns>the SourceEntry that contains the byte at the specified offset</returns>
         /// <exception cref="System.IO.IOException">if there is a problem with IO (usually the result of the sourceReleased() call)
         ///     </exception>
-        private GroupedRandomAccessSource.SourceEntry GetSourceEntryForOffset(long offset
-            )
+        private GroupedRandomAccessSource.SourceEntry GetSourceEntryForOffset(long offset)
         {
             if (offset >= size)
             {
@@ -240,12 +235,10 @@ namespace iTextSharp.IO.Source
             /// <summary>The underlying source</summary>
             internal readonly IRandomAccessSource source;
 
-            /// <summary>The first byte (in the coordinates of the GroupedRandomAccessSource) that this source contains
-            ///     </summary>
+            /// <summary>The first byte (in the coordinates of the GroupedRandomAccessSource) that this source contains</summary>
             internal readonly long firstByte;
 
-            /// <summary>The last byte (in the coordinates of the GroupedRandomAccessSource) that this source contains
-            ///     </summary>
+            /// <summary>The last byte (in the coordinates of the GroupedRandomAccessSource) that this source contains</summary>
             internal readonly long lastByte;
 
             /// <summary>The index of this source in the GroupedRandomAccessSource</summary>

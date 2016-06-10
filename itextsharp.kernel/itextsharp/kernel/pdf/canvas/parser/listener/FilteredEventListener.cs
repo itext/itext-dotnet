@@ -48,8 +48,7 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
 {
-    /// <summary>An event listener which filters events on the fly before passing them on to the delegate.
-    ///     </summary>
+    /// <summary>An event listener which filters events on the fly before passing them on to the delegate.</summary>
     public class FilteredEventListener : IEventListener
     {
         protected internal readonly IList<IEventListener> delegates;
@@ -87,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>
-        public FilteredEventListener(IEventListener delegate_, params IEventFilter[] filterSet
-            )
+        public FilteredEventListener(IEventListener delegate_, params IEventFilter[] filterSet)
             : this()
         {
             AttachEventListener(delegate_, filterSet);
@@ -112,10 +110,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>
-        /// <returns>delegate that has been passed to the method, used for convenient call chaining
-        ///     </returns>
-        public virtual T AttachEventListener<T>(T delegate_, params IEventFilter[] filterSet
-            )
+        /// <returns>delegate that has been passed to the method, used for convenient call chaining</returns>
+        public virtual T AttachEventListener<T>(T delegate_, params IEventFilter[] filterSet)
             where T : IEventListener
         {
             delegates.Add(delegate_);
@@ -128,8 +124,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
             for (int i = 0; i < delegates.Count; i++)
             {
                 IEventListener delegate_ = delegates[i];
-                bool filtersPassed = delegate_.GetSupportedEvents() == null || delegate_.GetSupportedEvents
-                    ().Contains(type);
+                bool filtersPassed = delegate_.GetSupportedEvents() == null || delegate_.GetSupportedEvents().Contains(type
+                    );
                 foreach (IEventFilter filter in filters[i])
                 {
                     if (!filter.Accept(data, type))

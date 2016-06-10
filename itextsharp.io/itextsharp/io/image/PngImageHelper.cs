@@ -79,8 +79,7 @@ namespace iTextSharp.IO.Image
 
             internal int interlaceMethod;
 
-            internal IDictionary<String, Object> additional = new Dictionary<String, Object>(
-                );
+            internal IDictionary<String, Object> additional = new Dictionary<String, Object>();
 
             internal byte[] imageData;
 
@@ -183,8 +182,8 @@ namespace iTextSharp.IO.Image
 
         private const int PNG_FILTER_PAETH = 4;
 
-        private static readonly String[] intents = new String[] { "/Perceptual", "/RelativeColorimetric"
-            , "/Saturation", "/AbsoluteColorimetric" };
+        private static readonly String[] intents = new String[] { "/Perceptual", "/RelativeColorimetric", "/Saturation"
+            , "/AbsoluteColorimetric" };
 
         public static void ProcessImage(ImageData image)
         {
@@ -207,8 +206,7 @@ namespace iTextSharp.IO.Image
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, e);
             }
             finally
             {
@@ -227,8 +225,7 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png
-            )
+        private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png)
         {
             ReadPng(pngStream, png);
             try
@@ -262,8 +259,8 @@ namespace iTextSharp.IO.Image
                 {
                     png.additional["Mask"] = String.Format("[{0} {1}]", palIdx, palIdx);
                 }
-                bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType
-                     & 4) != 0) || png.palShades || png.genBWMask;
+                bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType & 4) != 0) || png.
+                    palShades || png.genBWMask;
                 switch (png.colorType)
                 {
                     case 0:
@@ -314,19 +311,18 @@ namespace iTextSharp.IO.Image
                 {
                     if (png.colorType == 3)
                     {
-                        RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components
-                            , bpc, png.imageData);
+                        RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components, bpc, png.imageData);
                     }
                     else
                     {
-                        RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components
-                            , bpc, png.imageData, null);
+                        RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components, bpc, png.imageData, 
+                            null);
                     }
                 }
                 else
                 {
-                    RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components
-                        , bpc, png.idat.ToArray());
+                    RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components, bpc, png.idat.ToArray
+                        ());
                     png.image.SetDeflated(true);
                     IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
                     decodeparms["BitsPerComponent"] = png.bitDepth;
@@ -350,16 +346,14 @@ namespace iTextSharp.IO.Image
                 if (png.palShades)
                 {
                     RawImageData im2 = (RawImageData)ImageDataFactory.CreateRawImage(null);
-                    RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 8, png.smask
-                        );
+                    RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 8, png.smask);
                     im2.MakeMask();
                     png.image.SetImageMask(im2);
                 }
                 if (png.genBWMask)
                 {
                     RawImageData im2 = (RawImageData)ImageDataFactory.CreateRawImage(null);
-                    RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 1, png.smask
-                        );
+                    RawImageHelper.UpdateRawImageParameters(im2, png.width, png.height, 1, 1, png.smask);
                     im2.MakeMask();
                     png.image.SetImageMask(im2);
                 }
@@ -368,8 +362,7 @@ namespace iTextSharp.IO.Image
             }
             catch (Exception e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, 
-                    e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, e);
             }
         }
 
@@ -426,18 +419,17 @@ namespace iTextSharp.IO.Image
                     }
                     if (png.hasCHRM)
                     {
-                        float z = png.yW * ((png.xG - png.xB) * png.yR - (png.xR - png.xB) * png.yG + (png
-                            .xR - png.xG) * png.yB);
-                        float YA = png.yR * ((png.xG - png.xB) * png.yW - (png.xW - png.xB) * png.yG + (png
-                            .xW - png.xG) * png.yB) / z;
+                        float z = png.yW * ((png.xG - png.xB) * png.yR - (png.xR - png.xB) * png.yG + (png.xR - png.xG) * png.yB);
+                        float YA = png.yR * ((png.xG - png.xB) * png.yW - (png.xW - png.xB) * png.yG + (png.xW - png.xG) * png.yB)
+                             / z;
                         float XA = YA * png.xR / png.yR;
                         float ZA = YA * ((1 - png.xR) / png.yR - 1);
-                        float YB = -png.yG * ((png.xR - png.xB) * png.yW - (png.xW - png.xB) * png.yR + (
-                            png.xW - png.xR) * png.yB) / z;
+                        float YB = -png.yG * ((png.xR - png.xB) * png.yW - (png.xW - png.xB) * png.yR + (png.xW - png.xR) * png.yB
+                            ) / z;
                         float XB = YB * png.xG / png.yG;
                         float ZB = YB * ((1 - png.xG) / png.yG - 1);
-                        float YC = png.yB * ((png.xR - png.xG) * png.yW - (png.xW - png.xG) * png.yW + (png
-                            .xW - png.xR) * png.yG) / z;
+                        float YC = png.yB * ((png.xR - png.xG) * png.yW - (png.xW - png.xG) * png.yW + (png.xW - png.xR) * png.yG)
+                             / z;
                         float XC = YC * png.xB / png.yB;
                         float ZC = YC * ((1 - png.xB) / png.yB - 1);
                         float XW = XA + XB + XC;
@@ -541,8 +533,7 @@ namespace iTextSharp.IO.Image
                                     }
                                     else
                                     {
-                                        png.additional["Mask"] = String.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green
-                                            , green, blue, blue);
+                                        png.additional["Mask"] = String.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue, blue);
                                     }
                                 }
                                 break;
@@ -632,10 +623,9 @@ namespace iTextSharp.IO.Image
                                         png.yG = GetInt(pngStream) / 100000f;
                                         png.xB = GetInt(pngStream) / 100000f;
                                         png.yB = GetInt(pngStream) / 100000f;
-                                        png.hasCHRM = !(Math.Abs(png.xW) < 0.0001f || Math.Abs(png.yW) < 0.0001f || Math.
-                                            Abs(png.xR) < 0.0001f || Math.Abs(png.yR) < 0.0001f || Math.Abs(png.xG) < 0.0001f
-                                             || Math.Abs(png.yG) < 0.0001f || Math.Abs(png.xB) < 0.0001f || Math.Abs(png.
-                                            yB) < 0.0001f);
+                                        png.hasCHRM = !(Math.Abs(png.xW) < 0.0001f || Math.Abs(png.yW) < 0.0001f || Math.Abs(png.xR) < 0.0001f || 
+                                            Math.Abs(png.yR) < 0.0001f || Math.Abs(png.xG) < 0.0001f || Math.Abs(png.yG) < 0.0001f || Math.Abs(png
+                                            .xB) < 0.0001f || Math.Abs(png.yB) < 0.0001f);
                                     }
                                     else
                                     {
@@ -831,8 +821,8 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        private static void DecodePass(int xOffset, int yOffset, int xStep, int yStep, int
-             passWidth, int passHeight, PngImageHelper.PngParameters png)
+        private static void DecodePass(int xOffset, int yOffset, int xStep, int yStep, int passWidth, int passHeight
+            , PngImageHelper.PngParameters png)
         {
             if ((passWidth == 0) || (passHeight == 0))
             {
@@ -902,8 +892,8 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        private static void ProcessPixels(byte[] curr, int xOffset, int step, int y, int 
-            width, PngImageHelper.PngParameters png)
+        private static void ProcessPixels(byte[] curr, int xOffset, int step, int y, int width, PngImageHelper.PngParameters
+             png)
         {
             int srcX;
             int dstX;
@@ -929,12 +919,10 @@ namespace iTextSharp.IO.Image
             if (png.imageData != null)
             {
                 dstX = xOffset;
-                int yStride = (sizes * png.width * (png.bitDepth == 16 ? 8 : png.bitDepth) + 7) /
-                     8;
+                int yStride = (sizes * png.width * (png.bitDepth == 16 ? 8 : png.bitDepth) + 7) / 8;
                 for (srcX = 0; srcX < width; srcX++)
                 {
-                    SetPixel(png.imageData, outPixel, png.inputBands * srcX, sizes, dstX, y, png.bitDepth
-                        , yStride);
+                    SetPixel(png.imageData, outPixel, png.inputBands * srcX, sizes, dstX, y, png.bitDepth, yStride);
                     dstX += step;
                 }
             }
@@ -946,16 +934,14 @@ namespace iTextSharp.IO.Image
                     {
                         for (int k = 0; k < width; ++k)
                         {
-                            outPixel[k * png.inputBands + sizes] = (int)(((uint)outPixel[k * png.inputBands +
-                                 sizes]) >> 8);
+                            outPixel[k * png.inputBands + sizes] = (int)(((uint)outPixel[k * png.inputBands + sizes]) >> 8);
                         }
                     }
                     int yStride = png.width;
                     dstX = xOffset;
                     for (srcX = 0; srcX < width; srcX++)
                     {
-                        SetPixel(png.smask, outPixel, png.inputBands * srcX + sizes, 1, dstX, y, 8, yStride
-                            );
+                        SetPixel(png.smask, outPixel, png.inputBands * srcX + sizes, 1, dstX, y, 8, yStride);
                         dstX += step;
                     }
                 }
@@ -1026,8 +1012,8 @@ namespace iTextSharp.IO.Image
                             for (srcX = 0; srcX < width; srcX++)
                             {
                                 int markRed = png.inputBands * srcX;
-                                v[0] = (outPixel[markRed] == png.transRedGray && outPixel[markRed + 1] == png.transGreen
-                                     && outPixel[markRed + 2] == png.transBlue ? 1 : 0);
+                                v[0] = (outPixel[markRed] == png.transRedGray && outPixel[markRed + 1] == png.transGreen && outPixel[markRed
+                                     + 2] == png.transBlue ? 1 : 0);
                                 SetPixel(png.smask, v, 0, 1, dstX, y, 1, yStride);
                                 dstX += step;
                             }
@@ -1038,8 +1024,7 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        private static int GetPixel(byte[] image, int x, int y, int bitDepth, int bytesPerRow
-            )
+        private static int GetPixel(byte[] image, int x, int y, int bitDepth, int bytesPerRow)
         {
             if (bitDepth == 8)
             {
@@ -1054,8 +1039,8 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        internal static void SetPixel(byte[] image, int[] data, int offset, int size, int
-             x, int y, int bitDepth, int bytesPerRow)
+        internal static void SetPixel(byte[] image, int[] data, int offset, int size, int x, int y, int bitDepth, 
+            int bytesPerRow)
         {
             if (bitDepth == 8)
             {
@@ -1146,8 +1131,7 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        private static void DecodeAverageFilter(byte[] curr, byte[] prev, int count, int 
-            bpp)
+        private static void DecodeAverageFilter(byte[] curr, byte[] prev, int count, int bpp)
         {
             int raw;
             int priorPixel;
@@ -1190,8 +1174,7 @@ namespace iTextSharp.IO.Image
             }
         }
 
-        private static void DecodePaethFilter(byte[] curr, byte[] prev, int count, int bpp
-            )
+        private static void DecodePaethFilter(byte[] curr, byte[] prev, int count, int bpp)
         {
             int raw;
             int priorPixel;
@@ -1219,8 +1202,7 @@ namespace iTextSharp.IO.Image
         /// <exception cref="System.IO.IOException"/>
         public static int GetInt(Stream pngStream)
         {
-            return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() <<
-                 8) + pngStream.Read();
+            return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
         }
 
         /// <summary>Gets a <CODE>word</CODE> from an <CODE>InputStream</CODE>.</summary>

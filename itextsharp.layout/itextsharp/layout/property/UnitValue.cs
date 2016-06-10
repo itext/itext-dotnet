@@ -91,8 +91,7 @@ namespace iTextSharp.Layout.Property
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value
-            )
+        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value)
         {
             return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
         }
@@ -133,10 +132,9 @@ namespace iTextSharp.Layout.Property
             {
                 return false;
             }
-            iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue
-                )obj;
-            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 
-                && iTextSharp.IO.Util.JavaUtil.FloatCompare(value, other.value) == 0;
+            iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue)obj;
+            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && iTextSharp.IO.Util.JavaUtil.FloatCompare
+                (value, other.value) == 0;
         }
 
         public override int GetHashCode()

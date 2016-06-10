@@ -81,32 +81,28 @@ namespace iTextSharp.Layout.Renderer
             return null;
         }
 
-        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-            )
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult)
         {
-            AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != 
-                null ? overflowResult.GetAreaBreak() : null;
+            AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
+                () : null;
             MoveToNextPage();
-            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE &&
-                 currentPageNumber < document.GetPdfDocument().GetNumberOfPages())
+            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE && currentPageNumber < document
+                .GetPdfDocument().GetNumberOfPages())
             {
                 MoveToNextPage();
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
-            while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document
-                .GetPdfDocument().GetPage(currentPageNumber).IsFlushed())
+            while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document.GetPdfDocument().GetPage
+                (currentPageNumber).IsFlushed())
             {
                 currentPageNumber++;
             }
-            PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize
-                );
+            PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize);
             if (lastPageSize == null)
             {
-                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).
-                    GetPageSize());
+                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetPageSize());
             }
-            return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea
-                (lastPageSize)));
+            return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer)
@@ -117,18 +113,16 @@ namespace iTextSharp.Layout.Renderer
                 PdfDocument pdfDocument = document.GetPdfDocument();
                 EnsureDocumentHasNPages(pageNum, null);
                 PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
-                bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() 
-                    != null && correspondingPage.GetContentStreamCount() > 0 && correspondingPage
-                    .GetLastContentStream().GetLength() > 0 && !wrappedContentPage.Contains(pageNum
-                    ) && pdfDocument.GetNumberOfPages() >= pageNum;
+                bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
+                    .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage
+                    .Contains(pageNum) && pdfDocument.GetNumberOfPages() >= pageNum;
                 wrappedContentPage.Add(pageNum);
                 if (pdfDocument.IsTagged())
                 {
-                    pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage
-                        );
+                    pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetPageForTagging(correspondingPage);
                 }
-                resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, 
-                    wrapOldContent), pdfDocument.IsTagged()));
+                resultRenderer.Draw(new DrawContext(pdfDocument, new PdfCanvas(correspondingPage, wrapOldContent), pdfDocument
+                    .IsTagged()));
             }
         }
 
@@ -142,8 +136,7 @@ namespace iTextSharp.Layout.Renderer
             {
                 document.GetPdfDocument().AddNewPage();
             }
-            return customPageSize != null ? customPageSize : document.GetPdfDocument().GetDefaultPageSize
-                ();
+            return customPageSize != null ? customPageSize : document.GetPdfDocument().GetDefaultPageSize();
         }
 
         /// <summary>Adds some pages so that the overall number is at least n.</summary>

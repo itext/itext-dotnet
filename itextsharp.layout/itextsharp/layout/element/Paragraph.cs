@@ -137,8 +137,7 @@ namespace iTextSharp.Layout.Element
             return this;
         }
 
-        /// <summary>Adds an unspecified amount of tabstop elements as properties to the Paragraph.
-        ///     </summary>
+        /// <summary>Adds an unspecified amount of tabstop elements as properties to the Paragraph.</summary>
         /// <param name="tabStops">
         /// the
         /// <see cref="TabStop">tabstop(s)</see>
@@ -146,8 +145,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops
-            )
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops)
         {
             AddTabStopsAsProperty(iTextSharp.IO.Util.JavaUtil.ArraysAsList(tabStops));
             return this;
@@ -165,8 +163,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops
-            )
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops)
         {
             AddTabStopsAsProperty(tabStops);
             return this;
@@ -184,11 +181,10 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition
-            )
+        public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition)
         {
-            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
-                >>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property
+                .TAB_STOPS);
             if (tabStops != null)
             {
                 tabStops.JRemove(tabStopPosition);
@@ -202,8 +198,8 @@ namespace iTextSharp.Layout.Element
             {
                 case iTextSharp.Layout.Property.Property.LEADING:
                 {
-                    return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements
-                        [0] is Image ? 1 : 1.35f);
+                    return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements[0] is Image ? 
+                        1 : 1.35f);
                 }
 
                 case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT:
@@ -239,8 +235,7 @@ namespace iTextSharp.Layout.Element
         /// the Paragraph, as a <code>float</code>
         /// </param>
         /// <returns>this Paragraph</returns>
-        public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent
-            )
+        public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent)
         {
             SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, indent);
             return this;
@@ -256,8 +251,7 @@ namespace iTextSharp.Layout.Element
         /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
         public virtual iTextSharp.Layout.Element.Paragraph SetFixedLeading(float leading)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.FIXED
-                , leading));
+            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.FIXED, leading));
             return this;
         }
 
@@ -269,11 +263,9 @@ namespace iTextSharp.Layout.Element
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
-        public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading
-            )
+        public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading)
         {
-            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED
-                , leading));
+            SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
             return this;
         }
 
@@ -284,8 +276,8 @@ namespace iTextSharp.Layout.Element
 
         private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
         {
-            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop
-                >>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property
+                .TAB_STOPS);
             if (tabStops == null)
             {
                 tabStops = new SortedDictionary<float, TabStop>();

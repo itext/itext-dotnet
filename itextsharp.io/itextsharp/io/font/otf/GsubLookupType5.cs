@@ -53,8 +53,8 @@ namespace iTextSharp.IO.Font.Otf
         protected internal IList<ContextualSubTable> subTables;
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal GsubLookupType5(OpenTypeFontTableReader openReader, int lookupFlag
-            , int[] subTableLocations)
+        protected internal GsubLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
+            )
             : base(openReader, lookupFlag, subTableLocations)
         {
             subTables = new List<ContextualSubTable>();
@@ -87,8 +87,7 @@ namespace iTextSharp.IO.Font.Otf
                         gidx.NextGlyph(openReader, lookupFlag);
                     }
                     line.idx = gidx.idx;
-                    OpenTableLookup lookupTable = openReader.GetLookupTable(substRecord.lookupListIndex
-                        );
+                    OpenTableLookup lookupTable = openReader.GetLookupTable(substRecord.lookupListIndex);
                     lookupTable.TransformOne(line);
                 }
                 line.idx = line.end;
@@ -133,32 +132,25 @@ namespace iTextSharp.IO.Font.Otf
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadSubTableFormat1(int subTableLocation)
         {
-            IDictionary<int, IList<ContextualSubstRule>> substMap = new Dictionary<int, IList
-                <ContextualSubstRule>>();
+            IDictionary<int, IList<ContextualSubstRule>> substMap = new Dictionary<int, IList<ContextualSubstRule>>();
             int coverageOffset = openReader.rf.ReadUnsignedShort();
             int subRuleSetCount = openReader.rf.ReadUnsignedShort();
-            int[] subRuleSetOffsets = openReader.ReadUShortArray(subRuleSetCount, subTableLocation
-                );
-            IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverageOffset
-                );
+            int[] subRuleSetOffsets = openReader.ReadUShortArray(subRuleSetCount, subTableLocation);
+            IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverageOffset);
             for (int i = 0; i < subRuleSetCount; ++i)
             {
                 openReader.rf.Seek(subRuleSetOffsets[i]);
                 int subRuleCount = openReader.rf.ReadUnsignedShort();
-                int[] subRuleOffsets = openReader.ReadUShortArray(subRuleCount, subRuleSetOffsets
-                    [i]);
-                IList<ContextualSubstRule> subRuleSet = new List<ContextualSubstRule>(subRuleCount
-                    );
+                int[] subRuleOffsets = openReader.ReadUShortArray(subRuleCount, subRuleSetOffsets[i]);
+                IList<ContextualSubstRule> subRuleSet = new List<ContextualSubstRule>(subRuleCount);
                 for (int j = 0; j < subRuleCount; ++j)
                 {
                     openReader.rf.Seek(subRuleOffsets[j]);
                     int glyphCount = openReader.rf.ReadUnsignedShort();
                     int substCount = openReader.rf.ReadUnsignedShort();
                     int[] inputGlyphIds = openReader.ReadUShortArray(glyphCount - 1);
-                    SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount
-                        );
-                    subRuleSet.Add(new SubTableLookup5Format1.SubstRuleFormat1(inputGlyphIds, substLookupRecords
-                        ));
+                    SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount);
+                    subRuleSet.Add(new SubTableLookup5Format1.SubstRuleFormat1(inputGlyphIds, substLookupRecords));
                 }
                 substMap[coverageGlyphIds[i]] = subRuleSet;
             }
@@ -171,16 +163,13 @@ namespace iTextSharp.IO.Font.Otf
             int coverageOffset = openReader.rf.ReadUnsignedShort();
             int classDefOffset = openReader.rf.ReadUnsignedShort();
             int subClassSetCount = openReader.rf.ReadUnsignedShort();
-            int[] subClassSetOffsets = openReader.ReadUShortArray(subClassSetCount, subTableLocation
+            int[] subClassSetOffsets = openReader.ReadUShortArray(subClassSetCount, subTableLocation);
+            ICollection<int> coverageGlyphIds = new HashSet<int>(openReader.ReadCoverageFormat(subTableLocation + coverageOffset
+                ));
+            OtfClass classDefinition = openReader.ReadClassDefinition(subTableLocation + classDefOffset);
+            SubTableLookup5Format2 t = new SubTableLookup5Format2(openReader, lookupFlag, coverageGlyphIds, classDefinition
                 );
-            ICollection<int> coverageGlyphIds = new HashSet<int>(openReader.ReadCoverageFormat
-                (subTableLocation + coverageOffset));
-            OtfClass classDefinition = openReader.ReadClassDefinition(subTableLocation + classDefOffset
-                );
-            SubTableLookup5Format2 t = new SubTableLookup5Format2(openReader, lookupFlag, coverageGlyphIds
-                , classDefinition);
-            IList<IList<ContextualSubstRule>> subClassSets = new List<IList<ContextualSubstRule
-                >>(subClassSetCount);
+            IList<IList<ContextualSubstRule>> subClassSets = new List<IList<ContextualSubstRule>>(subClassSetCount);
             for (int i = 0; i < subClassSetCount; ++i)
             {
                 IList<ContextualSubstRule> subClassSet = null;
@@ -188,8 +177,7 @@ namespace iTextSharp.IO.Font.Otf
                 {
                     openReader.rf.Seek(subClassSetOffsets[i]);
                     int subClassRuleCount = openReader.rf.ReadUnsignedShort();
-                    int[] subClassRuleOffsets = openReader.ReadUShortArray(subClassRuleCount, subClassSetOffsets
-                        [i]);
+                    int[] subClassRuleOffsets = openReader.ReadUShortArray(subClassRuleCount, subClassSetOffsets[i]);
                     subClassSet = new List<ContextualSubstRule>(subClassRuleCount);
                     for (int j = 0; j < subClassRuleCount; ++j)
                     {
@@ -198,10 +186,8 @@ namespace iTextSharp.IO.Font.Otf
                         int glyphCount = openReader.rf.ReadUnsignedShort();
                         int substCount = openReader.rf.ReadUnsignedShort();
                         int[] inputClassIds = openReader.ReadUShortArray(glyphCount - 1);
-                        SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount
-                            );
-                        rule = new SubTableLookup5Format2.SubstRuleFormat2(t, inputClassIds, substLookupRecords
-                            );
+                        SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount);
+                        rule = new SubTableLookup5Format2.SubstRuleFormat2(t, inputClassIds, substLookupRecords);
                         subClassSet.Add(rule);
                     }
                 }
@@ -217,12 +203,11 @@ namespace iTextSharp.IO.Font.Otf
             int glyphCount = openReader.rf.ReadUnsignedShort();
             int substCount = openReader.rf.ReadUnsignedShort();
             int[] coverageOffsets = openReader.ReadUShortArray(glyphCount, subTableLocation);
-            SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount
-                );
+            SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount);
             IList<ICollection<int>> coverages = new List<ICollection<int>>(glyphCount);
             openReader.ReadCoverages(coverageOffsets, coverages);
-            SubTableLookup5Format3.SubstRuleFormat3 rule = new SubTableLookup5Format3.SubstRuleFormat3
-                (coverages, substLookupRecords);
+            SubTableLookup5Format3.SubstRuleFormat3 rule = new SubTableLookup5Format3.SubstRuleFormat3(coverages, substLookupRecords
+                );
             subTables.Add(new SubTableLookup5Format3(openReader, lookupFlag, rule));
         }
     }

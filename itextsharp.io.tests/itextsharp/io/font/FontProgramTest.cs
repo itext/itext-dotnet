@@ -22,11 +22,9 @@ namespace iTextSharp.IO.Font
         {
             FontProgram fp = FontProgramFactory.CreateFont(FontConstants.HELVETICA);
             fp.SetBold(true);
-            NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected"
-                );
+            NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) != 0, "Bold expected");
             fp.SetBold(false);
-            NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) == 0, "Not Bold expected"
-                );
+            NUnit.Framework.Assert.IsTrue((fp.GetPdfFontFlags() & (1 << 18)) == 0, "Not Bold expected");
         }
     }
 }

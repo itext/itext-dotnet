@@ -115,8 +115,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         }
 
         /// <summary>Skips "len" amount of bytes from the InputStream.</summary>
-        /// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.
-        ///     </remarks>
+        /// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.</remarks>
         /// <param name="len">amount of bytes needed to skip</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Skip(int len)

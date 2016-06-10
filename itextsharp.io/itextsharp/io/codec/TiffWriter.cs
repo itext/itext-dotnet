@@ -50,8 +50,8 @@ namespace iTextSharp.IO.Codec
     /// <summary>Exports images as TIFF.</summary>
     public class TiffWriter
     {
-        private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int
-            , TiffWriter.FieldBase>();
+        private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int, TiffWriter.FieldBase>(
+            );
 
         public virtual void AddField(TiffWriter.FieldBase field)
         {
@@ -298,8 +298,8 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static void CompressLZW(Stream stream, int predictor, byte[] b, int height
-            , int samplesPerPixel, int stride)
+        public static void CompressLZW(Stream stream, int predictor, byte[] b, int height, int samplesPerPixel, int
+             stride)
         {
             LZWCompressor lzwCompressor = new LZWCompressor(stream, 8, true);
             bool usePredictor = predictor == TIFFConstants.PREDICTOR_HORIZONTAL_DIFFERENCING;

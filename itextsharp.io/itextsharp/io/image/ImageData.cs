@@ -252,13 +252,11 @@ namespace iTextSharp.IO.Image
         {
             if (this.mask)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask);
             }
             if (!imageMask.mask)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask);
             }
             this.imageMask = imageMask;
         }
@@ -272,8 +270,7 @@ namespace iTextSharp.IO.Image
         {
             if (!CanBeMask())
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask
-                    );
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask);
             }
             mask = true;
         }
@@ -333,8 +330,7 @@ namespace iTextSharp.IO.Image
             return imageAttributes;
         }
 
-        public virtual void SetImageAttributes(IDictionary<String, Object> imageAttributes
-            )
+        public virtual void SetImageAttributes(IDictionary<String, Object> imageAttributes)
         {
             this.imageAttributes = imageAttributes;
         }
@@ -390,8 +386,8 @@ namespace iTextSharp.IO.Image
         /// <exception cref="System.IO.IOException"/>
         internal virtual void LoadData()
         {
-            RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory
-                ().CreateSource(url));
+            RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(url
+                ));
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(raf, stream);
             raf.Close();
@@ -403,8 +399,8 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Creates a new serial id.</summary>
         /// <returns>the new serialId</returns>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
-            .Synchronized)]
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
+            )]
         private static long? GetSerialId()
         {
             return ++serialId;

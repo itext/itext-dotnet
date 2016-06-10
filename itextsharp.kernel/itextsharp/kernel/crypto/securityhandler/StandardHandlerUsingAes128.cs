@@ -49,19 +49,17 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class StandardHandlerUsingAes128 : StandardHandlerUsingStandard128
     {
-        private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)
-            0x6c, (byte)0x54 };
+        private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)0x6c, (byte)0x54 };
 
-        public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] userPassword
-            , byte[] ownerPassword, int permissions, bool encryptMetadata, bool embeddedFilesOnly
-            , byte[] documentId)
-            : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata
-                , embeddedFilesOnly, documentId)
+        public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
+            : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
+                documentId)
         {
         }
 
-        public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] password
-            , byte[] documentId, bool encryptMetadata)
+        public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId, 
+            bool encryptMetadata)
             : base(encryptionDictionary, password, documentId, encryptMetadata)
         {
         }
@@ -96,8 +94,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             }
         }
 
-        protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary
-            , bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool encryptMetadata
+            , bool embeddedFilesOnly)
         {
             if (!encryptMetadata)
             {

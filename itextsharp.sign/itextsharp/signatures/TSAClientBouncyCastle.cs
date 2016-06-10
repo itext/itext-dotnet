@@ -98,16 +98,14 @@ namespace iTextSharp.Signatures
         protected internal String digestAlgorithm;
 
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
-        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")
-        ///     </param>
+        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         public TSAClientBouncyCastle(String url)
             : this(url, null, null, DEFAULTTOKENSIZE, DEFAULTHASHALGORITHM)
         {
         }
 
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
-        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")
-        ///     </param>
+        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         /// <param name="username">String - user(account) name</param>
         /// <param name="password">String - password</param>
         public TSAClientBouncyCastle(String url, String username, String password)
@@ -122,14 +120,12 @@ namespace iTextSharp.Signatures
         /// size is not likely to change (as long as we call the same TSA using
         /// the same imprint length).
         /// </remarks>
-        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")
-        ///     </param>
+        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         /// <param name="username">String - user(account) name</param>
         /// <param name="password">String - password</param>
-        /// <param name="tokSzEstimate">int - estimated size of received time stamp token (DER encoded)
-        ///     </param>
-        public TSAClientBouncyCastle(String url, String username, String password, int tokSzEstimate
-            , String digestAlgorithm)
+        /// <param name="tokSzEstimate">int - estimated size of received time stamp token (DER encoded)</param>
+        public TSAClientBouncyCastle(String url, String username, String password, int tokSzEstimate, String digestAlgorithm
+            )
         {
             this.tsaURL = url;
             this.tsaUsername = username;
@@ -180,8 +176,8 @@ namespace iTextSharp.Signatures
             tsqGenerator.SetCertReq(true);
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
             BigInteger nonce = BigInteger.ValueOf(SystemUtility.GetCurrentTimeMillis());
-            TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms
-                .GetAllowedDigest(digestAlgorithm)), imprint, nonce);
+            TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest
+                (digestAlgorithm)), imprint, nonce);
             byte[] requestBytes = request.GetEncoded();
             // Call the communications layer
             respBytes = GetTSAResponse(requestBytes);
@@ -194,8 +190,7 @@ namespace iTextSharp.Signatures
             if (value != 0)
             {
                 // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
-                throw new PdfException(PdfException.InvalidTsa1ResponseCode2).SetMessageParams(tsaURL
-                    , value.ToString());
+                throw new PdfException(PdfException.InvalidTsa1ResponseCode2).SetMessageParams(tsaURL, value.ToString());
             }
             // @todo: validate the time stap certificate chain (if we want
             //        assure we do not sign using an invalid timestamp).
@@ -203,8 +198,8 @@ namespace iTextSharp.Signatures
             TimeStampToken tsToken = response.TimeStampToken;
             if (tsToken == null)
             {
-                throw new PdfException(PdfException.Tsa1FailedToReturnTimeStampToken2).SetMessageParams
-                    (tsaURL, response.GetStatusString());
+                throw new PdfException(PdfException.Tsa1FailedToReturnTimeStampToken2).SetMessageParams(tsaURL, response.GetStatusString
+                    ());
             }
             TimeStampTokenInfo tsTokenInfo = tsToken.TimeStampInfo;
             // to view details
@@ -225,8 +220,8 @@ namespace iTextSharp.Signatures
         protected internal virtual byte[] GetTSAResponse(byte[] requestBytes)
         {
             // Setup the TSA connection
-            SignUtils.TsaResponse response = SignUtils.GetTsaResponseForUserRequest(tsaURL, requestBytes
-                , tsaUsername, tsaPassword);
+            SignUtils.TsaResponse response = SignUtils.GetTsaResponseForUserRequest(tsaURL, requestBytes, tsaUsername, 
+                tsaPassword);
             // Get TSA response as a byte array
             Stream inp = response.tsaResponseStream;
             MemoryStream baos = new MemoryStream();
@@ -240,8 +235,8 @@ namespace iTextSharp.Signatures
             if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
                 ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture)))
             {
-                respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (respBytes, "US-ASCII"));
+                respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
+                    ));
             }
             return respBytes;
         }

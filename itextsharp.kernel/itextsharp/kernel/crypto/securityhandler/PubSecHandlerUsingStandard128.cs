@@ -49,21 +49,20 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class PubSecHandlerUsingStandard128 : PubSecHandlerUsingStandard40
     {
-        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate
-            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
-            : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly
-                )
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+            , bool encryptMetadata, bool embeddedFilesOnly)
+            : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly)
         {
         }
 
-        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata)
+        public PubSecHandlerUsingStandard128(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, 
+            X509Certificate certificate, bool encryptMetadata)
             : base(encryptionDictionary, certificateKey, certificate, encryptMetadata)
         {
         }
 
-        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
+             encryptMetadata, bool embeddedFilesOnly)
         {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             PdfArray recipients = CreateRecipientsArray();

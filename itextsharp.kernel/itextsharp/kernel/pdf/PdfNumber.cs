@@ -145,8 +145,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
             return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
         }
@@ -190,13 +189,11 @@ namespace iTextSharp.Kernel.Pdf
             {
                 if (isDouble)
                 {
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue
-                        ()));
+                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()));
                 }
                 else
                 {
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue
-                        ()));
+                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()));
                 }
             }
         }
@@ -227,8 +224,8 @@ namespace iTextSharp.Kernel.Pdf
         {
             try
             {
-                value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content
-                    ), System.Globalization.CultureInfo.InvariantCulture);
+                value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
+                    );
             }
             catch (FormatException)
             {
@@ -237,8 +234,7 @@ namespace iTextSharp.Kernel.Pdf
             isDouble = true;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document
-            )
+        protected internal override void CopyContent(PdfObject from, PdfDocument document)
         {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfNumber number = (iTextSharp.Kernel.Pdf.PdfNumber)from;

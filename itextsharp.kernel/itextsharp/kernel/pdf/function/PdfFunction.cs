@@ -59,8 +59,7 @@ namespace iTextSharp.Kernel.Pdf.Function
             return (int)((PdfDictionary)GetPdfObject()).GetAsInt(PdfName.FunctionType);
         }
 
-        public virtual bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace
-            )
+        public virtual bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace)
         {
             return true;
         }
@@ -88,29 +87,24 @@ namespace iTextSharp.Kernel.Pdf.Function
             {
             }
 
-            public Type0(PdfArray domain, PdfArray range, PdfArray size, PdfNumber bitsPerSample
-                , byte[] samples)
+            public Type0(PdfArray domain, PdfArray range, PdfArray size, PdfNumber bitsPerSample, byte[] samples)
                 : this(domain, range, size, bitsPerSample, null, null, null, samples)
             {
             }
 
-            public Type0(PdfArray domain, PdfArray range, PdfArray size, PdfNumber bitsPerSample
+            public Type0(PdfArray domain, PdfArray range, PdfArray size, PdfNumber bitsPerSample, PdfNumber order, PdfArray
+                 encode, PdfArray decode, byte[] samples)
+                : this(MakeType0(domain, range, size, bitsPerSample, order, encode, decode, samples))
+            {
+            }
+
+            public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace)
+            {
+                return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents();
+            }
+
+            private static PdfStream MakeType0(PdfArray domain, PdfArray range, PdfArray size, PdfNumber bitsPerSample
                 , PdfNumber order, PdfArray encode, PdfArray decode, byte[] samples)
-                : this(MakeType0(domain, range, size, bitsPerSample, order, encode, decode, samples
-                    ))
-            {
-            }
-
-            public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace
-                )
-            {
-                return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents
-                    ();
-            }
-
-            private static PdfStream MakeType0(PdfArray domain, PdfArray range, PdfArray size
-                , PdfNumber bitsPerSample, PdfNumber order, PdfArray encode, PdfArray decode, 
-                byte[] samples)
             {
                 PdfStream stream = new PdfStream(samples);
                 stream.Put(PdfName.FunctionType, new PdfNumber(0));
@@ -146,14 +140,13 @@ namespace iTextSharp.Kernel.Pdf.Function
             {
             }
 
-            public Type2(PdfArray domain, PdfArray range, PdfArray c0, PdfArray c1, PdfNumber
-                 n)
+            public Type2(PdfArray domain, PdfArray range, PdfArray c0, PdfArray c1, PdfNumber n)
                 : this(MakeType2(domain, range, c0, c1, n))
             {
             }
 
-            private static PdfDictionary MakeType2(PdfArray domain, PdfArray range, PdfArray 
-                c0, PdfArray c1, PdfNumber n)
+            private static PdfDictionary MakeType2(PdfArray domain, PdfArray range, PdfArray c0, PdfArray c1, PdfNumber
+                 n)
             {
                 PdfDictionary dictionary = new PdfDictionary();
                 dictionary.Put(PdfName.FunctionType, new PdfNumber(2));
@@ -182,20 +175,19 @@ namespace iTextSharp.Kernel.Pdf.Function
             {
             }
 
-            public Type3(PdfArray domain, PdfArray range, PdfArray functions, PdfArray bounds
-                , PdfArray encode)
+            public Type3(PdfArray domain, PdfArray range, PdfArray functions, PdfArray bounds, PdfArray encode)
                 : this(MakeType3(domain, range, functions, bounds, encode))
             {
             }
 
-            public Type3(PdfArray domain, PdfArray range, IList<PdfFunction> functions, PdfArray
-                 bounds, PdfArray encode)
+            public Type3(PdfArray domain, PdfArray range, IList<PdfFunction> functions, PdfArray bounds, PdfArray encode
+                )
                 : this(domain, range, GetFunctionsArray(functions), bounds, encode)
             {
             }
 
-            private static PdfDictionary MakeType3(PdfArray domain, PdfArray range, PdfArray 
-                functions, PdfArray bounds, PdfArray encode)
+            private static PdfDictionary MakeType3(PdfArray domain, PdfArray range, PdfArray functions, PdfArray bounds
+                , PdfArray encode)
             {
                 PdfDictionary dictionary = new PdfDictionary();
                 dictionary.Put(PdfName.FunctionType, new PdfNumber(3));
@@ -230,11 +222,9 @@ namespace iTextSharp.Kernel.Pdf.Function
             {
             }
 
-            public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace
-                )
+            public override bool CheckCompatibilityWithColorSpace(PdfColorSpace alternateSpace)
             {
-                return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents
-                    ();
+                return GetInputSize() == 1 && GetOutputSize() == alternateSpace.GetNumberOfComponents();
             }
 
             private static PdfStream MakeType4(PdfArray domain, PdfArray range, byte[] ps)

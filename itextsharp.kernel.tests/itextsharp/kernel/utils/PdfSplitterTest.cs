@@ -10,11 +10,10 @@ namespace iTextSharp.Kernel.Utils
 {
     public class PdfSplitterTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -25,24 +24,22 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
-            )]
+        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest01()
         {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_44(inputPdfDoc).SplitByPageNumbers
-                (pageNumbers);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_44(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments)
             {
                 doc.Close();
             }
             for (int i = 1; i <= 3; i++)
             {
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                     + "splitDocument1_" + i.ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument1_"
-                     + i.ToString() + ".pdf", destinationFolder, "diff_"));
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument1_" + i
+                    .ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument1_" + i.ToString() + ".pdf", destinationFolder
+                    , "diff_"));
             }
         }
 
@@ -56,13 +53,12 @@ namespace iTextSharp.Kernel.Utils
 
             internal int partNumber;
 
-            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
-                )
+            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
             {
                 try
                 {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument1_"
-                         + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber
+                        ++).ToString() + ".pdf", FileMode.Create));
                 }
                 catch (FileNotFoundException)
                 {
@@ -74,19 +70,17 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3
-            )]
+        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest02()
         {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            new _PdfSplitter_74(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_85
-                ());
+            new _PdfSplitter_74(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_85());
             for (int i = 1; i <= 3; i++)
             {
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                     + "splitDocument2_" + i.ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument2_"
-                     + i.ToString() + ".pdf", destinationFolder, "diff_"));
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
+                    .ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument2_" + i.ToString() + ".pdf", destinationFolder
+                    , "diff_"));
             }
         }
 
@@ -100,13 +94,12 @@ namespace iTextSharp.Kernel.Utils
 
             internal int partNumber;
 
-            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
-                )
+            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
             {
                 try
                 {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument2_"
-                         + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument2_" + (this.partNumber
+                        ++).ToString() + ".pdf", FileMode.Create));
                 }
                 catch (FileNotFoundException)
                 {
@@ -134,27 +127,24 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
-            )]
+        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest03()
         {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
-                (1, 2);
-            PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence
-                (70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_113(inputPdfDoc).ExtractPageRanges
-                (iTextSharp.IO.Util.JavaUtil.ArraysAsList(pageRange1, pageRange2));
+            PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
+            PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_113(inputPdfDoc).ExtractPageRanges(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+                (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments)
             {
                 pdfDocument.Close();
             }
             for (int i = 1; i <= 2; i++)
             {
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                     + "splitDocument3_" + i + ".pdf", sourceFolder + "cmp/" + "splitDocument3_" 
-                    + i.ToString() + ".pdf", destinationFolder, "diff_"));
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument3_" + i
+                     + ".pdf", sourceFolder + "cmp/" + "splitDocument3_" + i.ToString() + ".pdf", destinationFolder, "diff_"
+                    ));
             }
         }
 
@@ -168,13 +158,12 @@ namespace iTextSharp.Kernel.Utils
 
             internal int partNumber;
 
-            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
-                )
+            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
             {
                 try
                 {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument3_"
-                         + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber
+                        ++).ToString() + ".pdf", FileMode.Create));
                 }
                 catch (FileNotFoundException)
                 {
@@ -186,8 +175,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2
-            )]
+        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentByOutlineTest()
         {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
@@ -218,9 +206,8 @@ namespace iTextSharp.Kernel.Utils
             }
             for (int i = 1; i <= 4; ++i)
             {
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                     + "splitBySize_part" + i + ".pdf", sourceFolder + "cmp/" + "splitBySize_part"
-                     + i + ".pdf", destinationFolder, "diff_"));
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitBySize_part" + 
+                    i + ".pdf", sourceFolder + "cmp/" + "splitBySize_part" + i + ".pdf", destinationFolder, "diff_"));
             }
         }
 
@@ -234,13 +221,12 @@ namespace iTextSharp.Kernel.Utils
 
             internal int partNumber;
 
-            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange
-                )
+            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange)
             {
                 try
                 {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitBySize_part"
-                         + (this.partNumber++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber
+                        ++).ToString() + ".pdf", FileMode.Create));
                 }
                 catch (FileNotFoundException)
                 {

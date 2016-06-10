@@ -54,8 +54,7 @@ namespace iTextSharp.IO.Font.Otf
         private readonly IList<GposLookupType4.MarkToBase> marksbases;
 
         /// <exception cref="System.IO.IOException"/>
-        public GposLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GposLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             marksbases = new List<GposLookupType4.MarkToBase>();
@@ -113,9 +112,8 @@ namespace iTextSharp.IO.Font.Otf
                 int markClass = omr.markClass;
                 GposAnchor baseAnchor = gpas[markClass];
                 GposAnchor markAnchor = omr.anchor;
-                line.Set(line.idx, new Glyph(line.Get(line.idx), -markAnchor.XCoordinate + baseAnchor
-                    .XCoordinate, -markAnchor.YCoordinate + baseAnchor.YCoordinate, 0, 0, gi.idx 
-                    - line.idx));
+                line.Set(line.idx, new Glyph(line.Get(line.idx), -markAnchor.XCoordinate + baseAnchor.XCoordinate, -markAnchor
+                    .YCoordinate + baseAnchor.YCoordinate, 0, 0, gi.idx - line.idx));
                 changed = true;
                 break;
             }
@@ -136,15 +134,13 @@ namespace iTextSharp.IO.Font.Otf
             int baseArrayLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             IList<int> markCoverage = openReader.ReadCoverageFormat(markCoverageLocation);
             IList<int> baseCoverage = openReader.ReadCoverageFormat(baseCoverageLocation);
-            IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation
-                );
+            IList<OtfMarkRecord> markRecords = OtfReadCommon.ReadMarkArray(openReader, markArrayLocation);
             GposLookupType4.MarkToBase markToBase = new GposLookupType4.MarkToBase();
             for (int k = 0; k < markCoverage.Count; ++k)
             {
                 markToBase.marks[markCoverage[k]] = markRecords[k];
             }
-            IList<GposAnchor[]> baseArray = OtfReadCommon.ReadBaseArray(openReader, classCount
-                , baseArrayLocation);
+            IList<GposAnchor[]> baseArray = OtfReadCommon.ReadBaseArray(openReader, classCount, baseArrayLocation);
             for (int k_1 = 0; k_1 < baseCoverage.Count; ++k_1)
             {
                 markToBase.bases[baseCoverage[k_1]] = baseArray[k_1];
@@ -154,11 +150,9 @@ namespace iTextSharp.IO.Font.Otf
 
         public class MarkToBase
         {
-            public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord
-                >();
+            public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord>();
 
-            public readonly IDictionary<int, GposAnchor[]> bases = new Dictionary<int, GposAnchor
-                []>();
+            public readonly IDictionary<int, GposAnchor[]> bases = new Dictionary<int, GposAnchor[]>();
         }
     }
 }

@@ -94,8 +94,7 @@ namespace iTextSharp.Kernel.Events
         }
 
         /// <summary>Returns the PdfPage associated with this event.</summary>
-        /// <remarks>Returns the PdfPage associated with this event. Warning: this can be null.
-        ///     </remarks>
+        /// <remarks>Returns the PdfPage associated with this event. Warning: this can be null.</remarks>
         /// <returns>the PdfPage associated with this event</returns>
         public virtual PdfPage GetPage()
         {

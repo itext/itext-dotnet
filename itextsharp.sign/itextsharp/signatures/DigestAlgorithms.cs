@@ -66,19 +66,14 @@ namespace iTextSharp.Signatures
         /// <summary>Algorithm available for signatures since PDF 1.7.</summary>
         public const String RIPEMD160 = "RIPEMD160";
 
-        /// <summary>Maps the digest IDs with the human-readable name of the digest algorithm.
-        ///     </summary>
-        private static readonly IDictionary<String, String> digestNames = new Dictionary<
-            String, String>();
+        /// <summary>Maps the digest IDs with the human-readable name of the digest algorithm.</summary>
+        private static readonly IDictionary<String, String> digestNames = new Dictionary<String, String>();
 
-        /// <summary>Maps digest algorithm that are unknown by the JDKs MessageDigest object to a known one.
-        ///     </summary>
-        private static readonly IDictionary<String, String> fixNames = new Dictionary<String
-            , String>();
+        /// <summary>Maps digest algorithm that are unknown by the JDKs MessageDigest object to a known one.</summary>
+        private static readonly IDictionary<String, String> fixNames = new Dictionary<String, String>();
 
         /// <summary>Maps the name of a digest algorithm with its ID.</summary>
-        private static readonly IDictionary<String, String> allowedDigests = new Dictionary
-            <String, String>();
+        private static readonly IDictionary<String, String> allowedDigests = new Dictionary<String, String>();
 
         static DigestAlgorithms()
         {
@@ -212,8 +207,7 @@ namespace iTextSharp.Signatures
         /// <returns>An oid.</returns>
         public static String GetAllowedDigest(String name)
         {
-            return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture
-                ));
+            return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 }

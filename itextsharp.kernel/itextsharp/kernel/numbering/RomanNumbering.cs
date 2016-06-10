@@ -55,11 +55,10 @@ namespace iTextSharp.Kernel.Numbering
     public class RomanNumbering
     {
         /// <summary>Array with Roman digits.</summary>
-        private static readonly RomanNumbering.RomanDigit[] ROMAN_DIGITS = new RomanNumbering.RomanDigit
-            [] { new RomanNumbering.RomanDigit('m', 1000, false), new RomanNumbering.RomanDigit
-            ('d', 500, false), new RomanNumbering.RomanDigit('c', 100, true), new RomanNumbering.RomanDigit
-            ('l', 50, false), new RomanNumbering.RomanDigit('x', 10, true), new RomanNumbering.RomanDigit
-            ('v', 5, false), new RomanNumbering.RomanDigit('i', 1, true) };
+        private static readonly RomanNumbering.RomanDigit[] ROMAN_DIGITS = new RomanNumbering.RomanDigit[] { new RomanNumbering.RomanDigit
+            ('m', 1000, false), new RomanNumbering.RomanDigit('d', 500, false), new RomanNumbering.RomanDigit('c', 
+            100, true), new RomanNumbering.RomanDigit('l', 50, false), new RomanNumbering.RomanDigit('x', 10, true
+            ), new RomanNumbering.RomanDigit('v', 5, false), new RomanNumbering.RomanDigit('i', 1, true) };
 
         /// <summary>Returns a lower case roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>

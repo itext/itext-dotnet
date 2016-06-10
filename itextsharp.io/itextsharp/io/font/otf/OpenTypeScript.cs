@@ -55,14 +55,12 @@ namespace iTextSharp.IO.Font.Otf
         private IList<ScriptRecord> records;
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable
-            )
+        public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable)
         {
             this.openTypeReader = openTypeReader;
             records = new List<ScriptRecord>();
             openTypeReader.rf.Seek(locationScriptTable);
-            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationScriptTable
-                );
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationScriptTable);
             foreach (TagAndLocation tagLoc in tagsLocs)
             {
                 ReadScriptRecord(tagLoc);
@@ -74,8 +72,7 @@ namespace iTextSharp.IO.Font.Otf
             return records;
         }
 
-        public virtual LanguageRecord GetLanguageRecord(String[] scripts, String language
-            )
+        public virtual LanguageRecord GetLanguageRecord(String[] scripts, String language)
         {
             ScriptRecord scriptFound = null;
             ScriptRecord scriptDefault = null;

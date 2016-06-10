@@ -75,8 +75,7 @@ namespace iTextSharp.Barcodes
         private static readonly int[] GUARD_EMPTY = new int[] {  };
 
         /// <summary>The bar positions that are guard bars.</summary>
-        private static readonly int[] GUARD_UPCA = new int[] { 0, 2, 4, 6, 28, 30, 52, 54
-            , 56, 58 };
+        private static readonly int[] GUARD_UPCA = new int[] { 0, 2, 4, 6, 28, 30, 52, 54, 56, 58 };
 
         /// <summary>The bar positions that are guard bars.</summary>
         private static readonly int[] GUARD_EAN13 = new int[] { 0, 2, 28, 30, 56, 58 };
@@ -88,19 +87,18 @@ namespace iTextSharp.Barcodes
         private static readonly int[] GUARD_UPCE = new int[] { 0, 2, 28, 30, 32 };
 
         /// <summary>The x coordinates to place the text.</summary>
-        private static readonly float[] TEXTPOS_EAN13 = new float[] { 6.5f, 13.5f, 20.5f, 
-            27.5f, 34.5f, 41.5f, 53.5f, 60.5f, 67.5f, 74.5f, 81.5f, 88.5f };
+        private static readonly float[] TEXTPOS_EAN13 = new float[] { 6.5f, 13.5f, 20.5f, 27.5f, 34.5f, 41.5f, 53.5f
+            , 60.5f, 67.5f, 74.5f, 81.5f, 88.5f };
 
         /// <summary>The x coordinates to place the text.</summary>
-        private static readonly float[] TEXTPOS_EAN8 = new float[] { 6.5f, 13.5f, 20.5f, 
-            27.5f, 39.5f, 46.5f, 53.5f, 60.5f };
+        private static readonly float[] TEXTPOS_EAN8 = new float[] { 6.5f, 13.5f, 20.5f, 27.5f, 39.5f, 46.5f, 53.5f
+            , 60.5f };
 
         /// <summary>The basic bar widths.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 3, 2, 1, 1 }, 
-            new byte[] { 2, 2, 2, 1 }, new byte[] { 2, 1, 2, 2 }, new byte[] { 1, 4, 1, 1
-             }, new byte[] { 1, 1, 3, 2 }, new byte[] { 1, 2, 3, 1 }, new byte[] { 1, 1, 
-            1, 4 }, new byte[] { 1, 3, 1, 2 }, new byte[] { 1, 2, 1, 3 }, new byte[] { 3, 
-            1, 1, 2 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 3, 2, 1, 1 }, new byte[] { 2, 2, 2, 1 }
+            , new byte[] { 2, 1, 2, 2 }, new byte[] { 1, 4, 1, 1 }, new byte[] { 1, 1, 3, 2 }, new byte[] { 1, 2, 
+            3, 1 }, new byte[] { 1, 1, 1, 4 }, new byte[] { 1, 3, 1, 2 }, new byte[] { 1, 2, 1, 3 }, new byte[] { 
+            3, 1, 1, 2 } };
 
         /// <summary>The total number of bars for EAN13.</summary>
         private const int TOTALBARS_EAN13 = 11 + 12 * 4;
@@ -124,36 +122,31 @@ namespace iTextSharp.Barcodes
         private const int EVEN = 1;
 
         /// <summary>Sequence of parities to be used with EAN13.</summary>
-        private static readonly byte[][] PARITY13 = new byte[][] { new byte[] { ODD, ODD, 
-            ODD, ODD, ODD, ODD }, new byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, new byte
-            [] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, new byte[] { ODD, ODD, EVEN, EVEN, EVEN
-            , ODD }, new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, new byte[] { ODD, EVEN
-            , EVEN, ODD, ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, new 
-            byte[] { ODD, EVEN, ODD, EVEN, ODD, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN
-            , EVEN, ODD }, new byte[] { ODD, EVEN, EVEN, ODD, EVEN, ODD } };
+        private static readonly byte[][] PARITY13 = new byte[][] { new byte[] { ODD, ODD, ODD, ODD, ODD, ODD }, new 
+            byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, new byte[] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, new byte[]
+             { ODD, ODD, EVEN, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, new byte[] { ODD
+            , EVEN, EVEN, ODD, ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, EVEN
+            , ODD, EVEN, ODD, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, EVEN
+            , ODD, EVEN, ODD } };
 
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY2 = new byte[][] { new byte[] { ODD, ODD }
-            , new byte[] { ODD, EVEN }, new byte[] { EVEN, ODD }, new byte[] { EVEN, EVEN
-             } };
+        private static readonly byte[][] PARITY2 = new byte[][] { new byte[] { ODD, ODD }, new byte[] { ODD, EVEN }
+            , new byte[] { EVEN, ODD }, new byte[] { EVEN, EVEN } };
 
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY5 = new byte[][] { new byte[] { EVEN, EVEN
-            , ODD, ODD, ODD }, new byte[] { EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN
-            , ODD, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, ODD, ODD, EVEN }, new byte[]
-             { ODD, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, ODD, EVEN, EVEN, ODD }, new 
-            byte[] { ODD, ODD, ODD, EVEN, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, ODD }
-            , new byte[] { ODD, EVEN, ODD, ODD, EVEN }, new byte[] { ODD, ODD, EVEN, ODD, 
-            EVEN } };
+        private static readonly byte[][] PARITY5 = new byte[][] { new byte[] { EVEN, EVEN, ODD, ODD, ODD }, new byte
+            [] { EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, ODD, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, ODD
+            , ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, ODD, EVEN, EVEN, ODD }, new 
+            byte[] { ODD, ODD, ODD, EVEN, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, ODD }, new byte[] { ODD, EVEN
+            , ODD, ODD, EVEN }, new byte[] { ODD, ODD, EVEN, ODD, EVEN } };
 
         /// <summary>Sequence of parities to be used with UPCE.</summary>
-        private static readonly byte[][] PARITYE = new byte[][] { new byte[] { EVEN, EVEN
-            , EVEN, ODD, ODD, ODD }, new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, new 
-            byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, new byte[] { EVEN, EVEN, ODD, ODD
-            , ODD, EVEN }, new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, new byte[] { EVEN
-            , ODD, ODD, EVEN, EVEN, ODD }, new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }
-            , new byte[] { EVEN, ODD, EVEN, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, EVEN
-            , ODD, ODD, EVEN }, new byte[] { EVEN, ODD, ODD, EVEN, ODD, EVEN } };
+        private static readonly byte[][] PARITYE = new byte[][] { new byte[] { EVEN, EVEN, EVEN, ODD, ODD, ODD }, 
+            new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, new byte
+            [] { EVEN, EVEN, ODD, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, new byte[] { EVEN
+            , ODD, ODD, EVEN, EVEN, ODD }, new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }, new byte[] { EVEN, ODD, 
+            EVEN, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, ODD, EVEN
+            , ODD, EVEN } };
 
         /// <summary>Creates new BarcodeEAN</summary>
         public BarcodeEAN(PdfDocument document)
@@ -252,13 +245,13 @@ namespace iTextSharp.Barcodes
             {
                 return null;
             }
-            if (text.JSubstring(3, 6).Equals("000") || text.JSubstring(3, 6).Equals("100") ||
-                 text.JSubstring(3, 6).Equals("200"))
+            if (text.JSubstring(3, 6).Equals("000") || text.JSubstring(3, 6).Equals("100") || text.JSubstring(3, 6).Equals
+                ("200"))
             {
                 if (text.JSubstring(6, 8).Equals("00"))
                 {
-                    return text.JSubstring(0, 1) + text.JSubstring(1, 3) + text.JSubstring(8, 11) + text
-                        .JSubstring(3, 4) + text.Substring(11);
+                    return text.JSubstring(0, 1) + text.JSubstring(1, 3) + text.JSubstring(8, 11) + text.JSubstring(3, 4) + text
+                        .Substring(11);
                 }
             }
             else
@@ -267,8 +260,7 @@ namespace iTextSharp.Barcodes
                 {
                     if (text.JSubstring(6, 9).Equals("000"))
                     {
-                        return text.JSubstring(0, 1) + text.JSubstring(1, 4) + text.JSubstring(9, 11) + "3"
-                             + text.Substring(11);
+                        return text.JSubstring(0, 1) + text.JSubstring(1, 4) + text.JSubstring(9, 11) + "3" + text.Substring(11);
                     }
                 }
                 else
@@ -277,8 +269,7 @@ namespace iTextSharp.Barcodes
                     {
                         if (text.JSubstring(6, 10).Equals("0000"))
                         {
-                            return text.JSubstring(0, 1) + text.JSubstring(1, 5) + text.JSubstring(10, 11) + 
-                                "4" + text.Substring(11);
+                            return text.JSubstring(0, 1) + text.JSubstring(1, 5) + text.JSubstring(10, 11) + "4" + text.Substring(11);
                         }
                     }
                     else
@@ -287,8 +278,7 @@ namespace iTextSharp.Barcodes
                         {
                             if (text.JSubstring(6, 10).Equals("0000"))
                             {
-                                return text.JSubstring(0, 1) + text.JSubstring(1, 6) + text.JSubstring(10, 11) + 
-                                    text.Substring(11);
+                                return text.JSubstring(0, 1) + text.JSubstring(1, 6) + text.JSubstring(10, 11) + text.Substring(11);
                             }
                         }
                     }
@@ -497,8 +487,7 @@ namespace iTextSharp.Barcodes
             }
             byte[] bars = new byte[TOTALBARS_SUPP5];
             int pb = 0;
-            int parity = (((code[0] + code[2] + code[4]) * 3) + ((code[1] + code[3]) * 9)) % 
-                10;
+            int parity = (((code[0] + code[2] + code[4]) * 3) + ((code[1] + code[3]) * 9)) % 10;
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 2;
@@ -650,8 +639,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             Rectangle rect = GetBarcodeSize();
             float barStartX = 0;

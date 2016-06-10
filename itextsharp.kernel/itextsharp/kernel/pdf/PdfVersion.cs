@@ -49,35 +49,26 @@ namespace iTextSharp.Kernel.Pdf
     /// <summary>Enum listing all official PDF versions.</summary>
     public class PdfVersion : IComparable<iTextSharp.Kernel.Pdf.PdfVersion>
     {
-        private static readonly IList<iTextSharp.Kernel.Pdf.PdfVersion> values = new List
-            <iTextSharp.Kernel.Pdf.PdfVersion>();
+        private static readonly IList<iTextSharp.Kernel.Pdf.PdfVersion> values = new List<iTextSharp.Kernel.Pdf.PdfVersion
+            >();
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_0 = CreatePdfVersion
-            (1, 0);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_0 = CreatePdfVersion(1, 0);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_1 = CreatePdfVersion
-            (1, 0);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_1 = CreatePdfVersion(1, 0);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_2 = CreatePdfVersion
-            (1, 2);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_2 = CreatePdfVersion(1, 2);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_3 = CreatePdfVersion
-            (1, 3);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_3 = CreatePdfVersion(1, 3);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_4 = CreatePdfVersion
-            (1, 4);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_4 = CreatePdfVersion(1, 4);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_5 = CreatePdfVersion
-            (1, 5);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_5 = CreatePdfVersion(1, 5);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_6 = CreatePdfVersion
-            (1, 6);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_6 = CreatePdfVersion(1, 6);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_7 = CreatePdfVersion
-            (1, 7);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_1_7 = CreatePdfVersion(1, 7);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_2_0 = CreatePdfVersion
-            (2, 0);
+        public static readonly iTextSharp.Kernel.Pdf.PdfVersion PDF_2_0 = CreatePdfVersion(2, 0);
 
         private int major;
 
@@ -153,11 +144,9 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        private static iTextSharp.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor
-            )
+        private static iTextSharp.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor)
         {
-            iTextSharp.Kernel.Pdf.PdfVersion pdfVersion = new iTextSharp.Kernel.Pdf.PdfVersion
-                (major, minor);
+            iTextSharp.Kernel.Pdf.PdfVersion pdfVersion = new iTextSharp.Kernel.Pdf.PdfVersion(major, minor);
             values.Add(pdfVersion);
             return pdfVersion;
         }

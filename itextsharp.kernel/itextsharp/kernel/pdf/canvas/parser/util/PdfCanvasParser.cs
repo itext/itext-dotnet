@@ -112,8 +112,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                 {
                     if (ob.ToString().Equals("BI"))
                     {
-                        PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, currentResources
-                            .GetResource(PdfName.ColorSpace));
+                        PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, currentResources.GetResource(PdfName.ColorSpace
+                            ));
                         ls.Clear();
                         ls.Add(inlineImageAsStream);
                         ls.Add(new PdfLiteral("EI"));
@@ -139,8 +139,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         }
 
         /// <summary>Reads a dictionary.</summary>
-        /// <remarks>Reads a dictionary. The tokeniser must be positioned past the "&lt;&lt;" token.
-        ///     </remarks>
+        /// <remarks>Reads a dictionary. The tokeniser must be positioned past the "&lt;&lt;" token.</remarks>
         /// <returns>the dictionary</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfDictionary ReadDictionary()
@@ -158,8 +157,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name)
                 {
-                    tokeniser.ThrowError(PdfException.DictionaryKey1IsNotAName, tokeniser.GetStringValue
-                        ());
+                    tokeniser.ThrowError(PdfException.DictionaryKey1IsNotAName, tokeniser.GetStringValue());
                 }
                 PdfName name = new PdfName(tokeniser.GetStringValue());
                 PdfObject obj = ReadObject();
@@ -216,8 +214,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
 
                 case PdfTokenizer.TokenType.String:
                 {
-                    PdfString str = new PdfString(tokeniser.GetDecodedStringContent()).SetHexWriting(
-                        tokeniser.IsHexString());
+                    PdfString str = new PdfString(tokeniser.GetDecodedStringContent()).SetHexWriting(tokeniser.IsHexString());
                     return str;
                 }
 
@@ -240,8 +237,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         }
 
         /// <summary>Reads the next token skipping over the comments.</summary>
-        /// <returns><CODE>true</CODE> if a token was read, <CODE>false</CODE> if the end of content was reached
-        ///     </returns>
+        /// <returns><CODE>true</CODE> if a token was read, <CODE>false</CODE> if the end of content was reached</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         public virtual bool NextValidToken()
         {

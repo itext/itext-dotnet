@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 {
-    /// <summary>Specifies different types of events where a callback should be notified.
-    ///     </summary>
+    /// <summary>Specifies different types of events where a callback should be notified.</summary>
     public enum EventType
     {
         BEGIN_TEXT,

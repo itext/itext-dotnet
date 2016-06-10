@@ -63,11 +63,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.Watermark;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint
-             fixedPrint)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint fixedPrint)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint
-                , fixedPrint.GetPdfObject());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint, fixedPrint.GetPdfObject
+                ());
         }
 
         public virtual PdfDictionary GetFixedPrint()

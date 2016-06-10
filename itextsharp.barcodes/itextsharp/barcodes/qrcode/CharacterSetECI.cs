@@ -57,8 +57,8 @@ namespace iTextSharp.Barcodes.Qrcode
 
         private static void Initialize()
         {
-            IDictionary<String, iTextSharp.Barcodes.Qrcode.CharacterSetECI> n = new Dictionary
-                <String, iTextSharp.Barcodes.Qrcode.CharacterSetECI>(29);
+            IDictionary<String, iTextSharp.Barcodes.Qrcode.CharacterSetECI> n = new Dictionary<String, iTextSharp.Barcodes.Qrcode.CharacterSetECI
+                >(29);
             AddCharacterSet(0, "Cp437", n);
             AddCharacterSet(1, new String[] { "ISO8859_1", "ISO-8859-1" }, n);
             AddCharacterSet(2, "Cp437", n);
@@ -101,19 +101,19 @@ namespace iTextSharp.Barcodes.Qrcode
             return value;
         }
 
-        private static void AddCharacterSet(int value, String encodingName, IDictionary<String
-            , iTextSharp.Barcodes.Qrcode.CharacterSetECI> n)
+        private static void AddCharacterSet(int value, String encodingName, IDictionary<String, iTextSharp.Barcodes.Qrcode.CharacterSetECI
+            > n)
         {
-            iTextSharp.Barcodes.Qrcode.CharacterSetECI eci = new iTextSharp.Barcodes.Qrcode.CharacterSetECI
-                (value, encodingName);
+            iTextSharp.Barcodes.Qrcode.CharacterSetECI eci = new iTextSharp.Barcodes.Qrcode.CharacterSetECI(value, encodingName
+                );
             n[encodingName] = eci;
         }
 
-        private static void AddCharacterSet(int value, String[] encodingNames, IDictionary
-            <String, iTextSharp.Barcodes.Qrcode.CharacterSetECI> n)
+        private static void AddCharacterSet(int value, String[] encodingNames, IDictionary<String, iTextSharp.Barcodes.Qrcode.CharacterSetECI
+            > n)
         {
-            iTextSharp.Barcodes.Qrcode.CharacterSetECI eci = new iTextSharp.Barcodes.Qrcode.CharacterSetECI
-                (value, encodingNames[0]);
+            iTextSharp.Barcodes.Qrcode.CharacterSetECI eci = new iTextSharp.Barcodes.Qrcode.CharacterSetECI(value, encodingNames
+                [0]);
             for (int i = 0; i < encodingNames.Length; i++)
             {
                 n[encodingNames[i]] = eci;
@@ -127,8 +127,7 @@ namespace iTextSharp.Barcodes.Qrcode
         /// representing ECI for character encoding, or null if it is legal
         /// but unsupported
         /// </returns>
-        public static iTextSharp.Barcodes.Qrcode.CharacterSetECI GetCharacterSetECIByName
-            (String name)
+        public static iTextSharp.Barcodes.Qrcode.CharacterSetECI GetCharacterSetECIByName(String name)
         {
             if (NAME_TO_ECI == null)
             {

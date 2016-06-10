@@ -99,8 +99,7 @@ namespace iTextSharp.IO.Image
             image.SetFilter("JPXDecode");
         }
 
-        /// <summary>This method checks if the image is a valid JPEG and processes some parameters.
-        ///     </summary>
+        /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
         private static void ProcessParameters(Jpeg2000ImageData jp2)
         {
             jp2.parameters = new Jpeg2000ImageData.Parameters();
@@ -209,25 +208,22 @@ namespace iTextSharp.IO.Image
                     }
                     else
                     {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidJpeg2000File
-                            );
+                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidJpeg2000File);
                     }
                 }
             }
             catch (System.IO.IOException e)
             {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jpeg2000ImageException
-                    , e);
+                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jpeg2000ImageException, e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static Jpeg2000ImageData.ColorSpecBox Jp2_read_colr(Jpeg2000ImageHelper.Jpeg2000Box
-             box, Stream jpeg2000Stream)
+        private static Jpeg2000ImageData.ColorSpecBox Jp2_read_colr(Jpeg2000ImageHelper.Jpeg2000Box box, Stream jpeg2000Stream
+            )
         {
             int readBytes = 8;
-            Jpeg2000ImageData.ColorSpecBox colorSpecBox = new Jpeg2000ImageData.ColorSpecBox(
-                );
+            Jpeg2000ImageData.ColorSpecBox colorSpecBox = new Jpeg2000ImageData.ColorSpecBox();
             for (int i = 0; i < 3; i++)
             {
                 colorSpecBox.Add(Cio_read(1, jpeg2000Stream));
@@ -252,8 +248,7 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void Jp2_read_boxhdr(Jpeg2000ImageHelper.Jpeg2000Box box, Stream jpeg2000Stream
-            )
+        private static void Jp2_read_boxhdr(Jpeg2000ImageHelper.Jpeg2000Box box, Stream jpeg2000Stream)
         {
             box.length = Cio_read(4, jpeg2000Stream);
             box.type = Cio_read(4, jpeg2000Stream);
@@ -261,14 +256,12 @@ namespace iTextSharp.IO.Image
             {
                 if (Cio_read(4, jpeg2000Stream) != 0)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotHandleBoxSizesHigherThan2_32
-                        );
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotHandleBoxSizesHigherThan2_32);
                 }
                 box.length = Cio_read(4, jpeg2000Stream);
                 if (box.length == 0)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0
-                        );
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0);
                 }
             }
             else

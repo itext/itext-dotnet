@@ -261,8 +261,7 @@ namespace iTextSharp.IO.Font
             return (macStyle & EXTENDED_FLAG) != 0;
         }
 
-        protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames
-            )
+        protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames)
         {
             this.allNames = allNames;
         }
@@ -339,8 +338,7 @@ namespace iTextSharp.IO.Font
 
         protected internal static int ConvertFontWeight(String weight)
         {
-            String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                );
+            String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture);
             switch (fontWeight)
             {
                 case "ultralight":

@@ -54,8 +54,7 @@ namespace iTextSharp.IO.Font.Otf
         private IList<OpenTableLookup> listRules = new List<OpenTableLookup>();
 
         /// <exception cref="System.IO.IOException"/>
-        public GposLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GposLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             ReadSubTables();
@@ -92,16 +91,16 @@ namespace iTextSharp.IO.Font.Otf
             {
                 case 1:
                 {
-                    GposLookupType2.PairPosAdjustmentFormat1 format1 = new GposLookupType2.PairPosAdjustmentFormat1
-                        (openReader, lookupFlag, subTableLocation);
+                    GposLookupType2.PairPosAdjustmentFormat1 format1 = new GposLookupType2.PairPosAdjustmentFormat1(openReader
+                        , lookupFlag, subTableLocation);
                     listRules.Add(format1);
                     break;
                 }
 
                 case 2:
                 {
-                    GposLookupType2.PairPosAdjustmentFormat2 format2 = new GposLookupType2.PairPosAdjustmentFormat2
-                        (openReader, lookupFlag, subTableLocation);
+                    GposLookupType2.PairPosAdjustmentFormat2 format2 = new GposLookupType2.PairPosAdjustmentFormat2(openReader
+                        , lookupFlag, subTableLocation);
                     listRules.Add(format2);
                     break;
                 }
@@ -110,12 +109,11 @@ namespace iTextSharp.IO.Font.Otf
 
         private class PairPosAdjustmentFormat1 : OpenTableLookup
         {
-            private IDictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>> gposMap
-                 = new Dictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>>();
+            private IDictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>> gposMap = new Dictionary<int, 
+                IDictionary<int, GposLookupType2.PairValueFormat>>();
 
             /// <exception cref="System.IO.IOException"/>
-            public PairPosAdjustmentFormat1(OpenTypeFontTableReader openReader, int lookupFlag
-                , int subtableLocation)
+            public PairPosAdjustmentFormat1(OpenTypeFontTableReader openReader, int lookupFlag, int subtableLocation)
                 : base(openReader, lookupFlag, null)
             {
                 ReadFormat(subtableLocation);
@@ -194,12 +192,11 @@ namespace iTextSharp.IO.Font.Otf
 
             private HashSet<int> coverageSet;
 
-            private IDictionary<int, GposLookupType2.PairValueFormat[]> posSubs = new Dictionary
-                <int, GposLookupType2.PairValueFormat[]>();
+            private IDictionary<int, GposLookupType2.PairValueFormat[]> posSubs = new Dictionary<int, GposLookupType2.PairValueFormat
+                []>();
 
             /// <exception cref="System.IO.IOException"/>
-            public PairPosAdjustmentFormat2(OpenTypeFontTableReader openReader, int lookupFlag
-                , int subtableLocation)
+            public PairPosAdjustmentFormat2(OpenTypeFontTableReader openReader, int lookupFlag, int subtableLocation)
                 : base(openReader, lookupFlag, null)
             {
                 ReadFormat(subtableLocation);
@@ -255,8 +252,7 @@ namespace iTextSharp.IO.Font.Otf
                 int class2Count = openReader.rf.ReadUnsignedShort();
                 for (int k = 0; k < class1Count; ++k)
                 {
-                    GposLookupType2.PairValueFormat[] pairs = new GposLookupType2.PairValueFormat[class2Count
-                        ];
+                    GposLookupType2.PairValueFormat[] pairs = new GposLookupType2.PairValueFormat[class2Count];
                     posSubs[k] = pairs;
                     for (int j = 0; j < class2Count; ++j)
                     {

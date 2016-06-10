@@ -108,11 +108,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.Widget;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject
-             parent)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject parent)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent);
         }
 
         /// <summary>Setter for the annotation's highlighting mode.</summary>
@@ -138,8 +136,7 @@ namespace iTextSharp.Kernel.Pdf.Annot
         /// </remarks>
         /// <param name="mode">The new value for the annotation's highlighting mode.</param>
         /// <returns>The widget annotation which this method was called on.</returns>
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName
-             mode)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName mode)
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
         }

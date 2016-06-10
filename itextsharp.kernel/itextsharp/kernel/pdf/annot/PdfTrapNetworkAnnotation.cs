@@ -74,11 +74,10 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.TrapNet;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetLastModified
-            (PdfDate lastModified)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetLastModified(PdfDate lastModified)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.LastModified
-                , lastModified.GetPdfObject());
+            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.LastModified, lastModified.GetPdfObject
+                ());
         }
 
         public virtual PdfString GetLastModified()
@@ -86,11 +85,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.LastModified);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetVersion(PdfArray
-             version)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetVersion(PdfArray version)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.Version, 
-                version);
+            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.Version, version);
         }
 
         public virtual PdfArray GetVersion()
@@ -98,11 +95,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.Version);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetAnnotStates
-            (PdfArray annotStates)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetAnnotStates(PdfArray annotStates)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.AnnotStates
-                , annotStates);
+            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.AnnotStates, annotStates);
         }
 
         public virtual PdfArray GetAnnotStates()
@@ -110,15 +105,13 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsArray(PdfName.AnnotStates);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts
-            (PdfArray fauxedFonts)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(PdfArray fauxedFonts)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.FontFauxing
-                , fauxedFonts);
+            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.FontFauxing, fauxedFonts);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts
-            (IList<PdfFont> fauxedFonts)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(IList<PdfFont> fauxedFonts
+            )
         {
             PdfArray arr = new PdfArray();
             foreach (PdfFont f in fauxedFonts)

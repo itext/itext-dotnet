@@ -49,9 +49,8 @@ namespace iTextSharp.Pdfa.Checker
 {
     public class PdfA3Checker : PdfA2Checker
     {
-        protected internal static readonly ICollection<PdfName> allowedAFRelationships = 
-            new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Source, 
-            PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
+        protected internal static readonly ICollection<PdfName> allowedAFRelationships = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            (PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
 
         public PdfA3Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel)
@@ -68,8 +67,8 @@ namespace iTextSharp.Pdfa.Checker
             }
             if (fileSpec.ContainsKey(PdfName.EF))
             {
-                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec
-                    .ContainsKey(PdfName.Desc))
+                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF) || !fileSpec.ContainsKey(PdfName
+                    .Desc))
                 {
                     throw new PdfAConformanceException(PdfAConformanceException.FileSpecificationDictionaryShallContainFKeyUFKeyAndDescKey
                         );

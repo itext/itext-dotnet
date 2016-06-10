@@ -55,8 +55,7 @@ namespace iTextSharp.Layout.Element
     /// custom drawing interface instance.
     /// This might be thought of as an HTML's <hr> element alternative.
     /// </summary>
-    public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator
-        >
+    public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator>
     {
         protected internal PdfName role = PdfName.Artifact;
 

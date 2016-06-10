@@ -439,8 +439,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         int r = @in.ReadShort();
                         int t = @in.ReadShort();
                         int l = @in.ReadShort();
-                        cb.Arc(state.TransformX(l), state.TransformY(b), state.TransformX(r), state.TransformY
-                            (t), 0, 360);
+                        cb.Arc(state.TransformX(l), state.TransformY(b), state.TransformX(r), state.TransformY(t), 0, 360);
                         StrokeAndFill();
                         break;
                     }
@@ -765,8 +764,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         }
 
         /// <summary>Output Text at a certain x and y coordinate.</summary>
-        /// <remarks>Output Text at a certain x and y coordinate. Clipped or opaque text isn't supported as of yet.
-        ///     </remarks>
+        /// <remarks>Output Text at a certain x and y coordinate. Clipped or opaque text isn't supported as of yet.</remarks>
         /// <param name="x">x-coordinate</param>
         /// <param name="y">y-coordinate</param>
         /// <param name="flag">flag indicating clipped or opaque</param>
@@ -776,8 +774,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <param name="y2">y1-coordinate of the rectangle if clipped or opaque</param>
         /// <param name="text">text to output</param>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void OutputText(int x, int y, int flag, int x1, int y1, int x2, int
-             y2, String text)
+        public virtual void OutputText(int x, int y, int flag, int x1, int y1, int x2, int y2, String text)
         {
             MetaFont font = state.GetCurrentFont();
             float refX = state.TransformX(x);
@@ -839,8 +836,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             textColor = state.GetCurrentTextColor();
             cb.SetFillColor(textColor);
             cb.BeginText();
-            cb.SetFontAndSize(PdfFontFactory.CreateFont(state.GetCurrentFont().GetFont(), PdfEncodings
-                .CP1252, true), fontSize);
+            cb.SetFontAndSize(PdfFontFactory.CreateFont(state.GetCurrentFont().GetFont(), PdfEncodings.CP1252, true), 
+                fontSize);
             cb.SetTextMatrix(tx, ty);
             cb.ShowText(text);
             cb.EndText();
@@ -869,8 +866,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             MetaBrush brush = state.GetCurrentBrush();
             bool noPen = pen.GetStyle() == MetaPen.PS_NULL;
             int style = brush.GetStyle();
-            bool isBrush = style == MetaBrush.BS_SOLID || style == MetaBrush.BS_HATCHED && state
-                .GetBackgroundMode() == MetaState.OPAQUE;
+            bool isBrush = style == MetaBrush.BS_SOLID || style == MetaBrush.BS_HATCHED && state.GetBackgroundMode() ==
+                 MetaState.OPAQUE;
             bool result = noPen && !isBrush;
             if (!noPen)
             {
@@ -907,8 +904,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             }
             else
             {
-                bool isBrush = brushStyle == MetaBrush.BS_SOLID || brushStyle == MetaBrush.BS_HATCHED
-                     && state.GetBackgroundMode() == MetaState.OPAQUE;
+                bool isBrush = brushStyle == MetaBrush.BS_SOLID || brushStyle == MetaBrush.BS_HATCHED && state.GetBackgroundMode
+                    () == MetaState.OPAQUE;
                 if (isBrush)
                 {
                     if (state.GetPolyFillMode() == MetaState.ALTERNATE)
@@ -927,8 +924,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             }
         }
 
-        internal static float GetArc(float xCenter, float yCenter, float xDot, float yDot
-            )
+        internal static float GetArc(float xCenter, float yCenter, float xDot, float yDot)
         {
             double s = Math.Atan2(yDot - yCenter, xDot - xCenter);
             if (s < 0)

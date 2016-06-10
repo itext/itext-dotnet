@@ -50,8 +50,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     {
         private PdfName lastFilterName;
 
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             lastFilterName = filterName;
             return b;

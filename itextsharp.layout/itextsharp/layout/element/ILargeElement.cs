@@ -62,8 +62,7 @@ namespace iTextSharp.Layout.Element
         /// <returns>the completion marker boolean</returns>
         bool IsComplete();
 
-        /// <summary>Indicates that all the desired content has been added to this large element.
-        ///     </summary>
+        /// <summary>Indicates that all the desired content has been added to this large element.</summary>
         void Complete();
 
         /// <summary>Writes the newly added content to the document.</summary>

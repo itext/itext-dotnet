@@ -54,8 +54,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
         {
         }
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary
-             pdfObject)
+        public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary pdfObject)
         {
             PdfNumber type = pdfObject.GetAsNumber(PdfName.PatternType);
             if (type.IntValue() == 1 && pdfObject is PdfStream)
@@ -153,10 +152,9 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
                 GetPdfObject().Put(PdfName.PatternType, new PdfNumber(1));
-                GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType
-                    .COLORED : PdfPattern.Tiling.PaintType.UNCOLORED));
-                GetPdfObject().Put(PdfName.TilingType, new PdfNumber(PdfPattern.Tiling.TilingType
-                    .CONSTANT_SPACING));
+                GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType.COLORED : PdfPattern.Tiling.PaintType
+                    .UNCOLORED));
+                GetPdfObject().Put(PdfName.TilingType, new PdfNumber(PdfPattern.Tiling.TilingType.CONSTANT_SPACING));
                 GetPdfObject().Put(PdfName.BBox, new PdfArray(bbox));
                 GetPdfObject().Put(PdfName.XStep, new PdfNumber(xStep));
                 GetPdfObject().Put(PdfName.YStep, new PdfNumber(yStep));
@@ -166,14 +164,13 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
             public virtual bool IsColored()
             {
-                return GetPdfObject().GetAsNumber(PdfName.PaintType).IntValue() == PdfPattern.Tiling.PaintType
-                    .COLORED;
+                return GetPdfObject().GetAsNumber(PdfName.PaintType).IntValue() == PdfPattern.Tiling.PaintType.COLORED;
             }
 
             public virtual void SetColored(bool colored)
             {
-                GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType
-                    .COLORED : PdfPattern.Tiling.PaintType.UNCOLORED));
+                GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType.COLORED : PdfPattern.Tiling.PaintType
+                    .UNCOLORED));
                 SetModified();
             }
 
@@ -184,9 +181,8 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
 
             public virtual void SetTilingType(int tilingType)
             {
-                if (tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING && tilingType != 
-                    PdfPattern.Tiling.TilingType.NO_DISTORTION && tilingType != PdfPattern.Tiling.TilingType
-                    .CONSTANT_SPACING_AND_FASTER_TILING)
+                if (tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING && tilingType != PdfPattern.Tiling.TilingType
+                    .NO_DISTORTION && tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING_AND_FASTER_TILING)
                 {
                     throw new ArgumentException("tilingType");
                 }

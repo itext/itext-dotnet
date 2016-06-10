@@ -57,33 +57,26 @@ namespace iTextSharp.Kernel.Utils
         {
         }
 
-        /// <summary>You can call specify the page range in a string form, for example: "1-12, 15, 45-66".
-        ///     </summary>
+        /// <summary>You can call specify the page range in a string form, for example: "1-12, 15, 45-66".</summary>
         /// <param name="pageRange">the page range.</param>
         public PageRange(String pageRange)
         {
             pageRange = iTextSharp.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
-            Regex sequencePattern = iTextSharp.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)"
-                );
+            Regex sequencePattern = iTextSharp.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)");
             Regex singlePagePattern = iTextSharp.IO.Util.StringUtil.RegexCompile("(\\d+)");
             foreach (String pageRangePart in pageRange.Split(","))
             {
                 Match matcher;
-                if ((matcher = iTextSharp.IO.Util.StringUtil.Match(sequencePattern, pageRangePart
-                    )).Success)
+                if ((matcher = iTextSharp.IO.Util.StringUtil.Match(sequencePattern, pageRangePart)).Success)
                 {
-                    sequenceStarts.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
-                        , 1)));
-                    sequenceEnds.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
-                        , 2)));
+                    sequenceStarts.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher, 1)));
+                    sequenceEnds.Add(System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher, 2)));
                 }
                 else
                 {
-                    if ((matcher = iTextSharp.IO.Util.StringUtil.Match(singlePagePattern, pageRangePart
-                        )).Success)
+                    if ((matcher = iTextSharp.IO.Util.StringUtil.Match(singlePagePattern, pageRangePart)).Success)
                     {
-                        int pageNumber = System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher
-                            , 1));
+                        int pageNumber = System.Convert.ToInt32(iTextSharp.IO.Util.StringUtil.Group(matcher, 1));
                         sequenceStarts.Add(pageNumber);
                         sequenceEnds.Add(pageNumber);
                     }
@@ -91,8 +84,7 @@ namespace iTextSharp.Kernel.Utils
             }
         }
 
-        public virtual iTextSharp.Kernel.Utils.PageRange AddPageSequence(int startPageNumber
-            , int endPageNumber)
+        public virtual iTextSharp.Kernel.Utils.PageRange AddPageSequence(int startPageNumber, int endPageNumber)
         {
             sequenceStarts.Add(startPageNumber);
             sequenceEnds.Add(endPageNumber);
@@ -111,8 +103,7 @@ namespace iTextSharp.Kernel.Utils
             IList<int> allPages = new List<int>();
             for (int ind = 0; ind < sequenceStarts.Count; ind++)
             {
-                for (int pageInRange = (int)sequenceStarts[ind]; pageInRange <= sequenceEnds[ind]
-                    ; pageInRange++)
+                for (int pageInRange = (int)sequenceStarts[ind]; pageInRange <= sequenceEnds[ind]; pageInRange++)
                 {
                     allPages.Add(pageInRange);
                 }
@@ -139,8 +130,7 @@ namespace iTextSharp.Kernel.Utils
                 return false;
             }
             iTextSharp.Kernel.Utils.PageRange other = (iTextSharp.Kernel.Utils.PageRange)obj;
-            return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds
-                );
+            return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds);
         }
 
         public override int GetHashCode()

@@ -66,10 +66,8 @@ namespace iTextSharp.IO.Font
         private RandomAccessSourceFactory sourceFactory = new RandomAccessSourceFactory();
 
         /// <summary>Creates a new Type1 font file.</summary>
-        /// <param name="afm">the AFM file if the input is made with a <CODE>byte</CODE> array
-        ///     </param>
-        /// <param name="pfb">the PFB file if the input is made with a <CODE>byte</CODE> array
-        ///     </param>
+        /// <param name="afm">the AFM file if the input is made with a <CODE>byte</CODE> array</param>
+        /// <param name="pfb">the PFB file if the input is made with a <CODE>byte</CODE> array</param>
         /// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
         ///     </param>
         /// <the>AFM file is invalid</the>
@@ -97,8 +95,7 @@ namespace iTextSharp.IO.Font
                     resource = ResourceUtil.GetResourceStream(resourcePath);
                     if (resource == null)
                     {
-                        throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath
-                            );
+                        throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath);
                     }
                     MemoryStream stream = new MemoryStream();
                     int read;
@@ -127,27 +124,24 @@ namespace iTextSharp.IO.Font
             {
                 if (afmPath != null)
                 {
-                    if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm"
-                        ))
+                    if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm"))
                     {
                         return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                     }
                     else
                     {
-                        if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"
-                            ))
+                        if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"))
                         {
                             MemoryStream ba = new MemoryStream();
-                            RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource
-                                (afmPath));
+                            RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                             Pfm2afm.Convert(rf, ba);
                             rf.Close();
                             return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
                         }
                         else
                         {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile
-                                ).SetMessageParams(afmPath);
+                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams(
+                                afmPath);
                         }
                     }
                 }
@@ -155,8 +149,7 @@ namespace iTextSharp.IO.Font
                 {
                     if (afmData != null)
                     {
-                        RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateSource
-                            (afmData));
+                        RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateSource(afmData));
                         if (IsAfmFile(rf))
                         {
                             return rf;
@@ -196,8 +189,7 @@ namespace iTextSharp.IO.Font
             }
             else
             {
-                if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                    ).EndsWith(".pfb"))
+                if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfb"))
                 {
                     return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
                 }

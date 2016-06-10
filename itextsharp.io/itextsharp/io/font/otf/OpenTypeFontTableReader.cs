@@ -68,9 +68,8 @@ namespace iTextSharp.IO.Font.Otf
         private readonly int unitsPerEm;
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation
-            , OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm
-            )
+        protected internal OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation, OpenTypeGdefTableReader
+             gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
         {
             this.rf = rf;
             this.tableLocation = tableLocation;
@@ -103,8 +102,7 @@ namespace iTextSharp.IO.Font.Otf
             return featuresType.GetRecords();
         }
 
-        public virtual IList<FeatureRecord> GetFeatures(String[] scripts, String language
-            )
+        public virtual IList<FeatureRecord> GetFeatures(String[] scripts, String language)
         {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
             if (rec == null)
@@ -119,8 +117,7 @@ namespace iTextSharp.IO.Font.Otf
             return ret;
         }
 
-        public virtual IList<FeatureRecord> GetSpecificFeatures(IList<FeatureRecord> features
-            , String[] specific)
+        public virtual IList<FeatureRecord> GetSpecificFeatures(IList<FeatureRecord> features, String[] specific)
         {
             if (specific == null)
             {
@@ -143,8 +140,7 @@ namespace iTextSharp.IO.Font.Otf
             return recs;
         }
 
-        public virtual FeatureRecord GetRequiredFeature(String[] scripts, String language
-            )
+        public virtual FeatureRecord GetRequiredFeature(String[] scripts, String language)
         {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
             if (rec == null)
@@ -211,8 +207,8 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal abstract OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag
-            , int[] subTableLocations);
+        protected internal abstract OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
+            );
 
         /// <exception cref="System.IO.IOException"/>
         protected internal OtfClass ReadClassDefinition(int classLocation)
@@ -233,8 +229,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<
-            int>> coverage)
+        protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<int>> coverage)
         {
             OtfReadCommon.ReadCoverages(rf, locations, coverage);
         }
@@ -246,8 +241,7 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual SubstLookupRecord[] ReadSubstLookupRecords(int substCount
-            )
+        protected internal virtual SubstLookupRecord[] ReadSubstLookupRecords(int substCount)
         {
             return OtfReadCommon.ReadSubstLookupRecords(rf, substCount);
         }
@@ -306,8 +300,7 @@ namespace iTextSharp.IO.Font.Otf
             lookupList = new List<OpenTableLookup>();
             rf.Seek(lookupListTableLocation);
             int lookupCount = rf.ReadUnsignedShort();
-            int[] lookupTableLocations = ReadUShortArray(lookupCount, lookupListTableLocation
-                );
+            int[] lookupTableLocations = ReadUShortArray(lookupCount, lookupListTableLocation);
             // read LookUp tables
             foreach (int lookupLocation in lookupTableLocations)
             {

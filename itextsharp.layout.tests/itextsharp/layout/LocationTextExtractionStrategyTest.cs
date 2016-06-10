@@ -15,8 +15,7 @@ namespace iTextSharp.Layout
 {
     public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest
     {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
 
         public override ITextExtractionStrategy CreateRenderListenerForTest()
         {
@@ -27,10 +26,9 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TestYPosition()
         {
-            PdfDocument doc = CreatePdfWithOverlappingTextVertical(new String[] { "A", "B", "C"
-                , "D" }, new String[] { "AA", "BB", "CC", "DD" });
-            String text = PdfTextExtractor.GetTextFromPage(doc.GetPage(1), CreateRenderListenerForTest
-                ());
+            PdfDocument doc = CreatePdfWithOverlappingTextVertical(new String[] { "A", "B", "C", "D" }, new String[] { 
+                "AA", "BB", "CC", "DD" });
+            String text = PdfTextExtractor.GetTextFromPage(doc.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A\nAA\nB\nBB\nC\nCC\nD\nDD", text);
         }
 
@@ -38,13 +36,11 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void TestXPosition()
         {
-            byte[] content = CreatePdfWithOverlappingTextHorizontal(new String[] { "A", "B", 
-                "C", "D" }, new String[] { "AA", "BB", "CC", "DD" });
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)
-                ));
+            byte[] content = CreatePdfWithOverlappingTextHorizontal(new String[] { "A", "B", "C", "D" }, new String[] 
+                { "AA", "BB", "CC", "DD" });
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
             //TestResourceUtils.openBytesAsPdf(content);
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A AA B BB C CC D DD", text);
         }
 
@@ -55,8 +51,7 @@ namespace iTextSharp.Layout
         {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
         }
 
@@ -67,8 +62,7 @@ namespace iTextSharp.Layout
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
         }
 
@@ -79,8 +73,7 @@ namespace iTextSharp.Layout
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
         }
 
@@ -92,10 +85,8 @@ namespace iTextSharp.Layout
             String text1 = "X";
             byte[] content = CreatePdfWithRotatedXObject(text1);
             //TestResourceUtils.saveBytesToFile(content, new File("C:/temp/out.pdf"));
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)
-                ));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("A\nB\nX\nC", text);
         }
 
@@ -105,10 +96,8 @@ namespace iTextSharp.Layout
         {
             byte[] content = CreatePdfWithNegativeCharSpacing("W", 200, "A");
             //TestResourceUtils.openBytesAsPdf(content);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)
-                ));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("WA", text);
         }
 
@@ -119,11 +108,9 @@ namespace iTextSharp.Layout
             Vector end = new Vector(1, 0, 1);
             Vector antiparallelStart = new Vector(0.9f, 0, 1);
             Vector parallelStart = new Vector(1.1f, 0, 1);
-            float rsltAntiParallel = antiparallelStart.Subtract(end).Dot(end.Subtract(start).
-                Normalize());
+            float rsltAntiParallel = antiparallelStart.Subtract(end).Dot(end.Subtract(start).Normalize());
             NUnit.Framework.Assert.AreEqual(-0.1f, rsltAntiParallel, 0.0001);
-            float rsltParallel = parallelStart.Subtract(end).Dot(end.Subtract(start).Normalize
-                ());
+            float rsltParallel = parallelStart.Subtract(end).Dot(end.Subtract(start).Normalize());
             NUnit.Framework.Assert.AreEqual(0.1f, rsltParallel, 0.0001);
         }
 
@@ -133,10 +120,8 @@ namespace iTextSharp.Layout
         {
             byte[] content = CreatePdfWithSupescript("Hel", "lo");
             //TestResourceUtils.openBytesAsPdf(content);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)
-                ));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest
-                ());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("Hello", text);
         }
 
@@ -144,25 +129,21 @@ namespace iTextSharp.Layout
         [NUnit.Framework.Test]
         public virtual void Test01()
         {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"));
+            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new LocationTextExtractionStrategy(
                 ));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new LocationTextExtractionStrategy
-                ());
             pdfDocument.Close();
-            String expectedText = "        We asked each candidate company to distribute to 225 \n"
-                 + "randomly selected employees the Great Place to Work \n" + "Trust Index. This employee survey was designed by the \n"
-                 + "Great Place to Work Institute of San Francisco to evaluate \n" + "trust in management, pride in work/company, and \n"
-                 + "camaraderie. Responses were returned directly to us. ";
+            String expectedText = "        We asked each candidate company to distribute to 225 \n" + "randomly selected employees the Great Place to Work \n"
+                 + "Trust Index. This employee survey was designed by the \n" + "Great Place to Work Institute of San Francisco to evaluate \n"
+                 + "trust in management, pride in work/company, and \n" + "camaraderie. Responses were returned directly to us. ";
             NUnit.Framework.Assert.AreEqual(expectedText, text);
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String
-             str2)
+        private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String str2)
         {
             MemoryStream baos = new MemoryStream();
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel
-                (0));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             canvas.BeginText();
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 12);
@@ -181,23 +162,20 @@ namespace iTextSharp.Layout
         private byte[] CreatePdfWithRotatedXObject(String xobjectText)
         {
             MemoryStream baos = new MemoryStream();
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel
-                (0));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("A"));
             document.Add(new Paragraph("B"));
             PdfFormXObject template = new PdfFormXObject(new Rectangle(20, 100));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
-            canvas.SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).Rectangle(0, 0, template
-                .GetWidth(), template.GetHeight()).Stroke();
+            canvas.SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).Rectangle(0, 0, template.GetWidth(), template.GetHeight
+                ()).Stroke();
             AffineTransform tx = new AffineTransform();
             tx.Translate(0, template.GetHeight());
             tx.Rotate((float)(-90 / 180f * Math.PI));
-            canvas.ConcatMatrix(tx).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
-                .HELVETICA), 12).MoveText(0, template.GetWidth() - 12).ShowText(xobjectText).
-                EndText();
-            document.Add(new Image(template).SetRotationAngle(Math.PI / 2)).Add(new Paragraph
-                ("C"));
+            canvas.ConcatMatrix(tx).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 12)
+                .MoveText(0, template.GetWidth() - 12).ShowText(xobjectText).EndText();
+            document.Add(new Image(template).SetRotationAngle(Math.PI / 2)).Add(new Paragraph("C"));
             document.Close();
             return baos.ToArray();
         }
@@ -206,8 +184,7 @@ namespace iTextSharp.Layout
         private byte[] CreateSimplePdf(Rectangle pageSize, params String[] text)
         {
             MemoryStream byteStream = new MemoryStream();
-            Document document = new Document(new PdfDocument(new PdfWriter(byteStream)), new 
-                PageSize(pageSize));
+            Document document = new Document(new PdfDocument(new PdfWriter(byteStream)), new PageSize(pageSize));
             foreach (String @string in text)
             {
                 document.Add(new Paragraph(@string));
@@ -218,12 +195,10 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[]
-             text1, String[] text2)
+        protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[] text1, String[] text2)
         {
             MemoryStream baos = new MemoryStream();
-            Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel
-                (0)));
+            Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
             float ystart = 500;
             float xstart = 50;
             float x = xstart;
@@ -245,12 +220,10 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private PdfDocument CreatePdfWithOverlappingTextVertical(String[] text1, String[]
-             text2)
+        private PdfDocument CreatePdfWithOverlappingTextVertical(String[] text1, String[] text2)
         {
             MemoryStream baos = new MemoryStream();
-            Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel
-                (0)));
+            Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
             float ystart = 500;
             float x = 50;
             float y = ystart;
@@ -270,13 +243,11 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreatePdfWithSupescript(String regularText, String superscriptText
-            )
+        private byte[] CreatePdfWithSupescript(String regularText, String superscriptText)
         {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
-            document.Add(new Paragraph(regularText).Add(new Text(superscriptText).SetTextRise
-                (7)));
+            document.Add(new Paragraph(regularText).Add(new Text(superscriptText).SetTextRise(7)));
             document.Close();
             return byteStream.ToArray();
         }

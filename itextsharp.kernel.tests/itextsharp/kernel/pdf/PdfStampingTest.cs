@@ -9,11 +9,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfStampingTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -30,11 +29,10 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
-                SetTitle("Empty iText 6 Document");
+            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
+                );
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%Hello World\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%Hello World\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
@@ -42,11 +40,9 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document"
-                );
+            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document");
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -64,15 +60,11 @@ namespace iTextSharp.Kernel.Pdf
             PdfString creator = info.GetAsString(PdfName.Creator);
             NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
             byte[] bytes = document.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
-            String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate
-                ).GetValue();
+            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
-            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl
-                );
-            String message = "Unexpected creation date. Different from now is " + (float)diff
-                 / 1000 + "s";
+            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl);
+            String message = "Unexpected creation date. Different from now is " + (float)diff / 1000 + "s";
             NUnit.Framework.Assert.IsTrue(diff < 5000, message);
             reader.Close();
         }
@@ -87,8 +79,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
@@ -97,12 +88,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -116,11 +105,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -131,27 +118,22 @@ namespace iTextSharp.Kernel.Pdf
             String filename1 = destinationFolder + "stamping3_1.pdf";
             String filename2 = destinationFolder + "stamping3_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -165,11 +147,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -183,8 +163,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             int pageCount = 15;
@@ -196,13 +175,11 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 2; i <= pageCount; i++)
             {
                 PdfPage page2 = pdfDoc2.AddNewPage();
-                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " 
-                    + i + "\n"));
+                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
@@ -215,13 +192,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ));
             }
             reader.Close();
         }
@@ -236,27 +212,23 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             int pageCount = 15;
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             for (int i = 2; i <= pageCount; i++)
             {
                 PdfPage page2 = pdfDoc2.AddNewPage();
-                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " 
-                    + i + "\n"));
+                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
@@ -269,13 +241,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ));
             }
             reader.Close();
         }
@@ -287,12 +258,10 @@ namespace iTextSharp.Kernel.Pdf
             String filename1 = destinationFolder + "stamping6_1.pdf";
             String filename2 = destinationFolder + "stamping6_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
@@ -301,12 +270,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -320,11 +287,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -338,23 +303,19 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -368,11 +329,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -384,32 +343,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stamping8_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(true));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -420,8 +374,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -434,32 +388,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stamping9_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (false));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(true));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -470,8 +419,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -484,32 +433,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stamping10_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(false));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (false));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -520,8 +464,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -534,32 +478,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stamping11_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (false));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(false));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (false));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -570,8 +509,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -589,13 +528,11 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             int newPageCount = 10;
@@ -604,8 +541,7 @@ namespace iTextSharp.Kernel.Pdf
                 NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i_1), "Remove page " + i_1);
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_2 = 1; i_2 <= pdfDoc3.GetNumberOfPages(); i_2++)
             {
@@ -613,10 +549,8 @@ namespace iTextSharp.Kernel.Pdf
             }
             PdfPage pdfPage = pdfDoc3.GetPage(1);
             PdfDictionary root = pdfPage.GetPdfObject().GetAsDictionary(PdfName.Parent);
-            NUnit.Framework.Assert.AreEqual(newPageCount, root.GetAsArray(PdfName.Kids).Size(
-                ), "PdfPages kids count");
-            NUnit.Framework.Assert.AreEqual(newPageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(newPageCount, root.GetAsArray(PdfName.Kids).Size(), "PdfPages kids count");
+            NUnit.Framework.Assert.AreEqual(newPageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -627,8 +561,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_3 = 1; i_3 <= pdfDocument.GetNumberOfPages(); i_3++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_3).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_3 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_3);
+                NUnit.Framework.Assert.AreEqual("%page " + i_3 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_3);
             }
             reader.Close();
         }
@@ -646,13 +580,11 @@ namespace iTextSharp.Kernel.Pdf
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             for (int i_1 = pageCount; i_1 > 1; i_1--)
@@ -663,23 +595,19 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 PdfPage page = pdfDoc2.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i_2 + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i_2 + "\n"));
                 page.Flush();
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_3 = 1; i_3 <= pdfDoc3.GetNumberOfPages(); i_3++)
             {
                 pdfDoc3.GetPage(i_3);
             }
-            PdfArray rootKids = pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject().GetAsArray
-                (PdfName.Kids);
+            PdfArray rootKids = pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject().GetAsArray(PdfName.Kids);
             NUnit.Framework.Assert.AreEqual(2, rootKids.Size(), "Page root kids count");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -690,8 +618,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_4 = 1; i_4 <= pageCount; i_4++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_4).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_4 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_4);
+                NUnit.Framework.Assert.AreEqual("%page " + i_4 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_4);
             }
             reader.Close();
         }
@@ -703,8 +631,7 @@ namespace iTextSharp.Kernel.Pdf
         {
             String filename1 = sourceFolder + "20000PagesDocument.pdf";
             String filename2 = destinationFolder + "stamping14.pdf";
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--)
@@ -712,15 +639,13 @@ namespace iTextSharp.Kernel.Pdf
                 NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 1; i_1 <= pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1);
             }
-            NUnit.Framework.Assert.IsTrue(pdfDoc3.GetXref().Size() < 20, "Xref size is " + pdfDoc3
-                .GetXref().Size());
+            NUnit.Framework.Assert.IsTrue(pdfDoc3.GetXref().Size() < 20, "Xref size is " + pdfDoc3.GetXref().Size());
             NUnit.Framework.Assert.AreEqual(3, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
@@ -732,8 +657,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pdfDocument.GetNumberOfPages(); i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -816,35 +741,30 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingXmp1_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(false).AddXmpMetadata());
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (false).AddXmpMetadata());
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
-                ()), "XmpMetadata not found");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
+            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
                 );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -855,8 +775,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -870,35 +790,30 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingXmp2_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (false));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(true).AddXmpMetadata());
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (true).AddXmpMetadata());
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             pdfDoc2.GetDocumentInfo().SetAuthor("Alexander Chingarev");
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata
-                ()), "XmpMetadata not found");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
+            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
                 );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -909,8 +824,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -924,25 +839,21 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
-                SetTitle("Empty iText 6 Document");
+            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
+                );
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%Hello World\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%Hello World\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
-            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document"
-                );
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
+            pdfDoc2.GetDocumentInfo().SetCreator("iText 7").SetTitle("Empty iText 7 Document");
             pdfDoc2.GetDocumentInfo().SetModified();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -960,15 +871,11 @@ namespace iTextSharp.Kernel.Pdf
             PdfString creator = info.GetAsString(PdfName.Creator);
             NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
-            String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate
-                ).GetValue();
+            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
-            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl
-                );
-            String message = "Unexpected creation date. Different from now is " + (float)diff
-                 / 1000 + "s";
+            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl);
+            String message = "Unexpected creation date. Different from now is " + (float)diff / 1000 + "s";
             NUnit.Framework.Assert.IsTrue(diff < 5000, message);
             reader.Close();
         }
@@ -983,24 +890,20 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.SetModified();
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -1014,11 +917,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -1029,27 +930,22 @@ namespace iTextSharp.Kernel.Pdf
             String filename1 = destinationFolder + "stampingAppend3_1.pdf";
             String filename2 = destinationFolder + "stampingAppend3_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             PdfPage page2 = pdfDoc2.AddNewPage();
-            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"
-                ));
+            page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 2\n"));
             page2.Flush();
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
             {
@@ -1063,11 +959,9 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                (bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -1081,8 +975,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             int pageCount = 15;
@@ -1090,18 +983,15 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             for (int i = 2; i <= pageCount; i++)
             {
                 PdfPage page2 = pdfDoc2.AddNewPage();
-                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " 
-                    + i + "\n"));
+                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
@@ -1114,13 +1004,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ));
             }
             reader.Close();
         }
@@ -1135,28 +1024,23 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             PdfPage page1 = pdfDoc1.AddNewPage();
-            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"
-                ));
+            page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page 1\n"));
             page1.Flush();
             pdfDoc1.Close();
             int pageCount = 15;
             FileStream fis2 = new FileStream(filename1, FileMode.Open, FileAccess.Read);
             PdfReader reader2 = new PdfReader(fis2);
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode
-                (true));
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             for (int i = 2; i <= pageCount; i++)
             {
                 PdfPage page2 = pdfDoc2.AddNewPage();
-                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " 
-                    + i + "\n"));
+                page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
             }
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
@@ -1169,13 +1053,12 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ));
             }
             reader.Close();
         }
@@ -1188,32 +1071,26 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingAppend8_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -1224,8 +1101,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -1238,33 +1115,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingAppend9_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (false));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (true));
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -1275,8 +1146,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -1289,33 +1160,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingAppend10_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (true));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(false));
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (false));
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -1326,8 +1191,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -1340,33 +1205,27 @@ namespace iTextSharp.Kernel.Pdf
             String filename2 = destinationFolder + "stampingAppend11_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode
-                (false));
+            PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 1; i <= pageCount; i++)
             {
                 PdfPage page = pdfDoc1.AddNewPage();
-                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " +
-                     i + "\n"));
+                page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
             }
             pdfDoc1.Close();
-            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read
-                ));
-            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new 
-                WriterProperties().SetFullCompressionMode(false));
-            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().
-                UseAppendMode());
+            PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create), new WriterProperties().SetFullCompressionMode
+                (false));
+            PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
             pdfDoc2.Close();
-            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read
-                ));
+            PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
             for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
             {
                 pdfDoc3.GetPage(i_1 + 1);
             }
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages"
-                );
+            NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
@@ -1377,8 +1236,8 @@ namespace iTextSharp.Kernel.Pdf
             for (int i_2 = 1; i_2 <= pageCount; i_2++)
             {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
-                    (bytes), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
+                    ), "Page content at page " + i_2);
             }
             reader.Close();
         }
@@ -1409,8 +1268,8 @@ namespace iTextSharp.Kernel.Pdf
             String @out = destinationFolder + "hello_stamped02.pdf";
             FileStream fis = new FileStream(@in, FileMode.Open, FileAccess.Read);
             PdfReader reader = new PdfReader(fis);
-            PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(@out, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
             NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetPdfVersion());
             pdfDoc.Close();
             PdfDocument assertPdfDoc = new PdfDocument(new PdfReader(@out));
@@ -1427,10 +1286,8 @@ namespace iTextSharp.Kernel.Pdf
             String @out = destinationFolder + "stampingAppendVersionTest01.pdf";
             FileStream fis = new FileStream(@in, FileMode.Open, FileAccess.Read);
             PdfReader reader = new PdfReader(fis);
-            PdfWriter writer = new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0));
-            PdfDocument pdfDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode
-                ());
+            PdfWriter writer = new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfDocument pdfDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
             NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetPdfVersion());
             pdfDoc.Close();
             PdfDocument assertPdfDoc = new PdfDocument(new PdfReader(@out));
@@ -1443,10 +1300,8 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void StampingTestWithTaggedStructure()
         {
             String filename = sourceFolder + "iphone_user_guide.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "stampingDocWithTaggedStructure.pdf"
-                , FileMode.Create);
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "stampingDocWithTaggedStructure.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.Close();
@@ -1461,10 +1316,8 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression01.pdf"
                 ));
             pdfDoc.Close();
-            float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression01.pdf"
-                ).Length;
-            float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression01.pdf"
-                ).Length;
+            float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression01.pdf").Length;
+            float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression01.pdf").Length;
             float coef = Math.Abs((expected - result) / expected);
             NUnit.Framework.Assert.IsTrue(coef < 0.01);
         }
@@ -1478,10 +1331,8 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression02.pdf"
                 , new WriterProperties().SetFullCompressionMode(false)));
             pdfDoc.Close();
-            float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression02.pdf"
-                ).Length;
-            float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression02.pdf"
-                ).Length;
+            float result = new FileInfo(destinationFolder + "stampingTestWithFullCompression02.pdf").Length;
+            float expected = new FileInfo(sourceFolder + "cmp_stampingTestWithFullCompression02.pdf").Length;
             float coef = Math.Abs((expected - result) / expected);
             NUnit.Framework.Assert.IsTrue(coef < 0.01);
         }

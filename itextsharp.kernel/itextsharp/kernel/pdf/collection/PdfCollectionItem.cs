@@ -61,8 +61,7 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <param name="key"/>
         /// <param name="value"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String 
-            key, String value)
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String key, String value)
         {
             PdfCollectionField field = schema.GetField(key);
             GetPdfObject().Put(new PdfName(key), field.GetValue(value));
@@ -99,8 +98,7 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <param name="key"/>
         /// <param name="prefix"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String
-             key, String prefix)
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String key, String prefix)
         {
             PdfName fieldName = new PdfName(key);
             PdfObject obj = GetPdfObject().Get(fieldName);

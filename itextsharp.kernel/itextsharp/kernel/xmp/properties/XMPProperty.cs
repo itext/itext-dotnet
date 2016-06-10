@@ -32,8 +32,7 @@ using iTextSharp.Kernel.XMP.Options;
 
 namespace iTextSharp.Kernel.XMP.Properties
 {
-    /// <summary>This interface is used to return a text property together with its and options.
-    ///     </summary>
+    /// <summary>This interface is used to return a text property together with its and options.</summary>
     /// <since>23.01.2006</since>
     public interface XMPProperty
     {

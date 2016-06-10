@@ -49,8 +49,7 @@ namespace iTextSharp.Kernel.Font
 {
     public class Type3FontProgram : FontProgram
     {
-        private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph
-            >();
+        private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
 
         private bool colorized = false;
 
@@ -90,8 +89,7 @@ namespace iTextSharp.Kernel.Font
             return type3Glyphs.Count;
         }
 
-        internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph
-             type3Glyph)
+        internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph)
         {
             Glyph glyph = new Glyph(code, width, unicode, bbox);
             codeToGlyph[code] = glyph;

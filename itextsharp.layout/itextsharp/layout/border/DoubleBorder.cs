@@ -85,8 +85,8 @@ namespace iTextSharp.Layout.Border
             return iTextSharp.Layout.Border.Border.DOUBLE;
         }
 
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter)
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter)
         {
             float x3 = 0;
             float y3 = 0;
@@ -135,8 +135,7 @@ namespace iTextSharp.Layout.Border
                 }
             }
             canvas.SetFillColor(color);
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-                .Fill();
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             switch (borderSide)
             {
                 case Border.Side.TOP:
@@ -191,12 +190,10 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
             }
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1)
-                .Fill();
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2)
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
         {
             float thirdOfWidth = width / 3;
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
@@ -228,8 +225,8 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
             }
-            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
-                ).LineTo(x2, y2).Stroke().RestoreState();
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1).LineTo(x2, y2).Stroke()
+                .RestoreState();
             switch (borderSide)
             {
                 case Border.Side.TOP:
@@ -265,8 +262,8 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
             }
-            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1
-                ).LineTo(x2, y2).Stroke().RestoreState();
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1).LineTo(x2, y2).Stroke()
+                .RestoreState();
         }
     }
 }

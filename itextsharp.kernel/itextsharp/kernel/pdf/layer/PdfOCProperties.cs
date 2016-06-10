@@ -133,8 +133,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
             }
         }
 
-        /// <summary>Fills the underlying PdfDictionary object with the current layers and their settings.
-        ///     </summary>
+        /// <summary>Fills the underlying PdfDictionary object with the current layers and their settings.</summary>
         /// <remarks>
         /// Fills the underlying PdfDictionary object with the current layers and their settings.
         /// Note that it completely regenerates the dictionary, so your direct changes to the dictionary
@@ -229,8 +228,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
             base.Flush();
         }
 
-        /// <summary>Gets the list of all the layers currently registered in the OCProperties.
-        ///     </summary>
+        /// <summary>Gets the list of all the layers currently registered in the OCProperties.</summary>
         /// <remarks>
         /// Gets the list of all the layers currently registered in the OCProperties.
         /// Note that this is just a new list and modifications to it will not affect anything.
@@ -331,8 +329,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
             arras.Add(@as);
         }
 
-        /// <summary>Reads the layers from the document to be able to modify them in the future.
-        ///     </summary>
+        /// <summary>Reads the layers from the document to be able to modify them in the future.</summary>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         private void ReadLayersFromDictionary()
         {
@@ -341,12 +338,12 @@ namespace iTextSharp.Kernel.Pdf.Layer
             {
                 return;
             }
-            IDictionary<PdfIndirectReference, PdfLayer> layerMap = new SortedDictionary<PdfIndirectReference
-                , PdfLayer>();
+            IDictionary<PdfIndirectReference, PdfLayer> layerMap = new SortedDictionary<PdfIndirectReference, PdfLayer
+                >();
             for (int ind = 0; ind < ocgs.Size(); ind++)
             {
-                PdfLayer currentLayer = new PdfLayer(((PdfDictionary)ocgs.GetAsDictionary(ind).MakeIndirect
-                    (GetDocument())));
+                PdfLayer currentLayer = new PdfLayer(((PdfDictionary)ocgs.GetAsDictionary(ind).MakeIndirect(GetDocument())
+                    ));
                 // We will set onPanel to true later for the objects present in /D->/Order entry.
                 currentLayer.onPanel = false;
                 layerMap[currentLayer.GetIndirectReference()] = currentLayer;
@@ -386,11 +383,10 @@ namespace iTextSharp.Kernel.Pdf.Layer
             }
         }
 
-        /// <summary>Reads the /Order in the /D entry and initialized the parent-child hierarchy.
-        ///     </summary>
+        /// <summary>Reads the /Order in the /D entry and initialized the parent-child hierarchy.</summary>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        private void ReadOrderFromDictionary(PdfLayer parent, PdfArray orderArray, IDictionary
-            <PdfIndirectReference, PdfLayer> layerMap)
+        private void ReadOrderFromDictionary(PdfLayer parent, PdfArray orderArray, IDictionary<PdfIndirectReference
+            , PdfLayer> layerMap)
         {
             for (int i = 0; i < orderArray.Size(); i++)
             {
@@ -406,8 +402,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
                         {
                             parent.AddChild(layer);
                         }
-                        if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject
-                            .ARRAY)
+                        if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY)
                         {
                             ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap);
                             i++;
@@ -426,16 +421,14 @@ namespace iTextSharp.Kernel.Pdf.Layer
                         PdfObject firstObj = subArray.Get(0);
                         if (firstObj.GetObjectType() == PdfObject.STRING)
                         {
-                            PdfLayer titleLayer = PdfLayer.CreateTitleSilent(((PdfString)firstObj).ToUnicodeString
-                                (), GetDocument());
+                            PdfLayer titleLayer = PdfLayer.CreateTitleSilent(((PdfString)firstObj).ToUnicodeString(), GetDocument());
                             titleLayer.onPanel = true;
                             layers.Add(titleLayer);
                             if (parent != null)
                             {
                                 parent.AddChild(titleLayer);
                             }
-                            ReadOrderFromDictionary(titleLayer, new PdfArray(subArray.SubList(1, subArray.Size
-                                ())), layerMap);
+                            ReadOrderFromDictionary(titleLayer, new PdfArray(subArray.SubList(1, subArray.Size())), layerMap);
                         }
                         else
                         {

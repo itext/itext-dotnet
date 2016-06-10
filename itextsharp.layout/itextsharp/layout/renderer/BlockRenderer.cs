@@ -65,15 +65,12 @@ namespace iTextSharp.Layout.Renderer
         {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
-                != null)
+            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
             {
-                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer
-                    .INF);
+                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             float? blockHeight = RetrieveHeight();
-            if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight
-                ())
+            if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight())
             {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this);
             }
@@ -104,8 +101,8 @@ namespace iTextSharp.Layout.Renderer
             {
                 areas = InitElementAreas(new LayoutArea(pageNumber, parentBBox));
             }
-            occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox
-                .GetY() + parentBBox.GetHeight(), parentBBox.GetWidth(), 0));
+            occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
+                GetHeight(), parentBBox.GetWidth(), 0));
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
             bool anythingPlaced = false;
@@ -114,18 +111,16 @@ namespace iTextSharp.Layout.Renderer
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult result;
                 childRenderer.SetParent(this);
-                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea
-                    (pageNumber, layoutBox)))).GetStatus() != LayoutResult.FULL)
+                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
+                    )))).GetStatus() != LayoutResult.FULL)
                 {
                     if (result.GetOccupiedArea() != null)
                     {
-                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.
-                            GetOccupiedArea().GetBBox()));
-                        layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                            ());
+                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                            ()));
+                        layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
                     }
-                    if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) 
-                        != null)
+                    if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) != null)
                     {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
@@ -150,26 +145,22 @@ namespace iTextSharp.Layout.Renderer
                     {
                         if (result.GetStatus() == LayoutResult.PARTIAL)
                         {
-                            layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                                ());
+                            layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
                             if (currentAreaPos + 1 == areas.Count)
                             {
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
-                                splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos
-                                    ));
+                                splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
                                 splitRenderer.occupiedArea = occupiedArea;
                                 AbstractRenderer overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
                                 IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
                                 overflowRendererChildren.Add(result.GetOverflowRenderer());
-                                overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
-                                    .Count));
+                                overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                                 overflowRenderer.childRenderers = overflowRendererChildren;
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer
-                                    );
+                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer);
                             }
                             else
                             {
@@ -184,11 +175,9 @@ namespace iTextSharp.Layout.Renderer
                             if (result.GetStatus() == LayoutResult.NOTHING)
                             {
                                 bool keepTogether = IsKeepTogether();
-                                int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult
-                                    .NOTHING;
+                                int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
-                                splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos
-                                    ));
+                                splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 foreach (IRenderer renderer in splitRenderer.childRenderers)
                                 {
                                     renderer.SetParent(splitRenderer);
@@ -196,8 +185,7 @@ namespace iTextSharp.Layout.Renderer
                                 AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutResult);
                                 IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
                                 overflowRendererChildren.Add(result.GetOverflowRenderer());
-                                overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers
-                                    .Count));
+                                overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                                 overflowRenderer.childRenderers = overflowRendererChildren;
                                 if (keepTogether)
                                 {
@@ -208,29 +196,25 @@ namespace iTextSharp.Layout.Renderer
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                                if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
-                                    )))
+                                if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT)))
                                 {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                                 }
                                 else
                                 {
-                                    return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer
-                                        );
+                                    return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer);
                                 }
                             }
                         }
                     }
                 }
                 anythingPlaced = true;
-                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.
-                    GetOccupiedArea().GetBBox()));
+                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                    ()));
                 if (result.GetStatus() == LayoutResult.FULL)
                 {
-                    layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                        ());
-                    if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) 
-                        != null)
+                    layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
+                    if (childRenderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.WIDTH) != null)
                     {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
@@ -239,8 +223,8 @@ namespace iTextSharp.Layout.Renderer
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight())
             {
-                occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight
-                    ()).SetHeight((float)blockHeight);
+                occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float)
+                    blockHeight);
             }
             if (isPositioned)
             {
@@ -250,14 +234,12 @@ namespace iTextSharp.Layout.Renderer
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
-            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) 
-                != null)
+            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null)
             {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingHeight(layoutContext.GetArea()))
                 {
-                    if (!true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT
-                        )))
+                    if (!true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT)))
                     {
                         return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
                     }
@@ -277,8 +259,7 @@ namespace iTextSharp.Layout.Renderer
             return splitRenderer;
         }
 
-        protected internal virtual AbstractRenderer CreateOverflowRenderer(int layoutResult
-            )
+        protected internal virtual AbstractRenderer CreateOverflowRenderer(int layoutResult)
         {
             AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
             overflowRenderer.parent = parent;
@@ -349,14 +330,12 @@ namespace iTextSharp.Layout.Renderer
         public override Rectangle GetOccupiedAreaBBox()
         {
             Rectangle bBox = occupiedArea.GetBBox().Clone();
-            float? rotationAngle = this.GetProperty<float?>(iTextSharp.Layout.Property.Property
-                .ROTATION_ANGLE);
+            float? rotationAngle = this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE);
             if (rotationAngle != null)
             {
-                bBox.SetWidth((float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-                    ROTATION_INITIAL_WIDTH));
-                bBox.SetHeight((float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_INITIAL_HEIGHT));
+                bBox.SetWidth((float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH));
+                bBox.SetHeight((float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT)
+                    );
             }
             return bBox;
         }
@@ -365,11 +344,10 @@ namespace iTextSharp.Layout.Renderer
         {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(iTextSharp.Layout.Property.Property
                 .VERTICAL_ALIGNMENT);
-            if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers
-                .Count > 0)
+            if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers.Count > 0)
             {
-                float deltaY = childRenderers[childRenderers.Count - 1].GetOccupiedArea().GetBBox
-                    ().GetY() - GetInnerAreaBBox().GetY();
+                float deltaY = childRenderers[childRenderers.Count - 1].GetOccupiedArea().GetBBox().GetY() - GetInnerAreaBBox
+                    ().GetY();
                 switch (verticalAlignment)
                 {
                     case VerticalAlignment.BOTTOM:
@@ -395,10 +373,8 @@ namespace iTextSharp.Layout.Renderer
 
         protected internal virtual void ApplyRotationLayout(Rectangle layoutBox)
         {
-            float? rotationPointX = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                .ROTATION_POINT_X);
-            float? rotationPointY = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                .ROTATION_POINT_Y);
+            float? rotationPointX = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X);
+            float? rotationPointY = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y);
             if (rotationPointX == null || rotationPointY == null)
             {
                 // if rotation point was not specified, the most bottom-left point is used
@@ -414,8 +390,7 @@ namespace iTextSharp.Layout.Renderer
             if (!IsPositioned())
             {
                 IList<Point> rotatedPoints = new List<Point>();
-                GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, (float)rotationPointY
-                    );
+                GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, (float)rotationPointY);
                 Point clipLineBeg = new Point(layoutBox.GetRight(), layoutBox.GetTop());
                 Point clipLineEnd = new Point(layoutBox.GetRight(), layoutBox.GetBottom());
                 IList<Point> newOccupiedBox = ClipBBox(rotatedPoints, clipLineBeg, clipLineEnd);
@@ -450,28 +425,21 @@ namespace iTextSharp.Layout.Renderer
                 dy = (float)shift.GetY();
                 dx = (float)shift.GetX();
             }
-            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
-                );
+            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE);
             AffineTransform transform = new AffineTransform();
             transform.Rotate((float)angle);
             float[] ctm = new float[6];
             transform.GetMatrix(ctm);
-            ctm[4] = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X
-                ) + dx;
-            ctm[5] = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y
-                ) + dy;
+            ctm[4] = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X) + dx;
+            ctm[5] = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y) + dy;
             return ctm;
         }
 
-        private Point GetLayoutShiftAndRotatedPoints(IList<Point> rotatedPoints, float shiftX
-            , float shiftY)
+        private Point GetLayoutShiftAndRotatedPoints(IList<Point> rotatedPoints, float shiftX, float shiftY)
         {
-            float angle = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-                ROTATION_ANGLE);
-            float width = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
-                ROTATION_INITIAL_WIDTH);
-            float height = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                .ROTATION_INITIAL_HEIGHT);
+            float angle = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE);
+            float width = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_WIDTH);
+            float height = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT);
             float left = occupiedArea.GetBBox().GetX() - shiftX;
             float bottom = occupiedArea.GetBBox().GetY() - shiftY;
             float right = left + width;
@@ -503,16 +471,13 @@ namespace iTextSharp.Layout.Renderer
 
         protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas)
         {
-            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
-                );
+            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE);
             if (angle != null)
             {
-                float heightDiff = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox().GetHeight();
-                float shiftX = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_POINT_X);
-                float shiftY = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_POINT_Y) + heightDiff;
+                float heightDiff = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+                    ) - occupiedArea.GetBBox().GetHeight();
+                float shiftX = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X);
+                float shiftY = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y) + heightDiff;
                 Move(-shiftX, -shiftY);
                 float[] ctm = ApplyRotation();
                 canvas.SaveState().ConcatMatrix(ctm[0], ctm[1], ctm[2], ctm[3], ctm[4], ctm[5]);
@@ -521,26 +486,23 @@ namespace iTextSharp.Layout.Renderer
 
         protected internal virtual void EndRotationIfApplied(PdfCanvas canvas)
         {
-            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE
-                );
+            float? angle = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_ANGLE);
             if (angle != null)
             {
-                float heightDiff = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox().GetHeight();
-                float shiftX = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_POINT_X);
-                float shiftY = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .ROTATION_POINT_Y) + heightDiff;
+                float heightDiff = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_INITIAL_HEIGHT
+                    ) - occupiedArea.GetBBox().GetHeight();
+                float shiftX = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_X);
+                float shiftY = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y) + heightDiff;
                 canvas.RestoreState();
                 Move(shiftX, shiftY);
             }
         }
 
-        private IList<Point> TransformBBox(float left, float bottom, float right, float top
-            , AffineTransform transform, IList<Point> bBoxPoints)
+        private IList<Point> TransformBBox(float left, float bottom, float right, float top, AffineTransform transform
+            , IList<Point> bBoxPoints)
         {
-            bBoxPoints.AddAll(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Point(left, bottom
-                ), new Point(right, bottom), new Point(right, top), new Point(left, top)));
+            bBoxPoints.AddAll(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new Point(left, bottom), new Point(right, bottom
+                ), new Point(right, top), new Point(left, top)));
             foreach (Point point in bBoxPoints)
             {
                 transform.Transform(point, point);
@@ -548,8 +510,7 @@ namespace iTextSharp.Layout.Renderer
             return bBoxPoints;
         }
 
-        private IList<Point> ClipBBox(IList<Point> points, Point clipLineBeg, Point clipLineEnd
-            )
+        private IList<Point> ClipBBox(IList<Point> points, Point clipLineBeg, Point clipLineEnd)
         {
             IList<Point> filteredPoints = new List<Point>();
             bool prevOnRightSide = false;
@@ -567,8 +528,7 @@ namespace iTextSharp.Layout.Renderer
                 {
                     if (!prevOnRightSide)
                     {
-                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd
-                            ));
+                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd));
                     }
                     filteredPoints.Add(filteringPoint);
                     prevOnRightSide = true;
@@ -577,8 +537,7 @@ namespace iTextSharp.Layout.Renderer
                 {
                     if (prevOnRightSide)
                     {
-                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd
-                            ));
+                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd));
                     }
                 }
                 prevPoint = filteringPoint;
@@ -586,8 +545,7 @@ namespace iTextSharp.Layout.Renderer
             return filteredPoints;
         }
 
-        private int CheckPointSide(Point filteredPoint, Point clipLineBeg, Point clipLineEnd
-            )
+        private int CheckPointSide(Point filteredPoint, Point clipLineBeg, Point clipLineEnd)
         {
             double x1;
             double x2;
@@ -613,16 +571,14 @@ namespace iTextSharp.Layout.Renderer
             return 0;
         }
 
-        private Point GetIntersectionPoint(Point lineBeg, Point lineEnd, Point clipLineBeg
-            , Point clipLineEnd)
+        private Point GetIntersectionPoint(Point lineBeg, Point lineEnd, Point clipLineBeg, Point clipLineEnd)
         {
             double A1 = lineBeg.GetY() - lineEnd.GetY();
             double A2 = clipLineBeg.GetY() - clipLineEnd.GetY();
             double B1 = lineEnd.GetX() - lineBeg.GetX();
             double B2 = clipLineEnd.GetX() - clipLineBeg.GetX();
             double C1 = lineBeg.GetX() * lineEnd.GetY() - lineBeg.GetY() * lineEnd.GetX();
-            double C2 = clipLineBeg.GetX() * clipLineEnd.GetY() - clipLineBeg.GetY() * clipLineEnd
-                .GetX();
+            double C2 = clipLineBeg.GetX() * clipLineEnd.GetY() - clipLineBeg.GetY() * clipLineEnd.GetX();
             double M = B1 * A2 - B2 * A1;
             return new Point((B2 * C1 - B1 * C2) / M, (C2 * A1 - C1 * A2) / M);
         }

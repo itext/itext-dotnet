@@ -46,8 +46,7 @@ using System.Text;
 
 namespace iTextSharp.Barcodes.Qrcode
 {
-    /// <summary><p>A simple, fast array of bits, represented compactly by an array of ints internally.</p>
-    ///     </summary>
+    /// <summary><p>A simple, fast array of bits, represented compactly by an array of ints internally.</p></summary>
     /// <author>Sean Owen</author>
     internal sealed class BitArray
     {
@@ -115,10 +114,8 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <summary>Efficient method to check if a range of bits is set, or not set.</summary>
         /// <param name="start">start of range, inclusive.</param>
         /// <param name="end">end of range, exclusive</param>
-        /// <param name="value">if true, checks that bits in range are set, otherwise checks that they are not set
-        ///     </param>
-        /// <returns>true iff all bits are set or not set in range, according to value argument
-        ///     </returns>
+        /// <param name="value">if true, checks that bits in range are set, otherwise checks that they are not set</param>
+        /// <returns>true iff all bits are set or not set in range, according to value argument</returns>
         /// <exception cref="System.ArgumentException">if end is less than or equal to start</exception>
         public bool IsRange(int start, int end, bool value)
         {

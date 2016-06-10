@@ -52,8 +52,7 @@ namespace iTextSharp.IO.Font.Otf
         private IDictionary<int, int[]> substMap;
 
         /// <exception cref="System.IO.IOException"/>
-        public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] 
-            subTableLocations)
+        public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations)
         {
             substMap = new Dictionary<int, int[]>();
@@ -90,10 +89,8 @@ namespace iTextSharp.IO.Font.Otf
             {
                 int coverage = openReader.rf.ReadUnsignedShort();
                 int sequenceCount = openReader.rf.ReadUnsignedShort();
-                int[] sequenceLocations = openReader.ReadUShortArray(sequenceCount, subTableLocation
-                    );
-                IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage
-                    );
+                int[] sequenceLocations = openReader.ReadUShortArray(sequenceCount, subTableLocation);
+                IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
                 for (int i = 0; i < sequenceCount; ++i)
                 {
                     openReader.rf.Seek(sequenceLocations[i]);

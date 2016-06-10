@@ -65,10 +65,8 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>Parsing with default options.</summary>
         /// <param name="in">an <code>InputStream</code></param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
-        /// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.XMP.Options.ParseOptions)
-        ///     "/>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.XMP.Options.ParseOptions)"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta Parse(Stream @in)
         {
@@ -100,8 +98,7 @@ namespace iTextSharp.Kernel.XMP
         /// <em>Note:</em>The XMP_STRICT_ALIASING option is not yet implemented.
         /// </param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta Parse(Stream @in, ParseOptions options)
         {
@@ -111,8 +108,7 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>Parsing with default options.</summary>
         /// <param name="packet">a String contain an XMP-file.</param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
         /// <seealso cref="Parse(System.IO.Stream)"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromString(String packet)
@@ -124,10 +120,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="packet">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
-        /// <seealso cref="ParseFromString(System.String, iTextSharp.Kernel.XMP.Options.ParseOptions)
-        ///     "/>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <seealso cref="ParseFromString(System.String, iTextSharp.Kernel.XMP.Options.ParseOptions)"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromString(String packet, ParseOptions options)
         {
@@ -137,10 +131,8 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>Parsing with default options.</summary>
         /// <param name="buffer">a String contain an XMP-file.</param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
-        /// <seealso cref="ParseFromBuffer(byte[], iTextSharp.Kernel.XMP.Options.ParseOptions)
-        ///     "/>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <seealso cref="ParseFromBuffer(byte[], iTextSharp.Kernel.XMP.Options.ParseOptions)"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromBuffer(byte[] buffer)
         {
@@ -151,10 +143,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="buffer">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.
-        ///     </exception>
-        /// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.XMP.Options.ParseOptions)
-        ///     "/>
+        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <seealso cref="Parse(System.IO.Stream, iTextSharp.Kernel.XMP.Options.ParseOptions)"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromBuffer(byte[] buffer, ParseOptions options)
         {
@@ -174,8 +164,7 @@ namespace iTextSharp.Kernel.XMP
             Serialize(xmp, @out, null);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>.
-        ///     </summary>
+        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>.</summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="options">
         /// Options to control the serialization (see
@@ -254,8 +243,8 @@ namespace iTextSharp.Kernel.XMP
         /// its requested.
         /// </remarks>
         /// <returns>Returns the version information.</returns>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions
-            .Synchronized)]
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
+            )]
         public static XMPVersionInfo GetVersionInfo()
         {
             if (versionInfo == null)
@@ -269,8 +258,7 @@ namespace iTextSharp.Kernel.XMP
                     bool debug = false;
                     // Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
                     String message = "Adobe XMP Core 5.1.0-jc003";
-                    versionInfo = new _XMPVersionInfo_263(major, minor, micro, debug, engBuild, message
-                        );
+                    versionInfo = new _XMPVersionInfo_263(major, minor, micro, debug, engBuild, message);
                 }
                 catch (Exception e)
                 {
@@ -283,8 +271,7 @@ namespace iTextSharp.Kernel.XMP
 
         private sealed class _XMPVersionInfo_263 : XMPVersionInfo
         {
-            public _XMPVersionInfo_263(int major, int minor, int micro, bool debug, int engBuild
-                , String message)
+            public _XMPVersionInfo_263(int major, int minor, int micro, bool debug, int engBuild, String message)
             {
                 this.major = major;
                 this.minor = minor;

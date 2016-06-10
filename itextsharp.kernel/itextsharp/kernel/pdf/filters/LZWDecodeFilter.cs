@@ -49,8 +49,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <summary>Handles LZWDECODE filter</summary>
     public class LZWDecodeFilter : IFilterHandler
     {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             b = LZWDecode(b);
             b = FlateDecodeFilter.DecodePredictor(b, decodeParams);

@@ -13,8 +13,7 @@ namespace iTextSharp.Layout.Property
         {
             ICollection<int> fieldValues = new HashSet<int>();
             int maxFieldValue = 1;
-            foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields
-                ())
+            foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields())
             {
                 if (field.FieldType == typeof(int))
                 {
@@ -34,8 +33,7 @@ namespace iTextSharp.Layout.Property
                     NUnit.Framework.Assert.Fail(String.Format("Missing value: {0}", i));
                 }
             }
-            System.Console.Out.WriteLine(String.Format("Max field value: {0}", maxFieldValue)
-                );
+            System.Console.Out.WriteLine(String.Format("Max field value: {0}", maxFieldValue));
         }
     }
 }

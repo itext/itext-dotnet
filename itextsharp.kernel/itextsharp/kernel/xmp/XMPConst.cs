@@ -53,8 +53,7 @@ namespace iTextSharp.Kernel.XMP
         /// <summary>The XML namespace for the DICOM medical schema.</summary>
         public const String NS_DICOM = "http://ns.adobe.com/DICOM/";
 
-        /// <summary>The XML namespace for the PLUS (Picture Licensing Universal System, http://www.useplus.org)
-        ///     </summary>
+        /// <summary>The XML namespace for the PLUS (Picture Licensing Universal System, http://www.useplus.org)</summary>
         public const String NS_PLUS = "http://ns.useplus.org/ldf/xmp/1.0/";
 
         /// <summary>The XML namespace Adobe XMP Metadata.</summary>
@@ -166,8 +165,7 @@ namespace iTextSharp.Kernel.XMP
         public const String TYPE_GRAPHICS = "http://ns.adobe.com/xap/1.0/g/";
 
         /// <summary>The XML namespace for fields of a graphical image.</summary>
-        /// <remarks>The XML namespace for fields of a graphical image. Used for the Thumbnail type.
-        ///     </remarks>
+        /// <remarks>The XML namespace for fields of a graphical image. Used for the Thumbnail type.</remarks>
         public const String TYPE_IMAGE = "http://ns.adobe.com/xap/1.0/g/img/";
 
         public const String TYPE_FONT = "http://ns.adobe.com/xap/1.0/sType/Font#";

@@ -71,8 +71,7 @@ namespace iTextSharp.IO.Font.Cmap
 
         public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity()
         {
-            iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode
-                ();
+            iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode();
             for (int i = 0; i < 65537; i++)
             {
                 uni.AddChar(i, TextUtil.ConvertFromUtf32(i));
@@ -192,8 +191,7 @@ namespace iTextSharp.IO.Font.Cmap
                     }
                     else
                     {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode
-                            ));
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode));
                         logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                     }
                 }

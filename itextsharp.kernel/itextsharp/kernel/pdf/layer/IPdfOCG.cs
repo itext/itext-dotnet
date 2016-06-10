@@ -45,8 +45,7 @@ using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Kernel.Pdf.Layer
 {
-    /// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).
-    ///     </summary>
+    /// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).</summary>
     public interface IPdfOCG
     {
         /// <summary>Gets the object representing the layer.</summary>

@@ -10,11 +10,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfCopyTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCopyTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCopyTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfCopyTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfCopyTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -28,22 +27,18 @@ namespace iTextSharp.Kernel.Pdf
         [LogMessage(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
         public virtual void CopySignedDocuments()
         {
-            FileStream fis1 = new FileStream(sourceFolder + "hello_signed.pdf", FileMode.Open
-                , FileAccess.Read);
+            FileStream fis1 = new FileStream(sourceFolder + "hello_signed.pdf", FileMode.Open, FileAccess.Read);
             PdfReader reader1 = new PdfReader(fis1);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode.Create
-                );
+            FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode.Create);
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(fos2));
             pdfDoc1.CopyPagesTo(1, 1, pdfDoc2);
             pdfDoc2.Close();
             pdfDoc1.Close();
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(destinationFolder + "copySignedDocuments.pdf"
-                ));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(destinationFolder + "copySignedDocuments.pdf"));
             PdfDictionary sig = (PdfDictionary)pdfDocument.GetPdfObject(13);
             PdfDictionary sigRef = sig.GetAsArray(PdfName.Reference).GetAsDictionary(0);
-            NUnit.Framework.Assert.IsTrue(PdfName.SigRef.Equals(sigRef.GetAsName(PdfName.Type
-                )));
+            NUnit.Framework.Assert.IsTrue(PdfName.SigRef.Equals(sigRef.GetAsName(PdfName.Type)));
             NUnit.Framework.Assert.IsTrue(sigRef.Get(PdfName.Data).IsNull());
         }
 
@@ -51,28 +46,24 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void Copying1()
         {
-            FileStream fos1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Create
-                );
+            FileStream fos1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").
-                SetTitle("Empty iText 6 Document");
-            pdfDoc1.GetCatalog().Put(new PdfName("a"), ((PdfName)new PdfName("b").MakeIndirect
-                (pdfDoc1)));
+            pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
+                );
+            pdfDoc1.GetCatalog().Put(new PdfName("a"), ((PdfName)new PdfName("b").MakeIndirect(pdfDoc1)));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             pdfDoc1.Close();
-            FileStream fis1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Open
-                , FileAccess.Read);
+            FileStream fis1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Open, FileAccess.Read);
             PdfReader reader1 = new PdfReader(fis1);
             pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copying1_2.pdf", FileMode.Create
-                );
+            FileStream fos2 = new FileStream(destinationFolder + "copying1_2.pdf", FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
             pdfDoc2.AddNewPage();
-            pdfDoc2.GetDocumentInfo().GetPdfObject().Put(new PdfName("a"), pdfDoc1.GetCatalog
-                ().GetPdfObject().Get(new PdfName("a")).CopyTo(pdfDoc2));
+            pdfDoc2.GetDocumentInfo().GetPdfObject().Put(new PdfName("a"), pdfDoc1.GetCatalog().GetPdfObject().Get(new 
+                PdfName("a")).CopyTo(pdfDoc2));
             pdfDoc2.Close();
             pdfDoc1.Close();
             PdfReader reader = new PdfReader(destinationFolder + "copying1_2.pdf");
@@ -89,24 +80,21 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void Copying2()
         {
-            FileStream fos1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Create
-                );
+            FileStream fos1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
             for (int i = 0; i < 10; i++)
             {
                 PdfPage page1 = pdfDoc1.AddNewPage();
-                page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " 
-                    + (i + 1).ToString() + "\n"));
+                page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + (i + 1).ToString() + "\n"
+                    ));
                 page1.Flush();
             }
             pdfDoc1.Close();
-            FileStream fis1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Open
-                , FileAccess.Read);
+            FileStream fis1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Open, FileAccess.Read);
             PdfReader reader1 = new PdfReader(fis1);
             pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copying2_2.pdf", FileMode.Create
-                );
+            FileStream fos2 = new FileStream(destinationFolder + "copying2_2.pdf", FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
             for (int i_1 = 0; i_1 < 10; i_1++)
@@ -134,31 +122,25 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void Copying3()
         {
-            FileStream fos = new FileStream(destinationFolder + "copying3_1.pdf", FileMode.Create
-                );
+            FileStream fos = new FileStream(destinationFolder + "copying3_1.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
-                ));
-            PdfDictionary helloWorld1 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc
-                ));
+            PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
+            PdfDictionary helloWorld1 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
             helloWorld.Put(new PdfName("HelloWrld"), helloWorld);
             helloWorld.Put(new PdfName("HelloWrld1"), helloWorld1);
             PdfPage page = pdfDoc.AddNewPage();
             page.GetPdfObject().Put(new PdfName("HelloWorld"), helloWorld);
-            page.GetPdfObject().Put(new PdfName("HelloWorldClone"), (PdfObject)helloWorld.Clone
-                ());
+            page.GetPdfObject().Put(new PdfName("HelloWorldClone"), (PdfObject)helloWorld.Clone());
             pdfDoc.Close();
             PdfReader reader = new PdfReader(destinationFolder + "copying3_1.pdf");
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             pdfDoc = new PdfDocument(reader);
-            PdfDictionary dic0 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName
-                ("HelloWorld"));
+            PdfDictionary dic0 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName("HelloWorld"));
             NUnit.Framework.Assert.AreEqual(4, dic0.GetIndirectReference().GetObjNumber());
             NUnit.Framework.Assert.AreEqual(0, dic0.GetIndirectReference().GetGenNumber());
-            PdfDictionary dic1 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName
-                ("HelloWorldClone"));
+            PdfDictionary dic1 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName("HelloWorldClone"));
             NUnit.Framework.Assert.AreEqual(8, dic1.GetIndirectReference().GetObjNumber());
             NUnit.Framework.Assert.AreEqual(0, dic1.GetIndirectReference().GetGenNumber());
             PdfString str0 = dic0.GetAsString(new PdfName("Hello"));
@@ -167,18 +149,18 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(str0.GetValue(), "World");
             PdfDictionary dic01 = dic0.GetAsDictionary(new PdfName("HelloWrld"));
             PdfDictionary dic11 = dic1.GetAsDictionary(new PdfName("HelloWrld"));
-            NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetObjNumber(), dic11
-                .GetIndirectReference().GetObjNumber());
-            NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetGenNumber(), dic11
-                .GetIndirectReference().GetGenNumber());
+            NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetObjNumber(), dic11.GetIndirectReference().
+                GetObjNumber());
+            NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetGenNumber(), dic11.GetIndirectReference().
+                GetGenNumber());
             NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetObjNumber(), 4);
             NUnit.Framework.Assert.AreEqual(dic01.GetIndirectReference().GetGenNumber(), 0);
             PdfDictionary dic02 = dic0.GetAsDictionary(new PdfName("HelloWrld1"));
             PdfDictionary dic12 = dic1.GetAsDictionary(new PdfName("HelloWrld1"));
-            NUnit.Framework.Assert.AreEqual(dic02.GetIndirectReference().GetObjNumber(), dic12
-                .GetIndirectReference().GetObjNumber());
-            NUnit.Framework.Assert.AreEqual(dic02.GetIndirectReference().GetGenNumber(), dic12
-                .GetIndirectReference().GetGenNumber());
+            NUnit.Framework.Assert.AreEqual(dic02.GetIndirectReference().GetObjNumber(), dic12.GetIndirectReference().
+                GetObjNumber());
+            NUnit.Framework.Assert.AreEqual(dic02.GetIndirectReference().GetGenNumber(), dic12.GetIndirectReference().
+                GetGenNumber());
             NUnit.Framework.Assert.AreEqual(dic12.GetIndirectReference().GetObjNumber(), 5);
             NUnit.Framework.Assert.AreEqual(dic12.GetIndirectReference().GetGenNumber(), 0);
             reader.Close();
@@ -191,19 +173,16 @@ namespace iTextSharp.Kernel.Pdf
         public virtual void CopyDocumentsWithFormFieldsTest()
         {
             String filename = sourceFolder + "fieldsOn2-sPage.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read
-                ));
-            FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf"
-                , FileMode.Create);
+            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
+            FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument sourceDoc = new PdfDocument(reader);
             PdfDocument pdfDoc = new PdfDocument(writer);
             sourceDoc.InitializeOutlines();
             sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), pdfDoc);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder
-                 + "copyDocumentsWithFormFields.pdf", sourceFolder + "cmp_copyDocumentsWithFormFields.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copyDocumentsWithFormFields.pdf"
+                , sourceFolder + "cmp_copyDocumentsWithFormFields.pdf", destinationFolder, "diff_"));
         }
     }
 }

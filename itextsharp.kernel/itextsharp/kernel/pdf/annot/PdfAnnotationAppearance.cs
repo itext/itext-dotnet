@@ -59,15 +59,15 @@ namespace iTextSharp.Kernel.Pdf.Annot
         {
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetState(PdfName
-             stateName, PdfFormXObject state)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetState(PdfName stateName, PdfFormXObject
+             state)
         {
             GetPdfObject().Put(stateName, state.GetPdfObject());
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetStateObject
-            (PdfName stateName, PdfStream state)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotationAppearance SetStateObject(PdfName stateName, PdfStream
+             state)
         {
             GetPdfObject().Put(stateName, state);
             return this;

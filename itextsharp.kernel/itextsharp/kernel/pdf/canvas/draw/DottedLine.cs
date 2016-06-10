@@ -87,10 +87,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 
         public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
         {
-            canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(0, gap
-                , gap / 2).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND).MoveTo(drawArea
-                .GetX(), drawArea.GetY()).LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea
-                .GetY()).Stroke().RestoreState();
+            canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(0, gap, gap / 2).SetLineCapStyle
+                (PdfCanvasConstants.LineCapStyle.ROUND).MoveTo(drawArea.GetX(), drawArea.GetY()).LineTo(drawArea.GetX(
+                ) + drawArea.GetWidth(), drawArea.GetY()).Stroke().RestoreState();
         }
 
         /// <summary>Getter for the gap between the center of the dots of the dotted line.</summary>

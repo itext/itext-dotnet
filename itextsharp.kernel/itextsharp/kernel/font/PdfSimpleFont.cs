@@ -57,8 +57,7 @@ namespace iTextSharp.Kernel.Font
         protected internal FontEncoding fontEncoding;
 
         /// <summary>Forces the output of the width array.</summary>
-        /// <remarks>Forces the output of the width array. Only matters for the 14 built-in fonts.
-        ///     </remarks>
+        /// <remarks>Forces the output of the width array. Only matters for the 14 built-in fonts.</remarks>
         protected internal bool forceWidthsOutput = false;
 
         /// <summary>The array used with single byte encodings.</summary>
@@ -174,8 +173,7 @@ namespace iTextSharp.Kernel.Font
             return bytes;
         }
 
-        public override void WriteText(GlyphLine text, int from, int to, PdfOutputStream 
-            stream)
+        public override void WriteText(GlyphLine text, int from, int to, PdfOutputStream stream)
         {
             byte[] bytes = new byte[to - from + 1];
             int ptr = 0;
@@ -365,8 +363,8 @@ namespace iTextSharp.Kernel.Font
             {
                 if (!fontEncoding.IsFontSpecific())
                 {
-                    GetPdfObject().Put(PdfName.Encoding, PdfEncodings.CP1252.Equals(fontEncoding.GetBaseEncoding
-                        ()) ? PdfName.WinAnsiEncoding : PdfName.MacRomanEncoding);
+                    GetPdfObject().Put(PdfName.Encoding, PdfEncodings.CP1252.Equals(fontEncoding.GetBaseEncoding()) ? PdfName.
+                        WinAnsiEncoding : PdfName.MacRomanEncoding);
                 }
             }
             if (IsForceWidthsOutput() || !IsBuiltInFont() || fontEncoding.HasDifferences())
@@ -423,12 +421,9 @@ namespace iTextSharp.Kernel.Font
             fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
             fontDescriptor.Put(PdfName.Ascent, new PdfNumber(fontMetrics.GetTypoAscender()));
             fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
-            fontDescriptor.Put(PdfName.Descent, new PdfNumber(fontMetrics.GetTypoDescender())
-                );
-            fontDescriptor.Put(PdfName.FontBBox, new PdfArray(ArrayUtil.CloneArray(fontMetrics
-                .GetBbox())));
-            fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle(
-                )));
+            fontDescriptor.Put(PdfName.Descent, new PdfNumber(fontMetrics.GetTypoDescender()));
+            fontDescriptor.Put(PdfName.FontBBox, new PdfArray(ArrayUtil.CloneArray(fontMetrics.GetBbox())));
+            fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
             fontDescriptor.Put(PdfName.StemV, new PdfNumber(fontMetrics.GetStemV()));
             if (fontMetrics.GetXHeight() > 0)
             {
@@ -442,11 +437,10 @@ namespace iTextSharp.Kernel.Font
             {
                 fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
             }
-            if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && 
-                fontNames.GetFamilyName()[0].Length >= 4)
+            if (fontNames.GetFamilyName() != null && fontNames.GetFamilyName().Length > 0 && fontNames.GetFamilyName()
+                [0].Length >= 4)
             {
-                fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0]
-                    [3]));
+                fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
             }
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();

@@ -74,8 +74,7 @@ namespace iTextSharp.IO.Source
         long Length();
 
         /// <summary>Closes this source.</summary>
-        /// <remarks>Closes this source. The underlying data structure or source (if any) will also be closed
-        ///     </remarks>
+        /// <remarks>Closes this source. The underlying data structure or source (if any) will also be closed</remarks>
         /// <exception cref="System.IO.IOException"/>
         void Close();
     }

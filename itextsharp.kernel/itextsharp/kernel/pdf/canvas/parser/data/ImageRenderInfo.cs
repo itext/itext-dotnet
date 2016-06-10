@@ -50,28 +50,24 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
     /// <summary>Represents image data from a PDF</summary>
     public class ImageRenderInfo : IEventData
     {
-        /// <summary>The coordinate transformation matrix that was in effect when the image was rendered
-        ///     </summary>
+        /// <summary>The coordinate transformation matrix that was in effect when the image was rendered</summary>
         private Matrix ctm;
 
         private PdfImageXObject image;
 
-        /// <summary>the color space dictionary from resources which are associated with the image
-        ///     </summary>
+        /// <summary>the color space dictionary from resources which are associated with the image</summary>
         private PdfDictionary colorSpaceDictionary;
 
         /// <summary>defines if the encountered image was inline</summary>
         private bool isInline;
 
         /// <summary>Create an ImageRenderInfo</summary>
-        /// <param name="ctm">the coordinate transformation matrix at the time the image is rendered
-        ///     </param>
+        /// <param name="ctm">the coordinate transformation matrix at the time the image is rendered</param>
         /// <param name="stream">image stream object</param>
         /// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
         ///     </param>
         /// <param name="isInline">defines if the encountered image was inline</param>
-        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary
-            , bool isInline)
+        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary, bool isInline)
         {
             this.ctm = ctm;
             this.image = new PdfImageXObject(stream);
@@ -129,8 +125,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
             return isInline;
         }
 
-        /// <returns>the color space dictionary from resources which are associated with the image
-        ///     </returns>
+        /// <returns>the color space dictionary from resources which are associated with the image</returns>
         public virtual PdfDictionary GetColorSpaceDictionary()
         {
             return colorSpaceDictionary;

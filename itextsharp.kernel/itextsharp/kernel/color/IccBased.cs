@@ -60,8 +60,7 @@ namespace iTextSharp.Kernel.Color
         }
 
         /// <summary>Creates IccBased color.</summary>
-        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.
-        ///     </param>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public IccBased(Stream iccStream)
             : this(new PdfCieBasedCs.IccBased(iccStream), null)
@@ -75,8 +74,7 @@ namespace iTextSharp.Kernel.Color
         }
 
         /// <summary>Creates IccBased color.</summary>
-        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.
-        ///     </param>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
         /// <param name="value">color value.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public IccBased(Stream iccStream, float[] value)

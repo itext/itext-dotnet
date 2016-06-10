@@ -56,16 +56,14 @@ namespace iTextSharp.Layout.Border
     {
         private const float GAP_MODIFIER = 2.5f;
 
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.
-        ///     </summary>
+        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(float width)
             : base(width)
         {
         }
 
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.
-        ///     </summary>
+        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(iTextSharp.Kernel.Color.Color color, float width)
@@ -78,8 +76,8 @@ namespace iTextSharp.Layout.Border
             return iTextSharp.Layout.Border.Border.ROUND_DOTS;
         }
 
-        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2
-            , float borderWidthBefore, float borderWidthAfter)
+        public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+            , float borderWidthAfter)
         {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -121,12 +119,10 @@ namespace iTextSharp.Layout.Border
             canvas.SetStrokeColor(color);
             canvas.SetLineWidth(width);
             canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
-            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2)
-                .Stroke();
+            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2
-            , float y2)
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
         {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -145,8 +141,7 @@ namespace iTextSharp.Layout.Border
             canvas.SetStrokeColor(color);
             canvas.SetLineWidth(width);
             canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
-            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2)
-                .Stroke();
+            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
         protected internal virtual float GetDotsGap(double distance, float initialGap)

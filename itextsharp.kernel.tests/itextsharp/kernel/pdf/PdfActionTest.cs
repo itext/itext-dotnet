@@ -7,11 +7,10 @@ namespace iTextSharp.Kernel.Pdf
 {
     public class PdfActionTest : ExtendedITextTest
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfActionTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfActionTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itextsharp/kernel/pdf/PdfActionTest/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itextsharp/kernel/pdf/PdfActionTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass()
@@ -23,8 +22,7 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void ActionTest01()
         {
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest01.pdf"
-                , FileMode.Create));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest01.pdf", FileMode.Create));
             PdfDocument document = CreateDocument(writer, true);
             document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
@@ -36,11 +34,9 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         public virtual void ActionTest02()
         {
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest02.pdf"
-                , FileMode.Create));
+            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest02.pdf", FileMode.Create));
             PdfDocument document = CreateDocument(writer, false);
-            document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"
-                ));
+            document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
             System.Console.Out.WriteLine(String.Format("Please open document {0} at page 2 and make sure that you're automatically redirected to {1} site."
                 , destinationFolder + "actionTest02.pdf", "http://itextpdf.com"));

@@ -58,13 +58,11 @@ using iTextSharp.Kernel.Pdf.Annot;
 
 namespace iTextSharp.Signatures
 {
-    /// <summary>Takes care of the cryptographic options and appearances that form a signature.
-    ///     </summary>
+    /// <summary>Takes care of the cryptographic options and appearances that form a signature.</summary>
     public class PdfSigner
     {
         /// <summary>Enum containing the Cryptographic Standards.</summary>
-        /// <remarks>Enum containing the Cryptographic Standards. Possible values are "CMS" and "CADES".
-        ///     </remarks>
+        /// <remarks>Enum containing the Cryptographic Standards. Possible values are "CMS" and "CADES".</remarks>
         public enum CryptoStandard
         {
             CMS,
@@ -92,12 +90,10 @@ namespace iTextSharp.Signatures
         /// <summary>The file right before the signature is added (can be null).</summary>
         protected internal FileStream raf;
 
-        /// <summary>The bytes of the file right before the signature is added (if raf is null).
-        ///     </summary>
+        /// <summary>The bytes of the file right before the signature is added (if raf is null).</summary>
         protected internal byte[] bout;
 
-        /// <summary>Array containing the byte positions of the bytes that need to be hashed.
-        ///     </summary>
+        /// <summary>Array containing the byte positions of the bytes that need to be hashed.</summary>
         protected internal long[] range;
 
         /// <summary>The PdfDocument.</summary>
@@ -133,8 +129,7 @@ namespace iTextSharp.Signatures
         /// <summary>Holds value of property signDate.</summary>
         protected internal DateTime signDate;
 
-        /// <summary>Boolean to check if this PdfSigner instance has been closed already or not.
-        ///     </summary>
+        /// <summary>Boolean to check if this PdfSigner instance has been closed already or not.</summary>
         protected internal bool closed;
 
         /// <summary>Creates a PdfSigner instance.</summary>
@@ -145,8 +140,7 @@ namespace iTextSharp.Signatures
         /// </remarks>
         /// <param name="reader">PdfReader that reads the PDF file</param>
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
-        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not
-        ///     </param>
+        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
         /// <exception cref="System.IO.IOException"/>
         public PdfSigner(PdfReader reader, Stream outputStream, bool append)
             : this(reader, outputStream, null, append)
@@ -162,8 +156,7 @@ namespace iTextSharp.Signatures
         /// <param name="reader">PdfReader that reads the PDF file</param>
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="path">File to which the output is temporarily written</param>
-        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not
-        ///     </param>
+        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
         /// <exception cref="System.IO.IOException"/>
         public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
         {
@@ -180,8 +173,7 @@ namespace iTextSharp.Signatures
             else
             {
                 this.tempFile = FileUtil.CreateTempFile(path);
-                document = new PdfDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile
-                    )), properties);
+                document = new PdfDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), properties);
             }
             originalOS = outputStream;
             signDate = SignUtils.GetCurrentTime();
@@ -298,16 +290,14 @@ namespace iTextSharp.Signatures
             return this.signatureEvent;
         }
 
-        /// <summary>Sets the signature event to allow modification of the signature dictionary.
-        ///     </summary>
+        /// <summary>Sets the signature event to allow modification of the signature dictionary.</summary>
         /// <param name="signatureEvent">the signature event</param>
         public virtual void SetSignatureEvent(PdfSigner.ISignatureEvent signatureEvent)
         {
             this.signatureEvent = signatureEvent;
         }
 
-        /// <summary>Gets a new signature field name that doesn't clash with any existing name.
-        ///     </summary>
+        /// <summary>Gets a new signature field name that doesn't clash with any existing name.</summary>
         /// <returns>A new signature field name.</returns>
         public virtual String GetNewSigFieldName()
         {
@@ -411,14 +401,13 @@ namespace iTextSharp.Signatures
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
         /// <param name="externalDigest">an implementation that provides the digest</param>
-        /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0
-        ///     </param>
+        /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate
-            [] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient
-             tsaClient, int estimatedSize, PdfSigner.CryptoStandard sigtype)
+        public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
+            <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
+             sigtype)
         {
             if (closed)
             {
@@ -455,8 +444,8 @@ namespace iTextSharp.Signatures
             {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
-            PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard
-                .CADES ? PdfName.ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
+            PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
+                .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());
             dic.SetLocation(appearance.GetLocation());
             dic.SetSignatureCreator(appearance.GetSignatureCreator());
@@ -470,18 +459,15 @@ namespace iTextSharp.Signatures
             String hashAlgorithm = externalSignature.GetHashAlgorithm();
             PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
             Stream data = GetRangeStream();
-            byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm
-                ));
+            byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm));
             byte[] ocsp = null;
             if (chain.Length >= 2 && ocspClient != null)
             {
-                ocsp = ocspClient.GetEncoded((X509Certificate)chain[0], (X509Certificate)chain[1]
-                    , null);
+                ocsp = ocspClient.GetEncoded((X509Certificate)chain[0], (X509Certificate)chain[1], null);
             }
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(hash, ocsp, crlBytes, sigtype);
             byte[] extSignature = externalSignature.Sign(sh);
-            sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm
-                ());
+            sgn.SetExternalDigest(extSignature, null, externalSignature.GetEncryptionAlgorithm());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, tsaClient, ocsp, crlBytes, sigtype);
             if (estimatedSize < encodedSig.Length)
             {
@@ -503,13 +489,12 @@ namespace iTextSharp.Signatures
         /// NOTE: This method closes the underlying pdf document. This means, that current instance
         /// of PdfSigner cannot be used after this method call.
         /// </remarks>
-        /// <param name="externalSignatureContainer">the interface providing the actual signing
-        ///     </param>
+        /// <param name="externalSignatureContainer">the interface providing the actual signing</param>
         /// <param name="estimatedSize">the reserved size for the signature</param>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer
-            , int estimatedSize)
+        public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer, int estimatedSize
+            )
         {
             if (closed)
             {
@@ -611,20 +596,19 @@ namespace iTextSharp.Signatures
         /// </param>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public static void SignDeferred(PdfDocument document, String fieldName, Stream outs
-            , IExternalSignatureContainer externalSignatureContainer)
+        public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
+             externalSignatureContainer)
         {
             SignatureUtil signatureUtil = new SignatureUtil(document);
             PdfDictionary v = signatureUtil.GetSignatureDictionary(fieldName);
             if (v == null)
             {
-                throw new PdfException(PdfException.ThereIsNoFieldInTheDocumentWithSuchName1).SetMessageParams
-                    (fieldName);
+                throw new PdfException(PdfException.ThereIsNoFieldInTheDocumentWithSuchName1).SetMessageParams(fieldName);
             }
             if (!signatureUtil.SignatureCoversWholeDocument(fieldName))
             {
-                new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument
-                    ).SetMessageParams(fieldName);
+                new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams(fieldName
+                    );
             }
             PdfArray b = v.GetAsArray(PdfName.ByteRange);
             long[] gaps = SignatureUtil.AsLongArray(b);
@@ -633,10 +617,8 @@ namespace iTextSharp.Signatures
             {
                 throw new ArgumentException("Single exclusion space supported");
             }
-            IRandomAccessSource readerSource = document.GetReader().GetSafeFile().CreateSourceView
-                ();
-            Stream rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource
-                , gaps));
+            IRandomAccessSource readerSource = document.GetReader().GetSafeFile().CreateSourceView();
+            Stream rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
             byte[] signedContent = externalSignatureContainer.Sign(rg);
             int spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
             if ((spaceAvailable & 1) != 0)
@@ -669,8 +651,8 @@ namespace iTextSharp.Signatures
         ///     </param>
         /// <param name="crlList">a list of CrlClient implementations</param>
         /// <returns>a collection of CRL bytes that can be embedded in a PDF</returns>
-        protected internal virtual ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection
-            <ICrlClient> crlList)
+        protected internal virtual ICollection<byte[]> ProcessCrl(X509Certificate cert, ICollection<ICrlClient> crlList
+            )
         {
             if (crlList == null)
             {
@@ -700,8 +682,7 @@ namespace iTextSharp.Signatures
             }
         }
 
-        protected internal virtual void AddDeveloperExtension(PdfDeveloperExtension extension
-            )
+        protected internal virtual void AddDeveloperExtension(PdfDeveloperExtension extension)
         {
             document.GetCatalog().AddDeveloperExtension(extension);
         }
@@ -727,8 +708,7 @@ namespace iTextSharp.Signatures
         /// calculation. The key is a PdfName and the value an Integer. At least the /Contents must be present
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes
-            )
+        protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes)
         {
             if (preClosed)
             {
@@ -749,8 +729,7 @@ namespace iTextSharp.Signatures
             cryptoDictionary.GetPdfObject().MakeIndirect(document);
             if (fieldExist)
             {
-                PdfSignatureFormField sigField = (PdfSignatureFormField)acroForm.GetField(fieldName
-                    );
+                PdfSignatureFormField sigField = (PdfSignatureFormField)acroForm.GetField(fieldName);
                 sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
                 fieldLock = sigField.GetSigFieldLockDictionary();
                 if (fieldLock == null && this.fieldLock != null)
@@ -759,8 +738,7 @@ namespace iTextSharp.Signatures
                     sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
                     fieldLock = this.fieldLock;
                 }
-                sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject
-                    ());
+                sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject());
                 sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
                 PdfObject obj = sigField.GetPdfObject().Get(PdfName.F);
                 int flags = 0;
@@ -902,8 +880,7 @@ namespace iTextSharp.Signatures
             }
         }
 
-        /// <summary>Gets the document bytes that are hashable when using external signatures.
-        ///     </summary>
+        /// <summary>Gets the document bytes that are hashable when using external signatures.</summary>
         /// <remarks>
         /// Gets the document bytes that are hashable when using external signatures.
         /// The general sequence is:
@@ -1036,8 +1013,7 @@ namespace iTextSharp.Signatures
             return raf == null ? fac.CreateSource(bout) : fac.CreateSource(raf);
         }
 
-        /// <summary>Adds keys to the signature dictionary that define the certification level and the permissions.
-        ///     </summary>
+        /// <summary>Adds keys to the signature dictionary that define the certification level and the permissions.</summary>
         /// <remarks>
         /// Adds keys to the signature dictionary that define the certification level and the permissions.
         /// This method is only used for Certifying signatures.
@@ -1068,15 +1044,13 @@ namespace iTextSharp.Signatures
             crypto.Put(PdfName.Reference, types);
         }
 
-        /// <summary>Adds keys to the signature dictionary that define the field permissions.
-        ///     </summary>
+        /// <summary>Adds keys to the signature dictionary that define the field permissions.</summary>
         /// <remarks>
         /// Adds keys to the signature dictionary that define the field permissions.
         /// This method is only used for signatures that lock fields.
         /// </remarks>
         /// <param name="crypto">the signature dictionary</param>
-        protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLockDictionary
-             fieldLock)
+        protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLockDictionary fieldLock)
         {
             PdfDictionary reference = new PdfDictionary();
             PdfDictionary transformParams = new PdfDictionary();
@@ -1105,8 +1079,7 @@ namespace iTextSharp.Signatures
         /// <summary>Get the rectangle associated to the provided widget.</summary>
         /// <param name="widget">PdfWidgetAnnotation to extract the rectangle from</param>
         /// <returns>Rectangle</returns>
-        protected internal virtual Rectangle GetWidgetRectangle(PdfWidgetAnnotation widget
-            )
+        protected internal virtual Rectangle GetWidgetRectangle(PdfWidgetAnnotation widget)
         {
             return widget.GetRectangle().ToRectangle();
         }

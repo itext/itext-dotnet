@@ -50,15 +50,14 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class PubSecHandlerUsingAes256 : PubSecHandlerUsingAes128
     {
-        public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, X509Certificate
-            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
-            : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly
-                )
+        public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
+            , bool encryptMetadata, bool embeddedFilesOnly)
+            : base(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly)
         {
         }
 
-        public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata)
+        public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, ICipherParameters certificateKey, X509Certificate
+             certificate, bool encryptMetadata)
             : base(encryptionDictionary, certificateKey, certificate, encryptMetadata)
         {
         }
@@ -74,8 +73,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             nextObjectKeySize = 32;
         }
 
-        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
+             encryptMetadata, bool embeddedFilesOnly)
         {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);

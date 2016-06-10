@@ -44,8 +44,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         }
 
         // EMPTY
-        /// <summary>A converter that processes a byte buffer containing a mix of UTF8 and Latin-1/Cp1252 chars.
-        ///     </summary>
+        /// <summary>A converter that processes a byte buffer containing a mix of UTF8 and Latin-1/Cp1252 chars.</summary>
         /// <remarks>
         /// A converter that processes a byte buffer containing a mix of UTF8 and Latin-1/Cp1252 chars.
         /// The result is a buffer where those chars have been converted to UTF-8;
@@ -197,8 +196,7 @@ namespace iTextSharp.Kernel.XMP.Impl
                     }
                     // space for undefined 
                     // interpret byte as Windows Cp1252 char
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252")
-                        .GetBytes("UTF-8");
+                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
                 }
             }
             catch (ArgumentException)

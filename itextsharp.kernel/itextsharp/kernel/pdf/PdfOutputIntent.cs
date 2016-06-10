@@ -55,8 +55,8 @@ namespace iTextSharp.Kernel.Pdf
         /// suppress any key.
         /// By default output intent subtype is GTS_PDFA1, use setter to change it.
         /// </remarks>
-        public PdfOutputIntent(String outputConditionIdentifier, String outputCondition, 
-            String registryName, String info, Stream iccStream)
+        public PdfOutputIntent(String outputConditionIdentifier, String outputCondition, String registryName, String
+             info, Stream iccStream)
             : base(new PdfDictionary())
         {
             SetOutputIntentSubtype(PdfName.GTS_PDFA1);
@@ -124,11 +124,9 @@ namespace iTextSharp.Kernel.Pdf
             return GetPdfObject().GetAsString(PdfName.OutputConditionIdentifier);
         }
 
-        public virtual void SetOutputConditionIdentifier(String outputConditionIdentifier
-            )
+        public virtual void SetOutputConditionIdentifier(String outputConditionIdentifier)
         {
-            GetPdfObject().Put(PdfName.OutputConditionIdentifier, new PdfString(outputConditionIdentifier
-                ));
+            GetPdfObject().Put(PdfName.OutputConditionIdentifier, new PdfString(outputConditionIdentifier));
         }
 
         public virtual PdfString GetOutputCondition()

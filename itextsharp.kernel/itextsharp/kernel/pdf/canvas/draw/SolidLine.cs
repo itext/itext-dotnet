@@ -63,8 +63,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw
         {
         }
 
-        /// <summary>Constructs an instance of solid line drawer with the specified line thickness
-        ///     </summary>
+        /// <summary>Constructs an instance of solid line drawer with the specified line thickness</summary>
         /// <param name="lineWidth">line width</param>
         public SolidLine(float lineWidth)
         {
@@ -73,9 +72,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw
 
         public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
         {
-            canvas.SaveState().SetStrokeColor(color).MoveTo(drawArea.GetX(), drawArea.GetY())
-                .LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea.GetY()).Stroke().RestoreState
-                ();
+            canvas.SaveState().SetStrokeColor(color).MoveTo(drawArea.GetX(), drawArea.GetY()).LineTo(drawArea.GetX() +
+                 drawArea.GetWidth(), drawArea.GetY()).Stroke().RestoreState();
         }
 
         /// <summary>Gets line width in points</summary>

@@ -72,11 +72,10 @@ namespace iTextSharp.Barcodes
     public class BarcodeInter25 : Barcode1D
     {
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 1, 1, 0
-             }, new byte[] { 1, 0, 0, 0, 1 }, new byte[] { 0, 1, 0, 0, 1 }, new byte[] { 
-            1, 1, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 1 }, new byte[] { 1, 0, 1, 0, 0 }, 
-            new byte[] { 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 0, 1, 1 }, new byte[] { 1, 0
-            , 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 
+            0, 1 }, new byte[] { 0, 1, 0, 0, 1 }, new byte[] { 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 1, 0, 1 }, new 
+            byte[] { 1, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 0, 1, 1 }, new byte[] { 1, 
+            0, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0 } };
 
         /// <summary>Creates new BarcodeInter25</summary>
         public BarcodeInter25(PdfDocument document)
@@ -248,8 +247,8 @@ namespace iTextSharp.Barcodes
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color
-             barColor, iTextSharp.Kernel.Color.Color textColor)
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+             textColor)
         {
             String fullCode = code;
             float fontX = 0;

@@ -65,8 +65,8 @@ namespace iTextSharp.Layout.Layout
 
         protected internal AreaBreak areaBreak;
 
-        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, 
-            IRenderer overflowRenderer)
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            )
         {
             this.status = status;
             this.occupiedArea = occupiedArea;
@@ -109,8 +109,7 @@ namespace iTextSharp.Layout.Layout
             return areaBreak;
         }
 
-        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak
-            )
+        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak)
         {
             this.areaBreak = areaBreak;
             return this;
@@ -145,8 +144,7 @@ namespace iTextSharp.Layout.Layout
                     break;
                 }
             }
-            return "LayoutResult{" + status + ", areaBreak=" + areaBreak + ", occupiedArea=" 
-                + occupiedArea + '}';
+            return "LayoutResult{" + status + ", areaBreak=" + areaBreak + ", occupiedArea=" + occupiedArea + '}';
         }
     }
 }

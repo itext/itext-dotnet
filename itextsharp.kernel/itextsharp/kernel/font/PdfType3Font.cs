@@ -80,10 +80,8 @@ namespace iTextSharp.Kernel.Font
             fontEncoding = FontEncoding.CreateEmptyFontEncoding();
         }
 
-        /// <summary>Creates a Type3 font based on an existing font dictionary, which must be an indirect object.
-        ///     </summary>
-        /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.
-        ///     </param>
+        /// <summary>Creates a Type3 font based on an existing font dictionary, which must be an indirect object.</summary>
+        /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary)
         {
@@ -92,26 +90,22 @@ namespace iTextSharp.Kernel.Font
             subset = true;
             embedded = true;
             fontProgram = new Type3FontProgram(false);
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding
-                ), null, false);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), null, false);
             PdfDictionary charProcsDic = GetPdfObject().GetAsDictionary(PdfName.CharProcs);
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (GetPdfObject().ContainsKey(PdfName.FontBBox))
             {
                 PdfArray fontBBox = GetPdfObject().GetAsArray(PdfName.FontBBox);
-                fontProgram.GetFontMetrics().SetBbox(fontBBox.GetAsNumber(0).IntValue(), fontBBox
-                    .GetAsNumber(1).IntValue(), fontBBox.GetAsNumber(2).IntValue(), fontBBox.GetAsNumber
-                    (3).IntValue());
+                fontProgram.GetFontMetrics().SetBbox(fontBBox.GetAsNumber(0).IntValue(), fontBBox.GetAsNumber(1).IntValue(
+                    ), fontBBox.GetAsNumber(2).IntValue(), fontBBox.GetAsNumber(3).IntValue());
             }
             else
             {
                 fontProgram.GetFontMetrics().SetBbox(0, 0, 0, 0);
             }
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
-            int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0)
-                 : 0;
-            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName
-                .Widths), firstChar);
+            int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
+            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar);
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++)
             {
@@ -124,8 +118,8 @@ namespace iTextSharp.Kernel.Font
                 if (unicode != -1 && fontEncoding.CanEncode(unicode))
                 {
                     int code = fontEncoding.ConvertToByte(unicode);
-                    ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, 
-                        new Type3Glyph(charProcsDic.GetAsStream(glyphName), GetDocument()));
+                    ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic
+                        .GetAsStream(glyphName), GetDocument()));
                 }
             }
         }
@@ -156,8 +150,7 @@ namespace iTextSharp.Kernel.Font
         }
 
         /// <summary>Defines a glyph.</summary>
-        /// <remarks>Defines a glyph. If the character was already defined it will return the same content
-        ///     </remarks>
+        /// <remarks>Defines a glyph. If the character was already defined it will return the same content</remarks>
         /// <param name="c">the character to match this glyph.</param>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
@@ -177,8 +170,7 @@ namespace iTextSharp.Kernel.Font
         /// <CODE>true</CODE> the value is ignored
         /// </param>
         /// <returns>a content where the glyph can be defined</returns>
-        public virtual Type3Glyph AddGlyph(char c, int wx, int llx, int lly, int urx, int
-             ury)
+        public virtual Type3Glyph AddGlyph(char c, int wx, int llx, int lly, int urx, int ury)
         {
             Type3Glyph glyph = GetType3Glyph(c);
             if (glyph != null)
@@ -186,10 +178,9 @@ namespace iTextSharp.Kernel.Font
                 return glyph;
             }
             int code = GetFirstEmptyCode();
-            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3FontProgram)
-                GetFontProgram()).IsColorized());
-            ((Type3FontProgram)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, 
-                urx, ury }, glyph);
+            glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3FontProgram)GetFontProgram()).IsColorized
+                ());
+            ((Type3FontProgram)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
             fontEncoding.AddSymbol((byte)code, c);
             if (!((Type3FontProgram)GetFontProgram()).IsColorized())
             {
@@ -214,8 +205,7 @@ namespace iTextSharp.Kernel.Font
         {
             if (fontEncoding.CanEncode(unicode) || unicode < 33)
             {
-                Glyph glyph = ((Type3FontProgram)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
-                    (unicode));
+                Glyph glyph = ((Type3FontProgram)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null)
                 {
                     // Handle special layout characters like sfthyphen (00AD).
@@ -254,14 +244,12 @@ namespace iTextSharp.Kernel.Font
                 if (fontEncoding.CanDecode(i))
                 {
                     Type3Glyph glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
-                    charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream(
-                        ));
+                    charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
                 }
             }
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
             GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
-            GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox
-                ()));
+            GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontProgram.GetFontMetrics().GetBbox()));
             base.FlushFontData(null, PdfName.Type3);
             base.Flush();
         }

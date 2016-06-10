@@ -4,8 +4,7 @@ namespace iTextSharp.IO.Image
 {
     public class Jpeg2000Test
     {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itextsharp/io/image/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/io/image/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
@@ -18,8 +17,7 @@ namespace iTextSharp.IO.Image
             }
             catch (iTextSharp.IO.IOException e)
             {
-                NUnit.Framework.Assert.AreEqual(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0
-                    , e.Message);
+                NUnit.Framework.Assert.AreEqual(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0, e.Message);
             }
         }
 

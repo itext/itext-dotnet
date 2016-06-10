@@ -161,11 +161,9 @@ namespace iTextSharp.Barcodes.Qrcode
             }
         }
 
-        /// <summary>A fast method to retrieve one row of data from the matrix as a BitArray.
-        ///     </summary>
+        /// <summary>A fast method to retrieve one row of data from the matrix as a BitArray.</summary>
         /// <param name="y">The row to retrieve</param>
-        /// <param name="row">An optional caller-allocated BitArray, will be allocated if null or too small
-        ///     </param>
+        /// <param name="row">An optional caller-allocated BitArray, will be allocated if null or too small</param>
         /// <returns>
         /// The resulting BitArray - this reference should always be used even when passing
         /// your own row

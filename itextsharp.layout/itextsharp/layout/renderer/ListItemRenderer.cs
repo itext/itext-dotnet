@@ -61,8 +61,7 @@ namespace iTextSharp.Layout.Renderer
         {
         }
 
-        public virtual void AddSymbolRenderer(IRenderer symbolRenderer, float symbolAreaWidth
-            )
+        public virtual void AddSymbolRenderer(IRenderer symbolRenderer, float symbolAreaWidth)
         {
             this.symbolRenderer = symbolRenderer;
             this.symbolAreaWidth = symbolAreaWidth;
@@ -70,12 +69,11 @@ namespace iTextSharp.Layout.Renderer
 
         public override LayoutResult Layout(LayoutContext layoutContext)
         {
-            if (symbolRenderer != null && this.GetProperty<Object>(iTextSharp.Layout.Property.Property
-                .HEIGHT) == null)
+            if (symbolRenderer != null && this.GetProperty<Object>(iTextSharp.Layout.Property.Property.HEIGHT) == null)
             {
                 // TODO this is actually MinHeight.
-                SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, symbolRenderer.GetOccupiedArea
-                    ().GetBBox().GetHeight());
+                SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight
+                    ());
             }
             return base.Layout(layoutContext);
         }
@@ -86,8 +84,7 @@ namespace iTextSharp.Layout.Renderer
             TagTreePointer tagPointer = null;
             if (isTagged)
             {
-                tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer
-                    ();
+                tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 IAccessibleElement modelElement = (IAccessibleElement)GetModelElement();
                 PdfName role = modelElement.GetRole();
                 if (role != null && !PdfName.Artifact.Equals(role))
@@ -124,31 +121,26 @@ namespace iTextSharp.Layout.Renderer
                         }
                         else
                         {
-                            symbolRenderer.Move(0, (float)yLine - symbolRenderer.GetOccupiedArea().GetBBox().
-                                GetY());
+                            symbolRenderer.Move(0, (float)yLine - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
                         }
                     }
                     else
                     {
-                        symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight
-                            () - (symbolRenderer.GetOccupiedArea().GetBBox().GetY() + symbolRenderer.GetOccupiedArea
-                            ().GetBBox().GetHeight()));
+                        symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - (symbolRenderer
+                            .GetOccupiedArea().GetBBox().GetY() + symbolRenderer.GetOccupiedArea().GetBBox().GetHeight()));
                     }
                 }
                 else
                 {
-                    symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight
-                        () - symbolRenderer.GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.
-                        GetOccupiedArea().GetBBox().GetY());
+                    symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - symbolRenderer
+                        .GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
                 }
-                ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty
-                    <ListSymbolAlignment?>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT
-                    , ListSymbolAlignment.RIGHT);
+                ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(iTextSharp.Layout.Property.Property
+                    .LIST_SYMBOL_ALIGNMENT, ListSymbolAlignment.RIGHT);
                 float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
                 if (listSymbolAlignment == ListSymbolAlignment.RIGHT)
                 {
-                    xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth
-                        ();
+                    xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 }
                 symbolRenderer.Move(xPosition, 0);
                 if (isTagged)
@@ -172,11 +164,10 @@ namespace iTextSharp.Layout.Renderer
             return new iTextSharp.Layout.Renderer.ListItemRenderer((ListItem)modelElement);
         }
 
-        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult
-            )
+        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult)
         {
-            iTextSharp.Layout.Renderer.ListItemRenderer splitRenderer = (iTextSharp.Layout.Renderer.ListItemRenderer
-                )GetNextRenderer();
+            iTextSharp.Layout.Renderer.ListItemRenderer splitRenderer = (iTextSharp.Layout.Renderer.ListItemRenderer)GetNextRenderer
+                ();
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
@@ -186,13 +177,12 @@ namespace iTextSharp.Layout.Renderer
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, this.GetProperty
-                <Object>(iTextSharp.Layout.Property.Property.MARGIN_LEFT));
+            splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, this.GetProperty<Object>(iTextSharp.Layout.Property.Property
+                .MARGIN_LEFT));
             return splitRenderer;
         }
 
-        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult
-            )
+        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult)
         {
             iTextSharp.Layout.Renderer.ListItemRenderer overflowRenderer = (iTextSharp.Layout.Renderer.ListItemRenderer
                 )GetNextRenderer();
@@ -204,8 +194,8 @@ namespace iTextSharp.Layout.Renderer
                 overflowRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, this
-                .GetProperty<Object>(iTextSharp.Layout.Property.Property.MARGIN_LEFT));
+            overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, this.GetProperty<Object>(iTextSharp.Layout.Property.Property
+                .MARGIN_LEFT));
             return overflowRenderer;
         }
     }

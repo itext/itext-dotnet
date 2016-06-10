@@ -92,8 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             GetPdfObject().Put(PdfName.CS, colorSpace);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfTransparencyGroup Put(PdfName key
-            , PdfObject value)
+        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfTransparencyGroup Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;

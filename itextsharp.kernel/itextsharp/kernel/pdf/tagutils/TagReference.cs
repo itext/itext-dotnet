@@ -58,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 
         protected internal PdfDictionary properties;
 
-        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer
-            , int insertIndex)
+        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer, int insertIndex)
         {
             this.role = referencedTag.GetRole();
             this.referencedTag = referencedTag;
@@ -77,8 +76,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return tagPointer.CreateNextMcidForStructElem(referencedTag, insertIndex);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name
-            , PdfObject value)
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name, PdfObject value)
         {
             if (properties == null)
             {
@@ -88,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName
-             name)
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName name)
         {
             if (properties != null)
             {

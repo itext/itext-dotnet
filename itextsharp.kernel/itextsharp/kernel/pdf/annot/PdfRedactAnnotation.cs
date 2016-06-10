@@ -63,11 +63,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return PdfName.Redact;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString
-             text)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, 
-                text);
+            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, text);
         }
 
         public virtual PdfString GetOverlayText()
@@ -75,8 +73,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsString(PdfName.OverlayText);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance
-            (PdfStream stream)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance(PdfStream stream
+            )
         {
             return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
         }
@@ -86,11 +84,9 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return GetPdfObject().GetAsStream(PdfName.RO);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean
-             repeat)
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean repeat)
         {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat
-                );
+            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat);
         }
 
         public virtual PdfBoolean GetRepeat()

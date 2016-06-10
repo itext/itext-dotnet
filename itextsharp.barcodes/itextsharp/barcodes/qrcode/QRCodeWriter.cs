@@ -46,8 +46,7 @@ using System.Collections.Generic;
 
 namespace iTextSharp.Barcodes.Qrcode
 {
-    /// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.
-    ///     </summary>
+    /// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
     public sealed class QRCodeWriter
     {
@@ -60,8 +59,8 @@ namespace iTextSharp.Barcodes.Qrcode
         }
 
         /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
-        public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType
-            , Object> hints)
+        public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType, Object> hints
+            )
         {
             if (contents == null || contents.Length == 0)
             {
@@ -69,14 +68,12 @@ namespace iTextSharp.Barcodes.Qrcode
             }
             if (width < 0 || height < 0)
             {
-                throw new ArgumentException("Requested dimensions are too small: " + width + 'x' 
-                    + height);
+                throw new ArgumentException("Requested dimensions are too small: " + width + 'x' + height);
             }
             ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
             if (hints != null)
             {
-                ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel)hints.Get(EncodeHintType
-                    .ERROR_CORRECTION);
+                ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel)hints.Get(EncodeHintType.ERROR_CORRECTION);
                 if (requestedECLevel != null)
                 {
                     errorCorrectionLevel = requestedECLevel;

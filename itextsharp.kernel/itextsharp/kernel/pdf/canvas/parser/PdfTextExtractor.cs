@@ -57,8 +57,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="page">the page for the text to be extracted from</param>
         /// <param name="strategy">the strategy to use for extracting text</param>
         /// <returns>the extracted text</returns>
-        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy
-            )
+        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy)
         {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
             parser.ProcessPageContent(page);

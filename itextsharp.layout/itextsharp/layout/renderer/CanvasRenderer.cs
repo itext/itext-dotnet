@@ -85,13 +85,11 @@ namespace iTextSharp.Layout.Renderer
                 TagTreePointer tagPointer = null;
                 if (toTag)
                 {
-                    tagPointer = canvas.GetPdfDocument().GetTagStructureContext().GetAutoTaggingPointer
-                        ();
+                    tagPointer = canvas.GetPdfDocument().GetTagStructureContext().GetAutoTaggingPointer();
                     tagPointer.SetPageForTagging(canvas.GetPage());
                     tagPointer.SetContentStreamForTagging(canvas.GetPdfCanvas().GetContentStream());
                 }
-                resultRenderer.Draw(new DrawContext(canvas.GetPdfDocument(), canvas.GetPdfCanvas(
-                    ), toTag));
+                resultRenderer.Draw(new DrawContext(canvas.GetPdfDocument(), canvas.GetPdfCanvas(), toTag));
                 if (toTag)
                 {
                     tagPointer.SetContentStreamForTagging(null);
@@ -99,8 +97,7 @@ namespace iTextSharp.Layout.Renderer
             }
         }
 
-        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult
-            )
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult)
         {
             if (currentArea == null)
             {

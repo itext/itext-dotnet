@@ -87,8 +87,8 @@ namespace iTextSharp.Layout.Property
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
-        public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop
-            , float extraRight, float extraBottom)
+        public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop, float extraRight, 
+            float extraBottom)
         {
             this.color = color;
             this.extraLeft = extraLeft;

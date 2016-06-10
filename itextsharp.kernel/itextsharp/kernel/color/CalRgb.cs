@@ -62,8 +62,7 @@ namespace iTextSharp.Kernel.Color
         {
         }
 
-        public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix
-            , float[] value)
+        public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix, float[] value)
             : this(new PdfCieBasedCs.CalRgb(whitePoint, blackPoint, gamma, matrix), value)
         {
         }

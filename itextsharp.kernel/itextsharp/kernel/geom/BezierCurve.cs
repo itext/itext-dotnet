@@ -122,16 +122,16 @@ namespace iTextSharp.Kernel.Geom
         {
             IList<Point> points = new List<Point>();
             points.Add(controlPoints[0]);
-            RecursiveApproximation(controlPoints[0].GetX(), controlPoints[0].GetY(), controlPoints
-                [1].GetX(), controlPoints[1].GetY(), controlPoints[2].GetX(), controlPoints[2
-                ].GetY(), controlPoints[3].GetX(), controlPoints[3].GetY(), points);
+            RecursiveApproximation(controlPoints[0].GetX(), controlPoints[0].GetY(), controlPoints[1].GetX(), controlPoints
+                [1].GetY(), controlPoints[2].GetX(), controlPoints[2].GetY(), controlPoints[3].GetX(), controlPoints[3
+                ].GetY(), points);
             points.Add(controlPoints[controlPoints.Count - 1]);
             return points;
         }
 
         // Based on the De Casteljau's algorithm
-        private void RecursiveApproximation(double x1, double y1, double x2, double y2, double
-             x3, double y3, double x4, double y4, IList<Point> points)
+        private void RecursiveApproximation(double x1, double y1, double x2, double y2, double x3, double y3, double
+             x4, double y4, IList<Point> points)
         {
             // Subdivision using the De Casteljau's algorithm (t = 0.5)
             double x12 = (x1 + x2) / 2;
@@ -167,8 +167,8 @@ namespace iTextSharp.Kernel.Geom
             }
             else
             {
-                if ((Math.Abs(x1 + x3 - x2 - x2) + Math.Abs(y1 + y3 - y2 - y2) + Math.Abs(x2 + x4
-                     - x3 - x3) + Math.Abs(y2 + y4 - y3 - y3)) <= distanceToleranceManhattan)
+                if ((Math.Abs(x1 + x3 - x2 - x2) + Math.Abs(y1 + y3 - y2 - y2) + Math.Abs(x2 + x4 - x3 - x3) + Math.Abs(y2
+                     + y4 - y3 - y3)) <= distanceToleranceManhattan)
                 {
                     points.Add(new Point(x1234, y1234));
                     return;

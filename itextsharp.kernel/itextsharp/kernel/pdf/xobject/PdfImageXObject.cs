@@ -80,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
         {
         }
 
-        public PdfImageXObject(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
-             imageMask)
+        public PdfImageXObject(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject imageMask)
             : this(CreatePdfStream(CheckImageType(image), imageMask))
         {
             mask = image.IsMask();
@@ -127,11 +126,10 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document
-            )
+        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document)
         {
-            iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject image = new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
-                (((PdfStream)GetPdfObject().CopyTo(document)));
+            iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject image = new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(((
+                PdfStream)GetPdfObject().CopyTo(document)));
             image.width = width;
             image.height = height;
             image.mask = mask;
@@ -150,8 +148,8 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             bytes = GetPdfObject().GetBytes(false);
             if (decoded)
             {
-                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler
-                    >(FilterHandlers.GetDefaultFilterHandlers());
+                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
+                    ());
                 DoNothingFilter stubFilter = new DoNothingFilter();
                 filters[PdfName.DCTDecode] = stubFilter;
                 filters[PdfName.JBIG2Decode] = stubFilter;
@@ -172,8 +170,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             return bytes;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject
-             value)
+        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject value)
         {
             GetPdfObject().Put(key, value);
             return this;
@@ -196,8 +193,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             }
             stream.Put(PdfName.Type, PdfName.XObject);
             stream.Put(PdfName.Subtype, PdfName.Image);
-            PdfDictionary decodeParms = CreateDictionaryFromMap(stream, image.GetDecodeParms(
-                ));
+            PdfDictionary decodeParms = CreateDictionaryFromMap(stream, image.GetDecodeParms());
             if (decodeParms != null)
             {
                 stream.Put(PdfName.DecodeParms, decodeParms);
@@ -239,8 +235,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             {
                 stream.Remove(PdfName.ColorSpace);
             }
-            PdfDictionary additional = CreateDictionaryFromMap(stream, image.GetImageAttributes
-                ());
+            PdfDictionary additional = CreateDictionaryFromMap(stream, image.GetImageAttributes());
             if (additional != null)
             {
                 stream.PutAll(additional);
@@ -268,15 +263,15 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             {
                 if (mask.IsSoftMask())
                 {
-                    stream.Put(PdfName.SMask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image
-                        .GetImageMask()).GetPdfObject());
+                    stream.Put(PdfName.SMask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject
+                        ());
                 }
                 else
                 {
                     if (mask.IsMask())
                     {
-                        stream.Put(PdfName.Mask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.
-                            GetImageMask()).GetPdfObject());
+                        stream.Put(PdfName.Mask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject
+                            ());
                     }
                 }
             }
@@ -308,8 +303,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             return stream;
         }
 
-        private static PdfDictionary CreateDictionaryFromMap(PdfStream stream, IDictionary
-            <String, Object> parms)
+        private static PdfDictionary CreateDictionaryFromMap(PdfStream stream, IDictionary<String, Object> parms)
         {
             if (parms != null)
             {
@@ -447,8 +441,8 @@ namespace iTextSharp.Kernel.Pdf.Xobject
             {
                 if (bpc != 8)
                 {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorDepthIsNotSupported
-                        ).SetMessageParams(bpc);
+                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorDepthIsNotSupported).SetMessageParams(bpc
+                        );
                 }
                 if (colorspace is PdfArray)
                 {
@@ -456,15 +450,14 @@ namespace iTextSharp.Kernel.Pdf.Xobject
                     PdfObject tyca = ca.Get(0);
                     if (!PdfName.ICCBased.Equals(tyca))
                     {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported
-                            ).SetMessageParams(tyca.ToString());
+                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca
+                            .ToString());
                     }
                     PdfStream pr = (PdfStream)ca.Get(1);
                     int n = pr.GetAsNumber(PdfName.N).IntValue();
                     if (n != 4)
                     {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.NValueIsNotSupported
-                            ).SetMessageParams(n);
+                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.NValueIsNotSupported).SetMessageParams(n);
                     }
                     icc = pr.GetBytes();
                 }
@@ -472,41 +465,31 @@ namespace iTextSharp.Kernel.Pdf.Xobject
                 {
                     if (!PdfName.DeviceCMYK.Equals(colorspace))
                     {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported
-                            ).SetMessageParams(colorspace.ToString());
+                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace
+                            .ToString());
                     }
                 }
                 stride = (int)(4 * width);
                 TiffWriter wr = new TiffWriter();
                 wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_SAMPLESPERPIXEL, 4));
-                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_BITSPERSAMPLE, new int
-                    [] { 8, 8, 8, 8 }));
-                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_PHOTOMETRIC, TIFFConstants
-                    .PHOTOMETRIC_SEPARATED));
-                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_IMAGEWIDTH, (int)width
+                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_BITSPERSAMPLE, new int[] { 8, 8, 8, 8 }));
+                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_PHOTOMETRIC, TIFFConstants.PHOTOMETRIC_SEPARATED
                     ));
-                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_IMAGELENGTH, (int)height
+                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_IMAGEWIDTH, (int)width));
+                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_IMAGELENGTH, (int)height));
+                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_COMPRESSION, TIFFConstants.COMPRESSION_LZW));
+                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_PREDICTOR, TIFFConstants.PREDICTOR_HORIZONTAL_DIFFERENCING
                     ));
-                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_COMPRESSION, TIFFConstants
-                    .COMPRESSION_LZW));
-                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_PREDICTOR, TIFFConstants
-                    .PREDICTOR_HORIZONTAL_DIFFERENCING));
-                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_ROWSPERSTRIP, (int)height
-                    ));
-                wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_XRESOLUTION, new int
-                    [] { 300, 1 }));
-                wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_YRESOLUTION, new int
-                    [] { 300, 1 }));
-                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_RESOLUTIONUNIT, TIFFConstants
-                    .RESUNIT_INCH));
-                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, Version.GetInstance
-                    ().GetVersion()));
+                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_ROWSPERSTRIP, (int)height));
+                wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_XRESOLUTION, new int[] { 300, 1 }));
+                wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_YRESOLUTION, new int[] { 300, 1 }));
+                wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_RESOLUTIONUNIT, TIFFConstants.RESUNIT_INCH));
+                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, Version.GetInstance().GetVersion()));
                 MemoryStream comp = new MemoryStream();
                 TiffWriter.CompressLZW(comp, 2, imageBytes, (int)height, 4, stride);
                 byte[] buf = comp.ToArray();
                 wr.AddField(new TiffWriter.FieldImage(buf));
-                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_STRIPBYTECOUNTS, buf.Length
-                    ));
+                wr.AddField(new TiffWriter.FieldLong(TIFFConstants.TIFFTAG_STRIPBYTECOUNTS, buf.Length));
                 if (icc != null)
                 {
                     wr.AddField(new TiffWriter.FieldUndefined(TIFFConstants.TIFFTAG_ICCPROFILE, icc));
@@ -523,8 +506,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject
                     if (pngBitDepth == 1)
                     {
                         // if the decode array is 1,0, then we need to invert the image
-                        if (decode.GetAsNumber(0).IntValue() == 1 && decode.GetAsNumber(1).IntValue() == 
-                            0)
+                        if (decode.GetAsNumber(0).IntValue() == 1 && decode.GetAsNumber(1).IntValue() == 0)
                         {
                             int len = imageBytes.Length;
                             for (int t = 0; t < len; ++t)
@@ -554,10 +536,8 @@ namespace iTextSharp.Kernel.Pdf.Xobject
 
         /// <summary>Sets state of this object according to the color space</summary>
         /// <param name="colorspace">the colorspace to use</param>
-        /// <param name="allowIndexed">whether indexed color spaces will be resolved (used for recursive call)
-        ///     </param>
-        /// <exception cref="System.IO.IOException">if there is a problem with reading from the underlying stream
-        ///     </exception>
+        /// <param name="allowIndexed">whether indexed color spaces will be resolved (used for recursive call)</param>
+        /// <exception cref="System.IO.IOException">if there is a problem with reading from the underlying stream</exception>
         private void FindColorspace(PdfObject colorspace, bool allowIndexed)
         {
             if (colorspace == null && bpc == 1)

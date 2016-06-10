@@ -47,26 +47,22 @@ using iTextSharp.IO.Util;
 
 namespace iTextSharp.IO.Font.Otf.Lookuptype5
 {
-    /// <summary>Contextual Substitution Subtable: Coverage-based context glyph substitution
-    ///     </summary>
+    /// <summary>Contextual Substitution Subtable: Coverage-based context glyph substitution</summary>
     public class SubTableLookup5Format3 : ContextualSubTable
     {
         internal ContextualSubstRule substitutionRule;
 
-        public SubTableLookup5Format3(OpenTypeFontTableReader openReader, int lookupFlag, 
-            SubTableLookup5Format3.SubstRuleFormat3 rule)
+        public SubTableLookup5Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup5Format3.SubstRuleFormat3
+             rule)
             : base(openReader, lookupFlag)
         {
             this.substitutionRule = rule;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph
-            (int startId)
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
         {
-            SubTableLookup5Format3.SubstRuleFormat3 ruleFormat3 = (SubTableLookup5Format3.SubstRuleFormat3
-                )this.substitutionRule;
-            if (ruleFormat3.coverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag
-                ))
+            SubTableLookup5Format3.SubstRuleFormat3 ruleFormat3 = (SubTableLookup5Format3.SubstRuleFormat3)this.substitutionRule;
+            if (ruleFormat3.coverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
             {
                 return JavaCollectionsUtil.SingletonList(this.substitutionRule);
             }
@@ -79,8 +75,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
             internal SubstLookupRecord[] substLookupRecords;
 
-            public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords
-                )
+            public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords)
             {
                 this.coverages = coverages;
                 this.substLookupRecords = substLookupRecords;

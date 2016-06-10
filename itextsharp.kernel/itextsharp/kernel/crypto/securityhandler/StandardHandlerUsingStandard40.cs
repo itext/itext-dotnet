@@ -51,15 +51,14 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 {
     public class StandardHandlerUsingStandard40 : StandardSecurityHandler
     {
-        protected internal static readonly byte[] pad = new byte[] { (byte)0x28, (byte)0xBF
-            , (byte)0x4E, (byte)0x5E, (byte)0x4E, (byte)0x75, (byte)0x8A, (byte)0x41, (byte
-            )0x64, (byte)0x00, (byte)0x4E, (byte)0x56, (byte)0xFF, (byte)0xFA, (byte)0x01
-            , (byte)0x08, (byte)0x2E, (byte)0x2E, (byte)0x00, (byte)0xB6, (byte)0xD0, (byte
-            )0x68, (byte)0x3E, (byte)0x80, (byte)0x2F, (byte)0x0C, (byte)0xA9, (byte)0xFE
-            , (byte)0x64, (byte)0x53, (byte)0x69, (byte)0x7A };
+        protected internal static readonly byte[] pad = new byte[] { (byte)0x28, (byte)0xBF, (byte)0x4E, (byte)0x5E
+            , (byte)0x4E, (byte)0x75, (byte)0x8A, (byte)0x41, (byte)0x64, (byte)0x00, (byte)0x4E, (byte)0x56, (byte
+            )0xFF, (byte)0xFA, (byte)0x01, (byte)0x08, (byte)0x2E, (byte)0x2E, (byte)0x00, (byte)0xB6, (byte)0xD0, 
+            (byte)0x68, (byte)0x3E, (byte)0x80, (byte)0x2F, (byte)0x0C, (byte)0xA9, (byte)0xFE, (byte)0x64, (byte)
+            0x53, (byte)0x69, (byte)0x7A };
 
-        protected internal static readonly byte[] metadataPad = new byte[] { (byte)255, (
-            byte)255, (byte)255, (byte)255 };
+        protected internal static readonly byte[] metadataPad = new byte[] { (byte)255, (byte)255, (byte)255, (byte
+            )255 };
 
         protected internal byte[] documentId;
 
@@ -67,26 +66,23 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 
         protected internal ARCFOUREncryption arcfour = new ARCFOUREncryption();
 
-        public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] 
-            userPassword, byte[] ownerPassword, int permissions, bool encryptMetadata, bool
-             embeddedFilesOnly, byte[] documentId)
+        public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
         {
             // stores key length of the main key
-            InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions
-                , encryptMetadata, embeddedFilesOnly, documentId);
+            InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
+                embeddedFilesOnly, documentId);
         }
 
-        public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] 
-            password, byte[] documentId, bool encryptMetadata)
+        public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId
+            , bool encryptMetadata)
         {
-            InitKeyAndReadDictionary(encryptionDictionary, password, documentId, encryptMetadata
-                );
+            InitKeyAndReadDictionary(encryptionDictionary, password, documentId, encryptMetadata);
         }
 
         public override OutputStreamEncryption GetEncryptionStream(Stream os)
         {
-            return new OutputStreamStandardEncryption(os, nextObjectKey, 0, nextObjectKeySize
-                );
+            return new OutputStreamStandardEncryption(os, nextObjectKey, 0, nextObjectKeySize);
         }
 
         public override IDecryptor GetDecryptor()
@@ -94,8 +90,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return new StandardDecryptor(nextObjectKey, 0, nextObjectKeySize);
         }
 
-        public virtual byte[] ComputeUserPassword(byte[] ownerPassword, PdfDictionary encryptionDictionary
-            )
+        public virtual byte[] ComputeUserPassword(byte[] ownerPassword, PdfDictionary encryptionDictionary)
         {
             byte[] ownerKey = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O));
             byte[] userPad = ComputeOwnerKey(ownerKey, PadPassword(ownerPassword));
@@ -128,8 +123,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             this.permissions = permissions;
         }
 
-        protected internal virtual byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad
-            )
+        protected internal virtual byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad)
         {
             byte[] ownerKey = new byte[32];
             byte[] digest = md5.Digest(ownerPad);
@@ -138,8 +132,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return ownerKey;
         }
 
-        protected internal virtual void ComputeGlobalEncryptionKey(byte[] userPad, byte[]
-             ownerKey, bool encryptMetadata)
+        protected internal virtual void ComputeGlobalEncryptionKey(byte[] userPad, byte[] ownerKey, bool encryptMetadata
+            )
         {
             mkey = new byte[keyLength / 8];
             // fixed by ujihara in order to follow PDF reference
@@ -173,8 +167,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return userKey;
         }
 
-        protected internal virtual void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary
-            , bool encryptMetadata, bool embeddedFilesOnly)
+        protected internal virtual void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool encryptMetadata
+            , bool embeddedFilesOnly)
         {
             encryptionDictionary.Put(PdfName.R, new PdfNumber(2));
             encryptionDictionary.Put(PdfName.V, new PdfNumber(1));
@@ -185,9 +179,8 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return !EqualsArray(uValue, userKey, 32);
         }
 
-        private void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, byte[] 
-            userPassword, byte[] ownerPassword, int permissions, bool encryptMetadata, bool
-             embeddedFilesOnly, byte[] documentId)
+        private void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
         {
             ownerPassword = GenerateOwnerPasswordIfNullOrEmpty(ownerPassword);
             CalculatePermissions(permissions);
@@ -201,12 +194,11 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             ComputeGlobalEncryptionKey(userPad, ownerKey, encryptMetadata);
             byte[] userKey = ComputeUserKey();
             SetStandardHandlerDicEntries(encryptionDictionary, userKey, ownerKey);
-            SetSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly
-                );
+            SetSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly);
         }
 
-        private void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, byte[] 
-            password, byte[] documentId, bool encryptMetadata)
+        private void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId
+            , bool encryptMetadata)
         {
             byte[] uValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.U));
             byte[] oValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O));
@@ -218,8 +210,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             CheckPassword(encryptMetadata, uValue, oValue, paddedPassword);
         }
 
-        private void CheckPassword(bool encryptMetadata, byte[] uValue, byte[] oValue, byte
-            [] paddedPassword)
+        private void CheckPassword(bool encryptMetadata, byte[] uValue, byte[] oValue, byte[] paddedPassword)
         {
             byte[] userKey;
             // assume password - is owner password

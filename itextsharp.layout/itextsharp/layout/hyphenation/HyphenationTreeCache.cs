@@ -23,15 +23,12 @@ namespace iTextSharp.Layout.Hyphenation
     public class HyphenationTreeCache
     {
         /// <summary>Contains the cached hyphenation trees</summary>
-        private IDictionary<String, HyphenationTree> hyphenTrees = new Dictionary<String, 
-            HyphenationTree>();
+        private IDictionary<String, HyphenationTree> hyphenTrees = new Dictionary<String, HyphenationTree>();
 
-        /// <summary>Used to avoid multiple error messages for the same language if a pattern file is missing.
-        ///     </summary>
+        /// <summary>Used to avoid multiple error messages for the same language if a pattern file is missing.</summary>
         private ICollection<String> missingHyphenationTrees;
 
-        /// <summary>Looks in the cache if a hyphenation tree is available and returns it if it is found.
-        ///     </summary>
+        /// <summary>Looks in the cache if a hyphenation tree is available and returns it if it is found.</summary>
         /// <param name="lang">the language</param>
         /// <param name="country">the country (may be null or "none")</param>
         /// <returns>the HyhenationTree instance or null if it's not in the cache</returns>
@@ -85,11 +82,10 @@ namespace iTextSharp.Layout.Hyphenation
         /// </remarks>
         /// <param name="lang">the language</param>
         /// <param name="country">the country (may be null or "none")</param>
-        /// <param name="hyphPatNames">the map of user-configured hyphenation pattern file names
-        ///     </param>
+        /// <param name="hyphPatNames">the map of user-configured hyphenation pattern file names</param>
         /// <returns>the hyphenation pattern file name or null</returns>
-        public static String ConstructUserKey(String lang, String country, IDictionary<String
-            , String> hyphPatNames)
+        public static String ConstructUserKey(String lang, String country, IDictionary<String, String> hyphPatNames
+            )
         {
             String userKey = null;
             if (hyphPatNames != null)
@@ -125,8 +121,7 @@ namespace iTextSharp.Layout.Hyphenation
             missingHyphenationTrees.Add(key);
         }
 
-        /// <summary>Indicates whether a hyphenation file has been requested before but it wasn't available.
-        ///     </summary>
+        /// <summary>Indicates whether a hyphenation file has been requested before but it wasn't available.</summary>
         /// <remarks>
         /// Indicates whether a hyphenation file has been requested before but it wasn't available.
         /// This is to avoid searching a second time for a hyphenation pattern file which is not

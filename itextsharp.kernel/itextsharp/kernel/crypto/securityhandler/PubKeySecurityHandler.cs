@@ -71,8 +71,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             recipients = new List<PublicKeyRecipient>();
         }
 
-        protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, 
-            bool encryptMetadata)
+        protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata)
         {
             IDigest md;
             byte[] encodedRecipient;
@@ -97,18 +96,16 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return md.Digest();
         }
 
-        protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary
-            , ICipherParameters certificateKey, X509Certificate certificate, bool encryptMetadata
-            , String digestAlgorithm)
+        protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary, ICipherParameters
+             certificateKey, X509Certificate certificate, bool encryptMetadata, String digestAlgorithm)
         {
             PdfArray recipients = encryptionDictionary.GetAsArray(PdfName.Recipients);
             if (recipients == null)
             {
-                recipients = encryptionDictionary.GetAsDictionary(PdfName.CF).GetAsDictionary(PdfName
-                    .DefaultCryptFilter).GetAsArray(PdfName.Recipients);
+                recipients = encryptionDictionary.GetAsDictionary(PdfName.CF).GetAsDictionary(PdfName.DefaultCryptFilter).
+                    GetAsArray(PdfName.Recipients);
             }
-            byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate
-                , recipients);
+            byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate, recipients);
             byte[] encryptionKey;
             IDigest md;
             try
@@ -133,8 +130,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return encryptionKey;
         }
 
-        protected internal virtual void AddAllRecipients(X509Certificate[] certs, int[] permissions
-            )
+        protected internal virtual void AddAllRecipients(X509Certificate[] certs, int[] permissions)
         {
             if (certs != null)
             {
@@ -159,16 +155,15 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             return recipients;
         }
 
-        protected internal abstract void SetPubSecSpecificHandlerDicEntries(PdfDictionary
-             encryptionDictionary, bool encryptMetadata, bool embeddedFilesOnly);
+        protected internal abstract void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
+             encryptMetadata, bool embeddedFilesOnly);
 
         protected internal abstract String GetDigestAlgorithm();
 
         protected internal abstract void InitKey(byte[] globalKey, int keyLength);
 
-        protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary
-            , X509Certificate[] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly
-            )
+        protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, X509Certificate
+            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
         {
             AddAllRecipients(certs, permissions);
             int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
@@ -176,17 +171,15 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] digest = ComputeGlobalKey(digestAlgorithm, encryptMetadata);
             InitKey(digest, keyLength);
-            SetPubSecSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly
-                );
+            SetPubSecSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly);
         }
 
-        protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary
-            , ICipherParameters certificateKey, X509Certificate certificate, bool encryptMetadata
-            )
+        protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, ICipherParameters
+             certificateKey, X509Certificate certificate, bool encryptMetadata)
         {
             String digestAlgorithm = GetDigestAlgorithm();
-            byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters
-                )certificateKey, certificate, encryptMetadata, digestAlgorithm);
+            byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters)certificateKey, 
+                certificate, encryptMetadata, digestAlgorithm);
             int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
             int keyLength = keyLen != null ? (int)keyLen : 40;
             InitKey(encryptionKey, keyLength);
@@ -284,37 +277,31 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private Asn1Object CreateDERForRecipient(byte[] @in, X509Certificate cert)
         {
-            EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams
-                (@in);
-            KeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters
-                .abyte0);
+            EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
+            KeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
             DerOctetString deroctetstring = new DerOctetString(parameters.abyte1);
             DerSet derset = new DerSet(new RecipientInfo(keytransrecipientinfo));
             EncryptedContentInfo encryptedcontentinfo = new EncryptedContentInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.Data
                 , parameters.algorithmIdentifier, deroctetstring);
-            EnvelopedData env = new EnvelopedData(null, derset, encryptedcontentinfo, (Asn1Set
-                )null);
-            ContentInfo contentinfo = new ContentInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.EnvelopedData
-                , env);
+            EnvelopedData env = new EnvelopedData(null, derset, encryptedcontentinfo, (Asn1Set)null);
+            ContentInfo contentinfo = new ContentInfo(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.EnvelopedData, 
+                env);
             return contentinfo.ToAsn1Object();
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate
-            , byte[] abyte0)
+        private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate, byte[] abyte0)
         {
-            Asn1InputStream asn1inputstream = new Asn1InputStream(new MemoryStream(x509certificate
-                .GetTbsCertificate()));
-            TbsCertificateStructure tbscertificatestructure = TbsCertificateStructure.GetInstance
-                (asn1inputstream.ReadObject());
+            Asn1InputStream asn1inputstream = new Asn1InputStream(new MemoryStream(x509certificate.GetTbsCertificate()
+                ));
+            TbsCertificateStructure tbscertificatestructure = TbsCertificateStructure.GetInstance(asn1inputstream.ReadObject
+                ());
             System.Diagnostics.Debug.Assert(tbscertificatestructure != null);
-            AlgorithmIdentifier algorithmidentifier = tbscertificatestructure.SubjectPublicKeyInfo
-                .AlgorithmID;
-            IssuerAndSerialNumber issuerandserialnumber = new IssuerAndSerialNumber(tbscertificatestructure
-                .Issuer, tbscertificatestructure.SerialNumber.Value);
-            byte[] cipheredBytes = EncryptionUtils.CipherBytes(x509certificate, abyte0, algorithmidentifier
-                );
+            AlgorithmIdentifier algorithmidentifier = tbscertificatestructure.SubjectPublicKeyInfo.AlgorithmID;
+            IssuerAndSerialNumber issuerandserialnumber = new IssuerAndSerialNumber(tbscertificatestructure.Issuer, tbscertificatestructure
+                .SerialNumber.Value);
+            byte[] cipheredBytes = EncryptionUtils.CipherBytes(x509certificate, abyte0, algorithmidentifier);
             DerOctetString deroctetstring = new DerOctetString(cipheredBytes);
             RecipientIdentifier recipId = new RecipientIdentifier(issuerandserialnumber);
             return new KeyTransRecipientInfo(recipId, algorithmidentifier, deroctetstring);

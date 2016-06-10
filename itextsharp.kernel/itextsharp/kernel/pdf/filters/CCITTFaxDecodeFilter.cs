@@ -50,8 +50,8 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <summary>Handles CCITTFaxDecode filter</summary>
     public class CCITTFaxDecodeFilter : IFilterHandler
     {
-        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams
-            , PdfDictionary streamDictionary)
+        public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            )
         {
             PdfNumber wn = streamDictionary.GetAsNumber(PdfName.Width);
             PdfNumber hn = streamDictionary.GetAsNumber(PdfName.Height);
@@ -61,8 +61,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
             }
             int width = wn.IntValue();
             int height = hn.IntValue();
-            PdfDictionary param = decodeParams is PdfDictionary ? (PdfDictionary)decodeParams
-                 : null;
+            PdfDictionary param = decodeParams is PdfDictionary ? (PdfDictionary)decodeParams : null;
             int k = 0;
             bool blackIs1 = false;
             bool byteAlign = false;

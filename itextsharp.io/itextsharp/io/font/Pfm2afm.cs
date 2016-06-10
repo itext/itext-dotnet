@@ -218,22 +218,20 @@ namespace iTextSharp.IO.Font
                 output.Write("\nFamilyName " + ReadString());
             }
             output.Write("\nWeight ");
-            if (weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Contains("bold"))
+            if (weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("bold"))
             {
                 output.Write("Bold");
             }
             else
             {
-                if ((weight < 325 && weight != 0) || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                    ).Contains("light"))
+                if ((weight < 325 && weight != 0) || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains
+                    ("light"))
                 {
                     output.Write("Light");
                 }
                 else
                 {
-                    if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("black"
-                        ))
+                    if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("black"))
                     {
                         output.Write("Black");
                     }
@@ -244,8 +242,7 @@ namespace iTextSharp.IO.Font
                 }
             }
             output.Write("\nItalicAngle ");
-            if (italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Contains("italic"))
+            if (italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("italic"))
             {
                 output.Write("-12.00");
             }
@@ -504,58 +501,46 @@ namespace iTextSharp.IO.Font
         /// Translate table from 1004 to psstd.  1004 is an extension of the
         /// Windows translate table used in PM.
         /// </remarks>
-        private int[] Win2PSStd = new int[] { 0, 0, 0, 0, 197, 198, 199, 0, 202, 0, 205, 
-            206, 207, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34
-            , 35, 36, 37, 38, 169, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
-            , 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 
-            73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92
-            , 93, 94, 95, 193, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109
-            , 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 
-            125, 126, 127, 128, 0, 184, 166, 185, 188, 178, 179, 195, 189, 0, 172, 234, 0
-            , 0, 0, 0, 96, 0, 170, 186, 183, 177, 208, 196, 0, 0, 173, 250, 0, 0, 0, 0, 161
-            , 162, 163, 168, 165, 0, 167, 200, 0, 227, 171, 0, 0, 0, 197, 0, 0, 0, 0, 194
-            , 0, 182, 180, 203, 0, 235, 187, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 225, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 251, 0, 0, 
-            0, 0, 0, 0, 241, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 249, 0, 0
-            , 0, 0, 0, 0, 0 };
+        private int[] Win2PSStd = new int[] { 0, 0, 0, 0, 197, 198, 199, 0, 202, 0, 205, 206, 207, 0, 0, 0, 0, 0, 
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 169, 40, 41, 42, 43, 44, 45, 46, 
+            47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72
+            , 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 193, 97, 
+            98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 
+            119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 0, 184, 166, 185, 188, 178, 179, 195, 189, 0, 172, 234
+            , 0, 0, 0, 0, 96, 0, 170, 186, 183, 177, 208, 196, 0, 0, 173, 250, 0, 0, 0, 0, 161, 162, 163, 168, 165
+            , 0, 167, 200, 0, 227, 171, 0, 0, 0, 197, 0, 0, 0, 0, 194, 0, 182, 180, 203, 0, 235, 187, 0, 0, 0, 191
+            , 0, 0, 0, 0, 0, 0, 225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 251
+            , 0, 0, 0, 0, 0, 0, 241, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 249, 0, 0, 0, 0, 0, 0, 0 };
 
         /// <summary>Windows character names.</summary>
         /// <remarks>
         /// Windows character names.  Give a name to the used locations
         /// for when the all flag is specified.
         /// </remarks>
-        private String[] WinChars = new String[] { "W00", "W01", "W02", "W03", "macron", 
-            "breve", "dotaccent", "W07", "ring", "W09", "W0a", "W0b", "W0c", "W0d", "W0e"
-            , "W0f", "hungarumlaut", "ogonek", "caron", "W13", "W14", "W15", "W16", "W17"
-            , "W18", "W19", "W1a", "W1b", "W1c", "W1d", "W1e", "W1f", "space", "exclam", 
-            "quotedbl", "numbersign", "dollar", "percent", "ampersand", "quotesingle", "parenleft"
-            , "parenright", "asterisk", "plus", "comma", "hyphen", "period", "slash", "zero"
-            , "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "colon"
-            , "semicolon", "less", "equal", "greater", "question", "at", "A", "B", "C", "D"
-            , "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", 
-            "T", "U", "V", "W", "X", "Y", "Z", "bracketleft", "backslash", "bracketright"
-            , "asciicircum", "underscore", "grave", "a", "b", "c", "d", "e", "f", "g", "h"
-            , "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", 
-            "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "W7f", "euro", 
-            "W81", "quotesinglbase", "florin", "quotedblbase", "ellipsis", "dagger", "daggerdbl"
-            , "circumflex", "perthousand", "Scaron", "guilsinglleft", "OE", "W8d", "Zcaron"
-            , "W8f", "W90", "quoteleft", "quoteright", "quotedblleft", "quotedblright", "bullet"
-            , "endash", "emdash", "tilde", "trademark", "scaron", "guilsinglright", "oe", 
-            "W9d", "zcaron", "Ydieresis", "reqspace", "exclamdown", "cent", "sterling", "currency"
-            , "yen", "brokenbar", "section", "dieresis", "copyright", "ordfeminine", "guillemotleft"
-            , "logicalnot", "syllable", "registered", "macron", "degree", "plusminus", "twosuperior"
-            , "threesuperior", "acute", "mu", "paragraph", "periodcentered", "cedilla", "onesuperior"
-            , "ordmasculine", "guillemotright", "onequarter", "onehalf", "threequarters", 
-            "questiondown", "Agrave", "Aacute", "Acircumflex", "Atilde", "Adieresis", "Aring"
-            , "AE", "Ccedilla", "Egrave", "Eacute", "Ecircumflex", "Edieresis", "Igrave", 
-            "Iacute", "Icircumflex", "Idieresis", "Eth", "Ntilde", "Ograve", "Oacute", "Ocircumflex"
-            , "Otilde", "Odieresis", "multiply", "Oslash", "Ugrave", "Uacute", "Ucircumflex"
-            , "Udieresis", "Yacute", "Thorn", "germandbls", "agrave", "aacute", "acircumflex"
-            , "atilde", "adieresis", "aring", "ae", "ccedilla", "egrave", "eacute", "ecircumflex"
-            , "edieresis", "igrave", "iacute", "icircumflex", "idieresis", "eth", "ntilde"
-            , "ograve", "oacute", "ocircumflex", "otilde", "odieresis", "divide", "oslash"
-            , "ugrave", "uacute", "ucircumflex", "udieresis", "yacute", "thorn", "ydieresis"
-             };
+        private String[] WinChars = new String[] { "W00", "W01", "W02", "W03", "macron", "breve", "dotaccent", "W07"
+            , "ring", "W09", "W0a", "W0b", "W0c", "W0d", "W0e", "W0f", "hungarumlaut", "ogonek", "caron", "W13", "W14"
+            , "W15", "W16", "W17", "W18", "W19", "W1a", "W1b", "W1c", "W1d", "W1e", "W1f", "space", "exclam", "quotedbl"
+            , "numbersign", "dollar", "percent", "ampersand", "quotesingle", "parenleft", "parenright", "asterisk"
+            , "plus", "comma", "hyphen", "period", "slash", "zero", "one", "two", "three", "four", "five", "six", 
+            "seven", "eight", "nine", "colon", "semicolon", "less", "equal", "greater", "question", "at", "A", "B"
+            , "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
+            "W", "X", "Y", "Z", "bracketleft", "backslash", "bracketright", "asciicircum", "underscore", "grave", 
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"
+            , "v", "w", "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "W7f", "euro", "W81", "quotesinglbase"
+            , "florin", "quotedblbase", "ellipsis", "dagger", "daggerdbl", "circumflex", "perthousand", "Scaron", 
+            "guilsinglleft", "OE", "W8d", "Zcaron", "W8f", "W90", "quoteleft", "quoteright", "quotedblleft", "quotedblright"
+            , "bullet", "endash", "emdash", "tilde", "trademark", "scaron", "guilsinglright", "oe", "W9d", "zcaron"
+            , "Ydieresis", "reqspace", "exclamdown", "cent", "sterling", "currency", "yen", "brokenbar", "section"
+            , "dieresis", "copyright", "ordfeminine", "guillemotleft", "logicalnot", "syllable", "registered", "macron"
+            , "degree", "plusminus", "twosuperior", "threesuperior", "acute", "mu", "paragraph", "periodcentered", 
+            "cedilla", "onesuperior", "ordmasculine", "guillemotright", "onequarter", "onehalf", "threequarters", 
+            "questiondown", "Agrave", "Aacute", "Acircumflex", "Atilde", "Adieresis", "Aring", "AE", "Ccedilla", "Egrave"
+            , "Eacute", "Ecircumflex", "Edieresis", "Igrave", "Iacute", "Icircumflex", "Idieresis", "Eth", "Ntilde"
+            , "Ograve", "Oacute", "Ocircumflex", "Otilde", "Odieresis", "multiply", "Oslash", "Ugrave", "Uacute", 
+            "Ucircumflex", "Udieresis", "Yacute", "Thorn", "germandbls", "agrave", "aacute", "acircumflex", "atilde"
+            , "adieresis", "aring", "ae", "ccedilla", "egrave", "eacute", "ecircumflex", "edieresis", "igrave", "iacute"
+            , "icircumflex", "idieresis", "eth", "ntilde", "ograve", "oacute", "ocircumflex", "otilde", "odieresis"
+            , "divide", "oslash", "ugrave", "uacute", "ucircumflex", "udieresis", "yacute", "thorn", "ydieresis" };
         /* Total length of .pfm file */
         /* Copyright string [60]*/
         /* 0=windows, otherwise nomap */

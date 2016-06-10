@@ -67,8 +67,7 @@ namespace iTextSharp.Kernel.Pdf
             return this;
         }
 
-        /// <summary>Defines if the encryption of the original document (if it was encrypted) will be preserved.
-        ///     </summary>
+        /// <summary>Defines if the encryption of the original document (if it was encrypted) will be preserved.</summary>
         /// <remarks>
         /// Defines if the encryption of the original document (if it was encrypted) will be preserved.
         /// By default, the resultant document doesn't preserve the original encryption.

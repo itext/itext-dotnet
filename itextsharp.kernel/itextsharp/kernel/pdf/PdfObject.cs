@@ -126,8 +126,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <summary>Flushes the object to the document.</summary>
-        /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.
-        ///     </param>
+        /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public void Flush(bool canBeInObjStm)
         {
@@ -147,8 +146,8 @@ namespace iTextSharp.Kernel.Pdf
                 if (document != null)
                 {
                     document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
-                    document.FlushObject(this, canBeInObjStm && GetObjectType() != STREAM && GetObjectType
-                        () != INDIRECT_REFERENCE && GetIndirectReference().GetGenNumber() == 0);
+                    document.FlushObject(this, canBeInObjStm && GetObjectType() != STREAM && GetObjectType() != INDIRECT_REFERENCE
+                         && GetIndirectReference().GetGenNumber() == 0);
                 }
             }
             catch (System.IO.IOException e)
@@ -195,8 +194,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference 
-            reference)
+        public virtual PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
         {
             if (document == null || indirectReference != null)
             {
@@ -204,8 +202,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             if (document.GetWriter() == null)
             {
-                throw new PdfException(PdfException.ThereIsNoAssociatePdfWriterForMakingIndirects
-                    );
+                throw new PdfException(PdfException.ThereIsNoAssociatePdfWriterForMakingIndirects);
             }
             if (reference == null)
             {
@@ -247,8 +244,7 @@ namespace iTextSharp.Kernel.Pdf
             return (indirectReference != null && indirectReference.CheckState(MODIFIED));
         }
 
-        /// <summary>Creates clone of the object which belongs to the same document as original object.
-        ///     </summary>
+        /// <summary>Creates clone of the object which belongs to the same document as original object.</summary>
         /// <remarks>
         /// Creates clone of the object which belongs to the same document as original object.
         /// New object shall not be used in other documents.
@@ -301,13 +297,11 @@ namespace iTextSharp.Kernel.Pdf
             {
                 if (indirectReference.GetWriter() != null || CheckState(MUST_BE_INDIRECT))
                 {
-                    throw new PdfException(PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten
-                        );
+                    throw new PdfException(PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten);
                 }
                 if (!indirectReference.GetReader().IsOpenedWithFullPermission())
                 {
-                    throw new BadPasswordException(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword
-                        );
+                    throw new BadPasswordException(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword);
                 }
             }
             return ProcessCopying(document, allowDuplicating);
@@ -334,8 +328,8 @@ namespace iTextSharp.Kernel.Pdf
             }
             else
             {
-                if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference
-                    .CheckState(FLUSHED))
+                if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED
+                    ))
                 {
                     indirectReference.refersTo = null;
                     indirectReference = null;
@@ -455,8 +449,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <returns>new instance of object.</returns>
         protected internal abstract PdfObject NewInstance();
 
-        protected internal virtual PdfObject SetIndirectReference(PdfIndirectReference indirectReference
-            )
+        protected internal virtual PdfObject SetIndirectReference(PdfIndirectReference indirectReference)
         {
             this.indirectReference = indirectReference;
             return this;
@@ -514,8 +507,7 @@ namespace iTextSharp.Kernel.Pdf
         /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
-        internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating
-            )
+        internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating)
         {
             if (documentTo != null)
             {
