@@ -68,7 +68,7 @@ namespace iTextSharp.Profiling
         }
 
         [Test]
-        [Timeout(300000)]
+        [Timeout(1000000)]
         public void CopyPagesWithFieldsTest()
         {
             int runCount = 10;
