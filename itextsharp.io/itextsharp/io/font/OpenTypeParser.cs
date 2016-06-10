@@ -541,7 +541,8 @@ namespace iTextSharp.IO.Font
 			{
 				return null;
 			}
-			int idx = name.ToLower().IndexOf(".ttc,");
+			int idx = name.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf
+				(".ttc,");
 			if (idx < 0)
 			{
 				return name;

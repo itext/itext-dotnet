@@ -214,7 +214,8 @@ namespace iTextSharp.IO.Font.Cmap
 					CMapObject numObject = new CMapObject(CMapObject.NUMBER, null);
 					try
 					{
-						numObject.SetValue((int)System.Double.Parse(tokeniser.GetStringValue()));
+						numObject.SetValue((int)System.Double.Parse(tokeniser.GetStringValue(), System.Globalization.CultureInfo.InvariantCulture
+							));
 					}
 					catch (FormatException)
 					{

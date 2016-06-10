@@ -254,7 +254,8 @@ namespace iTextSharp.Kernel.Pdf.Collection
 
 				case NUMBER:
 				{
-					return new PdfNumber(System.Double.Parse(value.Trim()));
+					return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture
+						));
 				}
 			}
 			throw new PdfException(PdfException.IsNotAnAcceptableValueForTheField).SetMessageParams

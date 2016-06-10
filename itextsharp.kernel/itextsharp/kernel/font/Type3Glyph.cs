@@ -222,7 +222,8 @@ namespace iTextSharp.Kernel.Font
 				String[] bbArray = str.JSubstring(0, d0Pos - 1).Split(" ");
 				if (bbArray.Length == 2)
 				{
-					this.wx = float.Parse(bbArray[0]);
+					this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture
+						);
 				}
 			}
 			else
@@ -233,11 +234,16 @@ namespace iTextSharp.Kernel.Font
 					String[] bbArray = str.JSubstring(0, d1Pos - 1).Split(" ");
 					if (bbArray.Length == 6)
 					{
-						this.wx = float.Parse(bbArray[0]);
-						this.llx = float.Parse(bbArray[2]);
-						this.lly = float.Parse(bbArray[3]);
-						this.urx = float.Parse(bbArray[4]);
-						this.ury = float.Parse(bbArray[5]);
+						this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture
+							);
+						this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture
+							);
+						this.lly = float.Parse(bbArray[3], System.Globalization.CultureInfo.InvariantCulture
+							);
+						this.urx = float.Parse(bbArray[4], System.Globalization.CultureInfo.InvariantCulture
+							);
+						this.ury = float.Parse(bbArray[5], System.Globalization.CultureInfo.InvariantCulture
+							);
 					}
 				}
 			}

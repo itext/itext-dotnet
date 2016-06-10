@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 			{
 				faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
 			}
-			faceName = faceName.ToLower();
+			faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>Returns the Font.</summary>

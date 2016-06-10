@@ -252,7 +252,7 @@ namespace iTextSharp.Kernel.Xmp
 			{
 				throw new XmpException("Empty convert-string", XmpError.BADVALUE);
 			}
-			value = value.ToLower();
+			value = value.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 			try
 			{
 				// First try interpretation as Integer (anything not 0 is true)
@@ -376,7 +376,8 @@ namespace iTextSharp.Kernel.Xmp
 				}
 				else
 				{
-					return System.Double.Parse(rawValue);
+					return System.Double.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture
+						);
 				}
 			}
 			catch (FormatException)

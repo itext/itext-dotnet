@@ -314,15 +314,18 @@ namespace iTextSharp.IO.Font
 					);
 			}
 			FontProgram fontBuilt;
-			if (isBuiltinFonts14 || name.ToLower().EndsWith(".afm") || name.ToLower().EndsWith
-				(".pfm"))
+			if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				).EndsWith(".afm") || name.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				).EndsWith(".pfm"))
 			{
 				fontBuilt = new Type1Font(name, null, font, null);
 			}
 			else
 			{
-				if (baseName.ToLower().EndsWith(".ttf") || baseName.ToLower().EndsWith(".otf") ||
-					 baseName.ToLower().IndexOf(".ttc,") > 0)
+				if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(
+					".ttf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith
+					(".otf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).
+					IndexOf(".ttc,") > 0)
 				{
 					if (font != null)
 					{

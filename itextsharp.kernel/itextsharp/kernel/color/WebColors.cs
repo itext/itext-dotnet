@@ -244,7 +244,8 @@ namespace iTextSharp.Kernel.Color
 		public static DeviceRgb GetRGBColor(String name)
 		{
 			int[] color = new int[] { 0, 0, 0, 255 };
-			String colorName = name.ToLower();
+			String colorName = name.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				);
 			bool colorStrWithoutHash = MissingHashColorFormat(colorName);
 			if (colorName.StartsWith("#") || colorStrWithoutHash)
 			{

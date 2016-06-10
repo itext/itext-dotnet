@@ -405,7 +405,8 @@ namespace iTextSharp.IO.Font
 		/// <returns>the normalized encoding</returns>
 		protected internal static String NormalizeEncoding(String enc)
 		{
-			String tmp = enc == null ? "" : enc.ToLower();
+			String tmp = enc == null ? "" : enc.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				);
 			switch (tmp)
 			{
 				case "":

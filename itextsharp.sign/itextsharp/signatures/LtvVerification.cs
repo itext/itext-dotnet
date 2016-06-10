@@ -508,7 +508,8 @@ namespace iTextSharp.Signatures
 			{
 				buf.AppendHex(b);
 			}
-			return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpper();
+			return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpper(System.Globalization.CultureInfo.InvariantCulture
+				);
 		}
 	}
 }

@@ -72,7 +72,7 @@ namespace iTextSharp.Kernel.Numbering
 		/// <param name="number">a number to be converted to roman notation.</param>
 		public static String ToRomanUpperCase(int number)
 		{
-			return Convert(number).ToUpper();
+			return Convert(number).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>Returns a roman representation of an integer.</summary>

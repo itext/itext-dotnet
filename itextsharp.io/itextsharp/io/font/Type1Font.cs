@@ -323,7 +323,8 @@ namespace iTextSharp.IO.Font
 
 					case "ItalicAngle":
 					{
-						fontMetrics.SetItalicAngle(float.Parse(tok.NextToken()));
+						fontMetrics.SetItalicAngle(float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
@@ -341,23 +342,29 @@ namespace iTextSharp.IO.Font
 
 					case "FontBBox":
 					{
-						int llx = (int)float.Parse(tok.NextToken());
-						int lly = (int)float.Parse(tok.NextToken());
-						int urx = (int)float.Parse(tok.NextToken());
-						int ury = (int)float.Parse(tok.NextToken());
+						int llx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							);
+						int lly = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							);
+						int urx = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							);
+						int ury = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							);
 						fontMetrics.SetBbox(llx, lly, urx, ury);
 						break;
 					}
 
 					case "UnderlinePosition":
 					{
-						fontMetrics.SetUnderlinePosition((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetUnderlinePosition((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "UnderlineThickness":
 					{
-						fontMetrics.SetUnderlineThickness((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetUnderlineThickness((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
@@ -369,37 +376,43 @@ namespace iTextSharp.IO.Font
 
 					case "CapHeight":
 					{
-						fontMetrics.SetCapHeight((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetCapHeight((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "XHeight":
 					{
-						fontMetrics.SetXHeight((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetXHeight((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "Ascender":
 					{
-						fontMetrics.SetTypoAscender((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetTypoAscender((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "Descender":
 					{
-						fontMetrics.SetTypoDescender((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetTypoDescender((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "StdHW":
 					{
-						fontMetrics.SetStemH((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetStemH((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
 					case "StdVW":
 					{
-						fontMetrics.SetStemV((int)float.Parse(tok.NextToken()));
+						fontMetrics.SetStemV((int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							));
 						break;
 					}
 
@@ -462,7 +475,8 @@ namespace iTextSharp.IO.Font
 
 						case "WX":
 						{
-							WX = (int)float.Parse(tokc.NextToken());
+							WX = (int)float.Parse(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+								);
 							break;
 						}
 
@@ -564,7 +578,8 @@ namespace iTextSharp.IO.Font
 					{
 						String first = tok.NextToken();
 						String second = tok.NextToken();
-						int? width = (int)float.Parse(tok.NextToken());
+						int? width = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+							);
 						int firstUni = (int)AdobeGlyphList.NameToUnicode(first);
 						int secondUni = (int)AdobeGlyphList.NameToUnicode(second);
 						if (firstUni != -1 && secondUni != -1)

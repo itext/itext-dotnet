@@ -253,7 +253,8 @@ namespace iTextSharp.IO.Font
 				}
 				return b;
 			}
-			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower());
+			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				));
 			if (extra != null)
 			{
 				byte[] b = extra.CharToByte(text, encoding);
@@ -411,7 +412,8 @@ namespace iTextSharp.IO.Font
 				}
 				return new String(c);
 			}
-			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower());
+			IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				));
 			if (extra != null)
 			{
 				String text = extra.ByteToChar(bytes, encoding);
@@ -497,7 +499,8 @@ namespace iTextSharp.IO.Font
 		{
 			lock (extraEncodings)
 			{
-				extraEncodings[name.ToLower()] = enc;
+				extraEncodings[name.ToLower(System.Globalization.CultureInfo.InvariantCulture)] =
+					 enc;
 			}
 		}
 

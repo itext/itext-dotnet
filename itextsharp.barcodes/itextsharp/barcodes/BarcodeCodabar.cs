@@ -118,7 +118,7 @@ namespace iTextSharp.Barcodes
 		/// <returns>the bars</returns>
 		public static byte[] GetBarsCodabar(String text)
 		{
-			text = text.ToUpper();
+			text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
 			int len = text.Length;
 			if (len < 2)
 			{
@@ -154,7 +154,7 @@ namespace iTextSharp.Barcodes
 			{
 				return code;
 			}
-			String text = code.ToUpper();
+			String text = code.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
 			int sum = 0;
 			int len = text.Length;
 			for (int k = 0; k < len; ++k)

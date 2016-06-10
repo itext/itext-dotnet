@@ -248,7 +248,7 @@ namespace iTextSharp.IO.Font
 
 		protected internal virtual void SetFontWidth(String fontWidth)
 		{
-			fontWidth = fontWidth.ToLower();
+			fontWidth = fontWidth.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 			int fontWidthValue = FontNames.FWIDTH_NORMAL;
 			switch (fontWidth)
 			{

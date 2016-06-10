@@ -339,7 +339,8 @@ namespace iTextSharp.IO.Font
 
 		protected internal static int ConvertFontWeight(String weight)
 		{
-			String fontWeight = weight.ToLower();
+			String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				);
 			switch (fontWeight)
 			{
 				case "ultralight":

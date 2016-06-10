@@ -97,7 +97,8 @@ namespace iTextSharp.Kernel.Pdf
 		public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(String
 			 part, String conformance)
 		{
-			String lowLetter = conformance.ToUpper();
+			String lowLetter = conformance.ToUpper(System.Globalization.CultureInfo.InvariantCulture
+				);
 			bool aLevel = lowLetter.Equals("A");
 			bool bLevel = lowLetter.Equals("B");
 			bool uLevel = lowLetter.Equals("U");

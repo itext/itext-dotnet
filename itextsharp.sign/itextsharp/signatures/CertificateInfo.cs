@@ -200,7 +200,8 @@ namespace iTextSharp.Signatures
 						throw new ArgumentException();
 					}
 					/*MessageLocalization.getComposedMessage("badly.formated.directory.string")*/
-					String id = token.JSubstring(0, index).ToUpper();
+					String id = token.JSubstring(0, index).ToUpper(System.Globalization.CultureInfo.InvariantCulture
+						);
 					String value = token.Substring(index + 1);
 					IList<String> vs = values.Get(id);
 					if (vs == null)

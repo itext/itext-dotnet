@@ -212,7 +212,8 @@ namespace iTextSharp.Signatures
 		/// <returns>An oid.</returns>
 		public static String GetAllowedDigest(String name)
 		{
-			return allowedDigests.Get(name.ToUpper());
+			return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture
+				));
 		}
 	}
 }

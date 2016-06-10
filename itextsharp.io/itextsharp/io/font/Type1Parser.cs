@@ -127,13 +127,15 @@ namespace iTextSharp.IO.Font
 			{
 				if (afmPath != null)
 				{
-					if (afmPath.ToLower().EndsWith(".afm"))
+					if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm"
+						))
 					{
 						return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
 					}
 					else
 					{
-						if (afmPath.ToLower().EndsWith(".pfm"))
+						if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm"
+							))
 						{
 							MemoryStream ba = new MemoryStream();
 							RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource
@@ -194,7 +196,8 @@ namespace iTextSharp.IO.Font
 			}
 			else
 			{
-				if (pfbPath != null && pfbPath.ToLower().EndsWith(".pfb"))
+				if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture
+					).EndsWith(".pfb"))
 				{
 					return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
 				}

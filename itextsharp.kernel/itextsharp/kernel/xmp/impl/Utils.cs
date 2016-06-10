@@ -494,7 +494,8 @@ namespace iTextSharp.Kernel.Xmp.Impl
 						// write control chars escaped,
 						// if there are others than tab, LF and CR the xml will become invalid.
 						buffer.Append("&#x");
-						buffer.Append(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper());
+						buffer.Append(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper(System.Globalization.CultureInfo.InvariantCulture
+							));
 						buffer.Append(';');
 					}
 				}

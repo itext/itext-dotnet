@@ -60,8 +60,8 @@ namespace iTextSharp.Kernel.Font
 			{
 				encoding = FontEncoding.FONT_SPECIFIC;
 			}
-			if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLower().Equals(encoding.ToLower
-				()))
+			if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				).Equals(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture)))
 			{
 				fontEncoding = FontEncoding.CreateFontSpecificEncoding();
 			}

@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Globalization;
 using iTextSharp.IO.Source;
 
 namespace iTextSharp.Kernel.Pdf
@@ -229,7 +228,7 @@ namespace iTextSharp.Kernel.Pdf
 			try
 			{
 				value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content
-					), CultureInfo.InvariantCulture);
+					), System.Globalization.CultureInfo.InvariantCulture);
 			}
 			catch (FormatException)
 			{

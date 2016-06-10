@@ -141,7 +141,8 @@ namespace iTextSharp.IO.Font
 			{
 				v = (int)names2unicode.Get(name);
 			}
-			if (v == -1 && name.Length == 7 && name.ToLower().StartsWith("uni"))
+			if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				).StartsWith("uni"))
 			{
 				try
 				{

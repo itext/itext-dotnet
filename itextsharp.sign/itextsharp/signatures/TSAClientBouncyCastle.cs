@@ -237,8 +237,8 @@ namespace iTextSharp.Signatures
 				baos.Write(buffer, 0, bytesRead);
 			}
 			byte[] respBytes = baos.ToArray();
-			if (response.encoding != null && response.encoding.ToLower().Equals("base64".ToLower
-				()))
+			if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
+				).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture)))
 			{
 				respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
 					(respBytes, "US-ASCII"));
