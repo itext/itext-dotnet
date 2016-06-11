@@ -2,12 +2,12 @@ using System;
 using System.Text;
 
 namespace iTextSharp.IO.Util {
-	public sealed class EncodingUtil
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class EncodingUtil
 	{
-		private EncodingUtil()
-		{
-		}
-
 		/// <exception cref="java.nio.charset.CharacterCodingException"/>
 		public static byte[] ConvertToBytes(char[] chars, String encoding)
 		{

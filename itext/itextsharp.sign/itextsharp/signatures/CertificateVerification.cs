@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Signatures
 {
@@ -61,7 +62,7 @@ namespace iTextSharp.Signatures
         /// </returns>
         public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls)
         {
-            return VerifyCertificate(cert, crls, SignUtils.GetCurrentTime());
+            return VerifyCertificate(cert, crls, DateTimeUtil.GetCurrentTime());
         }
 
         /// <summary>Verifies a single certificate.</summary>
@@ -111,7 +112,7 @@ namespace iTextSharp.Signatures
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore, ICollection<X509Crl> crls)
         {
-            return VerifyCertificates(certs, keystore, crls, SignUtils.GetCurrentTime());
+            return VerifyCertificates(certs, keystore, crls, DateTimeUtil.GetCurrentTime());
         }
 
         /// <summary>Verifies a certificate chain against a KeyStore.</summary>
@@ -206,7 +207,7 @@ namespace iTextSharp.Signatures
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore)
         {
-            return VerifyCertificates(certs, keystore, SignUtils.GetCurrentTime());
+            return VerifyCertificates(certs, keystore, DateTimeUtil.GetCurrentTime());
         }
 
         /// <summary>Verifies a certificate chain against a KeyStore.</summary>

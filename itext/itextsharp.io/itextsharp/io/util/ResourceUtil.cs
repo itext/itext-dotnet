@@ -3,13 +3,13 @@ using System.IO;
 using System.Reflection;
 
 namespace iTextSharp.IO.Util {
-    public sealed class ResourceUtil
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class ResourceUtil
     {
         private static List<object> resourceSearch = new List<object>();
-
-        private ResourceUtil()
-        {
-        }
 
         public static void AddToResourceSearch(object obj)
         {

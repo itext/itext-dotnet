@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 
 namespace iTextSharp.IO.Util {
-    public class SortUtil {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public class SortUtil
+    {
         public static void MergeSort<T>(List<T> list, IComparer<T> comparer) {
             if (comparer == null) {
                 comparer = Comparer<T>.Default;

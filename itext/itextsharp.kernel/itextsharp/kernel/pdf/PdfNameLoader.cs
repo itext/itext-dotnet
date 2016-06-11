@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace iTextSharp.Kernel.Pdf
 {
-	internal sealed class PdfNameLoader
+	internal static class PdfNameLoader
 	{
 		internal static IDictionary<String, PdfName> LoadNames()
 		{
@@ -15,7 +15,7 @@ namespace iTextSharp.Kernel.Pdf
 					FieldInfo curFld = fields[fldIdx];
 					if (curFld.FieldType.Equals(typeof(PdfName))) {
 						PdfName name = (PdfName)curFld.GetValue(null);
-						staticNames.Put(name.GetValue(), name);
+						staticNames[name.GetValue()] = name;
 					}
 				}
 			} catch {

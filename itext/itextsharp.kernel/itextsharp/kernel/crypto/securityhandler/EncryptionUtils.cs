@@ -46,7 +46,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             byte[] outp = new byte[10000];
             int len = cipher.DoFinal(abyte0, outp, 0);
             byte[] abyte1 = new byte[len];
-            System.Array.Copy(outp, 0, abyte1, 0, len);
+            Array.Copy(outp, 0, abyte1, 0, len);
 
             return abyte1;
         }
@@ -89,7 +89,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             int len = cf.DoFinal(@in, outp, 0);
 
             byte[] abyte1 = new byte[len];
-            System.Array.Copy(outp, 0, abyte1, 0, len);
+            Array.Copy(outp, 0, abyte1, 0, len);
 
             Asn1EncodableVector ev = new Asn1EncodableVector();
             ev.Add(new DerInteger(58));

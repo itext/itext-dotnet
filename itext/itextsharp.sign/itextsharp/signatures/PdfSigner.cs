@@ -176,7 +176,7 @@ namespace iTextSharp.Signatures
                 document = new PdfDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), properties);
             }
             originalOS = outputStream;
-            signDate = SignUtils.GetCurrentTime();
+            signDate = DateTimeUtil.GetCurrentTime();
             fieldName = GetNewSigFieldName();
             appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             appearance.SetSignDate(signDate);

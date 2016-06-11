@@ -63,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
-            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl);
+            double diff = DateTimeUtil.GetUtcMillisFromEpoch(null) - DateTimeUtil.GetUtcMillisFromEpoch(cl);
             String message = "Unexpected creation date. Different from now is " + (float)diff / 1000 + "s";
             NUnit.Framework.Assert.IsTrue(diff < 5000, message);
             reader.Close();
@@ -874,7 +874,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
             String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
-            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl);
+            double diff = DateTimeUtil.GetUtcMillisFromEpoch(null) - DateTimeUtil.GetUtcMillisFromEpoch(cl);
             String message = "Unexpected creation date. Different from now is " + (float)diff / 1000 + "s";
             NUnit.Framework.Assert.IsTrue(diff < 5000, message);
             reader.Close();

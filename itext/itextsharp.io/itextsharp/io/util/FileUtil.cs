@@ -48,21 +48,17 @@ using System.Text;
 using System.Threading;
 
 namespace iTextSharp.IO.Util {
-	public sealed class FileUtil {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class FileUtil
+    {
 	    private static int tempFileCounter = 0;
-
-		private FileUtil()
-		{
-		}
 
 		public static String GetFontsDir()
 		{
             return Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
-		}
-
-		public static String GetFileName(String file)
-		{
-			return new FileInfo(file).Name;
 		}
 
 		public static bool FileExists(String path)

@@ -49,6 +49,7 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Signatures
 {
@@ -311,7 +312,7 @@ namespace iTextSharp.Signatures
                     CRLVerifier crlVerifier = new CRLVerifier(null, null);
                     crlVerifier.SetRootStore(rootStore);
                     crlVerifier.SetOnlineCheckingAllowed(onlineCheckingAllowed);
-                    crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, SignUtils.GetCurrentUtcTime());
+                    crlVerifier.Verify((X509Crl)crl, responderCert, issuerCert, DateTimeUtil.GetCurrentUtcTime());
                     return;
                 }
             }

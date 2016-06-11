@@ -6,7 +6,12 @@ using System.Linq;
 using iTextSharp.IO.Util.Collections;
 
 namespace iTextSharp.IO.Util {
-    public static class JavaCollectionsUtil {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class JavaCollectionsUtil
+    {
         public static IList<T> EmptyList<T>() {
             return new EmptyList<T>();
         }

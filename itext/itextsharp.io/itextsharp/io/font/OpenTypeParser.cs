@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
@@ -313,7 +314,7 @@ namespace iTextSharp.IO.Font
                 }
                 else
                 {
-                    fontName = FileUtil.GetFileName(fileName).Replace(' ', '-');
+                    fontName = new FileInfo(fileName).Name.Replace(' ', '-');
                 }
             }
             return fontName;

@@ -47,11 +47,12 @@ using System.IO;
 using System.util.zlib;
 
 namespace iTextSharp.IO.Util {
-	public sealed class FilterUtil
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class FilterUtil
 	{
-		private FilterUtil()
-		{
-		}
 
 		/// <summary>A helper to FlateDecode.</summary>
 		/// <param name="input">the input data</param>

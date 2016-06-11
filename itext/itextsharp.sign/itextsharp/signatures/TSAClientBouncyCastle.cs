@@ -50,8 +50,8 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
 
 namespace iTextSharp.Signatures
 {
@@ -175,7 +175,7 @@ namespace iTextSharp.Signatures
             TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
             tsqGenerator.SetCertReq(true);
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
-            BigInteger nonce = BigInteger.ValueOf(SystemUtility.GetCurrentTimeMillis());
+            BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetSystemTimeTicks());
             TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest
                 (digestAlgorithm)), imprint, nonce);
             byte[] requestBytes = request.GetEncoded();

@@ -197,12 +197,6 @@ namespace iTextSharp.Kernel {
             return value;
         }
 
-        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
-        {
-            dictionary[key] = value;
-            return value;
-        }
-
         public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             return dictionary.ContainsKey(key);
         }

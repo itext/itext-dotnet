@@ -464,8 +464,8 @@ namespace iTextSharp.Kernel.Utils
 		{
 			this.outPdf = outPdf;
 			this.cmpPdf = cmpPdf;
-		    outPdfName = FileUtil.GetFileName(outPdf);
-		    cmpPdfName = FileUtil.GetFileName(cmpPdf);
+		    outPdfName = new FileInfo(outPdf).Name;
+            cmpPdfName = new FileInfo(cmpPdf).Name;
 			outImage = outPdfName + "-%03d.png";
 			if (cmpPdfName.StartsWith("cmp_"))
 			{

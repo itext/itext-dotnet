@@ -189,14 +189,6 @@ namespace iTextSharp.Signatures
             }
 	        return false;
 	    }
-
-	    internal static DateTime GetCurrentTime() {
-            return DateTime.Now;
-        }
-
-	    internal static DateTime GetCurrentUtcTime() {
-            return DateTime.UtcNow;
-        }
         
         internal static DateTime GetTimeStampDate(TimeStampToken timeStampToken) {
             return timeStampToken.TimeStampInfo.GenTime;

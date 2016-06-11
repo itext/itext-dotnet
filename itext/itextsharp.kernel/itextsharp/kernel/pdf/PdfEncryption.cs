@@ -46,6 +46,7 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Source;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Crypto.Securityhandler;
@@ -64,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf
 
         private const int AES_256 = 5;
 
-        private static long seq = SystemUtility.GetCurrentTimeMillis();
+        private static long seq = SystemUtil.GetSystemTimeTicks();
 
         private int cryptoMode;
 
@@ -286,8 +287,8 @@ namespace iTextSharp.Kernel.Pdf
             {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
-            long time = SystemUtility.GetCurrentTimeMillis();
-            long mem = SystemUtility.GetFreeMemory();
+            long time = SystemUtil.GetSystemTimeTicks();
+            long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
             return md5.Digest(s.GetBytes());
         }

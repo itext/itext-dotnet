@@ -49,6 +49,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iTextSharp.Forms;
 using iTextSharp.IO.Log;
+using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
 namespace iTextSharp.Signatures
@@ -100,7 +101,7 @@ namespace iTextSharp.Signatures
             this.sgnUtil = new SignatureUtil(document);
             IList<String> names = sgnUtil.GetSignatureNames();
             signatureName = names[names.Count - 1];
-            this.signDate = SignUtils.GetCurrentUtcTime();
+            this.signDate = DateTimeUtil.GetCurrentUtcTime();
             pkcs7 = CoversWholeDocument();
             LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
                 ));

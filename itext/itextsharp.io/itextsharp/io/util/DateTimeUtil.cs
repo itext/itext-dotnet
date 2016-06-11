@@ -45,18 +45,28 @@ address: sales@itextpdf.com
 using System;
 
 namespace iTextSharp.IO.Util {
-	public sealed class DateTimeUtil
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+	public static class DateTimeUtil
 	{
-        private DateTimeUtil()
-		{
-		}
-
-		public static double GetTimeInMillis(DateTime? dateTime)
+		public static double GetUtcMillisFromEpoch(DateTime? dateTime)
 		{
 		    if (dateTime == null) {
 		        dateTime = DateTime.Now;
 		    }
 		    return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
-		}
+        }
+
+        public static DateTime GetCurrentTime()
+        {
+            return DateTime.Now;
+        }
+
+        public static DateTime GetCurrentUtcTime()
+        {
+            return DateTime.UtcNow;
+        }
 	}
 }

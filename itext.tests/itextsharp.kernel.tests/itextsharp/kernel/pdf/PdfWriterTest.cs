@@ -37,7 +37,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
             String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.CreationDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
-            double diff = DateTimeUtil.GetTimeInMillis(null) - DateTimeUtil.GetTimeInMillis(cl);
+            double diff = DateTimeUtil.GetUtcMillisFromEpoch(null) - DateTimeUtil.GetUtcMillisFromEpoch(cl);
             String message = "Unexpected creation date. Different from now is " + (float)diff / 1000 + "s";
             NUnit.Framework.Assert.IsTrue(diff < 5000, message);
             reader.Close();

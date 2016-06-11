@@ -48,12 +48,12 @@ using System.IO;
 using System.Net;
 
 namespace iTextSharp.IO.Util {
-    public sealed class UrlUtil
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that it's API and functionality may be changed in future.
+    /// </summary>
+    public static class UrlUtil
     {
-        private UrlUtil()
-        {
-        }
-
         /// <summary>This method makes a valid URL from a given filename.</summary>
         /// <param name="filename">a given filename</param>
         /// <returns>a valid URL</returns>

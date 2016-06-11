@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iTextSharp.IO.Util;
 
 namespace iTextSharp.Kernel.Crypto
 {
@@ -56,8 +57,8 @@ namespace iTextSharp.Kernel.Crypto
         static IVGenerator()
         {
             arcfour = new ARCFOUREncryption();
-            long time = SystemUtility.GetCurrentTimeMillis();
-            long mem = SystemUtility.GetFreeMemory();
+            long time = SystemUtil.GetSystemTimeTicks();
+            long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem;
             arcfour.PrepareARCFOURKey(s.GetBytes());
         }
