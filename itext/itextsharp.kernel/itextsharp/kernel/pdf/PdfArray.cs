@@ -218,7 +218,11 @@ namespace iTextSharp.Kernel.Pdf
 			return list.GetEnumerator();
 		}
 
-		public virtual void Add(PdfObject pdfObject)
+	    public IEnumerator<PdfObject> GetDirectEnumerator() {
+            return new PdfArrayDirectEnumerator(list.GetEnumerator());
+	    }
+
+	    public virtual void Add(PdfObject pdfObject)
 		{
 			list.Add(pdfObject);
 		}
@@ -562,5 +566,47 @@ namespace iTextSharp.Kernel.Pdf
 		{
 			list = null;
 		}
+
+        private class PdfArrayDirectEnumerator : IEnumerator<PdfObject>
+        {
+            private IEnumerator<PdfObject> parentEnumerator;
+
+            public PdfArrayDirectEnumerator(IEnumerator<PdfObject> parentEnumerator)
+            {
+                this.parentEnumerator = parentEnumerator;
+            }
+
+            public void Dispose()
+            {
+                parentEnumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                if (parentEnumerator.MoveNext())
+                {
+                    PdfObject obj = parentEnumerator.Current;
+                    if (obj.IsIndirectReference())
+                    {
+                        obj = ((PdfIndirectReference)obj).GetRefersTo(true);
+                    }
+                    Current = obj;
+                    return true;
+                }
+                return false;
+            }
+
+            public void Reset()
+            {
+                parentEnumerator.Reset();
+            }
+
+            public PdfObject Current { get; private set; }
+
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
+        }
 	}
 }

@@ -319,10 +319,37 @@ namespace iTextSharp.Kernel.Pdf {
             return map.Values;
         }
 
+        public virtual ICollection<PdfObject> DirectValues() {
+            ICollection<PdfObject> directValues = new List<PdfObject>();
+            foreach (PdfObject value in map.Values) {
+                if (value.IsIndirectReference()) {
+                    directValues.Add(((PdfIndirectReference)value).GetRefersTo());
+                }
+                else {
+                    directValues.Add(value);
+                }
+            }
+            return directValues;
+        }
+
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
         /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> EntrySet() {
             return map;
+        }
+
+        public virtual ICollection<KeyValuePair<PdfName, PdfObject>> DirectEntrySet() {
+            IDictionary<PdfName, PdfObject> directMap = new Dictionary<PdfName, PdfObject>();
+            foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
+                PdfObject value = entry.Value;
+                if (value.IsIndirectReference()) {
+                    directMap[entry.Key] = ((PdfIndirectReference)value).GetRefersTo();
+                }
+                else {
+                    directMap[entry.Key] = value;
+                }
+            }
+            return directMap;
         }
 
         public override byte GetObjectType() {
