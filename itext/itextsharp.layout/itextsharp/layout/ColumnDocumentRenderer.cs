@@ -49,9 +49,9 @@ using iTextSharp.Layout.Renderer;
 namespace iTextSharp.Layout {
     /// <summary>This class is used for convenient multi-column Document Layouting</summary>
     public class ColumnDocumentRenderer : DocumentRenderer {
-        private Rectangle[] columns;
+        protected internal Rectangle[] columns;
 
-        private int nextAreaNumber;
+        protected internal int nextAreaNumber;
 
         public ColumnDocumentRenderer(Document document, Rectangle[] columns)
             : base(document) {
@@ -73,6 +73,10 @@ namespace iTextSharp.Layout {
             }
             return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone()
                 ));
+        }
+
+        public virtual int GetNextAreaNumber() {
+            return nextAreaNumber;
         }
     }
 }
