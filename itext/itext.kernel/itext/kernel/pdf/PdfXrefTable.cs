@@ -334,7 +334,7 @@ namespace iText.Kernel.Pdf {
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(String.Format("%%{0}-{1}\n", k, version.GetRelease()));
+            writer.WriteString(String.Format("%{0}-{1}\n", k, version.GetRelease()));
         }
 
         private void EnsureCount(int count) {
